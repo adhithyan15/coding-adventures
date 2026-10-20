@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C328-matrona",
+    "language": "latin",
+    "chapter": 328,
+    "sequence": 17720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:984e8ebd071986bd"
+  },
+  "findings": []
+}

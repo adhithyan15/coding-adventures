@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:f4f23d7719e70914",
+  "lessonIds": [
+    "LA-C532-manumissio",
+    "LA-C532-libertinus",
+    "LA-C532-vindicta",
+    "LA-C532-ingenuus",
+    "LA-C532-pilleus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch532.txt",
+  "json": "latin/narration/ch532.json",
+  "textHash": "fnv1a64:ebed30d5c68bccbc",
+  "jsonHash": "fnv1a64:e570b776bbd69039",
+  "findings": []
+}

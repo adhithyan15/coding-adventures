@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:e6e8fb9681acffa7",
+  "lessonIds": [
+    "LA-C318-cremo",
+    "LA-C318-uro",
+    "LA-C318-flagro",
+    "LA-C318-fumo",
+    "LA-C318-conflagro"
+  ],
+  "tex": "latin/book/chapters/ch318-ardet.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-317-INCENDIUM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a fire: a blaze, the heat, glowing ash, a firebrand and burning heat.",
+  "prerequisites": []
+}

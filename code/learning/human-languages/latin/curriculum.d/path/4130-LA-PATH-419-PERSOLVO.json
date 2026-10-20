@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-419-PERSOLVO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-419-PERSOLVO"
+  ],
+  "after": []
+}

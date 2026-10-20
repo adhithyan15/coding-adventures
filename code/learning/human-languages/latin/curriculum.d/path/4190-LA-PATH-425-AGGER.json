@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-425-AGGER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-425-AGGER"
+  ],
+  "after": []
+}

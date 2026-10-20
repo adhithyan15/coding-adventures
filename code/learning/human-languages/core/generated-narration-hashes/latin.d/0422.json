@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:9f79c77e2502a475",
+  "lessonIds": [
+    "LA-C422-divitiae",
+    "LA-C422-egeo",
+    "LA-C422-egestas",
+    "LA-C422-careo",
+    "LA-C422-abundo",
+    "LA-R422-review-421-422",
+    "LA-R422-review-final-422"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch422.txt",
+  "json": "latin/narration/ch422.json",
+  "textHash": "fnv1a64:5afed27bc6601577",
+  "jsonHash": "fnv1a64:c55bbd44436cc653",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R306-review-299-306",
+    "language": "latin",
+    "chapter": 306,
+    "sequence": 16610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39398153ee27825a"
+  },
+  "findings": []
+}

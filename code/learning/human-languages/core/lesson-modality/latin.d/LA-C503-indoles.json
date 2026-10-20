@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C503-indoles",
+    "language": "latin",
+    "chapter": 503,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f92d5780dd1eaafc"
+  },
+  "findings": []
+}

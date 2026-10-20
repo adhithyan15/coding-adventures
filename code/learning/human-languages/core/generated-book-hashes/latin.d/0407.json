@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:4570a5a6ac40dd3c",
+  "lessonIds": [
+    "LA-C407-scientia",
+    "LA-C407-intellegentia",
+    "LA-C407-doctrina",
+    "LA-C407-inscitia",
+    "LA-C407-imitor"
+  ],
+  "tex": "latin/book/chapters/ch407-knowing-and-not-knowing.tex"
+}

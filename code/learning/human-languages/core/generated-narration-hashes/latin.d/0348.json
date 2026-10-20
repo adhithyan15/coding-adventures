@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:31d137c984484281",
+  "lessonIds": [
+    "LA-C348-oraculum",
+    "LA-C348-vates",
+    "LA-C348-prodigium",
+    "LA-C348-omen",
+    "LA-C348-vaticinor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch348.txt",
+  "json": "latin/narration/ch348.json",
+  "textHash": "fnv1a64:c7c0628dceb48561",
+  "jsonHash": "fnv1a64:d6185160e3b569ac",
+  "findings": []
+}

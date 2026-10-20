@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Fābulae mīrae",
+  "label": "ch:la-fabulae-mirae",
+  "canDo": "I can tell and react to a tall story: to chat, to say, wonderful, unbelievable and a made-up story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C349-commentum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can tell and react to a tall story: to chat, to say, wonderful, unbelievable and a made-up story.",
+    "assesses": [
+      "LA-LEX-C349-FABULOR-03",
+      "LA-LEX-C349-FABULOR-04",
+      "LA-LEX-C349-FABULOR-05"
+    ]
+  }
+}

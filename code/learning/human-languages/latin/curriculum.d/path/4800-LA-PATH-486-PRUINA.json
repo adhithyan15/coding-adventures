@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-486-PRUINA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-486-PRUINA"
+  ],
+  "after": []
+}

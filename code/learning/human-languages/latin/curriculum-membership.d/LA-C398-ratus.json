@@ -1,0 +1,11 @@
+{
+  "id": "LA-C398-ratus",
+  "pathSegment": "LA-PATH-398-PRAESTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-398-PRAESTO",
+      "order": 3
+    }
+  ]
+}

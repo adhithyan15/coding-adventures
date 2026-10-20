@@ -1,0 +1,11 @@
+{
+  "id": "LA-C443-praetervehor",
+  "pathSegment": "LA-PATH-443-FLUCTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-443-FLUCTUS",
+      "order": 4
+    }
+  ]
+}

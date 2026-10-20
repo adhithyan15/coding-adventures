@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:f7bcefa9a72081d4",
+  "lessonIds": [
+    "LA-C527-requiesco",
+    "LA-C527-requies",
+    "LA-C527-dormito",
+    "LA-C527-insomnia",
+    "LA-C527-recumbo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch527.txt",
+  "json": "latin/narration/ch527.json",
+  "textHash": "fnv1a64:3be07fb8059be522",
+  "jsonHash": "fnv1a64:a0b8120de581c7bb",
+  "findings": []
+}

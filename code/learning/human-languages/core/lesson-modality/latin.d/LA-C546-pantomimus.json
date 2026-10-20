@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C546-pantomimus",
+    "language": "latin",
+    "chapter": 546,
+    "sequence": 28960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e4356c1dd00c441"
+  },
+  "findings": []
+}

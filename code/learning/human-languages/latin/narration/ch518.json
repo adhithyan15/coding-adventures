@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 518,
+  "title": "Side, hip and foot",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8022d57e06eea2fa",
+  "lessons": [
+    {
+      "id": "LA-C518-latus",
+      "sequence": 27480,
+      "title": "latus, lateris — side, flank",
+      "headword": "latus, lateris",
+      "romanization": "latus, lateris",
+      "gloss": "side, flank",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ca59cd4f0f44261",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for sweat, then the Latin for a beat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: latus, lateris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "latus, lateris — \"side, flank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dolor in latere sinistrō est. The pain is in the left side."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, third declension. Not the adjective lātus — wide. English lateral."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "latus is a native Latin noun; Lewis & Short compares Greek platus \"broad\", but the origin is not settled. English lateral comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "latus, lateris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *latus, lateris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "latus, lateris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *latus, lateris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with latus, lateris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *latus, lateris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for sweat, then the Latin for a beat, then say latus, lateris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for sweat, then the Latin for a beat, then say *latus, lateris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does latus, lateris mean? (\"Side, flank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C518-coxa",
+      "sequence": 27490,
+      "title": "coxa, coxae — hip",
+      "headword": "coxa, coxae",
+      "romanization": "coxa, coxae",
+      "gloss": "hip",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a28ab4ff975ecfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a beat, then the Latin for side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: coxa, coxae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coxa, coxae — \"hip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex in coxā dolōrem sentit. The old man feels pain in his hip."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension. French cuisse and Italian coscia — thigh — come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coxa is inherited from a Proto-Indo-European word for \"hip, joint\", and Old Irish cos \"foot, leg\" is a cousin (EtymDB). French cuisse \"thigh\" comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coxa, coxae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coxa, coxae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coxa, coxae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coxa, coxae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with coxa, coxae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *coxa, coxae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a beat, then the Latin for side, then say coxa, coxae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a beat, then the Latin for side, then say *coxa, coxae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does coxa, coxae mean? (\"Hip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C518-calx",
+      "sequence": 27500,
+      "title": "calx, calcis — heel",
+      "headword": "calx, calcis",
+      "romanization": "calx, calcis",
+      "gloss": "heel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2005069809a4b8f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for side, then the Latin for hip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: calx, calcis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calx, calcis — \"heel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Calx mea post longum iter dolet. My heel hurts after the long journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension. Another calx means lime or chalk. English recalcitrant, kicking back, comes from this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calx \"heel\" is a native Latin noun with no settled origin; Lewis & Short keeps it apart from calx \"lime\". English recalcitrant comes from it, through recalcitrō \"to kick back\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calx, calcis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calx, calcis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calx, calcis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calx, calcis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with calx, calcis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *calx, calcis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for side, then the Latin for hip, then say calx, calcis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for side, then the Latin for hip, then say *calx, calcis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does calx, calcis mean? (\"Heel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C518-planta",
+      "sequence": 27510,
+      "title": "planta, plantae — sole of the foot; a sprout",
+      "headword": "planta, plantae",
+      "romanization": "planta, plantae",
+      "gloss": "sole of the foot; a sprout",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:facfac62250f2b31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hip, then the Latin for heel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: planta, plantae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "planta, plantae — \"sole of the foot; a sprout\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer nūdīs plantīs in harēnā ambulat. The boy walks on the sand with bare soles."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension. Both the sole of the foot and a young plant. English plant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "planta is inherited from a Proto-Indo-European word for \"sole of the foot\", built on a root meaning \"flat\" (EtymDB). English plant comes from its second sense, a sprout."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "planta, plantae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *planta, plantae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "planta, plantae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *planta, plantae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with planta, plantae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *planta, plantae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hip, then the Latin for heel, then say planta, plantae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hip, then the Latin for heel, then say *planta, plantae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does planta, plantae mean? (\"Sole of the foot; a sprout\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C518-umbilicus",
+      "sequence": 27520,
+      "title": "umbilīcus, umbilīcī — navel; the knob of a book-roll",
+      "headword": "umbilīcus, umbilīcī",
+      "romanization": "umbilīcus, umbilīcī",
+      "gloss": "navel; the knob of a book-roll",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbc219842bf5e284",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for heel, then the Latin for sole of the foot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: umbilīcus, umbilīcī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umbilīcus, umbilīcī — \"navel; the knob of a book-roll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Īnfāns parvum umbilīcum habet. The baby has a little navel."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension. Also the knob on the rod of a book-roll, so ad umbilīcum addūcere — to finish a book. English umbilical."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umbilīcus is inherited from a Proto-Indo-European word for \"navel\", and Greek omphalos is a cousin (EtymDB; Lewis & Short). English umbilical comes from it, and navel is a distant Germanic cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umbilīcus, umbilīcī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umbilīcus, umbilīcī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umbilīcus, umbilīcī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umbilīcus, umbilīcī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with umbilīcus, umbilīcī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *umbilīcus, umbilīcī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for heel, then the Latin for sole of the foot, then say umbilīcus, umbilīcī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for heel, then the Latin for sole of the foot, then say *umbilīcus, umbilīcī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does umbilīcus, umbilīcī mean? (\"Navel; the knob of a book-roll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

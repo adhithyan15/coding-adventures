@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Mūnus",
+  "label": "ch:la-munus",
+  "canDo": "I can describe the shows in the arena: the gladiator, the trainer, the public show, the wild-beast hunt and the beast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C336-bestia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can describe the shows in the arena: the gladiator, the trainer, the public show, the wild-beast hunt and the beast.",
+    "assesses": [
+      "LA-LEX-C336-GLADIATOR-03",
+      "LA-LEX-C336-GLADIATOR-04",
+      "LA-LEX-C336-GLADIATOR-05"
+    ]
+  }
+}

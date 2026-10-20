@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C407-imitor",
+    "language": "latin",
+    "chapter": 407,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ee81fd2eef29f91"
+  },
+  "findings": []
+}

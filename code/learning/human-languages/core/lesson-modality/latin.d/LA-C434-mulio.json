@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C434-mulio",
+    "language": "latin",
+    "chapter": 434,
+    "sequence": 23200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b137689a48218ef5"
+  },
+  "findings": []
+}

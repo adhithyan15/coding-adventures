@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Diēs fēstus",
+  "label": "ch:la-dies-festus",
+  "canDo": "I can describe a festival day: festive, yearly and solemn, a procession, a feast and to feast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C333-epulor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can describe a festival day: festive, yearly and solemn, a procession, a feast and to feast.",
+    "assesses": [
+      "LA-LEX-C333-FESTUS-03",
+      "LA-LEX-C333-FESTUS-04",
+      "LA-LEX-C333-FESTUS-05"
+    ]
+  }
+}

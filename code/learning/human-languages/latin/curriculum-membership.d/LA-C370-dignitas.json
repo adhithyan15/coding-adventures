@@ -1,0 +1,11 @@
+{
+  "id": "LA-C370-dignitas",
+  "pathSegment": "LA-PATH-370-AUCTORITAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-370-AUCTORITAS",
+      "order": 1
+    }
+  ]
+}

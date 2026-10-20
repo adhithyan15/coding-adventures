@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C416-obtempero",
+    "language": "latin",
+    "chapter": 416,
+    "sequence": 22240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cf17e90c8dd0a07"
+  },
+  "findings": []
+}

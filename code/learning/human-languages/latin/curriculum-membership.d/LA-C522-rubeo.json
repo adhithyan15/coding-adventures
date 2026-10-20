@@ -1,0 +1,11 @@
+{
+  "id": "LA-C522-rubeo",
+  "pathSegment": "LA-PATH-522-PALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-522-PALL",
+      "order": 2
+    }
+  ]
+}

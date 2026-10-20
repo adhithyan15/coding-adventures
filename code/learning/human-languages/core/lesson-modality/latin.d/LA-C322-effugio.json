@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C322-effugio",
+    "language": "latin",
+    "chapter": 322,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:923628be91b9fdd6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:4e751548a1b7d55f",
+  "lessonIds": [
+    "LA-C437-rudens",
+    "LA-C437-funis",
+    "LA-C437-armamenta",
+    "LA-C437-gubernaculum",
+    "LA-C437-remigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch437.txt",
+  "json": "latin/narration/ch437.json",
+  "textHash": "fnv1a64:8e512d31ab5de6eb",
+  "jsonHash": "fnv1a64:31ef29e9be3e748f",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C524-contagio",
+  "pathSegment": "LA-PATH-524-PEST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-524-PEST",
+      "order": 2
+    }
+  ]
+}

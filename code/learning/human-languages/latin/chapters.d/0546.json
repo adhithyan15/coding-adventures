@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "At the theatre",
+  "label": "ch:la-at-the-theatre",
+  "canDo": "I can describe a Roman theatre.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C546-pantomimus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can describe a Roman theatre.",
+    "assesses": [
+      "LA-LEX-C546-CAVE-03",
+      "LA-LEX-C546-CAVE-04",
+      "LA-LEX-C546-CAVE-05"
+    ]
+  }
+}

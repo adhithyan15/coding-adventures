@@ -10,6 +10,23 @@
 use std::path::PathBuf;
 use std::process::Command;
 
+/// A scratch-name nonce that is unique for every call in this process.
+///
+/// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+/// so two tests running in parallel threads could read the same "nanos" and
+/// be handed the same directory, each seeing the other's files (this made
+/// `compose_fixtures` fail about one run in five). The counter makes every
+/// call distinct; the clock keeps names from a previous run apart.
+fn unique_nonce() -> String {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock after epoch")
+        .as_nanos();
+    format!("{nanos}-{n}")
+}
+
 fn workspace_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
@@ -74,10 +91,7 @@ fn the_emitted_swiftui_host_answers_effects() {
     let project = std::env::temp_dir().join(format!(
         "mosaic-swift-effects-{}-{}",
         std::process::id(),
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .expect("system clock after epoch")
-            .as_nanos()
+        unique_nonce()
     ));
     std::fs::create_dir(&project).expect("create the driver project");
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C326-pupillus",
+    "language": "latin",
+    "chapter": 326,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43c79a19e875c3ea"
+  },
+  "findings": []
+}

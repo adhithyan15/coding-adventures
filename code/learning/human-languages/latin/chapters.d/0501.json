@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Moods and feelings",
+  "label": "ch:la-moods-and-feelings",
+  "canDo": "I can describe moods and how things affect me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C501-securus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can describe moods and how things affect me.",
+    "assesses": [
+      "LA-LEX-C501-AFFE-03",
+      "LA-LEX-C501-AFFE-04",
+      "LA-LEX-C501-AFFE-05"
+    ]
+  }
+}

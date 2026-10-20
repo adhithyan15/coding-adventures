@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:a1dc7b470f614430",
+  "lessonIds": [
+    "LA-C553-vestibulum",
+    "LA-C553-pessulus",
+    "LA-C553-limen",
+    "LA-C553-cardo",
+    "LA-C553-penus"
+  ],
+  "tex": "latin/book/chapters/ch553-doors-and-stores.tex"
+}

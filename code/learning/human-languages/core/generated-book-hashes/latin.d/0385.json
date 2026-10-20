@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:a5e01e6e7a8a40fd",
+  "lessonIds": [
+    "LA-C385-rego",
+    "LA-C385-guberno",
+    "LA-C385-administro",
+    "LA-C385-imperium",
+    "LA-C385-princeps"
+  ],
+  "tex": "latin/book/chapters/ch385-ruling-and-governing.tex"
+}

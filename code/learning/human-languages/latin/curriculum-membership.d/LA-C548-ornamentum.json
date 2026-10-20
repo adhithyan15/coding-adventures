@@ -1,0 +1,11 @@
+{
+  "id": "LA-C548-ornamentum",
+  "pathSegment": "LA-PATH-548-VENU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-548-VENU",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C387-seditio",
+  "pathSegment": "LA-PATH-387-SEDITIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-387-SEDITIO",
+      "order": 1
+    }
+  ]
+}

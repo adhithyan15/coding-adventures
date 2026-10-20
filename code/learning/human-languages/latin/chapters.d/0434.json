@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Stable, Manger, Hay, To neigh, Muleteer",
+  "label": "ch:la-stable-manger-hay-to-neigh-muleteer",
+  "canDo": "I can talk about the stable at an inn: the stable, the manger, hay, horses neighing and the muleteer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C434-mulio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about the stable at an inn: the stable, the manger, hay, horses neighing and the muleteer.",
+    "assesses": [
+      "LA-LEX-C434-STABULUM-03",
+      "LA-LEX-C434-STABULUM-04",
+      "LA-LEX-C434-STABULUM-05"
+    ]
+  }
+}

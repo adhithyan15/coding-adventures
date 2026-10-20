@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:35ddd6156d7d6311",
+  "lessonIds": [
+    "LA-C404-rhetor",
+    "LA-C404-rhetorica",
+    "LA-C404-dialectica",
+    "LA-C404-geometria",
+    "LA-C404-elementum",
+    "LA-R404-review-397-404"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch404.txt",
+  "json": "latin/narration/ch404.json",
+  "textHash": "fnv1a64:2701f0bef2a8f646",
+  "jsonHash": "fnv1a64:2e4dfe4cc919da86",
+  "findings": []
+}

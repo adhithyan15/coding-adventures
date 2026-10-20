@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Ruling and Governing",
+  "label": "ch:la-ruling-and-governing",
+  "canDo": "I can say that someone rules, steers or runs a state, and talk about supreme power and the first man of the state.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C385-princeps",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say that someone rules, steers or runs a state, and talk about supreme power and the first man of the state.",
+    "assesses": [
+      "LA-LEX-C385-REGO-03",
+      "LA-LEX-C385-REGO-04",
+      "LA-LEX-C385-REGO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Ship's rope, Rope, Tackle, Rudder, To row",
+  "label": "ch:la-ship-s-rope-rope-tackle-rudder-to-row",
+  "canDo": "I can talk about ropes, steering and rowing: a ship's rope, a rope, the tackle, the rudder, and rowing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C437-remigo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about ropes, steering and rowing: a ship's rope, a rope, the tackle, the rudder, and rowing.",
+    "assesses": [
+      "LA-LEX-C437-RUDENS-03",
+      "LA-LEX-C437-RUDENS-04",
+      "LA-LEX-C437-RUDENS-05"
+    ]
+  }
+}

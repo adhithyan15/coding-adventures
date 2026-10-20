@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:f5fbd11b3e1611f8",
+  "lessonIds": [
+    "LA-C377-fullo",
+    "LA-C377-aurifex",
+    "LA-C377-lignarius",
+    "LA-C377-caementarius",
+    "LA-C377-statuarius"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch377.txt",
+  "json": "latin/narration/ch377.json",
+  "textHash": "fnv1a64:90393c6231638a83",
+  "jsonHash": "fnv1a64:c581d3703284dd2f",
+  "findings": []
+}

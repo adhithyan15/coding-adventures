@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Granting and Denying",
+  "label": "ch:la-granting-and-denying",
+  "canDo": "I can grant a point, deny or refuse something, own up to a fault, raise a reproach and keep insisting.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C363-contendo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can grant a point, deny or refuse something, own up to a fault, raise a reproach and keep insisting.",
+    "assesses": [
+      "LA-LEX-C363-CONCEDO-03",
+      "LA-LEX-C363-CONCEDO-04",
+      "LA-LEX-C363-CONCEDO-05"
+    ]
+  }
+}

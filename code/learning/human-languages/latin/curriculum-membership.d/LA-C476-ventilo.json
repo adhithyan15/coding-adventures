@@ -1,0 +1,11 @@
+{
+  "id": "LA-C476-ventilo",
+  "pathSegment": "LA-PATH-476-TRITURO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-476-TRITURO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C348-vaticinor",
+  "pathSegment": "LA-PATH-348-ORACULUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-348-ORACULUM",
+      "order": 4
+    }
+  ]
+}

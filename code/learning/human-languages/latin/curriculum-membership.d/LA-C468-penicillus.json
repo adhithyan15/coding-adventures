@@ -1,0 +1,11 @@
+{
+  "id": "LA-C468-penicillus",
+  "pathSegment": "LA-PATH-468-TINGO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-468-TINGO",
+      "order": 4
+    }
+  ]
+}

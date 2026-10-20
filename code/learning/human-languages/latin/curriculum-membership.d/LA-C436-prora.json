@@ -1,0 +1,11 @@
+{
+  "id": "LA-C436-prora",
+  "pathSegment": "LA-PATH-436-PUPPIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-436-PUPPIS",
+      "order": 1
+    }
+  ]
+}

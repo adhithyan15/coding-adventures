@@ -1,0 +1,11 @@
+{
+  "id": "LA-C334-immolo",
+  "pathSegment": "LA-PATH-334-SACERDOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-334-SACERDOS",
+      "order": 2
+    }
+  ]
+}

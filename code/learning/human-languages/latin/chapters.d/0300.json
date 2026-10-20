@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Tabellārius et praecō",
+  "label": "ch:la-tabellarius-et-praeco",
+  "canDo": "I can talk about how news travelled: the letter-carrier, the herald, the instructions, the embassy and bringing word back.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C300-renuntio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can talk about how news travelled: the letter-carrier, the herald, the instructions, the embassy and bringing word back.",
+    "assesses": [
+      "LA-LEX-C300-TABELLARIUS-03",
+      "LA-LEX-C300-TABELLARIUS-04",
+      "LA-LEX-C300-TABELLARIUS-05"
+    ]
+  }
+}

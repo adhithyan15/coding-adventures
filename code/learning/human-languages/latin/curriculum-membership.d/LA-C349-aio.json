@@ -1,0 +1,11 @@
+{
+  "id": "LA-C349-aio",
+  "pathSegment": "LA-PATH-349-FABULOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-349-FABULOR",
+      "order": 1
+    }
+  ]
+}

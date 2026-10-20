@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Free time",
+  "label": "ch:la-free-time",
+  "canDo": "I can talk about leisure and holidays.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C538-remissio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about leisure and holidays.",
+    "assesses": [
+      "LA-LEX-C538-OTIU-03",
+      "LA-LEX-C538-OTIU-04",
+      "LA-LEX-C538-OTIU-05"
+    ]
+  }
+}

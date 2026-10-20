@@ -1,0 +1,11 @@
+{
+  "id": "LA-C314-praecipito",
+  "pathSegment": "LA-PATH-314-OFFENDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-314-OFFENDO",
+      "order": 2
+    }
+  ]
+}

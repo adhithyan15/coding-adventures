@@ -1,0 +1,11 @@
+{
+  "id": "LA-C304-claustrum",
+  "pathSegment": "LA-PATH-304-COMPREHENDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-304-COMPREHENDO",
+      "order": 1
+    }
+  ]
+}

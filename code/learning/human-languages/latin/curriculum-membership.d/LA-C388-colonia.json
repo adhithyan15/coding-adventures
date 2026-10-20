@@ -1,0 +1,11 @@
+{
+  "id": "LA-C388-colonia",
+  "pathSegment": "LA-PATH-388-MUNICEPS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-388-MUNICEPS",
+      "order": 2
+    }
+  ]
+}

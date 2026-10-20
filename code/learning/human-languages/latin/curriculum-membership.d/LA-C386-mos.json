@@ -1,0 +1,11 @@
+{
+  "id": "LA-C386-mos",
+  "pathSegment": "LA-PATH-386-SOCIETAS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-386-SOCIETAS",
+      "order": 2
+    }
+  ]
+}

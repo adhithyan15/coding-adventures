@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 439,
+  "title": "To put in, To step out, To haul ashore, To launch, Navigable",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b47ed27d86e16ba",
+  "lessons": [
+    {
+      "id": "LA-C439-appello",
+      "sequence": 23420,
+      "title": "appellō, appellere — to put in (to land), to bring a ship to shore",
+      "headword": "appellō, appellere",
+      "romanization": "appellō, appellere",
+      "gloss": "to put in (to land), to bring a ship to shore",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d80cfdfa5336a4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to set sail, then the Latin for a ferryman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: appellō, appellere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appellō, appellere — \"to put in (to land), to bring a ship to shore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nautae nāvem ad lītus appellunt. The sailors bring the ship in to the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "appellō, appellere, appulī, appulsum, third conjugation. Do not mix it up with appellō, appellāre 'to call', a different verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appellō, appellere is built from ad- 'to' and pellō 'to drive, to push' (EtymDB; Lewis & Short): to drive a ship to land."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appellō, appellere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appellō, appellere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appellō, appellere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appellō, appellere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with appellō, appellere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *appellō, appellere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to set sail, then the Latin for a ferryman, then say appellō, appellere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to set sail, then the Latin for a ferryman, then say *appellō, appellere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does appellō, appellere mean? (\"To put in (to land), to bring a ship to shore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C439-egredior",
+      "sequence": 23430,
+      "title": "ēgredior, ēgredī — to step out, to go out; to land, to disembark",
+      "headword": "ēgredior, ēgredī",
+      "romanization": "ēgredior, ēgredī",
+      "gloss": "to step out, to go out; to land, to disembark",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab79f289ef9fc3a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a ferryman, then the Latin for to put in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ēgredior, ēgredī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēgredior, ēgredī — \"to step out, to go out; to land, to disembark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Viātōrēs ē nāve ēgrediuntur et ad caupōnam ambulant. The travellers get off the ship and walk to the inn."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: ēgredior, ēgredī, ēgressus sum. Ē nāve ēgredī, to disembark. English egress comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēgredior is built from ē(x)- 'out' and gradior 'to step' (EtymDB; Lewis & Short). English egress comes from its participle ēgressus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēgredior, ēgredī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēgredior, ēgredī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēgredior, ēgredī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēgredior, ēgredī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ēgredior, ēgredī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ēgredior, ēgredī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a ferryman, then the Latin for to put in, then say ēgredior, ēgredī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a ferryman, then the Latin for to put in, then say *ēgredior, ēgredī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ēgredior, ēgredī mean? (\"To step out, to go out; to land, to disembark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C439-subduco",
+      "sequence": 23440,
+      "title": "subdūcō, subdūcere — to haul ashore, to draw up (a ship); to take away",
+      "headword": "subdūcō, subdūcere",
+      "romanization": "subdūcō, subdūcere",
+      "gloss": "to haul ashore, to draw up (a ship); to take away",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6b78e022b6ba7e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to put in, then the Latin for to step out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: subdūcō, subdūcere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "subdūcō, subdūcere — \"to haul ashore, to draw up (a ship); to take away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hieme nautae nāvēs in lītus subdūcunt. In winter the sailors haul the ships up on the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "subdūcō, subdūcere, subdūxī, subductum. Ancient ships were pulled up on the beach for the winter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "subdūcō is built from sub- 'from under, up' and dūcō 'to lead, to draw' (EtymDB; Lewis & Short). English subduction comes from the noun subductiō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subdūcō, subdūcere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subdūcō, subdūcere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subdūcō, subdūcere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subdūcō, subdūcere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with subdūcō, subdūcere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *subdūcō, subdūcere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to put in, then the Latin for to step out, then say subdūcō, subdūcere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to put in, then the Latin for to step out, then say *subdūcō, subdūcere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does subdūcō, subdūcere mean? (\"To haul ashore, to draw up (a ship); to take away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C439-deduco",
+      "sequence": 23450,
+      "title": "dēdūcō, dēdūcere — to launch (a ship); to lead away, to escort",
+      "headword": "dēdūcō, dēdūcere",
+      "romanization": "dēdūcō, dēdūcere",
+      "gloss": "to launch (a ship); to lead away, to escort",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2978fce4124153e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to step out, then the Latin for to haul ashore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēdūcō, dēdūcere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēdūcō, dēdūcere — \"to launch (a ship); to lead away, to escort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vēre nautae nāvēs in mare dēdūcunt. In spring the sailors launch the ships into the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "dēdūcō, dēdūcere, dēdūxī, dēductum. The opposite of subdūcō. English deduce and deduct come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēdūcō is built from dē- 'down, away' and dūcō 'to lead' (EtymDB; Lewis & Short): to draw a ship down into the water. English deduce and deduct come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēdūcō, dēdūcere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēdūcō, dēdūcere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēdūcō, dēdūcere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēdūcō, dēdūcere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēdūcō, dēdūcere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēdūcō, dēdūcere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to step out, then the Latin for to haul ashore, then say dēdūcō, dēdūcere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to step out, then the Latin for to haul ashore, then say *dēdūcō, dēdūcere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēdūcō, dēdūcere mean? (\"To launch (a ship); to lead away, to escort\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C439-navigabilis",
+      "sequence": 23460,
+      "title": "nāvigābilis, nāvigābile — navigable",
+      "headword": "nāvigābilis, nāvigābile",
+      "romanization": "nāvigābilis, nāvigābile",
+      "gloss": "navigable",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9efc78707bc655f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to haul ashore, then the Latin for to launch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nāvigābilis, nāvigābile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāvigābilis, nāvigābile — \"navigable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Flūmen magnum et altum est, itaque nāvigābile. The river is big and deep, and so it is navigable."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of two endings, from nāvigō 'to sail' with -bilis 'that can be'. English navigable comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāvigābilis is built on nāvigō 'to sail' with the suffix -bilis 'that can be' (Lewis & Short). English navigable comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvigābilis, nāvigābile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvigābilis, nāvigābile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāvigābilis, nāvigābile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāvigābilis, nāvigābile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nāvigābilis, nāvigābile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nāvigābilis, nāvigābile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to haul ashore, then the Latin for to launch, then say nāvigābilis, nāvigābile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to haul ashore, then the Latin for to launch, then say *nāvigābilis, nāvigābile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nāvigābilis, nāvigābile mean? (\"Navigable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

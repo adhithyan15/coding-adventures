@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C293-sensim",
+    "language": "latin",
+    "chapter": 293,
+    "sequence": 15910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f3ef594b27e9831"
+  },
+  "findings": []
+}

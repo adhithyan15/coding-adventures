@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 469,
+  "title": "Anvil, Bellows, Forge, Blacksmith, To hammer",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2f239645ae4086fe",
+  "lessons": [
+    {
+      "id": "LA-C469-incus",
+      "sequence": 24950,
+      "title": "incūs, incūdis — an anvil",
+      "headword": "incūs, incūdis",
+      "romanization": "incūs, incūdis",
+      "gloss": "an anvil",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62a23031cad81dfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a paint, then the Latin for a paintbrush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: incūs, incūdis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "incūs, incūdis — \"an anvil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Faber ferrum calidum in incūde pōnit. The smith puts the hot iron on the anvil."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: incūs, incūdis f. Ad incūdem redīre, to go back to the anvil, to rework a piece of writing. English incus is a bone of the ear, named for its shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "incūs is built on incūdō 'to forge on' (EtymDB; Lewis & Short), from in 'on' and cūdō 'to strike, to hammer': the block that iron is struck on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "incūs, incūdis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *incūs, incūdis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "incūs, incūdis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *incūs, incūdis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with incūs, incūdis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *incūs, incūdis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a paint, then the Latin for a paintbrush, then say incūs, incūdis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a paint, then the Latin for a paintbrush, then say *incūs, incūdis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does incūs, incūdis mean? (\"An anvil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C469-follis",
+      "sequence": 24960,
+      "title": "follis, follis — a pair of bellows; a leather bag",
+      "headword": "follis, follis",
+      "romanization": "follis, follis",
+      "gloss": "a pair of bellows; a leather bag",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af9c3cb6e28f3ca7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a paintbrush, then the Latin for an anvil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: follis, follis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "follis, follis — \"a pair of bellows; a leather bag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servus folle ignem auget. The slave makes the fire bigger with the bellows."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: follis, follis m. Also a blown-up leather ball and a money bag. English fool comes from it through French, from 'windbag'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "follis is inherited from PIE bʰolǵʰnis (EtymDB); Lewis & Short compare flō 'to blow'. English fool comes from it through Old French fol, from the sense 'windbag'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "follis, follis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *follis, follis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "follis, follis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *follis, follis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with follis, follis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *follis, follis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a paintbrush, then the Latin for an anvil, then say follis, follis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a paintbrush, then the Latin for an anvil, then say *follis, follis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does follis, follis mean? (\"A pair of bellows; a leather bag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C469-caminus",
+      "sequence": 24970,
+      "title": "camīnus, camīnī — a forge, a furnace; a fireplace",
+      "headword": "camīnus, camīnī",
+      "romanization": "camīnus, camīnī",
+      "gloss": "a forge, a furnace; a fireplace",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2f658d779996091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an anvil, then the Latin for a pair of bellows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: camīnus, camīnī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "camīnus, camīnī — \"a forge, a furnace; a fireplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In camīnō ignis magnus ardet. A big fire burns in the forge."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: camīnus, camīnī m. A smith's forge, or a stove for heating a room. English chimney comes from a word built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "camīnus was borrowed from Greek kamīnos 'furnace' (EtymDB; Lewis & Short). English chimney comes, through French, from Late Latin camīnāta, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camīnus, camīnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camīnus, camīnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camīnus, camīnī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camīnus, camīnī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with camīnus, camīnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *camīnus, camīnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an anvil, then the Latin for a pair of bellows, then say camīnus, camīnī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an anvil, then the Latin for a pair of bellows, then say *camīnus, camīnī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does camīnus, camīnī mean? (\"A forge, a furnace; a fireplace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C469-ferrarius",
+      "sequence": 24980,
+      "title": "ferrārius, ferrāriī — a blacksmith, an ironworker",
+      "headword": "ferrārius, ferrāriī",
+      "romanization": "ferrārius, ferrāriī",
+      "gloss": "a blacksmith, an ironworker",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6d43e14be2ed1e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a pair of bellows, then the Latin for a forge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ferrārius, ferrāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ferrārius, ferrāriī — \"a blacksmith, an ironworker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ferrārius soleās ferreās equīs facit. The blacksmith makes iron shoes for the horses."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: ferrārius, ferrāriī m., short for faber ferrārius. English farrier comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ferrārius is built on ferrum 'iron' with the suffix -ārius (EtymDB; Lewis & Short). English farrier, a smith who shoes horses, comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ferrārius, ferrāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ferrārius, ferrāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ferrārius, ferrāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ferrārius, ferrāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ferrārius, ferrāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ferrārius, ferrāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a pair of bellows, then the Latin for a forge, then say ferrārius, ferrāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a pair of bellows, then the Latin for a forge, then say *ferrārius, ferrāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ferrārius, ferrāriī mean? (\"A blacksmith, an ironworker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C469-cudo",
+      "sequence": 24990,
+      "title": "cūdō, cūdere — to hammer, to forge; to strike (coins)",
+      "headword": "cūdō, cūdere",
+      "romanization": "cūdō, cūdere",
+      "gloss": "to hammer, to forge; to strike (coins)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:313206c8f4342265",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a forge, then the Latin for a blacksmith."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cūdō, cūdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cūdō, cūdere — \"to hammer, to forge; to strike (coins)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Faber ferrum in incūde cūdit. The smith hammers the iron on the anvil."
+            },
+            {
+              "kind": "speech",
+              "text": "cūdō, cūdere, cūdī, cūsum. Nummōs cūdere, to strike coins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cūdō is inherited from Proto-Italic kūdō 'to stamp, to pound', from PIE kewh₂- 'to strike, to hew' (EtymDB). English hew is a distant Germanic cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūdō, cūdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūdō, cūdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūdō, cūdere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūdō, cūdere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cūdō, cūdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cūdō, cūdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a forge, then the Latin for a blacksmith, then say cūdō, cūdere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a forge, then the Latin for a blacksmith, then say *cūdō, cūdere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cūdō, cūdere mean? (\"To hammer, to forge; to strike (coins)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:1c14d855c80ebc92",
+  "lessonIds": [
+    "LA-C294-identidem",
+    "LA-C294-subinde",
+    "LA-C294-crebro",
+    "LA-C294-plerumque",
+    "LA-C294-quotiens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch294.txt",
+  "json": "latin/narration/ch294.json",
+  "textHash": "fnv1a64:74a5cb021637bc5d",
+  "jsonHash": "fnv1a64:e9c0e23ac12e6d6c",
+  "findings": []
+}

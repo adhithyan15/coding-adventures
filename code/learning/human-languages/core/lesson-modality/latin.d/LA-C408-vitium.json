@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C408-vitium",
+    "language": "latin",
+    "chapter": 408,
+    "sequence": 21820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66ed024487043c41"
+  },
+  "findings": []
+}

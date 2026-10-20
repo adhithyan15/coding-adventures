@@ -1,0 +1,11 @@
+{
+  "id": "LA-C487-auster",
+  "pathSegment": "LA-PATH-487-AQUILO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-487-AQUILO",
+      "order": 1
+    }
+  ]
+}

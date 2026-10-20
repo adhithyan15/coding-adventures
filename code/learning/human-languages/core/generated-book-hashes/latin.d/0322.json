@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:ee3545083ca29448",
+  "lessonIds": [
+    "LA-C322-fuga",
+    "LA-C322-effugio",
+    "LA-C322-evado",
+    "LA-C322-pereo",
+    "LA-C322-custos",
+    "LA-R322-review-315-322"
+  ],
+  "tex": "latin/book/chapters/ch322-fuga.tex"
+}

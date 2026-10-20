@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 482,
+  "title": "River, Torrent, Confluence, To flow, To swim across",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3f1e744154f6f8f5",
+  "lessons": [
+    {
+      "id": "LA-C482-amnis",
+      "sequence": 25620,
+      "title": "amnis, amnis — a river, a broad stream",
+      "headword": "amnis, amnis",
+      "romanization": "amnis, amnis",
+      "gloss": "a river, a broad stream",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc61086c1f7f44e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for rough, then the Latin for to slide down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: amnis, amnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amnis, amnis — \"a river, a broad stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amnis magnus et altus per campōs it. A big, deep river runs through the plains."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: amnis, amnis m. A big, deep river, a word more of poetry and history than flūmen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amnis is inherited from Old Latin abnis, from PIE h₂ep- 'water' (EtymDB). Lewis & Short also derive it from the Sanskrit word for water."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amnis, amnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amnis, amnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amnis, amnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amnis, amnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with amnis, amnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *amnis, amnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for rough, then the Latin for to slide down, then say amnis, amnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for rough, then the Latin for to slide down, then say *amnis, amnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does amnis, amnis mean? (\"A river, a broad stream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C482-torrens",
+      "sequence": 25630,
+      "title": "torrēns, torrentis — a torrent, a rushing stream",
+      "headword": "torrēns, torrentis",
+      "romanization": "torrēns, torrentis",
+      "gloss": "a torrent, a rushing stream",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:084ba938c9e64abe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to slide down, then the Latin for a river."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: torrēns, torrentis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torrēns, torrentis — \"a torrent, a rushing stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post pluviam torrēns ē monte currit. After the rain a torrent rushes down from the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: torrēns, torrentis m. The present participle of torreō 'to burn', used as a noun: a stream that is fierce. English torrent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torrēns is the present participle of torreō 'to parch, to burn' (EtymDB; Lewis & Short), used as a noun for a raging, boiling stream. English torrent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torrēns, torrentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torrēns, torrentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torrēns, torrentis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torrēns, torrentis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with torrēns, torrentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *torrēns, torrentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to slide down, then the Latin for a river, then say torrēns, torrentis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to slide down, then the Latin for a river, then say *torrēns, torrentis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does torrēns, torrentis mean? (\"A torrent, a rushing stream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C482-confluens",
+      "sequence": 25640,
+      "title": "cōnfluēns, cōnfluentis — a confluence, the place where two rivers meet",
+      "headword": "cōnfluēns, cōnfluentis",
+      "romanization": "cōnfluēns, cōnfluentis",
+      "gloss": "a confluence, the place where two rivers meet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5902fa01ed12e474",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a river, then the Latin for a torrent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnfluēns, cōnfluentis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnfluēns, cōnfluentis — \"a confluence, the place where two rivers meet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ad cōnfluentem duōrum flūminum oppidum est. At the confluence of two rivers there is a town."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: cōnfluēns, cōnfluentis m., also plural cōnfluentēs. Many towns stand at such a place. English confluence comes from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnfluēns is the present participle of cōnfluō 'to flow together', from con- and fluō 'to flow' (Lewis & Short). English confluence comes from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnfluēns, cōnfluentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnfluēns, cōnfluentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnfluēns, cōnfluentis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnfluēns, cōnfluentis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnfluēns, cōnfluentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnfluēns, cōnfluentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a river, then the Latin for a torrent, then say cōnfluēns, cōnfluentis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a river, then the Latin for a torrent, then say *cōnfluēns, cōnfluentis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnfluēns, cōnfluentis mean? (\"A confluence, the place where two rivers meet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C482-fluo",
+      "sequence": 25650,
+      "title": "fluō, fluere — to flow, to run (of water)",
+      "headword": "fluō, fluere",
+      "romanization": "fluō, fluere",
+      "gloss": "to flow, to run (of water)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33d1143405b8366a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a torrent, then the Latin for a confluence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fluō, fluere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fluō, fluere — \"to flow, to run (of water)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rīvus per prātum lentē fluit. A stream flows slowly through the meadow."
+            },
+            {
+              "kind": "speech",
+              "text": "fluō, fluere, flūxī, flūxum. English fluid, fluent and flux come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fluō is inherited from PIE bʰlew- 'to swell, to flow' (EtymDB). English fluid, fluent, flux and influence come from it (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fluō, fluere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fluō, fluere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fluō, fluere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fluō, fluere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fluō, fluere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fluō, fluere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a torrent, then the Latin for a confluence, then say fluō, fluere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a torrent, then the Latin for a confluence, then say *fluō, fluere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fluō, fluere mean? (\"To flow, to run (of water)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C482-transnato",
+      "sequence": 25660,
+      "title": "trānsnatō, trānsnatāre — to swim across",
+      "headword": "trānsnatō, trānsnatāre",
+      "romanization": "trānsnatō, trānsnatāre",
+      "gloss": "to swim across",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12a0c6bae62f54d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a confluence, then the Latin for to flow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: trānsnatō, trānsnatāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trānsnatō, trānsnatāre — \"to swim across\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs flūmen trānsnatant, quod pōns nūllus est. The soldiers swim across the river, because there is no bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "trānsnatō, trānsnatāre, trānsnatāvī, also trānatō, with an accusative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trānsnatō is built from trāns 'across' and natō 'to swim' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trānsnatō, trānsnatāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trānsnatō, trānsnatāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trānsnatō, trānsnatāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trānsnatō, trānsnatāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with trānsnatō, trānsnatāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *trānsnatō, trānsnatāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a confluence, then the Latin for to flow, then say trānsnatō, trānsnatāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a confluence, then the Latin for to flow, then say *trānsnatō, trānsnatāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does trānsnatō, trānsnatāre mean? (\"To swim across\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

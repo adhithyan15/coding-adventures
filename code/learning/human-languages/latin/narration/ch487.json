@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 487,
+  "title": "North wind, South wind, West wind, To blow through, Clear weather",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:596198e4329c2212",
+  "lessons": [
+    {
+      "id": "LA-C487-aquilo",
+      "sequence": 25880,
+      "title": "aquilō, aquilōnis — the north wind; the north",
+      "headword": "aquilō, aquilōnis",
+      "romanization": "aquilō, aquilōnis",
+      "gloss": "the north wind; the north",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e09ce9ac3bda5d82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to be stiff with cold, then the Latin for to feel cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aquilō, aquilōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aquilō, aquilōnis — \"the north wind; the north\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hieme aquilō ventus frīgidus est. In winter the north wind is a cold wind."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: aquilō, aquilōnis m. A cold, stormy wind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of aquilō is not settled. Lewis & Short suggest aqua 'water', for its rain, or aquilus 'dark', for its storm clouds; EtymDB gives no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aquilō, aquilōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aquilō, aquilōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aquilō, aquilōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aquilō, aquilōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aquilō, aquilōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aquilō, aquilōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to be stiff with cold, then the Latin for to feel cold, then say aquilō, aquilōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to be stiff with cold, then the Latin for to feel cold, then say *aquilō, aquilōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aquilō, aquilōnis mean? (\"The north wind; the north\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C487-auster",
+      "sequence": 25890,
+      "title": "auster, austrī — the south wind; the south",
+      "headword": "auster, austrī",
+      "romanization": "auster, austrī",
+      "gloss": "the south wind; the south",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47f979d0dcfb6de1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to feel cold, then the Latin for the north wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: auster, austrī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "auster, austrī — \"the south wind; the south\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Auster calidus nūbēs et pluviam fert. The warm south wind brings clouds and rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: auster, austrī m. English austral comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "auster is inherited; EtymDB lists English east and Latin aurōra 'dawn' as cousins, while Lewis & Short derive it from a root meaning 'to burn', the hot wind. English austral comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auster, austrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auster, austrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auster, austrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auster, austrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with auster, austrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *auster, austrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to feel cold, then the Latin for the north wind, then say auster, austrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to feel cold, then the Latin for the north wind, then say *auster, austrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does auster, austrī mean? (\"The south wind; the south\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C487-favonius",
+      "sequence": 25900,
+      "title": "favōnius, favōniī — the west wind (of spring)",
+      "headword": "favōnius, favōniī",
+      "romanization": "favōnius, favōniī",
+      "gloss": "the west wind (of spring)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97ac4caaa654f300",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the north wind, then the Latin for the south wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: favōnius, favōniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "favōnius, favōniī — \"the west wind (of spring)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vēre favōnius venit, et flōrēs aperiuntur. In spring the west wind comes, and the flowers open."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: favōnius, favōniī m. The mild wind that brings spring."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "favōnius is built on faveō 'to be kind, to favour' (EtymDB; Lewis & Short): the kindly wind of spring. The Alpine wind name Föhn is usually traced to it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "favōnius, favōniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *favōnius, favōniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "favōnius, favōniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *favōnius, favōniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with favōnius, favōniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *favōnius, favōniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the north wind, then the Latin for the south wind, then say favōnius, favōniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the north wind, then the Latin for the south wind, then say *favōnius, favōniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does favōnius, favōniī mean? (\"The west wind (of spring)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C487-perflo",
+      "sequence": 25910,
+      "title": "perflō, perflāre — to blow through, to blow across",
+      "headword": "perflō, perflāre",
+      "romanization": "perflō, perflāre",
+      "gloss": "to blow through, to blow across",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92cd8fbbfcf302fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the south wind, then the Latin for the west wind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: perflō, perflāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perflō, perflāre — \"to blow through, to blow across\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ventus magnus agrōs perflat, et arborēs moventur. A strong wind blows across the fields, and the trees move."
+            },
+            {
+              "kind": "speech",
+              "text": "perflō, perflāre, perflāvī, perflātum, with an accusative of the place. The simple verb flō 'to blow' gives English inflate through īnflāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perflō is built from per 'through' and flō 'to blow' (Lewis & Short). flō is inherited, and EtymDB lists English blow as a cousin; English inflate and flatulent come from flō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perflō, perflāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perflō, perflāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perflō, perflāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perflō, perflāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with perflō, perflāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *perflō, perflāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the south wind, then the Latin for the west wind, then say perflō, perflāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the south wind, then the Latin for the west wind, then say *perflō, perflāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does perflō, perflāre mean? (\"To blow through, to blow across\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C487-serenitas",
+      "sequence": 25920,
+      "title": "serēnitās, serēnitātis — clear weather, fair weather; calm",
+      "headword": "serēnitās, serēnitātis",
+      "romanization": "serēnitās, serēnitātis",
+      "gloss": "clear weather, fair weather; calm",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:347a258b6633f84e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the west wind, then the Latin for to blow through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: serēnitās, serēnitātis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "serēnitās, serēnitātis — \"clear weather, fair weather; calm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post ventum serēnitās est, et caelum caeruleum est. After the wind the weather is clear, and the sky is blue."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: serēnitās, serēnitātis f., from serēnus 'clear'. English serenity comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "serēnitās is built on serēnus 'clear, cloudless' with the suffix -itās (EtymDB; Lewis & Short). English serenity comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "serēnitās, serēnitātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *serēnitās, serēnitātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "serēnitās, serēnitātis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *serēnitās, serēnitātis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with serēnitās, serēnitātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *serēnitās, serēnitātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the west wind, then the Latin for to blow through, then say serēnitās, serēnitātis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the west wind, then the Latin for to blow through, then say *serēnitās, serēnitātis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does serēnitās, serēnitātis mean? (\"Clear weather, fair weather; calm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

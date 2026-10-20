@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:f778e6f98595b563",
+  "lessonIds": [
+    "LA-C390-condicio",
+    "LA-C390-sin",
+    "LA-C390-dummodo",
+    "LA-C390-modo",
+    "LA-C390-quamvis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch390.txt",
+  "json": "latin/narration/ch390.json",
+  "textHash": "fnv1a64:904aa822e96eb14b",
+  "jsonHash": "fnv1a64:355c360946bde184",
+  "findings": []
+}

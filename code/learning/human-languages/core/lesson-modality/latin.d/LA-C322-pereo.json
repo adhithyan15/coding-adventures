@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C322-pereo",
+    "language": "latin",
+    "chapter": 322,
+    "sequence": 17410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44f0797a16088074"
+  },
+  "findings": []
+}

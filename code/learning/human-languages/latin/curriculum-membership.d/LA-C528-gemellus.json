@@ -1,0 +1,11 @@
+{
+  "id": "LA-C528-gemellus",
+  "pathSegment": "LA-PATH-528-GENS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-528-GENS",
+      "order": 4
+    }
+  ]
+}

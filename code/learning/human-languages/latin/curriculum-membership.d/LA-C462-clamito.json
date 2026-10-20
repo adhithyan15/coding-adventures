@@ -1,0 +1,11 @@
+{
+  "id": "LA-C462-clamito",
+  "pathSegment": "LA-PATH-462-NUNDINOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-462-NUNDINOR",
+      "order": 1
+    }
+  ]
+}

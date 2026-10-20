@@ -35,7 +35,7 @@ bounded item after each verified merge.
 
 | Language | Rust lexer/parser | Lowering input | First missing piece |
 | --- | --- | --- | --- |
-| JavaScript | Yes, including a typed `javascript_ast::Program` bridge | Typed AST | Direct AST-to-IIR compiler |
+| JavaScript | Yes, including a typed `javascript_ast::Program` bridge (not on the IIR path) | Generic grammar tree (CST) since `javascript-iir-compiler` 0.3.0; typed AST before | Broader subset; LANG84 phases 6a/6b/6d/6e |
 | Python | Yes, versioned through 3.12 | Generic grammar tree | Direct tree-to-IIR compiler |
 | Ruby | Yes | Generic grammar tree | Direct tree-to-IIR compiler |
 | Perl | No Perl-language grammar, lexer, or parser in Rust | None | Define a bounded Perl grammar and parser first |
@@ -64,7 +64,10 @@ to that registry first.
 
 Create `code/packages/rust/javascript-iir-compiler` with `compile_source`
 and `compile_ast` APIs. Read the typed AST from `javascript-parser`; do not
-round-trip through Semantic IR. Compile JavaScript numeric literals as
+round-trip through Semantic IR. (Superseded by LANG84 phase 6c: since
+`javascript-iir-compiler` 0.3.0 the compiler reads the generic
+`GrammarASTNode` from `parse_javascript_cst_division_only` and `compile_ast`
+takes that tree; the emitted IIR and the errors are unchanged.) Compile JavaScript numeric literals as
 `Operand::Float` even when their spelling has no decimal point. The first
 accepted source subset is expression statements containing numeric literals,
 parentheses, unary minus, and binary `+`, `-`, `*`, `/`, plus

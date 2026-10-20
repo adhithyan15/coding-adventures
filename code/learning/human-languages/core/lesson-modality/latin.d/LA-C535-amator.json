@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C535-amator",
+    "language": "latin",
+    "chapter": 535,
+    "sequence": 28380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:315e3aaf66f2f968"
+  },
+  "findings": []
+}

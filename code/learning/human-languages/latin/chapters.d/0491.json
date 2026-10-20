@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Tears and sighs",
+  "label": "ch:la-tears-and-sighs",
+  "canDo": "I can describe weeping, groaning and sighing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C491-suspiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can describe weeping, groaning and sighing.",
+    "assesses": [
+      "LA-LEX-C491-LACR-03",
+      "LA-LEX-C491-LACR-04",
+      "LA-LEX-C491-LACR-05"
+    ]
+  }
+}

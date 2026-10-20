@@ -1,0 +1,11 @@
+{
+  "id": "LA-C509-audacia",
+  "pathSegment": "LA-PATH-509-FORT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-509-FORT",
+      "order": 1
+    }
+  ]
+}

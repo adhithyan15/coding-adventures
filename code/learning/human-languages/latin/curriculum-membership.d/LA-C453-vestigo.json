@@ -1,0 +1,11 @@
+{
+  "id": "LA-C453-vestigo",
+  "pathSegment": "LA-PATH-453-PERITUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-453-PERITUS",
+      "order": 4
+    }
+  ]
+}

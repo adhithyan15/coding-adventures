@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 531,
+  "title": "Jobs in a great house",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:845c042db2f7ddb8",
+  "lessons": [
+    {
+      "id": "LA-C531-atriensis",
+      "sequence": 28150,
+      "title": "ātriēnsis, ātriēnsis — a steward, house-manager",
+      "headword": "ātriēnsis, ātriēnsis",
+      "romanization": "ātriēnsis, ātriēnsis",
+      "gloss": "a steward, house-manager",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91cc83433c2512fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for of a slave, then the Latin for a footman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ātriēnsis, ātriēnsis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ātriēnsis, ātriēnsis — \"a steward, house-manager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ātriēnsis servīs labōrem dat. The steward gives the slaves their work."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, third declension, from ātrium: the slave in charge of the hall and the house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ātriēnsis is built on ātrium \"hall\" with -ēnsis (Lewis & Short; EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātriēnsis, ātriēnsis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātriēnsis, ātriēnsis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātriēnsis, ātriēnsis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātriēnsis, ātriēnsis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ātriēnsis, ātriēnsis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ātriēnsis, ātriēnsis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for of a slave, then the Latin for a footman, then say ātriēnsis, ātriēnsis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for of a slave, then the Latin for a footman, then say *ātriēnsis, ātriēnsis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ātriēnsis, ātriēnsis mean? (\"A steward, house-manager\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C531-ianitor",
+      "sequence": 28160,
+      "title": "iānitor, iānitōris — a doorkeeper",
+      "headword": "iānitor, iānitōris",
+      "romanization": "iānitor, iānitōris",
+      "gloss": "a doorkeeper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b88c82c493931f44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a footman, then the Latin for a steward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: iānitor, iānitōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iānitor, iānitōris — \"a doorkeeper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iānitor ad iānuam sedet et hospitēs salūtat. The doorkeeper sits by the door and greets the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, third declension, from iānua — door. English janitor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iānitor is built on iānua \"door\" with -tor (Lewis & Short; EtymDB). English janitor comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iānitor, iānitōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iānitor, iānitōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iānitor, iānitōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iānitor, iānitōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with iānitor, iānitōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *iānitor, iānitōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a footman, then the Latin for a steward, then say iānitor, iānitōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a footman, then the Latin for a steward, then say *iānitor, iānitōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does iānitor, iānitōris mean? (\"A doorkeeper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C531-ostiarius",
+      "sequence": 28170,
+      "title": "ostiārius, ostiāriī — a porter, doorman",
+      "headword": "ostiārius, ostiāriī",
+      "romanization": "ostiārius, ostiāriī",
+      "gloss": "a porter, doorman",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:397ff22dad4b9cf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a steward, then the Latin for a doorkeeper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ostiārius, ostiāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ostiārius, ostiāriī — \"a porter, doorman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ostiārius canem ad portam habet. The porter keeps a dog at the gate."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension, from ostium — door, entrance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ostiārius is built on ostium \"door, entrance\" with -ārius (Lewis & Short; EtymDB), and EtymDB relates ostium to ōs \"mouth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ostiārius, ostiāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ostiārius, ostiāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ostiārius, ostiāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ostiārius, ostiāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ostiārius, ostiāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ostiārius, ostiāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a steward, then the Latin for a doorkeeper, then say ostiārius, ostiāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a steward, then the Latin for a doorkeeper, then say *ostiārius, ostiāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ostiārius, ostiāriī mean? (\"A porter, doorman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C531-lecticarius",
+      "sequence": 28180,
+      "title": "lectīcārius, lectīcāriī — a litter-bearer",
+      "headword": "lectīcārius, lectīcāriī",
+      "romanization": "lectīcārius, lectīcāriī",
+      "gloss": "a litter-bearer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7477ec844002478",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a doorkeeper, then the Latin for a porter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lectīcārius, lectīcāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lectīcārius, lectīcāriī — \"a litter-bearer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sex lectīcāriī dominam per urbem portant. Six litter-bearers carry their mistress through the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension, from lectīca — a litter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lectīcārius is built on lectīca \"litter, sedan chair\" with -ārius (Lewis & Short); lectīca itself comes from lectus \"couch\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lectīcārius, lectīcāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lectīcārius, lectīcāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lectīcārius, lectīcāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lectīcārius, lectīcāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lectīcārius, lectīcāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lectīcārius, lectīcāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a doorkeeper, then the Latin for a porter, then say lectīcārius, lectīcāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a doorkeeper, then the Latin for a porter, then say *lectīcārius, lectīcāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lectīcārius, lectīcāriī mean? (\"A litter-bearer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C531-vilica",
+      "sequence": 28190,
+      "title": "vīlica, vīlicae — a farm housekeeper",
+      "headword": "vīlica, vīlicae",
+      "romanization": "vīlica, vīlicae",
+      "gloss": "a farm housekeeper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39bb1a52f26327d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a porter, then the Latin for a litter-bearer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vīlica, vīlicae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīlica, vīlicae — \"a farm housekeeper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vīlica cēnam familiae rūsticae parat. The farm housekeeper prepares dinner for the farm slaves."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension: the wife of the vīlicus, the farm manager. She ran the farm kitchen and stores."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīlica is the feminine of vīlicus \"farm manager\", built on vīlla \"country house, farm\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlica, vīlicae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlica, vīlicae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlica, vīlicae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlica, vīlicae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vīlica, vīlicae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vīlica, vīlicae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a porter, then the Latin for a litter-bearer, then say vīlica, vīlicae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a porter, then the Latin for a litter-bearer, then say *vīlica, vīlicae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vīlica, vīlicae mean? (\"A farm housekeeper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

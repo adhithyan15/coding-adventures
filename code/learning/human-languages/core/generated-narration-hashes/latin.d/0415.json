@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:66fb45ff6e1f7615",
+  "lessonIds": [
+    "LA-C415-castigo",
+    "LA-C415-relego",
+    "LA-C415-proscribo",
+    "LA-C415-flagellum",
+    "LA-C415-custodia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch415.txt",
+  "json": "latin/narration/ch415.json",
+  "textHash": "fnv1a64:de00ff4c6ffad821",
+  "jsonHash": "fnv1a64:a0e4ed26b5d2b98c",
+  "findings": []
+}

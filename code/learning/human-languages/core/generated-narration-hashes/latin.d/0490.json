@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:b7469576678c743a",
+  "lessonIds": [
+    "LA-C490-tristitia",
+    "LA-C490-maestitia",
+    "LA-C490-maereo",
+    "LA-C490-maeror",
+    "LA-C490-luctuosus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch490.txt",
+  "json": "latin/narration/ch490.json",
+  "textHash": "fnv1a64:6dc5638772925ae1",
+  "jsonHash": "fnv1a64:5ecec1fc7f0737f3",
+  "findings": []
+}

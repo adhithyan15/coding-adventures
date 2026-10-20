@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R422-review-final-422",
+    "language": "latin",
+    "chapter": 422,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1071bd94ce6da0b3"
+  },
+  "findings": []
+}

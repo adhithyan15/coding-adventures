@@ -1,0 +1,11 @@
+{
+  "id": "LA-C356-triclinium",
+  "pathSegment": "LA-PATH-356-APPONO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-356-APPONO",
+      "order": 2
+    }
+  ]
+}

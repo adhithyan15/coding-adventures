@@ -1,0 +1,20 @@
+{
+  "chapter": 289,
+  "title": "If",
+  "label": "ch:la-if",
+  "canDo": "I can make a real condition with sī and nisi, and say that something depends on something else.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-R289-if",
+    "kind": "production",
+    "summary": "Complete LA-R289-if: I can make a real condition with sī and nisi, and say that something depends on something else.",
+    "assesses": [
+      "LA-LEX-C289-SI-01",
+      "LA-GRAMMAR-C289-SI-REAL-01",
+      "LA-LEX-C289-PENDET-EX-01",
+      "LA-LEX-C289-IN-POTESTATE-02"
+    ]
+  }
+}

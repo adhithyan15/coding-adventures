@@ -1,0 +1,11 @@
+{
+  "id": "LA-C512-vitupero",
+  "pathSegment": "LA-PATH-512-GRAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-512-GRAT",
+      "order": 4
+    }
+  ]
+}

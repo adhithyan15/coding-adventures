@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 382,
+  "title": "Senators and People",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:862a2869bb421ce5",
+  "lessons": [
+    {
+      "id": "LA-C382-senator",
+      "sequence": 20480,
+      "title": "senātor, senātōris — a senator",
+      "headword": "senātor, senātōris",
+      "romanization": "senātor, senātōris",
+      "gloss": "a senator",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3daf9b4c4fd563e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a copyist, then the Latin for a land surveyor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: senātor, senātōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "senātor, senātōris — \"a senator\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senātōrēs in cūriā sedent. The senators sit in the senate house."
+            },
+            {
+              "kind": "speech",
+              "text": "senātor, senātōris m., a member of the senātus, the council of elders (senex, an old man)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "senātor is built on senātus \"the council of elders\" (EtymDB), which comes from senex \"an old man\" (Lewis & Short). English senator comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senātor, senātōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senātor, senātōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senātor, senātōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senātor, senātōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with senātor, senātōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *senātor, senātōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a copyist, then the Latin for a land surveyor, then say senātor, senātōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a copyist, then the Latin for a land surveyor, then say *senātor, senātōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does senātor, senātōris mean? (\"A senator\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C382-patricius",
+      "sequence": 20490,
+      "title": "patricius, patricia, patricium — patrician, of the old noble families",
+      "headword": "patricius, patricia, patricium",
+      "romanization": "patricius, patricia, patricium",
+      "gloss": "patrician, of the old noble families",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6041409c9b8ebb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a land surveyor, then the Latin for a senator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: patricius, patricia, patricium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patricius, patricia, patricium — \"patrician, of the old noble families\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Familia eius patricia et antīqua est. His family is patrician and ancient."
+            },
+            {
+              "kind": "speech",
+              "text": "patricius, patricia, patricium, built on patrēs, the fathers, an old name of the senators. English patrician."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patricius is built on patrēs \"the fathers\" (EtymDB; Lewis & Short), the plural of pater used of the first senators. English patrician comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patricius, patricia, patricium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patricius, patricia, patricium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patricius, patricia, patricium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patricius, patricia, patricium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with patricius, patricia, patricium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *patricius, patricia, patricium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a land surveyor, then the Latin for a senator, then say patricius, patricia, patricium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a land surveyor, then the Latin for a senator, then say *patricius, patricia, patricium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does patricius, patricia, patricium mean? (\"Patrician, of the old noble families\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C382-plebeius",
+      "sequence": 20500,
+      "title": "plēbēius, plēbēia, plēbēium — plebeian, of the common people",
+      "headword": "plēbēius, plēbēia, plēbēium",
+      "romanization": "plēbēius, plēbēia, plēbēium",
+      "gloss": "plebeian, of the common people",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b544a76fcb564363",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a senator, then the Latin for patrician."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: plēbēius, plēbēia, plēbēium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plēbēius, plēbēia, plēbēium — \"plebeian, of the common people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Prīmus cōnsul plēbēius ā populō laudātus est. The first plebeian consul was praised by the people."
+            },
+            {
+              "kind": "speech",
+              "text": "plēbēius, plēbēia, plēbēium, built on plēbs, the common people. English plebeian."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plēbēius is built on plēbs, plēbis \"the common people\" (EtymDB; Lewis & Short). English plebeian comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plēbēius, plēbēia, plēbēium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plēbēius, plēbēia, plēbēium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plēbēius, plēbēia, plēbēium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plēbēius, plēbēia, plēbēium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with plēbēius, plēbēia, plēbēium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *plēbēius, plēbēia, plēbēium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a senator, then the Latin for patrician, then say plēbēius, plēbēia, plēbēium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a senator, then the Latin for patrician, then say *plēbēius, plēbēia, plēbēium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does plēbēius, plēbēia, plēbēium mean? (\"Plebeian, of the common people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C382-nobilis",
+      "sequence": 20510,
+      "title": "nōbilis, nōbile — well known; noble",
+      "headword": "nōbilis, nōbile",
+      "romanization": "nōbilis, nōbile",
+      "gloss": "well known; noble",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2a4817ebc323a73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for patrician, then the Latin for plebeian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nōbilis, nōbile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nōbilis, nōbile — \"well known; noble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nōbilis vir est, sed pauper. He is a man of noble birth, but poor."
+            },
+            {
+              "kind": "speech",
+              "text": "nōbilis, nōbile: first known (it is built on nōscō, to get to know), then of a known family. The nōbilēs had a consul among their ancestors. English noble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nōbilis is built on nōscō, old gnōscō \"to get to know\" (EtymDB; Lewis & Short), with the ending -bilis: one who can be known. English noble comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōbilis, nōbile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōbilis, nōbile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōbilis, nōbile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōbilis, nōbile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nōbilis, nōbile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nōbilis, nōbile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for patrician, then the Latin for plebeian, then say nōbilis, nōbile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for patrician, then the Latin for plebeian, then say *nōbilis, nōbile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nōbilis, nōbile mean? (\"Well known; noble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C382-popularis",
+      "sequence": 20520,
+      "title": "populāris, populāre — of the people, popular; a fellow countryman",
+      "headword": "populāris, populāre",
+      "romanization": "populāris, populāre",
+      "gloss": "of the people, popular; a fellow countryman",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9084cc788e7c11ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for plebeian, then the Latin for well known."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: populāris, populāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "populāris, populāre — \"of the people, popular; a fellow countryman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ōrātor populāris plēbem ad sē trahēbat. The popular speaker drew the common people to himself."
+            },
+            {
+              "kind": "speech",
+              "text": "populāris, populāre. The populārēs were politicians who worked through the people's assemblies. As a noun, populāris is a fellow countryman. English popular."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "populāris is built on populus \"the people\" (EtymDB; Lewis & Short), with the ending -āris \"belonging to\". English popular comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "populāris, populāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *populāris, populāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "populāris, populāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *populāris, populāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with populāris, populāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *populāris, populāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for plebeian, then the Latin for well known, then say populāris, populāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for plebeian, then the Latin for well known, then say *populāris, populāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does populāris, populāre mean? (\"Of the people, popular; a fellow countryman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

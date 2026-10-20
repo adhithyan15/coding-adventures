@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:d6ad6791054e6702",
+  "lessonIds": [
+    "LA-C511-crudelitas",
+    "LA-C511-saevitia",
+    "LA-C511-laedo",
+    "LA-C511-mitigo",
+    "LA-C511-mansuetus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch511.txt",
+  "json": "latin/narration/ch511.json",
+  "textHash": "fnv1a64:bc94a87961fce4a3",
+  "jsonHash": "fnv1a64:678155bc5fbe4cfb",
+  "findings": []
+}

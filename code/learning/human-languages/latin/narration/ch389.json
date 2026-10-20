@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 389,
+  "title": "Duty and Freedom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6e9d6fb5a3c0593b",
+  "lessons": [
+    {
+      "id": "LA-C389-servitus",
+      "sequence": 20840,
+      "title": "servitūs, servitūtis — slavery, servitude",
+      "headword": "servitūs, servitūtis",
+      "romanization": "servitūs, servitūtis",
+      "gloss": "slavery, servitude",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff3aca84184b9fb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a companion, then the Latin for an association."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: servitūs, servitūtis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "servitūs, servitūtis — \"slavery, servitude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lībertās servitūte melior est. Freedom is better than slavery."
+            },
+            {
+              "kind": "speech",
+              "text": "servitūs, servitūtis f., built on servus, a slave. English servitude."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "servitūs is built on servus \"a slave\" (EtymDB; Lewis & Short), with the ending -tūs that makes a state."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "servitūs, servitūtis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *servitūs, servitūtis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "servitūs, servitūtis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *servitūs, servitūtis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with servitūs, servitūtis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *servitūs, servitūtis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a companion, then the Latin for an association, then say servitūs, servitūtis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a companion, then the Latin for an association, then say *servitūs, servitūtis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does servitūs, servitūtis mean? (\"Slavery, servitude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C389-manumitto",
+      "sequence": 20850,
+      "title": "manūmittō, manūmittere — to set free (a slave)",
+      "headword": "manūmittō, manūmittere",
+      "romanization": "manūmittō, manūmittere",
+      "gloss": "to set free (a slave)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf648b8831e6681b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an association, then the Latin for slavery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: manūmittō, manūmittere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manūmittō, manūmittere — \"to set free (a slave)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dominus servum fidēlem manūmīsit. The master freed his faithful slave."
+            },
+            {
+              "kind": "speech",
+              "text": "manūmittō, manūmittere, manūmīsī, manūmissum: manū from the hand + mittō, to let go. The freed slave became a lībertus. English manumit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manūmittō is built from manū \"from the hand\", the ablative of manus, and mittō \"to let go\" (Lewis & Short): to release from one's power. English manumit comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manūmittō, manūmittere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manūmittō, manūmittere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manūmittō, manūmittere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manūmittō, manūmittere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with manūmittō, manūmittere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *manūmittō, manūmittere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an association, then the Latin for slavery, then say manūmittō, manūmittere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an association, then the Latin for slavery, then say *manūmittō, manūmittere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does manūmittō, manūmittere mean? (\"To set free (a slave)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C389-pietas",
+      "sequence": 20860,
+      "title": "pietās, pietātis — dutifulness, devotion (to gods, family, country)",
+      "headword": "pietās, pietātis",
+      "romanization": "pietās, pietātis",
+      "gloss": "dutifulness, devotion (to gods, family, country)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4aa52c9b17dc62a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for slavery, then the Latin for to set free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pietās, pietātis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pietās, pietātis — \"dutifulness, devotion (to gods, family, country)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fīlius magnā pietāte patrem cūrābat. The son looked after his father with great devotion."
+            },
+            {
+              "kind": "speech",
+              "text": "pietās, pietātis f., built on pius, dutiful: the loyalty owed to gods, parents and country. English piety and pity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pietās is built on pius \"dutiful\" (EtymDB; Lewis & Short), with the ending -tās that makes a quality. English piety and pity both come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pietās, pietātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pietās, pietātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pietās, pietātis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pietās, pietātis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pietās, pietātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pietās, pietātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for slavery, then the Latin for to set free, then say pietās, pietātis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for slavery, then the Latin for to set free, then say *pietās, pietātis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pietās, pietātis mean? (\"Dutifulness, devotion (to gods, family, country)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C389-onus",
+      "sequence": 20870,
+      "title": "onus, oneris — a load, a burden",
+      "headword": "onus, oneris",
+      "romanization": "onus, oneris",
+      "gloss": "a load, a burden",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b93db65c3a6aaeb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to set free, then the Latin for dutifulness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: onus, oneris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "onus, oneris — \"a load, a burden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Asinus onus grave portat. The donkey carries a heavy load."
+            },
+            {
+              "kind": "speech",
+              "text": "onus, oneris n. A load on a back, and a burden of duty or tax. English onus and onerous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "onus is inherited from a Proto-Indo-European noun meaning \"a burden\" (EtymDB). English took it over as onus, and onerous comes from its adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "onus, oneris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *onus, oneris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "onus, oneris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *onus, oneris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with onus, oneris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *onus, oneris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to set free, then the Latin for dutifulness, then say onus, oneris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to set free, then the Latin for dutifulness, then say *onus, oneris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does onus, oneris mean? (\"A load, a burden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C389-obsequium",
+      "sequence": 20880,
+      "title": "obsequium, obsequiī — compliance, obedience",
+      "headword": "obsequium, obsequiī",
+      "romanization": "obsequium, obsequiī",
+      "gloss": "compliance, obedience",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc6540118872af54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for dutifulness, then the Latin for a load."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: obsequium, obsequiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obsequium, obsequiī — \"compliance, obedience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Obsequium amīcōs, vēritās odium parit. Giving way wins friends; truth breeds hatred."
+            },
+            {
+              "kind": "speech",
+              "text": "obsequium, obsequiī n., built on obsequor, to give way to someone. English obsequious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obsequium is built on obsequor \"to comply\" (EtymDB; Lewis & Short), from ob and sequor \"to follow\". English obsequious comes from its adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obsequium, obsequiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obsequium, obsequiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obsequium, obsequiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obsequium, obsequiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obsequium, obsequiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obsequium, obsequiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for dutifulness, then the Latin for a load, then say obsequium, obsequiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for dutifulness, then the Latin for a load, then say *obsequium, obsequiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does obsequium, obsequiī mean? (\"Compliance, obedience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

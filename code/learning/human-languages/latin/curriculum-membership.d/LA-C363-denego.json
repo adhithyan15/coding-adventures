@@ -1,0 +1,11 @@
+{
+  "id": "LA-C363-denego",
+  "pathSegment": "LA-PATH-363-CONCEDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-363-CONCEDO",
+      "order": 1
+    }
+  ]
+}

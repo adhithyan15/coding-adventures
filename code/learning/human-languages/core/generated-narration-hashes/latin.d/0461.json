@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:c17d4314557c55e3",
+  "lessonIds": [
+    "LA-C461-thermopolium",
+    "LA-C461-calda",
+    "LA-C461-poto",
+    "LA-C461-fumosus",
+    "LA-C461-immundus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch461.txt",
+  "json": "latin/narration/ch461.json",
+  "textHash": "fnv1a64:b3fe7af615c1f654",
+  "jsonHash": "fnv1a64:0bb8fe3982d5284b",
+  "findings": []
+}
