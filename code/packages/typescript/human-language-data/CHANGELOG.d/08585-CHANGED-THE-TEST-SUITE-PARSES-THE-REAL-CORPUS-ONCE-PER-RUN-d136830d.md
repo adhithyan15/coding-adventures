@@ -36,3 +36,9 @@
   directory and file checks, symlinked directories and entries, three
   concurrent writer processes against a live reader, and a per-track
   comparison of the real corpus read through the cache against a fresh parse.
+- The cache key also includes the ICU build and the default collation locale,
+  because concept tags and `sourceHash` key order follow `localeCompare`. A
+  parse made under one locale is never served to another.
+- `required_capabilities.json` declares the test-only cache directory
+  (`node_modules/.cache/human-language-data/**`: create, write, read, list,
+  delete), and its summary says the CLI never enables the cache.

@@ -286,6 +286,13 @@ export function lessonCacheKey(input: LessonCacheKeyInput, sourceDigest: string)
   };
   field(LESSON_CACHE_FORMAT);
   field(process.versions.v8);
+  // The parse is not locale-free: concept tags and the frontmatter keys inside
+  // `sourceHash` are ordered with `localeCompare`, which follows the default ICU
+  // locale (under da_DK "aa" sorts after "z"). A parse made under one locale must
+  // not be served to a run under another, so the ICU build and the resolved
+  // default collation locale are part of the address.
+  field(process.versions.icu ?? "no-icu");
+  field(new Intl.Collator().resolvedOptions().locale);
   field(sourceDigest);
   field(input.language);
   // `undefined` and `""` are different answers from `trackScript` — "no

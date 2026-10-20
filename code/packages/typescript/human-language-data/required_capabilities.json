@@ -50,7 +50,37 @@
       "action": "write",
       "target": "../../learning/human-languages/core/generated-narration-hashes/*.d/*.json",
       "justification": "The explicit generate:narration command refreshes stable metadata and chapter-owned source/output hash files inside registered language directories to detect drift between lessons and committed voice scripts; CI normally verifies them without writing, and no flat aggregate is written."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "node_modules/.cache/human-language-data/**",
+      "justification": "Test-only: the vitest setup caches each track's parsed lessons (v8-serialized, content-addressed) in a private 0700 directory so the suite parses the corpus once per run instead of once per test file. CLI and generator processes never enable it. Entries are written as 0600 temp files, renamed into place, and a track's superseded entries are deleted."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "node_modules/.cache/human-language-data/**",
+      "justification": "Test-only: the vitest setup caches each track's parsed lessons (v8-serialized, content-addressed) in a private 0700 directory so the suite parses the corpus once per run instead of once per test file. CLI and generator processes never enable it. Entries are written as 0600 temp files, renamed into place, and a track's superseded entries are deleted."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "node_modules/.cache/human-language-data/**",
+      "justification": "Test-only: the vitest setup caches each track's parsed lessons (v8-serialized, content-addressed) in a private 0700 directory so the suite parses the corpus once per run instead of once per test file. CLI and generator processes never enable it. Entries are written as 0600 temp files, renamed into place, and a track's superseded entries are deleted."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "node_modules/.cache/human-language-data/**",
+      "justification": "Test-only: the vitest setup caches each track's parsed lessons (v8-serialized, content-addressed) in a private 0700 directory so the suite parses the corpus once per run instead of once per test file. CLI and generator processes never enable it. Entries are written as 0600 temp files, renamed into place, and a track's superseded entries are deleted."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "node_modules/.cache/human-language-data/**",
+      "justification": "Test-only: the vitest setup caches each track's parsed lessons (v8-serialized, content-addressed) in a private 0700 directory so the suite parses the corpus once per run instead of once per test file. CLI and generator processes never enable it. Entries are written as 0600 temp files, renamed into place, and a track's superseded entries are deleted."
     }
   ],
-  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, chapter-owned generated-hash files, and direct per-lesson modality owners. No network or process access is needed."
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, chapter-owned generated-hash files, and direct per-lesson modality owners. The only other filesystem use is the test suite's parsed-lesson cache under node_modules/.cache/human-language-data, which the vitest setup enables and the CLI never does. No network or process access is needed."
 }
