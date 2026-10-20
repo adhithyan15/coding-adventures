@@ -82,7 +82,7 @@
 component Cell {
   // Accessible name of the inline editor; callers may include displayed coordinates.
   slot editor-label : text = "Cell value" ;
-  slot height : number = 32 ;
+  slot row-height : number = 32 ;
   slot value        : text ;
   slot row : number ;
   slot col : number ;

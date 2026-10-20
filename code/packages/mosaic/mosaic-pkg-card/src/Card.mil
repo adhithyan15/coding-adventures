@@ -25,6 +25,6 @@
 
 component Card {
   slot title  : text ;
-  slot body   : text ;
+  slot body-text   : text ;
   slot footer : text ;
 }

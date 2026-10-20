@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Fixed — test scratch directories never collide
+
+- Tests named scratch directories by process id and `SystemTime` nanos. macOS
+  reports `SystemTime` in whole microseconds, so parallel tests could be handed
+  the same directory: `compose_fixtures` failed 4 of 22 local runs, when one
+  test found another's `src/` in "its" fresh directory. Every such name (seven
+  integration-test helpers and three unit tests) now comes from
+  `unique_nonce()`, which adds a per-process atomic counter to the clock.
+  `scratch_names_never_repeat_within_a_process` pins it: 1,000 back-to-back
+  names are distinct (a clock-only name gave 668).
+
 ### Added — `pkg` reports mosstyle v2 warnings (UI90 §4 step 1)
 
 - After a v1 package builds, `pkg` prints one line with its v2 finding
