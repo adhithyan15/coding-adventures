@@ -1,0 +1,11 @@
+{
+  "id": "LA-C515-supercilium",
+  "pathSegment": "LA-PATH-515-VULT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-515-VULT",
+      "order": 3
+    }
+  ]
+}

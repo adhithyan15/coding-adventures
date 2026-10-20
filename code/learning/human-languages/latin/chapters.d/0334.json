@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Sacrificium",
+  "label": "ch:la-sacrificium",
+  "canDo": "I can describe a sacrifice: the priest, the victim, to sacrifice, to vow and a vow.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C334-votum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can describe a sacrifice: the priest, the victim, to sacrifice, to vow and a vow.",
+    "assesses": [
+      "LA-LEX-C334-SACERDOS-03",
+      "LA-LEX-C334-SACERDOS-04",
+      "LA-LEX-C334-SACERDOS-05"
+    ]
+  }
+}

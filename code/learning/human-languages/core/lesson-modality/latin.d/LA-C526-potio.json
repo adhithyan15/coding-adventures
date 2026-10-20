@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C526-potio",
+    "language": "latin",
+    "chapter": 526,
+    "sequence": 27930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb46de319d3175f2"
+  },
+  "findings": []
+}

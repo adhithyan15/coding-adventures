@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 426,
+  "title": "Dusty, Muddy, Footprint, Weary, To wear out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e3c5de5102958427",
+  "lessons": [
+    {
+      "id": "LA-C426-pulverulentus",
+      "sequence": 22750,
+      "title": "pulverulentus, pulverulenta, pulverulentum — dusty, covered with dust",
+      "headword": "pulverulentus, pulverulenta, pulverulentum",
+      "romanization": "pulverulentus, pulverulenta, pulverulentum",
+      "gloss": "dusty, covered with dust",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:962cfa4387da4bd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a wheel rut, then the Latin for to spread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pulverulentus, pulverulenta, pulverulentum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pulverulentus, pulverulenta, pulverulentum — \"dusty, covered with dust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aestāte via pulverulenta est, et viātōrēs aquam quaerunt. In summer the road is dusty, and travellers look for water."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from pulvis, pulveris 'dust' with the ending -ulentus 'full of'. English pulverize is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pulverulentus is built on pulvis, pulveris 'dust' with the suffix -ulentus 'full of' (EtymDB; Lewis & Short). English pulverize comes from the same noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulverulentus, pulverulenta, pulverulentum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulverulentus, pulverulenta, pulverulentum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulverulentus, pulverulenta, pulverulentum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulverulentus, pulverulenta, pulverulentum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pulverulentus, pulverulenta, pulverulentum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pulverulentus, pulverulenta, pulverulentum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a wheel rut, then the Latin for to spread, then say pulverulentus, pulverulenta, pulverulentum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a wheel rut, then the Latin for to spread, then say *pulverulentus, pulverulenta, pulverulentum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pulverulentus, pulverulenta, pulverulentum mean? (\"Dusty, covered with dust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C426-lutulentus",
+      "sequence": 22760,
+      "title": "lutulentus, lutulenta, lutulentum — muddy, covered with mud",
+      "headword": "lutulentus, lutulenta, lutulentum",
+      "romanization": "lutulentus, lutulenta, lutulentum",
+      "gloss": "muddy, covered with mud",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78a7eac0a6a67481",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to spread, then the Latin for dusty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lutulentus, lutulenta, lutulentum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lutulentus, lutulenta, lutulentum — \"muddy, covered with mud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post pluviam via lutulenta est, et plaustra lentē eunt. After the rain the road is muddy, and the wagons go slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from lutum 'mud'. Also of a dirty, low person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lutulentus is built on lutum 'mud' with the suffix -ulentus 'full of' (EtymDB; Lewis & Short), the same pattern as pulverulentus 'dusty'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lutulentus, lutulenta, lutulentum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lutulentus, lutulenta, lutulentum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lutulentus, lutulenta, lutulentum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lutulentus, lutulenta, lutulentum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lutulentus, lutulenta, lutulentum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lutulentus, lutulenta, lutulentum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to spread, then the Latin for dusty, then say lutulentus, lutulenta, lutulentum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to spread, then the Latin for dusty, then say *lutulentus, lutulenta, lutulentum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lutulentus, lutulenta, lutulentum mean? (\"Muddy, covered with mud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C426-vestigium",
+      "sequence": 22770,
+      "title": "vestīgium, vestīgiī — a footprint, a track; a trace",
+      "headword": "vestīgium, vestīgiī",
+      "romanization": "vestīgium, vestīgiī",
+      "gloss": "a footprint, a track; a trace",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:854c7dd2ff654805",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for dusty, then the Latin for muddy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vestīgium, vestīgiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vestīgium, vestīgiī — \"a footprint, a track; a trace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In lutō vestīgia equōrum et mūlōrum sunt. In the mud there are the footprints of horses and mules."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: vestīgium, vestīgiī n. Eōdem vestīgiō, on the same spot. English vestige comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of vestīgium is not settled: Lewis & Short call the etymology doubtful, and EtymDB gives no parent. English vestige comes from it, and investigate from the related verb investīgāre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vestīgium, vestīgiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vestīgium, vestīgiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vestīgium, vestīgiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vestīgium, vestīgiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vestīgium, vestīgiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vestīgium, vestīgiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for dusty, then the Latin for muddy, then say vestīgium, vestīgiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for dusty, then the Latin for muddy, then say *vestīgium, vestīgiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vestīgium, vestīgiī mean? (\"A footprint, a track; a trace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C426-lassus",
+      "sequence": 22780,
+      "title": "lassus, lassa, lassum — weary, tired out",
+      "headword": "lassus, lassa, lassum",
+      "romanization": "lassus, lassa, lassum",
+      "gloss": "weary, tired out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b696d47dc1f298bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for muddy, then the Latin for a footprint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lassus, lassa, lassum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lassus, lassa, lassum — \"weary, tired out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post longum iter viātor lassus in caupōnā sedet. After a long journey the weary traveller sits in the inn."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, close to fessus. English lassitude comes from the noun lassitūdō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lassus is inherited and is usually traced to PIE led- 'slow, weary' (EtymDB); Lewis & Short call its origin doubtful. English lassitude comes from the Latin noun lassitūdō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lassus, lassa, lassum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lassus, lassa, lassum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lassus, lassa, lassum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lassus, lassa, lassum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lassus, lassa, lassum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lassus, lassa, lassum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for muddy, then the Latin for a footprint, then say lassus, lassa, lassum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for muddy, then the Latin for a footprint, then say *lassus, lassa, lassum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lassus, lassa, lassum mean? (\"Weary, tired out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C426-defatigo",
+      "sequence": 22790,
+      "title": "dēfatīgō, dēfatīgāre — to wear out, to tire out",
+      "headword": "dēfatīgō, dēfatīgāre",
+      "romanization": "dēfatīgō, dēfatīgāre",
+      "gloss": "to wear out, to tire out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75cd7d85260f8c3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a footprint, then the Latin for weary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēfatīgō, dēfatīgāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēfatīgō, dēfatīgāre — \"to wear out, to tire out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Via longa equōs dēfatīgat. The long road wears the horses out."
+            },
+            {
+              "kind": "speech",
+              "text": "dēfatīgō, dēfatīgāre, dēfatīgāvī, dēfatīgātum. Often passive: dēfatīgātus 'worn out'. The simple verb fatīgō gives English fatigue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēfatīgō is built from dē- 'down, completely' and fatīgō 'to tire, to weary' (EtymDB; Lewis & Short). English fatigue comes, through French, from fatīgō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēfatīgō, dēfatīgāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēfatīgō, dēfatīgāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēfatīgō, dēfatīgāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēfatīgō, dēfatīgāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēfatīgō, dēfatīgāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēfatīgō, dēfatīgāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a footprint, then the Latin for weary, then say dēfatīgō, dēfatīgāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a footprint, then the Latin for weary, then say *dēfatīgō, dēfatīgāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēfatīgō, dēfatīgāre mean? (\"To wear out, to tire out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

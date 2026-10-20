@@ -1,0 +1,11 @@
+{
+  "id": "LA-C305-dolus",
+  "pathSegment": "LA-PATH-305-SCELUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-305-SCELUS",
+      "order": 4
+    }
+  ]
+}

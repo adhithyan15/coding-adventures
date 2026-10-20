@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Oaths and Agreements",
+  "label": "ch:la-oaths-and-agreements",
+  "canDo": "I can talk about an oath, an agreement and a pact, and say that people strike a bargain and demand a formal promise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C397-stipulor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can talk about an oath, an agreement and a pact, and say that people strike a bargain and demand a formal promise.",
+    "assesses": [
+      "LA-LEX-C397-PACTUM-03",
+      "LA-LEX-C397-PACTUM-04",
+      "LA-LEX-C397-PACTUM-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C410-sancio",
+  "pathSegment": "LA-PATH-410-ROGATIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-410-ROGATIO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:35c7b5e430c900e0",
+  "lessonIds": [
+    "LA-C298-evenio",
+    "LA-C298-fio",
+    "LA-C298-orior",
+    "LA-C298-intervenio",
+    "LA-C298-posterus",
+    "LA-R298-review-291-298"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch298.txt",
+  "json": "latin/narration/ch298.json",
+  "textHash": "fnv1a64:5d260d7e195a42ed",
+  "jsonHash": "fnv1a64:fbaa1fbe929c8939",
+  "findings": []
+}

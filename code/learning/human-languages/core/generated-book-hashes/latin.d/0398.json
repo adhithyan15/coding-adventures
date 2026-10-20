@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:e18b86293c8bb7e7",
+  "lessonIds": [
+    "LA-C398-violo",
+    "LA-C398-praesto",
+    "LA-C398-obligo",
+    "LA-C398-ratus",
+    "LA-C398-irritus"
+  ],
+  "tex": "latin/book/chapters/ch398-keeping-my-word.tex"
+}

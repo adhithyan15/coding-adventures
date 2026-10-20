@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C343-triumphus",
+    "language": "latin",
+    "chapter": 343,
+    "sequence": 18500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:732387d1516e4be8"
+  },
+  "findings": []
+}

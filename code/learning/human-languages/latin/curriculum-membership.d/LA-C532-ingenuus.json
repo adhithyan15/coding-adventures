@@ -1,0 +1,11 @@
+{
+  "id": "LA-C532-ingenuus",
+  "pathSegment": "LA-PATH-532-LIBT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-532-LIBT",
+      "order": 3
+    }
+  ]
+}

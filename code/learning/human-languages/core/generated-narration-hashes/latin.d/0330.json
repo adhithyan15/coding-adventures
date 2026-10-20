@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:d2c6ddc6587658b5",
+  "lessonIds": [
+    "LA-C330-funus",
+    "LA-C330-sepelio",
+    "LA-C330-sepultura",
+    "LA-C330-rogus",
+    "LA-C330-exsequiae",
+    "LA-R330-review-323-330"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch330.txt",
+  "json": "latin/narration/ch330.json",
+  "textHash": "fnv1a64:c9e118b5501141a6",
+  "jsonHash": "fnv1a64:aa5f49505753b242",
+  "findings": []
+}

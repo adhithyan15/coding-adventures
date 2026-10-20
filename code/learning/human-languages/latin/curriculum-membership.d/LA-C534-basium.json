@@ -1,0 +1,11 @@
+{
+  "id": "LA-C534-basium",
+  "pathSegment": "LA-PATH-534-OSCU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-534-OSCU",
+      "order": 1
+    }
+  ]
+}

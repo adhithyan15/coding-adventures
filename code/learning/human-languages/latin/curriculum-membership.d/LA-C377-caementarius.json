@@ -1,0 +1,11 @@
+{
+  "id": "LA-C377-caementarius",
+  "pathSegment": "LA-PATH-377-FULLO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-377-FULLO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:e71662db16667896",
+  "lessonIds": [
+    "LA-C508-ignavia",
+    "LA-C508-pigritia",
+    "LA-C508-segnis",
+    "LA-C508-strenuus",
+    "LA-C508-assiduus"
+  ],
+  "tex": "latin/book/chapters/ch508-laziness-and-energy.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C535-amator",
+  "pathSegment": "LA-PATH-535-AMAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-535-AMAN",
+      "order": 3
+    }
+  ]
+}

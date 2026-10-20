@@ -1,0 +1,11 @@
+{
+  "id": "LA-C485-pluvialis",
+  "pathSegment": "LA-PATH-485-IMBER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-485-IMBER",
+      "order": 2
+    }
+  ]
+}

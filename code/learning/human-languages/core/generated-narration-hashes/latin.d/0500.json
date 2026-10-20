@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:72802ad4b0618df2",
+  "lessonIds": [
+    "LA-C500-cupido",
+    "LA-C500-cupidus",
+    "LA-C500-avidus",
+    "LA-C500-invideo",
+    "LA-C500-rivalis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch500.txt",
+  "json": "latin/narration/ch500.json",
+  "textHash": "fnv1a64:e977e3fb4802f678",
+  "jsonHash": "fnv1a64:1d16807d9b712350",
+  "findings": []
+}

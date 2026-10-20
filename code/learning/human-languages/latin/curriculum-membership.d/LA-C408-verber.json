@@ -1,0 +1,11 @@
+{
+  "id": "LA-C408-verber",
+  "pathSegment": "LA-PATH-408-MENDUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-408-MENDUM",
+      "order": 3
+    }
+  ]
+}

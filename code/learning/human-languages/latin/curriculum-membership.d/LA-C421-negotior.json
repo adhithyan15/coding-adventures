@@ -1,0 +1,11 @@
+{
+  "id": "LA-C421-negotior",
+  "pathSegment": "LA-PATH-421-COMMERCIUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-421-COMMERCIUM",
+      "order": 1
+    }
+  ]
+}

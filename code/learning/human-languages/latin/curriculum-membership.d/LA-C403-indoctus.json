@@ -1,0 +1,11 @@
+{
+  "id": "LA-C403-indoctus",
+  "pathSegment": "LA-PATH-403-DOCTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-403-DOCTUS",
+      "order": 1
+    }
+  ]
+}

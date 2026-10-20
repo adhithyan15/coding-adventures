@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-320-PAVOR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-320-PAVOR"
+  ],
+  "after": []
+}

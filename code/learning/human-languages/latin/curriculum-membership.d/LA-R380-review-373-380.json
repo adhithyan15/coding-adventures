@@ -1,0 +1,11 @@
+{
+  "id": "LA-R380-review-373-380",
+  "pathSegment": "LA-PATH-380-CONDUCO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-380-CONDUCO",
+      "order": 5
+    }
+  ]
+}

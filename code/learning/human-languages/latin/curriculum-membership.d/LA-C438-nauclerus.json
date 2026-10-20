@@ -1,0 +1,11 @@
+{
+  "id": "LA-C438-nauclerus",
+  "pathSegment": "LA-PATH-438-CONSCENDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-438-CONSCENDO",
+      "order": 2
+    }
+  ]
+}

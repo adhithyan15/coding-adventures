@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C357-censeo",
+    "language": "latin",
+    "chapter": 357,
+    "sequence": 19220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70a591ca4796866f"
+  },
+  "findings": []
+}

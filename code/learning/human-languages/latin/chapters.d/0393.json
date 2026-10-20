@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Making Up My Mind",
+  "label": "ch:la-making-up-my-mind",
+  "canDo": "I can say that I have decided and fixed a day, talk about an aim and a venture, and say that I am trying to do something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C393-conor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say that I have decided and fixed a day, talk about an aim and a venture, and say that I am trying to do something.",
+    "assesses": [
+      "LA-LEX-C393-STATUO-03",
+      "LA-LEX-C393-STATUO-04",
+      "LA-LEX-C393-STATUO-05"
+    ]
+  }
+}

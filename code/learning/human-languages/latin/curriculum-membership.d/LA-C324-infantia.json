@@ -1,0 +1,11 @@
+{
+  "id": "LA-C324-infantia",
+  "pathSegment": "LA-PATH-324-PUER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-324-PUER",
+      "order": 2
+    }
+  ]
+}

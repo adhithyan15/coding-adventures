@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Crowd, Crowded, To throng, To go back and forth, Near the city",
+  "label": "ch:la-crowd-crowded-to-throng-to-go-back-and-forth-near-the-city",
+  "canDo": "I can describe a busy town: a crowd, crowded streets, people thronging and going back and forth, and places near the city.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C460-suburbanus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can describe a busy town: a crowd, crowded streets, people thronging and going back and forth, and places near the city.",
+    "assesses": [
+      "LA-LEX-C460-TURBA-03",
+      "LA-LEX-C460-TURBA-04",
+      "LA-LEX-C460-TURBA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C446-lodix",
+  "pathSegment": "LA-PATH-446-LECTULUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-446-LECTULUS",
+      "order": 4
+    }
+  ]
+}

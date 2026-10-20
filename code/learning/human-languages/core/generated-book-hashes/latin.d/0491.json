@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:e24631f75f7af4d4",
+  "lessonIds": [
+    "LA-C491-lacrimo",
+    "LA-C491-ploro",
+    "LA-C491-gemo",
+    "LA-C491-gemitus",
+    "LA-C491-suspiro"
+  ],
+  "tex": "latin/book/chapters/ch491-tears-and-sighs.tex"
+}

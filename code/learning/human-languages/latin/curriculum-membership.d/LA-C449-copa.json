@@ -1,0 +1,11 @@
+{
+  "id": "LA-C449-copa",
+  "pathSegment": "LA-PATH-449-VAPPA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-449-VAPPA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C500-invideo",
+  "pathSegment": "LA-PATH-500-CUPI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-500-CUPI",
+      "order": 3
+    }
+  ]
+}

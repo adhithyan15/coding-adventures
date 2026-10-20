@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:8c4e8ee463728f9f",
+  "lessonIds": [
+    "LA-C360-manifestus",
+    "LA-C360-perspicuus",
+    "LA-C360-absurdus",
+    "LA-C360-stultitia",
+    "LA-C360-constantia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch360.txt",
+  "json": "latin/narration/ch360.json",
+  "textHash": "fnv1a64:53fead30480d4f4b",
+  "jsonHash": "fnv1a64:8c2d0b6cdf86bf8e",
+  "findings": []
+}

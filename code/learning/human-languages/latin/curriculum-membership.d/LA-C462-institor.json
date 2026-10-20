@@ -1,0 +1,11 @@
+{
+  "id": "LA-C462-institor",
+  "pathSegment": "LA-PATH-462-NUNDINOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-462-NUNDINOR",
+      "order": 4
+    }
+  ]
+}

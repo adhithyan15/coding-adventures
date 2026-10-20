@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-400-DOCEO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone teaches, educates, trains and instructs a pupil, and tells him what to do.",
+  "prerequisites": []
+}

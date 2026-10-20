@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Ārdet",
+  "label": "ch:la-ardet",
+  "canDo": "I can say how things burned: to burn up, to scorch, to blaze, to smoke and to go up in flames.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C318-conflagro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can say how things burned: to burn up, to scorch, to blaze, to smoke and to go up in flames.",
+    "assesses": [
+      "LA-LEX-C318-CREMO-03",
+      "LA-LEX-C318-CREMO-04",
+      "LA-LEX-C318-CREMO-05"
+    ]
+  }
+}

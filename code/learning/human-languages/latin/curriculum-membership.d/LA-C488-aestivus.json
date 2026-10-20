@@ -1,0 +1,11 @@
+{
+  "id": "LA-C488-aestivus",
+  "pathSegment": "LA-PATH-488-BRUMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-488-BRUMA",
+      "order": 3
+    }
+  ]
+}

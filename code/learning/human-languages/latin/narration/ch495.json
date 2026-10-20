@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 495,
+  "title": "Wonder and amazement",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:944df516c2b54d56",
+  "lessons": [
+    {
+      "id": "LA-C495-admiratio",
+      "sequence": 26300,
+      "title": "admīrātiō, admīrātiōnis — admiration, wonder",
+      "headword": "admīrātiō, admīrātiōnis",
+      "romanization": "admīrātiō, admīrātiōnis",
+      "gloss": "admiration, wonder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab9642ada96850bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for disgust, then the Latin for it wearies."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: admīrātiō, admīrātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "admīrātiō, admīrātiōnis — \"admiration, wonder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospitēs templum novum cum admīrātiōne spectant. The guests gaze at the new temple in wonder."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from admīror, already known. English admiration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "admīrātiō is the action noun of admīror \"to wonder at\", built on ad- and mīror \"to wonder\" (Lewis & Short; EtymDB). English admiration comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admīrātiō, admīrātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *admīrātiō, admīrātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admīrātiō, admīrātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *admīrātiō, admīrātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with admīrātiō, admīrātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *admīrātiō, admīrātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for disgust, then the Latin for it wearies, then say admīrātiō, admīrātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for disgust, then the Latin for it wearies, then say *admīrātiō, admīrātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does admīrātiō, admīrātiōnis mean? (\"Admiration, wonder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C495-miror",
+      "sequence": 26310,
+      "title": "mīror, mīrārī — to wonder, marvel at",
+      "headword": "mīror, mīrārī",
+      "romanization": "mīror, mīrārī",
+      "gloss": "to wonder, marvel at",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9a299d3a034b03b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for it wearies, then the Latin for admiration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mīror, mīrārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mīror, mīrārī — \"to wonder, marvel at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer elephantum mīrātur. The boy marvels at the elephant."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: mīror, mīrārī, mīrātus sum. With the accusative, or with quod — I am surprised that. English miracle belongs to the same family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mīror is built on mīrus \"wonderful\", which EtymDB traces through Proto-Italic to a Proto-Indo-European root meaning \"to smile\". English admire and miracle belong to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīror, mīrārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīror, mīrārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīror, mīrārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīror, mīrārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mīror, mīrārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mīror, mīrārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for it wearies, then the Latin for admiration, then say mīror, mīrārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for it wearies, then the Latin for admiration, then say *mīror, mīrārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mīror, mīrārī mean? (\"To wonder, marvel at\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C495-stupeo",
+      "sequence": 26320,
+      "title": "stupeō, stupēre — to be stunned, be amazed",
+      "headword": "stupeō, stupēre",
+      "romanization": "stupeō, stupēre",
+      "gloss": "to be stunned, be amazed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a6231c7051a63d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for admiration, then the Latin for to wonder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: stupeō, stupēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stupeō, stupēre — \"to be stunned, be amazed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Agricola in urbe magnā stupet. The farmer is stunned in the great city."
+            },
+            {
+              "kind": "speech",
+              "text": "stupeō, stupēre, stupuī. Struck dumb with wonder or fear. English stupor comes from it, and stupid from its adjective stupidus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stupeō is inherited and usually traced to a Proto-Indo-European root meaning \"to strike, to stun\" (EtymDB). English stupid comes from its adjective stupidus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stupeō, stupēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stupeō, stupēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stupeō, stupēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stupeō, stupēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stupeō, stupēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stupeō, stupēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for admiration, then the Latin for to wonder, then say stupeō, stupēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for admiration, then the Latin for to wonder, then say *stupeō, stupēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does stupeō, stupēre mean? (\"To be stunned, be amazed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C495-attonitus",
+      "sequence": 26330,
+      "title": "attonitus, attonita, attonitum — thunderstruck, astonished",
+      "headword": "attonitus, attonita, attonitum",
+      "romanization": "attonitus, attonita, attonitum",
+      "gloss": "thunderstruck, astonished",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3aaf083954af0279",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to wonder, then the Latin for to be stunned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: attonitus, attonita, attonitum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "attonitus, attonita, attonitum — \"thunderstruck, astonished\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Attonitī nūntium audīmus. We hear the news, thunderstruck."
+            },
+            {
+              "kind": "speech",
+              "text": "The past participle of attonō — to strike with thunder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "attonitus is the past participle of attonō \"to strike with thunder\", built on ad- and tonō \"to thunder\" (Lewis & Short). English astonish comes from a related compound of tonō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "attonitus, attonita, attonitum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *attonitus, attonita, attonitum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "attonitus, attonita, attonitum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *attonitus, attonita, attonitum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with attonitus, attonita, attonitum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *attonitus, attonita, attonitum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to wonder, then the Latin for to be stunned, then say attonitus, attonita, attonitum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to wonder, then the Latin for to be stunned, then say *attonitus, attonita, attonitum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does attonitus, attonita, attonitum mean? (\"Thunderstruck, astonished\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C495-obstupesco",
+      "sequence": 26340,
+      "title": "obstupēscō, obstupēscere — to be struck dumb, be astounded",
+      "headword": "obstupēscō, obstupēscere",
+      "romanization": "obstupēscō, obstupēscere",
+      "gloss": "to be struck dumb, be astounded",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:988fc121bf4a7061",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to be stunned, then the Latin for thunderstruck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: obstupēscō, obstupēscere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obstupēscō, obstupēscere — \"to be struck dumb, be astounded\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospitēs ad hanc fābulam obstupēscunt. The guests are astounded at this story."
+            },
+            {
+              "kind": "speech",
+              "text": "obstupēscō, obstupēscere, obstupuī. The inceptive of stupeō: the moment the wonder strikes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obstupēscō is built on ob- and stupēscō, the inceptive form of stupeō \"to be stunned\" (Lewis & Short; EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obstupēscō, obstupēscere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obstupēscō, obstupēscere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obstupēscō, obstupēscere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obstupēscō, obstupēscere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obstupēscō, obstupēscere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obstupēscō, obstupēscere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to be stunned, then the Latin for thunderstruck, then say obstupēscō, obstupēscere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to be stunned, then the Latin for thunderstruck, then say *obstupēscō, obstupēscere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does obstupēscō, obstupēscere mean? (\"To be struck dumb, be astounded\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

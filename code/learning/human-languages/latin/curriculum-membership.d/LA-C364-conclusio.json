@@ -1,0 +1,11 @@
+{
+  "id": "LA-C364-conclusio",
+  "pathSegment": "LA-PATH-364-CONCLUDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-364-CONCLUDO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C295-dudum",
+    "language": "latin",
+    "chapter": 295,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c4995d80f0e49ab"
+  },
+  "findings": []
+}

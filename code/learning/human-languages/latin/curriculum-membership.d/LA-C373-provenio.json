@@ -1,0 +1,11 @@
+{
+  "id": "LA-C373-provenio",
+  "pathSegment": "LA-PATH-373-EFFECTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-373-EFFECTUS",
+      "order": 2
+    }
+  ]
+}

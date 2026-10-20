@@ -1,0 +1,11 @@
+{
+  "id": "LA-C477-armentum",
+  "pathSegment": "LA-PATH-477-PECUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-477-PECUS",
+      "order": 2
+    }
+  ]
+}

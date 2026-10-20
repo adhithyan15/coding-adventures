@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Proelium",
+  "label": "ch:la-proelium",
+  "canDo": "I can tell the story of a battle: the battle, the battle line, the army on the march, a raid and to fight it out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C339-dimico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can tell the story of a battle: the battle, the battle line, the army on the march, a raid and to fight it out.",
+    "assesses": [
+      "LA-LEX-C339-PROELIUM-03",
+      "LA-LEX-C339-PROELIUM-04",
+      "LA-LEX-C339-PROELIUM-05"
+    ]
+  }
+}

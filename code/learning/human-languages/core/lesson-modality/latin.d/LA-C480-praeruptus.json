@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C480-praeruptus",
+    "language": "latin",
+    "chapter": 480,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d166ea058830ae98"
+  },
+  "findings": []
+}

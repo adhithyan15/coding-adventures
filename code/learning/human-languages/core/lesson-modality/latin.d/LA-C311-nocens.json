@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C311-nocens",
+    "language": "latin",
+    "chapter": 311,
+    "sequence": 16840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:219f1b6a9a0d62d4"
+  },
+  "findings": []
+}

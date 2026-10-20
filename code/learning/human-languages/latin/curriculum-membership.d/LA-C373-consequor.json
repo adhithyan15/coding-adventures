@@ -1,0 +1,11 @@
+{
+  "id": "LA-C373-consequor",
+  "pathSegment": "LA-PATH-373-EFFECTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-373-EFFECTUS",
+      "order": 1
+    }
+  ]
+}

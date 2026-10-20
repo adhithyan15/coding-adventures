@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Elections",
+  "label": "ch:la-elections",
+  "canDo": "I can talk about votes and the voting assembly, a candidate, canvassing, and choosing someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C384-eligo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about votes and the voting assembly, a candidate, canvassing, and choosing someone.",
+    "assesses": [
+      "LA-LEX-C384-SUFFRAGIUM-03",
+      "LA-LEX-C384-SUFFRAGIUM-04",
+      "LA-LEX-C384-SUFFRAGIUM-05"
+    ]
+  }
+}

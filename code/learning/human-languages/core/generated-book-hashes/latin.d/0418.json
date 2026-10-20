@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:7401bcd7df4201e9",
+  "lessonIds": [
+    "LA-C418-aes-alienum",
+    "LA-C418-debitor",
+    "LA-C418-creditor",
+    "LA-C418-fenus",
+    "LA-C418-mutuus"
+  ],
+  "tex": "latin/book/chapters/ch418-debts.tex"
+}

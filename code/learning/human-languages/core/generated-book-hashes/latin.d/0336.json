@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:57cd4f6f50f3afbe",
+  "lessonIds": [
+    "LA-C336-gladiator",
+    "LA-C336-lanista",
+    "LA-C336-munus",
+    "LA-C336-venatio",
+    "LA-C336-bestia"
+  ],
+  "tex": "latin/book/chapters/ch336-munus.tex"
+}

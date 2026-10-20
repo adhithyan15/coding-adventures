@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Flat wine, Neat wine, To water down, Rotten, Tavern hostess",
+  "label": "ch:la-flat-wine-neat-wine-to-water-down-rotten-tavern-hostess",
+  "canDo": "I can complain about the food and drink at an inn: flat wine, neat wine, watered wine, rotten food, and the tavern hostess.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C449-copa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can complain about the food and drink at an inn: flat wine, neat wine, watered wine, rotten food, and the tavern hostess.",
+    "assesses": [
+      "LA-LEX-C449-VAPPA-03",
+      "LA-LEX-C449-VAPPA-04",
+      "LA-LEX-C449-VAPPA-05"
+    ]
+  }
+}

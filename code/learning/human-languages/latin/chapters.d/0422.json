@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Rich and Poor",
+  "label": "ch:la-rich-and-poor",
+  "canDo": "I can talk about wealth and poverty, say that someone is in need or does without, and that a place has plenty.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-R422-review-final-422",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about wealth and poverty, say that someone is in need or does without, and that a place has plenty.",
+    "assesses": [
+      "LA-LEX-C422-DIVITIAE-03",
+      "LA-LEX-C422-DIVITIAE-04",
+      "LA-LEX-C422-DIVITIAE-05"
+    ]
+  }
+}

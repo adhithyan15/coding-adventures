@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 403,
+  "title": "Learned and Unlearned",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:491b2098105e6dfe",
+  "lessons": [
+    {
+      "id": "LA-C403-doctus",
+      "sequence": 21550,
+      "title": "doctus, docta, doctum — learned, skilled",
+      "headword": "doctus, docta, doctum",
+      "romanization": "doctus, docta, doctum",
+      "gloss": "learned, skilled",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8024127dec24f0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to think over, then the Latin for to call to mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: doctus, docta, doctum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "doctus, docta, doctum — \"learned, skilled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vir doctus et prūdēns est. He is a learned and wise man."
+            },
+            {
+              "kind": "speech",
+              "text": "doctus, docta, doctum, the participle of doceō: taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "doctus is the participle of doceō \"to teach\" (Lewis & Short): one who has been taught."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doctus, docta, doctum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doctus, docta, doctum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doctus, docta, doctum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doctus, docta, doctum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with doctus, docta, doctum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *doctus, docta, doctum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to think over, then the Latin for to call to mind, then say doctus, docta, doctum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to think over, then the Latin for to call to mind, then say *doctus, docta, doctum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does doctus, docta, doctum mean? (\"Learned, skilled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C403-indoctus",
+      "sequence": 21560,
+      "title": "indoctus, indocta, indoctum — unlearned, untaught",
+      "headword": "indoctus, indocta, indoctum",
+      "romanization": "indoctus, indocta, indoctum",
+      "gloss": "unlearned, untaught",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8931cf72dab68ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to call to mind, then the Latin for learned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: indoctus, indocta, indoctum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indoctus, indocta, indoctum — \"unlearned, untaught\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Indoctus est, sed nōn stultus. He is unlearned, but not foolish."
+            },
+            {
+              "kind": "speech",
+              "text": "indoctus, indocta, indoctum: in- not + doctus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indoctus is built from in- \"not\" and doctus \"taught\" (Lewis & Short), the participle of doceō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indoctus, indocta, indoctum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indoctus, indocta, indoctum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indoctus, indocta, indoctum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indoctus, indocta, indoctum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with indoctus, indocta, indoctum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *indoctus, indocta, indoctum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to call to mind, then the Latin for learned, then say indoctus, indocta, indoctum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to call to mind, then the Latin for learned, then say *indoctus, indocta, indoctum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does indoctus, indocta, indoctum mean? (\"Unlearned, untaught\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C403-eruditus",
+      "sequence": 21570,
+      "title": "ērudītus, ērudīta, ērudītum — educated, learned",
+      "headword": "ērudītus, ērudīta, ērudītum",
+      "romanization": "ērudītus, ērudīta, ērudītum",
+      "gloss": "educated, learned",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c06593f0197d28db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for learned, then the Latin for unlearned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ērudītus, ērudīta, ērudītum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ērudītus, ērudīta, ērudītum — \"educated, learned\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fēmina ērudīta multōs librōs lēgerat. The educated woman had read many books."
+            },
+            {
+              "kind": "speech",
+              "text": "ērudītus, ērudīta, ērudītum, the participle of ērudiō. English erudite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ērudītus is the participle of ērudiō \"to educate\" (Lewis & Short), from ē and rudis \"rough\". English erudite comes from it (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ērudītus, ērudīta, ērudītum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ērudītus, ērudīta, ērudītum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ērudītus, ērudīta, ērudītum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ērudītus, ērudīta, ērudītum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ērudītus, ērudīta, ērudītum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ērudītus, ērudīta, ērudītum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for learned, then the Latin for unlearned, then say ērudītus, ērudīta, ērudītum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for learned, then the Latin for unlearned, then say *ērudītus, ērudīta, ērudītum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ērudītus, ērudīta, ērudītum mean? (\"Educated, learned\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C403-sciens",
+      "sequence": 21580,
+      "title": "sciēns, scientis — knowing; on purpose; skilled (in)",
+      "headword": "sciēns, scientis",
+      "romanization": "sciēns, scientis",
+      "gloss": "knowing; on purpose; skilled (in)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67c0bb83e2e89f9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for unlearned, then the Latin for educated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sciēns, scientis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sciēns, scientis — \"knowing; on purpose; skilled (in)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sciēns hoc fēcit, nōn imprūdēns. He did this knowingly, not by mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "sciēns, scientis, the present participle of sciō: knowing, on purpose. With the genitive, skilled in: bellī sciēns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sciēns is the present participle of sciō \"to know\" (EtymDB; Lewis & Short). English science and conscience come from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sciēns, scientis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sciēns, scientis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sciēns, scientis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sciēns, scientis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sciēns, scientis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sciēns, scientis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for unlearned, then the Latin for educated, then say sciēns, scientis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for unlearned, then the Latin for educated, then say *sciēns, scientis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sciēns, scientis mean? (\"Knowing; on purpose; skilled (in)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C403-imperitus",
+      "sequence": 21590,
+      "title": "imperītus, imperīta, imperītum — inexperienced, unskilled",
+      "headword": "imperītus, imperīta, imperītum",
+      "romanization": "imperītus, imperīta, imperītum",
+      "gloss": "inexperienced, unskilled",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:464ca266f202c236",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for educated, then the Latin for knowing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: imperītus, imperīta, imperītum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "imperītus, imperīta, imperītum — \"inexperienced, unskilled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperītus nauta nāvem frēgit. The unskilled sailor wrecked the ship."
+            },
+            {
+              "kind": "speech",
+              "text": "imperītus, imperīta, imperītum: the opposite of the word for experienced, with in-, not. With the genitive: bellī imperītus, without experience of war."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "imperītus is built from in- \"not\" and perītus \"experienced\" (EtymDB; Lewis & Short), which comes from the root of experior \"to try, to test\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imperītus, imperīta, imperītum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imperītus, imperīta, imperītum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imperītus, imperīta, imperītum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imperītus, imperīta, imperītum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with imperītus, imperīta, imperītum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *imperītus, imperīta, imperītum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for educated, then the Latin for knowing, then say imperītus, imperīta, imperītum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for educated, then the Latin for knowing, then say *imperītus, imperīta, imperītum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does imperītus, imperīta, imperītum mean? (\"Inexperienced, unskilled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

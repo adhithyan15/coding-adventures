@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:2fcb77312a977f62",
+  "lessonIds": [
+    "LA-C402-edisco",
+    "LA-C402-perdisco",
+    "LA-C402-studeo",
+    "LA-C402-meditor",
+    "LA-C402-recordor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch402.txt",
+  "json": "latin/narration/ch402.json",
+  "textHash": "fnv1a64:6e221e7a46b9429e",
+  "jsonHash": "fnv1a64:12cf4c42b6f9d7e1",
+  "findings": []
+}

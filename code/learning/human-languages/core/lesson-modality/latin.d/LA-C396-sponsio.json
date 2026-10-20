@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C396-sponsio",
+    "language": "latin",
+    "chapter": 396,
+    "sequence": 21220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ae2d3fa3e0d3d0e"
+  },
+  "findings": []
+}

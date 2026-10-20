@@ -1,0 +1,11 @@
+{
+  "id": "LA-C360-perspicuus",
+  "pathSegment": "LA-PATH-360-MANIFESTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-360-MANIFESTUS",
+      "order": 1
+    }
+  ]
+}

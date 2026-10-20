@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:a00681987cfeb7c6",
+  "lessonIds": [
+    "LA-C535-amplector",
+    "LA-C535-complector",
+    "LA-C535-amans",
+    "LA-C535-amator",
+    "LA-C535-procus"
+  ],
+  "tex": "latin/book/chapters/ch535-lovers.tex"
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 466,
+  "title": "Corn supply, Dearness, Cheapness, To value, To be sold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c06e2cef50131662",
+  "lessons": [
+    {
+      "id": "LA-C466-annona",
+      "sequence": 24800,
+      "title": "annōna, annōnae — the corn supply; the price of grain",
+      "headword": "annōna, annōnae",
+      "romanization": "annōna, annōnae",
+      "gloss": "the corn supply; the price of grain",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97ecdfa66cdb978c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a quarter-as, then the Latin for a money-changer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: annōna, annōnae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "annōna, annōnae — \"the corn supply; the price of grain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hōc annō annōna cāra est, quod pluvia nūlla fuit. This year grain is dear, because there was no rain."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: annōna, annōnae f. First the year's harvest, then the city's grain supply and its price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "annōna is built on annus 'year' (EtymDB; Lewis & Short): the produce of the year, and so the grain supply and its price."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annōna, annōnae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annōna, annōnae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annōna, annōnae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annōna, annōnae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with annōna, annōnae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *annōna, annōnae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a quarter-as, then the Latin for a money-changer, then say annōna, annōnae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a quarter-as, then the Latin for a money-changer, then say *annōna, annōnae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does annōna, annōnae mean? (\"The corn supply; the price of grain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C466-caritas",
+      "sequence": 24810,
+      "title": "cāritās, cāritātis — dearness, high prices; affection",
+      "headword": "cāritās, cāritātis",
+      "romanization": "cāritās, cāritātis",
+      "gloss": "dearness, high prices; affection",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b0c2d30b09a7cc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a money-changer, then the Latin for the corn supply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cāritās, cāritātis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cāritās, cāritātis — \"dearness, high prices; affection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Propter cāritātem annōnae pauperēs parum cibī habent. Because of the high price of grain the poor have too little food."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: cāritās, cāritātis f., from cārus 'dear'. Dear in price, and dear to the heart. English charity comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cāritās is built on cārus 'dear, costly', from PIE keh₂- 'to desire' (EtymDB; Lewis & Short). English charity comes from it, in its sense 'affection'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāritās, cāritātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāritās, cāritātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāritās, cāritātis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāritās, cāritātis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cāritās, cāritātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cāritās, cāritātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a money-changer, then the Latin for the corn supply, then say cāritās, cāritātis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a money-changer, then the Latin for the corn supply, then say *cāritās, cāritātis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cāritās, cāritātis mean? (\"Dearness, high prices; affection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C466-vilitas",
+      "sequence": 24820,
+      "title": "vīlitās, vīlitātis — cheapness, low prices",
+      "headword": "vīlitās, vīlitātis",
+      "romanization": "vīlitās, vīlitātis",
+      "gloss": "cheapness, low prices",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46ae27afa68aa1a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the corn supply, then the Latin for dearness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vīlitās, vīlitātis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīlitās, vīlitātis — \"cheapness, low prices\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post bonum annum vīlitās est, et agricolae minus pecūniae habent. After a good year prices are low, and the farmers have less money."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: vīlitās, vīlitātis f. The opposite of cāritās. Also worthlessness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīlitās is built on vīlis 'cheap, of little value' with the suffix -itās (EtymDB; Lewis & Short). English vile comes from vīlis."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlitās, vīlitātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlitās, vīlitātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlitās, vīlitātis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlitās, vīlitātis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vīlitās, vīlitātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vīlitās, vīlitātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the corn supply, then the Latin for dearness, then say vīlitās, vīlitātis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the corn supply, then the Latin for dearness, then say *vīlitās, vīlitātis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vīlitās, vīlitātis mean? (\"Cheapness, low prices\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C466-aestimo",
+      "sequence": 24830,
+      "title": "aestimō, aestimāre — to value, to put a price on; to judge",
+      "headword": "aestimō, aestimāre",
+      "romanization": "aestimō, aestimāre",
+      "gloss": "to value, to put a price on; to judge",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2acec3b771b6aa94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for dearness, then the Latin for cheapness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aestimō, aestimāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aestimō, aestimāre — \"to value, to put a price on; to judge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor equum centum dēnāriīs aestimat. The merchant values the horse at a hundred denarii."
+            },
+            {
+              "kind": "speech",
+              "text": "aestimō, aestimāre, aestimāvī, aestimātum, with the price in the ablative or genitive: magnī aestimāre, to value highly. English estimate and esteem come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aestimō comes from older aestumāre (EtymDB), and Lewis & Short link it with aes 'bronze, money', a valuing in money; the second part is not settled. English estimate and esteem come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aestimō, aestimāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aestimō, aestimāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aestimō, aestimāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aestimō, aestimāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aestimō, aestimāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aestimō, aestimāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for dearness, then the Latin for cheapness, then say aestimō, aestimāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for dearness, then the Latin for cheapness, then say *aestimō, aestimāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aestimō, aestimāre mean? (\"To value, to put a price on; to judge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C466-veneo",
+      "sequence": 24840,
+      "title": "vēneō, vēnīre — to be sold, to go on sale",
+      "headword": "vēneō, vēnīre",
+      "romanization": "vēneō, vēnīre",
+      "gloss": "to be sold, to go on sale",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86e19ee12f720c02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for cheapness, then the Latin for to value."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vēneō, vēnīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vēneō, vēnīre — \"to be sold, to go on sale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In forō servī et equī vēneunt. Slaves and horses are sold in the forum."
+            },
+            {
+              "kind": "speech",
+              "text": "Irregular like eō: vēneō, vēnīre, vēniī. It serves as the passive of vendō. Do not confuse vēnīre with venīre 'to come'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vēneō comes from vēnum eō 'I go to sale' (EtymDB; Lewis & Short), with vēnum 'sale' and eō 'to go'; vendō 'to sell' is from vēnum dō 'I give to sale'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēneō, vēnīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēneō, vēnīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēneō, vēnīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēneō, vēnīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vēneō, vēnīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vēneō, vēnīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for cheapness, then the Latin for to value, then say vēneō, vēnīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for cheapness, then the Latin for to value, then say *vēneō, vēnīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vēneō, vēnīre mean? (\"To be sold, to go on sale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

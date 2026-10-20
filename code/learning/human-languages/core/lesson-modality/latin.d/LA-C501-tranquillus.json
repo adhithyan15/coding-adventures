@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C501-tranquillus",
+    "language": "latin",
+    "chapter": 501,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f088dbe68ee6afcb"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-405-CALCULUS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-405-CALCULUS"
+  ],
+  "after": []
+}

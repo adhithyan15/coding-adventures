@@ -1,0 +1,11 @@
+{
+  "id": "LA-C512-meritum",
+  "pathSegment": "LA-PATH-512-GRAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-512-GRAT",
+      "order": 2
+    }
+  ]
+}

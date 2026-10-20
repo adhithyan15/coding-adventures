@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:543872a8945d50d1",
+  "lessonIds": [
+    "LA-C519-visus",
+    "LA-C519-auditus",
+    "LA-C519-tactus",
+    "LA-C519-olfacio",
+    "LA-C519-percipio"
+  ],
+  "tex": "latin/book/chapters/ch519-the-senses.tex"
+}

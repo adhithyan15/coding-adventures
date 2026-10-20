@@ -1,0 +1,11 @@
+{
+  "id": "LA-R282-a-story-in-order",
+  "pathSegment": "LA-PATH-282-ORDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-282-ORDO",
+      "order": 3
+    }
+  ]
+}

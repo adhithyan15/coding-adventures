@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:cc66c1f6c5286f97",
+  "lessonIds": [
+    "LA-C553-vestibulum",
+    "LA-C553-pessulus",
+    "LA-C553-limen",
+    "LA-C553-cardo",
+    "LA-C553-penus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch553.txt",
+  "json": "latin/narration/ch553.json",
+  "textHash": "fnv1a64:a4c0a51c8ca54685",
+  "jsonHash": "fnv1a64:5214b799a5f765cc",
+  "findings": []
+}

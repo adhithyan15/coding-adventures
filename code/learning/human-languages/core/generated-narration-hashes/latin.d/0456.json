@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:c7a75f96abfb6cfa",
+  "lessonIds": [
+    "LA-C456-inquilinus",
+    "LA-C456-oppidanus",
+    "LA-C456-incola",
+    "LA-C456-incolo",
+    "LA-C456-habitator"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch456.txt",
+  "json": "latin/narration/ch456.json",
+  "textHash": "fnv1a64:d40054ae3b395e36",
+  "jsonHash": "fnv1a64:52d8444025ee6bd0",
+  "findings": []
+}

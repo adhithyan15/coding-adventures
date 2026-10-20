@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-316-ERIPIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-316-ERIPIO"
+  ],
+  "after": []
+}

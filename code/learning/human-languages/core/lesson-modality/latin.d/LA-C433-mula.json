@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C433-mula",
+    "language": "latin",
+    "chapter": 433,
+    "sequence": 23130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e000d89da23e607"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C344-maiores",
+    "language": "latin",
+    "chapter": 344,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d066a048fab5831f"
+  },
+  "findings": []
+}

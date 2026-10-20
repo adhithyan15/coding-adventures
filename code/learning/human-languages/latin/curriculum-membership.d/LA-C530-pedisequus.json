@@ -1,0 +1,11 @@
+{
+  "id": "LA-C530-pedisequus",
+  "pathSegment": "LA-PATH-530-ERUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-530-ERUS",
+      "order": 4
+    }
+  ]
+}

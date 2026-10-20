@@ -1,0 +1,11 @@
+{
+  "id": "LA-C396-promissum",
+  "pathSegment": "LA-PATH-396-POLLICEOR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-396-POLLICEOR",
+      "order": 0
+    }
+  ]
+}

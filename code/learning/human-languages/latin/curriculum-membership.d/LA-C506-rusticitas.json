@@ -1,0 +1,11 @@
+{
+  "id": "LA-C506-rusticitas",
+  "pathSegment": "LA-PATH-506-COMI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-506-COMI",
+      "order": 3
+    }
+  ]
+}

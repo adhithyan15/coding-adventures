@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Pride and arrogance",
+  "label": "ch:la-pride-and-arrogance",
+  "canDo": "I can describe proud and arrogant people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C507-vanitas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can describe proud and arrogant people.",
+    "assesses": [
+      "LA-LEX-C507-SUPB-03",
+      "LA-LEX-C507-SUPB-04",
+      "LA-LEX-C507-SUPB-05"
+    ]
+  }
+}

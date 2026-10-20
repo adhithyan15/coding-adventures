@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C429-carpentum",
+    "language": "latin",
+    "chapter": 429,
+    "sequence": 22930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81da3092f2f4580e"
+  },
+  "findings": []
+}

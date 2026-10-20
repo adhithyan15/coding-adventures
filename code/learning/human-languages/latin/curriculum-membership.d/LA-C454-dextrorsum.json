@@ -1,0 +1,11 @@
+{
+  "id": "LA-C454-dextrorsum",
+  "pathSegment": "LA-PATH-454-DEXTRORSUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-454-DEXTRORSUM",
+      "order": 0
+    }
+  ]
+}

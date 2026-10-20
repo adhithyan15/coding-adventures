@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-397-PACTUM",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-397-PACTUM"
+  ],
+  "after": []
+}

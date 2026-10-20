@@ -1,0 +1,11 @@
+{
+  "id": "LA-C371-temere",
+  "pathSegment": "LA-PATH-371-ROSTRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-371-ROSTRA",
+      "order": 4
+    }
+  ]
+}

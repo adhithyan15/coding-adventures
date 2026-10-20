@@ -52,6 +52,15 @@ This restricted numeric entry also rejects exponentiation operator tokens before
 ASI parsing, preventing recursive exponent-chain stack overflow. Quoted spelling
 and comment trivia do not trigger that operator check.
 
+`parse_javascript_cst_division_only(source, EsVersion)` runs exactly the same
+steps — the regex-free token goal, the exponentiation-token rejection, the ASI
+parse with its depth guard, and the 512 spine bound, with the same error
+texts — and stops there, returning the post-ASI `GrammarASTNode` instead of a
+typed AST. It is the input of `javascript-iir-compiler` (LANG84 decision 6:
+the IIR compiler walks the parse tree). `parse_javascript_program_division_only`
+is now that function followed by the typed bridge, so the two always agree on
+which sources parse.
+
 The JavaScript grammar covers:
 
 - **program** — the top-level rule, a sequence of statements

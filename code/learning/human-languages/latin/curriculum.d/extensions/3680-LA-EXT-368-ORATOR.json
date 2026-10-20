@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-368-ORATOR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the orator and his eloquence, a debate, and holding forth on a subject.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C444-litoreus",
+  "pathSegment": "LA-PATH-444-MALACIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-444-MALACIA",
+      "order": 3
+    }
+  ]
+}

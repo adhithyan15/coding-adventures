@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:bd53ca1b0a067185",
+  "lessonIds": [
+    "LA-C306-caedes",
+    "LA-C306-homicida",
+    "LA-C306-sicarius",
+    "LA-C306-pugio",
+    "LA-C306-occido",
+    "LA-R306-review-299-306"
+  ],
+  "tex": "latin/book/chapters/ch306-caedes.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Fūr comprehēnsus",
+  "label": "ch:la-fur-comprehensus",
+  "canDo": "I can tell how a thief broke in and was caught: to break open, a bolt, to snatch, to catch in the act and to arrest.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C304-comprehendo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can tell how a thief broke in and was caught: to break open, a bolt, to snatch, to catch in the act and to arrest.",
+    "assesses": [
+      "LA-LEX-C304-COMPREHENDO-03",
+      "LA-LEX-C304-COMPREHENDO-04",
+      "LA-LEX-C304-COMPREHENDO-05"
+    ]
+  }
+}

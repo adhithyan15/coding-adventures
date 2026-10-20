@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C282-lectio",
+    "language": "latin",
+    "chapter": 282,
+    "sequence": 15470,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7b8aea995dfb97b2"
+  },
+  "findings": []
+}

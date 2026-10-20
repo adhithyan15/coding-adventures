@@ -4,6 +4,16 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
+
+`var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
+ADVANCED to output without `var x = 1;`, which threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.21.0, which gives a lexical `for` head its own
+loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
+SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
+output bytes, and, when `node` is installed, checks that the output prints
+what the source prints.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph
@@ -940,6 +950,14 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 `rename-globals`, `rename-properties`) appear in the trace exactly when they
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
+
+### Fixed - strict clippy passes on closurec (#15939)
+
+`cargo clippy --all-targets -- -D warnings` now exits 0 with clippy 0.1.95.
+The unknown `doc_list_item_without_indentation` lint named in #15939 had
+already been removed from `Cargo.toml` by #16905. The one remaining error was
+`nonminimal_bool` in `tests/oracle_manifest.rs`: `a == !b` is now written as
+the equivalent `a != b`.
 
 ## [0.246.0] - 2026-09-19
 

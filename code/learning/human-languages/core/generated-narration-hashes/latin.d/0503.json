@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:7bf64e169896ebfa",
+  "lessonIds": [
+    "LA-C503-natura",
+    "LA-C503-indoles",
+    "LA-C503-alacer",
+    "LA-C503-lepidus",
+    "LA-C503-lascivus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch503.txt",
+  "json": "latin/narration/ch503.json",
+  "textHash": "fnv1a64:e69a80f89fcf5d94",
+  "jsonHash": "fnv1a64:ec0d83e1eb6984f4",
+  "findings": []
+}

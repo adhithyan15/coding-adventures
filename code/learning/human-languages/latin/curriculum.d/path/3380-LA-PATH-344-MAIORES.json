@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-344-MAIORES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-344-MAIORES"
+  ],
+  "after": []
+}

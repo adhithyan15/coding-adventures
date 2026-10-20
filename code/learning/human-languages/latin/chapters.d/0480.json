@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Cliff, Jagged rock, Sheer, Steep, To climb",
+  "label": "ch:la-cliff-jagged-rock-sheer-steep-to-climb",
+  "canDo": "I can describe mountains: a cliff, a jagged rock, sheer and steep slopes, and climbing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C480-scando",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can describe mountains: a cliff, a jagged rock, sheer and steep slopes, and climbing.",
+    "assesses": [
+      "LA-LEX-C480-RUPES-03",
+      "LA-LEX-C480-RUPES-04",
+      "LA-LEX-C480-RUPES-05"
+    ]
+  }
+}
