@@ -722,16 +722,20 @@ class MatrixTest(Fixture):
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
 
-    def test_rows_without_release_are_noted_not_counted(self) -> None:
+    def test_rows_without_release_fail(self) -> None:
+        # Phase 2b counted these in a note; since 4c gave Perl's rows the
+        # field, a row of an inventoried language without one is an error.
         path = self.inventory({"1.0": "partial,P,s,-,-,-"})
         report = release_inventory.check_inventory(
             path, release_inventory.matrix_rows(MATRIX)
         )
+        line = MATRIX.count("\n", 0, MATRIX.index('src: "print(2);"')) + 1
         self.assertIn(
-            "matrix: 1 lang_matrix row(s) name no release (LANG84 requires one; "
-            "Prog gains the field in phase 4c)",
-            report.notes,
+            f"lang_matrix.rs line {line}: a Language::Perl row names no release "
+            "(LANG84 requires one for a language with releases.csv)",
+            report.errors,
         )
+        self.assertFalse(any("name no release" in n for n in report.notes))
 
     @ANY_PROFILE
     def test_cli_matrix_flag_reads_the_source(self) -> None:

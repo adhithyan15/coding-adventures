@@ -93,7 +93,9 @@ sweep (LANG84 phase 4c); `class` is the hex digest of the IIR that R produces
 for C, or `rejected`. A `lang_matrix` row (`Prog { .. }` in
 `code/packages/rust/lang-aot/tests/lang_matrix.rs`) counts when it names
 `release: Some("<id>")` and `case: Some("<subset>/<name>")`. Rows naming an
-unknown release, subset or case fail the check, so stale rows cannot linger.
+unknown release, subset or case fail the check, so stale rows cannot linger,
+and so does a row of an inventoried language that names no release (since
+LANG84 phase 4c; phase 2b only counted such rows in a note).
 
 USAGE
 =====
@@ -722,11 +724,16 @@ def check_matrix(
 
     # Matrix rows that name a release/case must name real ones.
     ran: set[tuple[str, str, str]] = set()
-    undeclared = 0
     for row in mine:
         where = f"lang_matrix.rs line {row['line']}"
         if "release" not in row:
-            undeclared += 1
+            # LANG84 "CI bounding": `release` is required (`Some`) for every
+            # language with an inventory. 2b only noted such rows, until 4c
+            # gave the 11 Perl rows the field; from 4c on it is an error.
+            report.error(
+                f"{where}: a Language::{row['lang']} row names no release "
+                "(LANG84 requires one for a language with releases.csv)"
+            )
             continue
         release, case = row["release"], row.get("case")
         if release not in order:
@@ -741,11 +748,6 @@ def check_matrix(
             )
             continue
         ran.add((release, subset, name))
-    if undeclared:
-        report.notes.append(
-            f"matrix: {undeclared} lang_matrix row(s) name no release "
-            "(LANG84 requires one; Prog gains the field in phase 4c)"
-        )
 
     classes = read_classes(report, directory, order, cases)
     representative: dict[tuple[str, str, str], str] = {}
