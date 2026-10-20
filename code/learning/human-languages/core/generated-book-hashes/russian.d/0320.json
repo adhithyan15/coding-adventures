@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:4987218e9a951f06",
+  "lessonIds": [
+    "RU-C320-volshebnik",
+    "RU-C320-vedma",
+    "RU-C320-chudovishche",
+    "RU-C320-drakon",
+    "RU-C320-prevrashchatsya"
+  ],
+  "tex": "russian/book/chapters/ch320-fairy-tale-creatures.tex"
+}

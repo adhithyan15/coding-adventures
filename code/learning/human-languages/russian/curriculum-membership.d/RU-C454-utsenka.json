@@ -1,0 +1,11 @@
+{
+  "id": "RU-C454-utsenka",
+  "pathSegment": "RU-PATH-454-RASPRODAZHA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-454-RASPRODAZHA",
+      "order": 1
+    }
+  ]
+}

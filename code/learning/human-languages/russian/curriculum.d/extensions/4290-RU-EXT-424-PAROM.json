@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-424-PAROM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can travel by ferry: the ferry, the deck, the cabin, the mooring and the landing stage.",
+  "prerequisites": []
+}

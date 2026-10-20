@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:1f523e5b028d97a4",
+  "lessonIds": [
+    "RU-C310-yubiley",
+    "RU-C310-godovshchina",
+    "RU-C310-novorozhdyonnyy",
+    "RU-C310-krestiny",
+    "RU-C310-krestit",
+    "RU-R310-review-303-310"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch310.txt",
+  "json": "russian/narration/ch310.json",
+  "textHash": "fnv1a64:3a3b39429119dc81",
+  "jsonHash": "fnv1a64:c28b43fd68a9c5ff",
+  "findings": []
+}

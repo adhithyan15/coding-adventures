@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-504-BOARDGAMES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-504-BOARDGAMES"
+  ],
+  "after": []
+}

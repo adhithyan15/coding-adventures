@@ -59,6 +59,13 @@ the last good page visible if a rebuild fails.
 
 - `data/index.landing` owns copy, navigation, cards, repository statistics,
   Forme status, and links.
+  Its dated snapshot matches the root README's tracked-path census and counting
+  rules. When refreshing it, update both documents from the same `main` commit,
+  set `site.updated`, and check Forme's completion roadmap and each product's
+  acceptance ledger before changing capability claims. Keep live Pages routes
+  in `labs`; use repository links in `workshop` for source and design tracks.
+  `verify.ts` reads snapshot values from the authored model so a content refresh
+  does not need a second hand-maintained list of numbers.
 - `landing-style.ts` owns backend-portable style tokens and rules.
 - `landing.css` owns web-only layout primitives that the current
   backend-neutral Style IR does not model, including grid, flex, pseudo

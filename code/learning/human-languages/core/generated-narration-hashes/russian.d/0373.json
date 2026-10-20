@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:1e44c8db7e128afd",
+  "lessonIds": [
+    "RU-C373-riskovat",
+    "RU-C373-opasatsya",
+    "RU-C373-izbegat",
+    "RU-C373-ugrozhat",
+    "RU-C373-predotvrashchat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch373.txt",
+  "json": "russian/narration/ch373.json",
+  "textHash": "fnv1a64:7274d1173491b99e",
+  "jsonHash": "fnv1a64:40538c76c66a8855",
+  "findings": []
+}

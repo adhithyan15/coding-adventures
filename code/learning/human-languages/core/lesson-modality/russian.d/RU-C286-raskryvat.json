@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C286-raskryvat",
+    "language": "russian",
+    "chapter": 286,
+    "sequence": 17180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61822dbcff473188"
+  },
+  "findings": []
+}

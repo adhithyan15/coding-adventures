@@ -265,9 +265,11 @@ embedding-layer compatibility work. Participant `box` declarations now lower int
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
 rectangles and labels, including the supported named and `rgb`/`rgba` color
 forms. Functional `hsl`/`hsla` colors normalize to backend-safe RGB while
-retaining their color semantics. The family remains partial until the
-pinned upstream corpus pass; unsupported forms must fail grammar validation
-rather than degrade silently.
+retaining their color semantics. All 71 valid fixtures in the pinned Mermaid
+11.16.1 Sequence corpus pass grammar validation, semantic lowering,
+deterministic Sequence layout, backend-neutral PaintScene lowering, and native
+Metal-to-PNG rendering; all five pinned invalid fixtures remain rejected.
+Sequence therefore reaches the manifest's defined `full` level.
 
 Sequence `accTitle`, single-line `accDescr`, and multiline `accDescr` blocks
 preserve accessibility semantics in PaintScene metadata.

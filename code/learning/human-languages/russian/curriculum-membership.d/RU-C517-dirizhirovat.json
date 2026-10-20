@@ -1,0 +1,11 @@
+{
+  "id": "RU-C517-dirizhirovat",
+  "pathSegment": "RU-PATH-517-ORCHESTRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-517-ORCHESTRA",
+      "order": 3
+    }
+  ]
+}

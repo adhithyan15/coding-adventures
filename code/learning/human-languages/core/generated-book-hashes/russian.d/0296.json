@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:5b479e5c9f52cd38",
+  "lessonIds": [
+    "RU-C296-spasatel",
+    "RU-C296-spasat",
+    "RU-C296-spaseniye",
+    "RU-C296-evakuirovat",
+    "RU-C296-evakuatsiya"
+  ],
+  "tex": "russian/book/chapters/ch296-rescue.tex"
+}

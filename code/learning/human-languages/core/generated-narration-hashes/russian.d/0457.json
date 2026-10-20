@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:5a3d83f29cd95e2f",
+  "lessonIds": [
+    "RU-C457-upakovyvat",
+    "RU-C457-zavorachivat",
+    "RU-C457-dostavka",
+    "RU-C457-dostavlyat",
+    "RU-C457-kuryer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch457.txt",
+  "json": "russian/narration/ch457.json",
+  "textHash": "fnv1a64:203fac8bbbb5c452",
+  "jsonHash": "fnv1a64:cf7db7b8ba3e5168",
+  "findings": []
+}

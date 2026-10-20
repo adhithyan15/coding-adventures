@@ -1,0 +1,11 @@
+{
+  "id": "RU-C338-dovod",
+  "pathSegment": "RU-PATH-338-DOVOD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-338-DOVOD",
+      "order": 1
+    }
+  ]
+}

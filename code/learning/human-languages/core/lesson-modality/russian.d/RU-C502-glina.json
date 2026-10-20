@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C502-glina",
+    "language": "russian",
+    "chapter": 502,
+    "sequence": 28290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dc15143bc1b1bd0"
+  },
+  "findings": []
+}

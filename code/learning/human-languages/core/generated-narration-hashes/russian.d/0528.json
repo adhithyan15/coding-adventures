@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:d72451b6ae56b84c",
+  "lessonIds": [
+    "RU-C528-pristavka",
+    "RU-C528-videoigra",
+    "RU-C528-bloger",
+    "RU-C528-podpischik",
+    "RU-C528-geymer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch528.txt",
+  "json": "russian/narration/ch528.json",
+  "textHash": "fnv1a64:7464d982bb15a5bf",
+  "jsonHash": "fnv1a64:2dda2355d0163e8f",
+  "findings": []
+}

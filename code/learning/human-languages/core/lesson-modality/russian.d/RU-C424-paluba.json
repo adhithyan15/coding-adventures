@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C424-paluba",
+    "language": "russian",
+    "chapter": 424,
+    "sequence": 24280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8eaa69a7eae678e0"
+  },
+  "findings": []
+}

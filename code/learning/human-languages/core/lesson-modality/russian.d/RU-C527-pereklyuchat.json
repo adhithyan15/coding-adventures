@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C527-pereklyuchat",
+    "language": "russian",
+    "chapter": 527,
+    "sequence": 29600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10b75dc6f0b1fc6b"
+  },
+  "findings": []
+}

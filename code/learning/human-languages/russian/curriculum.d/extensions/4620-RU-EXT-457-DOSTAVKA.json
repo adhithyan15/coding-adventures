@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-457-DOSTAVKA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can send things: packing, wrapping, delivery, delivering and the courier.",
+  "prerequisites": []
+}

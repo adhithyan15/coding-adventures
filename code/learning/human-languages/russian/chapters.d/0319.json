@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Legends and heroes",
+  "label": "ch:ru-legends-and-heroes",
+  "canDo": "I can talk about a legend, a myth, a hero and a storyteller, and say that someone made up a story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C319-sochinyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can talk about a legend, a myth, a hero and a storyteller, and say that someone made up a story.",
+    "assesses": [
+      "RU-LEX-C319-LEGENDA-03",
+      "RU-LEX-C319-LEGENDA-04",
+      "RU-LEX-C319-LEGENDA-05"
+    ]
+  }
+}

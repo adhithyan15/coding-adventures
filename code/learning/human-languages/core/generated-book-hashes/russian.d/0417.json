@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:57ffac36733c118c",
+  "lessonIds": [
+    "RU-C417-turniket",
+    "RU-C417-proyezdnoy",
+    "RU-C417-bezbiletnik",
+    "RU-C417-marshrut",
+    "RU-C417-marshrutka"
+  ],
+  "tex": "russian/book/chapters/ch417-metro-and-minibus.tex"
+}

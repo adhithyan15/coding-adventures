@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-471-HURT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-471-HURT"
+  ],
+  "after": []
+}

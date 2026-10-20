@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Cramming and crib sheets",
+  "label": "ch:ru-cramming-and-crib-sheets",
+  "canDo": "I can talk about how students study: cramming, learning by heart, skipping classes, crib sheets and getting distracted.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-R384-review-377-384",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about how students study: cramming, learning by heart, skipping classes, crib sheets and getting distracted.",
+    "assesses": [
+      "RU-LEX-C384-UCHYOBA-03",
+      "RU-LEX-C384-UCHYOBA-04",
+      "RU-LEX-C384-UCHYOBA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:51cd176351b56d81",
+  "lessonIds": [
+    "RU-C444-ratusha",
+    "RU-C444-sobor",
+    "RU-C444-kolokolnya",
+    "RU-C444-krepost",
+    "RU-C444-meriya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch444.txt",
+  "json": "russian/narration/ch444.json",
+  "textHash": "fnv1a64:d5d91890153eece0",
+  "jsonHash": "fnv1a64:cb48c459839ff87d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C413-kupe",
+    "language": "russian",
+    "chapter": 413,
+    "sequence": 23730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16f889721cc7e2d1"
+  },
+  "findings": []
+}

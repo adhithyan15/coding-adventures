@@ -1,0 +1,11 @@
+{
+  "id": "RU-C313-ukrashat",
+  "pathSegment": "RU-PATH-313-YOLKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-313-YOLKA",
+      "order": 2
+    }
+  ]
+}

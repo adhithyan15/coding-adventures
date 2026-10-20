@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-502-CRAFTS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-502-CRAFTS"
+  ],
+  "after": []
+}

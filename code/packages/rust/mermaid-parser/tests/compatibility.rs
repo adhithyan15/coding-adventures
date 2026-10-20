@@ -1248,7 +1248,7 @@ fn pinned_sequence_corpus_matches_upstream_acceptance() {
 }
 
 #[test]
-fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
+fn sequence_full_status_is_backed_by_complete_syntax_and_visual_corpora() {
     let syntax: Value = serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
     let visual: Value =
         serde_json::from_str(SEQUENCE_VISUAL_CORPUS).expect("sequence visual corpus must be JSON");
@@ -1266,7 +1266,7 @@ fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
         .iter()
         .map(|id| id.as_str().expect("visual fixture id"))
         .collect::<BTreeSet<_>>();
-    assert!(fixtures.is_subset(&valid));
+    assert_eq!(fixtures, valid, "visual corpus must cover every valid syntax fixture");
     assert_eq!(
         fixtures.len(),
         visual["fixtures"].as_array().expect("visual fixture array").len(),

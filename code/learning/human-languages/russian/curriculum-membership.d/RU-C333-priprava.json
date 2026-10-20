@@ -1,0 +1,11 @@
+{
+  "id": "RU-C333-priprava",
+  "pathSegment": "RU-PATH-333-SOLIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-333-SOLIT",
+      "order": 3
+    }
+  ]
+}

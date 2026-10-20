@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C325-revolyutsiya",
+    "language": "russian",
+    "chapter": 325,
+    "sequence": 19170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96d43e8d892ffe08"
+  },
+  "findings": []
+}

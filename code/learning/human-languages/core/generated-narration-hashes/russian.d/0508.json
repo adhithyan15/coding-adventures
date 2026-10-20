@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:99bc35037b1e498e",
+  "lessonIds": [
+    "RU-C508-bolelshchik",
+    "RU-C508-tribuna",
+    "RU-C508-svistok",
+    "RU-C508-podbadrivat",
+    "RU-C508-likovat",
+    "RU-R508-review-501-508"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch508.txt",
+  "json": "russian/narration/ch508.json",
+  "textHash": "fnv1a64:8a8315dfd6e23c94",
+  "jsonHash": "fnv1a64:d1745938a09dfbce",
+  "findings": []
+}

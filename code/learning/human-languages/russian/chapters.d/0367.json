@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Freedom and equality",
+  "label": "ch:ru-freedom-and-equality",
+  "canDo": "I can talk about freedom and equality, poverty and wealth, and unemployment.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C367-bezrabotica",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can talk about freedom and equality, poverty and wealth, and unemployment.",
+    "assesses": [
+      "RU-LEX-C367-RAVENSTVO-03",
+      "RU-LEX-C367-RAVENSTVO-04",
+      "RU-LEX-C367-RAVENSTVO-05"
+    ]
+  }
+}

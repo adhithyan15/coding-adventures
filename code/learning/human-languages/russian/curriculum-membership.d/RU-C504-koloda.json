@@ -1,0 +1,11 @@
+{
+  "id": "RU-C504-koloda",
+  "pathSegment": "RU-PATH-504-BOARDGAMES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-504-BOARDGAMES",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:be423a6b41997e29",
+  "lessonIds": [
+    "RU-C386-doklad",
+    "RU-C386-referat",
+    "RU-C386-prezentaciya",
+    "RU-C386-ponyatie",
+    "RU-C386-termin"
+  ],
+  "tex": "russian/book/chapters/ch386-giving-a-talk.tex"
+}

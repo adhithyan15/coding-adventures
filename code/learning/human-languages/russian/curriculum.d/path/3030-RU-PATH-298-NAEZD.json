@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-298-NAEZD",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-298-NAEZD"
+  ],
+  "after": []
+}

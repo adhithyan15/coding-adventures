@@ -1,0 +1,11 @@
+{
+  "id": "RU-R534-review-533-534",
+  "pathSegment": "RU-PATH-534-MORNING",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-534-MORNING",
+      "order": 5
+    }
+  ]
+}

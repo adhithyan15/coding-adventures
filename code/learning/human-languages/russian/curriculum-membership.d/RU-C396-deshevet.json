@@ -1,0 +1,11 @@
+{
+  "id": "RU-C396-deshevet",
+  "pathSegment": "RU-PATH-396-TSENY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-396-TSENY",
+      "order": 1
+    }
+  ]
+}

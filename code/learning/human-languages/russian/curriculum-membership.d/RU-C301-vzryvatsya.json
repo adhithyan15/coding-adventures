@@ -1,0 +1,11 @@
+{
+  "id": "RU-C301-vzryvatsya",
+  "pathSegment": "RU-PATH-301-KATASTROFA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-301-KATASTROFA",
+      "order": 2
+    }
+  ]
+}

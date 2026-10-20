@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C429-administrator",
+    "language": "russian",
+    "chapter": 429,
+    "sequence": 24530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52d0bf27cfc66187"
+  },
+  "findings": []
+}

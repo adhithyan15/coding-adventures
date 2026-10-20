@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-324-POBEDA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-324-POBEDA"
+  ],
+  "after": []
+}

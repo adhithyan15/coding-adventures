@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Laundry and mending",
+  "label": "ch:ru-laundry-and-mending",
+  "canDo": "I can get clothes cleaned and mended: the laundry, the dry cleaner's, darning, sewing up and sewing on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C448-prishivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can get clothes cleaned and mended: the laundry, the dry cleaner's, darning, sewing up and sewing on.",
+    "assesses": [
+      "RU-LEX-C448-KHIMCHISTKA-03",
+      "RU-LEX-C448-KHIMCHISTKA-04",
+      "RU-LEX-C448-KHIMCHISTKA-05"
+    ]
+  }
+}

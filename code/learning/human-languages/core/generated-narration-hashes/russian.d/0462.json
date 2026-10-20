@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:9b05cf712f6df2a0",
+  "lessonIds": [
+    "RU-C462-palatka",
+    "RU-C462-spalnik",
+    "RU-C462-kostyor",
+    "RU-C462-razzhigat",
+    "RU-C462-tushit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch462.txt",
+  "json": "russian/narration/ch462.json",
+  "textHash": "fnv1a64:6435672e8eee5be7",
+  "jsonHash": "fnv1a64:b99176fd134c990b",
+  "findings": []
+}

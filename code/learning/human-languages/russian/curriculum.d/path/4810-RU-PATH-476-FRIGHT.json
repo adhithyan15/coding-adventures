@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-476-FRIGHT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-476-FRIGHT"
+  ],
+  "after": []
+}

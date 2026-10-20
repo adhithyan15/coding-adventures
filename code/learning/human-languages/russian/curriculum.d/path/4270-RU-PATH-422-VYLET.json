@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-422-VYLET",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-422-VYLET"
+  ],
+  "after": []
+}

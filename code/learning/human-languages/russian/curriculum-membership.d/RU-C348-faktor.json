@@ -1,0 +1,11 @@
+{
+  "id": "RU-C348-faktor",
+  "pathSegment": "RU-PATH-348-POVOD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-348-POVOD",
+      "order": 2
+    }
+  ]
+}

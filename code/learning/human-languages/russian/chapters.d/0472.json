@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Irritation and Fury",
+  "label": "ch:ru-irritation-and-fury",
+  "canDo": "I can talk about irritation and anger.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C472-vspylchivyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about irritation and anger.",
+    "assesses": [
+      "RU-LEX-C472-ANGER-03",
+      "RU-LEX-C472-ANGER-04",
+      "RU-LEX-C472-ANGER-05"
+    ]
+  }
+}

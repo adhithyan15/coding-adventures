@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Exceptions",
+  "label": "ch:ru-exceptions",
+  "canDo": "I can name an exception, say as long as, except perhaps and at least, and do something in case.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-R376-review-369-376",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can name an exception, say as long as, except perhaps and at least, and do something in case.",
+    "assesses": [
+      "RU-LEX-C376-ISKLYUCHENIYE-03",
+      "RU-LEX-C376-ISKLYUCHENIYE-04",
+      "RU-LEX-C376-ISKLYUCHENIYE-05"
+    ]
+  }
+}

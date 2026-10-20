@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:f73e0a718132632e",
+  "lessonIds": [
+    "RU-C522-skulptor",
+    "RU-C522-skulptura",
+    "RU-C522-mramor",
+    "RU-C522-statuya",
+    "RU-C522-vdokhnovlyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch522.txt",
+  "json": "russian/narration/ch522.json",
+  "textHash": "fnv1a64:aed5bffec7145d45",
+  "jsonHash": "fnv1a64:99982485629c7690",
+  "findings": []
+}

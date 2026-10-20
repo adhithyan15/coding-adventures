@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Shame and Embarrassment",
+  "label": "ch:ru-shame-and-embarrassment",
+  "canDo": "I can talk about shame and embarrassment.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C470-zastenchivyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about shame and embarrassment.",
+    "assesses": [
+      "RU-LEX-C470-SHAME-03",
+      "RU-LEX-C470-SHAME-04",
+      "RU-LEX-C470-SHAME-05"
+    ]
+  }
+}

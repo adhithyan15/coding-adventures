@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:b75f65fb04f8e242",
+  "lessonIds": [
+    "RU-C321-korol",
+    "RU-C321-koroleva",
+    "RU-C321-printsessa",
+    "RU-C321-prints",
+    "RU-C321-korolevstvo"
+  ],
+  "tex": "russian/book/chapters/ch321-kings-and-queens.tex"
+}

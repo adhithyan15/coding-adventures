@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C385-obrazovanie",
+    "language": "russian",
+    "chapter": 385,
+    "sequence": 22260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e6768cc88c03e97"
+  },
+  "findings": []
+}

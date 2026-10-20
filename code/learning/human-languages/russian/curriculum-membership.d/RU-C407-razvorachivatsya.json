@@ -1,0 +1,11 @@
+{
+  "id": "RU-C407-razvorachivatsya",
+  "pathSegment": "RU-PATH-407-OBGON",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-407-OBGON",
+      "order": 3
+    }
+  ]
+}

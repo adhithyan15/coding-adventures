@@ -1,0 +1,11 @@
+{
+  "id": "RU-C484-rastyazheniye",
+  "pathSegment": "RU-PATH-484-PLASTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-484-PLASTER",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 262,
+  "title": "Then, and At Last: A Story Told in Order",
+  "label": "ch:ru-then-and-at-last-a-story-told-in-order",
+  "canDo": "I can tell a short story in order with сначала, потом, затем and наконец, retell it with рассказать, and read a connected story in the past.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C262-review",
+    "kind": "production",
+    "summary": "Complete RU-C262-review: a day retold in four steps, сначала, потом, затем, наконец, with the scene in the imperfective and the events in the perfective.",
+    "assesses": [
+      "RU-LEX-ZATEM-01",
+      "RU-GRAMMAR-PERFECTIVE-CHAIN-01",
+      "RU-LEX-RASSKAZAT-01",
+      "RU-GRAMMAR-STORY-FRAME-01",
+      "RU-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

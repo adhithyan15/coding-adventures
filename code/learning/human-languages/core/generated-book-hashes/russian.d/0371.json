@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:e1bd98dfad2ec4ae",
+  "lessonIds": [
+    "RU-C371-gipoteza",
+    "RU-C371-predpolagat",
+    "RU-C371-predpolozhim",
+    "RU-C371-dopustim",
+    "RU-C371-predpolozhenie"
+  ],
+  "tex": "russian/book/chapters/ch371-let-us-suppose.tex"
+}

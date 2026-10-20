@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:af29d2aedbc3ab21",
+  "lessonIds": [
+    "RU-C296-spasatel",
+    "RU-C296-spasat",
+    "RU-C296-spaseniye",
+    "RU-C296-evakuirovat",
+    "RU-C296-evakuatsiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch296.txt",
+  "json": "russian/narration/ch296.json",
+  "textHash": "fnv1a64:123a9b23834d6e78",
+  "jsonHash": "fnv1a64:36322bed0a49e8aa",
+  "findings": []
+}

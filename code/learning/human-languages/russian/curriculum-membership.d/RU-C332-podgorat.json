@@ -1,0 +1,11 @@
+{
+  "id": "RU-C332-podgorat",
+  "pathSegment": "RU-PATH-332-ZAPEKAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-332-ZAPEKAT",
+      "order": 3
+    }
+  ]
+}

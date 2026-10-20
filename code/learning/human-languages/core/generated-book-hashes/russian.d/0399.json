@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:cb77fb5b9d122f6a",
+  "lessonIds": [
+    "RU-C399-set",
+    "RU-C399-sayt",
+    "RU-C399-ssylka",
+    "RU-C399-brauzer",
+    "RU-C399-poiskovik"
+  ],
+  "tex": "russian/book/chapters/ch399-online.tex"
+}

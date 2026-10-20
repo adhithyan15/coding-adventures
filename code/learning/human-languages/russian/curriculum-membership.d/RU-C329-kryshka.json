@@ -1,0 +1,11 @@
+{
+  "id": "RU-C329-kryshka",
+  "pathSegment": "RU-PATH-329-KIPYATIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-329-KIPYATIT",
+      "order": 3
+    }
+  ]
+}

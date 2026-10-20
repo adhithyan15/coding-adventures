@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-427-MAYAK",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-427-MAYAK"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C489-analiz",
+  "pathSegment": "RU-PATH-489-CHECKUP",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-489-CHECKUP",
+      "order": 2
+    }
+  ]
+}

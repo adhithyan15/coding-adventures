@@ -1,0 +1,11 @@
+{
+  "id": "RU-C476-smelost",
+  "pathSegment": "RU-PATH-476-FRIGHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-476-FRIGHT",
+      "order": 4
+    }
+  ]
+}

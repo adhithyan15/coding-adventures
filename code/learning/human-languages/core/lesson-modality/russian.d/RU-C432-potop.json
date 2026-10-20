@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C432-potop",
+    "language": "russian",
+    "chapter": 432,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d31f6b72753a219"
+  },
+  "findings": []
+}

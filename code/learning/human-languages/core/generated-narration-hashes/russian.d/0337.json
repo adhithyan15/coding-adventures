@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:c91289a71523fc58",
+  "lessonIds": [
+    "RU-C337-tochka-zreniya",
+    "RU-C337-poziciya",
+    "RU-C337-vzglyad",
+    "RU-C337-zayavlyat",
+    "RU-C337-schitatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch337.txt",
+  "json": "russian/narration/ch337.json",
+  "textHash": "fnv1a64:abc34c6882ce51aa",
+  "jsonHash": "fnv1a64:de64db4af2df1f2d",
+  "findings": []
+}

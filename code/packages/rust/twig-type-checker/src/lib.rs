@@ -16,7 +16,8 @@
 //!     ▼  twig_type_checker::check_program   ← THIS CRATE (TW05-B)
 //! TypedProgram { program, env }
 //!     │
-//!     ▼  twig_ir_compiler::compile_program  (conditional on typed_mode)
+//!     ▼  twig_ir_compiler::compile_ast  (gate via check_cst_with_globals,
+//!                                         conditional on typed_mode)
 //! IIRModule
 //! ```
 //!
@@ -88,7 +89,11 @@ pub use profile::TwigLanguageProfile;
 pub use type_checker_protocol::TypeErrorDiagnostic;
 pub use type_declarations::AnnotatedNode;
 
-use twig_parser::{emit_type_declarations, parse, parse_to_ast, Program, TypedMode};
+use parser::grammar_parser::GrammarASTNode;
+use twig_parser::{
+    emit_type_declarations, extract_program, parse, parse_to_ast, Program, TwigParseError,
+    TypedMode,
+};
 use type_checker_protocol::{TypeCheckResult, TypeChecker};
 
 // ---------------------------------------------------------------------------
@@ -396,6 +401,53 @@ pub fn check_program_with_globals(
         errors,
         ok,
     }
+}
+
+// ---------------------------------------------------------------------------
+// LANG84: type-check a parse tree (the IIR compiler's TW05-B gate)
+// ---------------------------------------------------------------------------
+
+/// Type-check a Twig **parse tree** — the `program` [`GrammarASTNode`]
+/// from [`twig_parser::parse_to_ast`] — with optional cross-module globals.
+///
+/// This is the entry point `twig-ir-compiler` uses for its TW05-B gate.
+/// LANG84 decision 6 forbids the IIR compiler from lifting the CST into
+/// [`Program`]; the compiler therefore hands this crate the CST and reads
+/// back only the [`TypeCheckResult::ok`] flag and the diagnostics, which
+/// are keyed by source position `(line, column)` rather than by AST node.
+/// Nothing in the result feeds IIR emission.
+///
+/// Internally the checker still runs on its own typed AST: the tree is
+/// lifted with [`twig_parser::extract_program`] and checked by
+/// [`check_program_with_globals`].  (Whether TW05-B itself should walk the
+/// CST is LANG84 open question 2.)  With an empty `extra_globals` map the
+/// result is identical to [`check_program`].
+///
+/// # Errors
+///
+/// Returns the extractor's [`TwigParseError`] if `cst` is not a
+/// well-formed Twig `program` tree.  A tree straight from
+/// [`twig_parser::parse_to_ast`] that the IIR compiler's own `check_cst`
+/// pass accepted never fails here.
+///
+/// # Example
+///
+/// ```
+/// use std::collections::HashMap;
+/// use twig_type_checker::check_cst_with_globals;
+///
+/// let cst = twig_parser::parse_to_ast("(module m (typed strict)) (define (f x) x) (f 1 2)").unwrap();
+/// let result = check_cst_with_globals(&cst, None, &HashMap::new()).unwrap();
+/// assert!(!result.ok);
+/// assert!(result.errors[0].line >= 1);
+/// ```
+pub fn check_cst_with_globals(
+    cst: &GrammarASTNode,
+    mode_override: Option<TypedMode>,
+    extra_globals: &std::collections::HashMap<String, TwigKind>,
+) -> Result<TypeCheckResult<TypedProgram>, TwigParseError> {
+    let program = extract_program(cst)?;
+    Ok(check_program_with_globals(&program, mode_override, extra_globals))
 }
 
 // ---------------------------------------------------------------------------

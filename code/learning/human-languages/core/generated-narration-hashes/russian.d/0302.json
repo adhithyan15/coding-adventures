@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:e6d536e527412163",
+  "lessonIds": [
+    "RU-C302-zadykhatsya",
+    "RU-C302-vyzhivat",
+    "RU-C302-perevyazyvat",
+    "RU-C302-obzhechsya",
+    "RU-C302-porezatsya",
+    "RU-R302-review-295-302"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch302.txt",
+  "json": "russian/narration/ch302.json",
+  "textHash": "fnv1a64:688e2b18272e83d7",
+  "jsonHash": "fnv1a64:9f7302a1716ef34f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:b4ad848871fd95a3",
+  "lessonIds": [
+    "RU-C414-perron",
+    "RU-C414-platforma",
+    "RU-C414-tablo",
+    "RU-C414-otpravleniye",
+    "RU-C414-pribytiye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch414.txt",
+  "json": "russian/narration/ch414.json",
+  "textHash": "fnv1a64:7b4c10e7d63e8e8f",
+  "jsonHash": "fnv1a64:7dbc660722b6aff1",
+  "findings": []
+}

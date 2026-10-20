@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-426-VESLO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-426-VESLO"
+  ],
+  "after": []
+}

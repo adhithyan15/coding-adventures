@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "On the Ice and in the Water",
+  "label": "ch:ru-on-the-ice-and-in-the-water",
+  "canDo": "I can talk about skating and splashing about in the water.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C514-pleskatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about skating and splashing about in the water.",
+    "assesses": [
+      "RU-LEX-C514-ICE-03",
+      "RU-LEX-C514-ICE-04",
+      "RU-LEX-C514-ICE-05"
+    ]
+  }
+}

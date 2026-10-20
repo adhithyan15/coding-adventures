@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C398-strakhovat",
+    "language": "russian",
+    "chapter": 398,
+    "sequence": 22950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb865024cca8548a"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-271-VNEZAPNO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-271-VNEZAPNO"
+  ],
+  "after": []
+}
