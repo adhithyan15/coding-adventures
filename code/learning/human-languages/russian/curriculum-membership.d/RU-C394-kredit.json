@@ -1,0 +1,11 @@
+{
+  "id": "RU-C394-kredit",
+  "pathSegment": "RU-PATH-394-DOLG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-394-DOLG",
+      "order": 1
+    }
+  ]
+}

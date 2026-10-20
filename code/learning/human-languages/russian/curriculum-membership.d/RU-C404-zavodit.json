@@ -1,0 +1,11 @@
+{
+  "id": "RU-C404-zavodit",
+  "pathSegment": "RU-PATH-404-KAPOT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-404-KAPOT",
+      "order": 3
+    }
+  ]
+}

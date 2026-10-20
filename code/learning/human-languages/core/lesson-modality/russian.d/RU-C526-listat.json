@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C526-listat",
+    "language": "russian",
+    "chapter": 526,
+    "sequence": 29540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73dfed0b0a43fbfa"
+  },
+  "findings": []
+}

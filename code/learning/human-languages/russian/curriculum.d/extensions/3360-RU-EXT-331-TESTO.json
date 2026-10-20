@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-331-TESTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe making dough: dough, kneading, rolling out, shaping and a filling.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-354-BOLSHE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-354-BOLSHE"
+  ],
+  "after": []
+}

@@ -1,4 +1,15 @@
 # Changelog — `aarch64-backend`
+
+## Unreleased — fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `udf #0xDEAD`
+instead of storing a saturated integer. `fcvtzs` saturates NaN to 0 and
+out-of-range values to `i64::MIN`/`MAX`. The input is rounded in place
+(`frintm` for floor, the new `frintz` for trunc), converted, converted back
+with `scvtf` and compared with `fcmp`. The code also traps on a result of
+`i64::MAX`, because `fcvtzs` saturates `2^63` to that value, which converts
+back to `2^63` exactly.
+
 ## [0.40.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): `SDIV` never

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C399-brauzer",
+  "pathSegment": "RU-PATH-399-SET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-399-SET",
+      "order": 3
+    }
+  ]
+}

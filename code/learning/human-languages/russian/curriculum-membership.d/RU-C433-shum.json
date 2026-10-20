@@ -1,0 +1,11 @@
+{
+  "id": "RU-C433-shum",
+  "pathSegment": "RU-PATH-433-SHUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-433-SHUM",
+      "order": 0
+    }
+  ]
+}

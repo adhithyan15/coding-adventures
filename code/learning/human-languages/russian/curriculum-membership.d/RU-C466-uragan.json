@@ -1,0 +1,11 @@
+{
+  "id": "RU-C466-uragan",
+  "pathSegment": "RU-PATH-466-BURYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-466-BURYA",
+      "order": 1
+    }
+  ]
+}

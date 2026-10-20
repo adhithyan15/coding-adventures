@@ -1,0 +1,11 @@
+{
+  "id": "RU-C362-premiya",
+  "pathSegment": "RU-PATH-362-POVYSHENIYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-362-POVYSHENIYE",
+      "order": 1
+    }
+  ]
+}

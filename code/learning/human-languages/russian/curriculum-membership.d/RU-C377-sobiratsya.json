@@ -1,0 +1,11 @@
+{
+  "id": "RU-C377-sobiratsya",
+  "pathSegment": "RU-PATH-377-PLANY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-377-PLANY",
+      "order": 4
+    }
+  ]
+}

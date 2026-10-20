@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C463-priliv",
+    "language": "russian",
+    "chapter": 463,
+    "sequence": 26270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af849a00847c004a"
+  },
+  "findings": []
+}

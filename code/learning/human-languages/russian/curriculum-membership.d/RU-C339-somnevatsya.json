@@ -1,0 +1,11 @@
+{
+  "id": "RU-C339-somnevatsya",
+  "pathSegment": "RU-PATH-339-UBEZHDAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-339-UBEZHDAT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-295-POZHAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-295-POZHAR"
+  ],
+  "after": []
+}

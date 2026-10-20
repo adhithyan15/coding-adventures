@@ -1,0 +1,11 @@
+{
+  "id": "RU-C500-vyazat",
+  "pathSegment": "RU-PATH-500-KNITTING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-500-KNITTING",
+      "order": 0
+    }
+  ]
+}

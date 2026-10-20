@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:de9028f6ceef60d9",
+  "lessonIds": [
+    "RU-C303-rozhdeniye",
+    "RU-C303-rozhdatsya",
+    "RU-C303-mladenets",
+    "RU-C303-beremennaya",
+    "RU-C303-rozhat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch303.txt",
+  "json": "russian/narration/ch303.json",
+  "textHash": "fnv1a64:5228e3c9da24c51d",
+  "jsonHash": "fnv1a64:84047dff8acbf3b4",
+  "findings": []
+}

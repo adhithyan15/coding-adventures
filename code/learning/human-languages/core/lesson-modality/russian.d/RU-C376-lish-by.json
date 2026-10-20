@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C376-lish-by",
+    "language": "russian",
+    "chapter": 376,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a29d4ad284e8fc5"
+  },
+  "findings": []
+}

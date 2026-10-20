@@ -1,0 +1,11 @@
+{
+  "id": "RU-C513-otzhimatsya",
+  "pathSegment": "RU-PATH-513-TRAINING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-513-TRAINING",
+      "order": 1
+    }
+  ]
+}

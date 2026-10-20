@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C519-premyera",
+    "language": "russian",
+    "chapter": 519,
+    "sequence": 29190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2951d8a87da65a24"
+  },
+  "findings": []
+}

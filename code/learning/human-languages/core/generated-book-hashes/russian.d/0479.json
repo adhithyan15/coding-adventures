@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:cfb515f887b02c98",
+  "lessonIds": [
+    "RU-C479-doveriye",
+    "RU-C479-doveryat",
+    "RU-C479-predavat",
+    "RU-C479-uvazhat",
+    "RU-C479-iskrenniy"
+  ],
+  "tex": "russian/book/chapters/ch479-trust-and-betrayal.tex"
+}

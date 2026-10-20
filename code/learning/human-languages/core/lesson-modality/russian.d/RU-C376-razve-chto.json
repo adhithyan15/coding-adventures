@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C376-razve-chto",
+    "language": "russian",
+    "chapter": 376,
+    "sequence": 21810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17653e0e90ecba76"
+  },
+  "findings": []
+}

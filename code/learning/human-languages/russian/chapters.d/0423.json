@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Delays and cancellations",
+  "label": "ch:ru-delays-and-cancellations",
+  "canDo": "I can deal with delays: a delay, being held up, a cancellation, cancelling and compensation.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C423-kompensatsiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can deal with delays: a delay, being held up, a cancellation, cancelling and compensation.",
+    "assesses": [
+      "RU-LEX-C423-ZADERZHKA-03",
+      "RU-LEX-C423-ZADERZHKA-04",
+      "RU-LEX-C423-ZADERZHKA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C394-vozvrashchat",
+  "pathSegment": "RU-PATH-394-DOLG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-394-DOLG",
+      "order": 3
+    }
+  ]
+}

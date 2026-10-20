@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:64bf4dd9b068b936",
+  "lessonIds": [
+    "RU-C356-nesmotrya-na",
+    "RU-C356-tem-ne-menee",
+    "RU-C356-vprochem",
+    "RU-C356-s-odnoy-storony",
+    "RU-C356-s-drugoy-storony"
+  ],
+  "tex": "russian/book/chapters/ch356-despite-everything.tex"
+}

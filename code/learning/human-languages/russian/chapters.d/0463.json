@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "At the seaside",
+  "label": "ch:ru-at-the-seaside",
+  "canDo": "I can describe the seaside: high tide, low tide, a bay, a seashell and diving.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C463-nyryat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can describe the seaside: high tide, low tide, a bay, a seashell and diving.",
+    "assesses": [
+      "RU-LEX-C463-PRILIV-03",
+      "RU-LEX-C463-PRILIV-04",
+      "RU-LEX-C463-PRILIV-05"
+    ]
+  }
+}

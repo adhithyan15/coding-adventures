@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:eec411f676d3b98a",
+  "lessonIds": [
+    "RU-C289-ogrableniye",
+    "RU-C289-grabitel",
+    "RU-C289-grabit",
+    "RU-C289-napadeniye",
+    "RU-C289-napadat"
+  ],
+  "tex": "russian/book/chapters/ch289-robbery-and-attack.tex"
+}

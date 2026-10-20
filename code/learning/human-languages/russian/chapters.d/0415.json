@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "The train is leaving",
+  "label": "ch:ru-the-train-is-leaving",
+  "canDo": "I can follow station announcements: setting off, arriving, a train pulling out, announcing and making it in time.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C415-uspevat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can follow station announcements: setting off, arriving, a train pulling out, announcing and making it in time.",
+    "assesses": [
+      "RU-LEX-C415-OTPRAVLYATSYA-03",
+      "RU-LEX-C415-OTPRAVLYATSYA-04",
+      "RU-LEX-C415-OTPRAVLYATSYA-05"
+    ]
+  }
+}

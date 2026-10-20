@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:ab898dafc4c8cc90",
+  "lessonIds": [
+    "RU-C489-obsledovat",
+    "RU-C489-obsledovaniye",
+    "RU-C489-analiz",
+    "RU-C489-rentgen",
+    "RU-C489-khirurg"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch489.txt",
+  "json": "russian/narration/ch489.json",
+  "textHash": "fnv1a64:92254aa7612122cb",
+  "jsonHash": "fnv1a64:7e60fc1ed88cf503",
+  "findings": []
+}

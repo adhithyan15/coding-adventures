@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:8b786fd96a7401e7",
+  "lessonIds": [
+    "RU-C347-odnako",
+    "RU-C347-zato",
+    "RU-C347-prichyom",
+    "RU-C347-itak",
+    "RU-C347-inymi-slovami"
+  ],
+  "tex": "russian/book/chapters/ch347-however-and-moreover.tex"
+}

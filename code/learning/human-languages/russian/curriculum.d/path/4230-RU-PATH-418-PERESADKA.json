@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-418-PERESADKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-418-PERESADKA"
+  ],
+  "after": []
+}

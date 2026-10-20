@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-501-SEWING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-501-SEWING"
+  ],
+  "after": []
+}

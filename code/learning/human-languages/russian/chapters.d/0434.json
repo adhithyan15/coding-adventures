@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Making a complaint",
+  "label": "ch:ru-making-a-complaint",
+  "canDo": "I can make a complaint: the complaint, complaining, a formal claim, being dissatisfied and things that are out of order.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R434-review-427-434",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can make a complaint: the complaint, complaining, a formal claim, being dissatisfied and things that are out of order.",
+    "assesses": [
+      "RU-LEX-C434-ZHALOBA-03",
+      "RU-LEX-C434-ZHALOBA-04",
+      "RU-LEX-C434-ZHALOBA-05"
+    ]
+  }
+}

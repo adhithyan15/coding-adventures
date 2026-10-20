@@ -1,0 +1,11 @@
+{
+  "id": "RU-C296-evakuirovat",
+  "pathSegment": "RU-PATH-296-SPASATEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-296-SPASATEL",
+      "order": 3
+    }
+  ]
+}

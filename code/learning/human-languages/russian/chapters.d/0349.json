@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Causes and influence",
+  "label": "ch:ru-causes-and-influence",
+  "canDo": "I can say that one thing helps bring about another, leads to it, influences it or has an effect on it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C349-vozdeystvie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say that one thing helps bring about another, leads to it, influences it or has an effect on it.",
+    "assesses": [
+      "RU-LEX-C349-VLIYANIYE-03",
+      "RU-LEX-C349-VLIYANIYE-04",
+      "RU-LEX-C349-VLIYANIYE-05"
+    ]
+  }
+}

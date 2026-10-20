@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:52113d9d418d876b",
+  "lessonIds": [
+    "RU-C301-katastrofa",
+    "RU-C301-vzryv",
+    "RU-C301-vzryvatsya",
+    "RU-C301-obrushitsya",
+    "RU-C301-panika"
+  ],
+  "tex": "russian/book/chapters/ch301-disaster.tex"
+}

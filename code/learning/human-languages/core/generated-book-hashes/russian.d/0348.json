@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:a6aa4ff60004209b",
+  "lessonIds": [
+    "RU-C348-povod",
+    "RU-C348-osnovanie",
+    "RU-C348-faktor",
+    "RU-C348-motiv",
+    "RU-C348-proiskhozhdenie"
+  ],
+  "tex": "russian/book/chapters/ch348-grounds-and-motives.tex"
+}

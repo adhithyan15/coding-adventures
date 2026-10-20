@@ -1,0 +1,11 @@
+{
+  "id": "RU-C329-nakryvat",
+  "pathSegment": "RU-PATH-329-KIPYATIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-329-KIPYATIT",
+      "order": 4
+    }
+  ]
+}

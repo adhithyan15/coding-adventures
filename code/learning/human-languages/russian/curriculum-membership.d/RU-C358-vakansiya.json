@@ -1,0 +1,11 @@
+{
+  "id": "RU-C358-vakansiya",
+  "pathSegment": "RU-PATH-358-VAKANSIYA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-358-VAKANSIYA",
+      "order": 0
+    }
+  ]
+}

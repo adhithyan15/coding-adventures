@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Too hot, too cold",
+  "label": "ch:ru-too-hot-too-cold",
+  "canDo": "I can deal with heat and cold in a room: the air conditioner, the heater, a draught, airing the room and drying things.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C431-sushit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can deal with heat and cold in a room: the air conditioner, the heater, a draught, airing the room and drying things.",
+    "assesses": [
+      "RU-LEX-C431-SKVOZNYAK-03",
+      "RU-LEX-C431-SKVOZNYAK-04",
+      "RU-LEX-C431-SKVOZNYAK-05"
+    ]
+  }
+}

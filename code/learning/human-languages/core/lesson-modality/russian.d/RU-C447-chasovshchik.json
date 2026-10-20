@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C447-chasovshchik",
+    "language": "russian",
+    "chapter": 447,
+    "sequence": 25470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1881656c3a64d229"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Breaking down",
+  "label": "ch:ru-breaking-down",
+  "canDo": "I can get help after a breakdown: the breakdown, the tow truck, towing, the jack and the car repair shop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C409-avtoservis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can get help after a breakdown: the breakdown, the tow truck, towing, the jack and the car repair shop.",
+    "assesses": [
+      "RU-LEX-C409-POLOMKA-03",
+      "RU-LEX-C409-POLOMKA-04",
+      "RU-LEX-C409-POLOMKA-05"
+    ]
+  }
+}

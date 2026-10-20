@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-490-RECOVERY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-490-RECOVERY"
+  ],
+  "after": []
+}

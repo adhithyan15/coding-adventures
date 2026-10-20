@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C337-zayavlyat",
+    "language": "russian",
+    "chapter": 337,
+    "sequence": 19830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:989cbd8ed86d5ca7"
+  },
+  "findings": []
+}

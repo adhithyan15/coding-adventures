@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C524-povest",
+    "language": "russian",
+    "chapter": 524,
+    "sequence": 29440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1250a5cf245b85db"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C393-notarius",
+  "pathSegment": "RU-PATH-393-DOKUMENTY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-393-DOKUMENTY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:149b0d5ecb1f7736",
+  "lessonIds": [
+    "RU-C423-zaderzhka",
+    "RU-C423-zaderzhivat",
+    "RU-C423-otmena",
+    "RU-C423-otmenyat",
+    "RU-C423-kompensatsiya"
+  ],
+  "tex": "russian/book/chapters/ch423-delays-and-cancellations.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C395-vklad",
+    "language": "russian",
+    "chapter": 395,
+    "sequence": 22790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9419235d7ba0b26"
+  },
+  "findings": []
+}

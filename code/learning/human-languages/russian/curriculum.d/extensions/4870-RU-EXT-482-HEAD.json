@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-482-HEAD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the smaller parts of the head and face.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C385-bakalavr",
+  "pathSegment": "RU-PATH-385-OBRAZOVANIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-385-OBRAZOVANIYE",
+      "order": 3
+    }
+  ]
+}

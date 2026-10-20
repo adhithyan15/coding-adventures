@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:d7277f585b1646ff",
+  "lessonIds": [
+    "RU-C403-rul",
+    "RU-C403-tormoz",
+    "RU-C403-tormozit",
+    "RU-C403-razgonyatsya",
+    "RU-C403-signalit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch403.txt",
+  "json": "russian/narration/ch403.json",
+  "textHash": "fnv1a64:a235c8e205a13f9b",
+  "jsonHash": "fnv1a64:7dab7ac457fad010",
+  "findings": []
+}

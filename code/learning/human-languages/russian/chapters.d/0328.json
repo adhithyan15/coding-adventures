@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Slicing and grating",
+  "label": "ch:ru-slicing-and-grating",
+  "canDo": "I can describe getting food ready: a slice, a small piece, slicing, grating and a grater.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C328-tyorka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can describe getting food ready: a slice, a small piece, slicing, grating and a grater.",
+    "assesses": [
+      "RU-LEX-C328-NAREZAT-03",
+      "RU-LEX-C328-NAREZAT-04",
+      "RU-LEX-C328-NAREZAT-05"
+    ]
+  }
+}

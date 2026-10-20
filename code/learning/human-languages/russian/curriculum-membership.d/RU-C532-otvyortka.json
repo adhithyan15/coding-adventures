@@ -1,0 +1,11 @@
+{
+  "id": "RU-C532-otvyortka",
+  "pathSegment": "RU-PATH-532-DIY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-532-DIY",
+      "order": 4
+    }
+  ]
+}

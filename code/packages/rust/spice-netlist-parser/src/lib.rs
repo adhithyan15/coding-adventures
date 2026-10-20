@@ -1586,10 +1586,16 @@ fn evaluate_measure(
             card.name
         )));
     }
-    if card.operation == MeasureOperation::Find {
-        if execution.kind == AnalysisKind::Op && card.at.is_none() {
-            return Ok(measure_numeric_value(samples[0].value));
+    if execution.kind == AnalysisKind::Op && card.operation == MeasureOperation::Find {
+        if card.at.is_some() && card.at != Some(0.0) {
+            return Err(NetlistParseError::new(format!(
+                ".measure {:?} operating-point FIND AT must be 0",
+                card.name
+            )));
         }
+        return Ok(measure_numeric_value(samples[0].value));
+    }
+    if card.operation == MeasureOperation::Find {
         let Some(at) = card.at else {
             return Err(NetlistParseError::new(format!(
                 ".measure {:?} FIND requires AT=<value>",

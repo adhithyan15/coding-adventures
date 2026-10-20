@@ -1,0 +1,11 @@
+{
+  "id": "RU-C372-maloveroyatnyy",
+  "pathSegment": "RU-PATH-372-VEROYATNO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-372-VEROYATNO",
+      "order": 2
+    }
+  ]
+}

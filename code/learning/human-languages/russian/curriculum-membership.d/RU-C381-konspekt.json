@@ -1,0 +1,11 @@
+{
+  "id": "RU-C381-konspekt",
+  "pathSegment": "RU-PATH-381-SESSIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-381-SESSIYA",
+      "order": 3
+    }
+  ]
+}

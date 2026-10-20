@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Poems and Rhymes",
+  "label": "ch:ru-poems-and-rhymes",
+  "canDo": "I can talk about poems and learning them by heart.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C525-naizust",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about poems and learning them by heart.",
+    "assesses": [
+      "RU-LEX-C525-POETRY-03",
+      "RU-LEX-C525-POETRY-04",
+      "RU-LEX-C525-POETRY-05"
+    ]
+  }
+}

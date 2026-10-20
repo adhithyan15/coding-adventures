@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:58f79c13d81a2f72",
+  "lessonIds": [
+    "RU-C426-kater",
+    "RU-C426-shlyupka",
+    "RU-C426-zhilet",
+    "RU-C426-veslo",
+    "RU-C426-gresti",
+    "RU-R426-review-419-426"
+  ],
+  "tex": "russian/book/chapters/ch426-in-a-boat.tex"
+}

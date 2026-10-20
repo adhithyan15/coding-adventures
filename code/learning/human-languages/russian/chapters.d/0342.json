@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Talking it over",
+  "label": "ch:ru-talking-it-over",
+  "canDo": "I can discuss a question, take part in a discussion or a debate, give my opinion and share my ideas.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C342-delitsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can discuss a question, take part in a discussion or a debate, give my opinion and share my ideas.",
+    "assesses": [
+      "RU-LEX-C342-OBSUZHDAT-03",
+      "RU-LEX-C342-OBSUZHDAT-04",
+      "RU-LEX-C342-OBSUZHDAT-05"
+    ]
+  }
+}

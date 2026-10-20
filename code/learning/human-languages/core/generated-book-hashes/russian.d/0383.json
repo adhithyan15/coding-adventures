@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:de23b61826ba53ed",
+  "lessonIds": [
+    "RU-C383-postuplenie",
+    "RU-C383-abiturient",
+    "RU-C383-vstupitelnyy",
+    "RU-C383-fakultet",
+    "RU-C383-stipendiya"
+  ],
+  "tex": "russian/book/chapters/ch383-getting-into-university.tex"
+}

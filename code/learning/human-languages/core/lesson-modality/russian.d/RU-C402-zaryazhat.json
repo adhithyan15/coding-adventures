@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C402-zaryazhat",
+    "language": "russian",
+    "chapter": 402,
+    "sequence": 23140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60141b1d2f1e5d60"
+  },
+  "findings": []
+}

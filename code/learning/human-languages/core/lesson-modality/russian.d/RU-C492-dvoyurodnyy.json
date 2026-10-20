@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C492-dvoyurodnyy",
+    "language": "russian",
+    "chapter": 492,
+    "sequence": 27810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0edf956cc1fcf0c2"
+  },
+  "findings": []
+}

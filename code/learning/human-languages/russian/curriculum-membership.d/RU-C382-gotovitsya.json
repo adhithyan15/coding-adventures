@@ -1,0 +1,11 @@
+{
+  "id": "RU-C382-gotovitsya",
+  "pathSegment": "RU-PATH-382-EKZAMEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-382-EKZAMEN",
+      "order": 4
+    }
+  ]
+}

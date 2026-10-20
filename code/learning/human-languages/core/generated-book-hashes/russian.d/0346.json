@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:cc07761a0009e4be",
+  "lessonIds": [
+    "RU-C346-preimushchestvo",
+    "RU-C346-nedostatok",
+    "RU-C346-polza",
+    "RU-C346-vred",
+    "RU-C346-ocenivat"
+  ],
+  "tex": "russian/book/chapters/ch346-pros-and-cons.tex"
+}

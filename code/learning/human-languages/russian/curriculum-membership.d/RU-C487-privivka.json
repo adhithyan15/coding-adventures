@@ -1,0 +1,11 @@
+{
+  "id": "RU-C487-privivka",
+  "pathSegment": "RU-PATH-487-RASH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-487-RASH",
+      "order": 3
+    }
+  ]
+}

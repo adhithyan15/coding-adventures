@@ -1,0 +1,11 @@
+{
+  "id": "RU-C419-kladi",
+  "pathSegment": "RU-PATH-419-REGISTRATSIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-419-REGISTRATSIYA",
+      "order": 3
+    }
+  ]
+}

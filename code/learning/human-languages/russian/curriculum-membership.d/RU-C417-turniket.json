@@ -1,0 +1,11 @@
+{
+  "id": "RU-C417-turniket",
+  "pathSegment": "RU-PATH-417-MARSHRUTKA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-417-MARSHRUTKA",
+      "order": 0
+    }
+  ]
+}

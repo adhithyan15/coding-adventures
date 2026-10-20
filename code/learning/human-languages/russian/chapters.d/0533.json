@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Small Repairs",
+  "label": "ch:ru-small-repairs",
+  "canDo": "I can talk about small repairs with screws, pliers and tape.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C533-izolenta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about small repairs with screws, pliers and tape.",
+    "assesses": [
+      "RU-LEX-C533-REPAIRS-03",
+      "RU-LEX-C533-REPAIRS-04",
+      "RU-LEX-C533-REPAIRS-05"
+    ]
+  }
+}

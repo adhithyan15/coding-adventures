@@ -1,0 +1,11 @@
+{
+  "id": "RU-C515-fleyta",
+  "pathSegment": "RU-PATH-515-INSTRUMENTS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-515-INSTRUMENTS",
+      "order": 2
+    }
+  ]
+}

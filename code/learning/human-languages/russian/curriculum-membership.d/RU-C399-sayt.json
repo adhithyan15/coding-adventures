@@ -1,0 +1,11 @@
+{
+  "id": "RU-C399-sayt",
+  "pathSegment": "RU-PATH-399-SET",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-399-SET",
+      "order": 1
+    }
+  ]
+}

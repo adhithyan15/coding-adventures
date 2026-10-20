@@ -1,0 +1,23 @@
+{
+  "chapter": 261,
+  "title": "The Past, Seen Two Ways",
+  "label": "ch:ru-the-past-seen-two-ways",
+  "canDo": "I can say what happened and what was going on in the past, choosing between читал and прочитал, and join two events with когда and пока.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C261-review",
+    "kind": "production",
+    "summary": "Complete RU-C261-review: a past evening told aloud, one scene with пока and one finished event with когда, each verb in the right aspect.",
+    "assesses": [
+      "RU-GRAMMAR-PAST-L-GENDER-01",
+      "RU-GRAMMAR-PAST-LI-PLURAL-01",
+      "RU-GRAMMAR-BYL-PAST-01",
+      "RU-GRAMMAR-PAST-IMPERFECTIVE-PROCESS-01",
+      "RU-GRAMMAR-PAST-PERFECTIVE-RESULT-01",
+      "RU-GRAMMAR-POKA-WHILE-01",
+      "RU-GRAMMAR-KOGDA-EVENT-01"
+    ]
+  }
+}

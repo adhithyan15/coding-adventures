@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C408-prava",
+    "language": "russian",
+    "chapter": 408,
+    "sequence": 23480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cc5f38d326306b1"
+  },
+  "findings": []
+}

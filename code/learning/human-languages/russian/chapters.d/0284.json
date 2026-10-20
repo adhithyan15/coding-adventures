@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Interviews and comments",
+  "label": "ch:ru-interviews-and-comments",
+  "canDo": "I can talk about an interview, a survey and an editor, and say that someone commented on or quoted something.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C284-tsitirovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can talk about an interview, a survey and an editor, and say that someone commented on or quoted something.",
+    "assesses": [
+      "RU-LEX-C284-INTERVYU-03",
+      "RU-LEX-C284-INTERVYU-04",
+      "RU-LEX-C284-INTERVYU-05"
+    ]
+  }
+}

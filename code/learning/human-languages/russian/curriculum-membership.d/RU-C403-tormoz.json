@@ -1,0 +1,11 @@
+{
+  "id": "RU-C403-tormoz",
+  "pathSegment": "RU-PATH-403-RUL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-403-RUL",
+      "order": 1
+    }
+  ]
+}
