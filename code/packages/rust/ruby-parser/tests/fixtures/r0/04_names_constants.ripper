@@ -1,0 +1,15 @@
+# oracle: Ripper.lex, ruby 3.3.6 (2024-11-05 revision 75015d4c1f)
+1	0	on_ident	foo
+1	4	on_op	=
+1	6	on_const	Bar
+1	9	on_nl	\n
+2	0	on_ident	_x
+2	3	on_op	=
+2	5	on_const	Baz
+2	8	on_op	::
+2	10	on_const	Qux
+2	13	on_nl	\n
+3	0	on_const	CamelCase2
+3	11	on_op	=
+3	13	on_ident	snake_case_3
+3	25	on_nl	\n
