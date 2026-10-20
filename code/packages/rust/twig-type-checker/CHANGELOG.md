@@ -1,5 +1,22 @@
 # Changelog — twig-type-checker
 
+## 0.10.0 - Unreleased - LANG84: type-check a parse tree
+
+### Added
+
+- **`check_cst_with_globals(cst, mode_override, extra_globals)`** takes the
+  `program` `GrammarASTNode` from `twig_parser::parse_to_ast` and returns the
+  same `TypeCheckResult<TypedProgram>` as `check_program_with_globals`. With an
+  empty `extra_globals` map, that is the same result as `check_program`.
+  `twig-ir-compiler` 0.46 uses it for its TW05-B gate. LANG84 decision 6
+  forbids the IIR compiler from lifting the CST into `twig_parser::Program`,
+  so the compiler passes this crate the CST and reads back only the `ok` flag
+  and the diagnostics, which are keyed by `(line, column)`. The checker itself
+  still lifts the tree with `twig_parser::extract_program` and runs on its own
+  typed AST. Whether TW05-B should walk the CST is LANG84 open question 2. A
+  tree that is not a well-formed Twig `program` returns the extractor's
+  `TwigParseError`.
+
 ## [0.9.0] — 2026-05-17
 
 ### Added (LANG71 — TW05-P Part 2: Multi-Module Import Propagation)

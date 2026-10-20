@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C365-gosudarstvo",
+    "language": "russian",
+    "chapter": 365,
+    "sequence": 21230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dc61dbb3e98f7fd"
+  },
+  "findings": []
+}

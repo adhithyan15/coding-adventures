@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "However and moreover",
+  "label": "ch:ru-however-and-moreover",
+  "canDo": "I can link two ideas with however, but then, moreover, so, and in other words, and know what each one adds.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C347-inymi-slovami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can link two ideas with however, but then, moreover, so, and in other words, and know what each one adds.",
+    "assesses": [
+      "RU-LEX-C347-ODNAKO-03",
+      "RU-LEX-C347-ODNAKO-04",
+      "RU-LEX-C347-ODNAKO-05"
+    ]
+  }
+}

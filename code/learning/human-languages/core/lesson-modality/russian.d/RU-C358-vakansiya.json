@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C358-vakansiya",
+    "language": "russian",
+    "chapter": 358,
+    "sequence": 20870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e61b46a0f199d45"
+  },
+  "findings": []
+}

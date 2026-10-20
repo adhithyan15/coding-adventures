@@ -1,0 +1,11 @@
+{
+  "id": "RU-C322-mech",
+  "pathSegment": "RU-PATH-322-RYTSAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-322-RYTSAR",
+      "order": 2
+    }
+  ]
+}

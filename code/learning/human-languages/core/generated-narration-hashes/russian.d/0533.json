@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:915a4bba4967cabf",
+  "lessonIds": [
+    "RU-C533-shurup",
+    "RU-C533-ploskogubtsy",
+    "RU-C533-otkruchivat",
+    "RU-C533-peregorat",
+    "RU-C533-izolenta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch533.txt",
+  "json": "russian/narration/ch533.json",
+  "textHash": "fnv1a64:339143ff104cf1e6",
+  "jsonHash": "fnv1a64:f8c2bd51f97eb4aa",
+  "findings": []
+}

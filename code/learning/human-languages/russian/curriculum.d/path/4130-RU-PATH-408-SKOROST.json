@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-408-SKOROST",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-408-SKOROST"
+  ],
+  "after": []
+}

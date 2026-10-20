@@ -1,0 +1,11 @@
+{
+  "id": "RU-C389-razreshat",
+  "pathSegment": "RU-PATH-389-ZAPRET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-389-ZAPRET",
+      "order": 2
+    }
+  ]
+}

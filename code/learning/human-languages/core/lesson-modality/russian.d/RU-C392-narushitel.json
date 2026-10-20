@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C392-narushitel",
+    "language": "russian",
+    "chapter": 392,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f39fe04d99b4c711"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C377-naznachat",
+  "pathSegment": "RU-PATH-377-PLANY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-377-PLANY",
+      "order": 3
+    }
+  ]
+}

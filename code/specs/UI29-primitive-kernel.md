@@ -175,7 +175,38 @@ shape:
 React, Web Components, SwiftUI and Flutter read literals only until the
 slot-bound placeholder fix, so a bound placeholder vanished on those four
 with no degradation reported. A name that is not an identifier in the target
-language is an `UnsafeSlotName` error on all four, never spliced into source.
+language is an `UnsafeSlotName` error, never spliced into source. Qt, which
+already bound a slot, quoted a bare `For` binding as text and turned an unsafe
+name into `placeholderText: ""` until EM-14; it now does as the others do.
+
+`HostNumberInput` takes `placeholder` the same way, through the same helper
+on each backend:
+
+| Backend | `HostNumberInput` placeholder |
+|---|---|
+| React | `placeholder="…"` / `placeholder={x}` on `<input type="number">` |
+| Web Components | `placeholder="${escapeHtmlAttribute(x)}"` |
+| HTML | `placeholder="{{x}}"` |
+| SwiftUI | the `TextField(_:value:format:)` title, `String(describing: x)` for a bound value |
+| Qt | `placeholderText: x` on the `TextField` |
+| WinUI (XAML) | `NumberBox PlaceholderText="{x:Bind X, Mode=OneWay}"` |
+| Compose | **not lowered, by decision** (below) |
+| Flutter | `InputDecoration(hintText: x)` |
+
+React, SwiftUI, Flutter and Qt read a literal only on the number field until
+EM-14, so `mosaic-pkg-toolkit`'s `NumberInput` (`placeholder : slot:
+placeholder`) lost its placeholder on those four, unreported.
+
+Compose is the one backend that lowers no number placeholder, and it reports
+none. That is a decision, not a drop: Compose's number field is a
+`BasicTextField` whose text is always the bound number's `toString()` (`0.0`
+when no value is bound), so the field is never empty and a placeholder has no
+state in which to show. A degradation report would mark every number field
+that carries a placeholder (Engram's Deck options has ten) as degraded for a
+state the field cannot enter. If the Compose field ever gains an empty state,
+such as a nullable value, it must lower the placeholder as `HostInput` does.
+`host_number_input_placeholder_is_omitted_because_the_text_is_never_empty`
+pins the omission together with the `toString()` it rests on.
 
 `HostButton` takes its content from `label`. Children nested inside a
 `HostButton` are **not** a portable content model yet: only XAML and HTML

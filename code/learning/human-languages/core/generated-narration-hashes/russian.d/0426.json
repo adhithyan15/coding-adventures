@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:c75fc8be0a3e5cfc",
+  "lessonIds": [
+    "RU-C426-kater",
+    "RU-C426-shlyupka",
+    "RU-C426-zhilet",
+    "RU-C426-veslo",
+    "RU-C426-gresti",
+    "RU-R426-review-419-426"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch426.txt",
+  "json": "russian/narration/ch426.json",
+  "textHash": "fnv1a64:8c46754dbe9b0b6c",
+  "jsonHash": "fnv1a64:2d011a5a0d5a3a7a",
+  "findings": []
+}

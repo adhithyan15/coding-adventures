@@ -1,0 +1,11 @@
+{
+  "id": "RU-C330-vzbivat",
+  "pathSegment": "RU-PATH-330-SMESHIVAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-330-SMESHIVAT",
+      "order": 1
+    }
+  ]
+}

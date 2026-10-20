@@ -1,0 +1,11 @@
+{
+  "id": "RU-C277-dalneyshiy",
+  "pathSegment": "RU-PATH-277-OCHEREDNOY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-277-OCHEREDNOY",
+      "order": 4
+    }
+  ]
+}

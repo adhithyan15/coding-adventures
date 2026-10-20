@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C380-predskazyvat",
+    "language": "russian",
+    "chapter": 380,
+    "sequence": 22000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b64d27a65757627a"
+  },
+  "findings": []
+}

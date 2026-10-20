@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:444b93e801f10cf8",
+  "lessonIds": [
+    "RU-C290-moshennik",
+    "RU-C290-obmanyvat",
+    "RU-C290-ugonyat",
+    "RU-C290-pokhishchat",
+    "RU-C290-pryatatsya"
+  ],
+  "tex": "russian/book/chapters/ch290-tricks-and-hiding.tex"
+}

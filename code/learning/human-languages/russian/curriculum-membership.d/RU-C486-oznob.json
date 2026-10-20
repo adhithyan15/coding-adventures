@@ -1,0 +1,11 @@
+{
+  "id": "RU-C486-oznob",
+  "pathSegment": "RU-PATH-486-FEVER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-486-FEVER",
+      "order": 1
+    }
+  ]
+}

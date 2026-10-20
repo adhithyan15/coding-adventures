@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:e3dc15ceb2f77012",
+  "lessonIds": [
+    "RU-C331-testo",
+    "RU-C331-mesit",
+    "RU-C331-raskatyvat",
+    "RU-C331-lepit",
+    "RU-C331-nachinka"
+  ],
+  "tex": "russian/book/chapters/ch331-dough.tex"
+}

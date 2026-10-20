@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:99b6d2a329a50b4c",
+  "lessonIds": [
+    "RU-C370-uslovie",
+    "RU-C370-pri-uslovii",
+    "RU-C370-v-sluchae",
+    "RU-C370-v-protivnom-sluchae",
+    "RU-C370-dazhe-esli"
+  ],
+  "tex": "russian/book/chapters/ch370-on-one-condition.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R450-review-443-450",
+    "language": "russian",
+    "chapter": 450,
+    "sequence": 25650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f06241266b36e608"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C355-neizbezhnyy",
+  "pathSegment": "RU-PATH-355-SLUCHAYNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-355-SLUCHAYNO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C511-chempion",
+  "pathSegment": "RU-PATH-511-CHAMPIONS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-511-CHAMPIONS",
+      "order": 2
+    }
+  ]
+}

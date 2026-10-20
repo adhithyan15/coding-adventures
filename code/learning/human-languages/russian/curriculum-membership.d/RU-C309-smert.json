@@ -1,0 +1,11 @@
+{
+  "id": "RU-C309-smert",
+  "pathSegment": "RU-PATH-309-POKHORONY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-309-POKHORONY",
+      "order": 2
+    }
+  ]
+}

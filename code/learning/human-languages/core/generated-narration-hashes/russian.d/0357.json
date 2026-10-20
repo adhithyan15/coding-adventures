@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:efef935259a0c21c",
+  "lessonIds": [
+    "RU-C357-sotrudnik",
+    "RU-C357-rukovoditel",
+    "RU-C357-podchinyonnyy",
+    "RU-C357-rukovodit",
+    "RU-C357-kollektiv"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch357.txt",
+  "json": "russian/narration/ch357.json",
+  "textHash": "fnv1a64:d5320dfdd078bdd8",
+  "jsonHash": "fnv1a64:51218be2c7257fa4",
+  "findings": []
+}

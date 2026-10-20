@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:a4a88d2f115fe542",
+  "lessonIds": [
+    "RU-C333-solit",
+    "RU-C333-perchit",
+    "RU-C333-posypat",
+    "RU-C333-priprava",
+    "RU-C333-marinovat"
+  ],
+  "tex": "russian/book/chapters/ch333-seasoning.tex"
+}

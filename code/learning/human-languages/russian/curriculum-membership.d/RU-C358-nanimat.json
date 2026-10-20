@@ -1,0 +1,11 @@
+{
+  "id": "RU-C358-nanimat",
+  "pathSegment": "RU-PATH-358-VAKANSIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-358-VAKANSIYA",
+      "order": 3
+    }
+  ]
+}

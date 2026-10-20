@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:84e7c525fb826bbb",
+  "lessonIds": [
+    "RU-C515-royal",
+    "RU-C515-violonchel",
+    "RU-C515-fleyta",
+    "RU-C515-struna",
+    "RU-C515-nastraivat"
+  ],
+  "tex": "russian/book/chapters/ch515-piano-cello-and-flute.tex"
+}

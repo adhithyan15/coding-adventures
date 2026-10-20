@@ -1,0 +1,11 @@
+{
+  "id": "RU-C285-itog",
+  "pathSegment": "RU-PATH-285-SOBYTIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-285-SOBYTIYE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "A train ticket",
+  "label": "ch:ru-a-train-ticket",
+  "canDo": "I can buy a train ticket: the fare, an open sleeping car, a compartment, the rate and a concession.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C413-lgota",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can buy a train ticket: the fare, an open sleeping car, a compartment, the rate and a concession.",
+    "assesses": [
+      "RU-LEX-C413-PROYEZD-03",
+      "RU-LEX-C413-PROYEZD-04",
+      "RU-LEX-C413-PROYEZD-05"
+    ]
+  }
+}

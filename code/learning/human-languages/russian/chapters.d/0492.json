@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Step-parents, Twins and Cousins",
+  "label": "ch:ru-step-parents-twins-and-cousins",
+  "canDo": "I can describe a family with step-parents, twins and cousins.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R492-review-485-492",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can describe a family with step-parents, twins and cousins.",
+    "assesses": [
+      "RU-LEX-C492-STEPFAMILY-03",
+      "RU-LEX-C492-STEPFAMILY-04",
+      "RU-LEX-C492-STEPFAMILY-05"
+    ]
+  }
+}

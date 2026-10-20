@@ -1,0 +1,11 @@
+{
+  "id": "RU-C501-napyorstok",
+  "pathSegment": "RU-PATH-501-SEWING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-501-SEWING",
+      "order": 2
+    }
+  ]
+}

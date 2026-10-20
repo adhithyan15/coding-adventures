@@ -1,0 +1,11 @@
+{
+  "id": "RU-C427-matros",
+  "pathSegment": "RU-PATH-427-MAYAK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-427-MAYAK",
+      "order": 2
+    }
+  ]
+}

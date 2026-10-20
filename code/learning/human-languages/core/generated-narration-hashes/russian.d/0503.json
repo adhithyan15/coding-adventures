@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:2003f05a6e2d16d3",
+  "lessonIds": [
+    "RU-C503-kollektsionirovat",
+    "RU-C503-kollektsioner",
+    "RU-C503-znachok",
+    "RU-C503-krossvord",
+    "RU-C503-razgadyvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch503.txt",
+  "json": "russian/narration/ch503.json",
+  "textHash": "fnv1a64:7823f40eff3263e7",
+  "jsonHash": "fnv1a64:77edefdab4c11a39",
+  "findings": []
+}

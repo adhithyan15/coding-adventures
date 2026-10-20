@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Needle and Thread",
+  "label": "ch:ru-needle-and-thread",
+  "canDo": "I can talk about sewing and mending clothes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C501-podshivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about sewing and mending clothes.",
+    "assesses": [
+      "RU-LEX-C501-SEWING-03",
+      "RU-LEX-C501-SEWING-04",
+      "RU-LEX-C501-SEWING-05"
+    ]
+  }
+}

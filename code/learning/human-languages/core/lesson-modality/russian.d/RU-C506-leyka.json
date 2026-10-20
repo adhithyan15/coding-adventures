@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C506-leyka",
+    "language": "russian",
+    "chapter": 506,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47e84e74761bee3b"
+  },
+  "findings": []
+}

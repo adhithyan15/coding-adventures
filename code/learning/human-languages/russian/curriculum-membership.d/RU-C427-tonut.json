@@ -1,0 +1,11 @@
+{
+  "id": "RU-C427-tonut",
+  "pathSegment": "RU-PATH-427-MAYAK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-427-MAYAK",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:d381b2b6a622041e",
+  "lessonIds": [
+    "RU-C434-zhaloba",
+    "RU-C434-zhalovatsya",
+    "RU-C434-pretenziya",
+    "RU-C434-nedovolnyy",
+    "RU-C434-neispravnyy",
+    "RU-R434-review-427-434"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch434.txt",
+  "json": "russian/narration/ch434.json",
+  "textHash": "fnv1a64:9a268a5d2bdf6146",
+  "jsonHash": "fnv1a64:a2d3a6bb910b0b14",
+  "findings": []
+}

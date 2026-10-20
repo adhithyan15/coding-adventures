@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C426-veslo",
+    "language": "russian",
+    "chapter": 426,
+    "sequence": 24400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45afb6a95121c751"
+  },
+  "findings": []
+}

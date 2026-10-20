@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Covers and Bookmarks",
+  "label": "ch:ru-covers-and-bookmarks",
+  "canDo": "I can talk about handling and rereading books.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C526-perechityvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about handling and rereading books.",
+    "assesses": [
+      "RU-LEX-C526-BOOKS-03",
+      "RU-LEX-C526-BOOKS-04",
+      "RU-LEX-C526-BOOKS-05"
+    ]
+  }
+}

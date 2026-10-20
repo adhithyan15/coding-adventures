@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C490-vyzdorovleniye",
+    "language": "russian",
+    "chapter": 490,
+    "sequence": 27680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f41758a67b1d9b2"
+  },
+  "findings": []
+}

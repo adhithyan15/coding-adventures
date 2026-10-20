@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:df2cfc3b0f2e8b35",
+  "lessonIds": [
+    "RU-C358-vakansiya",
+    "RU-C358-sobesedovanie",
+    "RU-C358-kandidat",
+    "RU-C358-nanimat",
+    "RU-C358-stazh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch358.txt",
+  "json": "russian/narration/ch358.json",
+  "textHash": "fnv1a64:2e0d076fb913a7c1",
+  "jsonHash": "fnv1a64:8570524e1c13a825",
+  "findings": []
+}

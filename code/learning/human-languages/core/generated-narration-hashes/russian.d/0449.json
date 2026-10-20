@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:8bf5e4da818ac77d",
+  "lessonIds": [
+    "RU-C449-parikmakherskaya",
+    "RU-C449-strizhka",
+    "RU-C449-strich",
+    "RU-C449-britsya",
+    "RU-C449-chyolka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch449.txt",
+  "json": "russian/narration/ch449.json",
+  "textHash": "fnv1a64:29b53f55c130ee2c",
+  "jsonHash": "fnv1a64:eb503b201cd67549",
+  "findings": []
+}

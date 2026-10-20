@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:ef6016f6a5bb1809",
+  "lessonIds": [
+    "RU-C289-ogrableniye",
+    "RU-C289-grabitel",
+    "RU-C289-grabit",
+    "RU-C289-napadeniye",
+    "RU-C289-napadat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch289.txt",
+  "json": "russian/narration/ch289.json",
+  "textHash": "fnv1a64:5f4587a283986232",
+  "jsonHash": "fnv1a64:440fd86c03bf2407",
+  "findings": []
+}

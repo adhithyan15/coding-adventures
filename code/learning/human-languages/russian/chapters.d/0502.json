@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Clay and Crafts",
+  "label": "ch:ru-clay-and-crafts",
+  "canDo": "I can talk about pottery, modelling and handmade things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C502-podelka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about pottery, modelling and handmade things.",
+    "assesses": [
+      "RU-LEX-C502-CRAFTS-03",
+      "RU-LEX-C502-CRAFTS-04",
+      "RU-LEX-C502-CRAFTS-05"
+    ]
+  }
+}

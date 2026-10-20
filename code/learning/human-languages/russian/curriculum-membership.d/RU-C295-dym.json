@@ -1,0 +1,11 @@
+{
+  "id": "RU-C295-dym",
+  "pathSegment": "RU-PATH-295-POZHAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-295-POZHAR",
+      "order": 1
+    }
+  ]
+}

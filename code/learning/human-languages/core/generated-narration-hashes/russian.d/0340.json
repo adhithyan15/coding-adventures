@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:f110cbe6c1397294",
+  "lessonIds": [
+    "RU-C340-soglashatsya",
+    "RU-C340-soglasie",
+    "RU-C340-nesoglasie",
+    "RU-C340-vozrazhat",
+    "RU-C340-vozrazhenie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch340.txt",
+  "json": "russian/narration/ch340.json",
+  "textHash": "fnv1a64:fa111968fae191f6",
+  "jsonHash": "fnv1a64:ad6e57b39c207867",
+  "findings": []
+}

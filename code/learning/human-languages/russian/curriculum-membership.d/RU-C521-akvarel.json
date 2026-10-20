@@ -1,0 +1,11 @@
+{
+  "id": "RU-C521-akvarel",
+  "pathSegment": "RU-PATH-521-PAINTING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-521-PAINTING",
+      "order": 2
+    }
+  ]
+}

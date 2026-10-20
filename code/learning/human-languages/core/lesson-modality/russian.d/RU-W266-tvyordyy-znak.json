@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "RU-W266-tvyordyy-znak",
+    "language": "russian",
+    "chapter": 266,
+    "sequence": 16186,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2d12aa6483e754af",
+    "detachableSegments": [
+      "Script you'll notice: ъ",
+      "Writing: ъ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

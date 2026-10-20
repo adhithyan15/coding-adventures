@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C459-pokhod",
+    "language": "russian",
+    "chapter": 459,
+    "sequence": 26070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b88d971aee70b71b"
+  },
+  "findings": []
+}

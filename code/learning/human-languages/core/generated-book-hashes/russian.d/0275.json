@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:c6a3f6f3005b1b9c",
+  "lessonIds": [
+    "RU-C275-zatyagivatsya",
+    "RU-C275-otkladyvat",
+    "RU-C275-zaderzhivatsya",
+    "RU-C275-povtoryatsya",
+    "RU-C275-sovpadat"
+  ],
+  "tex": "russian/book/chapters/ch275-delays-and-coincidences.tex"
+}

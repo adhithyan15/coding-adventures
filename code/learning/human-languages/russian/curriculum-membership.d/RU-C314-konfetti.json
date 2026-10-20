@@ -1,0 +1,11 @@
+{
+  "id": "RU-C314-konfetti",
+  "pathSegment": "RU-PATH-314-SALYUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-314-SALYUT",
+      "order": 2
+    }
+  ]
+}

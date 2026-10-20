@@ -1,0 +1,11 @@
+{
+  "id": "RU-C341-nastaivat",
+  "pathSegment": "RU-PATH-341-KOMPROMISS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-341-KOMPROMISS",
+      "order": 3
+    }
+  ]
+}

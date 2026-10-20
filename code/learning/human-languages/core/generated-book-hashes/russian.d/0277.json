@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:574d44e2629a0cb2",
+  "lessonIds": [
+    "RU-C277-predydushchiy",
+    "RU-C277-posleduyushchiy",
+    "RU-C277-ocherednoy",
+    "RU-C277-yezhegodnyy",
+    "RU-C277-dalneyshiy"
+  ],
+  "tex": "russian/book/chapters/ch277-the-one-before-and-the-next.tex"
+}

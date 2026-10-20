@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Fair and unfair",
+  "label": "ch:ru-fair-and-unfair",
+  "canDo": "I can say whether something is fair or unfair, speak about justice, call an idea reasonable and speak of the truth.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C345-istina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say whether something is fair or unfair, speak about justice, call an idea reasonable and speak of the truth.",
+    "assesses": [
+      "RU-LEX-C345-SPRAVEDLIVO-03",
+      "RU-LEX-C345-SPRAVEDLIVO-04",
+      "RU-LEX-C345-SPRAVEDLIVO-05"
+    ]
+  }
+}

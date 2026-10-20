@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:b720a8354f3a9467",
+  "lessonIds": [
+    "RU-C381-sessiya",
+    "RU-C381-zachyot",
+    "RU-C381-seminar",
+    "RU-C381-konspekt",
+    "RU-C381-ball"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch381.txt",
+  "json": "russian/narration/ch381.json",
+  "textHash": "fnv1a64:422fcc629c0be921",
+  "jsonHash": "fnv1a64:f949bcabcd2bf90b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C298-postradavshiy",
+  "pathSegment": "RU-PATH-298-NAEZD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-298-NAEZD",
+      "order": 1
+    }
+  ]
+}

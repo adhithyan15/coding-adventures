@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:87627d49ec383d09",
+  "lessonIds": [
+    "RU-C509-vorota",
+    "RU-C509-vratar",
+    "RU-C509-napadayushchiy",
+    "RU-C509-gol",
+    "RU-C509-zabivat"
+  ],
+  "tex": "russian/book/chapters/ch509-goals-and-goalkeepers.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C295-pozhar",
+    "language": "russian",
+    "chapter": 295,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d67bff8ca1410a65"
+  },
+  "findings": []
+}

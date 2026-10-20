@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Frost and ice",
+  "label": "ch:ru-frost-and-ice",
+  "canDo": "I can talk about the cold: frost, black ice, a blizzard, feeling the cold and slipping.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C467-poskolznutsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about the cold: frost, black ice, a blizzard, feeling the cold and slipping.",
+    "assesses": [
+      "RU-LEX-C467-MOROZ-03",
+      "RU-LEX-C467-MOROZ-04",
+      "RU-LEX-C467-MOROZ-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:02fe86fc5175ee63",
+  "lessonIds": [
+    "RU-C465-liven",
+    "RU-C465-morosit",
+    "RU-C465-promokat",
+    "RU-C465-luzha",
+    "RU-C465-lit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch465.txt",
+  "json": "russian/narration/ch465.json",
+  "textHash": "fnv1a64:02df2a1a9371a337",
+  "jsonHash": "fnv1a64:6ee247610158c098",
+  "findings": []
+}

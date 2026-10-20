@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:cabbdfeec1a49d6d",
+  "lessonIds": [
+    "RU-C278-vpervyye",
+    "RU-C278-navsegda",
+    "RU-C278-nenadolgo",
+    "RU-C278-vspominat",
+    "RU-C278-zapominat",
+    "RU-R278-review-271-278"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch278.txt",
+  "json": "russian/narration/ch278.json",
+  "textHash": "fnv1a64:9bfb326530b9b446",
+  "jsonHash": "fnv1a64:d5dd36ccdb113d05",
+  "findings": []
+}

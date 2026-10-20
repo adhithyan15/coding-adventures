@@ -1,0 +1,11 @@
+{
+  "id": "RU-C297-postradat",
+  "pathSegment": "RU-PATH-297-TRAVMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-297-TRAVMA",
+      "order": 3
+    }
+  ]
+}

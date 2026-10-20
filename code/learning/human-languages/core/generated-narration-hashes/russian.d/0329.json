@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:848cda8946bc748d",
+  "lessonIds": [
+    "RU-C329-kipyatit",
+    "RU-C329-kipet",
+    "RU-C329-otvarivat",
+    "RU-C329-kryshka",
+    "RU-C329-nakryvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch329.txt",
+  "json": "russian/narration/ch329.json",
+  "textHash": "fnv1a64:2a628e527707a988",
+  "jsonHash": "fnv1a64:9354d28b57b1945d",
+  "findings": []
+}

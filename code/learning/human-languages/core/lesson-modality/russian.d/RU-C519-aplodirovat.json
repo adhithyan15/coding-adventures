@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C519-aplodirovat",
+    "language": "russian",
+    "chapter": 519,
+    "sequence": 29180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ecda1d470dcec51"
+  },
+  "findings": []
+}

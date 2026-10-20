@@ -1,0 +1,447 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 264,
+  "title": "Advice, and Why",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:0e3f68448c541ae1",
+  "lessons": [
+    {
+      "id": "RU-C264-tebe-stoit",
+      "sequence": 16110,
+      "title": "тебе стоит, лучше, ты должен — advice at three strengths",
+      "headword": "тебе стоит …; лучше …; ты должен …",
+      "romanization": "tebé stóit …; lúchshe …; ty dólzhen …",
+      "gloss": "advice at three strengths — тебе стоит, it is worth your while; лучше, it is better; ты должен, you must — each with an infinitive",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a105bcb890be637",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to cost\" and \"to rest\". (Stóit. Otdykhát.) Then \"it seems to me\". (Mne kázhetsya.) Мне was \"to me\"; the same shape for \"you\" is тебе, tebé."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: тебе стоит, it is worth your while",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Тебе стоит отдохнуть. — tebé stóit otdokhnút — You should rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Стоит, \"it costs\", here means \"it is worth it\": rest would pay you back. The infinitive follows, and the person advised takes the \"to you\" form: тебе, or polite вам. Отдохнуть is the perfective partner of отдыхать: one rest, taken."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: лучше, it is better",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Уже поздно, а метро далеко. — Тебе лучше взять такси. — uzhé pózdno, a metró dalekó. tebé lúchshe vzyat taksí — It's late already and the metro is far. You'd better take a taxi."
+            },
+            {
+              "kind": "speech",
+              "text": "Лучше — lúchshe — \"better\": one choice against another. Взять is the perfective partner of брать, the pair with two different roots."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: ты должен, you must",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ты должен позвонить маме. — ty dólzhen pozvonít máme — You must ring Mum."
+            },
+            {
+              "kind": "speech",
+              "text": "Должен is a duty, and it agrees like the past: должен to a man, должна (dolzhná) to a woman, должны (dolzhný) to more than one or to вы. It can sound strong between friends; стоит and лучше are gentler."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "должен comes from the Russian noun for \"a debt, a duty\", which EtymDB 2.1 traces to Proto-Slavic dŭlgŭ. A duty is a debt: Я должен тебе сто рублей still means \"I owe you a hundred roubles\"."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tebé stóit otdokhnút.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tebé stóit otdokhnút.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tebé lúchshe vzyat taksí.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tebé lúchshe vzyat taksí.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ty dólzhen pozvonít máme, then to a woman: Ty dolzhná pozvonít máme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ty dólzhen pozvonít máme*, then to a woman: *Ty dolzhná pozvonít máme.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reason and advice: Uzhé pózdno, poétomu tebé lúchshe vzyat taksí.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reason and advice: *Uzhé pózdno, poétomu tebé lúchshe vzyat taksí.*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The gentlest advice: \"it's worth your while\"? (Тебе стоит …) \"You'd better\"? (Тебе лучше …) The strongest, to a woman? (Ты должна …) And what form of the verb follows all three? (The infinitive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C264-prichina-v-tom",
+      "sequence": 16120,
+      "title": "причина в том, что … (prichína v tom, shto …) — giving the reason at length",
+      "headword": "причина в том, что …",
+      "romanization": "prichína v tom, shto …",
+      "gloss": "the reason is that … — giving an explanation at length: what happened, the reason, and what followed, each verb in the aspect that fits",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:553552caa87eefe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you must ring Mum\". (Ty dólzhen pozvonít máme.) Then \"a reason\". (Prichína.) Advice asks for a reason back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: причина в том, что …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Почему ты не позвонил? — Причина в том, что я потерял телефон. — pochemú ty ne pozvoníl? prichína v tom, shto ya poteryál telefón — Why didn't you ring? The reason is that I lost my phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"the reason is in that, that …\": в том points ahead, and что brings in the explanation, with its comma. It is weightier than потому что."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: an explanation in three steps",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What happened, then поэтому, then what followed:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я потерял телефон, поэтому не мог позвонить. — ya poteryál telefón, poétomu ne mog pozvonít — I lost my phone, so I couldn't ring."
+            },
+            {
+              "kind": "speech",
+              "text": "Мог is the past of мочь, one of the few whose form for a man has no л: мог, but могла, могли."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the aspect of an explanation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Учитель говорил быстро, и я не понимал правило. Потом он повторил медленно, и я понял. — uchítel govoríl býstro, i ya ne ponimál právilo. potóm on povtoríl médlenno, i ya pónyal — The teacher was talking fast and I didn't understand the rule. Then he said it again slowly, and I understood."
+            },
+            {
+              "kind": "speech",
+              "text": "A process with no result, then two deeds done: повторил, from the partner of повторять, and понял, from понять, stressed on the front: pónyal."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "причина is при- with чин, by the usual account \"order, rank\". EtymDB 2.1 lists причина itself without a parent, and takes чин through Old East Slavic činŭ to Proto-Slavic činŭ. A reason, on this reading, is what set things in motion."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Prichína v tom, shto ya poteryál telefón.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Prichína v tom, shto ya poteryál telefón.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya poteryál telefón, poétomu ne mog pozvonít.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya poteryál telefón, poétomu ne mog pozvonít.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Pochemú ty ne pozvoníl? Begin with prichína v tom, shto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Pochemú ty ne pozvoníl?* Begin with *prichína v tom, shto*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The reason is that …\"? (Причина в том, что …) \"The teacher said it again, and I understood\": which aspect? (Perfective: повторил, понял.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C264-review",
+      "sequence": 16130,
+      "title": "Review — advice, and the reason for it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a friend's problem — advice with стоит, лучше and должен, and an explanation with причина в том, что and поэтому",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df8bb505abd899fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces of advice: \"you should rest\", \"you'd better take a taxi\", \"you must ring Mum\". (Tebé stóit otdokhnút. Tebé lúchshe vzyat taksí. Ty dólzhen pozvonít máme.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and Russian can now advise and explain. Advice at three strengths, each with an infinitive: тебе стоит, лучше, ты должен. And причина в том, что … (prichína v tom, shto …), with the explanation built from what happened and поэтому."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Я не понимаю правило. — По-моему, тебе стоит спросить учителя. Он поможет."
+            },
+            {
+              "kind": "speech",
+              "text": "Ya ne ponimáyu právilo — \"I don't understand the rule.\" Po-móyemu, tebé stóit sprosít uchítelya. On pomózhet — \"I think you should ask the teacher. He'll help.\" Спросить is the perfective partner of спрашивать."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Po-móyemu, tebé stóit sprosít uchítelya.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Po-móyemu, tebé stóit sprosít uchítelya.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mne kázhetsya, shto tebé lúchshe otdokhnút.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mne kázhetsya, shto tebé lúchshe otdokhnút.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Pochemú ty ne pozvoníl? Begin with prichína v tom, shto, then poétomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Pochemú ty ne pozvoníl?* Begin with *prichína v tom, shto*, then *poétomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice to a friend who is tired, at all three strengths",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice to a friend who is tired, at all three strengths]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You must\", to a woman? (Ты должна.) \"The reason is that …\"? (Причина в том, что …) And the gentlest advice? (Тебе стоит …)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

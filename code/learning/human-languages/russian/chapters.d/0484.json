@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "In Plaster",
+  "label": "ch:ru-in-plaster",
+  "canDo": "I can talk about broken bones, sprains and limping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R484-review-477-484",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about broken bones, sprains and limping.",
+    "assesses": [
+      "RU-LEX-C484-PLASTER-03",
+      "RU-LEX-C484-PLASTER-04",
+      "RU-LEX-C484-PLASTER-05"
+    ]
+  }
+}

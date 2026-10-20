@@ -1,0 +1,11 @@
+{
+  "id": "RU-C285-sobytiye",
+  "pathSegment": "RU-PATH-285-SOBYTIYE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-285-SOBYTIYE",
+      "order": 0
+    }
+  ]
+}

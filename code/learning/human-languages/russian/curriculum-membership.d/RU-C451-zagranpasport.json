@@ -1,0 +1,11 @@
+{
+  "id": "RU-C451-zagranpasport",
+  "pathSegment": "RU-PATH-451-POSOLSTVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-451-POSOLSTVO",
+      "order": 1
+    }
+  ]
+}

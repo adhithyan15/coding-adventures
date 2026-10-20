@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Disappointment and Relief",
+  "label": "ch:ru-disappointment-and-relief",
+  "canDo": "I can talk about disappointment, despair and relief.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C473-vzdykhat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can talk about disappointment, despair and relief.",
+    "assesses": [
+      "RU-LEX-C473-LETDOWN-03",
+      "RU-LEX-C473-LETDOWN-04",
+      "RU-LEX-C473-LETDOWN-05"
+    ]
+  }
+}

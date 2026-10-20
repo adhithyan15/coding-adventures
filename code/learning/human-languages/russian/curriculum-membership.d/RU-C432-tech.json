@@ -1,0 +1,11 @@
+{
+  "id": "RU-C432-tech",
+  "pathSegment": "RU-PATH-432-PROTEKAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-432-PROTEKAT",
+      "order": 3
+    }
+  ]
+}

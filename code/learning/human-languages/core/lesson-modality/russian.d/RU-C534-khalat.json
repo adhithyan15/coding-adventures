@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C534-khalat",
+    "language": "russian",
+    "chapter": 534,
+    "sequence": 29970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:671df7267fd233bf"
+  },
+  "findings": []
+}
