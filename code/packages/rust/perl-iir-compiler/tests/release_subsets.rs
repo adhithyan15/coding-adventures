@@ -176,18 +176,21 @@ fn the_crlf_case_keeps_its_carriage_returns() {
 }
 
 /// Run the host `perl` on one corpus file, contained: no inherited
-/// environment (only `PATH`, to find `perl`), a scratch working directory,
-/// no stdin, and a wall-clock limit. A negative case may be any Perl at
-/// all, since only the compiler has to refuse it, so it must not be able to
-/// hang the suite or read the caller's environment.
+/// environment (only `PATH`, to find `perl`, and Windows' `SYSTEMROOT`), a
+/// scratch working directory, no stdin, and a wall-clock limit. A negative
+/// case may be any Perl at all, since only the compiler has to refuse it, so
+/// it must not be able to hang the suite or read the caller's environment.
 fn run_host_perl(path: &std::path::Path) -> std::process::Output {
     const LIMIT: Duration = Duration::from_secs(20);
     let scratch = std::env::temp_dir().join(format!("perl-oracle-{}", std::process::id()));
     std::fs::create_dir_all(&scratch).unwrap();
     let mut command = Command::new("perl");
     command.env_clear().current_dir(&scratch).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
-    if let Some(search) = std::env::var_os("PATH") {
-        command.env("PATH", search);
+    // `PATH` finds `perl`; Windows programs also expect `SYSTEMROOT`.
+    for key in ["PATH", "SYSTEMROOT"] {
+        if let Some(value) = std::env::var_os(key) {
+            command.env(key, value);
+        }
     }
     // The file path as one argument: no shell, no interpolation.
     let mut child = command.arg(path).spawn().expect("perl ran once already");
