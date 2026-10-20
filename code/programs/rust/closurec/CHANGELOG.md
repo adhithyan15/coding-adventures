@@ -16,9 +16,18 @@ upstream. The rule:
 - A label at the start of a function or control body is now recognised.
 
 gap-067 had only unwrapped `break`/`continue`/`return`/`throw` bodies.
-`tests/regression_ws_label_block.rs` pins 33 shapes to the jar's bytes. It
+`tests/regression_ws_label_block.rs` pins 49 shapes to the jar's bytes. It
 also checks with `node` that those shapes, and 7 shapes deliberately left
-braced, parse. Six unit tests cover the rule.
+braced, parse. Seven unit tests cover the rule.
+
+The security review found two problems, both fixed here:
+
+- The empty body's `;` is the label's statement, so the rule that drops a
+  `;` before `}` now keeps it (`function f(){l:{}}` →
+  `function f(){l:;};`, not `l:}`).
+- Block facts (matching `}`, nested `{`, top-level `;`) are computed in one
+  linear pass, so nested labels no longer rescan. 8,000 nested labels now
+  take 0.9 s in a debug build, down from 8.3 s.
 
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 

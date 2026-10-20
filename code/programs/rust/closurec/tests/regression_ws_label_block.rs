@@ -50,6 +50,25 @@ const CASES: &[(&str, &str)] = &[
     ("function f(){lbl:{return 1}}", "function f(){lbl:return 1};"),
     ("(function(){lbl:{a()}})()", "(function(){lbl:a()})();"),
     ("if(a){y:{b()}}", "if(a)y:b();"),
+    // An empty body's `;` survives before an enclosing `}`: a label needs a
+    // statement (CCR-087 review; `l:}` would not parse).
+    ("function f(){l:{}}", "function f(){l:;};"),
+    ("function f(){l:{;}}", "function f(){l:;};"),
+    ("function f(){x();l:{}}", "function f(){x();l:;};"),
+    ("if(a){x();l:{}}", "if(a){x();l:;};"),
+    ("{x;l:{}}", "{x;l:;};"),
+    ("try{}catch(e){l:{}}", "try{}catch(e){l:;};"),
+    ("switch(x){case 1:x;l:{}}", "switch(x){case 1:x;l:;};"),
+    ("x={m(){l:{}}}", "x={m(){l:;}};"),
+    ("class A{m(){l:{}}}", "class A{m(){l:;}};"),
+    ("class A{static{x;l:{}}}", "class A{static{x;l:;}};"),
+    ("x=function(){l:{}}", "x=function(){l:;};"),
+    ("do{x();l:{}}while(a)", "do{x();l:;}while(a);"),
+    ("if(a)b();else{x;l:{}}", "if(a)b();else{x;l:;};"),
+    ("function f(){l:{}m:{}}", "function f(){l:;m:;};"),
+    ("if(a){l:{}}", "if(a)l:;"),
+    // An ordinary `;` before `}` is still dropped.
+    ("switch(x){case 1:;}", "switch(x){case 1:};"),
     // A lone declaration keeps its block.
     ("lbl:{let x=1}", "lbl:{let x=1};"),
     ("lbl:{const x=1}", "lbl:{const x=1};"),
@@ -115,6 +134,21 @@ fn whitespace_only_label_blocks_match_upstream() {
     for (source, expected) in CASES {
         assert_eq!(&compile_ws(source), expected, "source: {source:?}");
     }
+}
+
+#[test]
+fn nested_labels_are_scanned_once() {
+    // `l:{x;` × 8000: each label used to rescan to its closing brace,
+    // O(depth × size). Brace facts are now computed in one pass.
+    let source = format!("{}{}", "l:{x;".repeat(8000), "}".repeat(8000));
+    let start = std::time::Instant::now();
+    let out = compile_ws(&source);
+    assert!(out.starts_with("l:{x;l:{x;"));
+    assert!(
+        start.elapsed() < std::time::Duration::from_secs(20),
+        "took {:?}",
+        start.elapsed()
+    );
 }
 
 #[test]
