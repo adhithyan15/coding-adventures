@@ -21,6 +21,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `op_support`: the four PR1b ops flip to `Lowered`; the
   `declared_support_matches_what_generic_jit_compiles` check registers
   `write_i64` like the other output builtins.
+- **Fixed — JIT failures fail closed (security review, MEDIUM).** A trap,
+  floor-division edge or `div` by zero in compiled code used to write the
+  error slot and return `Value::Null`; the vm-core handler passed that `Null`
+  to the interpreted caller, which kept running, and `execute_with_jit`
+  returned `Ok` (the reviewer's repro: `Ok(Some(Int(0)))` with two `mark`s run
+  after the trap). Now: new `Backend::take_error() -> Option<VMError>`
+  (default `None`); `GenericCirJit` implements it by draining its slot through
+  `generic_jit::error_from_message` (`trap: <registered kind>` →
+  `VMError::Trap`, `DIV_BY_ZERO_MESSAGE` → `VMError::DivisionByZero`, anything
+  else → `VMError::Custom`); the handler `JITCore` registers and
+  `JITCore::execute` call it after every run and return `Err`. Draining also
+  stops a stale message from shadowing a later failure (`set_error` keeps only
+  the first). New `tests/fail_closed.rs` (reviewer's repro now
+  `Err(Trap.Overflow)` with 0 marks; trap through an interpreted call chain;
+  `div` by zero from an interpreted caller; direct `execute` + no stale slot)
+  and `take_error_maps_and_drains_the_slot`.
 
 ## [0.6.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 

@@ -324,9 +324,14 @@ impl VMCore {
     /// When the interpreter encounters `call fn_name`, it calls this handler
     /// with the resolved argument values instead of pushing a new frame.
     /// Call `unregister_jit_handler` to revert to interpreted execution.
+    ///
+    /// The handler returns `Result`: `Err` (e.g. [`VMError::Trap`] or
+    /// [`VMError::DivisionByZero`]) stops the calling program exactly as the
+    /// same failure in interpreted code would — `execute` returns that error
+    /// and no later instruction of any caller runs.
     pub fn register_jit_handler<F>(&mut self, fn_name: impl Into<String>, handler: F)
     where
-        F: Fn(&[Value]) -> Value + Send + Sync + 'static,
+        F: Fn(&[Value]) -> Result<Value, VMError> + Send + Sync + 'static,
     {
         self.jit_handlers.insert(fn_name.into(), Box::new(handler));
     }
@@ -725,7 +730,7 @@ mod tests {
         let mut vm = VMCore::new();
         vm.register_jit_handler("double", |args| {
             let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-            Value::Int(n * 2)
+            Ok(Value::Int(n * 2))
         });
 
         let double_fn = IIRFunction::new(
@@ -753,6 +758,50 @@ mod tests {
 
         let result = vm.execute(&mut module, "main", &[]).unwrap();
         assert_eq!(result, Some(Value::Int(42)));
+        assert_eq!(vm.metrics_jit_hits(), 1);
+    }
+
+    /// A JIT handler that fails must stop its interpreted caller (fail
+    /// closed): `execute` returns the handler's error, the call's
+    /// destination is never assigned, and the `mark` builtin after the call
+    /// never runs.  Regression test for the LANG83 PR1b security review —
+    /// handlers used to return a bare `Value`, so a trapping compiled callee
+    /// handed back `Null` and the caller kept going.
+    #[test]
+    fn failing_jit_handler_stops_interpreted_caller() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::sync::Arc;
+
+        let marks = Arc::new(AtomicUsize::new(0));
+        let mut vm = VMCore::new();
+        let seen = Arc::clone(&marks);
+        vm.builtins_mut().register("mark", move |_| {
+            seen.fetch_add(1, Ordering::SeqCst);
+            Ok(Value::Null)
+        });
+        vm.register_jit_handler("boom", |_args| {
+            Err(VMError::Trap { kind: "Trap.Overflow".into() })
+        });
+
+        let main_fn = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("call", Some("r".into()),
+                    vec![Operand::Var("boom".into())], "i64"),
+                IIRInstr::new("call_builtin", None,
+                    vec![Operand::Var("mark".into())], "void"),
+                IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(main_fn);
+
+        let err = vm.execute(&mut module, "main", &[]).unwrap_err();
+        assert!(
+            matches!(&err, VMError::Trap { kind } if kind == "Trap.Overflow"),
+            "expected Trap.Overflow, got {err:?}"
+        );
+        assert_eq!(marks.load(Ordering::SeqCst), 0, "caller ran past a failed JIT call");
         assert_eq!(vm.metrics_jit_hits(), 1);
     }
 

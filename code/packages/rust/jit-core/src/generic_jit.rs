@@ -70,7 +70,9 @@
 //! - **LANG83 PR1b**: `i64_div_floor` / `i64_mod_floor` → `DIV_FLOOR_I64` /
 //!   `MOD_FLOOR_I64` (defined `Trap.DivZero` / `Trap.Overflow` edges), and
 //!   `trap "<kind>"` → `TRAP <kind id>`. A trap writes `trap: <kind>` to the
-//!   error slot (see [`trap_message`]) and stops the function.
+//!   error slot (see [`trap_message`]) and stops the function; `JITCore`
+//!   drains the slot after the run and raises `VMError::Trap { kind }`, which
+//!   stops every caller too (see [`Backend::take_error`]).
 //! - **Optional linear memory**: `load_mem`, `store_mem` (when the
 //!   GenericCirJit was constructed with a non-zero tape size).
 //!
@@ -86,6 +88,7 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
+use vm_core::errors::VMError;
 use vm_core::value::Value;
 
 use crate::backend::{Backend, FunctionContext};
@@ -139,7 +142,38 @@ pub(crate) mod opcode {
 /// `vm_core::errors::VMError::Trap` displays, so an embedder reads the kind
 /// identically from either tier.
 pub fn trap_message(kind: &str) -> String {
-    format!("trap: {kind}")
+    format!("{TRAP_PREFIX}{kind}")
+}
+
+/// Prefix of every LANG83 trap message in the error slot.
+const TRAP_PREFIX: &str = "trap: ";
+
+/// The error-slot text for `DIV_I64` by zero (the non-LANG83 `div_*` ops).
+pub const DIV_BY_ZERO_MESSAGE: &str = "GenericCirJit: division by zero";
+
+/// Turn an error-slot message back into the [`VMError`] the interpreter tier
+/// would have raised for the same failure, so both tiers fail identically:
+///
+/// | slot text                         | `VMError`                      |
+/// |-----------------------------------|--------------------------------|
+/// | `trap: <registered trap kind>`    | `Trap { kind }`                |
+/// | [`DIV_BY_ZERO_MESSAGE`]           | `DivisionByZero`               |
+/// | anything else (malformed binary,  | `Custom("generic-cir-jit: …")` |
+/// | fuel cap, bad memory access, …)   |                                |
+///
+/// The trap kind is checked against the closed LANG83 table, so a message
+/// that merely *looks* like a trap but names no registered kind is reported
+/// as an opaque failure rather than minting an arbitrary `Trap` kind.
+pub fn error_from_message(msg: String) -> VMError {
+    if let Some(kind) = msg.strip_prefix(TRAP_PREFIX) {
+        if interpreter_ir::exception_kind::trap_kind_id(kind).is_some() {
+            return VMError::Trap { kind: kind.to_string() };
+        }
+    }
+    if msg == DIV_BY_ZERO_MESSAGE {
+        return VMError::DivisionByZero;
+    }
+    VMError::Custom(format!("generic-cir-jit: {msg}"))
 }
 
 /// Floor quotient and remainder with LANG83's defined edges; `Err` is the trap
@@ -211,7 +245,12 @@ pub struct GenericCirJit {
     /// Error slot — set by the bytecode interpreter when a malformed
     /// bytecode read, out-of-bounds memory access, division-by-zero,
     /// or step-cap exhaustion occurs.  `Backend::run` cannot return a
-    /// `Result`, so callers inspect this slot after execution.
+    /// `Result`, so the failure is recorded here and `run` returns
+    /// `Value::Null`.  `JITCore` drains the slot through
+    /// [`Backend::take_error`] after **every** run and turns it into an
+    /// `Err` (see [`error_from_message`]), so the program stops — the slot
+    /// is empty again by the time `JITCore::execute` / `execute_with_jit`
+    /// return.  Embedders driving `run` directly must drain it themselves.
     pub error: Arc<Mutex<Option<String>>>,
 
     /// Optional step cap.  `None` means unlimited.
@@ -341,6 +380,11 @@ impl Backend for GenericCirJit {
         compile_to_bytecode(ir, &snapshot, self.tape_size > 0, ctx.params)
     }
 
+    fn take_error(&self) -> Option<VMError> {
+        let mut slot = self.error.lock().unwrap_or_else(|e| e.into_inner());
+        slot.take().map(error_from_message)
+    }
+
     fn run(&self, binary: &[u8], args: &[Value]) -> Value {
         // Decode the builtin name table.
         let mut pc = 0usize;
@@ -457,7 +501,7 @@ impl Backend for GenericCirJit {
                         opcode::MUL_I64 => a.wrapping_mul(b),
                         opcode::DIV_I64 => {
                             if b == 0 {
-                                self.set_error("GenericCirJit: division by zero");
+                                self.set_error(DIV_BY_ZERO_MESSAGE);
                                 return Value::Null;
                             }
                             a.wrapping_div(b)
@@ -1454,5 +1498,23 @@ mod tests {
         let e = j.error_handle().lock().unwrap().clone();
         assert!(e.as_deref().map(|s| s.contains("division by zero")).unwrap_or(false),
             "expected division-by-zero error, got: {e:?}");
+    }
+
+    /// `take_error` maps the slot back to the interpreter's `VMError`s and
+    /// drains it; a trap-shaped message naming no registered kind is not
+    /// turned into a `Trap` (the kind table is closed).
+    #[test]
+    fn take_error_maps_and_drains_the_slot() {
+        let j = GenericCirJit::new();
+        assert!(j.take_error().is_none());
+        j.set_error(trap_message("Trap.Overflow"));
+        assert!(matches!(j.take_error(), Some(VMError::Trap { kind }) if kind == "Trap.Overflow"));
+        assert!(j.take_error().is_none(), "take_error must clear the slot");
+        j.set_error(DIV_BY_ZERO_MESSAGE);
+        assert!(matches!(j.take_error(), Some(VMError::DivisionByZero)));
+        j.set_error("trap: Not.A.Kind");
+        assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.contains("Not.A.Kind")));
+        j.set_error("malformed bytecode: truncated TRAP");
+        assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.starts_with("generic-cir-jit: ")));
     }
 }

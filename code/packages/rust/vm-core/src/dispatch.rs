@@ -109,11 +109,35 @@ pub struct DispatchCtx<'a> {
     pub tracer: Option<&'a mut Vec<crate::trace::VMTrace>>,
 }
 
+/// A compiled JIT handler: resolved arguments in, the function's result out.
+///
+/// The handler is **fallible**.  A compiled function can fail exactly the way
+/// an interpreted one can — a LANG83 `trap`, an `i64_div_floor` overflow, a
+/// divide-by-zero, a malformed binary — and the failure must stop the whole
+/// program, not just the callee.  Returning `Result` lets [`handle_call`]
+/// propagate the error with `?`, so the interpreted caller of a JIT-compiled
+/// function stops at the same instruction it would have stopped at had the
+/// callee been interpreted.
+///
+/// ```text
+///  interpreted caller          JIT handler
+///  ------------------          -----------
+///  call f a b      ──args──▶   backend.run(...)
+///                  ◀─Err────   trap: Trap.Overflow
+///  (stops here: the error propagates out of execute — the next
+///   instruction never runs)
+/// ```
+///
+/// An earlier design returned a plain `Value` and left the error in a side
+/// slot that nobody on the call path read: the caller got `Value::Null` and
+/// kept running ("fail open").  The `Result` makes that impossible to forget.
+pub type JitHandler = Box<dyn Fn(&[Value]) -> Result<Value, VMError> + Send + Sync>;
+
 /// Registry mapping a function name to its compiled JIT handler.
 ///
 /// Factored into a named alias (rather than repeating the boxed-closure type at
 /// every use site) both for readability and to satisfy `clippy::type_complexity`.
-pub type JitHandlerMap = HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>;
+pub type JitHandlerMap = HashMap<String, JitHandler>;
 
 /// Signature for a language-specific opcode extension handler.
 ///
@@ -1743,8 +1767,13 @@ fn handle_call(
     // Step 2: JIT handler takes priority.
     if let Some(handler) = jit_handlers.get(&fn_name) {
         // jit_handlers borrow is a SEPARATE reference — no conflict with ctx.
-        let result = handler(&args);
+        //
+        // The handler is fallible: a compiled callee that traps (or divides by
+        // zero, or runs out of fuel) returns `Err`, and `?` stops the caller
+        // right here — the destination is never assigned and the caller's next
+        // instruction never runs.  This is the fail-closed contract.
         *ctx.metrics_jit_hits += 1;
+        let result = handler(&args)?;
         if let Some(dest) = &dest_name {
             ctx.frames.last_mut().unwrap().assign(dest, result.clone());
         }

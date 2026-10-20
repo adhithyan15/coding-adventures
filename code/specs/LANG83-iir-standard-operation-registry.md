@@ -123,7 +123,7 @@ already depend on some of those behaviours:
 | CLR | `DivideByZeroException` | `OverflowException` |
 | BEAM | `badarith` | bignum `2^63` |
 | vm-core | `VMError::DivisionByZero` | wraps to `MIN` (`mod`: `0`); a Rust panic before PR1b |
-| GenericCirJit | `set_error` | `wrapping_div` |
+| GenericCirJit | `VMError::DivisionByZero` (via the error slot; was fail-open before the PR1b security review) | `wrapping_div` |
 
 Rather than silently change those programs, LANG83 adds new ops whose edges are
 *defined* and identical everywhere. `i64_div_trunc` (Later) is the defined twin
@@ -152,7 +152,19 @@ How each column reports a trap (PR1b). Every one flushes earlier output first:
 | CLR | `Console.Out.Flush(); throw new System.Exception("<kind>")` | stderr `Unhandled exception. System.Exception: <kind>` |
 | BEAM | `erlang:error('<kind>')` — the reason is the kind **atom** | the uncaught error's reason |
 | VM | `VMError::Trap { kind }` | the error value |
-| JIT | `TRAP <id>` bytecode; error slot `trap: <kind>` | `GenericCirJit::error` |
+| JIT | `TRAP <id>` bytecode; error slot `trap: <kind>`, drained by `JITCore` after every run | `VMError::Trap { kind }` from `JITCore::execute` / `execute_with_jit` |
+
+**JIT traps fail closed (PR1b security review).** `Backend::run` returns a
+plain `Value`, so `GenericCirJit` records a trap in its error slot. The first
+PR1b cut stopped there: the JIT handler vm-core called returned the placeholder
+`Value::Null`, nothing on the call path read the slot, and an *interpreted*
+caller of a trapping JIT-compiled function kept running (and `execute_with_jit`
+returned `Ok`). vm-core JIT handlers are now fallible
+(`Fn(&[Value]) -> Result<Value, VMError>`); after every run `JITCore` drains
+the slot through `Backend::take_error` (`trap: <kind>` → `VMError::Trap`,
+`div_*` by zero → `VMError::DivisionByZero`, anything else →
+`VMError::Custom`), and `call` propagates it with `?`. A JIT trap therefore
+stops the whole program exactly like an interpreted one.
 
 **Divergence from the PR1b plan:** the plan proposed
 `erlang:error({iir_trap, Kind})` on BEAM. `iir-to-beam` has no

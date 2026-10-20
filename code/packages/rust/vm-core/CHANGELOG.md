@@ -22,6 +22,16 @@
   builtins.
 - Tests: sign table, both trap kinds, MIN/1, legacy MIN/−1, `trap` kind
   validation, `VMError::Trap` display, `write_i64` registration.
+- **Breaking — JIT handlers are fallible (security review, fail closed).**
+  `register_jit_handler` now takes `Fn(&[Value]) -> Result<Value, VMError>`
+  (new `dispatch::JitHandler` alias; `JitHandlerMap` maps to it), and `call`
+  propagates a handler's `Err` with `?`. Before, a handler returned a bare
+  `Value`, so a JIT-compiled function that trapped handed its interpreted
+  caller `Value::Null` and the caller kept running — `execute` even returned
+  `Ok`. Now the error stops the program at the `call`: the destination is
+  never assigned and no later instruction runs. Callers update their closures
+  to return `Ok(value)`. New test
+  `failing_jit_handler_stops_interpreted_caller`.
 
 ## [0.27.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 

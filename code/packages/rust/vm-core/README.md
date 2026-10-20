@@ -171,12 +171,18 @@ traps. See `tests/gc_heap.rs` for the full round-trip and reclamation proofs.
 ```rust
 vm.register_jit_handler("hot_fn", |args| {
     // Native Rust — bypasses the interpreter entirely.
-    Value::Int(args[0].as_i64().unwrap_or(0) * 2)
+    Ok(Value::Int(args[0].as_i64().unwrap_or(0) * 2))
 });
 ```
 
 The handler is called before the interpreter path whenever `call hot_fn …`
 appears.  Unregister with `vm.unregister_jit_handler("hot_fn")`.
+
+Handlers are **fallible** (`Fn(&[Value]) -> Result<Value, VMError>`): a handler
+that returns `Err` — e.g. `VMError::Trap { kind }` for a compiled LANG83 trap —
+stops the calling program right at the `call`, exactly as the same failure in
+interpreted code would.  The caller's destination is never assigned and no
+later instruction runs (fail closed).
 
 ---
 

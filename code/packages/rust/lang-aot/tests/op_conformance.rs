@@ -46,8 +46,9 @@
 //! the trap kind. Since LANG83 PR1b every column lowers `trap`, so those cases
 //! run everywhere; each column reports the kind its own way (native/LLVM
 //! `trap: <kind>` on stderr, JVM `RuntimeException: <kind>`, WASM the
-//! `env.__trap` kind id, VM `VMError::Trap`, JIT `trap: <kind>` in the error
-//! slot), and every column must report it — `None` is a failure, not a skip.
+//! `env.__trap` kind id, VM and JIT `VMError::Trap` — the JIT's error slot is
+//! drained into that `Err`, and a message left in the slot fails the case as
+//! fail-open), and every column must report it — `None` is a failure, not a skip.
 //!
 //! `StdoutThenTrap` / stdout-carrying `Trapped` live here, not in `lang_matrix`
 //! yet: no language row emits a PR1b op. The first frontend that does (LANG83
@@ -627,7 +628,9 @@ fn run_jit(module: IIRModule, case: &Case) -> RunResult {
         s.lock().expect("sink").extend_from_slice(n.to_string().as_bytes());
         Value::Null
     });
-    // `run` cannot return an error, so a JIT-side trap lands in this slot.
+    // `run` cannot return an error, so a JIT-side trap lands in this slot;
+    // `JITCore` must drain it into an `Err` (fail closed). A message still
+    // sitting here after `execute` returns means the trap failed open.
     let error_slot = Arc::clone(&backend.error);
     let mut jit = JITCore::new(&mut vm, Box::new(backend));
     let compiled = jit.compile(&mut vm, &module, "main");
@@ -637,19 +640,18 @@ fn run_jit(module: IIRModule, case: &Case) -> RunResult {
         case.name
     );
     let result = jit.execute(&mut vm, &mut module, "main", &[]);
-    let jit_error = error_slot.lock().expect("jit error slot").take();
-    match (result, jit_error) {
-        (Ok(_), None) => RunResult::Completed { stdout: sink_text(&sink) },
-        // `GenericCirJit` records a LANG83 trap as `trap: <kind>`
-        // (`generic_jit::trap_message`).
-        (_, Some(e)) => {
-            let kind = e.strip_prefix("trap: ").map(str::to_string);
-            RunResult::Trapped { stdout: sink_text(&sink), kind }
-        }
-        (Err(vm_core::errors::VMError::Trap { kind }), None) => {
+    let leftover = error_slot.lock().expect("jit error slot").take();
+    assert!(
+        leftover.is_none(),
+        "Jit: case `{}` left {leftover:?} in the JIT error slot — a JIT failure must surface as Err",
+        case.name
+    );
+    match result {
+        Ok(_) => RunResult::Completed { stdout: sink_text(&sink) },
+        Err(vm_core::errors::VMError::Trap { kind }) => {
             RunResult::Trapped { stdout: sink_text(&sink), kind: Some(kind) }
         }
-        (Err(_), None) => RunResult::Trapped { stdout: sink_text(&sink), kind: None },
+        Err(_) => RunResult::Trapped { stdout: sink_text(&sink), kind: None },
     }
 }
 
