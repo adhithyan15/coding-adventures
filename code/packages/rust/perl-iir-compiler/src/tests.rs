@@ -582,6 +582,10 @@ mod hostile_probes {
     const CHILD_TEST: &str = "tests::hostile_probes::child_runs_every_probe";
     const DONE_MARKER: &str = "perl-iir hostile probes passed:";
 
+    /// Instructions every program ends with: `main` returns the exit status
+    /// 0 (`const 0; ret`), so the probe counts include two epilogue ops.
+    const EPILOGUE: usize = 2;
+
     /// What a probe must end in.
     #[derive(Debug)]
     enum Expect {
@@ -646,14 +650,14 @@ mod hostile_probes {
             for op in ["+", "*", "-"] {
                 let short = 2_000;
                 probe("flat chain", &format!("print({}1);", format!("1{op}").repeat(short)),
-                    release, Expect::Compiles(2 * short + 1 + 2));
+                    release, Expect::Compiles(2 * short + 1 + 1 + EPILOGUE));
                 probe("long flat chain", &format!("print({}1);", format!("1{op}").repeat(20_000)),
                     release, Expect::Unsupported);
             }
             // Adjacent minus signs lex as decrement tokens, which no rule accepts.
             probe("decrement run", &format!("print(1{}1);", "-".repeat(40_000)), release, Expect::Parse);
             // Many statements: the same item budget bounds the program width.
-            probe("statements", &"print(1);".repeat(1_000), release, Expect::Compiles(2 * 1_000 + 1));
+            probe("statements", &"print(1);".repeat(1_000), release, Expect::Compiles(2 * 1_000 + EPILOGUE));
             probe("statement flood", &"print(1);".repeat(7_000), release, Expect::Unsupported);
             // Characters outside every token rule.
             for source in ["print(1);\0", "print(\u{FF11});", "print(1);\u{1b}[2J", "\u{FEFF}print(1);"] {
