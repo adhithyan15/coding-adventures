@@ -67,7 +67,7 @@ fn every_instruction_is_a_registry_builtin_or_an_ungated_scalar_op() {
                 assert_eq!(entry.kind, OpKind::Builtin);
             } else {
                 assert!(
-                    ["const", "neg", "add", "sub", "mul", "ret_void"]
+                    ["const", "neg", "add", "sub", "mul", "ret"]
                         .contains(&instruction.op.as_str()),
                     "{source}: unexpected op {}",
                     instruction.op

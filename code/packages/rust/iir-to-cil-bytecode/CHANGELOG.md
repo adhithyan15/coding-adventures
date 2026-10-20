@@ -6,6 +6,25 @@
   names the new `release: None` field from interpreter-ir 0.13.0. No
   behaviour change: backends do not read the field.
 
+## Unreleased — a void entry's `ret_void` returns an `int32` (LANG84 4a)
+
+- **Fix: `ret_void` in the entry method.** `emit_il` always gives the entry
+  the launcher's fixed `int32 MccarthyEntry()` signature, but lowered
+  `ret_void` to a bare `ret` everywhere. A `main` declared `void` — Perl's
+  `print` programs, the first such entry on the CLR column — therefore left
+  an empty stack in an `int32` method. `ilasm` assembles that silently;
+  CoreCLR rejects it at JIT time with `InvalidProgramException` ("Common
+  Language Runtime detected an invalid program"), which is how PR #17850's
+  macOS `matrix_every_proven_cell_agrees` failed on `print(1 + 2);`.
+  `ret_void` now emits `ldc.i4.0; ret` when the method's CIL return is
+  `int32` (a statement program that falls off its end returns 0) and keeps
+  the bare `ret` for `void` helpers.
+- Test `il_text::tests::void_entry_ret_void_still_returns_an_int32`: a
+  structural check, with no `dotnet` needed, that a void entry pushes an
+  `int32` before `ret` and a void helper does not. Confirmed against real
+  CoreCLR (SDK 10, `DOTNET_ROLL_FORWARD=Major`): all eleven Perl CLR matrix
+  cells now print their expected output.
+
 ## [0.47.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64` on the textual path)
 
 - **`i64_div_floor` / `i64_mod_floor`** on `emit_il` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
