@@ -67,7 +67,10 @@ A subset is a named slice of a language (LANG84 "Status stages"):
 CSV cell can never point outside the grammar directory. `spec` names a file
 `code/specs/<spec>-*.md`. A corpus case is `<name>.<ext>` plus `<name>.expect`
 and its oracle record `<name>.cite`; a negative case is `<name>.<ext>` plus
-`<name>.reject`.
+`<name>.reject`. A positive case may carry per-profile overrides:
+`<name>.expect@<profile>` (different output under that profile) or
+`<name>.reject@<profile>` (outside the subset under that profile, LANG84 4c),
+and the profile must be defined in a `profiles.rs`.
 
 THE MATRIX CHECK (`--matrix`)
 =============================
@@ -78,7 +81,8 @@ a release that claims B(S) is backed by backend runs. For every such release R
 and every case C of S's corpus, one of these must hold:
 
     1. `release_classes.csv` marks C as `rejected` under R (the case does not
-       apply: R's grammar does not parse it);
+       apply: R's grammar does not parse it, or a `.reject@<profile>`
+       override puts it outside R's profile);
     2. a `lang_matrix` row runs C on R itself;
     3. `release_classes.csv` puts (C, R) in an IIR-identity class whose
        representative -- its first release in inventory order -- has a
@@ -357,7 +361,9 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
 
     A case is `<name>.<ext>` + `<name>.expect` + `<name>.cite`; a negative
     probe is `<name>.<ext>` + `<name>.reject`. Overrides `<name>.expect@<p>`
-    need the plain `.expect`. Only positive cases need backend coverage.
+    and `<name>.reject@<p>` need the plain `.expect` and a profile `<p>`
+    that some `profiles.rs` defines. Only positive cases need backend
+    coverage.
     """
     corpus = directory / "corpus" / subset
     if not corpus.is_dir():
@@ -381,11 +387,8 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
         if not CASE_RE.match(stem):
             report.error(f"{where}: case name must match [A-Za-z0-9_-]+")
             continue
-        sources = {
-            s
-            for s in suffixes
-            if s not in {"expect", "cite", "reject"} and not s.startswith("expect@")
-        }
+        overrides = {s for s in suffixes if s.startswith(("expect@", "reject@"))}
+        sources = suffixes - overrides - {"expect", "cite", "reject"}
         positive, negative = "expect" in suffixes, "reject" in suffixes
         if positive == negative:
             report.error(f"{where}: needs exactly one of .expect or .reject")
@@ -395,8 +398,15 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
             )
         if positive and "cite" not in suffixes:
             report.error(f"{where}: .expect has no .cite oracle record")
-        if any(s.startswith("expect@") for s in suffixes) and not positive:
+        if overrides and not positive:
             report.error(f"{where}: a profile override needs the plain .expect")
+        for override in sorted(overrides):
+            profile = override.partition("@")[2]
+            if not PROFILE_RE.match(profile) or not known_profile(profile):
+                report.error(
+                    f"{where}: override .{override} names no profile defined "
+                    "in a profiles.rs"
+                )
         if positive:
             cases.add(stem)
     return cases

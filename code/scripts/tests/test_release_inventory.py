@@ -38,8 +38,9 @@ def subset_row(name: str, spec: str = "LANG84") -> str:
     return f"{name},the {name} subset,corpus/{name},{spec}"
 
 
-# `iir_status`/`backend_status` claims need a known profile; the repository
-# has no `profiles.rs` yet, so the matrix tests stub the lookup.
+# `iir_status`/`backend_status` claims need a known profile. The fixtures'
+# profile names (`p`, `p18`) are in no real `profiles.rs`, so these tests stub
+# the lookup.
 ANY_PROFILE = mock.patch.object(release_inventory, "known_profile", lambda _name: True)
 
 
@@ -478,6 +479,9 @@ class SubsetsTest(Fixture):
         self.case("lang", "s", "neither", "rb")
         self.case("lang", "s", "orphan", "rb", "reject", "expect@p18")
         self.case("lang", "s", "bad name", "rb", "expect", "cite")
+        self.case("lang", "s", "zero", "rb", "expect", "cite", "reject@p18")
+        self.case("lang", "s", "orphan2", "rb", "reject", "reject@p18")
+        self.case("lang", "s", "badprofile", "rb", "expect", "cite", "reject@9x")
         lines = [HEADER, row("1.0", "1990-01-01", "", "partial,P,s,s,-,p")]
         errors = self.errors("lang", lines)
         for fragment in (
@@ -488,9 +492,34 @@ class SubsetsTest(Fixture):
             "corpus/s/neither: needs exactly one of .expect or .reject",
             "corpus/s/orphan: a profile override needs the plain .expect",
             "corpus/s/bad name: case name must match",
+            "corpus/s/orphan2: a profile override needs the plain .expect",
+            "corpus/s/badprofile: override .reject@9x names no profile",
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
         self.assertFalse(any("corpus/s/good" in e for e in errors), errors)
+        # `.reject@<profile>` (LANG84 4c) is an override, not a second source.
+        self.assertFalse(any("corpus/s/zero" in e for e in errors), errors)
+
+    def test_overrides_name_a_profile_some_profiles_rs_defines(self) -> None:
+        self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
+        self.case("lang", "s", "zero", "rb", "expect", "cite", "expect@nosuch")
+        report = release_inventory.Report(self.root / "lang" / "releases.csv")
+        with mock.patch.object(
+            release_inventory, "known_profile", lambda name: name == "real"
+        ):
+            self.assertEqual(
+                release_inventory.corpus_cases(report, self.root / "lang", "s"),
+                {"zero"},
+            )
+            self.assertTrue(
+                any(".expect@nosuch names no profile" in e for e in report.errors),
+                report.errors,
+            )
+            self.case("lang", "s", "zero", "reject@real")
+            (self.root / "lang" / "corpus" / "s" / "zero.expect@nosuch").unlink()
+            report.errors.clear()
+            release_inventory.corpus_cases(report, self.root / "lang", "s")
+            self.assertEqual(report.errors, [])
 
 
 MATRIX = """

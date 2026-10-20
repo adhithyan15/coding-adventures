@@ -78,7 +78,8 @@ no `grammar_status`, and it filled the new columns as follows:
   `grammar_subset=pl-decimal-print`, and `pending` rows become `none` and `-`.
   `iir_status`, `backend_status` and `profile` are `-` everywhere. Stage
   I(`pl-int-print`) needs the corpus under `corpus/pl-int-print/` and the
-  `release_subsets` test, which arrive in phase 4c.
+  `release_subsets` test, which arrive in phase 4c. *(Since 4c, the 118
+  checked rows claim `pl-int-print` at I and B; see below.)*
 
 `subsets.csv` declares the subsets the CSV may name:
 
@@ -86,6 +87,41 @@ no `grammar_status`, and it filled the new columns as follows:
 | --- | --- | --- |
 | `pl-decimal-print` | The bounded plain-decimal arithmetic `print` subset that every partial pair parses | LANG82 |
 | `pl-int-print` | LANG81's integer `print` subset, lowered to IIR and run on the LANG83 backends | LANG81 |
+
+## The `pl-int-print` corpus and release classes (LANG84 phase 4c)
+
+`corpus/pl-int-print/` holds 12 positive and 7 negative cases. A positive
+case is `<name>.pl`, `<name>.expect` (the exact stdout, followed by one LF
+that is not part of it, because the subset's `print` never writes a newline)
+and `<name>.cite`, the oracle record: the host `perl` v5.38.2, plus the
+pinned historical sources for the older releases (in
+`perl-iir-compiler/src/profiles.rs`). A negative case has `<name>.reject`,
+the error category every checked release must return, and its `.cite` says
+what Perl itself does with the program. `zero_and_negation.reject@perl_nv`
+says that releases on the `perl_nv` profile refuse that case: they compute
+`-0` as the C double `-0.0` and print it as `0` or `-0` depending on constant
+folding and the platform. `crlf_layout.pl` keeps its CRLF line ends
+(`-text` in the repository's `.gitattributes`).
+
+`release_classes.csv` (`subset,case,release,class`) is written by
+`perl-iir-compiler`'s `tests/release_sweep.rs`. For each positive case and
+checked release, `class` is the release's IIR-identity class (16 hex digits
+of the SHA-256 of its outcome for every case), or `rejected` when the release
+does not accept the case. The 118 releases fall into three classes:
+
+| Representative | Profile | Members | Not accepted |
+| --- | --- | --- | --- |
+| `1.000` | `perl_nv` | 41: Perl 1–4, 5.000–5.003_25, 5.004_72, 1.0.15, 1.0_16 | `zero_and_negation` |
+| `5.003_26` | `perl_nv` | 73: 5.003_26–5.004_71, `p54rc1`/`p54rc2`, the 5.004 maintenance track | `zero_and_negation`, `crlf_layout` (CR is a lex error) |
+| `5.38.0` | `perl_iv` | 4: 5.38.0, 5.38.2, 5.44.0, 5.45.3 | — |
+
+Every release that accepts a case lowers it to the same IIR; the classes
+differ only in what they accept. `lang-aot`'s `lang_matrix` runs every case
+each representative accepts on all eight executable backends, and
+`release_inventory.py check --matrix` checks that every `backend_status`
+claim is covered by those rows.
+
+## Release pairs
 
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
