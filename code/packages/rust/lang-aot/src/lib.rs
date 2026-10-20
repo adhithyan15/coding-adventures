@@ -284,33 +284,32 @@ fn echo_release(release: &str) -> String {
 ///
 /// [`LangAotError::UnknownRelease`] and [`LangAotError::ReleaseNotAvailable`]
 /// have public `String` fields, so `Display` cannot assume a constructor
-/// already ran [`echo_release`]. This pass is the backstop: it escapes any
-/// character that is still a control or invisible format character (ESC, CR,
-/// the bidi overrides U+202A–U+202E and U+2066–U+2069, …) and caps the
-/// length. It is idempotent on text that `echo_release` already produced —
-/// that text has no such characters left — so nothing is escaped twice.
+/// already ran [`echo_release`]. This pass is the backstop, and it uses the
+/// same Unicode tables as `echo_release` (`char::escape_debug`) rather than a
+/// hand-picked list: every non-ASCII character that `escape_debug` considers
+/// unprintable (bidi overrides, U+2028/U+2029, tag characters, Hangul
+/// fillers, …) and every ASCII control becomes `\u{..}`-style text, and the
+/// length is capped. `escape_debug` treats the blank Hangul fillers as
+/// ordinary letters, so those four are escaped explicitly. Printable ASCII
+/// — the backslash included — passes through untouched, so text
+/// `echo_release` already escaped is not escaped a second time.
 fn neutralize(text: &str) -> String {
     const MAX_SHOWN_CHARS: usize = 512;
     let mut chars = text.chars();
     let mut shown = String::new();
     for c in chars.by_ref().take(MAX_SHOWN_CHARS) {
-        if c.is_control() || is_invisible_format(c) {
+        if c.is_ascii() && !c.is_ascii_control() {
+            shown.push(c);
+        } else if matches!(c, '\u{115F}' | '\u{1160}' | '\u{3164}' | '\u{FFA0}') {
             shown.extend(c.escape_unicode());
         } else {
-            shown.push(c);
+            shown.extend(c.escape_debug());
         }
     }
     if chars.next().is_some() {
         shown.push('…');
     }
     shown
-}
-
-/// Unicode format characters that can reorder or hide terminal text.
-fn is_invisible_format(c: char) -> bool {
-    matches!(c,
-        '\u{00AD}' | '\u{061C}' | '\u{180E}' | '\u{200B}'..='\u{200F}'
-        | '\u{202A}'..='\u{202E}' | '\u{2060}'..='\u{2069}' | '\u{FEFF}')
 }
 
 /// Detect a [`Language`] from a file extension.  Returns `None` if the
@@ -3308,14 +3307,24 @@ mod tests {
     /// what it echoes.
     #[test]
     fn release_errors_neutralize_text_built_outside_this_crate() {
+        let hidden = |c: char| {
+            c.is_control()
+                || ('\u{202a}'..='\u{202e}').contains(&c)
+                || ('\u{2066}'..='\u{2069}').contains(&c)
+                || matches!(c, '\u{2028}' | '\u{2029}' | '\u{3164}')
+                || ('\u{e0000}'..='\u{e007f}').contains(&c)
+        };
         let forged = LangAotError::ReleaseNotAvailable {
             language: Language::Perl,
-            release: "1\u{1b}[2J\u{202e}".into(),
+            release: "1\u{1b}[2J\u{202e}\u{2028}\u{e0041}\u{3164}".into(),
             stage: "\r\n".into(),
         }
         .to_string();
-        assert!(!forged.chars().any(|c| c.is_control() || is_invisible_format(c)), "{forged:?}");
+        assert!(!forged.chars().any(hidden), "{forged:?}");
         assert!(forged.contains("\\u{1b}") && forged.contains("\\u{202e}"), "{forged}");
+        assert!(forged.contains("\\u{2028}") && forged.contains("\\u{e0041}"), "{forged}");
+        // Printable non-ASCII text is shown as itself.
+        assert_eq!(neutralize("5.38.0-é"), "5.38.0-é");
         let forged = LangAotError::UnknownRelease {
             language: Language::Perl,
             release: "x".repeat(10_000),
