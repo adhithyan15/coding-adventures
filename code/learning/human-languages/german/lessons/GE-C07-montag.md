@@ -10,7 +10,7 @@ gloss: Monday — the pattern's first instance, and the one weekday English and 
 concept_tag: GE-WEEKDAY-MONDAY
 prerequisites: [GE-C07-mond]
 sounds: [long-o]
-roots: [germanic-menon]
+roots: [germanic-menon, dagaz]
 etymology_hook: "Montag is Mond plus Tag and Monday is moon plus day: the same two words in the same order, which is what an inherited name looks like rather than a translated one"
 duration:
   max_seconds: 145
@@ -50,6 +50,11 @@ two words in the same order — *moon* and *day*.
 
 That is what an **inherited** name looks like. Nobody translated this; both
 languages were already saying it before they were separate languages.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Montag** ← Middle High German *mōntac* (EtymDB 2.1): *Mond* + *Tag*, "moon's day", built the same way as English *Monday*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONTAG-01, GE-LEX-MOND-01] -->

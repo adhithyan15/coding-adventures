@@ -14,7 +14,8 @@ romanization: "taṭṭaccu cey"
 concept_tag: TA-VERB-TATTACCU-CEY
 prerequisites: [TA-C227-munpativu-cey, TA-C227-vinnappi]
 sounds: []
-roots: []
+roots: [dravidian-tattu-tap, dravidian-accu-mould, sey-do-dravidian]
+etymology_hook: "தட்டச்சு செய் — taṭṭu 'tap' + accu 'type' (DEDR 47; queried link with Sanskrit sañcaka) + sey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C227-vinnappi]
 <!-- hl-knowledge: introduces=[TA-LEX-C228-ACT228-01]; assesses=[] -->
 
 **தட்டச்சு செய்** — *taṭṭaccu cey* — "to type".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தட்டச்சு செய்** (*taṭṭaccu cey*) is a modern coinage from native words: *taṭṭu*, "to tap, to strike", *accu*, "mould, type" (DEDR 47, which lists Malayalam accu and Telugu accu 'print'), and *sey*, "to do" (DEDR 1957). DEDR itself compares *accu*, with a query, to Sanskrit *sañcaka*, "mould", so a link with Indo-Aryan is possible.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

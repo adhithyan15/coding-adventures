@@ -13,7 +13,8 @@ gloss: "a bridegroom"
 concept_tag: FR-CHOSES197-MARIE
 prerequisites: [FR-C196-plombier, FR-C196-ouvrier]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "marié — marié 'married' used as a noun: the bridegroom"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C196-ouvrier]
 <!-- hl-knowledge: introduces=[FR-LEX-C197-CHOSES197-01]; assesses=[] -->
 
 **le marié** — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marié** — the adjective *marié*, "married", used as a noun: the man being married. *Marier* ← Latin *marītāre*, "to wed" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

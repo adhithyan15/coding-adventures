@@ -14,7 +14,8 @@ romanization: "preṣayati"
 concept_tag: SA-VERB-PRESAYATI
 prerequisites: [SA-C134-bhinatti, SA-C134-sthapayati]
 sounds: []
-roots: []
+roots: [sanskrit-preshayati]
+etymology_hook: "preṣayati ← pra 'forth' + √iṣ 'set in motion, send' (MW; CDIAL 9003); Pali peseti 'sends'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C134-sthapayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C134-ACT134-04]; assesses=[] -->
 
 **प्रेषयति** — *preṣayati* — "sends".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*preṣayati* comes from *pra* "forth" and the root √iṣ "set in motion, send" (MW; CDIAL 9003): "drives on, sends forth". Pali kept it as *peseti* "sends", especially with a message (CDIAL 9003).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

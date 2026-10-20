@@ -15,6 +15,7 @@ concept_tag: BN-JINIS197-DABA
 prerequisites: [BN-C197-hoki, BN-C197-tenis]
 sounds: []
 roots: []
+etymology_hook: "dābā 'chess': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C197-tenis]
 <!-- hl-knowledge: introduces=[BN-LEX-C197-JINIS197-04]; assesses=[] -->
 
 **দাবা** — *dābā* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **দাবা** (*dābā*), "chess", is not settled: CDIAL has no entry for it, and its Bengali *dābā*, "to press down" (CDIAL 6173), is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

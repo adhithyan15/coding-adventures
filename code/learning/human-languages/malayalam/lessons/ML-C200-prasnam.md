@@ -14,7 +14,8 @@ romanization: "praśnaṁ"
 concept_tag: ML-KARANAM200-PRASNAM
 prerequisites: [ML-C200-venti, ML-C200-pakaram]
 sounds: []
-roots: []
+roots: [sanskrit-prashna]
+etymology_hook: "praśnaṁ ← Sanskrit praśna 'question', a tatsama (CDIAL 8818)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C200-pakaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C200-KARANAM200-03]; assesses=[] -->
 
 **പ്രശ്നം** — *praśnaṁ* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രശ്നം** (*praśnaṁ*) ← Sanskrit *praśna*, "question", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 8818). A question became a problem.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

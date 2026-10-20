@@ -14,7 +14,8 @@ romanization: "jalapāta"
 concept_tag: KA-THINGS128-JALAPATA
 prerequisites: [KA-C128-birugali, KA-C128-ale]
 sounds: []
-roots: []
+roots: [sanskrit-jala, sanskrit-pata-fall]
+etymology_hook: "jalapāta ← Sanskrit jala 'water' (CDIAL 5155) + pāta 'fall' (CDIAL 8052)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C128-ale]
 <!-- hl-knowledge: introduces=[KA-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **ಜಲಪಾತ** — *jalapāta* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಲಪಾತ** (*jalapāta*) is Sanskrit *jala*, "water" (CDIAL 5155), and *pāta*, "fall, flight" (CDIAL 8052): "a fall of water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

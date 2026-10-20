@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 166,
-  "sourceHash": "fnv1a64:fdcb5bacbc081736",
+  "sourceHash": "fnv1a64:13f58c47a26342bf",
   "lessonIds": [
     "IT-C166-firma",
     "IT-C166-busta",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch166.txt",
   "json": "italian/narration/ch166.json",
-  "textHash": "fnv1a64:524b4f89bec402a6",
-  "jsonHash": "fnv1a64:f4a1bd9f8b95f971",
+  "textHash": "fnv1a64:84e957231fcc0445",
+  "jsonHash": "fnv1a64:476dfd975717c899",
   "findings": []
 }

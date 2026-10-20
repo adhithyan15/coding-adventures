@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:8b077ee351541e01",
+  "lessonIds": [
+    "FR-C506-match-nul",
+    "FR-C506-classement",
+    "FR-C506-eliminer",
+    "FR-C506-qualifier",
+    "FR-C506-vainqueur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch506.txt",
+  "json": "french/narration/ch506.json",
+  "textHash": "fnv1a64:9bb1f6b7bc35e0a2",
+  "jsonHash": "fnv1a64:5dcc2337d3bc0357",
+  "findings": []
+}

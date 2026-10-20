@@ -11,7 +11,8 @@ romanization: "pōdum"
 concept_tag: TA-REPLY-ENOUGH
 prerequisites: [TA-C47-true, TA-C45-ear, TA-C46-student]
 sounds: []
-roots: []
+roots: [dravidian-podu-suffice]
+etymology_hook: "போதும் — native Dravidian (DEDR 4594); Malayalam pōruka 'to suffice'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C47-true]
 It grows out of *pōdu*, 'to suffice', and it is the polite full stop of a Tamil meal: your host is serving, your plate is filling, and *pōdum* stops it without giving offence. Said twice — *pōdum pōdum* — it means you are serious.
 
 It has nothing to do with *pō*, 'to go', though the two look alike at a glance. Different roots, similar clothes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போதும்** (*pōdum*) is native Dravidian. DEDR 4594 lists Malayalam *pōruka*, "to suffice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

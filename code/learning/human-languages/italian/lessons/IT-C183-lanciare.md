@@ -13,7 +13,8 @@ gloss: "to launch, to throw"
 concept_tag: IT-VERB-LANCIARE
 prerequisites: [IT-C183-insistere, IT-C183-interrompere]
 sounds: []
-roots: []
+roots: [lancea-latin]
+etymology_hook: "lanciare ← Late Latin lanceare, from lancea 'a lance' — English launch is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C183-interrompere]
 <!-- hl-knowledge: introduces=[IT-LEX-C183-VERBI183-04]; assesses=[] -->
 
 **lanciare** — "to launch, to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lanciare** ← Late Latin *lanceare*, "to wield a lance", from *lancea*, "a lance" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "trousers"
 concept_tag: GE-KLEIDUNG-HOSE
 prerequisites: [GE-C98-hemd, GE-C99-kleid]
 sounds: []
-roots: []
+roots: [germanic-huso]
+etymology_hook: "Hose ← Old High German hosa ← Proto-Germanic *husōn 'leggings' — the same word as English hose"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C99-kleid]
 <!-- hl-knowledge: introduces=[GE-LEX-C99-KLEIDUNG-02]; assesses=[] -->
 
 **die Hose** — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hose** ← Old High German *hosa* ← Proto-Germanic *\*husōn*, "leg coverings" — inherited, the same word as English *hose*, as in stockings. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:1f3b679f3daa4afa",
+  "lessonIds": [
+    "FR-C362-citoyen",
+    "FR-C362-citoyennete",
+    "FR-C362-nationalite",
+    "FR-C362-liberte",
+    "FR-C362-egalite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch362.txt",
+  "json": "french/narration/ch362.json",
+  "textHash": "fnv1a64:af4a2a4b6ea8f867",
+  "jsonHash": "fnv1a64:62bfdd98bfe106de",
+  "findings": []
+}

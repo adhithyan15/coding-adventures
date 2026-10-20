@@ -12,7 +12,7 @@ concept_tag: VERB-READ
 prerequisites: [MR-C08-samajne]
 sounds: [matra-aa, retroflex-na]
 roots: [sanskrit-vacayati-cause-to-speak, sanskrit-vac-speak, pie-wekw-speak]
-etymology_hook: "वाचणे is Sanskrit वाचयति vācayati, the causative of the root वच् vac- 'to speak' — so to read is to MAKE something speak; वच् is Indo-European \\*wekʷ-, which Latin turned into vōx and vocāre, giving English voice, vocal, invoke and advocate"
+etymology_hook: "वाचणे ← Sanskrit vācayati, causative of vac- 'to speak', PIE *wekʷ-: English voice, vocal, invoke"
 duration:
   max_seconds: 270
 requires:

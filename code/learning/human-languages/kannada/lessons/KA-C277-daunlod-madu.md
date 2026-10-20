@@ -14,7 +14,8 @@ romanization: "ḍaunlōḍ māḍu"
 concept_tag: KA-VERB-DAUNLOD-MADU
 prerequisites: [KA-C277-abhyasa-madu, KA-C277-banna-haccu]
 sounds: []
-roots: []
+roots: [english-download, maadu-do-dravidian]
+etymology_hook: "ḍaunlōḍ māḍu: English download + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C277-banna-haccu]
 <!-- hl-knowledge: introduces=[KA-LEX-C277-KRIYE277-05]; assesses=[] -->
 
 **ಡೌನ್ಲೋಡ್ ಮಾಡು** — *ḍaunlōḍ māḍu* — "to download".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಡೌನ್ಲೋಡ್ ಮಾಡು** (*ḍaunlōḍ māḍu*) is English *download* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 126,
-  "sourceHash": "fnv1a64:cf981039fb395316",
+  "sourceHash": "fnv1a64:b02da68c94a21df1",
   "lessonIds": [
     "RU-C126-last",
     "RU-C126-famous",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch126.txt",
   "json": "russian/narration/ch126.json",
-  "textHash": "fnv1a64:b382d358f70d7a1d",
-  "jsonHash": "fnv1a64:8840348c0d2a1de3",
+  "textHash": "fnv1a64:8e98bbca1d40b352",
+  "jsonHash": "fnv1a64:d1896a4dace04dfc",
   "findings": []
 }

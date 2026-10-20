@@ -1,0 +1,11 @@
+{
+  "id": "ES-C584-inconveniente",
+  "pathSegment": "ES-PATH-584-VENTAJA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-584-VENTAJA",
+      "order": 2
+    }
+  ]
+}

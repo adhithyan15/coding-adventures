@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 39,
-  "sourceHash": "fnv1a64:d76925d3905d4402",
+  "sourceHash": "fnv1a64:5e8d404045165998",
   "lessonIds": [
     "GU-C35-jo",
     "GU-C35-jo-to",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "gujarati/narration/ch39.txt",
   "json": "gujarati/narration/ch39.json",
-  "textHash": "fnv1a64:4a9783e083962e71",
-  "jsonHash": "fnv1a64:f5990be5d87a3b34",
+  "textHash": "fnv1a64:fc397541d1a27150",
+  "jsonHash": "fnv1a64:f1969f8d7ca92ff7",
   "findings": []
 }

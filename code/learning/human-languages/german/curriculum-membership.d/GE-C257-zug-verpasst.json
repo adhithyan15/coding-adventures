@@ -1,0 +1,11 @@
+{
+  "id": "GE-C257-zug-verpasst",
+  "pathSegment": "GE-PATH-257-FAHRKARTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-257-FAHRKARTE",
+      "order": 1
+    }
+  ]
+}

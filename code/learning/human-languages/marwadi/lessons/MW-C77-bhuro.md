@@ -14,7 +14,8 @@ romanization: "bhūro"
 concept_tag: MW-ADJ77-BHURO
 prerequisites: [MW-C77-nilo, MW-C77-kalo]
 sounds: []
-roots: []
+roots: [indo-aryan-bhrura]
+etymology_hook: "bhūro ← *bhrūra 'brown', reconstructed (CDIAL 9690, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C77-kalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C77-ADJ77-04]; assesses=[] -->
 
 **भूरो** — *bhūro* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूरो** (*bhūro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhrūra*, "brown", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9690); the match is through Hindi *bhūrā* and Gujarati *bhūrũ*. CDIAL sets it beside Indo-European *\*bhrūno-*, behind English *brown*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

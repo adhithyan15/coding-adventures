@@ -14,7 +14,8 @@ romanization: "basṭāṇḍu"
 concept_tag: TE-STHALAM214-BASTANDU
 prerequisites: [TE-C213-sekanu, TE-C213-monna]
 sounds: []
-roots: []
+roots: [english-bus-stand]
+etymology_hook: "basṭāṇḍu ← English bus stand"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C213-monna]
 <!-- hl-knowledge: introduces=[TE-LEX-C214-STHALAM214-01]; assesses=[] -->
 
 **బస్టాండు** — *basṭāṇḍu* — "a bus stand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బస్టాండు** (*basṭāṇḍu*) is a loan from English *bus stand*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

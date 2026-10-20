@@ -14,7 +14,8 @@ romanization: "āvālu"
 concept_tag: TE-VASTUVU299-AVALU
 prerequisites: [TE-C298-masaka, TE-C299-sanagalu]
 sounds: []
-roots: []
+roots: [dravidian-aiyavi-mustard]
+etymology_hook: "āvālu: DEDR 921 lists āvalu 'mustard seeds', with a query, beside Tamil aiyavi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C299-sanagalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C299-VASTUVU299-02]; assesses=[] -->
 
 **ఆవాలు** — *āvālu* — "mustard seeds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 921 lists **ఆవాలు** (*āvālu*), "mustard seeds", with a query, beside Tamil *aiyavi*, "mustard", and points to a possible link with Sanskrit *sarṣapa*, "mustard seed" (CDIAL 13281).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

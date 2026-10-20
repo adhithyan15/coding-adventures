@@ -14,7 +14,8 @@ romanization: "óblako"
 concept_tag: RU-SKY-CLOUD
 prerequisites: [RU-C58-moon, RU-C58-star]
 sounds: []
-roots: []
+roots: [slavic-velk]
+etymology_hook: "облако is Church Slavonic, from *ob-volkŭ 'what is drawn round'; Old Russian had оболоко"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C58-star]
 <!-- hl-knowledge: introduces=[RU-LEX-C58-SKY-05]; assesses=[] -->
 
 **облако** (*óblako*) — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**облако** — borrowed from Church Slavonic, says Vasmer; the native form was Old Russian *obolokŭ*. Both are *\*ob-volkŭ*, "what is drawn over", from the root of *волочь*, "to drag", a cousin of Greek *hélkō*, "I drag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

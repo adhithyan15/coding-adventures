@@ -22,6 +22,9 @@ coding_adventures_zeroize = { path = "../zeroize" }
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
 
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.52", features = ["Win32_Foundation"] }
+
 [dev-dependencies]
 chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
 chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
@@ -31,3 +34,8 @@ chief-of-staff-broker-callbacks = { path = "../chief-of-staff-broker-callbacks" 
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
 chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
 storage-core = { path = "../storage-core" }
+
+[target.'cfg(windows)'.dev-dependencies]
+capability-os-sandbox = { path = "../capability-os-sandbox" }
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file", features = ["test-support"] }
+chief-of-staff-windows-sandbox = { path = "../chief-of-staff-windows-sandbox" }

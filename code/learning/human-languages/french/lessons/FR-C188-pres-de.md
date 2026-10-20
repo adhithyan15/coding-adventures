@@ -13,7 +13,8 @@ gloss: "near to"
 concept_tag: FR-LIEU188-PRES-DE
 prerequisites: [FR-C187-jusqua, FR-C187-depuis]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "près de — près 'near' + de"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C187-depuis]
 <!-- hl-knowledge: introduces=[FR-LEX-C188-LIEU188-01]; assesses=[] -->
 
 **près de** — "near to".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**près de** — *près*, "near", and *de*, "of". *Près* ← Latin *presse*, "closely" (EtymDB 2.1), and *de* ← Latin *dē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

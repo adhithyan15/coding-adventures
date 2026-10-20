@@ -13,6 +13,7 @@ You'll want to know: నిజం.
 నిజం (nijaṁ) — "true; the truth".
 Sanskrit nija meant "one's own, innate" — what belongs to a thing by its nature. Telugu moved it one step: what belongs to a thing by nature is what is really so, and నిజం (nijaṁ) became the truth.
 Alone it answers a doubt: nijaṁ, "true". With a question on the end it becomes perhaps the commonest interjection in the language: nijamā?, "really?"
+CDIAL 7181 lists Sanskrit nija, "innate, one's own".
 
 What you've built.
 The first of five answers that are neither అవును nor లేదు.
@@ -46,6 +47,9 @@ You'll want to know: చాలు.
 చాలు (cālu) is a verb — "it suffices" — used as a complete answer. Held over a glass being filled it stops the pouring; said of an argument it ends it.
 చాలా, the everyday word for "very" and "a lot", is the same root wearing a different ending. Sufficiency and abundance sit one letter apart, which is a fair account of how the two ideas are related anywhere.
 
+The word, taken apart.
+చాలు (cālu) is native Dravidian, one word with Tamil cāl and Kannada sālu (DEDR 2470). DEDR lists Telugu cālu, "to be enough", and cāla, "abundant".
+
 What you've built.
 Two.
 
@@ -75,8 +79,11 @@ Before the new one: what did cālu mean?
 
 You'll want to know: తప్పకుండా.
 తప్పకుండా (tappakuṇḍā) — "certainly, without fail".
-Take it apart: తప్పు, "to miss, to slip, to go wrong", plus -కుండా, the ending meaning "without doing". తప్పకుండా (tappakuṇḍā) is without missing.
+Take it apart: తప్పు + -కుండా becomes తప్పకుండా (tappakuṇḍā). The first piece means "to miss, to slip, to go wrong"; the second is the ending meaning "without doing". So తప్పకుండా (tappakuṇḍā) is without missing.
 The ending is worth having on its own, because it attaches to any verb stem: ceppakuṇḍā, without telling; tinakuṇḍā, without eating. One suffix, and every verb you own gains a negative.
+
+The word, taken apart.
+తప్పకుండా (tappakuṇḍā) is native Dravidian: tappu, "to miss, to fail", which DEDR 3071 lists with Tamil tappu, "to err", and Kannada tappu, "to slip", followed by the ending -kuṇḍā, "without".
 
 What you've built.
 Three.
@@ -113,6 +120,9 @@ You'll want to know: ఏమో.
 Look at the front of it and you will find the questioning ఏ- that already stands in ఏమిటి, "what". ఏమో (ēmō) is that question with the asking taken out and only the uncertainty left behind.
 It also hangs on the end of a whole sentence, where English would need a separate clause: vastāḍēmō, "he may come". A language with a settled, unembarrassed word for not knowing is telling you something about its manners.
 
+The word, taken apart.
+ఏమో (ēmō) is native Dravidian: ēmi, "what", which DEDR 5151 lists on the question base e-, with the doubting ending -ō.
+
 What you've built.
 Four.
 
@@ -146,6 +156,9 @@ You'll want to know: అలాగే.
 అలాగే (alāgē) — "just so, alright then".
 అలా means "in that way"; -గే is the small emphatic tail that makes it "just so". అలాగే (alāgē) is the yes you give to an instruction — not "that is correct" but "it shall be as you said".
 Now look at the front of it. అ- points far, and already carries అది, "that one", and అక్కడ, "there". ఇ- points near: ఇది, ఇక్కడ, and so ఇలా, "in this way". ఎ- asks: ఎక్కడ, ఎలా. Three vowels, one grid, and అలాగే (alāgē) is simply the far corner of it with an ending stuck on.
+
+The word, taken apart.
+అలాగే (alāgē) is native Dravidian: alā, "in that way", built on the far-pointing base a- (DEDR 1), with the emphatic tail -gē.
 
 What you've built.
 Five answers, and a three-way grid you can now see running under అది, ఇక్కడ and ఎలా.

@@ -14,7 +14,8 @@ romanization: "mostaqim"
 concept_tag: FA-MAKAN230-MOSTAQIM
 prerequisites: [FA-C230-jonub, FA-C230-sharq]
 sounds: []
-roots: []
+roots: [arabic-mustaqim]
+etymology_hook: "mostaqim ← Arabic mustaqīm 'straight, upright', root q-w-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C230-sharq]
 <!-- hl-knowledge: introduces=[FA-LEX-C230-MAKAN230-04]; assesses=[] -->
 
 **مستقیم** — *mostaqim* — "straight ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mostaqim* is borrowed from Arabic *mustaqīm*, "straight, upright". Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

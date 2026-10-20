@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a tooth, then the Urdu for the throat.
 You'll want to know: پیٹ.
 پیٹ — peṭ — "the stomach".
 
+The word, taken apart.
+پیٹ (peṭ) is inherited. CDIAL lists it under a reconstructed peṭṭa, "belly", and notes that it may be the same word as similar forms meaning "basket" (CDIAL 8376). DEDR compares its variant poṭṭa with Dravidian words for "belly", such as Telugu poṭṭa (DEDR 4494).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for the throat, then the Urdu for the stomach.
 
 You'll want to know: کندھا.
 کندھا — kandhā — "a shoulder".
+
+The word, taken apart.
+کندھا (kandhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from skandha, "shoulder" (CDIAL 13627). CDIAL allows that a form without the s-, kandha, existed beside it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for the stomach, then the Urdu for a shoulder.
 You'll want to know: انگلی.
 انگلی — unglī — "a finger".
 
+The word, taken apart.
+انگلی (unglī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅguli, "finger, toe" (CDIAL 135).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a shoulder, then the Urdu for a finger.
 You'll want to know: ہونٹ.
 ہونٹ — hõṭ — "a lip".
 
+The word, taken apart.
+ہونٹ (hõṭ) is inherited. CDIAL lists Hindi hõṭh, "lip", under Sanskrit oṣṭha, "lip" (CDIAL 2563); its addenda also list hõṭh under a reconstructed compound adhamauṣṭha, "lower lip", which would account for the h- (CDIAL 247a).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a finger, then the Urdu for a lip.
 
 You'll want to know: گردن.
 گردن — gardan — "the neck".
+
+The word, taken apart.
+گردن (gardan) is a loan, usually traced to Persian gardan, "neck".
 
 What you've built.
 One more word for this chapter.

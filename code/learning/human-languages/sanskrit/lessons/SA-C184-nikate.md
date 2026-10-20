@@ -14,7 +14,8 @@ romanization: "nikaṭe"
 concept_tag: SA-LOC184-NIKATE
 prerequisites: [SA-C183-cirat, SA-C184-duratah]
 sounds: []
-roots: []
+roots: [sanskrit-nikata]
+etymology_hook: "nikaṭe 'near' ← nikaṭa 'nearness'; its origin is disputed (CDIAL 7136); Hindi neṛe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C184-duratah]
 <!-- hl-knowledge: introduces=[SA-LEX-C184-LOC184-02]; assesses=[] -->
 
 **निकटे** — *nikaṭe* — "close by, near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nikaṭe* is the locative of *nikaṭa*, "nearness" (MW). Its origin is disputed: CDIAL 7136 thinks a Munda source unlikely and derives it from *nikṛta-*, "put at". Hindi keeps it as *neṛe*, "near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

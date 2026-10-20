@@ -14,6 +14,7 @@ concept_tag: IT-VERB-GUARDARE
 prerequisites: [IT-C142-nascondere, IT-C142-mostrare]
 sounds: []
 roots: []
+etymology_hook: "guardare ← Frankish wardon 'to watch, to guard' — borrowed; English guard and ward"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C142-mostrare]
 <!-- hl-knowledge: introduces=[IT-LEX-C142-VERBI142-05]; assesses=[] -->
 
 **guardare** — "to look at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**guardare** ← Frankish *wardon*, "to watch, to guard" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

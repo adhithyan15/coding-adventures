@@ -13,7 +13,8 @@ gloss: "unfortunately"
 concept_tag: FR-POURQUOI189-MALHEUREUSEMENT
 prerequisites: [FR-C188-a-gauche, FR-C189-malgre]
 sounds: []
-roots: []
+roots: [augurium-latin]
+etymology_hook: "malheureusement — mal- + heureux + -ment: unluckily"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C189-malgre]
 <!-- hl-knowledge: introduces=[FR-LEX-C189-POURQUOI189-02]; assesses=[] -->
 
 **malheureusement** — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**malheureusement** — *heureux*, "lucky", with *mal-*, "badly", in front and the adverb ending *-ment*: unluckily. *Heureux* is built on Old French *eur*, "luck", from Latin *augurium*, "an omen", and *mal-* ← Latin *male*, "badly" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

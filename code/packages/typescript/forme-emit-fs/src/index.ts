@@ -23,7 +23,7 @@
  *        - `variant: { kind: "dist-tree" }` (static-files tree)
  *        - `files: ReadonlyRecord<routePath, Uint8Array>`
  *        - `manifest.routes: DeployRoute[]` (one per emitted page)
- *        - `manifest.assets: []` (asset emission is a future stage)
+ *        - `manifest.assets: []` (asset pipelines use forme-emit-site-fs)
  *        - `manifest.buildTime: ISO timestamp from ctx.time`
  *        - `manifest.buildId: blake2b over { route → sha256 }`
  *
@@ -32,24 +32,27 @@
  * Emit stages have the same chicken-and-egg problem source stages do:
  * `ctx.filesystem` is the orchestrator-provided `FilesystemApi`, but
  * for forme-emit-fs to *write* disk *something* has to be the
- * implementation.  v0 resolves it the same way `forme-source-fs` does:
+ * implementation. This first-party stage resolves it the same way
+ * `forme-source-fs` does:
  *
  *   - Declare `filesystem:write` in `required_capabilities.json` and
  *     in the stage's `capabilities` array (so the manifest audit
  *     layer sees correct intent).
- *   - Read via `node:fs/promises` directly (the runtime path).
+ *   - Write via `node:fs/promises` directly (the runtime path).
  *
- * When FM02 lands and the orchestrator wires real `FilesystemApi`s
- * around stages, this stage will be one of the implementations.
+ * FM02's shipped capability-backed APIs mediate installed third-party
+ * plugins. This first-party sink remains one of the filesystem
+ * implementations rather than a consumer of ambient plugin authority.
  * Documented in README + required_capabilities.json + this header.
  *
  * === Spec adherence ===
  *
- * No deliberate divergences from FM00/FM01.  v0 simplifications:
+ * No deliberate divergences from FM00/FM01. Compatibility contract:
  *
- *   - `manifest.assets` is always `[]` (no asset stages yet).
+ *   - `manifest.assets` is always `[]`; asset pipelines use
+ *     forme-emit-site-fs.
  *   - `DeployRoute.islands` / `DeployRoute.css` are always `[]`
- *     (renderer doesn't track them yet).
+ *     here; forme-emit-site-fs carries the implemented FM04/FM05 paths.
  *   - `DeployRoute.target` is always `{ kind: "file", path: <route> }`
  *     — no handler-typed routes in the static blog.
  *
@@ -284,8 +287,8 @@ const emitFs = defineStage({
       routes.push({
         pattern: page.route,
         target: { kind: "file", path: posixPath },
-        islands: [],   // renderer doesn't track islands in v0
-        css: [],       // theme CSS is inlined; no external bundles
+        islands: [],   // compatibility sink; island-aware routes use forme-emit-site-fs
+        css: [],       // compatibility sink keeps theme CSS inline
       });
     }
 
@@ -309,7 +312,7 @@ const emitFs = defineStage({
 
     const manifest: DeployManifest = {
       routes,
-      assets: [],   // no asset stages yet (v0)
+      assets: [],   // asset-bearing pipelines use forme-emit-site-fs
       buildTime,
       buildId,
     };

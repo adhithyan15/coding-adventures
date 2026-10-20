@@ -14,6 +14,7 @@ concept_tag: PT-VERB-DESCER
 prerequisites: [PT-C132-cair, PT-C132-subir]
 sounds: []
 roots: []
+etymology_hook: "descer — Old Portuguese decer, usually traced to Latin decidere 'to fall down'; details uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C132-subir]
 <!-- hl-knowledge: introduces=[PT-LEX-C133-VERBOS133-01]; assesses=[] -->
 
 **descer** — "to go down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**descer** — Old Portuguese said *decer* (EtymDB 2.1). The usual account traces it to Latin *decidere*, "to fall down", later reshaped after *descendere*, "to climb down"; the details are uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -26,7 +26,7 @@ primo (masculine), prima (feminine) — first. il primo giorno — the first day
 Uno, due, tre answer how many. This word answers which one in the line, and Italian keeps a second series for that job. It behaves as any describing word does and changes its ending with what it counts.
 
 The word, taken apart: already on the page.
-This book has used primo once, and hidden it. The seasons lesson glossed primavera as "the first green" — prima vera, the first spring — and the word behind that gloss was never given. Now it is.
+This book has used primo once, and hidden it. The seasons lesson glossed primavera as "the first spring" — Latin prīma vēra — and the word behind that gloss was never given. Now it is.
 One thing to know before you use it. Il primo piano is not the ground floor. Italian calls the ground floor il pianterreno, "the earth floor", and starts counting at the top of the first flight of stairs — so il primo piano is what an American calls the second floor. A lift panel in Rome begins T, then 1.
 
 Guided Practice.
@@ -119,6 +119,7 @@ fraction: a third. Italian: un terzo.
 fraction: a quarter. Italian: un quarto.
 fraction: a fifth. Italian: un quinto.
 So the words this chapter is teaching do a second job you will meet in a recipe or on a bill. English does exactly the same thing with a third and a quarter, and for the same reason: the ordinal already names a position in a division.
+Terzo itself is inherited from Latin tertius, "third", which was built on trēs, "three" (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -156,6 +157,9 @@ Recalls first, then the fourth — and the phrase that makes these words immedia
 You'll want to know: The word.
 quarto (masculine), quarta (feminine) — fourth. il quarto piano — the fourth floor. la quarta volta — the fourth time.
 Quattro is four and quarto is four with the ordinal ending, the double t squeezed out. Two in a row now behave the same way.
+
+The word, taken apart.
+quarto from Latin quartus, "fourth" — inherited. (EtymDB 2.1).
 
 You'll want to know: a quarter of an hour.
 un quarto d'ora — a quarter of an hour, fifteen minutes. tre quarti d'ora — three quarters of an hour.
@@ -200,10 +204,13 @@ Recalls first, then the fifth — and a pair that does not rhyme when it ought t
 You'll want to know: The word.
 quinto (masculine), quinta (feminine) — fifth. il quinto piano — the fifth floor. la quinta volta — the fifth time.
 
+The word, taken apart.
+quinto from Latin quintus, "fifth", from quinque, "five" — inherited. (EtymDB 2.1).
+
 Sounds you'll need: why cinque and quinto do not match.
 Say them together: cinque, quinto. They are the same Latin root and they do not sound alike, and the difference is worth a minute.
 Latin had quīnque and quīntus, both beginning kw-. Then the first one was pulled forward by the i that followed and softened all the way to ch- — which is why cinque opens like English chin. The ordinal was not pulled, and it still opens kw-: KWIN-to.
-So this pair is a sound change caught halfway through: one word moved and its twin did not. Listen for the same split in dieci against decimo, five lessons ahead — the cardinal softened, the ordinal did not.
+So this pair is a sound change caught halfway through: one word moved and its twin did not. Listen for the same split in dieci against the word for "tenth," five lessons ahead — the cardinal softened, the ordinal did not.
 
 Guided Practice.
 [pause 1 second]
@@ -216,4 +223,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why do cinque and quinto not rhyme? (The cardinal softened its opening to ch- and the ordinal kept kw-.) Say the fifth floor. (Il quinto piano.) And which pair five lessons ahead does the same thing? (Dieci against decimo.)
+Why do cinque and quinto not rhyme? (The cardinal softened its opening to ch- and the ordinal kept kw-.) Say the fifth floor. (Il quinto piano.)

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-767-PORVENIR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-767-PORVENIR"
+  ],
+  "after": []
+}

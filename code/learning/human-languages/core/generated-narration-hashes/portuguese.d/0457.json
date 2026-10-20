@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:23712fe39e3a2ebc",
+  "lessonIds": [
+    "PT-C457-carvalho",
+    "PT-C457-pinheiro",
+    "PT-C457-sobreiro",
+    "PT-C457-cortica",
+    "PT-C457-podar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch457.txt",
+  "json": "portuguese/narration/ch457.json",
+  "textHash": "fnv1a64:05f7eca5fafb9304",
+  "jsonHash": "fnv1a64:708ae32db2f67902",
+  "findings": []
+}

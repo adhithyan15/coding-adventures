@@ -6,7 +6,7 @@ sequence: 1920
 chapter: 37
 type: review
 headword: (sixteen letters)
-gloss: second pass: the same sixteen letters, from the word back to the letter
+gloss: 'second pass: the same sixteen letters, from the word back to the letter'
 romanization: "solah harf"
 concept_tag: UR-LETTERS-FROM-WORDS
 prerequisites: [UR-W34-be, UR-W34-te, UR-W34-tte, UR-W35-jim, UR-W35-bari-he, UR-W35-khe, UR-W35-che, UR-W36-dal, UR-W36-rre, UR-W36-do-chashmi-he, UR-W36-gaf, UR-W37-fe, UR-W37-qaf, UR-W37-zuad, UR-W37-zoe, UR-W37-hamza-seat]

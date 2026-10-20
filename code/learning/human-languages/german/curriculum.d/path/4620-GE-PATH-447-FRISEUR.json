@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-447-FRISEUR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-447-FRISEUR"
+  ],
+  "after": []
+}

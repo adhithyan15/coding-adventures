@@ -14,7 +14,8 @@ romanization: "sarvadā"
 concept_tag: SA-TIME92-SARVADA
 prerequisites: [SA-C92-pascat, SA-C92-adhuna, SA-C17-always]
 sounds: []
-roots: []
+roots: [sanskrit-sarva]
+etymology_hook: "sarvadā 'always' ← sarva 'all' + the time ending -dā of kadā and sadā (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,12 @@ reviews_of: [SA-C92-adhuna]
 <!-- hl-knowledge: introduces=[SA-LEX-C92-TIME92-05]; assesses=[] -->
 
 **सर्वदा** — *sarvadā* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sarvadā* is built from *sarva*, "all", with the time ending *-dā* that also ends
+*kadā* and *sadā* (MW): at all times.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

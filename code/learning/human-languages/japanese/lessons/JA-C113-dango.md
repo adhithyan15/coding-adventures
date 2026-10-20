@@ -14,7 +14,8 @@ romanization: "dango"
 concept_tag: JA-THINGS113-DANGO
 prerequisites: [JA-C112-yasumi, JA-C113-hanko]
 sounds: []
-roots: []
+roots: [middle-chinese-dwan]
+etymology_hook: "dango: Sino-Japanese dan 団 'round mass' + a noun ending -go 子"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C113-hanko]
 <!-- hl-knowledge: introduces=[JA-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **だんご** — *dango* — "a dumpling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だんご** (*dango*) is Sino-Japanese *dan*, "a round mass" (Middle Chinese *dwan*), borrowed from Chinese, with *-go*, a noun ending written with the character for child (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

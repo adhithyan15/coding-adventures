@@ -12,7 +12,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: ഇത്.
 ഇത് — itŭ — this one — the thing near me.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is അത് atŭ, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+ഇത് (itŭ) is native Dravidian: the old near-pointing base with an ending meaning "thing". DEDR 410 lists Malayalam itu with Tamil itu.
 
 Guided Practice.
 [pause 1 second]
@@ -39,7 +42,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: അത്.
 അത് — atŭ — that one — the thing over there.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ഇത് itŭ, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is ഇത് itŭ, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+അത് (atŭ) is native Dravidian: the old far-pointing base with an ending meaning "thing". DEDR 1 lists Malayalam atu with Tamil atu, Kannada adu and Telugu adi.
 
 Guided Practice.
 [pause 1 second]
@@ -64,7 +70,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: ഇവിടെ.
 ഇവിടെ — iviṭe — here — where I am.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is അവിടെ aviṭe, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+ഇവിടെ (iviṭe) is native Dravidian: the near-pointing base of itŭ with a tail meaning "place". DEDR 410 gathers the near-pointing words, with Tamil iṅkē, "here".
 
 Guided Practice.
 [pause 1 second]
@@ -88,7 +97,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: അവിടെ.
 അവിടെ — aviṭe — there — where I am not.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ഇവിടെ iviṭe, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is ഇവിടെ iviṭe, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+അവിടെ (aviṭe) is native Dravidian: the far-pointing base of atŭ with a tail meaning "place". DEDR 1 gathers the far-pointing words, with Tamil aṅkē, "there".
 
 Guided Practice.
 [pause 1 second]
@@ -112,12 +124,15 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: ആര്.
 ആര് — ārŭ — who? — asking about a person.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is എവിടെ eviṭe, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no one: it asks your listener to name the person.
+ārŭ opens with a long ā-. Do not hear it as the short a- of far that അത് atŭ and അവിടെ aviṭe share: it has nothing to do with distance. Tamil, next door, says yār; Malayalam's word is the same one with its first y- worn away.
+
+The word, taken apart.
+ആര് (ārŭ) is native Dravidian, the question stem yā- worn down to ā-. DEDR 5151 lists it with Tamil yār, ār and Kannada yār, ār.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ആര് (ārŭ)" three times, picturing something different each time]
+[your turn — say: "ആര് (ārŭ)" three times, asking about a different person each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -126,7 +141,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is ārŭ? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (e- — ask.)
+What is ārŭ? (who? — asking about a person.) Does its long ā- mean far, like the short a- of atŭ? (No — it is the same word as Tamil's yār, its y- worn away; it asks about a person.)
 
 
 Lesson 6 of 7.
@@ -138,12 +153,15 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: എവിടെ.
 എവിടെ — eviṭe — where? — asking about a place.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ആര് ārŭ, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no place: it asks your listener to point one out.
+Its partners are ഇവിടെ iviṭe and അവിടെ aviṭe, which you have already met. The three differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+എവിടെ (eviṭe) is native Dravidian: the old asking base with the same "place" tail as iviṭe and aviṭe. DEDR 5151 gathers the asking words, with Tamil yāṇṭu, "where".
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "എവിടെ (eviṭe)" three times, picturing something different each time]
+[your turn — say: "എവിടെ (eviṭe)" three times, asking about a different place each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -164,7 +182,7 @@ Warm-up.
 Say the six words from this chapter out loud, in order. Listen to how they begin.
 
 Grammar lens: one slot changes.
-You did not learn six words. You learned three beginnings and reused them.
+Five of these six words are three beginnings, reused; only the person question stands apart.
 [a table of 3 rows, read aloud]
 meaning: near. word: ഇവിടെ iviṭe.
 meaning: far. word: അവിടെ aviṭe.

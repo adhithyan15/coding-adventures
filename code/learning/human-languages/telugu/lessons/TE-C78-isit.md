@@ -11,7 +11,8 @@ romanization: "avunā"
 concept_tag: TE-QUESTION-YESNO
 prerequisites: [TE-C77-thirty, TE-C37-mukku]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "avunā: avunu 'yes' (DEDR 333) + the question ending -ā"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C77-thirty]
 Every question you have asked so far needed a question *word*. This one needs none: take అవును, "yes", and add **-ఆ**.
 
 That **-ఆ** is the whole yes-or-no machine. Hang it on the end of any statement and it becomes a question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అవునా** (*avunā*) is *avunu*, "yes", which DEDR 333 lists under *agu*, "to be", with the question ending *-ā*. DEDR compares Sanskrit *ām*, "yes" (CDIAL 1235).
 
 ## Grammar Lens: -ఆ makes any statement a question
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C78-YESNO-01]; assesses=[] -->

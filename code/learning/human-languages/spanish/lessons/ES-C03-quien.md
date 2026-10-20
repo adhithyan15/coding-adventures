@@ -11,6 +11,7 @@ concept_tag: ES-INTERROGATIVE-QUIEN-EARLY
 prerequisites: [ES-C03-usted-origin]
 sounds: []
 roots: []
+etymology_hook: "quién ← Latin quem 'whom'"
 duration:
   max_seconds: 180
 requires:
@@ -45,6 +46,8 @@ Say **quién** like *kyen*, one smooth beat. It asks for a **person**:
 
 Hear the word as one piece for now. The next micro-lesson slows down and
 explains the written accent that Spanish question words carry.
+
+It comes from Latin *quem*, "whom".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUIEN] -->

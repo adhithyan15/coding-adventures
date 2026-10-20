@@ -14,7 +14,8 @@ romanization: "rubâh"
 concept_tag: FA-THINGS105-RUBAH
 prerequisites: [FA-C105-khargush, FA-C105-ahu]
 sounds: []
-roots: []
+roots: [persian-rubah]
+etymology_hook: "rubâh ← Middle Persian rōbāh (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C105-ahu]
 <!-- hl-knowledge: introduces=[FA-LEX-C105-THINGS105-04]; assesses=[] -->
 
 **روباه** — *rubâh* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rubâh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *rōbāh*, "fox" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

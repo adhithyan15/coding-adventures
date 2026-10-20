@@ -14,7 +14,8 @@ romanization: "javāb"
 concept_tag: PA-SCHOOL72-JAVAB
 prerequisites: [PA-C72-paisa, PA-C72-saval]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javāb ← Arabic jawāb 'an answer', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C72-saval]
 <!-- hl-knowledge: introduces=[PA-LEX-C72-SCHOOL72-04]; assesses=[] -->
 
 **ਜਵਾਬ** — *javāb* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਵਾਬ** (*javāb*) is a loan from Arabic *jawāb*, "an answer", which reached Punjabi through Persian. Its Arabic root is *j-w-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

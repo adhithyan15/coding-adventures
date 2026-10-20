@@ -14,7 +14,8 @@ romanization: "tavallod"
 concept_tag: FA-ZAMAN228-TAVALLOD
 prerequisites: [FA-C228-sal-e-now, FA-C228-tahvil-e-sal]
 sounds: []
-roots: []
+roots: [arabic-tawallud]
+etymology_hook: "tavallod ← Arabic tawallud 'being born', root w-l-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C228-tahvil-e-sal]
 <!-- hl-knowledge: introduces=[FA-LEX-C228-ZAMAN228-05]; assesses=[] -->
 
 **تولد** — *tavallod* — "birth; a birthday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tavallod* is borrowed from Arabic *tawallud*, "being born". Its Arabic root is *w-l-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vayaṟiḷakkaṁ"
 concept_tag: ML-AROGYAM233-VAYARILAKKAM
 prerequisites: [ML-C233-cora, ML-C233-svasam]
 sounds: []
-roots: []
+roots: [dravidian-vayiru-belly, dravidian-ilaku-move]
+etymology_hook: "vayaṟiḷakkaṁ: native Dravidian, 'loosening of the belly': vayaṟŭ (DEDR 5259) + iḷakkam (DEDR 509)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C233-svasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C233-AROGYAM233-04]; assesses=[] -->
 
 **വയറിളക്കം** — *vayaṟiḷakkaṁ* — "diarrhoea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വയറിളക്കം** (*vayaṟiḷakkaṁ*) is native Dravidian, "the belly's loosening": *vayaṟŭ*, "belly" (DEDR 5259), and a noun from the verb "to move, shake loose" (DEDR 509, with Tamil *iḷaku*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

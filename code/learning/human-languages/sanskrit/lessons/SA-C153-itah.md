@@ -14,7 +14,8 @@ romanization: "itaḥ"
 concept_tag: SA-LOC153-ITAH
 prerequisites: [SA-C152-dinankah, SA-C152-satabdi]
 sounds: []
-roots: []
+roots: [sanskrit-itas]
+etymology_hook: "itaḥ ← pronoun base i- 'this' + -tas 'from': 'from here, hence' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C152-satabdi]
 <!-- hl-knowledge: introduces=[SA-LEX-C153-LOC153-01]; assesses=[] -->
 
 **इतः** — *itaḥ* — "from here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*itaḥ* is built from the pronoun base *i-*, the base of *idam* "this", and the ending *-tas* "from": "from this place, hence" (MW). It is the same *-tas* as in *yataḥ*, *ataḥ* and *tataḥ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

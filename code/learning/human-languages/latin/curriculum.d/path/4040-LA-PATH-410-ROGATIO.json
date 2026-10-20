@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-410-ROGATIO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-410-ROGATIO"
+  ],
+  "after": []
+}

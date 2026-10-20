@@ -14,7 +14,8 @@ romanization: "nāṇaṁ"
 concept_tag: ML-AROGYAM193-NANAM
 prerequisites: [ML-C193-apakatam, ML-C193-asuya]
 sounds: []
-roots: []
+roots: [dravidian-nan-shame]
+etymology_hook: "nāṇaṁ: native Dravidian, one word with Tamil nāṇ and Kannada nāṇ (DEDR 3639)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C193-asuya]
 <!-- hl-knowledge: introduces=[ML-LEX-C193-AROGYAM193-03]; assesses=[] -->
 
 **നാണം** — *nāṇaṁ* — "shyness, embarrassment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാണം** (*nāṇaṁ*) is native Dravidian, one word with Tamil *nāṇ*, Kannada *nāṇ* and Telugu *nāna* (DEDR 3639).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

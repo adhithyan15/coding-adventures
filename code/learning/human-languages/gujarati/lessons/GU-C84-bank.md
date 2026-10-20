@@ -14,7 +14,8 @@ romanization: "beṅk"
 concept_tag: GU-TOWN-BANK
 prerequisites: [GU-C83-which, GU-C84-clinic]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "beṅk ← English bank"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C84-clinic]
 <!-- hl-knowledge: introduces=[GU-LEX-C84-TOWN-02]; assesses=[] -->
 
 **બેંક** (*beṅk*) — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બેંક** (*beṅk*) is a loan from English *bank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

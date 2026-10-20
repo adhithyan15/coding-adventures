@@ -14,7 +14,8 @@ romanization: "dil"
 concept_tag: HI-THG199-DIL
 prerequisites: [HI-C199-ganit, HI-C199-kauva]
 sounds: []
-roots: []
+roots: [persian-dil]
+etymology_hook: "dil: usually traced to Persian dil 'heart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C199-kauva]
 <!-- hl-knowledge: introduces=[HI-LEX-C199-THG199-04]; assesses=[] -->
 
 **दिल** — *dil* — "the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिल** (*dil*) is a loan, usually traced to Persian *dil*, "heart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

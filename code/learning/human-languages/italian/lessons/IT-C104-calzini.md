@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI104-CALZINI
 prerequisites: [IT-C104-cappotto, IT-C104-scarpe]
 sounds: []
 roots: []
+etymology_hook: "calzini — little stockings; the stocking word ← Vulgar Latin calcea"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C104-scarpe]
 <!-- hl-knowledge: introduces=[IT-LEX-C104-VESTITI104-04]; assesses=[] -->
 
 **i calzini** — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calzini** — a small form (*-ino*) of the word for a stocking, which ← Vulgar Latin *calcea*, a covering for foot and leg. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

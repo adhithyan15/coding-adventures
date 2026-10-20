@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Einen Platz finden",
+  "label": "ch:ge-einen-platz-finden",
+  "canDo": "I can talk about parking: parking, pulling out, the parking space, the car park and the parking ticket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C406-parkschein",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can talk about parking: parking, pulling out, the parking space, the car park and the parking ticket.",
+    "assesses": [
+      "GE-LEX-C406-PARKEN-03",
+      "GE-LEX-C406-PARKEN-04",
+      "GE-LEX-C406-PARKEN-05"
+    ]
+  }
+}

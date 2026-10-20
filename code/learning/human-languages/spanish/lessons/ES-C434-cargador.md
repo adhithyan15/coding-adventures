@@ -11,6 +11,7 @@ concept_tag: ES-REF-CARGADOR
 prerequisites: [ES-C434-bateria, ES-C404-movil]
 sounds: []
 roots: []
+etymology_hook: "cargador — cargar 'to load' + -dor: the thing that loads"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +62,8 @@ de* — to take charge of something.
 
 The same verb also turns up wherever a shop charges you, which is why **cobrar**
 and **cargar** feel adjacent without being the same word.
+
+*Cargar* is Late Latin *carricare*, "to load a cart", from *carrus*, "a cart".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-05, ES-LEX-MOVIL, ES-LEX-C434-MAQ-04] -->

@@ -14,7 +14,8 @@ romanization: "ĩdur"
 concept_tag: BN-ANIMALS69-IDUR
 prerequisites: [BN-C69-bhera, BN-C69-pakhi]
 sounds: []
-roots: []
+roots: [sanskrit-indura]
+etymology_hook: "ĩdur ← Sanskrit indūra 'rat, mouse', which CDIAL takes from Austroasiatic (CDIAL 2095)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C69-pakhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C69-ANIMALS69-05]; assesses=[] -->
 
 **ইঁদুর** — *ĩdur* — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইঁদুর** (*ĩdur*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *indūra*, "rat, mouse" (CDIAL 2095). CDIAL takes the word, in its other form *undura*, from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

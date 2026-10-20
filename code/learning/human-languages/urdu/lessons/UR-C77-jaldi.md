@@ -14,7 +14,8 @@ romanization: "jaldī"
 concept_tag: UR-TIME77-JALDI
 prerequisites: [UR-C77-hamesha, UR-C77-kabhi]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jaldī: Persian jald 'quick', of Arabic origin, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C77-kabhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C77-TIME77-03]; assesses=[] -->
 
 **جلدی** — *jaldī* — "quickly; early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلدی** (*jaldī*) is *jald*, "quick", usually traced to Persian *jald*, a word of Arabic origin, with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

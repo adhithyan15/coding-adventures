@@ -14,7 +14,8 @@ romanization: "sandesā"
 concept_tag: HI-THG205-SANDESA
 prerequisites: [HI-C205-lifafa, HI-C205-tikatghar]
 sounds: []
-roots: []
+roots: [sanskrit-samdesha]
+etymology_hook: "sandesā ← Sanskrit saṁdeśa 'message, information', a tadbhava (CDIAL 12904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C205-tikatghar]
 <!-- hl-knowledge: introduces=[HI-LEX-C205-THG205-04]; assesses=[] -->
 
 **संदेसा** — *sandesā* — "a message (everyday)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संदेसा** (*sandesā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṁdeśa*, "message, information" (CDIAL 12904). It is the inherited form of the word Hindi also has whole as *sandeś*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

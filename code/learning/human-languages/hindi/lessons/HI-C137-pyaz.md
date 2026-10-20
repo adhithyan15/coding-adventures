@@ -14,7 +14,8 @@ romanization: "pyāz"
 concept_tag: HI-THINGS137-PYAZ
 prerequisites: [HI-C137-gost, HI-C137-alu]
 sounds: []
-roots: []
+roots: [persian-piyaz]
+etymology_hook: "pyāz: usually traced to Persian piyāz 'onion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C137-alu]
 <!-- hl-knowledge: introduces=[HI-LEX-C137-THINGS137-05]; assesses=[] -->
 
 **प्याज़** — *pyāz* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्याज़** (*pyāz*) is a loan, usually traced to Persian *piyāz*, "onion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

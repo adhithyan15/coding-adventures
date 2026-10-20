@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Olhos e boca",
+  "label": "ch:pt-olhos-e-boca",
+  "canDo": "I can name the small parts of the face.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C481-gengiva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can name the small parts of the face.",
+    "assesses": [
+      "PT-LEX-C481-ROSTO-03",
+      "PT-LEX-C481-ROSTO-04",
+      "PT-LEX-C481-ROSTO-05"
+    ]
+  }
+}

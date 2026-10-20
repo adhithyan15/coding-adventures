@@ -14,7 +14,8 @@ romanization: "zukām"
 concept_tag: AR-SIHHA200-ZUKAM
 prerequisites: [AR-C199-hamasa, AR-C199-hasada]
 sounds: []
-roots: []
+roots: [z-k-m]
+etymology_hook: "zukām: built on the root z-k-m, 'to have a cold' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C199-hasada]
 <!-- hl-knowledge: introduces=[AR-LEX-C200-SIHHA200-01]; assesses=[] -->
 
 **زكام** — *zukām* — "a cold (illness)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زكام** (*zukām*) is built on the native Arabic root *z-k-m*, "to have a cold" (Lane). *Zukām* has the *fuʿāl* shape of illness words, like *suʿāl*, "a cough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

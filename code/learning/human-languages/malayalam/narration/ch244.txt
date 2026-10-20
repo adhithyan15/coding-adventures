@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a possibility, then the Malayalam for 
 You'll want to know: നിറഞ്ഞ.
 നിറഞ്ഞ — niṟañña — "full".
 
+The word, taken apart.
+നിറഞ്ഞ (niṟañña) is native Dravidian, a past form of the verb "to become full"; DEDR 3682 lists the root with Tamil niṟai, Kannada neṟe and Telugu neṟayu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a basis, then the Malayalam for full.
 
 You'll want to know: കീറിയ.
 കീറിയ — kīṟiya — "torn".
+
+The word, taken apart.
+കീറിയ (kīṟiya) is native Dravidian, a past form of the verb "to be slit, torn"; DEDR 1624 lists the root with Tamil kīṟu, Kannada kītu and Telugu gīṟu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for full, then the Malayalam for torn.
 You'll want to know: മൂർച്ചയുള്ള.
 മൂർച്ചയുള്ള — mūrccayuḷḷa — "sharp".
 
+The word, taken apart.
+മൂർച്ചയുള്ള (mūrccayuḷḷa) is native Dravidian, "having an edge": mūrcca, "sharpness, edge" (DEDR 5042, with Tamil mūrccai), with -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for torn, then the Malayalam for sharp.
 You'll want to know: സ്വകാര്യ.
 സ്വകാര്യ — svakārya — "private".
 
+The word, taken apart.
+സ്വകാര്യ (svakārya) is Sanskrit: sva, "own", and kārya, "business, affair" (CDIAL 3078): "one's own affair".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for sharp, then the Malayalam for private.
 
 You'll want to know: പൊതു.
 പൊതു — potu — "public".
+
+The word, taken apart.
+പൊതു (potu) is native Dravidian, one word with Tamil potu and Kannada pudu (DEDR 4507).
 
 What you've built.
 One more word for this chapter.

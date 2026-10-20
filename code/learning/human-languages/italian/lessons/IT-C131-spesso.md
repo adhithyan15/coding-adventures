@@ -13,7 +13,8 @@ gloss: "often"
 concept_tag: IT-TEMPO131-SPESSO
 prerequisites: [IT-C131-data, IT-C131-secolo]
 sounds: []
-roots: []
+roots: [spissus-latin]
+etymology_hook: "spesso ← Latin spissus 'thick, crowded': what comes thick and fast comes often"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C131-secolo]
 <!-- hl-knowledge: introduces=[IT-LEX-C131-TEMPO131-04]; assesses=[] -->
 
 **spesso** — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spesso** ← Latin *spissus*, "thick, crowded" — inherited. (EtymDB 2.1) What comes thick and fast comes often.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

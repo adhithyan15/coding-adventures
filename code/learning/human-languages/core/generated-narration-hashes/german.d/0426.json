@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:05d8780b89ba7a3a",
+  "lessonIds": [
+    "GE-C426-rezeption",
+    "GE-C426-anreisen",
+    "GE-C426-abreisen",
+    "GE-C426-aufenthalt",
+    "GE-C426-auschecken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch426.txt",
+  "json": "german/narration/ch426.json",
+  "textHash": "fnv1a64:bd47c810922f0acf",
+  "jsonHash": "fnv1a64:113c6c716848d996",
+  "findings": []
+}

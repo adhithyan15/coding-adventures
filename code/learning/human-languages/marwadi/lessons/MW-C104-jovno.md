@@ -14,7 +14,8 @@ romanization: "jovṇo"
 concept_tag: MW-VERB-JOVNO
 prerequisites: [MW-C104-bulavno, MW-C104-mangno]
 sounds: []
-roots: []
+roots: [sanskrit-dyotate]
+etymology_hook: "jovṇo ← Sanskrit dyotate 'shines; makes clear', a tadbhava (CDIAL 6612, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C104-mangno]
 <!-- hl-knowledge: introduces=[MW-LEX-C104-ACT104-05]; assesses=[] -->
 
 **जोवणो** — *jovṇo* — "to look, to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जोवणो** (*jovṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dyotate*, "shines; makes clear". CDIAL lists Old Marwari *jovaï* under it (CDIAL 6612). The Old Marwari row means "watches"; CDIAL sets the verb beside Sanskrit *jyotate*, "shines".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

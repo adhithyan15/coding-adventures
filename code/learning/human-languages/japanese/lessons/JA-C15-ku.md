@@ -11,8 +11,8 @@ gloss: nine — a second reading that is not the native one, which is the except
 concept_tag: JA-NUMBER-NINE
 prerequisites: [JA-C15-hachi, JA-W09-ku, JA-C13-ane, JA-W09-mi]
 sounds: [mora]
-roots: []
-etymology_hook: Wiktionary's readings box for the kanji nine lists kyuu and ku together as on'yomi and kokono as the kun'yomi, so nine's two everyday readings are both borrowed.
+roots: [middle-chinese-kjuwx]
+etymology_hook: "ku and kyū: two on'yomi of 九 'nine', both from Middle Chinese kjuwX; native kokono is the kun'yomi"
 duration:
   max_seconds: 190
 requires:
@@ -51,6 +51,11 @@ closed **よく**. Say *hachi, ku*.
 Nine has a second everyday reading as well, *kyū*, and it is the commoner of the
 two. This book cannot spell it yet — it needs two signs you have not met — so it
 is written here in romanization only and will be spelled when those signs arrive.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**く** (*ku*) is Sino-Japanese, and so is *kyū*: both are on'yomi of the character for "nine", borrowed from Chinese at different times from one Chinese word (Middle Chinese *kjuwX*). The native word is *kokono* (KANJIDIC2).
 
 ## What you've built — a second reading that is not a native word
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KU, JA-GRAMMAR-KUN-IN-THE-COUNT, JA-LEX-YON, JA-LEX-NANA] -->

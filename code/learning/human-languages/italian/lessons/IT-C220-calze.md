@@ -13,7 +13,8 @@ gloss: "stockings"
 concept_tag: IT-COSE220-CALZE
 prerequisites: [IT-C219-moderno, IT-C220-maglietta]
 sounds: []
-roots: []
+roots: [calceus-latin]
+etymology_hook: "calze — plural of calza ← Vulgar Latin calcea, from calceus 'a shoe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C220-maglietta]
 <!-- hl-knowledge: introduces=[IT-LEX-C220-COSE220-02]; assesses=[] -->
 
 **le calze** — "stockings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calze** is the plural of *calza*, which ← Vulgar Latin *calcea*, a covering for foot and leg, from Latin *calceus*, "a shoe" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

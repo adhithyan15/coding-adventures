@@ -14,7 +14,8 @@ romanization: "sômādhān"
 concept_tag: BN-JINIS231-SOMADHAN
 prerequisites: [BN-C230-dhormo, BN-C231-jhamela]
 sounds: []
-roots: []
+roots: [sanskrit-samadhana]
+etymology_hook: "sômādhān ← Sanskrit samādhāna 'putting together; settling', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C231-jhamela]
 <!-- hl-knowledge: introduces=[BN-LEX-C231-JINIS231-02]; assesses=[] -->
 
 **সমাধান** — *sômādhān* — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সমাধান** (*sômādhān*) is Sanskrit *samādhāna*, "putting together; settling", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

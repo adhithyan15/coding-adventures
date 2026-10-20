@@ -14,7 +14,8 @@ romanization: "talaffoz kardan"
 concept_tag: FA-VERB-TALAFFOZ-KARDAN
 prerequisites: [FA-C187-variz-kardan, FA-C188-yaddasht-kardan]
 sounds: []
-roots: []
+roots: [arabic-talaffuz]
+etymology_hook: "talaffoz ← Arabic talaffuẓ 'uttering, pronouncing', root l-f-ẓ (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C188-yaddasht-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C188-KONESH188-02]; assesses=[] -->
 
 **تلفظ کردن** — *talaffoz kardan* — "to pronounce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*talaffoz kardan* pairs *talaffoz*, borrowed from Arabic *talaffuẓ*, "uttering, pronouncing" (root *l-f-ẓ*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

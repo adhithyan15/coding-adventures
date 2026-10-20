@@ -14,7 +14,8 @@ romanization: "kāṇḍaṁ"
 concept_tag: TE-VASTUVU272-KANDAM
 prerequisites: [TE-C272-kance, TE-C272-poda]
 sounds: []
-roots: []
+roots: [sanskrit-kanda-stem]
+etymology_hook: "kāṇḍaṁ ← Sanskrit kāṇḍa 'single joint of a plant; cluster', a tatsama (CDIAL 3023)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C272-poda]
 <!-- hl-knowledge: introduces=[TE-LEX-C272-VASTUVU272-04]; assesses=[] -->
 
 **కాండం** — *kāṇḍaṁ* — "a stem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాండం** (*kāṇḍaṁ*) is Sanskrit *kāṇḍa*, "single joint of a plant; cluster", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 3023). CDIAL thinks the Sanskrit word is probably of non-Aryan origin, probably from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

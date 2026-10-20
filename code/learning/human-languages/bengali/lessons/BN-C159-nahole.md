@@ -14,7 +14,8 @@ romanization: "nāhôle"
 concept_tag: BN-KARON159-NAHOLE
 prerequisites: [BN-C159-jodi, BN-C159-tobu]
 sounds: []
-roots: []
+roots: [sanskrit-na, sanskrit-bhavati]
+etymology_hook: "nāhôle: nā 'not' ← na (CDIAL 6906) + hôle 'if it is', of hôoyā ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C159-tobu]
 <!-- hl-knowledge: introduces=[BN-LEX-C159-KARON159-05]; assesses=[] -->
 
 **নাহলে** — *nāhôle* — "otherwise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাহলে** (*nāhôle*) is *nā*, "not", from Sanskrit *na* (CDIAL 6906), + *hôle*, "if it is", a form of *hôoyā*, "to be", from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416): "if not so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

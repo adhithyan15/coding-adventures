@@ -14,7 +14,8 @@ romanization: "toṅku"
 concept_tag: TA-VERB-TONKU
 prerequisites: [TA-C167-iyakku, TA-C167-ottu]
 sounds: []
-roots: []
+roots: [dravidian-tonku-hang]
+etymology_hook: "தொங்கு — native Dravidian (DEDR 3478); Malayalam toṅkuka, Kannada toṅgu, Telugu toṅgu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C167-ottu]
 <!-- hl-knowledge: introduces=[TA-LEX-C167-ACT167-04]; assesses=[] -->
 
 **தொங்கு** — *toṅku* — "to hang (intransitive), to dangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொங்கு** (*toṅku*) is native Dravidian. DEDR 3478 lists Malayalam *toṅkuka*, Kannada *toṅgu* and Telugu *toṅgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

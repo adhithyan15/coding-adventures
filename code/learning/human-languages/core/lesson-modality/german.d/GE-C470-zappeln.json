@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C470-zappeln",
+    "language": "german",
+    "chapter": 470,
+    "sequence": 25240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d6052b2b5bfc920"
+  },
+  "findings": []
+}

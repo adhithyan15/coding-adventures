@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 56,
-  "sourceHash": "fnv1a64:b9ef3781360b663c",
+  "sourceHash": "fnv1a64:f4a48306624ea674",
   "lessonIds": [
     "MW-C56-ginno",
     "MW-C56-pakarno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch56.txt",
   "json": "marwadi/narration/ch56.json",
-  "textHash": "fnv1a64:af2e593d77d6a29a",
-  "jsonHash": "fnv1a64:a1c95c1df361dc10",
+  "textHash": "fnv1a64:561268b96626ad50",
+  "jsonHash": "fnv1a64:f7a04bae051c72e2",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "lakṣyaṁ"
 concept_tag: ML-WANT145-LAKSYAM
 prerequisites: [ML-C145-svapnam, ML-C145-pratiksa]
 sounds: []
-roots: []
+roots: [sanskrit-lakshya]
+etymology_hook: "lakṣyaṁ ← Sanskrit lakṣya 'a mark, a target', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C145-pratiksa]
 <!-- hl-knowledge: introduces=[ML-LEX-C145-WANT145-04]; assesses=[] -->
 
 **ലക്ഷ്യം** — *lakṣyaṁ* — "an aim, a goal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലക്ഷ്യം** (*lakṣyaṁ*) ← Sanskrit *lakṣya*, "a mark, a target", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

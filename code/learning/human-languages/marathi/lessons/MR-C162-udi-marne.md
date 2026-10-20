@@ -14,7 +14,8 @@ romanization: "uḍī mārṇe"
 concept_tag: MR-VERB-UDI-MARNE
 prerequisites: [MR-C162-petavne, MR-C162-vijhavne]
 sounds: []
-roots: []
+roots: [sanskrit-marayati, sanskrit-uddayate]
+etymology_hook: "uḍī mārṇe: uḍī 'a jump', with uḍṇe 'to fly' (CDIAL 1697), + mārṇe 'to strike' ← mārayati (CDIAL 10066)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C162-vijhavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C162-ACT162-03]; assesses=[] -->
 
 **उडी मारणे** — *uḍī mārṇe* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उडी मारणे** (*uḍī mārṇe*) is "to strike a jump": *uḍī*, "a jump", belongs with **उडणे**, "to fly" (CDIAL 1697), and **मारणे** comes from Sanskrit *mārayati*, "kills", whose Marathi form CDIAL glosses "to strike, kill" (CDIAL 10066).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

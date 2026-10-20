@@ -14,7 +14,8 @@ romanization: "asari"
 concept_tag: JA-THINGS116-ASARI
 prerequisites: [JA-C116-hamachi, JA-C116-sanma]
 sounds: []
-roots: []
+roots: [japanese-asari]
+etymology_hook: "asari: native; written 浅蜊 'shallow clam'; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C116-sanma]
 <!-- hl-knowledge: introduces=[JA-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **あさり** — *asari* — "a short-neck clam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさり** (*asari*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "shallow" and "clam", and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

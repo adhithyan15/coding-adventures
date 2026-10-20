@@ -14,7 +14,8 @@ romanization: "iḻayuka"
 concept_tag: ML-VERB-ILAYUKA
 prerequisites: [ML-C189-kulukkuka, ML-C189-uruttuka]
 sounds: []
-roots: []
+roots: [dravidian-izhai-crawl]
+etymology_hook: "iḻayuka: native Dravidian, one word with Telugu dēku (DEDR 508)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C189-uruttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C189-KRIYA189-05]; assesses=[] -->
 
 **ഇഴയുക** — *iḻayuka* — "to crawl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇഴയുക** (*iḻayuka*) is native Dravidian, one word with Telugu *dēku* (DEDR 508).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

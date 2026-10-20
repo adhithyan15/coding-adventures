@@ -14,7 +14,8 @@ romanization: "santoṣaḥ"
 concept_tag: SA-WEL182-SANTOSAH
 prerequisites: [SA-C182-vismayah, SA-C182-sokah]
 sounds: []
-roots: []
+roots: [santosha-sanskrit]
+etymology_hook: "santoṣa ← sam 'fully' + root √tuṣ 'be satisfied, pleased' (MW; CDIAL 12895)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C182-sokah]
 <!-- hl-knowledge: introduces=[SA-LEX-C182-WEL182-03]; assesses=[] -->
 
 **सन्तोषः** — *santoṣaḥ* — "contentment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*santoṣa* is built on *sam* and the root √tuṣ, "to be satisfied, pleased" (MW; CDIAL 12895). Telugu took it as *santōṣam*, the everyday word for happiness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

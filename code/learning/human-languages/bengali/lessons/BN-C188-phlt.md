@@ -14,7 +14,8 @@ romanization: "phlæṭ"
 concept_tag: BN-JAYGA188-PHLT
 prerequisites: [BN-C188-kolej, BN-C188-thana]
 sounds: []
-roots: []
+roots: [english-flat]
+etymology_hook: "phlæṭ ← English flat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C188-thana]
 <!-- hl-knowledge: introduces=[BN-LEX-C188-JAYGA188-04]; assesses=[] -->
 
 **ফ্ল্যাট** — *phlæṭ* — "a flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফ্ল্যাট** (*phlæṭ*) is a loan from English *flat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

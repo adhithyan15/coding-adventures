@@ -14,7 +14,8 @@ romanization: "kūja"
 concept_tag: ML-VASTU331-KUJA
 prerequisites: [ML-C331-cirava, ML-C331-cattukam]
 sounds: []
-roots: []
+roots: [persian-kuza]
+etymology_hook: "kūja ← Persian kūza 'jug, pitcher', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C331-cattukam]
 <!-- hl-knowledge: introduces=[ML-LEX-C331-VASTU331-03]; assesses=[] -->
 
 **കൂജ** — *kūja* — "a clay water jug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂജ** (*kūja*) ← Persian *kūza*, "a jug, a pitcher", by way of Hindustani *kūzā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

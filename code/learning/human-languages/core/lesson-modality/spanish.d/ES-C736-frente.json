@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C736-frente",
+    "language": "spanish",
+    "chapter": 736,
+    "sequence": 26740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7084768559c30f2"
+  },
+  "findings": []
+}

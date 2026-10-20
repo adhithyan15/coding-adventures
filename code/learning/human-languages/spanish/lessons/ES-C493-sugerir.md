@@ -10,7 +10,8 @@ gloss: "to suggest"
 concept_tag: ES-VERB-SUGERIR
 prerequisites: [ES-C493-convencer, ES-C493-insistir]
 sounds: []
-roots: []
+roots: [gerere-latin]
+etymology_hook: "sugerir ← Latin suggerere 'to bring up from below': sub- + gerere 'to carry' — English suggest"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C493-insistir]
 > *I suggest another hotel to you.*
 
 The e breaks into ie under stress: *sugiero*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sugerir** ← Latin *suggerere*, "to bring up from below, to supply" (EtymDB 2.1): *sub-*, "under", and *gerere*, "to carry" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

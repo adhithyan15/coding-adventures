@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:1e0f3b9d1bb51040",
+  "lessonIds": [
+    "FR-C456-ruisseau",
+    "FR-C456-etang",
+    "FR-C456-marais",
+    "FR-C456-patauger",
+    "FR-C456-ruisseler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch456.txt",
+  "json": "french/narration/ch456.json",
+  "textHash": "fnv1a64:200a6ca87c4db0c8",
+  "jsonHash": "fnv1a64:cd4cc6ee527db14f",
+  "findings": []
+}

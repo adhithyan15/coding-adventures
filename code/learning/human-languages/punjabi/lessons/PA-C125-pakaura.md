@@ -14,7 +14,8 @@ romanization: "pakauṛā"
 concept_tag: PA-THINGS125-PAKAURA
 prerequisites: [PA-C125-haldi, PA-C125-jira]
 sounds: []
-roots: []
+roots: [indo-aryan-pakvapupada]
+etymology_hook: "pakauṛā ← *pakvapūpaḍa 'cooked cake', a reconstructed form; a tadbhava (CDIAL 7624)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C125-jira]
 <!-- hl-knowledge: introduces=[PA-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **ਪਕੌੜਾ** — *pakauṛā* — "a fritter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਕੌੜਾ** (*pakauṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pakvapūpaḍa*, "cooked cake", a form CDIAL reconstructs from its descendants (CDIAL 7624). CDIAL builds it from Sanskrit *pakva*, "cooked", and *pūpa*, "cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

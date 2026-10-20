@@ -14,7 +14,8 @@ romanization: "pulis"
 concept_tag: PA-TOWN92-PULIS
 prerequisites: [PA-C91-mandar, PA-C91-hotal]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "pulis ← English police"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C91-hotal]
 <!-- hl-knowledge: introduces=[PA-LEX-C92-TOWN92-01]; assesses=[] -->
 
 **ਪੁਲਿਸ** — *pulis* — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੁਲਿਸ** (*pulis*) is a loan from English *police*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

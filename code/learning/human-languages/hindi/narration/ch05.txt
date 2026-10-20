@@ -135,6 +135,9 @@ You'll want to know first.
 बोलना — the infinitive, and how to strip -nā to get the stem.
 हूँ — "I am," the verb this template leans on.
 
+The word, taken apart.
+bol- goes back to a reconstructed boll-, "speak" (CDIAL 9321). The -tā continues the old present participle in -nt-, as in Prakrit hoṁta, "being" (CDIAL 9416).
+
 Grammar Lens: stem + -tā/-tī/-te + honā.
 To say what someone does in general, Hindi builds three pieces in a row: the stem, a participle ending, and the "to be" verb.
 [a table of 3 rows, read aloud]

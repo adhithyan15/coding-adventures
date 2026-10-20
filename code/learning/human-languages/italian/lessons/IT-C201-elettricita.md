@@ -13,7 +13,8 @@ gloss: "electricity"
 concept_tag: IT-COSE201-ELETTRICITA
 prerequisites: [IT-C200-prato, IT-C200-sentiero]
 sounds: []
-roots: []
+roots: [electrum-latin]
+etymology_hook: "elettricità — from Greek elektron 'amber', which sparks when rubbed — English electricity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C200-sentiero]
 <!-- hl-knowledge: introduces=[IT-LEX-C201-COSE201-01]; assesses=[] -->
 
 **l'elettricità** — "electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elettricità** — built from the word for "electric" with *-ità*, "-ness". That word goes back to Latin *electrum*, "amber", from Greek *elektron*: rubbed amber gives a spark. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

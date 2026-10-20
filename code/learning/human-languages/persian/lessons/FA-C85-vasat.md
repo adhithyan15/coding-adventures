@@ -14,7 +14,8 @@ romanization: "vasat"
 concept_tag: FA-DEF85-VASAT
 prerequisites: [FA-C85-koja, FA-C85-kenar]
 sounds: []
-roots: []
+roots: [arabic-wasat]
+etymology_hook: "vasat ← Arabic wasaṭ 'middle', root w-s-ṭ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C85-kenar]
 <!-- hl-knowledge: introduces=[FA-LEX-C85-DEF85-04]; assesses=[] -->
 
 **وسط** — *vasat* — "the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vasat* is borrowed from Arabic *wasaṭ*, "middle". Its Arabic root is *w-s-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

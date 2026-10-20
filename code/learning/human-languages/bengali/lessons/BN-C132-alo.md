@@ -14,7 +14,8 @@ romanization: "ālo"
 concept_tag: BN-THINGS132-ALO
 prerequisites: [BN-C132-phon, BN-C132-rediyo]
 sounds: []
-roots: []
+roots: [sanskrit-aloka]
+etymology_hook: "ālo ← Sanskrit āloka 'brightness, splendour', a tadbhava (CDIAL 1400)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C132-rediyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **আলো** — *ālo* — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আলো** (*ālo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āloka*, "brightness, splendour" (CDIAL 1400).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

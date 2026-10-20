@@ -14,7 +14,8 @@ romanization: "hintirugu"
 concept_tag: KA-VERB-HINTIRUGU
 prerequisites: [KA-C278-sala-kodu, KA-C278-hintirugisu]
 sounds: []
-roots: []
+roots: [tamil-pin-after, dravidian-tiri-turn]
+etymology_hook: "hintirugu: native hin 'behind' (DEDR 4205) + tirugu 'to turn' (DEDR 3246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C278-hintirugisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C278-KRIYE278-03]; assesses=[] -->
 
 **ಹಿಂತಿರುಗು** — *hintirugu* — "to come back, to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಂತಿರುಗು** (*hintirugu*) is native Dravidian: *hin*, "behind, back", which DEDR 4205 lists as *him*, "behind", with older Kannada *pin*, and *tirugu*, "to go round, turn, go back" (DEDR 3246).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

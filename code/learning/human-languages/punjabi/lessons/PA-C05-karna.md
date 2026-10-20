@@ -12,6 +12,7 @@ concept_tag: PA-VERB-KARNA
 prerequisites: [PA-C01-namaste, PA-S02-sassa-tatta-sihari, PA-C05-rahna]
 sounds: [dental-ra]
 roots: [kr-do]
+etymology_hook: "karnā ← Sanskrit karoti 'does', root kṛ 'to do, make' (CDIAL 2814)"
 duration:
   max_seconds: 210
 requires:

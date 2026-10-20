@@ -14,7 +14,8 @@ romanization: "ōṇākkuka"
 concept_tag: ML-VERB-ONAKKUKA
 prerequisites: [ML-C187-udikkuka, ML-C188-maykkuka]
 sounds: []
-roots: []
+roots: [english-on, aaka-dravidian]
+etymology_hook: "ōṇākkuka: English on + native ākkuka 'to make' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C188-maykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C188-KRIYA188-02]; assesses=[] -->
 
 **ഓണാക്കുക** — *ōṇākkuka* — "to switch on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓണാക്കുക** (*ōṇākkuka*) joins English *on* to native *ākkuka*, "to make" (DEDR 333): "make it on". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

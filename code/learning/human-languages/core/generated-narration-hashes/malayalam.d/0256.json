@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 256,
-  "sourceHash": "fnv1a64:877565751e732643",
+  "sourceHash": "fnv1a64:0b0c91c67bc9548e",
   "lessonIds": [
     "ML-C256-vinodam",
     "ML-C256-kalippattam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch256.txt",
   "json": "malayalam/narration/ch256.json",
-  "textHash": "fnv1a64:5251d4b80b77ef8f",
-  "jsonHash": "fnv1a64:ea8376bb5bb2247f",
+  "textHash": "fnv1a64:dced7984e0c47ba6",
+  "jsonHash": "fnv1a64:0c29660ac5932c92",
   "findings": []
 }

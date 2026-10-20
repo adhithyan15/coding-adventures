@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 776,
+  "sourceHash": "fnv1a64:da69125b4ff9b8fb",
+  "lessonIds": [
+    "ES-C776-contrasena",
+    "ES-C776-archivo",
+    "ES-C776-carpeta",
+    "ES-C776-actualizar",
+    "ES-C776-teclado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch776.txt",
+  "json": "spanish/narration/ch776.json",
+  "textHash": "fnv1a64:4566eae6d7547ce4",
+  "jsonHash": "fnv1a64:cf7a82b33b06356c",
+  "findings": []
+}

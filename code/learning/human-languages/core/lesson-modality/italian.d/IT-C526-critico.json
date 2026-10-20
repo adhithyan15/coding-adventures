@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C526-critico",
+    "language": "italian",
+    "chapter": 526,
+    "sequence": 29430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b42d841d4a174d3"
+  },
+  "findings": []
+}

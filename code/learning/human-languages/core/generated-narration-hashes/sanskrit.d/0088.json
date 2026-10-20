@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 88,
-  "sourceHash": "fnv1a64:fef3ea99aaaa10e1",
+  "sourceHash": "fnv1a64:83f7aefe7a34a8ac",
   "lessonIds": [
     "SA-C88-girl",
     "SA-C88-youngman",
@@ -9,11 +9,11 @@
     "SA-C88-son",
     "SA-C88-daughter"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "sanskrit/narration/ch88.txt",
   "json": "sanskrit/narration/ch88.json",
-  "textHash": "fnv1a64:c5bca9b3df620ff1",
-  "jsonHash": "fnv1a64:61f21fcb5ad71d18",
+  "textHash": "fnv1a64:f8e0bfa1d40727df",
+  "jsonHash": "fnv1a64:f67a696732234491",
   "findings": []
 }

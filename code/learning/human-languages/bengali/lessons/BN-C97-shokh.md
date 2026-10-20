@@ -14,7 +14,8 @@ romanization: "shôkh"
 concept_tag: BN-WANT97-SHOKH
 prerequisites: [BN-C97-lobh, BN-C97-pochhondo]
 sounds: []
-roots: []
+roots: [arabic-shawq]
+etymology_hook: "shôkh ← Arabic shawq 'longing, desire', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C97-pochhondo]
 <!-- hl-knowledge: introduces=[BN-LEX-C97-WANT97-03]; assesses=[] -->
 
 **শখ** — *shôkh* — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শখ** (*shôkh*) is a loan from Arabic *shawq*, "longing, desire", which reached Bengali through Persian. Its Arabic root is *sh-w-q* (Lane). In Bengali it has come to mean "a hobby".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "menyát"
 concept_tag: RU-VERB-MENYAT
 prerequisites: [RU-C233-reshat, RU-C233-vybirat]
 sounds: []
-roots: []
+roots: [slavic-meniti]
+etymology_hook: "менять ← Old Russian měnjati; Lithuanian mainyti 'to exchange' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C233-vybirat]
 <!-- hl-knowledge: introduces=[RU-LEX-C233-ACT233-03]; assesses=[] -->
 
 **менять** (*menyát*) — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**менять** ← Old Russian *меняти*, *менити* — inherited. Vasmer compares Lithuanian *mainýti*, "to exchange", and Latvian *maĩnît*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

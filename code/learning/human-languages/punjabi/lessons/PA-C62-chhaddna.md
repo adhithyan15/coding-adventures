@@ -14,7 +14,8 @@ romanization: "chhaḍḍṇā"
 concept_tag: PA-VERB-CHHADDNA
 prerequisites: [PA-C62-pahinna, PA-C62-nahauna]
 sounds: []
-roots: []
+roots: [sanskrit-chardati]
+etymology_hook: "chhaḍḍṇā ← Sanskrit chardayati 'causes to flow over; vomits', whose basic sense is 'eject' (CDIAL 4998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C62-nahauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C62-VERBS62-04]; assesses=[] -->
 
 **ਛੱਡਣਾ** — *chhaḍḍṇā* — "to leave, to let go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛੱਡਣਾ** (*chhaḍḍṇā*) is inherited. CDIAL lists it under Sanskrit *chardayati*, "causes to flow over; vomits", a verb whose basic meaning it gives as "eject" (CDIAL 4998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

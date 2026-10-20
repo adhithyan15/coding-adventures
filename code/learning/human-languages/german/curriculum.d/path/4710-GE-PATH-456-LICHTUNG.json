@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-456-LICHTUNG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-456-LICHTUNG"
+  ],
+  "after": []
+}

@@ -13,7 +13,8 @@ gloss: "careful"
 concept_tag: LA-QUAL150-CAUTUS
 prerequisites: [LA-C149-argenteus, LA-C149-prudens]
 sounds: []
-roots: []
+roots: [cautus-latin, cavere-latin]
+etymology_hook: "cautus 'careful' — the participle of caveō 'to beware'; English caution"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C149-prudens]
 <!-- hl-knowledge: introduces=[LA-LEX-C150-QUAL150-01]; assesses=[] -->
 
 **cautus, cauta, cautum** — "careful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cautus** is the past participle of *caveō*, "to beware, to take care" (Lewis & Short): on one's guard. English *caution* comes from the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

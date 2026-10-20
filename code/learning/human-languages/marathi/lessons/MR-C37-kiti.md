@@ -11,7 +11,8 @@ gloss: how many, how much — the question the numbers one to five were waiting 
 concept_tag: MR-QUESTION-KITI
 prerequisites: [MR-C06-numbers-1-5, MR-C11-bhau, MR-C11-bahin, MR-A1F01-avdate-pey, MR-C31-dusra, MR-C37-kon]
 sounds: [matra-i, matra-ii]
-roots: [ka-interrogative]
+roots: [ka-interrogative, indo-aryan-kiyatta]
+etymology_hook: "kitī ← *kiyatta 'how great?', a form CDIAL builds like Sanskrit kiyant 'how much' (CDIAL 3167)"
 duration:
   max_seconds: 210
 requires:
@@ -51,7 +52,7 @@ Another **क-** word, and the answer to it is always a number. That is what mak
 it worth spending a lesson on so early: five numbers with no question to trigger
 them are five words nobody asks you for.
 
-**किती** is Sanskrit **कति** (*kati*, "how many") barely changed. Latin **quot**
+**किती** goes back to *\*kiyatta*, "how great", a form CDIAL builds like Sanskrit *kiyant*, "how much" (CDIAL 3167). Latin **quot**
 and English **how many** carry the same ancient stem.
 
 It also does duty for **how much** of something uncountable — Marathi does not

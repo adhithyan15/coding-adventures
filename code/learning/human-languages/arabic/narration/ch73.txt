@@ -12,6 +12,9 @@ Before the new one: say the Arabic for a kitchen, then the Arabic for a garden.
 You'll want to know: كتاب.
 كتاب — kitāb — "a book".
 
+The word, taken apart.
+كتاب (kitāb) is built on the native Arabic root k-t-b, "to write" (Lane). Kitāb is "a writing", hence "a book".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Arabic for a garden, then the Arabic for a book.
 
 You'll want to know: دفتر.
 دفتر — daftar — "a notebook".
+
+The word, taken apart.
+دفتر (daftar) came into Arabic from Persian. Lane calls it a Persian word, arabicized, and quotes Ibn Durayd calling its derivation unknown. The Persian word is usually traced to Greek diphthera, "prepared hide, parchment".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Arabic for a book, then the Arabic for a notebook.
 You'll want to know: قلم.
 قلم — qalam — "a pen".
 
+The word, taken apart.
+قلم (qalam) is listed by Lane under q-l-m as a reed prepared for writing. It is usually traced to Greek kalamos, "reed, reed pen" (EtymDB), perhaps through Aramaic, though Lane gives no foreign source.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Arabic for a notebook, then the Arabic for a pen.
 You'll want to know: ورقة.
 ورقة — waraqa — "a sheet of paper".
 
+The word, taken apart.
+ورقة (waraqa) is built on the native Arabic root w-r-q, "leaves" (Lane). Lane's short article on this root gives shajar wāriq, "leafy trees"; waraq is leaves, of a tree and of a book, and waraqa is one.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Arabic for a pen, then the Arabic for a sheet of pap
 
 You'll want to know: مدرسة.
 مدرسة — madrasa — "a school".
+
+The word, taken apart.
+مدرسة (madrasa) is built on the native Arabic root d-r-s, "to become effaced; to study" (Lane). Madrasa is the ma- place noun, "a place of study".
 
 What you've built.
 One more word for this chapter.

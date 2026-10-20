@@ -14,7 +14,8 @@ romanization: "sukaraḥ"
 concept_tag: SA-QUAL242-SUKARAH
 prerequisites: [SA-C242-durlabhah, SA-C242-jatilah]
 sounds: []
-roots: []
+roots: [sanskrit-sukara, kr-do]
+etymology_hook: "sukara = su 'easily' + kara 'doing', from √kṛ 'do': 'easy to do' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C242-jatilah]
 <!-- hl-knowledge: introduces=[SA-LEX-C242-QUAL242-04]; assesses=[] -->
 
 **सुकरः** — *sukaraḥ* — "easy to do".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sukara* is built on *su-*, "well, easily", and *kara*, "doing", from the root √kṛ, "to do" (MW): "easy to be done". It is the mirror of *duṣkara*, "hard to do", in the next lesson.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

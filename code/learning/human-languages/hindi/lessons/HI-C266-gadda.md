@@ -14,7 +14,8 @@ romanization: "gaddā"
 concept_tag: HI-THG266-GADDA
 prerequisites: [HI-C266-kudal, HI-C266-phavra]
 sounds: []
-roots: []
+roots: [indo-aryan-garda]
+etymology_hook: "gaddā ← *garda 'seat'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 4053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C266-phavra]
 <!-- hl-knowledge: introduces=[HI-LEX-C266-THG266-05]; assesses=[] -->
 
 **गद्दा** — *gaddā* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गद्दा** (*gaddā*) goes back to a reconstructed *\*garda*, "seat" (CDIAL 4053). CDIAL marks the Hindi form as taken over from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

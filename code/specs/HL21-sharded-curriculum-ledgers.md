@@ -204,6 +204,33 @@ logs are read far more widely than the repo. Both the message **and the `cause`
 chain** are scrubbed — the cause is what Node's default handler and Vitest
 actually print.
 
+The Python compatibility reader has the same boundary even when another
+process changes a shard directory during a read. On Windows, enumeration of
+JSON shards and book-generation owner entries must use the already-validated
+directory handle, not `os.scandir` on its former pathname. Every returned name
+and kind is checked through that handle without following a reparse point;
+enumeration errors fail closed. A directory moved after opening remains the
+directory being enumerated, so a junction substituted at the old name cannot
+contribute outside owner names. Tests must perform that swap for both reader
+entry points without requiring symlink privilege. On Unix, the Python reader
+must likewise enumerate through a descriptor opened from the trusted root,
+opening each descendant directory relative to its pinned parent with no-follow
+checks. A selected JSON shard is opened relative to that pinned directory and
+checked as a regular file before parsing. Static symlink rejection is not
+enough: deterministic ancestor-swap fixtures must show that both enumerators
+and a shard read cannot consume an outside replacement. Concurrent changes
+within the pinned tree need not form a snapshot; errors must fail closed.
+
+The Unix compatibility writer and remover have the same ancestor-swap boundary.
+After pathname prevalidation, each directory component must be opened relative
+to the already-pinned parent descriptor with `O_DIRECTORY` and `O_NOFOLLOW`.
+The selected shard must be checked relative to that final descriptor; temporary
+creation, atomic replacement, and deletion must also use it. A replaced track
+ancestor must neither redirect a write nor remove an outside shard. Tests must
+swap that ancestor immediately after prevalidation for both operations and
+preserve outside sentinels. Existing mode preservation and static symlink
+rejection remain required; no pathname recheck can substitute for anchoring.
+
 ---
 
 ## 3. Generated artifacts are regenerated, never hand-merged
@@ -741,3 +768,26 @@ separate script, never wired into `vitest run`.
    and the French, Japanese, and Marwadi chapter ledgers were each normalized in
    a separate, deliberate commit whose whole content was reformatting. That
    keeps "no data changed" reviewable instead of burying it inside a migration.
+
+---
+
+## 9. Derived whole-track digest snapshots are not owners
+
+The canonical curriculum graph is already held by version-controlled direct
+owners: one chapter shard, path/spine/extension shard, and lesson-membership
+shard per stable identity. A SHA-256 over the fully assembled track does not own
+any additional information. It is a generated summary of those owners.
+
+The first conflict-reduction pass moved one corpus-wide graph digest into one
+file per track. That removed cross-language conflicts, but it still required
+every independent author in the *same* track to rewrite the same generated
+file. Punjabi demonstrated the remaining serialization point: its curriculum
+digest was touched by 22 commits from 2026-10-01 through the #17411 audit.
+
+Those mutable aggregate pins are therefore retired. The loader and tests prove
+the useful properties directly from the canonical shards: safe regular files,
+valid schemas and references, complete unique membership ownership, contiguous
+ordering, and deterministic assembly. Git review shows which direct owners
+changed. Reintroducing a tracked checksum or count over a whole track would add
+derived state without adding an ownership boundary and would violate this
+specification's central rule: no one file may serialize independent work.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C644-cinturon",
+    "language": "spanish",
+    "chapter": 644,
+    "sequence": 22030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2dfde2d0a11a252"
+  },
+  "findings": []
+}

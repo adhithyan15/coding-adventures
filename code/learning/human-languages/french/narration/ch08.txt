@@ -49,6 +49,9 @@ Sounds you'll need.
 il est = eel-eh. The final t of est is silent on its own.
 But before heures, with its silent h, that t wakes up and links: il est une heure = eel eh-t-ün-eur. Another liaison, the same instinct as deux heures.
 
+The phrase, taken apart.
+il est … heures — il from Latin ille, "that"; est is Latin est, "is"; heure from Latin hora, "hour". All three are inherited. (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "il est" — eel-eh, no t sounded]
@@ -111,7 +114,7 @@ You already own the second half. That -di is the same diēs that ends lundi and 
 Grammar Lens: a name instead of a number.
 Because midi is the hour, it does not take heures. Drop the number and drop the noun:
 Il est midi. — "It is noon."
-Not il est douze heures. The frame stays; what goes into it is a name.
+Not "it is twelve hours" with a number in the slot. The frame stays; what goes into it is a name.
 
 Why it's said this way: English noon slid.
 English noon is Latin nōna hōra, "the ninth hour" — which in Roman reckoning was the middle of the afternoon. Over centuries the meal it named crept earlier, and the word came with it until it landed on midday and stopped. So English says noon and means "the ninth hour"; French says midi and means what it says.

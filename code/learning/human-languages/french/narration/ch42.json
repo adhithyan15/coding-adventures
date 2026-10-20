@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "What the Ear Cannot Hear",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:194fb0b4a70ada67",
+  "sourceHash": "fnv1a64:3c56f59f1d5c9090",
   "lessons": [
     {
       "id": "FR-C38-consonne-finale",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8c5debcb2925926",
+      "sourceHash": "fnv1a64:139c486794ac2ac6",
       "notice": null,
       "blocks": [
         {
@@ -59,11 +59,11 @@
             },
             {
               "kind": "speech",
-              "text": "Petit is puh-TEE. Grand is grahn. Trois is trwah. Beaucoup is boh-KOO. The letter is on the page and not in the mouth."
+              "text": "Salut is sa-LU. Deux is deu. Trois is trwah. Nuit is nwee. The letter is on the page and not in the mouth."
             },
             {
               "kind": "speech",
-              "text": "Those letters were once sounded. Old French said the t of petit and the s of trois, and over centuries the mouth dropped them while the spelling stayed where it was. Every silent consonant in French is a fossil of a sound the language used to make."
+              "text": "Those letters were once sounded. Old French said the t of salut and the s of trois, and over centuries the mouth dropped them while the spelling stayed where it was. Every silent consonant in French is a fossil of a sound the language used to make."
             },
             {
               "kind": "speech",
@@ -91,11 +91,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "silent — \"petit, grand, trois, beaucoup\"",
+              "instruction": "silent — \"salut, deux, trois, nuit\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: silent — \"petit, grand, trois, beaucoup\"]"
+              "source": "[YOU SAY: silent — \"salut, deux, trois, nuit\"]"
             },
             {
               "kind": "prompt",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd82b07e4571412b",
+      "sourceHash": "fnv1a64:a19c1d34f46bef29",
       "notice": null,
       "blocks": [
         {
@@ -338,15 +338,15 @@
             },
             {
               "kind": "speech",
-              "text": "petit — puh-TEE., petite — puh-TEET."
+              "text": "petit — puh-TEE., petite — puh-TEET. (\"small\")."
             },
             {
               "kind": "speech",
-              "text": "grand — grahn., grande — grahnd."
+              "text": "vert — vair., verte — vairt. (\"green\")."
             },
             {
               "kind": "speech",
-              "text": "Nothing is added to the sound at the end. What changes is that the t and the d stop being final, so the rule from two lessons ago no longer silences them."
+              "text": "Nothing is added to the sound at the end. What changes is that the t stops being final, so the rule from two lessons ago no longer silences it."
             },
             {
               "kind": "speech",
@@ -354,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "The colours behave the same way, and you already own three of them: vert is vair and verte is vairt; blanc and blanche; noir and noire, where the r was already sounding and nothing changes at all."
+              "text": "The other colours you own behave the same way: blanc and blanche; noir and noire, where the r was already sounding and nothing changes at all."
             }
           ]
         },
@@ -375,20 +375,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"grand, grande\"",
+              "instruction": "\"vert, verte\" — the t arrives again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"grand, grande\"]"
+              "source": "[YOU SAY: \"vert, verte\" — the *t* arrives again]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the colours — \"vert, verte; blanc, blanche\"",
+              "instruction": "\"blanc, blanche\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the colours — \"vert, verte; blanc, blanche\"]"
+              "source": "[YOU SAY: \"blanc, blanche\"]"
             },
             {
               "kind": "prompt",
@@ -451,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fb427a0a9ceaaed",
+      "sourceHash": "fnv1a64:f2d20c81cc100c3b",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +482,7 @@
             },
             {
               "kind": "speech",
-              "text": "le bateau becomes les bateaux, le cheveu becomes les cheveux, le fils becomes les fils."
+              "text": "le bateau becomes les bateaux, le cheveu becomes les cheveux, le nez becomes les nez."
             },
             {
               "kind": "speech",
@@ -498,7 +498,7 @@
             },
             {
               "kind": "speech",
-              "text": "The third line is simpler still: a word that already ends in s, x or z has nowhere to put another one, so it does not try. Le fils and les fils are the same six letters."
+              "text": "The third line is simpler still: a word that already ends in s, x or z has nowhere to put another one, so it does not try. Le nez and les nez share the same three-letter noun."
             }
           ]
         },
@@ -528,11 +528,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the invariable — \"le fils, les fils\"",
+              "instruction": "the invariable — \"le nez, les nez\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the invariable — \"le fils, les fils\"]"
+              "source": "[YOU SAY: the invariable — \"le nez, les nez\"]"
             },
             {
               "kind": "prompt",
@@ -743,7 +743,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fd2008c2589854e",
+      "sourceHash": "fnv1a64:aa472d39c977b8e0",
       "notice": null,
       "blocks": [
         {
@@ -771,11 +771,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "silent — \"petit, grand, trois, beaucoup\"",
+              "instruction": "silent — \"salut, deux, trois, nuit\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: silent — \"petit, grand, trois, beaucoup\"]"
+              "source": "[YOU SAY: silent — \"salut, deux, trois, nuit\"]"
             },
             {
               "kind": "prompt",

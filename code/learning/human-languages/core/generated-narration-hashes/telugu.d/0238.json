@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 238,
-  "sourceHash": "fnv1a64:0b8f266ac76c24c8",
+  "sourceHash": "fnv1a64:d8ee9276ef9f5b07",
   "lessonIds": [
     "TE-C238-jnapakam",
     "TE-C238-caritra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch238.txt",
   "json": "telugu/narration/ch238.json",
-  "textHash": "fnv1a64:36f08eeeeb09eb0a",
-  "jsonHash": "fnv1a64:3a0f0d44496b8500",
+  "textHash": "fnv1a64:1a0e5c589eff9dd3",
+  "jsonHash": "fnv1a64:1a2337015df348ce",
   "findings": []
 }

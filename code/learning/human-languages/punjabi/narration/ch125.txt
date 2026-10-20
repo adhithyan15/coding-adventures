@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for lassi, then the Punjabi for rice pudding
 You'll want to know: ਹਲਵਾ.
 ਹਲਵਾ — halvā — "halwa".
 
+The word, taken apart.
+ਹਲਵਾ (halvā) is a loan from Arabic ḥalwā, "a sweetmeat", which reached Punjabi through Persian. Its Arabic root is ḥ-l-w (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for rice pudding, then the Punjabi for halwa
 
 You'll want to know: ਮਸਾਲਾ.
 ਮਸਾਲਾ — masālā — "spice".
+
+The word, taken apart.
+ਮਸਾਲਾ (masālā) is a loan from Arabic maṣāliḥ, "things that are needful", which reached Punjabi through Persian. Its Arabic root is ṣ-l-ḥ (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for halwa, then the Punjabi for spice.
 You'll want to know: ਹਲਦੀ.
 ਹਲਦੀ — haldī — "turmeric".
 
+The word, taken apart.
+ਹਲਦੀ (haldī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, "turmeric" (CDIAL 13992).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for spice, then the Punjabi for turmeric.
 You'll want to know: ਜੀਰਾ.
 ਜੀਰਾ — jīrā — "cumin".
 
+The word, taken apart.
+ਜੀਰਾ (jīrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīraka, "cumin seed" (CDIAL 5234).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for turmeric, then the Punjabi for cumin.
 
 You'll want to know: ਪਕੌੜਾ.
 ਪਕੌੜਾ — pakauṛā — "a fritter".
+
+The word, taken apart.
+ਪਕੌੜਾ (pakauṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from pakvapūpaḍa, "cooked cake", a form CDIAL reconstructs from its descendants (CDIAL 7624). CDIAL builds it from Sanskrit pakva, "cooked", and pūpa, "cake".
 
 What you've built.
 One more word for this chapter.

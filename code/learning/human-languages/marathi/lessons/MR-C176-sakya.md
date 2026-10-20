@@ -14,7 +14,8 @@ romanization: "śakya"
 concept_tag: MR-GUN176-SAKYA
 prerequisites: [MR-C176-dhagal, MR-C176-pavsali]
 sounds: []
-roots: []
+roots: [sanskrit-shakya]
+etymology_hook: "śakya ← Sanskrit śakya 'possible', a tatsama (CDIAL 12253)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C176-pavsali]
 <!-- hl-knowledge: introduces=[MR-LEX-C176-GUN176-03]; assesses=[] -->
 
 **शक्य** — *śakya* — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शक्य** (*śakya*) is Sanskrit *śakya*, "possible", taken over whole as a learned loan, a tatsama (CDIAL 12253). It is built on *śak*, "to be able".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

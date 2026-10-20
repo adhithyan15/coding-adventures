@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:5d4d8430fe3e2914",
+  "lessonIds": [
+    "FR-C310-adolescence",
+    "FR-C310-adolescent",
+    "FR-C310-jeunesse",
+    "FR-C310-rentree",
+    "FR-C310-majeur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch310.txt",
+  "json": "french/narration/ch310.json",
+  "textHash": "fnv1a64:d45e727703989c25",
+  "jsonHash": "fnv1a64:348dc04bc0d664d6",
+  "findings": []
+}

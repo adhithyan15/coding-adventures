@@ -14,7 +14,8 @@ romanization: "okurimono"
 concept_tag: JA-THINGS104-OKURIMONO
 prerequisites: [JA-C104-tsutsumi, JA-C104-fuutou]
 sounds: []
-roots: []
+roots: [japanese-okuru, japanese-mono]
+etymology_hook: "okurimono: native okuri 'sending' (okuru) + mono 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C104-fuutou]
 <!-- hl-knowledge: introduces=[JA-LEX-C104-THINGS104-03]; assesses=[] -->
 
 **おくりもの** — *okurimono* — "a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おくりもの** (*okurimono*) is a native compound, inherited rather than borrowed: *okuri*, "sending", from *okuru*, "to send, to give", and *mono*, "thing" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

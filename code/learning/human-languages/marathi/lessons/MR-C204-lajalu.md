@@ -14,7 +14,8 @@ romanization: "lājāḷū"
 concept_tag: MR-GUN204-LAJALU
 prerequisites: [MR-C203-phakta, MR-C204-gambhir]
 sounds: []
-roots: []
+roots: [sanskrit-lajja]
+etymology_hook: "lājāḷū: lāj 'shame' ← Sanskrit lajjā (CDIAL 10910) + -āḷū 'given to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C204-gambhir]
 <!-- hl-knowledge: introduces=[MR-LEX-C204-GUN204-02]; assesses=[] -->
 
 **लाजाळू** — *lājāḷū* — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाजाळू** (*lājāḷū*) is **लाज**, "shame", from Sanskrit *lajjā*, "shame, modesty" (CDIAL 10910), with the ending *-āḷū*, "given to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

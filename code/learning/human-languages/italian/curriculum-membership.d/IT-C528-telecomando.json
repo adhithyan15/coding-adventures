@@ -1,0 +1,11 @@
+{
+  "id": "IT-C528-telecomando",
+  "pathSegment": "IT-PATH-528-SERIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-528-SERIE",
+      "order": 4
+    }
+  ]
+}

@@ -14,7 +14,7 @@ You'll want to know first — one word.
 Twenty-two chapters, and not one number. That has a price the book has been paying in silence: no age, no cost, no telephone number, no quantity, no time. It stops here.
 
 The word, taken apart — the road NOT taken.
-ایک (ek) continues Sanskrit eka through Prakrit, from Indo-European oywos, "one" — the root behind English one, Latin ūnus and Greek oîos.
+ایک (ek) continues Sanskrit eka through Prakrit, by way of a doubled ekka (CDIAL 2462), from Indo-European oywos, "one" — the root behind English one, Latin ūnus and Greek oîos.
 This book has spent chapters on words that came the OTHER way: garmī and sardī are Persian borrowings, sitting in Urdu beside inherited words that mean much the same. Numbers are where that stopped. Persian's yek was as available as Persian's sard was, and Urdu declined it — every one of the first ten numbers is the inherited form.
 That is worth holding on to, because it makes the whole count predictable in one direction: if you know a Sanskrit or Hindi number you already know the Urdu one, and if you know only the Persian one you do not.
 
@@ -44,7 +44,7 @@ You'll want to know first — one word.
 Two letters, and both of them have been on the page since the friend lesson — they open dost, "friend". A search of this whole book for دو (do) finds it twice and both times inside dost, which is exactly why a machine could report the word as present when the number had never been taught.
 
 The word, taken apart — the same word as English two.
-دو continues Sanskrit dvi through Prakrit do, from Indo-European dwóh₁, "two." English two, Latin duo and Greek dýo are the same word.
+دو continues Sanskrit dva (CDIAL 6648) through Prakrit do, from Indo-European dwóh₁, "two." English two, Latin duo and Greek dýo are the same word.
 Say do and two one after the other. Nothing there has to be learned; it has to be recognised.
 
 Guided Practice.
@@ -72,7 +72,7 @@ You'll want to know first — one word.
 تین — tīn — three.
 
 The word, taken apart — the same root, two distances.
-تین (tīn) continues Sanskrit tri, from Indo-European treyes, "three." English three, Latin trēs and Greek treîs are the same word.
+تین (tīn) continues Sanskrit trīṇi, a form of tri-, "three" (CDIAL 5994), from Indo-European treyes, "three." English three, Latin trēs and Greek treîs are the same word.
 Now set it beside the Persian for three, se. Both descend from treyes. Urdu's form still has the t; Persian's has lost the t AND the r, leaving one syllable. Same root, two roads, and one of them wore the word down much further.
 An English speaker hears tīn and gets three for nothing. Hearing se as three takes a moment.
 
@@ -101,7 +101,7 @@ You'll want to know first — one word.
 چار — chār — four.
 
 The word, taken apart — quattuor, four, chār.
-چار (chār) continues Sanskrit catvāraḥ, from Indo-European kʷetwóres, "four."
+چار (chār) continues Sanskrit catvāraḥ (CDIAL 4655), from Indo-European kʷetwóres, "four."
 The opening kʷ is where this gets interesting, because three branches did three different things with it. Latin kept it whole: quattuor. English lost the lip-rounding and softened the k to f: four. Indo-Aryan pushed it forward to a ch, which is what you are saying.
 One sound, three descendants, and the numbers still line up.
 
@@ -131,7 +131,7 @@ You'll want to know first — one word.
 The ن in the middle is nasalising the vowel before it rather than standing as a full n of its own — the behaviour this book named several chapters ago.
 
 The word, taken apart — five waters.
-پانچ (pānch) continues Sanskrit pañca, from Indo-European pénkʷe, "five." Greek pénte, Latin quīnque and English five are the same word.
+پانچ (pānch) continues Sanskrit pañca (CDIAL 7655), from Indo-European pénkʷe, "five." Greek pénte, Latin quīnque and English five are the same word.
 An English speaker has almost certainly met it already without being told. Punjab is panj + āb, "five waters" — the land of the five rivers — and the fruit drink punch is named for its five ingredients. The number was in the reader's language before this lesson was.
 
 Guided Practice.

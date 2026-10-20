@@ -14,7 +14,8 @@ romanization: "khotyá"
 concept_tag: RU-PRICH154-KHOTYA
 prerequisites: [RU-C154-tak-kak, RU-C154-yesli]
 sounds: []
-roots: []
+roots: [slavic-khoteti]
+etymology_hook: "хотя is the old present participle of хотеть 'to want': 'wanting', then 'although'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C154-yesli]
 <!-- hl-knowledge: introduces=[RU-LEX-C154-PRICH154-04]; assesses=[] -->
 
 **хотя** (*khotyá*) — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**хотя** is the old present participle of *хотеть*, "to want", Old Russian *хотя*, "wanting" (Vasmer); *хоть*, "at least, even", is its short form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

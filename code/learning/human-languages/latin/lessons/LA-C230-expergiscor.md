@@ -13,7 +13,8 @@ gloss: "to wake up"
 concept_tag: LA-VERB-EXPERGISCOR
 prerequisites: [LA-C229-cesso, LA-C229-removeo]
 sounds: []
-roots: []
+roots: [expergisci-latin]
+etymology_hook: "expergīscor 'to wake up' — built on expergō 'to wake'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C229-removeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C230-ACT230-01]; assesses=[] -->
 
 **expergīscor, expergīscī** — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**expergīscor** is built on *expergō*, "to wake up" (Lewis & Short), with *-scor*, the ending of verbs of becoming; *expergō* is often explained as *ex*, "out", with *pergō*, "to go on".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

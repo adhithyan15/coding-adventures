@@ -11,7 +11,8 @@ romanization: "elluṇḍi"
 concept_tag: TE-WORD-DAY-AFTER-TOMORROW
 prerequisites: [TE-C50-now]
 sounds: []
-roots: []
+roots: [dravidian-elli-tomorrow]
+etymology_hook: "elluṇḍi: native Dravidian; DEDR 845 lists it with elli 'tomorrow'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C50-now]
 One settled noun for the day after tomorrow. English needs four words and still sounds unsure of itself; Telugu, like its sisters, simply has the word.
 
 There is an older tomorrow hiding at the front of it. ఎల్లి once meant tomorrow, and though రేపు took that job in everyday speech, ఎల్లి is still in service inside ఎల్లుండి, doing its old work one day further out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎల్లుండి** (*elluṇḍi*) is native Dravidian. DEDR 845 lists Telugu *elli*, "tomorrow", and *elluṇḍi*, "the day after tomorrow", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

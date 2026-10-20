@@ -11,7 +11,8 @@ gloss: good — the ordinary word of approval, and the one बरं could never
 concept_tag: MR-LEX-CHANGLA
 prerequisites: [MR-R50-small, MR-C01-baram, MR-C10-chaha, MR-C45-ne]
 sounds: [matra-aa, anusvara-nasal]
-roots: []
+roots: [sanskrit-canga]
+etymology_hook: "chāṅglā ← Sanskrit caṅga 'of good understanding; handsome', a tadbhava (CDIAL 4564)"
 duration:
   max_seconds: 220
 requires:
@@ -56,6 +57,11 @@ Keep it apart from **बरं**. **बरं** answers *how are you* and closes
 *fine, all right, okay*. **चांगला** is a judgement about a thing: this tea is
 good, that room is good, he is a good friend. English blurs the two under *good*
 and Marathi does not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चांगला** (*chāṅglā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṅga*, "of good understanding; handsome" (CDIAL 4564). CDIAL lists both Marathi *cāṅg* and *cāṅglā*, "good".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-CHANGLA, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-CHAHA, MR-LEX-MOTHA, MR-POSTP-NE-INSTR] -->

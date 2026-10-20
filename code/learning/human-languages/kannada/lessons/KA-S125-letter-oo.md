@@ -57,11 +57,11 @@ word you are:
 
 The word you already say that opens with it:
 
-- **ಓದು** *ōdu* — to read, to study
+- **ಓಟ** *ōṭa* — running, a race
 
 **Why this one waited.** Every other character in this sequence was
 introduced once a word containing it was already in your mouth. ಓ had to wait
-until ಓದು was taught, because until then there was nothing to find it inside —
+until ಓಟ was taught, because until then there was nothing to find it inside —
 and a character shown without a word to hold it is a character you will not keep.
 
 ## Writing: ಓ — follow the numbered strip
@@ -82,7 +82,7 @@ slowly, and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these two, and say which one begins with the independent vowel]
 
-> ಓದು  ·  ಪರವಾಗಿಲ್ಲ
+> ಓಟ  ·  ಪರವಾಗಿಲ್ಲ
 
 - [YOU TRACE: ಓ three times, saying *ō* as you finish each one]
 - [YOU LOOK: at ಓ and ೋ side by side, and say which one stands alone]

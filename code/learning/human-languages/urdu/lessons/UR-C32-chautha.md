@@ -12,7 +12,7 @@ concept_tag: UR-ORDINAL-FOURTH
 prerequisites: [UR-C32-dusra-tisra]
 sounds: [rtl, hai-diphthong]
 roots: [sanskrit-caturtha]
-etymology_hook: "chautha is chaar with the ordinal ending, and from four upward the ending never changes again: paanchvaan, dasvaan, biisvaan."
+etymology_hook: "chauthā ← Sanskrit caturtha 'fourth', a tadbhava (CDIAL 4600)"
 duration:
   max_seconds: 270
 requires:
@@ -52,6 +52,11 @@ number and stops bending: *pānchvāṅ*, "fifth"; *dasvāṅ*, "tenth";
 So the whole series is three irregular forms at the bottom — *pehlā*, *dūsrā*,
 *tīsrā*, with *chauthā* half a step out — and one ending for everything above
 them. Twelve numbers and one ending is twelve ordinals.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوتھا** (*chauthā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from Sanskrit *caturtha*, "fourth", built on *catur-*, "four" (CDIAL 4600).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-CHAUTHA, UR-MORPH-ORDINAL-VAN, UR-LEX-PANCH, UR-LEX-DAS, UR-ETYMON-TEEN-THREE-PIE, UR-ETYMON-SAU-HUNDRED-PIE] -->

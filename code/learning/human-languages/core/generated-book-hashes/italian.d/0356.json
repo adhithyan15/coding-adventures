@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:88e191ee16c86f8e",
+  "lessonIds": [
+    "IT-C356-curriculum",
+    "IT-C356-candidatura",
+    "IT-C356-candidarsi",
+    "IT-C356-candidato",
+    "IT-C356-assunzione"
+  ],
+  "tex": "italian/book/chapters/ch356-cerco-lavoro.tex"
+}

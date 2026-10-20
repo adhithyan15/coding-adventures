@@ -1,0 +1,11 @@
+{
+  "id": "FR-C324-conquerir",
+  "pathSegment": "FR-PATH-324-CONQUETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-324-CONQUETE",
+      "order": 2
+    }
+  ]
+}

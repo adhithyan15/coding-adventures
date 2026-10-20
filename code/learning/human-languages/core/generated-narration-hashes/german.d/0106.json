@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 106,
-  "sourceHash": "fnv1a64:92dddcb72ac3fad8",
+  "sourceHash": "fnv1a64:dc66fce368d5bcf9",
   "lessonIds": [
     "GE-C106-supermarkt",
     "GE-C106-tankstelle",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch106.txt",
   "json": "german/narration/ch106.json",
-  "textHash": "fnv1a64:be373e126349b80e",
-  "jsonHash": "fnv1a64:770454d88474f1c4",
+  "textHash": "fnv1a64:880f829b1591eebf",
+  "jsonHash": "fnv1a64:b573b527d9266453",
   "findings": []
 }

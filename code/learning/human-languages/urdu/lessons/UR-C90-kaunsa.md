@@ -14,7 +14,8 @@ romanization: "kaunsā"
 concept_tag: UR-DEF90-KAUNSA
 prerequisites: [UR-C90-tamam, UR-C90-khud]
 sounds: []
-roots: []
+roots: [sanskrit-kah-punar]
+etymology_hook: "kaunsā: kaun 'who, which' ← kaḥ punar (CDIAL 2575) + -sā '-like'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C90-khud]
 <!-- hl-knowledge: introduces=[UR-LEX-C90-DEF90-03]; assesses=[] -->
 
 **کونسا** — *kaunsā* — "which one?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کونسا** (*kaunsā*) is *kaun*, "who, which", from Sanskrit *kaḥ punar*, "who then" (CDIAL 2575), with the ending *-sā*, "-like".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

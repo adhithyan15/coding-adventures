@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-V-03",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "the copula across three persons",
+  "probe": [
+    "SA-GRAMMAR-COPULA-THREE-PERSONS",
+    "SA-GRAMMAR-COPULA-IS-KEPT",
+    "SA-LEX-ASTI"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-V-02",
+    "A1-SV-02",
+    "A1-OS-05"
+  ],
+  "note": "asti / asi / asmi, with chapter 2's point that Sanskrit KEEPS the copula where a modern Indo-Aryan language would drop it. Spanish's ser/estar split has no Sanskrit counterpart and is answered by this one verb."
+}

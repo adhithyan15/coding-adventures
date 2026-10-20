@@ -14,7 +14,8 @@ romanization: "pērisu"
 concept_tag: KA-VERB-PERISU
 prerequisites: [KA-C207-netuhaku, KA-C207-kuttu]
 sounds: []
-roots: []
+roots: [dravidian-peru-load]
+etymology_hook: "pērisu: native Dravidian, from pēṟu 'to load, pile up' (DEDR 4446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C207-kuttu]
 <!-- hl-knowledge: introduces=[KA-LEX-C207-KRIYE207-04]; assesses=[] -->
 
 **ಪೇರಿಸು** — *pērisu* — "to stack, to pile up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೇರಿಸು** (*pērisu*) is native Dravidian, from *pēru*, "to load, pile up", which DEDR 4446 lists as Kannada *pēṟu*, with *-isu*; the entry also has Telugu *pērcu* and Malayalam *pēṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

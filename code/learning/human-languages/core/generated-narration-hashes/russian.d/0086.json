@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 86,
-  "sourceHash": "fnv1a64:57ae4dcc69b86d28",
+  "sourceHash": "fnv1a64:66acf46ae94a641e",
   "lessonIds": [
     "RU-C86-where",
     "RU-C86-where-to",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch86.txt",
   "json": "russian/narration/ch86.json",
-  "textHash": "fnv1a64:6ba81ab090fff8e0",
-  "jsonHash": "fnv1a64:434b58db441699df",
+  "textHash": "fnv1a64:e0ec98c9eb948dfb",
+  "jsonHash": "fnv1a64:d3f13dd796cfda24",
   "findings": []
 }

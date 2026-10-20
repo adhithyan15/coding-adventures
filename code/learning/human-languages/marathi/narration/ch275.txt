@@ -12,6 +12,9 @@ Before the new one: say the Marathi for worship, then the Marathi for an officer
 You'll want to know: कोडे.
 कोडे — koḍe — "a puzzle, a riddle".
 
+The word, taken apart.
+कोडे (koḍe) matches Marathi kohḍẽ, "puzzle, riddle", which CDIAL lists under Sanskrit kuha, "cheat" (CDIAL 3385).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an officer, then the Marathi for a puzzl
 
 You'll want to know: नाटक.
 नाटक — nāṭak — "a play, a drama".
+
+The word, taken apart.
+नाटक (nāṭak) is Sanskrit nāṭaka, "dancer, actor", taken over whole as a learned loan, a tatsama (CDIAL 7045). It is built on naṭa, "actor". The sense "a play" is the later Sanskrit one.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a puzzle, then the Marathi for a play.
 You'll want to know: चित्रपट.
 चित्रपट — citrapaṭ — "a film".
 
+The word, taken apart.
+चित्रपट (citrapaṭ) is a modern compound of Sanskrit parts: citra, "picture" (CDIAL 4803), and paṭa, "cloth, screen".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a play, then the Marathi for a film.
 You'll want to know: नृत्य.
 नृत्य — nṛtya — "dance".
 
+The word, taken apart.
+नृत्य (nṛtya) is Sanskrit nṛtya, "dancing", a tatsama built on nṛtyati, "dances" (CDIAL 7583).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a film, then the Marathi for dance.
 
 You'll want to know: रंगमंच.
 रंगमंच — raṅgmañc — "a stage".
+
+The word, taken apart.
+रंगमंच (raṅgmañc) is a compound of Sanskrit parts: raṅga, "colour; place of performance", and mañca, "stage, platform" (CDIAL 9715).
 
 What you've built.
 One more word for this chapter.

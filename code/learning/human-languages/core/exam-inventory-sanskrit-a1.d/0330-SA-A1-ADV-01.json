@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-ADV-01",
+  "category": "Avyaya — the indeclinable and the adverb",
+  "label": "place deictics: here and there",
+  "probe": [
+    "SA-LEX-C14-DEIXIS-03",
+    "SA-LEX-C14-DEIXIS-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADV-01",
+    "A1-NG3-01"
+  ],
+  "note": "atra and tatra, two terms against Spanish's three."
+}

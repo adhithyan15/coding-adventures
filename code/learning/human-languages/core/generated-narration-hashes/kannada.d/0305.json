@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 305,
-  "sourceHash": "fnv1a64:2dad1681482022b9",
+  "sourceHash": "fnv1a64:a8422bfb57ebfb30",
   "lessonIds": [
     "KA-C305-arcaka",
     "KA-C305-kalavida",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch305.txt",
   "json": "kannada/narration/ch305.json",
-  "textHash": "fnv1a64:a81ed86f59494c14",
-  "jsonHash": "fnv1a64:faff43da71309435",
+  "textHash": "fnv1a64:b78d24a46bfab596",
+  "jsonHash": "fnv1a64:3b5ffab0264c9e36",
   "findings": []
 }

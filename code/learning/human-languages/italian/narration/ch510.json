@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 510,
+  "title": "In campo",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d934d2f093b314a9",
+  "lessons": [
+    {
+      "id": "IT-C510-attaccante",
+      "sequence": 28590,
+      "title": "l'attaccante — forward, striker",
+      "headword": "l'attaccante",
+      "romanization": "l'attaccante",
+      "gloss": "forward, striker",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2b71a977836166d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for penalty, then the Italian for to book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'attaccante",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'attaccante — \"forward, striker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il nostro attaccante è il più veloce del campionato. Our striker is the fastest in the league."
+            },
+            {
+              "kind": "speech",
+              "text": "From attaccare \"to attack\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "attaccante is built on attaccare \"to attack, to attach\"; the origin of attaccare is not settled, though a Germanic word for a stake is often suggested."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'attaccante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'attaccante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'attaccante, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'attaccante*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'attaccante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'attaccante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for penalty, then the Italian for to book, then say l'attaccante again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for penalty, then the Italian for to book, then say *l'attaccante* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'attaccante mean? (\"Forward, striker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C510-difensore",
+      "sequence": 28600,
+      "title": "il difensore — defender",
+      "headword": "il difensore",
+      "romanization": "il difensore",
+      "gloss": "defender",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a3a345194975a76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to book, then the Italian for forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il difensore",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il difensore — \"defender\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il difensore ha fermato l'attaccante. The defender stopped the striker."
+            },
+            {
+              "kind": "speech",
+              "text": "In court it is also the lawyer for the defence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "difensore is a learned borrowing from Latin dēfēnsor \"a defender\" (EtymDB), from dēfendere \"to ward off\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il difensore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il difensore*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il difensore, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il difensore*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il difensore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il difensore*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to book, then the Italian for forward, then say il difensore again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to book, then the Italian for forward, then say *il difensore* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il difensore mean? (\"Defender\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C510-centrocampista",
+      "sequence": 28610,
+      "title": "il centrocampista — midfielder",
+      "headword": "il centrocampista",
+      "romanization": "il centrocampista",
+      "gloss": "midfielder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49691ef6852a0cab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for forward, then the Italian for defender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il centrocampista",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il centrocampista — \"midfielder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Gioco come centrocampista nella squadra della scuola. I play midfield in the school team."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on centrocampo \"midfield\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "centrocampista is built on centro \"centre\", from Latin centrum, and campo \"field\", from Latin campus (Lewis & Short), with -ista."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il centrocampista",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il centrocampista*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il centrocampista, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il centrocampista*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il centrocampista",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il centrocampista*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for forward, then the Italian for defender, then say il centrocampista again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for forward, then the Italian for defender, then say *il centrocampista* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il centrocampista mean? (\"Midfielder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C510-titolare",
+      "sequence": 28620,
+      "title": "il titolare — first-team player; holder, owner",
+      "headword": "il titolare",
+      "romanization": "il titolare",
+      "gloss": "first-team player; holder, owner",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3e9a6e4b6bcc890",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for defender, then the Italian for midfielder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il titolare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il titolare — \"first-team player; holder, owner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Oggi gioco titolare, non in panchina. Today I am in the starting line-up, not on the bench."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the owner of a shop: il titolare del bar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "titolare is a learned borrowing from Late Latin titulāris \"of a title\" (EtymDB), from titulus \"an inscription, a title\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il titolare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il titolare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il titolare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il titolare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il titolare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il titolare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for defender, then the Italian for midfielder, then say il titolare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for defender, then the Italian for midfielder, then say *il titolare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il titolare mean? (\"First-team player; holder, owner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C510-parare",
+      "sequence": 28630,
+      "title": "parare — to save (a shot); to ward off",
+      "headword": "parare",
+      "romanization": "parare",
+      "gloss": "to save (a shot); to ward off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d16fbd2e0d4b35b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for midfielder, then the Italian for first-team player."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: parare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "parare — \"to save (a shot); to ward off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il portiere ha parato un tiro difficile. The goalkeeper saved a difficult shot."
+            },
+            {
+              "kind": "speech",
+              "text": "La parata — a save. Also parare un colpo — to ward off a blow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "parare is inherited from Latin parāre \"to prepare, to make ready\" (EtymDB); the sense \"to ward off\" grew from getting ready to meet a blow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with parare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *parare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for midfielder, then the Italian for first-team player, then say parare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for midfielder, then the Italian for first-team player, then say *parare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does parare mean? (\"To save (a shot); to ward off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R510-ripasso-503-510",
+      "sequence": 28640,
+      "title": "Ripasso dei capitoli 503–510",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 503-510",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fffa61de644771ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for chess and draughts."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chess, draughts, dice, board game, to cheat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chess, draughts, dice, board game, to cheat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deck, to bluff, to bet, bet, crossword",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: deck, to bluff, to bet, bet, crossword]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to collect, collection, jigsaw puzzle, model making, to assemble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to collect, collection, jigsaw puzzle, model making, to assemble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take, to frame, tripod, roll of film, to develop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take, to frame, tripod, roll of film, to develop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardening, to sow, to water, rake, to hoe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gardening, to sow, to water, rake, to hoe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to train, training, push-up, abs, to sweat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to train, training, push-up, abs, to sweat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "referee, to whistle, foul, penalty, to book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: referee, to whistle, foul, penalty, to book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "forward, defender, midfielder, first-team player, to save",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: forward, defender, midfielder, first-team player, to save]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chess? (gli scacchi.) Draughts? (la dama.) Dice? (il dado.) Board game? (il gioco da tavolo.) To cheat? (barare.) Deck? (il mazzo.) To bluff? (bluffare.) To bet? (scommettere.) Bet? (la scommessa.) Crossword? (il cruciverba.) To collect? (collezionare.) Collection? (la collezione.) Jigsaw puzzle? (il puzzle.) Model making? (il modellismo.) To assemble? (assemblare.) To take? (scattare.) To frame? (inquadrare.) Tripod? (il treppiede.) Roll of film? (il rullino.) To develop? (sviluppare.) Gardening? (il giardinaggio.) To sow? (seminare.) To water? (annaffiare.) Rake? (il rastrello.) To hoe? (zappare.) To train? (allenarsi.) Training? (l'allenamento.) Push-up? (la flessione.) Abs? (gli addominali.) To sweat? (sudare.) Referee? (l'arbitro.) To whistle? (fischiare.) Foul? (il fallo.) Penalty? (il rigore.) To book? (ammonire.) Forward? (l'attaccante.) Defender? (il difensore.) Midfielder? (il centrocampista.) First-team player? (il titolare.) To save? (parare.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

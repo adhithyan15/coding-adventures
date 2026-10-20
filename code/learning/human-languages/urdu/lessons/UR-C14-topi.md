@@ -11,8 +11,8 @@ gloss: cap, hat — an honest dead end backward, and the word English borrowed a
 concept_tag: UR-CAP
 prerequisites: [UR-C14-juta, UR-C10-kaan, UR-C05-khuda-hafiz-more]
 sounds: [rtl, retroflex-t, long-i]
-roots: [prakrit-topia]
-etymology_hook: ṭopī is inherited from Sauraseni Prakrit ṭopiā, "helmet," related to Sanskrit ṭopikā -- and no further root is documented behind that. But moving forward rather than backward, English borrowed the word directly: topee, first recorded 1825-35, is from Hindi ṭopī, "hat." Unlike nīlā's cousin nīlī, which took four languages to reach English, ṭopī went straight across.
+roots: [prakrit-topia, indo-aryan-toppa]
+etymology_hook: "ṭopī ← *ṭoppa 'hat, covering', a reconstructed form (CDIAL 5481); English borrowed it as topee"
 duration:
   max_seconds: 270
 requires:
@@ -53,8 +53,7 @@ own, going the other direction.
 ## The word, taken apart — nothing behind it, something ahead
 <!-- hl-knowledge: introduces=[UR-ETYMON-TOPI-INTO-ENGLISH]; assesses=[UR-LEX-TOPI] -->
 
-**ٹوپی** is inherited from Sauraseni Prakrit *ṭopiā*, "helmet," related to
-Sanskrit *ṭopikā*. No further root is documented behind that — another
+**ٹوپی** is inherited: CDIAL lists it under a reconstructed *\*ṭoppa*, "hat, covering", beside Prakrit *ṭopiā*, "helmet", and late Sanskrit *ṭopikā*, "turban" (CDIAL 5481). No further root is documented behind that — another
 honest dead end, like **روٹی** and **کان**.
 
 But **ٹوپی** did something those two never did: it left Urdu and Hindi and

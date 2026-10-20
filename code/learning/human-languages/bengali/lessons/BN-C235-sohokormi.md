@@ -14,7 +14,8 @@ romanization: "sôhôkôrmī"
 concept_tag: BN-KAJ235-SOHOKORMI
 prerequisites: [BN-C235-miting, BN-C235-kormochari]
 sounds: []
-roots: []
+roots: [sanskrit-saha, sanskrit-karmin]
+etymology_hook: "sôhôkôrmī: Sanskrit saha 'with' + karmin 'worker', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C235-kormochari]
 <!-- hl-knowledge: introduces=[BN-LEX-C235-KAJ235-03]; assesses=[] -->
 
 **সহকর্মী** — *sôhôkôrmī* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সহকর্মী** (*sôhôkôrmī*) is built from Sanskrit *saha*, "with", and *karmin*, "worker", both taken over whole: "fellow worker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

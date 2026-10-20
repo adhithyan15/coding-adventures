@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 109,
-  "sourceHash": "fnv1a64:5916447ff4ea61d7",
+  "sourceHash": "fnv1a64:f8e064ff4cae0c64",
   "lessonIds": [
     "MW-C109-parno",
     "MW-C109-thakno",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch109.txt",
   "json": "marwadi/narration/ch109.json",
-  "textHash": "fnv1a64:d574557ca3fd39dc",
-  "jsonHash": "fnv1a64:8ecb7427c8309c22",
+  "textHash": "fnv1a64:191095ba34ae3be4",
+  "jsonHash": "fnv1a64:cda9451c04fd5351",
   "findings": []
 }

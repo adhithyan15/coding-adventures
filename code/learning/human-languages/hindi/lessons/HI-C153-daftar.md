@@ -14,7 +14,8 @@ romanization: "daftar"
 concept_tag: HI-THINGS153-DAFTAR
 prerequisites: [HI-C153-maidan, HI-C153-pul, HI-C16-mahine, HI-C16-mahine]
 sounds: []
-roots: []
+roots: [persian-daftar]
+etymology_hook: "daftar: usually traced, through Persian, to Arabic daftar 'register' (Lane), itself taken from Greek"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C153-pul]
 <!-- hl-knowledge: introduces=[HI-LEX-C153-THINGS153-04]; assesses=[] -->
 
 **दफ़्तर** — *daftar* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दफ़्तर** (*daftar*) is usually traced, through Persian, to Arabic *daftar*, "register, account book" (Lane), a word Arabic itself took from Greek.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

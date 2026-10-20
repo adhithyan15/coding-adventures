@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C377-impegno",
+    "language": "italian",
+    "chapter": 377,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d85d377f7b49f94"
+  },
+  "findings": []
+}

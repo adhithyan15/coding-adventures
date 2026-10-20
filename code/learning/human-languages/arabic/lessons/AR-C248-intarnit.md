@@ -14,7 +14,8 @@ romanization: "intarnit"
 concept_tag: AR-SHAY248-INTARNIT
 prerequisites: [AR-C247-nakhla, AR-C247-yasamin]
 sounds: []
-roots: []
+roots: [english-internet]
+etymology_hook: "intarnit: a modern loan from English internet (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C247-yasamin]
 <!-- hl-knowledge: introduces=[AR-LEX-C248-SHAY248-01]; assesses=[] -->
 
 **إنترنت** — *intarnit* — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إنترنت** (*intarnit*) is a modern loan from English *internet* (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

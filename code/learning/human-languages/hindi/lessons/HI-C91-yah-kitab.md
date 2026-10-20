@@ -14,9 +14,10 @@ romanization: "yah kitāb"
 concept_tag: HI-DET-ADNOMINAL
 prerequisites: [HI-C91-bacche-ko, HI-C40-this, HI-C40-that]
 sounds: []
-roots: []
+roots: [sanskrit-esha, arabic-kitab]
+etymology_hook: "yah: listed by CDIAL under Sanskrit eṣa 'this' (CDIAL 2530); kitāb ← Arabic kitāb 'book'"
 duration:
-  max_seconds: 240
+  max_seconds: 253
 requires:
   knowledge: [HI-LEX-C91-NOUN-06, HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02, HI-CONCEPT-C37-KITAAB-01]
 introduces:
@@ -65,6 +66,8 @@ There is a second reason it matters. Hindi has no article, so **यह** and **�
 are what a writer reaches for when *the* would have been enough in English. A
 sentence that begins **वह आदमी** is often best read as *the man* rather than
 *that man*.
+
+CDIAL lists **यह** under Sanskrit *eṣa*, "this" (CDIAL 2530).
 
 ## Grammar Lens: what fills the space before a noun
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-07, HI-LEX-C40-DEIXIS-02, HI-CONCEPT-C37-KITAAB-01] -->

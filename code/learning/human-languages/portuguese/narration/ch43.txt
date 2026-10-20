@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for to learn, then the Portuguese for to 
 You'll want to know: fechar.
 fechar — "to close". The opposite of abrir.
 
+The word, taken apart.
+fechar is built on an old word for a bolt, which is usually traced to Latin fistula, "pipe, tube". The details are uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for to open, then the Portuguese for to c
 
 You'll want to know: beber.
 beber — "to drink".
+
+The word, taken apart.
+beber from Latin bibere, "to drink" — inherited. EtymDB 2.1 traces it only to Old Portuguese beber; it derives Romanian bea and Old Provençal beure from bibere.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for to close, then the Portuguese for to 
 You'll want to know: comer.
 comer — "to eat".
 
+The word, taken apart.
+comer from Latin comedere, "to eat up" (EtymDB 2.1), from edere, "to eat" — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for to drink, then the Portuguese for to 
 You'll want to know: dar.
 dar — "to give".
 
+The word, taken apart.
+dar from Latin dare, "to give" (EtymDB 2.1) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for to eat, then the Portuguese for to gi
 
 You'll want to know: viver.
 viver — "to live".
+
+The word, taken apart.
+viver from Latin vivere, "to live" (EtymDB 2.1) — inherited.
 
 What you've built.
 One more word for this chapter.

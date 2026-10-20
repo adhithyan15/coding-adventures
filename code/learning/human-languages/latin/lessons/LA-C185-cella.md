@@ -13,7 +13,8 @@ gloss: "a storeroom, a small room"
 concept_tag: LA-RES185-CELLA
 prerequisites: [LA-C184-mutus, LA-C184-claudus]
 sounds: []
-roots: []
+roots: [cella-latin]
+etymology_hook: "cella 'storeroom' — usually traced to PIE *kelneh2 'small room'; English cell comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C184-claudus]
 <!-- hl-knowledge: introduces=[LA-LEX-C185-RES185-01]; assesses=[] -->
 
 **cella, cellae** — "a storeroom, a small room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cella** is inherited, usually traced to Proto-Indo-European *\*kelneh2*, "a small room" (EtymDB 2.1), from a root for hiding seen in *cēlō*, "to hide" (Lewis & Short). English *cell* comes from it, and English *hall* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

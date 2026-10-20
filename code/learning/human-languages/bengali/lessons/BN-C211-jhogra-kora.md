@@ -14,7 +14,8 @@ romanization: "jhôgṛā kôrā"
 concept_tag: BN-VERB-JHOGRA-KORA
 prerequisites: [BN-C211-rag-kora, BN-C211-lojja-paoya]
 sounds: []
-roots: []
+roots: [indo-aryan-jhagad, sanskrit-karoti]
+etymology_hook: "jhôgṛā kôrā: jhôgṛā 'quarrel' ← *jhagaḍ (CDIAL 5321) + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C211-lojja-paoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C211-ACT211-04]; assesses=[] -->
 
 **ঝগড়া করা** — *jhôgṛā kôrā* — "to quarrel".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝগড়া করা** (*jhôgṛā kôrā*) is *jhôgṛā*, "a quarrel", which CDIAL lists under *\*jhagaḍ*, "quarrel", a form it reconstructs (CDIAL 5321), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

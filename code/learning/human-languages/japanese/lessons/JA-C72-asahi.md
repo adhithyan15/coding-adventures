@@ -14,7 +14,8 @@ romanization: "asahi"
 concept_tag: JA-TIME72-ASAHI
 prerequisites: [JA-C72-asagata, JA-C72-yuuhan]
 sounds: []
-roots: []
+roots: [japanese-asa-morning, japanese-hi-sun]
+etymology_hook: "asahi: native compound of asa 'morning' + hi 'sun' (朝日)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C72-yuuhan]
 <!-- hl-knowledge: introduces=[JA-LEX-C72-TIME72-05]; assesses=[] -->
 
 **あさひ** — *asahi* — "the morning sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさひ** (*asahi*) is a native compound, inherited rather than borrowed: *asa*, "morning", and *hi*, "sun", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

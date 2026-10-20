@@ -14,7 +14,8 @@ romanization: "idéya"
 concept_tag: RU-THINGS111-IDEA
 prerequisites: [RU-C111-rubber, RU-C111-homework]
 sounds: []
-roots: []
+roots: [idea-latin]
+etymology_hook: "идея came from Polish idea, German Idee or French idée, from Greek idea 'look, form'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C111-homework]
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **идея** (*idéya*) — "an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**идея** — recorded from 1710; it came from Polish *idea*, German *Idee* or French *idée*, from Latin *idea*, Greek *idéa*, "look, form", from *ideîn*, "to see" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

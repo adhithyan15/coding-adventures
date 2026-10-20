@@ -14,7 +14,8 @@ romanization: "chehel"
 concept_tag: FA-NUMBERS76-CHEHEL
 prerequisites: [FA-C76-nuzdah, FA-C76-si]
 sounds: []
-roots: []
+roots: [persian-chehel]
+etymology_hook: "chehel: inherited, usually traced to Middle Persian čihl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C76-si]
 <!-- hl-knowledge: introduces=[FA-LEX-C76-NUMBERS76-05]; assesses=[] -->
 
 **چهل** — *chehel* — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chehel* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *čihl*, "forty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

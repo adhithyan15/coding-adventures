@@ -13,7 +13,8 @@ gloss: "a bank card"
 concept_tag: PT-COISAS248-CARTAO-BANCARIO
 prerequisites: [PT-C247-decisao, PT-C248-nota]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "cartão bancário: cartão from the card word (← Latin charta); bancário built on banco 'bank'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C248-nota]
 <!-- hl-knowledge: introduces=[PT-LEX-C248-COISAS248-02]; assesses=[] -->
 
 **o cartão bancário** — "a bank card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cartão bancário** is "bank card": *cartão* is a big form (*-ão*) of the word for a card or letter (EtymDB 2.1), from Latin *charta*, "paper", and *bancário*, "of a bank", is built on *banco*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

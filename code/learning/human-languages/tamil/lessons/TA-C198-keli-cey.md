@@ -14,7 +14,8 @@ romanization: "kēli cey"
 concept_tag: TA-VERB-KELI-CEY
 prerequisites: [TA-C198-poy-col, TA-C198-cantai-potu]
 sounds: []
-roots: []
+roots: [sanskrit-keli, sey-do-dravidian]
+etymology_hook: "கேலி செய் — kēli ← Sanskrit keli 'play, sport', a well-established loan, + native sey 'do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C198-cantai-potu]
 <!-- hl-knowledge: introduces=[TA-LEX-C198-ACT198-05]; assesses=[] -->
 
 **கேலி செய்** — *kēli cey* — "to tease, to make fun of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கேலி செய்** (*kēli cey*) is *kēli*, "jest, mockery", a well-established loan from Sanskrit *keli*, "play, sport", with native *sey*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4fdba382e4fb4f8c",
+  "sourceHash": "fnv1a64:9c62d9f04094b990",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06255cbb1ff25dd2",
+      "sourceHash": "fnv1a64:6da6cd6ba9205922",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "फिर (phir) means \"again, then, afterwards.\" It is a native Indo-Aryan adverb (from Prakrit, ultimately tied to the sense \"back, return\") with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English \"see you again,\" Hindi phir milenge (\"we'll meet again\"). The optimism is the same; only the word is Indian."
+              "text": "फिर (phir) means \"again, then, afterwards.\" It is a native Indo-Aryan adverb (the form \"having turned\" of a reconstructed phirati, \"turns\", CDIAL."
+            },
+            {
+              "kind": "speech",
+              "text": "with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English \"see you again,\" Hindi phir milenge (\"we'll meet again\"). The optimism is the same; only the word is Indian."
             }
           ]
         },
@@ -144,7 +148,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d2a22d32e65ad12c",
+      "sourceHash": "fnv1a64:42601b0b110a73b7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -289,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d42aa8cbabccfdd6",
+      "sourceHash": "fnv1a64:c3a25bf819b464af",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +320,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "फिर मिलेंगे = फिर (phir, \"again\") + मिलेंगे (milenge, \"we will meet\") — \"we'll meet again.\" Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, \"the farewell\"), phir milenge is native, everyday, and hopeful. It is the exact sibling of the \"promise of return\" goodbyes across South Asia — Tamil, Bengali, Marathi all say \"I'll come again\" rather than \"goodbye.\""
+              "text": "फिर मिलेंगे = फिर (phir, \"again\") + मिलेंगे (milenge, \"we will meet\") — \"we'll meet again.\" Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, \"the farewell\"), phir milenge is native, everyday, and hopeful: फिर goes back to phirati, \"turns\" (CDIAL 9078), and मिलेंगे to Sanskrit milati, \"meets\" (CDIAL 10133). It is the exact sibling of the \"promise of return\" goodbyes across South Asia — Tamil, Bengali, Marathi all say \"I'll come again\" rather than \"goodbye.\""
             }
           ]
         },
@@ -407,7 +411,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05a80d161f3c6f65",
+      "sourceHash": "fnv1a64:bb343282b064074b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -454,7 +458,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कल (kal) means both \"tomorrow\" and \"yesterday\" — the same word for the day on either side of today. It is from Sanskrit काल (kāla, \"time\") — the very root that sits inside Punjabi's akāl (\"timeless\"). Hindi trusts context (and the verb's tense) to tell which kal you mean: kal milte haiṁ (present-ish becomes \"tomorrow\"), kal milā (past becomes \"yesterday\")."
+              "text": "कल (kal) means both \"tomorrow\" and \"yesterday\" — the same word for the day on either side of today. It is from Sanskrit kalya, \"dawn, tomorrow\", built on काल (kāla, \"time\") (CDIAL 3104) — the very root that sits inside Punjabi's akāl (\"timeless\"). Hindi trusts context (and the verb's tense) to tell which kal you mean: kal milte haiṁ (present-ish becomes \"tomorrow\"), kal milā (past becomes \"yesterday\")."
             },
             {
               "kind": "speech",
@@ -556,7 +560,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:93fde095e319ccfd",
+      "sourceHash": "fnv1a64:3b089c174cac4e17",
       "notice": {
         "modality": "sight",
         "needs": [

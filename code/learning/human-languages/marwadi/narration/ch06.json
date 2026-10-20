@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4b299d70f654cf3c",
+  "sourceHash": "fnv1a64:1623e763b895c573",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:124cdfd836bdd13b",
+      "sourceHash": "fnv1a64:bab5629437ab54e5",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Marwari thāro, \"your\", among the possessive forms built on Sanskrit yuṣmad-, the plural \"you\" (CDIAL 10511). It is an inherited word, a tadbhava, whose plural \"your\" now serves for one person too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -79,7 +90,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -232,7 +243,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d061886b49ccbeb",
+      "sourceHash": "fnv1a64:3152a1116fed1389",
       "notice": null,
       "blocks": [
         {
@@ -278,6 +289,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Marwari थारो (thāro), \"your\", among the possessive forms built on Sanskrit yuṣmad-, the plural \"you\" (CDIAL 10511). It is an inherited word, a tadbhava, whose plural \"your\" now serves for one person too."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -302,7 +324,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -354,7 +376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4831d170267f19fd",
+      "sourceHash": "fnv1a64:2b4227e3f0adf811",
       "notice": null,
       "blocks": [
         {
@@ -431,6 +453,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kāĩ is not in CDIAL, so its history is not settled. Its k- is the question stem of Sanskrit kim, \"what\", where CDIAL lists Old Marwari kyaü (CDIAL 3164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -454,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -711,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e90b3d6068d11c39",
+      "sourceHash": "fnv1a64:3b57d147f0639839",
       "notice": null,
       "blocks": [
         {
@@ -784,6 +817,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for कांई (kāĩ), so the full history of the word is not settled. Its k- is the old question stem of Sanskrit kim, \"what\", under which CDIAL lists Old Marwari kyaü, \"what, why\" (CDIAL 3164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -808,7 +852,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

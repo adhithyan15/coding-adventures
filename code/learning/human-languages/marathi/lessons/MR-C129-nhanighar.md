@@ -14,7 +14,8 @@ romanization: "nhāṇīghar"
 concept_tag: MR-LOC129-NHANIGHAR
 prerequisites: [MR-C129-tapal, MR-C129-imarat]
 sounds: []
-roots: []
+roots: [sanskrit-snana, grha-sanskrit]
+etymology_hook: "nhāṇīghar: nhāṇī, from nhāṇ 'bathing' ← snāna (CDIAL 13789), + ghar 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C129-imarat]
 <!-- hl-knowledge: introduces=[MR-LEX-C129-LOC129-05]; assesses=[] -->
 
 **न्हाणीघर** — *nhāṇīghar* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**न्हाणीघर** (*nhāṇīghar*) is "bathing house": *nhāṇī*, from Marathi *nhāṇ*, "bathing", which CDIAL lists under Sanskrit *snāna*, "bathing" (CDIAL 13789), and **घर**, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

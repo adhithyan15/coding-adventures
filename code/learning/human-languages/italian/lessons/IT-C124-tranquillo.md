@@ -13,7 +13,8 @@ gloss: "quiet, calm"
 concept_tag: IT-QUALITA124-TRANQUILLO
 prerequisites: [IT-C124-aperto, IT-C124-chiuso]
 sounds: []
-roots: []
+roots: [tranquillus]
+etymology_hook: "tranquillo ← Latin tranquillus 'quiet, calm', a learned word — English tranquil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C124-chiuso]
 <!-- hl-knowledge: introduces=[IT-LEX-C124-QUALITA124-05]; assesses=[] -->
 
 **tranquillo** — "quiet, calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tranquillo** ← Latin *tranquillus*, "quiet, calm" — a learned borrowing. EtymDB 2.1 has no row for *tranquillo*; it derives Spanish and Portuguese *tranquilo*, borrowed the same way, from *tranquillus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

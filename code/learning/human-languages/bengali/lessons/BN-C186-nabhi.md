@@ -14,7 +14,8 @@ romanization: "nābhi"
 concept_tag: BN-SVASTHYO186-NABHI
 prerequisites: [BN-C185-bndej, BN-C186-pajor]
 sounds: []
-roots: []
+roots: [sanskrit-nabhi]
+etymology_hook: "nābhi ← Sanskrit nābhi 'navel', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C186-pajor]
 <!-- hl-knowledge: introduces=[BN-LEX-C186-SVASTHYO186-02]; assesses=[] -->
 
 **নাভি** — *nābhi* — "a navel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাভি** (*nābhi*) is Sanskrit *nābhi*, "navel", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

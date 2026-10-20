@@ -13,7 +13,8 @@ gloss: "a cherry"
 concept_tag: PT-COMIDA106-CEREJA
 prerequisites: [PT-C105-pepino, PT-C105-morango]
 sounds: []
-roots: []
+roots: [cerasus-latin]
+etymology_hook: "cereja ← Vulgar Latin *ceresia, from Greek kerasion — English cherry is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C105-morango]
 <!-- hl-knowledge: introduces=[PT-LEX-C106-COMIDA106-01]; assesses=[] -->
 
 **a cereja** — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cereja** ← Vulgar Latin *\*ceresia*, "cherry", from Greek *kerasion* — inherited. EtymDB 2.1 has no ancestor row for *cereja*; it derives Spanish *cereza* from *\*ceresia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

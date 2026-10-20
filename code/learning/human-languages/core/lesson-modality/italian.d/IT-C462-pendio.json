@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C462-pendio",
+    "language": "italian",
+    "chapter": 462,
+    "sequence": 26030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2d24445cc07e801"
+  },
+  "findings": []
+}

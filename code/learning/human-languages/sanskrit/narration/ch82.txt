@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a garden, then the Sanskrit for a fores
 You'll want to know: सरः.
 सरः (saraḥ) — "a lake", still जलम् where the lotus grows.
 
+The word, taken apart.
+Saras is built on the root √sṛ, "to flow, run": MW glosses it "anything flowing", and so a lake or a pool. It is already in the Rigveda.
+
 What you've built.
 Still water.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a forest, then the Sanskrit for a lake.
 
 You'll want to know: कूपः.
 कूपः (kūpaḥ) — "a well", water from under the ground.
+
+The word, taken apart.
+Kūpa first meant a hole or hollow, in the Rigveda, and then a well (CDIAL 3400). MW tentatively splits it into ku + ap, "water", but that is a guess. It lives on as Hindi kūā, "well".
 
 What you've built.
 Water from below.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a lake, then the Sanskrit for a well.
 You'll want to know: तडागः.
 तडागः (taḍāgaḥ) — "a pond", a village tank with steps.
 
+The word, taken apart.
+Taḍāga appears in the ritual handbooks and the epics (CDIAL 5635), but its origin is unclear: MW gives no root. It lives on as Hindi talāu, "pond".
+
 What you've built.
 The village water.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a well, then the Sanskrit for a pond.
 You'll want to know: द्वीपः.
 द्वीपः (dvīpaḥ) — "an island", land with water on both sides: द्वि, "two".
 
+The word, taken apart.
+Dvīpa is built from dvi, "two", and ap, "water": land with water on both sides (MW, CDIAL 6691).
+
 What you've built.
 Land in the water.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a pond, then the Sanskrit for an island
 
 You'll want to know: तीरम्.
 तीरम् (tīram) — "a bank", "a shore", the edge of a नदी or the समुद्रः.
+
+The word, taken apart.
+Tīra is built on the root √tṝ, "to cross over" (MW): the bank is where a crossing ends. It lives on as Hindi tīr, "bank" (CDIAL 5842).
 
 What you've built.
 The water's edge.

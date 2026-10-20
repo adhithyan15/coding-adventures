@@ -1,0 +1,11 @@
+{
+  "id": "ES-C680-papeleria",
+  "pathSegment": "ES-PATH-680-TIENDAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-680-TIENDAS",
+      "order": 1
+    }
+  ]
+}

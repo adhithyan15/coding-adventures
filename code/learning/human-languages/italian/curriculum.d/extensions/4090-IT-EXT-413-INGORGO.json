@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-413-INGORGO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report trouble on the road: a bump from behind, a pile-up, a traffic jam and a diversion.",
+  "prerequisites": []
+}

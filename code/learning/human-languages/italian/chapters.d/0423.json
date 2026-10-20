@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Sul traghetto",
+  "label": "ch:it-sul-traghetto",
+  "canDo": "I can talk about a voyage: the cruise, the cabin, the sailor, the bow and the stern.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C423-poppa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about a voyage: the cruise, the cabin, the sailor, the bow and the stern.",
+    "assesses": [
+      "IT-LEX-C423-TRAGHETTO-03",
+      "IT-LEX-C423-TRAGHETTO-04",
+      "IT-LEX-C423-TRAGHETTO-05"
+    ]
+  }
+}

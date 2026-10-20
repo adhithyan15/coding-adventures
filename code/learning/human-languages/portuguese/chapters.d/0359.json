@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "No escritório",
+  "label": "ch:pt-no-escritorio",
+  "canDo": "I can describe an office: the manager, the department, my tasks and colleagues, and what I delegate.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C359-delegar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can describe an office: the manager, the department, my tasks and colleagues, and what I delegate.",
+    "assesses": [
+      "PT-LEX-C359-DEPARTAMENTO-03",
+      "PT-LEX-C359-DEPARTAMENTO-04",
+      "PT-LEX-C359-DEPARTAMENTO-05"
+    ]
+  }
+}

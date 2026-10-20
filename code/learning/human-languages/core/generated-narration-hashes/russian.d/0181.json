@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 181,
-  "sourceHash": "fnv1a64:1568bbd61c9b6267",
+  "sourceHash": "fnv1a64:2447742151a73898",
   "lessonIds": [
     "RU-C181-yanvar",
     "RU-C181-fevral",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch181.txt",
   "json": "russian/narration/ch181.json",
-  "textHash": "fnv1a64:0f1888d75cb4cb94",
-  "jsonHash": "fnv1a64:991012fc263928d4",
+  "textHash": "fnv1a64:8a064d37e7fff267",
+  "jsonHash": "fnv1a64:fe4e4c9981c5121c",
   "findings": []
 }

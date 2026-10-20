@@ -11,7 +11,8 @@ romanization: "cūṭu"
 concept_tag: TA-WEATHER-HEAT
 prerequisites: [TA-C90-hungry, TA-C91-sunshine]
 sounds: []
-roots: []
+roots: [dravidian-cudu-burn]
+etymology_hook: "சூடு — native Dravidian (DEDR 2654); Malayalam cuṭuka 'to be hot', Kannada suḍu 'to burn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C91-sunshine]
 **சூடு** (*cūṭu*) — "heat", and of a thing, "hot".
 
 **சூடாக இருக்கிறது** — "it is hot". Tea, a pan, a forehead: anything can be **சூடு**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சூடு** (*cūṭu*) is native Dravidian. DEDR 2654 lists Malayalam *cuṭuka*, "to be hot" and Kannada *suḍu*, "to burn". The entry lists *cūṭu*, "heat, burning", under *cuṭu*, "to be hot", and compares Sanskrit *cūḍ-*, "to singe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

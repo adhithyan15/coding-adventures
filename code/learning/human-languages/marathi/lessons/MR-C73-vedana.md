@@ -14,7 +14,8 @@ romanization: "vedanā"
 concept_tag: MR-HEALTH73-VEDANA
 prerequisites: [MR-C72-davakhana, MR-C73-ajari]
 sounds: []
-roots: []
+roots: [sanskrit-vedana]
+etymology_hook: "vedanā ← Sanskrit vedanā 'feeling; pain', a tatsama (CDIAL 12106)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C73-ajari]
 <!-- hl-knowledge: introduces=[MR-LEX-C73-HEALTH73-02]; assesses=[] -->
 
 **वेदना** — *vedanā* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वेदना** (*vedanā*) is Sanskrit *vedanā*, "feeling; pain", taken over whole as a learned loan, a tatsama (CDIAL 12106). CDIAL lists the inherited Marathi form as *veṇ*, "pain, esp. of birth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

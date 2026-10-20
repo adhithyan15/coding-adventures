@@ -14,7 +14,8 @@ romanization: "vēkamāṉa"
 concept_tag: TA-QUAL145-VEKAMANA
 prerequisites: [TA-C145-cuttamana, TA-C145-alukkana]
 sounds: []
-roots: []
+roots: [sanskrit-vega]
+etymology_hook: "வேகமான ← Sanskrit vega 'speed' (CDIAL 12089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C145-alukkana]
 <!-- hl-knowledge: introduces=[TA-LEX-C145-QUAL145-05]; assesses=[] -->
 
 **வேகமான** — *vēkamāṉa* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேகமான** (*vēkamāṉa*) is a loan from Sanskrit *vega*, "speed" (CDIAL 12089).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

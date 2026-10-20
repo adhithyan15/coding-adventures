@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-MIDDLE-SCHOOL
 gloss: middle school, built from known characters
 prerequisites: [ZH-C15-hear-zhongxue]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: The newly secure 中 joins reviewed 学; no third shape is added.
+roots: [middle-chinese-trjuwng, middle-chinese-haewk]
+etymology_hook: "zhōngxué: 'middle' + 'learning', from Middle Chinese trjuwng and haewk, joined in Chinese"
 duration:
   max_seconds: 145
 requires:
@@ -42,6 +42,9 @@ reviews_of: [ZH-C15-hear-zhongxue, ZH-C15-zhong, ZH-C13-xue]
 > **中学** — *zhōngxué* — **middle school**
 
 Read the pair without pinyin: level, then rising.
+
+Both are inherited from Middle Chinese, *trjuwng* and *haewk* (Guangyun, in
+Baxter's transcription); Chinese built the school name from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-LEX-ZHONGXUE-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01] -->

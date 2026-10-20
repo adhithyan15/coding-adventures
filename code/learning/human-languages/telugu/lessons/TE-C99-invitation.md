@@ -11,7 +11,8 @@ romanization: "āhvānaṁ"
 concept_tag: TE-WELCOME-INVITATION
 prerequisites: [TE-C99-congrats, TE-C99-gift]
 sounds: []
-roots: []
+roots: [sanskrit-ahvana]
+etymology_hook: "āhvānaṁ ← Sanskrit āhvāna 'calling, invitation', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C99-gift]
 
 **పెళ్ళికి ఆహ్వానం** — "an invitation to the wedding", with **-కి**, "to". It is the reason for
 most of the visits this book has taught you to make.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆహ్వానం** (*āhvānaṁ*) is Sanskrit *āhvāna*, "calling, invitation", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

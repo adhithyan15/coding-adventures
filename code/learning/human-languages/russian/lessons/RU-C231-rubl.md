@@ -14,7 +14,8 @@ romanization: "rubl"
 concept_tag: RU-RABOTA231-RUBL
 prerequisites: [RU-C230-nyanya, RU-C231-kopeyka]
 sounds: []
-roots: []
+roots: [slavic-rubiti]
+etymology_hook: "рубль is from рубить 'to chop': a piece cut from a silver bar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C231-kopeyka]
 <!-- hl-knowledge: introduces=[RU-LEX-C231-RABOTA231-02]; assesses=[] -->
 
 **рубль** (*rubl*) — "a rouble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рубль** — Old Russian *рубль*, "a cut-off piece"; it comes from *рубить*, "to chop": a piece chopped from a silver ingot (Vasmer). Vasmer rejects the common tie to Sanskrit *rūpya-*, "silver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

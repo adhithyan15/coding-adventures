@@ -14,7 +14,8 @@ romanization: "kaṇṇāṭi"
 concept_tag: TA-THINGS120-KANNATI
 prerequisites: [TA-C119-talaiyanai, TA-C119-porvai]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye]
+etymology_hook: "கண்ணாடி — native Dravidian (DEDR 1182); Malayalam kaṇṇāṭi, Kannada kannaḍi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C119-porvai]
 <!-- hl-knowledge: introduces=[TA-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **கண்ணாடி** — *kaṇṇāṭi* — "a mirror; glasses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கண்ணாடி** (*kaṇṇāṭi*) is native Dravidian. DEDR 1182 lists Malayalam *kaṇṇāṭi* and Kannada *kannaḍi*. The entry points back to *kaṇ*, "eye" (DEDR 1159).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

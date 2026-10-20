@@ -14,7 +14,8 @@ romanization: "aṇṭisu"
 concept_tag: KA-VERB-ANTISU
 prerequisites: [KA-C160-sinu, KA-C160-nadugu]
 sounds: []
-roots: []
+roots: [dravidian-antu-stick]
+etymology_hook: "aṇṭisu: native Dravidian, 'make stick', from aṇṭu 'to stick' (DEDR 96)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C160-nadugu]
 <!-- hl-knowledge: introduces=[KA-LEX-C161-KRIYE161-01]; assesses=[] -->
 
 **ಅಂಟಿಸು** — *aṇṭisu* — "to stick, to paste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಟಿಸು** (*aṇṭisu*) is native Dravidian, from *aṇṭu*, "to stick, adhere", which DEDR 96 lists, with *-isu*, "to make"; the entry also has Tamil *aṭṭu*, Telugu *aṇṭu* and Malayalam *aṭṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

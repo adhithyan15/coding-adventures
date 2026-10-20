@@ -14,7 +14,8 @@ romanization: "tiruvu"
 concept_tag: KA-LOC110-TIRUVU
 prerequisites: [KA-C110-tota, KA-C110-mule]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn]
+etymology_hook: "tiruvu: native Dravidian, from tiri 'to turn' (DEDR 3246); Tamil tiri"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C110-mule]
 <!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-05]; assesses=[] -->
 
 **ತಿರುವು** — *tiruvu* — "a turn, a bend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಿರುವು** (*tiruvu*) is native Dravidian, from *tiri*, "to turn round", which DEDR 3246 lists with "a turn" among its senses; the entry also has Tamil *tiri*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

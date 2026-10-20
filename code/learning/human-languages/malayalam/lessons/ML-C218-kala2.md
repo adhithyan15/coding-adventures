@@ -14,7 +14,8 @@ romanization: "kaḷa"
 concept_tag: ML-VASTU218-KALA2
 prerequisites: [ML-C218-valam, ML-C218-canakam]
 sounds: []
-roots: []
+roots: [dravidian-kal-weed]
+etymology_hook: "kaḷa: native Dravidian, one word with Tamil kaḷ and Kannada kaḷe (DEDR 1373)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C218-canakam]
 <!-- hl-knowledge: introduces=[ML-LEX-C218-VASTU218-03]; assesses=[] -->
 
 **കള** — *kaḷa* — "a weed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കള** (*kaḷa*) is native Dravidian, one word with Tamil *kaḷ*, Kannada *kaḷe* and Telugu *kalupu* (DEDR 1373).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

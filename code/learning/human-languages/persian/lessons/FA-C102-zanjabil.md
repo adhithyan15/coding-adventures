@@ -14,7 +14,8 @@ romanization: "zanjabil"
 concept_tag: FA-THINGS102-ZANJABIL
 prerequisites: [FA-C101-bademjan, FA-C101-sir]
 sounds: []
-roots: []
+roots: [sanskrit-sringavera]
+etymology_hook: "zanjabil ← Arabic zanjabīl ← Middle Persian singibēr ← an Indian word (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C101-sir]
 <!-- hl-knowledge: introduces=[FA-LEX-C102-THINGS102-01]; assesses=[] -->
 
 **زنجبیل** — *zanjabil* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zanjabil* is borrowed from Arabic *zanjabīl*, "ginger", which came through Middle Persian *singibēr* from an Indian word (EtymDB). English *ginger* goes back to the same Indian word through Greek and Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

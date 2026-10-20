@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 593,
+  "sourceHash": "fnv1a64:207b68d5169b57fa",
+  "lessonIds": [
+    "ES-C593-tarea",
+    "ES-C593-desempenar",
+    "ES-C593-rendimiento",
+    "ES-C593-dedicarse",
+    "ES-C593-eficiente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch593.txt",
+  "json": "spanish/narration/ch593.json",
+  "textHash": "fnv1a64:0c152f2049fe4e7c",
+  "jsonHash": "fnv1a64:391b8567fc218e3f",
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "to accept, to assume"
 concept_tag: GE-VERB-ANNEHMEN
 prerequisites: [GE-C243-ziel, GE-C244-anbieten]
 sounds: []
-roots: []
+roots: [germanic-nemana]
+etymology_hook: "annehmen — an- + nehmen 'to take': to take on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C244-anbieten]
 <!-- hl-knowledge: introduces=[GE-LEX-C244-VERB244-02]; assesses=[] -->
 
 **annehmen** — "to accept, to assume".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**annehmen** is *an-* + *nehmen*, "to take" ← Proto-Germanic *\*nemaną* (EtymDB 2.1): to take on, or to take as true.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

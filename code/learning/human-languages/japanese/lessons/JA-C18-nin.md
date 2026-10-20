@@ -11,8 +11,8 @@ gloss: the counter for people — and the first place the tsu rule stops working
 concept_tag: JA-COUNTER-NIN
 prerequisites: [JA-C18-tsu-counter, JA-C13-kodomo, JA-W11-small-tsu, JA-C15-juu]
 sounds: [mora]
-roots: []
-etymology_hook: Wikipedia lists the people counter as irregular at exactly two places, and everywhere else it is the plain borrowed number with nin behind it.
+roots: [middle-chinese-nyin]
+etymology_hook: "-nin: Sino-Japanese, an on'yomi of 人 'person', from Middle Chinese nyin"
 duration:
   max_seconds: 205
 requires:
@@ -74,6 +74,11 @@ ten; use the proper counter for anything alive.**
 
 And **にん** itself has an exception, at exactly two numbers. That is the next
 lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にん** (*-nin*) is Sino-Japanese: an on'yomi of the character for "person", borrowed from Chinese (Middle Chinese *nyin*); *jin* is a second on'yomi of the same character (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIN, JA-LEX-KODOMO, JA-LEX-SAN, JA-LEX-JUU] -->

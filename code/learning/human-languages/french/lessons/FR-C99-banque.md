@@ -14,6 +14,7 @@ concept_tag: FR-VILLE51-BANQUE
 prerequisites: [FR-C99-magasin, FR-C99-ecole]
 sounds: []
 roots: []
+etymology_hook: "banque ← Italian banca 'a bench', the money-changer's table — English bank"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C99-ecole]
 <!-- hl-knowledge: introduces=[FR-LEX-C99-VILLE51-03]; assesses=[] -->
 
 **la banque** — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**banque** ← Italian *banca*, "a bench", the money-changer's table — borrowed. The Italian word is Germanic, from Lombardic *\*bank*, "bench". (EtymDB 2.1 records the Lombardic step, through Italian *banco*.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

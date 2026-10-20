@@ -10,7 +10,7 @@ gloss: add kaf and waw, then copy the greeting and its reply cue
 romanization: kāf, wāw — as-salāmu ʿalaykum
 prerequisites: [AR-W00-ayn-ya, AR-C01-iid, AR-C01-kukh]
 sounds: [arabic-kaf, arabic-waw]
-roots: [phoenician-kaph, phoenician-waw, semitic-s-l-m]
+roots: [phoenician-kaph, phoenician-waw, s-l-m]
 duration:
   max_seconds: 299
 requires:

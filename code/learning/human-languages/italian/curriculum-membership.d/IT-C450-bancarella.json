@@ -1,0 +1,11 @@
+{
+  "id": "IT-C450-bancarella",
+  "pathSegment": "IT-PATH-450-SAGRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-450-SAGRA",
+      "order": 4
+    }
+  ]
+}

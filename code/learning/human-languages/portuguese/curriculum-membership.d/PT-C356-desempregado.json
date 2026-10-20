@@ -1,0 +1,11 @@
+{
+  "id": "PT-C356-desempregado",
+  "pathSegment": "PT-PATH-356-DESPEDIMENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-356-DESPEDIMENTO",
+      "order": 3
+    }
+  ]
+}

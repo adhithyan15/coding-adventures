@@ -14,7 +14,8 @@ romanization: "nirappu"
 concept_tag: TA-VERB-NIRAPPU
 prerequisites: [TA-C224-vinnani, TA-C225-cuvai-par]
 sounds: []
-roots: []
+roots: [dravidian-nira-full]
+etymology_hook: "நிரப்பு — native Dravidian (DEDR 3672); Malayalam nirattuka 'to level'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C225-cuvai-par]
 <!-- hl-knowledge: introduces=[TA-LEX-C225-ACT225-02]; assesses=[] -->
 
 **நிரப்பு** — *nirappu* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிரப்பு** (*nirappu*) is native Dravidian. DEDR 3672 lists Malayalam *nirattuka*, "to level". It is the causative of *nira*, "to be full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

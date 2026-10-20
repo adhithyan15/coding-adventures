@@ -14,7 +14,8 @@ romanization: "shawka"
 concept_tag: AR-HOME72-SHAWKA
 prerequisites: [AR-C71-sahn, AR-C71-sikkin]
 sounds: []
-roots: []
+roots: [sh-w-k]
+etymology_hook: "shawka: built on the root sh-w-k, 'a thorn, a prickle' (Lane); Lane's shawka is a thorn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C71-sikkin]
 <!-- hl-knowledge: introduces=[AR-LEX-C72-HOME72-01]; assesses=[] -->
 
 **شوكة** — *shawka* — "a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوكة** (*shawka*) is built on the native Arabic root *sh-w-k*, "a thorn, a prickle" (Lane). Lane's *shawka* is a thorn; the table fork is not among his senses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-467-TEMPORALE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a thunderstorm: lightning, thunder, flashing, hail and hailing.",
+  "prerequisites": []
+}

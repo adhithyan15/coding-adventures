@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Windows `close_stream` now shuts the socket down for sending before
+  dropping it. Winsock turns `closesocket()` into an RST while an overlapped
+  `WSARecv` is pending (this provider nearly always has one), and the peer
+  then discards bytes it had not read yet: `websocket-runtime`'s Close echo
+  arrived as `ConnectionReset`. New `close_after_write_delivers_data_then_eof`
+  test on Linux and Windows.
+- The Windows provider implements `adopt_stream`, so a socket accepted by a
+  plain `std` listener on another thread can join its completion port (the
+  accept fan-out `tcp-runtime` now uses on Windows). The adoption test now
+  runs on Windows too.
+- The IPv6-only listener test now reserves `127.0.0.1:P` itself before
+  binding `[::]:P`, instead of hoping no other process listens on the IPv4
+  side of a random port. On main's busy sharded runner an unrelated IPv4
+  listener on the same port number made the old test fail although
+  `set_only_v6(true)` was in effect.
 - Keep the Windows backend clean under Rust 1.97 by documenting the
   platform-specific wake helper and using the standard backlog clamp.
 

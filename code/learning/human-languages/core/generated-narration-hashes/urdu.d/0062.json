@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 62,
-  "sourceHash": "fnv1a64:c3b753aa2c426b63",
+  "sourceHash": "fnv1a64:235f198a60ca95d7",
   "lessonIds": [
     "UR-C62-basta",
     "UR-C62-paisa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch62.txt",
   "json": "urdu/narration/ch62.json",
-  "textHash": "fnv1a64:60456f225fdb9011",
-  "jsonHash": "fnv1a64:203877508428ddf4",
+  "textHash": "fnv1a64:815ed0ee03d6dc8f",
+  "jsonHash": "fnv1a64:a204f226a8af2b84",
   "findings": []
 }

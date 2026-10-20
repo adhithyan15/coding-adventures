@@ -11,6 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [IT-C01-buono, IT-C01-giorno]
 sounds: []
 roots: [bonus, diurnum]
+etymology_hook: "buongiorno = buon (← Latin bonus 'good') + giorno (← Latin diurnum 'daytime')"
 reviews_of: [IT-C01-buono, IT-C01-giorno]
 duration:
   max_seconds: 120
@@ -42,6 +43,9 @@ variety: standard-contemporary
 <!-- hl-knowledge: introduces=[IT-LEX-BUONGIORNO-02]; assesses=[] -->
 
 - [buon](IT-C01-buono.md) ("good") + [giorno](IT-C01-giorno.md) ("day").
+
+Both halves are inherited from Latin: *buon* from *bonus*, "good", and *giorno*
+from *diurnum*, "daytime" (EtymDB 2.1).
 
 > **buongiorno** = "good day," one word.
 

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C467-tuonare",
+  "pathSegment": "IT-PATH-467-TEMPORALE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-467-TEMPORALE",
+      "order": 1
+    }
+  ]
+}

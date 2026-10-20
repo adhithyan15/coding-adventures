@@ -11,6 +11,7 @@ concept_tag: ES-ASK-CHAQUETA
 prerequisites: [ES-C467-sintesis-alimento, ES-C430-jersey, ES-C300-piel]
 sounds: [ch-digraph, k-hard, stress-penultimate]
 roots: [jacques-french]
+etymology_hook: "chaqueta ← French jaquette, a small jaque; probably from Jacques, a peasant's name"
 duration:
   max_seconds: 270
 requires:

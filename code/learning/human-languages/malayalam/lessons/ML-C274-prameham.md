@@ -14,7 +14,8 @@ romanization: "pramēhaṁ"
 concept_tag: ML-AROGYAM274-PRAMEHAM
 prerequisites: [ML-C274-otivu, ML-C274-pollal]
 sounds: []
-roots: []
+roots: [sanskrit-prameha]
+etymology_hook: "pramēhaṁ ← Sanskrit pramēha 'urinary disease', a tatsama (CDIAL 8731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C274-pollal]
 <!-- hl-knowledge: introduces=[ML-LEX-C274-AROGYAM274-05]; assesses=[] -->
 
 **പ്രമേഹം** — *pramēhaṁ* — "diabetes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രമേഹം** (*pramēhaṁ*) ← Sanskrit *pramēha*, "urinary disease", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 8731).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

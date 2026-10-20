@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:2b966299031f8a59",
+  "lessonIds": [
+    "FR-C414-couchette",
+    "FR-C414-terminus",
+    "FR-C414-consigne",
+    "FR-C414-chariot",
+    "FR-C414-navette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch414.txt",
+  "json": "french/narration/ch414.json",
+  "textHash": "fnv1a64:ca3c9fc60ff02ce3",
+  "jsonHash": "fnv1a64:8a15490e8b05a82d",
+  "findings": []
+}

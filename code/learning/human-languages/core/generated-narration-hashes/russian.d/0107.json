@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 107,
-  "sourceHash": "fnv1a64:e89afa10e1f32867",
+  "sourceHash": "fnv1a64:3a941f5c3b7e57c8",
   "lessonIds": [
     "RU-C107-jam",
     "RU-C107-nut",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch107.txt",
   "json": "russian/narration/ch107.json",
-  "textHash": "fnv1a64:d36b93759445337d",
-  "jsonHash": "fnv1a64:a1e5f7079404ab82",
+  "textHash": "fnv1a64:6012d40624a5d682",
+  "jsonHash": "fnv1a64:d47a6104bd317bca",
   "findings": []
 }

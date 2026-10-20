@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 21,
-  "sourceHash": "fnv1a64:232e2743e883a7d0",
+  "sourceHash": "fnv1a64:e1138e0d559a346d",
   "lessonIds": [
     "HI-S130-letter-chha",
     "HI-C21-numbers-6-10",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch21.txt",
   "json": "hindi/narration/ch21.json",
-  "textHash": "fnv1a64:10d7555e0bd2cccd",
-  "jsonHash": "fnv1a64:d7fd98c1e73f858b",
+  "textHash": "fnv1a64:48c6cde396f5af4c",
+  "jsonHash": "fnv1a64:98d0dc5bf04d53c2",
   "findings": []
 }

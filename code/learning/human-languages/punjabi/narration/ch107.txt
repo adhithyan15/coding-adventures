@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for such, then the Punjabi for every.
 You'll want to know: ਕੁਝ.
 ਕੁਝ — kujh — "something, some".
 
+The word, taken apart.
+ਕੁਝ (kujh) is inherited from Sanskrit kiṁcid, "anything". CDIAL gives no Punjabi form, but lists Lahnda kujh, "some", whose consonant it explains from kaścid, "someone" (CDIAL 3144).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for every, then the Punjabi for something.
 
 You'll want to know: ਆਪ.
 ਆਪ — āp — "oneself".
+
+The word, taken apart.
+ਆਪ (āp) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ātman, "breath, soul; self" (CDIAL 1135).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for something, then the Punjabi for oneself.
 You'll want to know: ਆਪਣਾ.
 ਆਪਣਾ — āpṇā — "one's own".
 
+The word, taken apart.
+ਆਪਣਾ (āpṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ātmanaka, "own", a form CDIAL reconstructs from its descendants (CDIAL 1135). CDIAL builds it on Sanskrit ātman, "self".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for oneself, then the Punjabi for one's own.
 You'll want to know: ਦੋਵੇਂ.
 ਦੋਵੇਂ — dovẽ — "both".
 
+The word, taken apart.
+ਦੋਵੇਂ (dovẽ) is built on do, "two", from Sanskrit dva (CDIAL 6648). CDIAL has no entry for dovẽ itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for one's own, then the Punjabi for both.
 
 You'll want to know: ਕਈ.
 ਕਈ — kaī — "several".
+
+The word, taken apart.
+ਕਈ (kaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from katipaya, "several" (CDIAL 2696).
 
 What you've built.
 One more word for this chapter.

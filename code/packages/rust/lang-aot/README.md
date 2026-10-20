@@ -10,11 +10,27 @@ statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between selector-safe runtime-real expressions rooted in
-direct formatter-safe real procedure results that do not depend on pre-call
-local provenance. A real name-formal result is also allowed when its actual has
-the same proof. Unary signs, arithmetic composition with finite static operands,
-and real-valued standard functions preserve it, while a finite static real
-actual is safe directly. Variable-free exact `sign` and exact-range `entier`
+direct formatter-safe real procedure results or unaliased local runtime-real
+snapshots through unary signs, additive, multiplicative, or power composition
+with finite static operands and pure supported standard-function
+transforms, plus the exact bounded `entier(sign(...))` transform. Unrestricted
+runtime `entier`, globals, captured locals, and other real-name branches remain
+conservative. A specialised real name formal may carry that exact transform
+through power composition and up to six supported built-in numeric transforms,
+including integer-valued `sign`. It may also carry the same unaliased
+local-rooted proof through a selector, including unary signs around the exact
+bounded transform, additive composition with finite static terms, and
+multiplication or division of that additive form by finite static terms. A
+single additional built-in `entier` may wrap a supported bounded transform
+rooted in `sign(...)`, including the exact `entier(sign(...))` root. A real
+name-formal result is also allowed when its actual has the same proof.
+Whole-number additive offsets may remain inside that bounded transform while
+their checked total stays within `2^53 - 1` units, so every path value remains
+an exact binary64 integer; the budget is tracked through parentheses and
+supported wrappers and applied per conditional path. Unary
+signs, arithmetic composition with finite static operands, and real-valued
+standard functions preserve it, while a finite static real actual is safe
+directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual
 provenance remains conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
@@ -74,6 +90,30 @@ Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
 nested exponentials and user-declared overrides remain conservative.
+Built-in `sqrt` may also map a runtime conditional when every branch retains a
+proven nonnegative bounded runtime-real sign root; unrestricted,
+non-runtime-real, nested-exponential, and overridden branches remain gated.
+Built-in `ln` may map a runtime conditional when every branch is one built-in
+exponential over a proven bounded runtime-real sign root; missing, nested,
+non-runtime-real, and overridden exponential branches remain gated.
+Built-in `ln` may also map a runtime conditional when every branch is exactly
+two built-in exponentials over a proven bounded runtime-real sign root; missing,
+deeper, non-runtime-real, and overridden branches remain gated.
+The same exact two-exponential proof now applies to a direct sign-rooted
+operand; unrestricted roots and overrides remain gated.
+The direct proof extends to exactly three exponentials, whose complete
+sign-rooted tower remains finite. Exactly four exponentials are also accepted
+over a proven nonpositive unit sign root, whose narrower tower remains finite;
+a positive-capable fourth layer or a fifth nonpositive layer would overflow
+binary64 before `ln` and therefore remains gated.
+The same bounded proof extends to exactly three built-in exponentials per
+branch. It also extends to exactly four built-in exponentials per branch when
+every root is proven nonpositive; positive-capable, missing, deeper,
+non-runtime-real, and overridden branches remain gated.
+Across every bounded conditional family above, branch roots may be unaliased
+local real snapshots carrying runtime-real provenance across assignment;
+globals, captured locals, and by-name aliases remain gated across a selector
+call.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
@@ -610,6 +650,45 @@ host — via the same `x86_64-backend` and `elf_object` / `pe_object` /
 
 No backend changes needed — every frontend gets x86-64 Linux, x86-64
 Windows, and ARM64 macOS for free.
+
+## Standard operations and compile-time refusal (LANG83)
+
+A frontend that needs a new operation (floor division, output without a
+newline, a defined trap, …) does not add a helper function or a runtime
+library. It uses an operation from the LANG83 standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`), and each backend lowers that
+operation itself. `lang_aot::Backend` names the nine columns (`X86_64`, `Aarch64`,
+`Llvm`, `Wasm`, `Jvm`, `Clr`, `Beam`, `Vm`, `Jit`). Each column maps to its
+crate's `op_support` declaration.
+`check_module_for(backend, &module)` runs first in every code-generation entry
+point. A refused operation is therefore a typed
+`LangAotError::UnsupportedOps` that names the function, the operation and the
+backend's reason. It is never a miscompile:
+
+```rust
+use lang_aot::{check_module_for, Backend};
+
+// `module` is any IIRModule. Err(UnsupportedOps) lists each refused (function, op).
+check_module_for(Backend::Wasm, &module)?;
+```
+
+The IIR-level entry points `compile_iir_to_{llvm,wasm,jvm_class,cil_artifact,
+cil_text,beam}` and `compile_iir_to_host_executable` compile an already-built
+module. Each `compile_source_to_*` is the frontend followed by one of them.
+`tests/op_conformance.rs` builds an IIR case for every registry operation. Each
+`Lowered` case compiles on every code-generation backend and runs on WASM, VM,
+JIT, LLVM, native and (with a JDK) the JVM. Each `Refused` case is rejected at
+compile time. Output is one ordered stream on every column: `print_i64`,
+`write_i64`, `putchar` and `print_str` interleave in program order.
+
+Since LANG83 PR1b every backend lowers `write_i64` (no newline),
+`i64_div_floor` / `i64_mod_floor` (floor semantics; a zero divisor traps
+`Trap.DivZero`, `MIN / -1` traps `Trap.Overflow`, `MIN mod -1` is 0) and
+`trap "<kind>"`. A trap flushes the output written so far before reporting its
+kind; the conformance suite proves that ("print, then trap") on WASM, VM, JIT,
+LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
+value model on the JVM (they are never narrowed to `i32`). See
+`code/specs/LANG83-iir-standard-operation-registry.md`.
 
 ## Limitations
 

@@ -14,7 +14,8 @@ romanization: "frúkty"
 concept_tag: RU-FRUIT-FRUIT
 prerequisites: [RU-C43-butter, RU-C43-salt]
 sounds: []
-roots: []
+roots: [fructus-latin]
+etymology_hook: "фрукты ← Polish frukt, from Latin fructus 'fruit, enjoyment', first recorded under Peter the Great"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C43-salt]
 <!-- hl-knowledge: introduces=[RU-LEX-C44-FRUIT-01]; assesses=[] -->
 
 **фрукты** (*frúkty*) — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фрукты** came through Polish *frukt* from Latin *frūctus*, "fruit, enjoyment"; it is recorded from 1705, in Peter the Great's time (Vasmer). English *fruit* comes from the same Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-529-ROUPA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-529-ROUPA"
+  ],
+  "after": []
+}

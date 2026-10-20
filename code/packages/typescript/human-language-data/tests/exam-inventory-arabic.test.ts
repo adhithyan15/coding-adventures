@@ -15,7 +15,7 @@
 // corpus as every block in the shared file.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../src/loader.js";
+import { loadExamInventory, loadLessons } from "../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -23,6 +23,10 @@ import {
   isExamInventoryComplete,
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
+
+// These assertions read one committed snapshot; a per-case full-corpus reload
+// adds unrelated shard I/O to the timeout budget without testing anything new.
+const lessons = loadLessons();
 
 describe("the committed Arabic A1 inventory", () => {
   const inventory = loadExamInventory("arabic", "A1");
@@ -36,7 +40,6 @@ describe("the committed Arabic A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
     const taught = trackIntroducedAtoms(lessons, "arabic");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -138,7 +141,6 @@ describe("the committed Arabic A1 inventory", () => {
   });
 
   it("reports a joining column no longer at ZERO, and the worst script closure in the series", () => {
-    const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(238);
     // 106 -> 123: the present-tense-and-joining tranche (chapters 37-41).

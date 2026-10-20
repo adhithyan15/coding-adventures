@@ -18,7 +18,7 @@ yih ām hai. — "This is a mango."
 Say that now; you can already write every word in it except the first letter of آم (ām), and that letter arrives shortly.
 
 The word, taken apart.
-آم is inherited: Sanskrit āmra became Prakrit amba and then Urdu ām, the ordinary north Indian name for the fruit for as long as there has been a north Indian name for it.
+آم is inherited: Sanskrit āmra (CDIAL 1268) became Prakrit amba and then Urdu ām, the ordinary north Indian name for the fruit for as long as there has been a north Indian name for it.
 Now the part worth slowing down for. English calls the fruit mango, and a reader who has newly learned ām would reasonably guess the two words are relatives. They are not.
 mango came by sea. Portuguese traders on the Malabar coast met the fruit under its Dravidian name — Tamil and Malayalam māṅkāy, "mango fruit" — carried it home as manga, and English took it from Portuguese. So the fruit travelled to Europe wearing a southern Indian name while the northern name stayed where it was.
 Two unrelated words for one fruit inside one country, and the one that left is not the one you are learning. That is worth holding: a resemblance is evidence of nothing on its own, and here there is not even a resemblance — the relationship people assume is the one that does not exist.
@@ -96,7 +96,7 @@ yih kām purānā hai. — "This work is old." merī qamīz purānī hai. — "M
 Say each, and notice you are choosing the ending by the noun's gender without being told which to use — you have made that choice for two chapters of colours already.
 
 The word, taken apart.
-پرانا (purānā) is inherited: Sanskrit purāṇa, "ancient, belonging to former times," built on purā, "formerly." Behind that stands Proto-Indo-European per-, in the sense "forward, before."
+پرانا (purānā) is inherited: Sanskrit purāṇa, "ancient, belonging to former times" (CDIAL 8283), built on purā, "formerly." Behind that stands Proto-Indo-European per-, in the sense "forward, before."
 That root went everywhere. Greek pró, Latin pro and prior, and in English a whole quiet family: fore, former, first, before. Each of them is a way of saying "in front" that turned into a way of saying "earlier" — and پرانا (purānā) made the same turn, in the same direction, in a different branch.
 One more thing this word names. The Sanskrit texts called the Purāṇas are this very word, plural: literally "the old ones," a body of writing whose title is an adjective. When you say purānā you are using the everyday form of a word that also names a library.
 Beside آم (ām), this is the other kind of result. There, a link people expect turns out not to exist. Here, a link nobody expects — purānā and English first — turns out to hold, all the way down.
@@ -186,7 +186,7 @@ voh merī māṅ haiṅ. — "She is my mother."
 Urdu names the person you are talking about with the same word it uses for the thing you are pointing at. Notice the copula in that sentence: haiṅ, not hai, because a mother is spoken of with respect, exactly as you already do when you address someone as āp.
 
 The word, taken apart.
-یہ and وہ (voh) did not arrive separately. They come down together from the Old Indo-Aryan demonstratives Sanskrit wrote as iyam — the near one — and asau — the far one. Urdu inherited a pair, and it still runs the pair the way it inherited it: everything Urdu points at gets sorted into near or far first, and only then into what it actually is.
+یہ and وہ (voh) did not arrive separately. They come down together from Old Indo-Aryan demonstratives: CDIAL lists Hindi yah under Sanskrit eṣa, "this" — the near one (CDIAL 2530) — and vah under asau, "that" — the far one (CDIAL 972). Urdu inherited a pair, and it still runs the pair the way it inherited it: everything Urdu points at gets sorted into near or far first, and only then into what it actually is.
 English does the same sorting with this and that, and once did it with a third, yon, now almost gone. But English uses separate words for the people it talks about — he, she, they. Urdu keeps the far pointer doing both jobs, which is fewer words to learn and one more reason context does the work.
 
 Guided Practice.

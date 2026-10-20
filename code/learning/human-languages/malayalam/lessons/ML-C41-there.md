@@ -11,7 +11,8 @@ romanization: "aviṭe"
 concept_tag: ML-DEIXIS-THERE
 prerequisites: [ML-C41-here, ML-C38-hrudayam]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "aviṭe: native Dravidian, the far-pointing base + a tail meaning 'place' (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: [ML-C41-here]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **ഇവിടെ** *iviṭe*, which you will meet just now. The two of them
+Its partner is **ഇവിടെ** *iviṭe*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അവിടെ** (*aviṭe*) is native Dravidian: the far-pointing base of *atŭ* with a tail meaning "place". DEDR 1 gathers the far-pointing words, with Tamil *aṅkē*, "there".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-04, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02] -->

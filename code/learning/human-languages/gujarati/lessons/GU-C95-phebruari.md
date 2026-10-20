@@ -14,7 +14,8 @@ romanization: "phebruārī"
 concept_tag: GU-TIME95-PHEBRUARI
 prerequisites: [GU-C95-tarat, GU-C95-janyuari]
 sounds: []
-roots: []
+roots: [english-february]
+etymology_hook: "phebruārī ← English February"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C95-janyuari]
 <!-- hl-knowledge: introduces=[GU-LEX-C95-TIME95-04]; assesses=[] -->
 
 **ફેબ્રુઆરી** (*phebruārī*) — "February".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફેબ્રુઆરી** (*phebruārī*) is a loan from English *February*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

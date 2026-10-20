@@ -12,6 +12,9 @@ Before the new one: say the Marathi for impossible, then the Marathi for main.
 You'll want to know: प्रेमळ.
 प्रेमळ — premaḷ — "affectionate".
 
+The word, taken apart.
+प्रेमळ (premaḷ) is Sanskrit preman, "love", with the Marathi ending -aḷ, "full of".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for main, then the Marathi for affectionate.
 
 You'll want to know: दयाळू.
 दयाळू — dayāḷū — "kind, compassionate".
+
+The word, taken apart.
+दयाळू (dayāḷū) is Sanskrit dayālu, "compassionate", built on dayā, "pity", with Marathi ळ. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for affectionate, then the Marathi for kind.
 You'll want to know: क्रूर.
 क्रूर — krūr — "cruel".
 
+The word, taken apart.
+क्रूर (krūr) is Sanskrit krūra, "bloody, cruel", taken over whole as a learned loan, a tatsama (CDIAL 3602).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for kind, then the Marathi for cruel.
 You'll want to know: नम्र.
 नम्र — namra — "humble".
 
+The word, taken apart.
+नम्र (namra) is Sanskrit namra, "bent, submissive", taken over whole as a learned loan, a tatsama (CDIAL 6964). It is built on nam, "to bow".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for cruel, then the Marathi for humble.
 
 You'll want to know: गर्विष्ठ.
 गर्विष्ठ — garviṣṭha — "arrogant".
+
+The word, taken apart.
+गर्विष्ठ (garviṣṭha) is Sanskrit garviṣṭha, "most proud", a tatsama built on garva, "pride". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

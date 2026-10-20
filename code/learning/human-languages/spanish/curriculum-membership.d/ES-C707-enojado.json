@@ -1,0 +1,11 @@
+{
+  "id": "ES-C707-enojado",
+  "pathSegment": "ES-PATH-707-ENFADO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-707-ENFADO",
+      "order": 1
+    }
+  ]
+}

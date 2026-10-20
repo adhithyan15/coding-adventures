@@ -14,7 +14,8 @@ romanization: "āropayati"
 concept_tag: SA-VERB-AROPAYATI
 prerequisites: [SA-C234-prayacchati, SA-C235-pidadhati]
 sounds: []
-roots: []
+roots: [sanskrit-rohati]
+etymology_hook: "āropayati ← ā- + causative of √ruh 'rise, grow': 'makes rise', so 'raises, plants' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C235-pidadhati]
 <!-- hl-knowledge: introduces=[SA-LEX-C235-ACT235-02]; assesses=[] -->
 
 **आरोपयति** — *āropayati* — "plants, raises".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āropayati* comes from *ā-ruh*, "to climb, rise", as its causative, from the root √ruh, "to rise, grow" (MW), the root of *rohati*, "grows". To make a plant rise is to plant it, and to make a thing rise is to raise it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

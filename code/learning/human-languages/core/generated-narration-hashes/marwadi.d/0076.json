@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 76,
-  "sourceHash": "fnv1a64:83640d89558ff9fe",
+  "sourceHash": "fnv1a64:5feedb29923f6d0c",
   "lessonIds": [
     "MW-C76-patlo",
     "MW-C76-bhari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch76.txt",
   "json": "marwadi/narration/ch76.json",
-  "textHash": "fnv1a64:9b8d79c8ad08cad7",
-  "jsonHash": "fnv1a64:71e7dfb254b14296",
+  "textHash": "fnv1a64:03dce10ca701d2ac",
+  "jsonHash": "fnv1a64:1da12338a069e571",
   "findings": []
 }

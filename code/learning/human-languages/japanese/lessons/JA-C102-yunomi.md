@@ -14,7 +14,8 @@ romanization: "yunomi"
 concept_tag: JA-THINGS102-YUNOMI
 prerequisites: [JA-C102-sentakumono, JA-C102-senzai]
 sounds: []
-roots: []
+roots: [japanese-yu, japanese-nomu]
+etymology_hook: "yunomi: native yu 'hot water' + nomi 'drinking' (nomu)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C102-senzai]
 <!-- hl-knowledge: introduces=[JA-LEX-C102-THINGS102-03]; assesses=[] -->
 
 **ゆのみ** — *yunomi* — "a teacup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆのみ** (*yunomi*) is a native compound, inherited rather than borrowed: *yu*, "hot water", and *nomi*, "drinking", from *nomu*, "to drink" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

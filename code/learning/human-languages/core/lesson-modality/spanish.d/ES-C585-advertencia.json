@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C585-advertencia",
+    "language": "spanish",
+    "chapter": 585,
+    "sequence": 19000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5129f2bb2120bcbf"
+  },
+  "findings": []
+}

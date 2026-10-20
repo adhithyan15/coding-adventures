@@ -14,7 +14,8 @@ romanization: "bimān"
 concept_tag: BN-JINIS198-BIMAN
 prerequisites: [BN-C197-daba, BN-C197-tas]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "bimān ← Sanskrit vimāna 'car of the gods', a tatsama (CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C197-tas]
 <!-- hl-knowledge: introduces=[BN-LEX-C198-JINIS198-01]; assesses=[] -->
 
 **বিমান** — *bimān* — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিমান** (*bimān*) is Sanskrit *vimāna*, "car of the gods", taken over whole as a learned loan, a tatsama (CDIAL 11823). In Bengali it has come to mean "aeroplane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

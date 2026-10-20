@@ -14,7 +14,8 @@ romanization: "cikanā"
 concept_tag: HI-QUAL214-CIKANA
 prerequisites: [HI-C213-mitha, HI-C213-narm]
 sounds: []
-roots: []
+roots: [sanskrit-cikkana]
+etymology_hook: "cikanā ← Sanskrit cikkaṇa 'slippery, unctuous', a tadbhava (CDIAL 4782)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C213-narm]
 <!-- hl-knowledge: introduces=[HI-LEX-C214-QUAL214-01]; assesses=[] -->
 
 **चिकना** — *cikanā* — "smooth, greasy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिकना** (*cikanā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cikkaṇa*, "slippery, unctuous" (CDIAL 4782).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

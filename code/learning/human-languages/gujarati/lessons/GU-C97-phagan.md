@@ -14,7 +14,8 @@ romanization: "phāgaṇ"
 concept_tag: GU-TIME97-PHAGAN
 prerequisites: [GU-C97-kartak, GU-C97-magsar, GU-C44-pehli-vanchan]
 sounds: []
-roots: []
+roots: [sanskrit-phalguna]
+etymology_hook: "phāgaṇ ← Sanskrit phālguna 'the month February-March', a tadbhava (CDIAL 9075)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [GU-C97-magsar]
 <!-- hl-knowledge: introduces=[GU-LEX-C97-TIME97-04]; assesses=[] -->
 
 **ફાગણ** (*phāgaṇ*) — "Phagan, the month of Holi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફાગણ** (*phāgaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phālguna*, "the month February-March" (CDIAL 9075).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:5ba9f6749b67ab0d",
+  "lessonIds": [
+    "IT-C389-burocrazia",
+    "IT-C389-pratica",
+    "IT-C389-procedura",
+    "IT-C389-richiesta",
+    "IT-C389-certificato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch389.txt",
+  "json": "italian/narration/ch389.json",
+  "textHash": "fnv1a64:efdbd09e49a02bc8",
+  "jsonHash": "fnv1a64:3d11fcdee9fdd844",
+  "findings": []
+}

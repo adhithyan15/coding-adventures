@@ -14,7 +14,8 @@ romanization: "paṟakkuka"
 concept_tag: ML-VERB-PARAKKUKA
 prerequisites: [ML-C185-ariyikkuka, ML-C185-carju-ceyyuka]
 sounds: []
-roots: []
+roots: [dravidian-para-fly]
+etymology_hook: "paṟakkuka: native Dravidian, one word with Tamil paṟa and Telugu paṟacu (DEDR 4020)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C185-carju-ceyyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C185-KRIYA185-04]; assesses=[] -->
 
 **പറക്കുക** — *paṟakkuka* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പറക്കുക** (*paṟakkuka*) is native Dravidian, one word with Tamil *paṟa* and Telugu *paṟacu* (DEDR 4020).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

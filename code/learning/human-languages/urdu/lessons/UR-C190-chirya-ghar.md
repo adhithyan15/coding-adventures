@@ -14,7 +14,8 @@ romanization: "chiṛyā ghar"
 concept_tag: UR-JAGAH190-CHIRYA-GHAR
 prerequisites: [UR-C189-der-se, UR-C190-vadi]
 sounds: []
-roots: []
+roots: [sanskrit-cataka, grha-sanskrit]
+etymology_hook: "chiṛyā 'bird' ← caṭaka (CDIAL 4571) + ghar 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C190-vadi]
 <!-- hl-knowledge: introduces=[UR-LEX-C190-JAGAH190-02]; assesses=[] -->
 
 **چڑیا گھر** — *chiṛyā ghar* — "a zoo".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چڑیا گھر** (*chiṛyā ghar*) is "bird house". *chiṛyā*, "bird", comes from Sanskrit *caṭaka*, "sparrow", through a variant *\*ciṭaka* (CDIAL 4571). *ghar*, "house", is inherited; it is usually taken as a popular form of Sanskrit *gṛha*, a link CDIAL calls phonetically difficult (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

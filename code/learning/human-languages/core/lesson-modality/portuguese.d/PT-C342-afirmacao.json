@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C342-afirmacao",
+    "language": "portuguese",
+    "chapter": 342,
+    "sequence": 19560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbff8a3b5d7f7415"
+  },
+  "findings": []
+}

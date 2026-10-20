@@ -14,7 +14,8 @@ romanization: "jarūrī"
 concept_tag: GU-QUAL137-JARURI
 prerequisites: [GU-C137-majbut, GU-C137-nabalu]
 sounds: []
-roots: []
+roots: [arabic-daruri]
+etymology_hook: "jarūrī ← Arabic ḍarūrī 'necessary', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C137-nabalu]
 <!-- hl-knowledge: introduces=[GU-LEX-C137-QUAL137-05]; assesses=[] -->
 
 **જરૂરી** (*jarūrī*) — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જરૂરી** (*jarūrī*) is a loan from Arabic *ḍarūrī*, "necessary", which reached Gujarati through Persian. Its Arabic root is *ḍ-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

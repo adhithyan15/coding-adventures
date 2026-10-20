@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 84,
-  "sourceHash": "fnv1a64:ebe94d0ae591d458",
+  "sourceHash": "fnv1a64:45348ba7c9444f4b",
   "lessonIds": [
     "JA-C84-donna",
     "JA-C84-hoka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch84.txt",
   "json": "japanese/narration/ch84.json",
-  "textHash": "fnv1a64:5dcb7428efb8da25",
-  "jsonHash": "fnv1a64:254696ee3c8d9c54",
+  "textHash": "fnv1a64:928b4392ad1af4e5",
+  "jsonHash": "fnv1a64:3ed9ec3b5cece379",
   "findings": []
 }

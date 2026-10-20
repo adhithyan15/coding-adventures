@@ -14,7 +14,8 @@ romanization: "ārabeṭṭu"
 concept_tag: TE-VERB-ARABETTU
 prerequisites: [TE-C199-dancu, TE-C199-nimpu]
 sounds: []
-roots: []
+roots: [dravidian-aru-cool, dravidian-pettu-put]
+etymology_hook: "ārabeṭṭu: native āru 'to dry' (DEDR 404) + peṭṭu 'to put' (DEDR 4390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C199-nimpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C199-KRIYA199-03]; assesses=[] -->
 
 **ఆరబెట్టు** — *ārabeṭṭu* — "to put out to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆరబెట్టు** (*ārabeṭṭu*) is native Dravidian: *āru*, "to dry, cool", one word with Tamil *āṟu*, "to cool" (DEDR 404), and *peṭṭu*, "to put" (DEDR 4390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

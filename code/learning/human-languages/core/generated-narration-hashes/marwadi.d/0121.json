@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 121,
-  "sourceHash": "fnv1a64:a05ff8dfb4231a01",
+  "sourceHash": "fnv1a64:22b84f80b25a16aa",
   "lessonIds": [
     "MW-C121-chaklo",
     "MW-C121-parat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch121.txt",
   "json": "marwadi/narration/ch121.json",
-  "textHash": "fnv1a64:4c87a309939f4bb5",
-  "jsonHash": "fnv1a64:6b2b37138285a9e9",
+  "textHash": "fnv1a64:6bbe501fc3e225f3",
+  "jsonHash": "fnv1a64:84f92e43229ea694",
   "findings": []
 }

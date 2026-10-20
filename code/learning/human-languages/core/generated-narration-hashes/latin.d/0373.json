@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:a538460119dd3cbc",
+  "lessonIds": [
+    "LA-C373-effectus",
+    "LA-C373-consequor",
+    "LA-C373-provenio",
+    "LA-C373-succedo",
+    "LA-C373-redundo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch373.txt",
+  "json": "latin/narration/ch373.json",
+  "textHash": "fnv1a64:d1c59c034fe23fca",
+  "jsonHash": "fnv1a64:966ad03f49b4ca47",
+  "findings": []
+}

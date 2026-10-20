@@ -7,7 +7,7 @@ chapter: 1
 type: word
 headword: نه
 romanization: na
-gloss: no
+gloss: 'no'
 concept_tag: RESPONSE-NO
 prerequisites: [FA-C01-bale]
 sounds: [rtl, short-vowels-unwritten]

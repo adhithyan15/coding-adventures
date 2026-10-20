@@ -14,7 +14,8 @@ romanization: "vikrayaḥ"
 concept_tag: SA-THG193-VIKRAYAH
 prerequisites: [SA-C192-vasanam, SA-C193-krayah]
 sounds: []
-roots: []
+roots: [sanskrit-vikraya, sanskrit-krinati]
+etymology_hook: "vikraya 'sale' ← vi- + √krī 'buy': buying turned the other way (MW); CDIAL 11638 lists Hindi bikrī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C193-krayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C193-THG193-02]; assesses=[] -->
 
 **विक्रयः** — *vikrayaḥ* — "a sale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vikraya* is built on *vi-* and the root √krī, "to buy" (MW): *vi-* turns buying into selling. CDIAL 11638 lists Hindi *bikrī*, "sale", under it, possibly by way of a learned form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

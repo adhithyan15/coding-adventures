@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Two Answers, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7bdd685736e64dfc",
+  "sourceHash": "fnv1a64:eaee4ce4470da4cd",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -649,7 +649,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:02e5572b856c1fa3",
+      "sourceHash": "fnv1a64:b4261a452ca9c41d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -803,7 +803,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e54c1e41459e49cd",
+      "sourceHash": "fnv1a64:915eb0df0c1f4191",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -859,7 +859,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "いいえ (iie) is the plain no — and, just as often, a modest \"not at all\" used to wave away thanks or a compliment. That second use is the common one in daily speech, which is worth knowing before you meet it as an answer to thank you at the end of this chapter."
+              "text": "いいえ (iie) is the plain no — and, as often, a modest \"not at all\" used to wave away thanks or a compliment. That second use is the common one in daily speech, which is worth knowing before you meet it as an answer to thank you at the end of this chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a native Japanese word, inherited rather than borrowed: JMdict lists it in one entry with iya, ie and ina, other ways of saying no, under a kanji meaning \"no\". How those forms are related is not settled."
             }
           ]
         },

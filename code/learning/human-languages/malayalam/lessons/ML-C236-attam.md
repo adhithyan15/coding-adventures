@@ -14,7 +14,8 @@ romanization: "attaṁ"
 concept_tag: ML-SAMAYAM236-ATTAM
 prerequisites: [ML-C235-vrkka, ML-C236-kuttikkalam]
 sounds: []
-roots: []
+roots: [hasta-sanskrit]
+etymology_hook: "attaṁ: a tadbhava of Sanskrit hasta 'hand' (CDIAL 14024), the name of a lunar asterism"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C236-kuttikkalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C236-SAMAYAM236-02]; assesses=[] -->
 
 **അത്തം** — *attaṁ* — "Atham, the day the Onam season begins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അത്തം** (*attaṁ*) is a tadbhava of Sanskrit *hasta*, "hand" (CDIAL 14024), the name of the lunar asterism on whose day the Onam season begins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

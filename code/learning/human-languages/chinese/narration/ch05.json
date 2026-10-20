@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes, No, and a Tone That Moves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9e656cd64e79fece",
+  "sourceHash": "fnv1a64:bc4a5cd23bf6f623",
   "lessons": [
     {
       "id": "ZH-W05-shi",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf5155780f45c34e",
+      "sourceHash": "fnv1a64:3429bbfad49a13c0",
       "notice": null,
       "blocks": [
         {
@@ -260,6 +260,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "是 shì is inherited from Middle Chinese dzyeX (Guangyun, in Baxter's transcription). In the oldest texts it meant \"this\"; its use as \"to be\" came later, and Unihan still lists both senses."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -293,7 +304,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -343,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4c90d8496c3c06f",
+      "sourceHash": "fnv1a64:a8f424a9981f8973",
       "notice": null,
       "blocks": [
         {
@@ -379,6 +390,10 @@
             {
               "kind": "speech",
               "text": "But say the two words you just warmed up with, one after the other, and something is wrong. bù falls. shì falls. Two sharp drops in a row, back to back, and your mouth does not want to make them."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited from Middle Chinese: pjut, \"not\", and dzyeX, \"this, to be\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

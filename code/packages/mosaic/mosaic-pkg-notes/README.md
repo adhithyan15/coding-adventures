@@ -42,13 +42,13 @@ engine ops (`upsertNote`/`deleteNote`).
 
 ## A deliberate legacy-primitive use
 
-UI29's kernel `HostInput` is single-line only — multiline support lives
-only on the legacy `Input` (UI25) primitive, and was never carried
-forward into a userland `MultilineInput` component (which doesn't exist
-yet). The note body genuinely needs multiple lines, so
-`notes-body-input` uses `Input ( multiline: true )` — the one such use in
-this package, disclosed rather than hidden. See the spec's "A real kernel
-gap found while designing this" section.
+The note body genuinely needs multiple lines, so `notes-body-input` uses
+the legacy `Input ( multiline: true )` (UI25) — the one such use in this
+package, disclosed rather than hidden. When this package was written, UI29's
+kernel `HostInput` was single-line only (the spec's "A real kernel gap found
+while designing this" section). It has since gained `multiline: true` on
+every backend, lowered exactly as `Input` lowers it (#15930), so the body can
+move to `HostInput` when the legacy `Input` retires (U29-X1).
 
 ## Usage
 

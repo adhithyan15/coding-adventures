@@ -1,0 +1,11 @@
+{
+  "id": "PT-C398-copiar",
+  "pathSegment": "PT-PATH-398-FICHEIRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-398-FICHEIRO",
+      "order": 1
+    }
+  ]
+}

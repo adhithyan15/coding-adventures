@@ -14,7 +14,8 @@ romanization: "emruz"
 concept_tag: FA-TIME65-EMRUZ
 prerequisites: [FA-C64-sal, FA-C65-daghighe]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "emruz: Persian em- 'this' + ruz 'day' (Middle Persian rōz, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C65-daghighe]
 <!-- hl-knowledge: introduces=[FA-LEX-C65-TIME65-02]; assesses=[] -->
 
 **امروز** — *emruz* — "today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*emruz* is *em-*, "this", with *ruz*, "day": "this day". Both are native Persian; *ruz* continues Middle Persian *rōz* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

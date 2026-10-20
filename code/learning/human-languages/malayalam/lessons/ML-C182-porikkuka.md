@@ -14,7 +14,8 @@ romanization: "porikkuka"
 concept_tag: ML-VERB-PORIKKUKA
 prerequisites: [ML-C181-talluka, ML-C182-ilakkuka]
 sounds: []
-roots: []
+roots: [dravidian-pori-fry]
+etymology_hook: "porikkuka: native Dravidian, one word with Tamil pori (DEDR 4537)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C182-ilakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C182-KRIYA182-02]; assesses=[] -->
 
 **പൊരിക്കുക** — *porikkuka* — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊരിക്കുക** (*porikkuka*) is native Dravidian, one word with Tamil *pori* (DEDR 4537).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

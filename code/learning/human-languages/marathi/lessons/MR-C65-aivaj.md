@@ -14,7 +14,8 @@ gloss: "valuables"
 concept_tag: MR-ANCHOR-AIVAJ
 prerequisites: [MR-W65-o-independent]
 sounds: []
-roots: []
+roots: [arabic-iwad]
+etymology_hook: "aivaj: usually traced, through Persian, to Arabic ʿiwaḍ 'exchange, equivalent'"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *aivaj*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ऐ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऐवज** (*aivaj*) is a loan, usually traced through Persian to Arabic *ʿiwaḍ*, "exchange, equivalent". Its Arabic root is *ʿ-w-ḍ* (Lane). In Marathi it came to mean money and valuables.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AIVAJ] -->

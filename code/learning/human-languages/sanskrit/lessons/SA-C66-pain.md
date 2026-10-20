@@ -14,7 +14,8 @@ romanization: "pīḍā"
 concept_tag: SA-UNWELL-PAIN
 prerequisites: [SA-C66-fever, SA-C66-cough, SA-C64-words]
 sounds: []
-roots: []
+roots: [sanskrit-pida]
+etymology_hook: "pīḍā 'pain' ← the root √pīḍ 'press, squeeze' (MW); it lives on as Hindi pīṛ 'pain' (CDIAL 8227)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,12 @@ reviews_of: [SA-C66-cough]
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-03]; assesses=[] -->
 
 **पीडा** (*pīḍā*) — "pain". **शिरः** + **पीडा**: **शिरःपीडा**, "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pīḍā* is built on the root √pīḍ, "to press, squeeze" (MW), so pain is named as
+pressure. It lives on as Hindi *pīṛ*, "pain" (CDIAL 8227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bank account"
 concept_tag: IT-COSE253-CONTO-CORRENTE
 prerequisites: [IT-C252-bugia, IT-C252-segreto]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "conto corrente — 'a running account': conto 'reckoning' + corrente 'running' ← Latin currens"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C252-segreto]
 <!-- hl-knowledge: introduces=[IT-LEX-C253-COSE253-01]; assesses=[] -->
 
 **il conto corrente** — "a bank account".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conto corrente** is "a running account": *conto* ← Vulgar Latin *contus*, "a reckoning", and *corrente*, "running" ← Latin *currens*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

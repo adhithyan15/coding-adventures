@@ -14,7 +14,8 @@ romanization: "śakṇe"
 concept_tag: MR-VERB-SAKNE
 prerequisites: [MR-C120-desh, MR-C120-gosta, MR-C05-mi-marathi-bolto, MR-C05-mi-marathi-bolto]
 sounds: []
-roots: []
+roots: [sanskrit-shaknoti]
+etymology_hook: "śakṇe ← Sanskrit śaknoti 'is able', a tadbhava (CDIAL 12252)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [MR-C120-gosta]
 <!-- hl-knowledge: introduces=[MR-LEX-C121-CAN121-01]; assesses=[] -->
 
 **शकणे** — *śakṇe* — "to be able to, can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शकणे** (*śakṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śaknoti*, "is able" (CDIAL 12252). CDIAL lists the Marathi verb as *sakṇẽ*; **शकणे** keeps the Sanskrit *ś* in its spelling.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

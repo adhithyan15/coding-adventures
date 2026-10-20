@@ -13,7 +13,8 @@ gloss: "a fox"
 concept_tag: IT-ANIMALI2-VOLPE
 prerequisites: [IT-C69-lupo, IT-C69-orso]
 sounds: []
-roots: []
+roots: [vulpes-latin]
+etymology_hook: "volpe ← Latin vulpes 'fox' — English vulpine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C69-orso]
 <!-- hl-knowledge: introduces=[IT-LEX-C69-ANIMALI2-05]; assesses=[] -->
 
 **la volpe** — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volpe** ← Latin *vulpes*, "fox" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

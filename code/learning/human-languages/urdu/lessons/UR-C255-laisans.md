@@ -14,7 +14,8 @@ romanization: "lāisans"
 concept_tag: UR-CHIZ255-LAISANS
 prerequisites: [UR-C255-traifik, UR-C255-jurmana]
 sounds: []
-roots: []
+roots: [english-licence]
+etymology_hook: "lāisans ← English licence"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C255-jurmana]
 <!-- hl-knowledge: introduces=[UR-LEX-C255-CHIZ255-04]; assesses=[] -->
 
 **لائسنس** — *lāisans* — "a licence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لائسنس** (*lāisans*) is a loan from English *licence*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

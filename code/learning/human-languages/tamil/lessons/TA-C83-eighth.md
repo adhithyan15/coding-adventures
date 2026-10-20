@@ -11,7 +11,8 @@ gloss: "eighth — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-EIGHTH
 prerequisites: [TA-C83-seventh, TA-C82-third, TA-C78-therefore, TA-C67-veshti]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, tamil-aaku-become]
+etymology_hook: "எட்டாவது — native: eṭṭu 'eight' (DEDR 784) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 195
 requires:
@@ -47,6 +48,11 @@ and nothing else changes.
 
 **எட்டு** has the doubled retroflex **ṭṭ**. The ending lands after all of it, so
 the doubling is untouched: **எட்டாவது**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எட்டாவது** (*eṭṭāvadu*) is native: *eṭṭu*, "eight" (DEDR 784), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-03, TA-LEX-C83-ORDINAL-02, TA-LEX-C82-ORDINAL-06] -->

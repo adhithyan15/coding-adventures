@@ -13,7 +13,8 @@ gloss: "a blanket"
 concept_tag: PT-CASA94-COBERTOR
 prerequisites: [PT-C94-prateleira, PT-C94-cortina]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "cobertor ← Latin coopertorium 'covering', from cooperire — English cover"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C94-cortina]
 <!-- hl-knowledge: introduces=[PT-LEX-C94-CASA94-05]; assesses=[] -->
 
 **o cobertor** — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cobertor** ← Latin *coopertorium*, "covering" (EtymDB 2.1), from *cooperire*, "to cover" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

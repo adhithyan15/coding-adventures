@@ -11,8 +11,8 @@ gloss: "twenty — two tens, with both halves still audible"
 concept_tag: RU-NUMBER-TWENTY
 prerequisites: [RU-C24-practice]
 sounds: [stress-unmarked]
-roots: []
-etymology_hook: "dvadtsat is dva plus a worn-down form of desyat: two tens, with both halves still audible, which is why the teens and the tens are a smaller job in Russian than the words look."
+roots: [pie-dwoh, proto-indo-european-dekm]
+etymology_hook: "двадцать ← Proto-Slavic *dŭva desęti, 'two tens': два 'two' + a worn-down десять 'ten' (Vasmer)"
 duration:
   max_seconds: 275
 requires:
@@ -49,6 +49,11 @@ Take it apart and both pieces are words you have: **два** at the front, and
 That worn ending does the same job further up: **тридцать** is three tens,
 thirty. Russian's tens are not a new vocabulary; they are numbers you already
 know with **десять** ground down onto the end of them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**двадцать** ← Proto-Slavic *\*dŭva desęti*, "two tens", in the old form for a pair (Vasmer). *десять*, "ten", is a cousin of Latin *decem*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DVADTSAT-01, RU-GRAMMAR-TSAT-TENS-01, RU-LEX-DVA-01, RU-LEX-DESYAT-01] -->

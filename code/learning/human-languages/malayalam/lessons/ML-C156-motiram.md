@@ -14,7 +14,8 @@ romanization: "mōtiraṁ"
 concept_tag: ML-THINGS156-MOTIRAM
 prerequisites: [ML-C156-kammal, ML-C156-vala, ML-C34-ishtam]
 sounds: []
-roots: []
+roots: [sanskrit-mudra]
+etymology_hook: "mōtiraṁ: usually traced to Sanskrit mudrā 'seal, signet ring' (CDIAL 10203), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C156-vala]
 <!-- hl-knowledge: introduces=[ML-LEX-C156-THINGS156-04]; assesses=[] -->
 
 **മോതിരം** — *mōtiraṁ* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മോതിരം** (*mōtiraṁ*) is usually traced to Sanskrit *mudrā*, "seal, signet ring" (CDIAL 10203), reshaped in the mouth; CDIAL thinks the Sanskrit word came from Iranian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

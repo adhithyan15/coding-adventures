@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:1df759407c0813fd",
+  "lessonIds": [
+    "SA-C272-offer-condolence",
+    "SA-C272-condolence-first-retrieval",
+    "SA-C272-condolence-final-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch272-one-condolence-held-as-a-whole.tex"
+}

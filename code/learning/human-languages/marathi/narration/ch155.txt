@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to break off, then the Marathi for to br
 You'll want to know: जोडणे.
 जोडणे — joḍṇe — "to join".
 
+The word, taken apart.
+जोडणे (joḍṇe) comes from yōṭayati, "joins", a form CDIAL reconstructs under yuṭati, "is joined" (CDIAL 10496).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to break, then the Marathi for to join.
 
 You'll want to know: बांधणे.
 बांधणे — bāndhṇe — "to tie, to build".
+
+The word, taken apart.
+बांधणे (bāndhṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bandhati, "binds" (CDIAL 9139).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to join, then the Marathi for to tie.
 You'll want to know: शिवणे.
 शिवणे — śivṇe — "to sew".
 
+The word, taken apart.
+शिवणे (śivṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sīvyati, "sews" (CDIAL 13444). The same ancient root as English sew.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to tie, then the Marathi for to sew.
 You'll want to know: रंगवणे.
 रंगवणे — raṅgavṇe — "to paint".
 
+The word, taken apart.
+रंगवणे (raṅgavṇe) is the "make" form built on रंग, "colour", which may come from Sanskrit raṅga, "dye, colour" (CDIAL 10560), or from Persian rang, "colour"; the two may have merged.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to sew, then the Marathi for to paint.
 
 You'll want to know: काढणे.
 काढणे — kāḍhṇe — "to take out".
+
+The word, taken apart.
+काढणे (kāḍhṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from kaḍḍhati, "pulls, draws", a form CDIAL reconstructs from its descendants (CDIAL 2660).
 
 What you've built.
 One more word for this chapter.

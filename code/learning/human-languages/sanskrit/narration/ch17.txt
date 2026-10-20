@@ -45,6 +45,9 @@ You'll want to know: रात्रिः.
 Where दिनम् (dinam) is the bright, रात्रिः (rātriḥ) is its opposite, and the pair is one of the oldest ways any language divides the world. In the hymns it is a name as much as a noun: Rātrī is addressed directly, a presence rather than an absence of light.
 The ending here is -iḥ, which is neither of the two you have met. Sanskrit has more than two families, and this is your first sight of a third. You do not need it yet — only the honest note that the system is bigger than the part you have seen.
 
+The word, taken apart.
+Rātri is an old Rigvedic word whose origin is not settled: MW offers two guesses, the root √rā "give" ("the bestower") or √ram "rest". It lives on as Hindi rāt, "night" (CDIAL 10702).
+
 What you've built.
 Day and night, and a quiet warning: the -am / -aḥ division you learned is real but not the whole map.
 
@@ -117,8 +120,11 @@ Naming the day you are standing in.
 
 You'll want to know: अद्य.
 अद्य (adya) — "today."
-Take it apart and the older shape shows: a- ("this") plus the same dy- that sits inside दिनम् (dinam) and द्यौः. This day — said so often that the two halves fused and stopped being separable for ordinary speakers.
+Take it apart and the older shape shows: a- ("this") plus the same dy- that sits inside द्यौः. This day — said so often that the two halves fused and stopped being separable for ordinary speakers.
 This is how a great many everyday words are built, in Sanskrit and elsewhere. English today is to + day, and tomorrow is to + morrow: the same trick, a thousand years later, in a different family.
+
+The word, taken apart.
+Adya is built from the pronoun base a- "this" and dya, a form of dyu "sky, day"; MW compares Latin hodiē, "today". It lives on as Hindi āj (CDIAL 242).
 
 What you've built.
 A word you can now see through. When a short everyday word looks unanalysable, it is usually a fused phrase that got worn smooth.
@@ -223,6 +229,9 @@ You'll want to know: सदा.
 सदा (sadā) — "always, ever."
 It carries the sense of sa-, "together, whole, the same" — the element behind Sanskrit सम (sama), "same, equal," and behind English same itself. Always is the whole of time taken at once.
 Where the other four words in this chapter point at one particular time, सदा (sadā) refuses to. That is what makes it useful with the verbs you already have: सदा (sadā) पठति, "he reads always."
+
+The word, taken apart.
+Sadā is an old Rigvedic adverb (MW). MW connects it with the prefix sa- "with, together", but its exact formation is not settled.
 
 What you've built.
 Five time words: two nouns, three that simply attach to a verb and say when.

@@ -14,7 +14,8 @@ romanization: "tansu"
 concept_tag: JA-THINGS101-TANSU
 prerequisites: [JA-C100-zasshi, JA-C101-hata]
 sounds: []
-roots: []
+roots: [middle-chinese-tan-basket, middle-chinese-sih]
+etymology_hook: "tansu: Sino-Japanese 箪笥, two characters for a basket or hamper"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C101-hata]
 <!-- hl-knowledge: introduces=[JA-LEX-C101-THINGS101-02]; assesses=[] -->
 
 **たんす** — *tansu* — "a chest of drawers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たんす** (*tansu*) is Sino-Japanese: two characters for a basket or hamper, *tan* (Middle Chinese *tan*) and *su*, borrowed from Chinese; *su* is a later Chinese reading. JMdict marks it as usually written in kana (Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

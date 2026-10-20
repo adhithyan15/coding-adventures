@@ -14,7 +14,8 @@ romanization: "mūta"
 concept_tag: TE-VASTUVU183-MUTA
 prerequisites: [TE-C183-padakagadi, TE-C183-balci]
 sounds: []
-roots: []
+roots: [dravidian-muccu-shut]
+etymology_hook: "mūta: native Dravidian; DEDR 4915 lists mūta 'covering' under mūyu 'to cover'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C183-balci]
 <!-- hl-knowledge: introduces=[TE-LEX-C183-VASTUVU183-04]; assesses=[] -->
 
 **మూత** — *mūta* — "a lid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మూత** (*mūta*) is native Dravidian. DEDR 4915 lists a nasalised *mūta*, "covering", under *mūyu*, "to cover", with Tamil *mūy*, "to cover; a cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

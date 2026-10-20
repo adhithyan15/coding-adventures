@@ -14,7 +14,8 @@ romanization: "bail"
 concept_tag: MR-THINGS144-BAIL
 prerequisites: [MR-C144-kolha, MR-C144-gadhav]
 sounds: []
-roots: []
+roots: [indo-aryan-balilla]
+etymology_hook: "bail ← *balilla 'ox', a reconstructed form; a tadbhava (CDIAL 9175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C144-gadhav]
 <!-- hl-knowledge: introduces=[MR-LEX-C144-THINGS144-03]; assesses=[] -->
 
 **बैल** — *bail* — "an ox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैल** (*bail*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*balilla*, "ox", a form CDIAL reconstructs from its descendants (CDIAL 9175). CDIAL builds it on Sanskrit *balin*, "strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

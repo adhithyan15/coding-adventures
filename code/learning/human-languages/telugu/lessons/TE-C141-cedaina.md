@@ -14,7 +14,8 @@ romanization: "cēdaina"
 concept_tag: TE-QUAL141-CEDAINA
 prerequisites: [TE-C140-padaina, TE-C141-tiyani]
 sounds: []
-roots: []
+roots: [dravidian-kaya-bitter, tamil-aaku-become]
+etymology_hook: "cēdaina: native cēdu 'bitter' (DEDR 1249) + ayina 'which is' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C141-tiyani]
 <!-- hl-knowledge: introduces=[TE-LEX-C141-QUAL141-02]; assesses=[] -->
 
 **చేదైన** — *cēdaina* — "bitter-tasting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చేదైన** (*cēdaina*) is native Dravidian: *cēdu*, "bitter" (DEDR 1249), and *ayina*, "which is" (DEDR 333). DEDR compares Sanskrit *kaṣāya*, "astringent", with *cēdu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

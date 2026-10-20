@@ -14,7 +14,8 @@ romanization: "moṇḍi"
 concept_tag: TE-GUNAM297-MONDI
 prerequisites: [TE-C296-upayogakaramaina, TE-C296-sthanika]
 sounds: []
-roots: []
+roots: [dravidian-monda-blunt]
+etymology_hook: "moṇḍi: native Dravidian; DEDR 5114 lists moṇḍi 'maimed, blunt' with Kannada moṇḍa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C296-sthanika]
 <!-- hl-knowledge: introduces=[TE-LEX-C297-GUNAM297-01]; assesses=[] -->
 
 **మొండి** — *moṇḍi* — "stubborn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొండి** (*moṇḍi*) is native Dravidian. DEDR 5114 lists *moṇḍi*, "maimed, blunt, stubborn", with Kannada *moṇḍa*, "blunt, maimed". DEDR compares Sanskrit *muṇḍa*, "hornless, blunt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

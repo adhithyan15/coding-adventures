@@ -14,7 +14,8 @@ romanization: "urók"
 concept_tag: RU-WORDS-LESSON
 prerequisites: [RU-C53-money, RU-C53-gift]
 sounds: []
-roots: []
+roots: [slavic-reku]
+etymology_hook: "урок is у- + рок, the root of реку 'I say': first 'what is laid down, a set task'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C53-gift]
 <!-- hl-knowledge: introduces=[RU-LEX-C54-WORDS-01]; assesses=[] -->
 
 **урок** (*urók*) — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**урок** is *у-* with *рок*, from the root of old *реку*, "I say" (Vasmer). Old Russian *urokŭ* meant "an agreement, a rule, a set payment": a lesson is the set task.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

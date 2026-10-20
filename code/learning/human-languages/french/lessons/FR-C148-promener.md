@@ -14,6 +14,7 @@ concept_tag: FR-VERB-PROMENER
 prerequisites: [FR-C148-observer, FR-C148-participer]
 sounds: []
 roots: []
+etymology_hook: "se promener ← Old French pormener 'to lead around' — English promenade"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C148-participer]
 <!-- hl-knowledge: introduces=[FR-LEX-C148-VERBES148-03]; assesses=[] -->
 
 **se promener** — "to go for a walk".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se promener** ← Old French *pormener*, "to lead around", built on *mener*, "to lead", ← Latin *minare*, "to drive cattle" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

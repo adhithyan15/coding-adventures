@@ -14,7 +14,8 @@ romanization: "vicāra"
 concept_tag: KA-VASTU228-VICARA
 prerequisites: [KA-C228-havyasa, KA-C228-abhipraya]
 sounds: []
-roots: []
+roots: [sanskrit-vicara-deliberation]
+etymology_hook: "vicāra ← Sanskrit vicāra 'mode of action; pondering', a tatsama (CDIAL 11683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C228-abhipraya]
 <!-- hl-knowledge: introduces=[KA-LEX-C228-VASTU228-05]; assesses=[] -->
 
 **ವಿಚಾರ** — *vicāra* — "an idea, a matter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಚಾರ** (*vicāra*) is Sanskrit *vicāra*, "mode of action; pondering", taken over whole as a learned loan, a tatsama (CDIAL 11683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

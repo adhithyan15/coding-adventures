@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 224,
-  "sourceHash": "fnv1a64:9f1a6301b1035040",
+  "sourceHash": "fnv1a64:9e4c6b0ee431c8fb",
   "lessonIds": [
     "PT-C224-sotao",
     "PT-C224-garagem",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch224.txt",
   "json": "portuguese/narration/ch224.json",
-  "textHash": "fnv1a64:66ce3fe0dc532078",
-  "jsonHash": "fnv1a64:5ff851e3a9dc48a3",
+  "textHash": "fnv1a64:d438d54c7562ef9e",
+  "jsonHash": "fnv1a64:27e49f8e055798bd",
   "findings": []
 }

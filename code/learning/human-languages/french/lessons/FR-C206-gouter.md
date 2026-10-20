@@ -13,7 +13,8 @@ gloss: "to taste"
 concept_tag: FR-VERB-GOUTER
 prerequisites: [FR-C206-casser, FR-C206-toucher]
 sounds: []
-roots: []
+roots: [gustare-latin]
+etymology_hook: "goûter ← Latin gustare 'to taste' — English gusto and disgust"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C206-toucher]
 <!-- hl-knowledge: introduces=[FR-LEX-C206-VERBES206-03]; assesses=[] -->
 
 **goûter** — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**goûter** ← Old French *goster* ← Latin *gustare*, "to taste" (EtymDB 2.1) — inherited; the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

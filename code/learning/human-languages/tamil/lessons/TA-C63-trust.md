@@ -11,7 +11,8 @@ romanization: "nambikkai"
 concept_tag: TA-NOUN-TRUST
 prerequisites: [TA-C63-hesitancy, TA-C61-fever, TA-C62-at-once]
 sounds: []
-roots: []
+roots: [dravidian-nambu-trust]
+etymology_hook: "நம்பிக்கை — native Dravidian (DEDR 3600); Malayalam nampuka, Kannada nambu, Telugu nammu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C63-hesitancy]
 Trust, and the confidence that comes with it. All three are off the same old stem: Kannada ನಂಬಿಕೆ (*nambike*), Telugu నమ్మకం (*nammakaṁ*), Tamil நம்பிக்கை.
 
 A விருந்தாளி is given this before anything else is given, which is the whole of what a Tamil house means by hospitality.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நம்பிக்கை** (*nambikkai*) is native Dravidian. DEDR 3600 lists Malayalam *nampuka*, Kannada *nambu* and Telugu *nammu*. It is the noun of *nampu*, "to trust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

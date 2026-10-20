@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:2062eb99ddf981e7",
+  "lessonIds": [
+    "LA-C371-rostra",
+    "LA-C371-contio",
+    "LA-C371-pronuntio",
+    "LA-C371-recito",
+    "LA-C371-temere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch371.txt",
+  "json": "latin/narration/ch371.json",
+  "textHash": "fnv1a64:b855c9abb77d3ff2",
+  "jsonHash": "fnv1a64:b3e92a5a0f37d741",
+  "findings": []
+}

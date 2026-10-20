@@ -11,7 +11,8 @@ romanization: "kaṟi"
 concept_tag: ML-DISH-CURRY
 prerequisites: [ML-C132-appam, ML-C132-puttu]
 sounds: []
-roots: []
+roots: [dravidian-kari-curry]
+etymology_hook: "kaṟi: native Dravidian, one word with Tamil kaṟi and Kannada kaṟi (DEDR 1391)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C132-puttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C132-DISHES-05]; assesses=[] -->
 
 **കറി** (*kaṟi*) — "a curry", any dish that goes on rice. **മീൻ കറി** — "fish curry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കറി** (*kaṟi*) is native Dravidian, one word with Tamil *kaṟi* and Kannada *kaṟi* (DEDR 1391). English *curry* comes from this South Indian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Four Oldest Kinship Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5656f10562d4ecea",
+  "sourceHash": "fnv1a64:0dde4338cb167764",
   "lessons": [
     {
       "id": "SA-C23-father",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08c4d72f6a41dc90",
+      "sourceHash": "fnv1a64:984a158751760374",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec7f30f26b837984",
+      "sourceHash": "fnv1a64:f9478389573468f3",
       "notice": null,
       "blocks": [
         {
@@ -301,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b24eeb5de2b6b34b",
+      "sourceHash": "fnv1a64:cdea6348fffc5de4",
       "notice": null,
       "blocks": [
         {
@@ -332,12 +332,23 @@
             },
             {
               "kind": "speech",
-              "text": "From √सू (sū), 'to bring forth, to give birth' — so the word means the one who was brought forth. Its cousins are Gothic sunus, Old English sunu, English son, Lithuanian sunus, Russian syn. Sanskrit's other son-word, putraḥ, is far commoner in the texts and has no such relatives; this quieter one is the inherited word."
+              "text": "From √सू (sū), 'to bring forth, to give birth' — so the word means the one who was brought forth. Its cousins are Gothic sunus, Old English sunu, English son, Lithuanian sūnus, Russian syn. Sanskrit's other son-word, putraḥ, is far commoner in the texts, but its own origin is doubtful (MW); this quieter one is the word with the familiar cousins."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sūnu is built on the root √sū, \"to bring forth\" (MW), and it is inherited: MW compares Gothic sunus, Lithuanian sūnus and English son (CDIAL 13569)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -348,7 +359,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -406,7 +417,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -437,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d91b03bb116d0fbd",
+      "sourceHash": "fnv1a64:2fac0ba0a67e8c29",
       "notice": null,
       "blocks": [
         {
@@ -468,7 +479,7 @@
             },
             {
               "kind": "speech",
-              "text": "Back to the -ṛ family: the stem is दुहितृ (duhitṛ-), standing beside पिता (pitā) and माता (mātā). Its cousins are English daughter, Greek thugatēr, Gothic dauhtar, Persian duxtar. Indian tradition read it as 'the one who milks', from √दुह् (duh) — a tidy story about a daughter's work in the house, which comparative linguists do not accept, because the cousins are older than the pun. Keep the story, and keep the fact that it is one."
+              "text": "Back to the -ṛ family: the stem is दुहितृ (duhitṛ-), standing beside पिता (pitā) and माता (mātā). Its cousins are English daughter, Greek thugatēr, Gothic dauhtar, Persian duxtar. Indian tradition, and MW after it, read it as 'the one who milks', from √दुह् (duh) — a tidy story about a daughter's work in the house. The cousins show the word is far older than Sanskrit, so the story is a reading, not a settled etymology. Keep the story, and keep the fact that it is one."
             }
           ]
         },

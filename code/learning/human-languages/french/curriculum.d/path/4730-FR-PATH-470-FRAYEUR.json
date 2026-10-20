@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-470-FRAYEUR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-470-FRAYEUR"
+  ],
+  "after": []
+}

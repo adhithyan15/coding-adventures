@@ -14,6 +14,7 @@ concept_tag: GE-QUAL214-FURCHTBAR
 prerequisites: [GE-C213-feucht, GE-C214-froehlich]
 sounds: []
 roots: []
+etymology_hook: "furchtbar — the word for 'fear' + -bar: fearful; fear ← Middle High German vorht, kin to English fright"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C214-froehlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C214-QUAL214-02]; assesses=[] -->
 
 **furchtbar** — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**furchtbar** is the word for "fear", Middle High German *vorht* (EtymDB 2.1), + *-bar*: causing fear. English *fright* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

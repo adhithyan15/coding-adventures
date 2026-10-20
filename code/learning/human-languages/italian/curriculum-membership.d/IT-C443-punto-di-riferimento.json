@@ -1,0 +1,11 @@
+{
+  "id": "IT-C443-punto-di-riferimento",
+  "pathSegment": "IT-PATH-443-CARDINALI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-443-CARDINALI",
+      "order": 4
+    }
+  ]
+}

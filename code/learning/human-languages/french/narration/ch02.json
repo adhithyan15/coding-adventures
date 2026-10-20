@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:381bf919c4b5cc17",
+  "sourceHash": "fnv1a64:d2d28362907b96ab",
   "lessons": [
     {
       "id": "FR-C02-je",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3cf7a2c35e7c40a",
+      "sourceHash": "fnv1a64:9005a29636420a32",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before a vowel it elides: je ai becomes j'ai (\"I have\"). You'll meet the same squeeze in je m'appelle."
+              "text": "Before a vowel it elides: the e drops and an apostrophe takes its place, j'. You'll meet the same squeeze in je m'appelle."
             }
           ]
         },
@@ -96,11 +96,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the elision — \"je ai\" becomes \"j'ai\"",
+              "instruction": "\"je\", then the bare zh of j' — all that is left when the e drops",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the elision — \"je ai\" → \"j'ai\"]"
+              "source": "[YOU SAY: \"je\", then the bare *zh* of **j'** — all that is left when the *e* drops]"
             },
             {
               "kind": "prompt",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82cf3bce59f1e291",
+      "sourceHash": "fnv1a64:d009252146ed8a89",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "Only me does any work here: it is what gives your own name, je m'appelle. te turns up once, in the informal \"what's your name?\" (comment tu t'appelles?), and se waits for a lesson that needs it. The set is named so its shape is familiar, not laid out as a grid to memorize — you meet each one where it earns its place."
+              "text": "Only me does any work here: it is what gives your own name, je m'appelle. te turns up once, in the informal \"what's your name?\" at the end of this chapter, and se waits for a lesson that needs it. The set is named so its shape is familiar, not laid out as a grid to memorize — you meet each one where it earns its place."
             }
           ]
         },
@@ -863,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1aa5f6c2dfae69e7",
+      "sourceHash": "fnv1a64:0b24c3f4e5bfb5b3",
       "notice": null,
       "blocks": [
         {
@@ -895,6 +895,10 @@
             {
               "kind": "speech",
               "text": "comment vous appelez-vous? = literally \"how do you call yourself?\" = the polite \"what's your name?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Comment from Latin quōmodo, \"in what manner\", vous from Latin vōs, and appeler from Latin appellāre, \"to call\" (EtymDB 2.1)."
             }
           ]
         },

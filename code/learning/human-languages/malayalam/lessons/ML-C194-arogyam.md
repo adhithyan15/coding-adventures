@@ -14,7 +14,8 @@ romanization: "ārōgyaṁ"
 concept_tag: ML-AROGYAM194-AROGYAM
 prerequisites: [ML-C194-opparesan, ML-C194-kelvi]
 sounds: []
-roots: []
+roots: [sanskrit-arogya]
+etymology_hook: "ārōgyaṁ ← Sanskrit ārōgya 'health', a tatsama (CDIAL 1330)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C194-kelvi]
 <!-- hl-knowledge: introduces=[ML-LEX-C194-AROGYAM194-04]; assesses=[] -->
 
 **ആരോഗ്യം** — *ārōgyaṁ* — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആരോഗ്യം** (*ārōgyaṁ*) ← Sanskrit *ārōgya*, "health", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1330). Its parts are *a-*, "without", and *rōga*, "disease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

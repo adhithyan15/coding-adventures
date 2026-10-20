@@ -14,7 +14,8 @@ romanization: "bâzi"
 concept_tag: FA-SCHOOL50-BAZI
 prerequisites: [FA-C50-javab, FA-C50-kalame]
 sounds: []
-roots: []
+roots: [persian-bazi]
+etymology_hook: "bâzi: inherited, usually traced to Middle Persian wāzīg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C50-kalame]
 <!-- hl-knowledge: introduces=[FA-LEX-C50-SCHOOL50-05]; assesses=[] -->
 
 **بازی** — *bâzi* — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâzi* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *wāzīg*, "play, game".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

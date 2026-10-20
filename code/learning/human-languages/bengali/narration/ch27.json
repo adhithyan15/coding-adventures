@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Three Ways to Say No",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2461ad88fb71f6b4",
+  "sourceHash": "fnv1a64:fed4ef4f02a317da",
   "lessons": [
     {
       "id": "BN-C16-na-verb",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd42d7f8fdd28762",
+      "sourceHash": "fnv1a64:84edf4de6eff4ff5",
       "notice": null,
       "blocks": [
         {
@@ -217,6 +217,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নয় (nôy) begins with the negator na, \"not\" (CDIAL 6906); CDIAL has no entry for the whole word, so how its ending formed is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the form follows the person",
           "segments": [
@@ -240,7 +251,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "pronunciation",
           "title": "Sounds you'll need: the dot under য",
           "segments": [
@@ -251,7 +262,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -291,7 +302,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -326,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5d22a1d2d28b4fe",
+      "sourceHash": "fnv1a64:cf997a99d1fc9ed6",
       "notice": null,
       "blocks": [
         {
@@ -376,6 +387,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নেই (nei) is a worn form of nāi: the negator na, \"not\" (CDIAL 6906), fused with the verb of being; CDIAL has no entry for the whole, so the details are not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: having, in a language with no verb for it",
           "segments": [
@@ -390,7 +412,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -430,7 +452,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

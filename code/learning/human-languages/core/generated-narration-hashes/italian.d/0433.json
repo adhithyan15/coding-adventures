@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:cb5c2f6b4c977858",
+  "lessonIds": [
+    "IT-C433-matrimoniale",
+    "IT-C433-culla",
+    "IT-C433-federa",
+    "IT-C433-saponetta",
+    "IT-C433-asciugacapelli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch433.txt",
+  "json": "italian/narration/ch433.json",
+  "textHash": "fnv1a64:04e790fb0eca2dd0",
+  "jsonHash": "fnv1a64:79479b2c0fadb4e8",
+  "findings": []
+}

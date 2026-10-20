@@ -14,7 +14,8 @@ romanization: "okashii"
 concept_tag: JA-QUAL124-OKASHII
 prerequisites: [JA-C124-kusai, JA-C124-mushiatsui]
 sounds: []
-roots: []
+roots: [japanese-okashii]
+etymology_hook: "okashii: native; 可笑しい 'can laugh' is chosen for meaning; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C124-mushiatsui]
 <!-- hl-knowledge: introduces=[JA-LEX-C124-QUAL124-04]; assesses=[] -->
 
 **おかしい** — *okashii* — "funny; strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おかしい** (*okashii*) is a native word, inherited rather than borrowed, usually written in kana; JMdict's kanji, "can" and "laugh", are chosen for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

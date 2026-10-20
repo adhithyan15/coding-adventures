@@ -6,7 +6,7 @@ sequence: 860
 chapter: 41
 type: word
 headword: aperiō, aperīre
-gloss: "I open" — half of a matched pair, built from one root with two opposite prefixes
+gloss: '"I open" — half of a matched pair, built from one root with two opposite prefixes'
 concept_tag: VERB-OPEN
 prerequisites: [LA-C41-curro]
 sounds: [macron-long-vowel, macron-none-short-vowel]

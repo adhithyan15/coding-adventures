@@ -13,7 +13,8 @@ gloss: "to marry"
 concept_tag: PT-VERB-CASAR
 prerequisites: [PT-C173-morrer, PT-C173-envelhecer]
 sounds: []
-roots: []
+roots: [casa-latin]
+etymology_hook: "casar — built from casa 'house': to set up a house together"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C173-envelhecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C173-VERBOS173-05]; assesses=[] -->
 
 **casar** — "to marry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**casar** is built from *casa*, "house": to set up a house together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

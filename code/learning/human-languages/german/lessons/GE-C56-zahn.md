@@ -13,7 +13,8 @@ gloss: "a tooth"
 concept_tag: GE-KOERPER1-ZAHN
 prerequisites: [GE-C27-schliessen, GE-C56-bein]
 sounds: []
-roots: []
+roots: [germanic-tanths]
+etymology_hook: "Zahn ← Old High German zand ← Proto-Germanic *tanþs — the same word as English tooth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C56-bein]
 <!-- hl-knowledge: introduces=[GE-LEX-C56-KOERPER1-02]; assesses=[] -->
 
 **der Zahn** — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Zahn** ← Old High German *zand* ← Proto-Germanic *\*tanþs*, "tooth" — inherited, the same word as English *tooth*, with German *z* where English kept *t*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

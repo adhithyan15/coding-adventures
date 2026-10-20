@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 74,
-  "sourceHash": "fnv1a64:85d5d54be4e7f27b",
+  "sourceHash": "fnv1a64:a3ade4988607994b",
   "lessonIds": [
     "MW-C74-garam",
     "MW-C74-thando",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch74.txt",
   "json": "marwadi/narration/ch74.json",
-  "textHash": "fnv1a64:a794a714bc8c80b3",
-  "jsonHash": "fnv1a64:64470217a399609e",
+  "textHash": "fnv1a64:80fb98c9ee0514a0",
+  "jsonHash": "fnv1a64:587069f62988b0c3",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "a forum, a market square"
 concept_tag: LA-URBS-FORUM
 prerequisites: [LA-C107-urbs, LA-C107-oppidum]
 sounds: []
-roots: []
+roots: [forum-latin]
+etymology_hook: "forum 'market square' — usually traced to PIE *dhworom 'enclosure'; English door is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C107-oppidum]
 <!-- hl-knowledge: introduces=[LA-LEX-C107-URBS-03]; assesses=[] -->
 
 **forum, forī** — "a forum, a market square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forum** is usually traced to Proto-Indo-European *\*dhworom*, "enclosure", from *\*dhwer-*, "door" (EtymDB 2.1); *forās*, "out of doors", and English *door* belong to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jamā māḍu"
 concept_tag: KA-VERB-JAMA-MADU
 prerequisites: [KA-C274-kuni, KA-C274-ottu]
 sounds: []
-roots: []
+roots: [arabic-jam, maadu-do-dravidian]
+etymology_hook: "jamā māḍu: Hindustani jamā 'deposit', from Arabic jamʿ, + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C274-ottu]
 <!-- hl-knowledge: introduces=[KA-LEX-C274-KRIYE274-03]; assesses=[] -->
 
 **ಜಮಾ ಮಾಡು** — *jamā māḍu* — "to deposit (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಮಾ ಮಾಡು** (*jamā māḍu*) is Hindustani *jamā*, "a sum, a deposit", from Arabic *jamʿ*, "collecting", with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

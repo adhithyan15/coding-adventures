@@ -14,7 +14,8 @@ romanization: "hejdah"
 concept_tag: FA-NUMBERS76-HEJDAH
 prerequisites: [FA-C75-shanzdah, FA-C76-hefdah]
 sounds: []
-roots: []
+roots: [proto-indo-european-oktow, proto-indo-european-dekm]
+etymology_hook: "hejdah ← Middle Persian haštdah (EtymDB): hasht 'eight' + dah 'ten'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C76-hefdah]
 <!-- hl-knowledge: introduces=[FA-LEX-C76-NUMBERS76-02]; assesses=[] -->
 
 **هجده** — *hejdah* — "eighteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hejdah* is *hasht*, "eight", with *dah*, "ten". It is inherited: EtymDB traces it to Middle Persian *haštdah*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

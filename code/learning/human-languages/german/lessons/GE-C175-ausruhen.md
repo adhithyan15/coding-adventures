@@ -13,7 +13,8 @@ gloss: "to rest (sich ausruhen)"
 concept_tag: GE-VERB-AUSRUHEN
 prerequisites: [GE-C174-aufraeumen, GE-C175-ausfuellen]
 sounds: []
-roots: []
+roots: [germanic-rowo]
+etymology_hook: "ausruhen — aus- 'out' + the verb 'to rest': to rest fully"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C175-ausfuellen]
 <!-- hl-knowledge: introduces=[GE-LEX-C175-VERB175-02]; assesses=[] -->
 
 **ausruhen** — "to rest (sich ausruhen)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ausruhen** is *aus-*, "out, fully", + the verb "to rest", built on the noun for "rest", Old High German *ruowa* ← Proto-Germanic *\*rōwō* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

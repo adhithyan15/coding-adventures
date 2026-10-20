@@ -14,7 +14,8 @@ romanization: "krūraḥ"
 concept_tag: SA-QUAL156-KRURAH
 prerequisites: [SA-C156-santah, SA-C156-candah]
 sounds: []
-roots: []
+roots: [sanskrit-krura]
+etymology_hook: "krūra 'bloody, cruel' ← kravis 'raw flesh' (MW; CDIAL 3602), which MW compares with Latin cruor 'blood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C156-candah]
 <!-- hl-knowledge: introduces=[SA-LEX-C156-QUAL156-05]; assesses=[] -->
 
 **क्रूरः** — *krūraḥ* — "cruel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*krūra* "bloody, cruel" is built on *kravis* "raw flesh" (MW; CDIAL 3602): first "wounded, sore", then "cruel". MW sets *kravis* beside Greek *kreas* "flesh" and Latin *cruor* "blood", the family of English *cruel* and *crude*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

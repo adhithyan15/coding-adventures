@@ -14,7 +14,8 @@ romanization: "goṭhā"
 concept_tag: MR-VASTU245-GOTHA
 prerequisites: [MR-C244-kaju, MR-C245-mala2]
 sounds: []
-roots: []
+roots: [sanskrit-goshtha]
+etymology_hook: "goṭhā ← Sanskrit goṣṭha 'cow-house', a tadbhava (CDIAL 4336)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C245-mala2]
 <!-- hl-knowledge: introduces=[MR-LEX-C245-VASTU245-02]; assesses=[] -->
 
 **गोठा** — *goṭhā* — "a cowshed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोठा** (*goṭhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *goṣṭha*, "cow-house" (CDIAL 4336). It is *go*, "cow", and *stha*, "standing". CDIAL glosses the Marathi word "cowpen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

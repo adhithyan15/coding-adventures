@@ -14,7 +14,8 @@ romanization: "ruciyuḷḷa"
 concept_tag: ML-GUNAM203-RUCIYULLA
 prerequisites: [ML-C202-dosam, ML-C202-nyayam]
 sounds: []
-roots: []
+roots: [sanskrit-ruci, dravidian-ul-be]
+etymology_hook: "ruciyuḷḷa: Sanskrit ruci 'light, relish' (CDIAL 10762) + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C202-nyayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C203-GUNAM203-01]; assesses=[] -->
 
 **രുചിയുള്ള** — *ruciyuḷḷa* — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രുചിയുള്ള** (*ruciyuḷḷa*) joins Sanskrit *ruci*, "light, beauty", later "relish, taste" (CDIAL 10762), to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

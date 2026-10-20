@@ -1,0 +1,11 @@
+{
+  "id": "ES-C653-embarque",
+  "pathSegment": "ES-PATH-653-EMBARQUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-653-EMBARQUE",
+      "order": 1
+    }
+  ]
+}

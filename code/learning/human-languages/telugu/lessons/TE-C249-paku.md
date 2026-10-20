@@ -14,7 +14,8 @@ romanization: "pāku"
 concept_tag: TE-VERB-PAKU
 prerequisites: [TE-C248-appagincu, TE-C249-bharincu]
 sounds: []
-roots: []
+roots: [dravidian-para-spread]
+etymology_hook: "pāku: native Dravidian; DEDR 3949 lists prāku, pākul-āḍu 'to creep, crawl'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C249-bharincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C249-KRIYA249-02]; assesses=[] -->
 
 **పాకు** — *pāku* — "to crawl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాకు** (*pāku*) is native Dravidian. DEDR 3949 lists *prāku* and *pākulāḍu*, "to creep, crawl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

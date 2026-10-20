@@ -14,7 +14,8 @@ romanization: "kuṟippŭ"
 concept_tag: ML-JOLI262-KURIPPU
 prerequisites: [ML-C261-parisilanam, ML-C261-ripporttu]
 sounds: []
-roots: []
+roots: [dravidian-kuri-mark]
+etymology_hook: "kuṟippŭ: native Dravidian, a noun from the verb 'to mark, note'; Tamil kuṟi (DEDR 1847)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C261-ripporttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C262-JOLI262-01]; assesses=[] -->
 
 **കുറിപ്പ്** — *kuṟippŭ* — "a note".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറിപ്പ്** (*kuṟippŭ*) is native Dravidian, a noun from the verb "to mark, note"; DEDR 1847 lists the root with Tamil *kuṟi*, Kannada *kuṟi* and Telugu *guṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "leṇo"
 concept_tag: MW-VERB-LENO
 prerequisites: [MW-C53-bechno, MW-C53-deno]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "leṇo ← Sanskrit labhate 'catches, takes', a tadbhava (CDIAL 10948, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C53-deno]
 <!-- hl-knowledge: introduces=[MW-LEX-C53-VERBS53-04]; assesses=[] -->
 
 **लेणो** — *leṇo* — "to take".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लेणो** (*leṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *labhate*, "catches, takes". CDIAL lists Old Marwari *lei* under it (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

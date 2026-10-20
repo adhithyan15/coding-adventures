@@ -14,7 +14,8 @@ romanization: "pandi"
 concept_tag: TE-THINGS126-PANDI
 prerequisites: [TE-C125-kaki, TE-C126-batu]
 sounds: []
-roots: []
+roots: [dravidian-panri-pig]
+etymology_hook: "pandi: native Dravidian, one word with Tamil paṉṟi and Kannada pandi (DEDR 4039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C126-batu]
 <!-- hl-knowledge: introduces=[TE-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **పంది** — *pandi* — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పంది** (*pandi*) is native Dravidian, one word with Tamil *paṉṟi* and Kannada *pandi* (DEDR 4039).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

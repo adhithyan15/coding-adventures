@@ -14,7 +14,8 @@ romanization: "sabab"
 concept_tag: FA-WHY92-SABAB
 prerequisites: [FA-C92-chon, FA-C92-dalil]
 sounds: []
-roots: []
+roots: [arabic-sabab]
+etymology_hook: "sabab ← Arabic sabab 'rope; means, cause', root s-b-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C92-dalil]
 <!-- hl-knowledge: introduces=[FA-LEX-C92-WHY92-05]; assesses=[] -->
 
 **سبب** — *sabab* — "a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabab* is borrowed from Arabic *sabab*, "rope; means, cause". Its Arabic root is *s-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

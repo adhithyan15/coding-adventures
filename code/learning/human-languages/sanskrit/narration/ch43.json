@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Good Manners",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7811e0815420e406",
+  "sourceHash": "fnv1a64:99370bf5fa243612",
   "lessons": [
     {
       "id": "SA-C43-hospitality",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:512e5763b7f65da1",
+      "sourceHash": "fnv1a64:684be6cecf7ccf46",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ātithya is built from atithi, \"guest\", by lengthening the first vowel and adding -ya, the usual way Sanskrit makes \"what belongs to\" a thing (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dea55015c9fc5b2",
+      "sourceHash": "fnv1a64:2ebb8283599f8273",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vinaya is built from the prefix vi, \"away, apart\", and the root √nī, \"to lead\": first \"leading away\", then \"training, good breeding\" (MW, CDIAL 11767)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e393bd9cd495569",
+      "sourceHash": "fnv1a64:99acdca2d98e59a9",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Namratā is built from namra, \"bowing, bent\", and the abstract ending -tā; namra itself is built on the root √nam, \"to bend, bow\" (MW, CDIAL 6964)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:528e6e41bd8108db",
+      "sourceHash": "fnv1a64:05597e244817452a",
       "notice": null,
       "blocks": [
         {
@@ -595,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:146e6019051909e7",
+      "sourceHash": "fnv1a64:6c4b4643ff230bf1",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +673,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW glosses sarala \"running on, straight\", filing it under sara, \"running\", from the root √sṛ, \"to run, flow\". It lives on as Punjabi and Bengali saral (CDIAL 13252)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +694,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +752,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

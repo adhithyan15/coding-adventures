@@ -14,7 +14,8 @@ romanization: "uttaram"
 concept_tag: SA-SCH255-UTTARAM
 prerequisites: [SA-C255-abhyasah, SA-C255-grhakaryam]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttara 'higher, later', so 'reply': uttara (vākya) 'the following speech' (CDIAL 1767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C255-grhakaryam]
 <!-- hl-knowledge: introduces=[SA-LEX-C255-SCH255-05]; assesses=[] -->
 
 **उत्तरम्** — *uttaram* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uttara* is the comparative of *ud*, "up": "higher", and also "following, later" (MW). The answer is the later word: CDIAL 1767 explains *uttaram* as *uttaram vākyam*, "the following speech". The same word means "north".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

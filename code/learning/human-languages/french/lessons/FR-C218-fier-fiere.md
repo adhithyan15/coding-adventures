@@ -14,6 +14,7 @@ concept_tag: FR-QUAL218-FIER-FIERE
 prerequisites: [FR-C218-curieux-curieuse, FR-C218-jaloux-jalouse]
 sounds: []
 roots: []
+etymology_hook: "fier ← Latin ferus 'wild, untamed' — fierce first, then proud; English fierce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C218-jaloux-jalouse]
 <!-- hl-knowledge: introduces=[FR-LEX-C218-QUAL218-03]; assesses=[] -->
 
 **fier / fière** — "proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fier** ← Latin *ferus*, "wild, untamed" (Lewis & Short) — inherited: fierce first, then proud.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

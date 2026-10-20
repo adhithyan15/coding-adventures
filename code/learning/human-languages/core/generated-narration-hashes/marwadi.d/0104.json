@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 104,
-  "sourceHash": "fnv1a64:7b6d302f36d349b0",
+  "sourceHash": "fnv1a64:a1b9a0bea74471a0",
   "lessonIds": [
     "MW-C104-kharidno",
     "MW-C104-ugharno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch104.txt",
   "json": "marwadi/narration/ch104.json",
-  "textHash": "fnv1a64:aa4b98812909414e",
-  "jsonHash": "fnv1a64:150920de62b69ec0",
+  "textHash": "fnv1a64:115cabefc10e0fdc",
+  "jsonHash": "fnv1a64:91a18f113378c824",
   "findings": []
 }

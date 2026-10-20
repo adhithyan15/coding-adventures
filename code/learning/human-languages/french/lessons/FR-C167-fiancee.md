@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES167-FIANCEE
 prerequisites: [FR-C167-belle-fille, FR-C167-fiance]
 sounds: []
 roots: []
+etymology_hook: "fiancée — the feminine of fiancé: promised"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C167-fiance]
 <!-- hl-knowledge: introduces=[FR-LEX-C167-CHOSES167-05]; assesses=[] -->
 
 **la fiancée** — "a fiancée".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiancée** is the feminine of *fiancé*: the woman promised in marriage. *Fiancé* comes from Old French *fiance*, "a promise", from the Latin family of *fidēs*, "faith".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

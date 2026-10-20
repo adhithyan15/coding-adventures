@@ -14,7 +14,8 @@ romanization: "kaḷiyākkuka"
 concept_tag: ML-VERB-KALIYAKKUKA
 prerequisites: [ML-C186-valakkituka, ML-C186-pinannuka]
 sounds: []
-roots: []
+roots: [dravidian-kali-play, aaka-dravidian]
+etymology_hook: "kaḷiyākkuka: native Dravidian, 'make into play': kaḷi (DEDR 1374) + ākkuka 'make' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C186-pinannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C186-KRIYA186-05]; assesses=[] -->
 
 **കളിയാക്കുക** — *kaḷiyākkuka* — "to tease, to make fun of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കളിയാക്കുക** (*kaḷiyākkuka*) is native Dravidian, "make into a game": *kaḷi*, "play, jest" (DEDR 1374), and *ākkuka*, "to make" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

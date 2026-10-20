@@ -14,7 +14,8 @@ romanization: "bakhshidan"
 concept_tag: FA-VERB-BAKHSHIDAN
 prerequisites: [FA-C220-chap-kardan, FA-C220-kopi-gereftan]
 sounds: []
-roots: []
+roots: [persian-bakhshidan]
+etymology_hook: "bakhshidan ← Middle Persian baxš- (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C220-kopi-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C221-KONESH221-01]; assesses=[] -->
 
 **بخشیدن** — *bakhshidan* — "to forgive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bakhshidan* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *baxš-*, "to share out, to grant" (EtymDB). Persian uses "to grant" for forgiving.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

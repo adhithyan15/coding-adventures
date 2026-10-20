@@ -15,6 +15,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [HI-C02-naam]
 sounds: [matra-e, matra-aa]
 roots: [ma]
+etymology_hook: "merā: listed by CDIAL under the Sanskrit first-person base ma-, the m- of English me (CDIAL 9691)"
 duration:
   max_seconds: 240
 requires:
@@ -48,8 +49,8 @@ shares to the root.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01] -->
 
-**मेरा** (*merā*, "my") descends from Sanskrit *madīya* ("of me"), on the
-first-person root **ma-** — the *same* *ma-/me-* behind English **me**, **my**,
+**मेरा** (*merā*, "my") is listed by CDIAL under the Sanskrit
+first-person base **ma-** (CDIAL 9691) — the *same* *ma-/me-* behind English **me**, **my**,
 **mine** and Latin *meus*. Hindi "my" and English "my" are, at root, one word.
 
 ## Grammar Lens: "my" agrees with the noun

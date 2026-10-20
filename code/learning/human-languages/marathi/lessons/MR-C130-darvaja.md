@@ -14,7 +14,8 @@ romanization: "darvājā"
 concept_tag: MR-LOC130-DARVAJA
 prerequisites: [MR-C129-nhanighar, MR-C130-angan]
 sounds: []
-roots: []
+roots: [persian-darvaza]
+etymology_hook: "darvājā: usually traced to Persian darvāza 'gate, door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C130-angan]
 <!-- hl-knowledge: introduces=[MR-LEX-C130-LOC130-02]; assesses=[] -->
 
 **दरवाजा** — *darvājā* — "a door, a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दरवाजा** (*darvājā*) is a loan, usually traced to Persian *darvāza*, "gate, door". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

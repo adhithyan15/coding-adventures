@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 42,
-  "sourceHash": "fnv1a64:d881bd45b373f3f2",
+  "sourceHash": "fnv1a64:bba126f5c1f35ba6",
   "lessonIds": [
     "PA-C42-oh",
     "PA-C42-asi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch42.txt",
   "json": "punjabi/narration/ch42.json",
-  "textHash": "fnv1a64:e108623cf7d9eecb",
-  "jsonHash": "fnv1a64:0fdf776d7f6ecaee",
+  "textHash": "fnv1a64:9dae55e9f2cb97c2",
+  "jsonHash": "fnv1a64:26df3fc329947ec5",
   "findings": []
 }

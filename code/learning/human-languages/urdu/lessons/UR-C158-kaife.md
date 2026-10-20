@@ -14,7 +14,8 @@ romanization: "kaife"
 concept_tag: UR-JAGAH158-KAIFE
 prerequisites: [UR-C158-bandargah, UR-C158-restorent]
 sounds: []
-roots: []
+roots: [english-cafe]
+etymology_hook: "kaife ← English café"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C158-restorent]
 <!-- hl-knowledge: introduces=[UR-LEX-C158-JAGAH158-05]; assesses=[] -->
 
 **کیفے** — *kaife* — "a café".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیفے** (*kaife*) is a loan from English *café*. English took it from French *café*, "coffee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

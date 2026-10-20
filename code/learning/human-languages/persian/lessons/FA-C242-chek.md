@@ -14,7 +14,8 @@ romanization: "chek"
 concept_tag: FA-CHIZ242-CHEK
 prerequisites: [FA-C241-deser, FA-C242-vam]
 sounds: []
-roots: []
+roots: [french-cheque]
+etymology_hook: "chek: a loan, usually traced to French chèque 'cheque'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C242-vam]
 <!-- hl-knowledge: introduces=[FA-LEX-C242-CHIZ242-02]; assesses=[] -->
 
 **چک** — *chek* — "a cheque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chek* is a loan, usually traced to French *chèque*, "cheque".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

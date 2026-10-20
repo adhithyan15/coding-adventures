@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Sinceri e bugiardi",
+  "label": "ch:it-sinceri-e-bugiardi",
+  "canDo": "I can say whether someone is honest, naive or sly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C473-ammirare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say whether someone is honest, naive or sly.",
+    "assesses": [
+      "IT-LEX-C473-SINCERITA-03",
+      "IT-LEX-C473-SINCERITA-04",
+      "IT-LEX-C473-SINCERITA-05"
+    ]
+  }
+}

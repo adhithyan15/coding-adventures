@@ -13,7 +13,8 @@ gloss: "a broom"
 concept_tag: IT-CASA97-SCOPA
 prerequisites: [IT-C97-pettine, IT-C97-spazzatura]
 sounds: []
-roots: []
+roots: [scopa-latin]
+etymology_hook: "scopa ← Latin scopa 'a broom'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C97-spazzatura]
 <!-- hl-knowledge: introduces=[IT-LEX-C97-CASA97-03]; assesses=[] -->
 
 **la scopa** — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scopa** ← Latin *scopa*, "a broom" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -60,7 +60,7 @@ English **future**; Greek built *phúsis*, "growth, nature," which is **physics*
 
 **হ** is a soft, breathed *h* carrying Bengali's inherent vowel — *hô*, not *ha*.
 **ওয়া** (*-wā*) is the tail every dictionary-form verb wears; you will meet it
-again on খাওয়া and যাওয়া.
+again on the next verbs of this chapter.
 
 ## Grammar Lens: two be-verbs, and one of them is unfinished
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C07-HOWA-02]; assesses=[] -->

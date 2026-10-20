@@ -14,7 +14,8 @@ romanization: "kavitā"
 concept_tag: MR-VASTU263-KAVITA
 prerequisites: [MR-C263-abhineta, MR-C263-abhinetri]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kavitā: Sanskrit kavitā 'poetry', from kavi 'poet', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C263-abhinetri]
 <!-- hl-knowledge: introduces=[MR-LEX-C263-VASTU263-05]; assesses=[] -->
 
 **कविता** — *kavitā* — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कविता** (*kavitā*) is Sanskrit *kavitā*, "poetry", a tatsama built on *kavi*, "poet". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

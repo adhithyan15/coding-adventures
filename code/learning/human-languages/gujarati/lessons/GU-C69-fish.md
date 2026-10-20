@@ -14,7 +14,8 @@ romanization: "māchlī"
 concept_tag: GU-SKY-FISH
 prerequisites: [GU-C69-peacock, GU-C69-sparrow]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "māchlī ← Sanskrit matsya 'fish', with an added -l-; a tadbhava (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C69-sparrow]
 <!-- hl-knowledge: introduces=[GU-LEX-C69-SKY-05]; assesses=[] -->
 
 **માછલી** (*māchlī*) — "a fish". It lives in the **દરિયો** or a **તળાવ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માછલી** (*māchlī*) is a tadbhava of Sanskrit *matsya*, "fish", lengthened with an *-l-* suffix (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

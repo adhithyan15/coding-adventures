@@ -14,7 +14,8 @@ romanization: "gāhak"
 concept_tag: UR-KAM236-GAHAK
 prerequisites: [UR-C236-qimat, UR-C236-dukandar]
 sounds: []
-roots: []
+roots: [sanskrit-grahaka]
+etymology_hook: "gāhak: usually taken as an inherited form of Sanskrit grāhaka 'one who takes'; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C236-dukandar]
 <!-- hl-knowledge: introduces=[UR-LEX-C236-KAM236-04]; assesses=[] -->
 
 **گاہک** — *gāhak* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گاہک** (*gāhak*) is usually taken as an inherited form of Sanskrit *grāhaka*, "one who takes, a buyer", built on *grah-*, "to take". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

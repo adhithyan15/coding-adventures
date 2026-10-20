@@ -14,7 +14,8 @@ romanization: "grīṣmaḥ"
 concept_tag: SA-WEATHER-SUMMER
 prerequisites: [SA-C76-heat, SA-C76-spring]
 sounds: []
-roots: []
+roots: [sanskrit-grishma]
+etymology_hook: "grīṣma 'summer' is Rigvedic; the grammarians derive it from √gras (MW); its origin is not settled (CDIAL 4391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C76-spring]
 <!-- hl-knowledge: introduces=[SA-LEX-C76-WEATHER-05]; assesses=[] -->
 
 **ग्रीष्मः** (*grīṣmaḥ*) — "summer", the **ऋतुः** of **उष्णम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Grīṣma* is already in the Rigveda. The native grammarians derive it from the root
+√gras, "to devour" (MW). MW also compares an Irish word for fire, a comparison
+CDIAL 4391 does not take up, so its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

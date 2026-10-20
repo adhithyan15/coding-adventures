@@ -13,7 +13,8 @@ gloss: "a dove, a pigeon"
 concept_tag: LA-THINGS131-COLUMBA
 prerequisites: [LA-C131-nebula, LA-C131-aquila]
 sounds: []
-roots: []
+roots: [columba-latin]
+etymology_hook: "columba 'dove' — feminine of columbus; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C131-aquila]
 <!-- hl-knowledge: introduces=[LA-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **columba, columbae** — "a dove, a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**columba** is the feminine of *columbus*, "a male dove" (Lewis & Short). Its origin is uncertain; Greek *kolymbos*, "a diving bird", is often compared (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

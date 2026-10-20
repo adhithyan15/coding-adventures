@@ -14,7 +14,8 @@ romanization: "gelā"
 concept_tag: BN-VERB-GELA
 prerequisites: [BN-C178-kreta, BN-C179-chakha]
 sounds: []
-roots: []
+roots: [sanskrit-gilati]
+etymology_hook: "gelā ← Sanskrit gilati 'swallows', beside galati, a tadbhava (CDIAL 4075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C179-chakha]
 <!-- hl-knowledge: introduces=[BN-LEX-C179-ACT179-02]; assesses=[] -->
 
 **গেলা** — *gelā* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গেলা** (*gelā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gilati*, "swallows", a byform of *galati* (CDIAL 4075). CDIAL writes the Bengali verb *gilā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

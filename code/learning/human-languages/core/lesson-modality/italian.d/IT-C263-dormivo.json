@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C263-dormivo",
+    "language": "italian",
+    "chapter": 263,
+    "sequence": 15730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a3d0895a0293ff1"
+  },
+  "findings": []
+}

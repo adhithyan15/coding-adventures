@@ -14,7 +14,8 @@ romanization: "paṇappai"
 concept_tag: TA-THINGS136-PANAPPAI
 prerequisites: [TA-C136-pattam, TA-C136-pommai]
 sounds: []
-roots: []
+roots: [sanskrit-pana, dravidian-pai-bag]
+etymology_hook: "பணப்பை — paṇam ← Sanskrit paṇa 'coin' (CDIAL 7715) + native pai 'bag' (DEDR 4450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C136-pommai]
 <!-- hl-knowledge: introduces=[TA-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **பணப்பை** — *paṇappai* — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பணப்பை** (*paṇappai*) is *paṇam*, "money", from Sanskrit *paṇa*, "a coin" (CDIAL 7715), and native *pai*, "bag" (DEDR 4450).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

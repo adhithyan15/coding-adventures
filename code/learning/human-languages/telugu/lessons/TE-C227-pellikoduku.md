@@ -14,7 +14,8 @@ romanization: "peḷḷikoḍuku"
 concept_tag: TE-VASTUVU227-PELLIKODUKU
 prerequisites: [TE-C227-iruguporugu, TE-C227-satruvu]
 sounds: []
-roots: []
+roots: [dravidian-pen-female, dravidian-kuzha-young]
+etymology_hook: "peḷḷikoḍuku: native peḷḷi 'marriage' (DEDR 4395) + koḍuku 'son' (DEDR 2149)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C227-satruvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C227-VASTUVU227-05]; assesses=[] -->
 
 **పెళ్ళికొడుకు** — *peḷḷikoḍuku* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెళ్ళికొడుకు** (*peḷḷikoḍuku*) is native Dravidian: *peḷḷi*, "marriage" (DEDR 4395), and *koḍuku*, "son" (DEDR 2149): "the wedding son". DEDR compares Sanskrit *kuḍaka*, "child", with the second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

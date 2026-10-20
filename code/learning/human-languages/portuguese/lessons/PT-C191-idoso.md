@@ -13,7 +13,8 @@ gloss: "an elderly person"
 concept_tag: PT-COISAS191-IDOSO
 prerequisites: [PT-C190-fotografo, PT-C191-adulto]
 sounds: []
-roots: []
+roots: [aetas-latin]
+etymology_hook: "idoso — built from the age word (← Latin aetas) + -oso: full of years"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C191-adulto]
 <!-- hl-knowledge: introduces=[PT-LEX-C191-COISAS191-02]; assesses=[] -->
 
 **o idoso** — "an elderly person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**idoso** is built from the word for age (← Latin *aetas*, "age") and *-oso*, "full of": full of years.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

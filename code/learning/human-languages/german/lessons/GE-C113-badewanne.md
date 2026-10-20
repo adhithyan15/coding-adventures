@@ -13,7 +13,8 @@ gloss: "a bathtub"
 concept_tag: GE-HAUS113-BADEWANNE
 prerequisites: [GE-C112-herd, GE-C113-dusche]
 sounds: []
-roots: []
+roots: [germanic-batha, vannus-latin]
+etymology_hook: "Badewanne — 'to bathe' + Wanne 'tub'; Wanne ← Latin vannus 'winnowing basket'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C113-dusche]
 <!-- hl-knowledge: introduces=[GE-LEX-C113-HAUS113-02]; assesses=[] -->
 
 **die Badewanne** — "a bathtub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Badewanne** is "bath, to bathe" (see *Bad*) + *Wanne*, "tub" ← Old High German *wanna* ← Latin *vannus*, "winnowing basket" (EtymDB 2.1) — a borrowed vessel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

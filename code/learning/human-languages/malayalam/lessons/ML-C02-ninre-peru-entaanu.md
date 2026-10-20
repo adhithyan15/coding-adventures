@@ -12,6 +12,7 @@ concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [ML-C02-entu, ML-C02-nii-ningal, ML-C02-peru, ML-C02-aanu]
 sounds: []
 roots: []
+etymology_hook: "ninṟe pēr entāṇŭ: all native Dravidian — your + name + what-is (DEDR 3684, 4410, 5151)"
 duration:
   max_seconds: 180
 requires:
@@ -46,6 +47,8 @@ hiding in the last word.
 
 Unlike the Tamil question (which had **no** verb), Malayalam carries its copula
 *āṇŭ* right inside the question-word *entāṇŭ*.
+
+Every part is native Dravidian: *nī* (DEDR 3684), *pēr* (DEDR 4410), *entŭ* (DEDR 5151) and *āṇŭ* (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## Grammar Lens: answer, and the respectful version
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->

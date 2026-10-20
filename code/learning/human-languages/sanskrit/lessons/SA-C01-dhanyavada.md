@@ -15,6 +15,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [SA-C01-namaskara]
 sounds: [inherent-a, ny-conjunct, visarga]
 roots: [dhanya, vada, vad-speak]
+etymology_hook: "dhanyavāda ← dhanya 'fortunate, worthy' (from dhana 'wealth') + vāda 'speech', from √vad 'speak' (MW)"
 reviews_of: [SA-C01-namaste]
 duration:
   max_seconds: 210

@@ -12,6 +12,7 @@ concept_tag: GU-VERB-MALVU
 prerequisites: [GU-C03-hun]
 sounds: [long-ii, u-nasal]
 roots: [mil-meet]
+etymology_hook: "maḷīshũ, from maḷvũ 'to meet' ← Sanskrit milati 'meets, encounters' (CDIAL 10133)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,8 @@ meet"), from Sanskrit **મિલ્** (*mil-*, "to join, unite") — the same r
 *milnā* and Punjabi *milṇā*. Note the retroflex **ળ** (*ḷ*): Gujarati keeps this
 extra letter — like Marathi and the Dravidian south, and unlike Hindi. The ending
 **-શું** (*-shũ*) is the "we will" future.
+
+CDIAL lists *maḷvũ* under Sanskrit *milati*, "meets, encounters" (CDIAL 10133).
 
 ## Grammar Lens: the future is an ending
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C04-MALISHUN-01] -->

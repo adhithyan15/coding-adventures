@@ -66,7 +66,7 @@ rule is about the **sentence**, not the verb.
 
 [PAUSE 1s]
 - [YOU SAY: the pair — "Je suis monté … J'ai monté les valises"]
-- [YOU SAY: the same for going out — "Je suis sorti … J'ai sorti le chien"]
+- [YOU SAY: the same for going out — "Je suis sorti … J'ai sorti le vin"]
 - [YOU SAY: the reason — "transition takes être; an action on an object takes avoir"]
 - [YOU SAY: the conclusion — "what decides it is the sentence, not the verb"]
 

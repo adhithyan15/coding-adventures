@@ -11,6 +11,7 @@ concept_tag: ES-ROAD-SERVICIO
 prerequisites: [ES-C454-accidente, ES-C386-servir, ES-C449-arreglar]
 sounds: [v-b, soft-c, stress-penultimate]
 roots: [servire-latin]
+etymology_hook: "servicio ← Latin servitium, from servire 'to serve', from servus 'a slave'"
 duration:
   max_seconds: 275
 requires:

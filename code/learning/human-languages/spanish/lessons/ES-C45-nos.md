@@ -6,11 +6,12 @@ sequence: 1226
 chapter: 88
 type: word
 headword: nos
-gloss: "us" — the object pronoun that speaks for more than one person
+gloss: '"us" — the object pronoun that speaks for more than one person'
 concept_tag: ES-PRONOUN-NOS
 prerequisites: [ES-C42-sintesis-decirlo-una-vez, ES-C13-plurales-cambio, ES-C11-querer]
 sounds: []
-roots: []
+roots: [nos-latin]
+etymology_hook: "nos ← Latin nos 'us, we', unchanged in two thousand years"
 teaches_cells: []
 duration:
   max_seconds: 250
@@ -54,6 +55,11 @@ is that person and somebody else.
 
 One letter of difference, and the difference is how many people you are
 speaking for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nos** is Latin *nos*, "us" and "we", unchanged in two thousand years. The next lesson shows what Spanish built on it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-NOS-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT] -->

@@ -14,7 +14,8 @@ romanization: "bacānā"
 concept_tag: HI-VERB-BACANA
 prerequisites: [HI-C169-ghatana, HI-C169-barhana]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bacānā: listed with bacnā 'to escape' under Sanskrit vañcati, whose forms meant 'escapes from' (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C169-barhana]
 <!-- hl-knowledge: introduces=[HI-LEX-C169-ACT169-04]; assesses=[] -->
 
 **बचाना** — *bacānā* — "to save, to rescue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचाना** (*bacānā*) is the causing form of *bacnā*, "to escape": to save is to make someone escape. CDIAL lists both under Sanskrit *vañcati*, "moves", whose causing form meant "escapes from" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:32516ae527528cff",
+  "lessonIds": [
+    "LA-C513-misericors",
+    "LA-C513-misericordia",
+    "LA-C513-misereor",
+    "LA-C513-pudet",
+    "LA-C513-verecundia"
+  ],
+  "tex": "latin/book/chapters/ch513-pity-and-shame.tex"
+}

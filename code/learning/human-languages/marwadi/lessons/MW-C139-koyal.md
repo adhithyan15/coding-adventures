@@ -14,7 +14,8 @@ romanization: "koyal"
 concept_tag: MW-THINGS139-KOYAL
 prerequisites: [MW-C139-kabutar, MW-C139-toto]
 sounds: []
-roots: []
+roots: [sanskrit-kokila]
+etymology_hook: "koyal ← Sanskrit kokila 'the Indian cuckoo', a tadbhava (CDIAL 3483, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C139-toto]
 <!-- hl-knowledge: introduces=[MW-LEX-C139-THINGS139-04]; assesses=[] -->
 
 **कोयल** — *koyal* — "a koel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोयल** (*koyal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kokila*, "the Indian cuckoo". CDIAL gives no Marwari form in this entry (CDIAL 3483); the match is through Hindi *koyal* and Gujarati *koyal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

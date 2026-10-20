@@ -1,0 +1,11 @@
+{
+  "id": "IT-C483-inciampare",
+  "pathSegment": "IT-PATH-483-FERITE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-483-FERITE",
+      "order": 3
+    }
+  ]
+}

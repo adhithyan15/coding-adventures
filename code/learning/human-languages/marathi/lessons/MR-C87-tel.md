@@ -14,7 +14,8 @@ romanization: "tel"
 concept_tag: MR-FOOD87-TEL
 prerequisites: [MR-C87-loni, MR-C87-madh]
 sounds: []
-roots: []
+roots: [sanskrit-taila]
+etymology_hook: "tel ← Sanskrit taila 'sesame oil, oil', a tadbhava (CDIAL 5958)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C87-madh]
 <!-- hl-knowledge: introduces=[MR-LEX-C87-FOOD87-04]; assesses=[] -->
 
 **तेल** — *tel* — "oil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तेल** (*tel*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *taila*, "sesame oil, oil" (CDIAL 5958). It is built on *tila*, "sesame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

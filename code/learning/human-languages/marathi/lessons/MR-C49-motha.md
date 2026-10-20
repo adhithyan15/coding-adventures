@@ -12,6 +12,7 @@ concept_tag: MR-LEX-MOTHA
 prerequisites: [MR-R48-have-and-toward, MR-C41-ghar, MR-C41-kholi, MR-C43-laamb, MR-C23-jhopne]
 sounds: [matra-o, retroflex-tha, matra-aa]
 roots: []
+etymology_hook: "moṭhā: origin not settled; CDIAL has a Marathi moṭā 'big, fat' only, with Hindi moṭā (CDIAL 10187)"
 duration:
   max_seconds: 220
 requires:
@@ -62,6 +63,11 @@ One warning worth having early. If you know Hindi you will meet **मोटा**
 (*moṭā*) there and reach for it: it means **fat**, not *big*, and the two
 words are a genuine trap between the languages. Marathi's **मोठा** is the
 neutral, everyday word; nothing about it is about a body.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मोठा** is not settled. CDIAL lists only a Marathi *moṭā*, "big, fat", in its "defective" word group *\*muṭṭa* (CDIAL 10187).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MOTHA, MR-LEX-GHAR, MR-LEX-KHOLI, MR-LEX-JHOPNE, MR-ETYMON-JHOPNE-NOT-SWEP] -->

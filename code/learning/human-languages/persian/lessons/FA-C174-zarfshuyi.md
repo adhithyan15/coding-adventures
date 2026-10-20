@@ -14,7 +14,8 @@ romanization: "zarfshuyi"
 concept_tag: FA-CHIZ174-ZARFSHUYI
 prerequisites: [FA-C173-charm, FA-C174-kabinet]
 sounds: []
-roots: []
+roots: [arabic-zarf]
+etymology_hook: "zarfshuyi: zarf ← Arabic ẓarf 'vessel' (Lane) + Persian shu 'washing' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C174-kabinet]
 <!-- hl-knowledge: introduces=[FA-LEX-C174-CHIZ174-02]; assesses=[] -->
 
 **ظرفشویی** — *zarfshuyi* — "a kitchen sink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zarfshuyi* is *zarf*, "dish, vessel", with *shu*, "washing" (from *shostan*), and *-i*: the dish-washing place. *zarf* is borrowed from Arabic *ẓarf*, "vessel" (root *ẓ-r-f*, Lane); *shu* is native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

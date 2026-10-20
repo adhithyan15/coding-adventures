@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-314-FUNERAILLES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-314-FUNERAILLES"
+  ],
+  "after": []
+}

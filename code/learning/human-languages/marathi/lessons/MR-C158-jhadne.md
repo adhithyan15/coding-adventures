@@ -14,7 +14,8 @@ romanization: "jhāḍṇe"
 concept_tag: MR-VERB-JHADNE
 prerequisites: [MR-C157-jagne, MR-C158-pusne]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāḍṇe ← *jhāṭayati 'shakes down', a reconstructed form (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C158-pusne]
 <!-- hl-knowledge: introduces=[MR-LEX-C158-ACT158-02]; assesses=[] -->
 
 **झाडणे** — *jhāḍṇe* — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झाडणे** (*jhāḍṇe*) comes from a reconstructed *\*jhāṭayati*, "shakes down" (CDIAL 5328). CDIAL lists Marathi *jhaḍṇẽ*, "to be shed (of leaves)", under the same entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

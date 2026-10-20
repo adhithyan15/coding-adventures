@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 16,
-  "sourceHash": "fnv1a64:0b34acf4e5cf6183",
+  "sourceHash": "fnv1a64:39de8342d58e811f",
   "lessonIds": [
     "ES-C06-hablar",
     "ES-C06-hablo",
@@ -12,6 +12,6 @@
   "text": "spanish/narration/ch16.txt",
   "json": "spanish/narration/ch16.json",
   "textHash": "fnv1a64:6b373ff39713ed16",
-  "jsonHash": "fnv1a64:92b7b8afcabba7cb",
+  "jsonHash": "fnv1a64:105333baea996eeb",
   "findings": []
 }

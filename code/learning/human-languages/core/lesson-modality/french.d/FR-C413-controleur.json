@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C413-controleur",
+    "language": "french",
+    "chapter": 413,
+    "sequence": 22980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f79ee95b9fdf2d9"
+  },
+  "findings": []
+}

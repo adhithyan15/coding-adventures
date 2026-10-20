@@ -1,0 +1,21 @@
+{
+  "chapter": 258,
+  "title": "A connected A2 message",
+  "label": "ch:sa-a-connected-a2-message",
+  "canDo": "I can plan and write a connected 70–90 word Sanskrit message in Devanagari for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-W258-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 258 by writing a model-free 70–90 word connected Sanskrit message for a named reader and practical purpose.",
+    "assesses": [
+      "SA-JOIN-CA-01",
+      "SA-GRAMMAR-GERUND-TVA-01",
+      "SA-FRAME-ROCATE-01",
+      "SA-LEX-C97-LOC97-05",
+      "SA-LEX-C18-ASK-01"
+    ]
+  }
+}

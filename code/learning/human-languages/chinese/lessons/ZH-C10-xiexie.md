@@ -11,8 +11,8 @@ gloss: thank you — the same character twice, and the second one goes light
 concept_tag: COURTESY-THANKS
 prerequisites: [ZH-W10-xie]
 sounds: [tone-4, tone-neutral]
-roots: []
-etymology_hook: 谢谢 is the first word in this book made by saying the same character twice, which is a way of building words that Mandarin uses a great deal.
+roots: [middle-chinese-zjaeh]
+etymology_hook: "xièxie: 谢 doubled; inherited from Middle Chinese zjaeH 'to decline, take leave', later 'to thank'"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,10 @@ Two cautions about this particular word, so you do not over-apply it. **谢谢 i
 fixed expression**, not something you assemble fresh each time — it does not mean
 "to thank briefly". And **谢 is not said on its own**: it lives inside words, so
 do not reach for a bare 谢 and expect it to work.
+
+**谢** is inherited from Middle Chinese *zjaeH*, glossed "to decline, take leave"
+(Guangyun, in Baxter's transcription); "to thank" is a later sense, and the
+doubled form is a Chinese formation.
 
 ## Sounds you'll need — the second one goes light
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-NEUTRAL, ZH-LEX-XIEXIE] -->

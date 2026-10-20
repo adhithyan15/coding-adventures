@@ -13,7 +13,8 @@ gloss: "to seem"
 concept_tag: FR-VERB-SEMBLER
 prerequisites: [FR-C148-posseder, FR-C149-decouvrir]
 sounds: []
-roots: []
+roots: [similis-latin]
+etymology_hook: "sembler ← Late Latin similare, from similis 'like' — English semblance and similar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C149-decouvrir]
 <!-- hl-knowledge: introduces=[FR-LEX-C149-VERBES149-02]; assesses=[] -->
 
 **sembler** — "to seem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sembler** ← Late Latin *similare*, "to be like", from *similis*, "like" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

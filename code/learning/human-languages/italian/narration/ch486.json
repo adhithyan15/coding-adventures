@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 486,
+  "title": "Starnuti e prurito",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:428dfa89568015fc",
+  "lessons": [
+    {
+      "id": "IT-C486-starnutire",
+      "sequence": 27360,
+      "title": "starnutire — to sneeze",
+      "headword": "starnutire",
+      "romanization": "starnutire",
+      "gloss": "to sneeze",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6811acac39796e1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for gauze, then the Italian for to bandage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: starnutire",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "starnutire — \"to sneeze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In primavera starnutisco tutto il giorno. In spring I sneeze all day."
+            },
+            {
+              "kind": "speech",
+              "text": "An -isc- verb. Lo starnuto — a sneeze; people say salute!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "starnutire is inherited from Latin sternūtāre \"to sneeze often\" (Lewis & Short), from sternuere \"to sneeze\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "starnutire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *starnutire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "starnutire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *starnutire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with starnutire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *starnutire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for gauze, then the Italian for to bandage, then say starnutire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for gauze, then the Italian for to bandage, then say *starnutire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does starnutire mean? (\"To sneeze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C486-prurito",
+      "sequence": 27370,
+      "title": "il prurito — itch, itching",
+      "headword": "il prurito",
+      "romanization": "il prurito",
+      "gloss": "itch, itching",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aa22ab76e241c79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to bandage, then the Italian for to sneeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il prurito",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il prurito — \"itch, itching\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Questa lana mi dà prurito. This wool makes me itch."
+            },
+            {
+              "kind": "speech",
+              "text": "Avere prurito — to itch."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prurito is a learned borrowing from Latin prūrītus \"an itching\" (Lewis & Short), from prūrīre \"to itch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il prurito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il prurito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il prurito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il prurito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il prurito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il prurito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to bandage, then the Italian for to sneeze, then say il prurito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to bandage, then the Italian for to sneeze, then say *il prurito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il prurito mean? (\"Itch, itching\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C486-grattarsi",
+      "sequence": 27380,
+      "title": "grattarsi — to scratch (oneself)",
+      "headword": "grattarsi",
+      "romanization": "grattarsi",
+      "gloss": "to scratch (oneself)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:117874cafe0c4b07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to sneeze, then the Italian for itch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: grattarsi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grattarsi — \"to scratch (oneself)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Non grattarti, peggiora! Do not scratch, it makes it worse!"
+            },
+            {
+              "kind": "speech",
+              "text": "Without si: grattare — to scratch, to grate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grattarsi is built on grattare \"to scratch\", usually traced to a Germanic verb krattōn \"to scratch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grattarsi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grattarsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grattarsi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grattarsi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with grattarsi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *grattarsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to sneeze, then the Italian for itch, then say grattarsi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to sneeze, then the Italian for itch, then say *grattarsi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does grattarsi mean? (\"To scratch (oneself)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C486-allergia",
+      "sequence": 27390,
+      "title": "l'allergia — allergy",
+      "headword": "l'allergia",
+      "romanization": "l'allergia",
+      "gloss": "allergy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0add1339b17ca455",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for itch, then the Italian for to scratch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'allergia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'allergia — \"allergy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho un'allergia ai gatti. I have an allergy to cats."
+            },
+            {
+              "kind": "speech",
+              "text": "Essere allergico a — to be allergic to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "allergia came from German Allergie (EtymDB, under English allergy), a modern coinage from Greek állos \"other\" and érgon \"work, action\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'allergia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'allergia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'allergia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'allergia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'allergia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'allergia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for itch, then the Italian for to scratch, then say l'allergia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for itch, then the Italian for to scratch, then say *l'allergia* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'allergia mean? (\"Allergy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C486-puntura",
+      "sequence": 27400,
+      "title": "la puntura — sting, bite (of an insect); injection",
+      "headword": "la puntura",
+      "romanization": "la puntura",
+      "gloss": "sting, bite (of an insect); injection",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4cb2a271b2ca5ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to scratch, then the Italian for allergy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la puntura",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la puntura — \"sting, bite (of an insect); injection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho una puntura di zanzara sul braccio. I have a mosquito bite on my arm."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech it can also be an injection: fare una puntura."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "puntura is inherited from Latin punctūra \"a pricking\" (EtymDB), from pungere \"to prick\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la puntura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la puntura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la puntura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la puntura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la puntura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la puntura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to scratch, then the Italian for allergy, then say la puntura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to scratch, then the Italian for allergy, then say *la puntura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la puntura mean? (\"Sting, bite (of an insect); injection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R486-ripasso-479-486",
+      "sequence": 27410,
+      "title": "Ripasso dei capitoli 479–486",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 479-486",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e45c60f24e26342e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for cheerfulness and laugh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cheerfulness, laugh, to giggle, enthusiasm, to be moved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cheerfulness, laugh, to giggle, enthusiasm, to be moved]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take offence, grudge, forgiveness, to regret, to let off steam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take offence, grudge, forgiveness, to regret, to let off steam]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hip, thigh, calf, heel, big toe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hip, thigh, calf, heel, big toe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eyebrow, eyelashes, eyelid, temple, jaw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: eyebrow, eyelashes, eyelid, temple, jaw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bruise, scratch, burn, to trip, to cut oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bruise, scratch, burn, to trip, to cut oneself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "X-ray, plaster cast, crutch, to put in a plaster cast, to limp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: X-ray, plaster cast, crutch, to put in a plaster cast, to limp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sprain, cramp, swollen, gauze, to bandage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sprain, cramp, swollen, gauze, to bandage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sneeze, itch, to scratch, allergy, sting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sneeze, itch, to scratch, allergy, sting]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cheerfulness? (l'allegria.) Laugh? (la risata.) To giggle? (ridacchiare.) Enthusiasm? (l'entusiasmo.) To be moved? (commuoversi.) To take offence? (offendersi.) Grudge? (il rancore.) Forgiveness? (il perdono.) To regret? (pentirsi.) To let off steam? (sfogarsi.) Hip? (il fianco.) Thigh? (la coscia.) Calf? (il polpaccio.) Heel? (il tallone.) Big toe? (l'alluce.) Eyebrow? (il sopracciglio.) Eyelashes? (le ciglia.) Eyelid? (la palpebra.) Temple? (la tempia.) Jaw? (la mascella.) Bruise? (il livido.) Scratch? (il graffio.) Burn? (la scottatura.) To trip? (inciampare.) To cut oneself? (tagliarsi.) X-ray? (la radiografia.) Plaster cast? (il gesso.) Crutch? (la stampella.) To put in a plaster cast? (ingessare.) To limp? (zoppicare.) To sprain? (slogarsi.) Cramp? (il crampo.) Swollen? (gonfio.) Gauze? (la garza.) To bandage? (fasciare.) To sneeze? (starnutire.) Itch? (il prurito.) To scratch? (grattarsi.) Allergy? (l'allergia.) Sting? (la puntura.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

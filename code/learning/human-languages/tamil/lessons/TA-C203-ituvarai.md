@@ -14,7 +14,8 @@ romanization: "ituvarai"
 concept_tag: TA-NERAM203-ITUVARAI
 prerequisites: [TA-C202-puttantu, TA-C203-nurrantu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-varampu-limit]
+etymology_hook: "இதுவரை — native: itu 'this' (DEDR 410) + varai 'up to' (DEDR 5261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C203-nurrantu]
 <!-- hl-knowledge: introduces=[TA-LEX-C203-NERAM203-02]; assesses=[] -->
 
 **இதுவரை** — *ituvarai* — "until now, so far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இதுவரை** (*ituvarai*) is native: *itu*, "this" (DEDR 410), and *varai*, "up to" (DEDR 5261): "up to this".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

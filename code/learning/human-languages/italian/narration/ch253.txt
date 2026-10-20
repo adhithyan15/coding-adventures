@@ -12,6 +12,9 @@ Before the new one: say the Italian for a lie, then the Italian for a secret.
 You'll want to know: il conto corrente.
 il conto corrente — "a bank account".
 
+The phrase, taken apart.
+conto corrente is "a running account": conto from Vulgar Latin contus, "a reckoning", and corrente, "running" from Latin currens. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a secret, then the Italian for a bank ac
 
 You'll want to know: il prestito.
 il prestito — "a loan".
+
+The word, taken apart.
+prestito is "a thing lent", from prestare, "to lend", which from Latin praestare. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a bank account, then the Italian for a l
 You'll want to know: il debito.
 il debito — "a debt".
 
+The word, taken apart.
+debito from Latin debitum, "what is owed" — a learned borrowing. EtymDB 2.1 has no row for debito; it derives Spanish and Portuguese débito, borrowed the same way, from debitum.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a loan, then the Italian for a debt.
 You'll want to know: la tassa.
 la tassa — "a tax".
 
+The word, taken apart.
+tassa from Medieval Latin taxa, "a charge", from Latin taxare, "to appraise" — taken from Medieval Latin. EtymDB 2.1 has no row for tassa; it derives Old French taxe from taxa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a debt, then the Italian for a tax.
 
 You'll want to know: il modulo.
 il modulo — "a form".
+
+The word, taken apart.
+modulo from Latin modulus, "a small measure" — a learned borrowing. EtymDB 2.1 has no row for modulo; it derives Spanish módulo and Catalan mòdul from modulus.
 
 What you've built.
 One more word for this chapter.

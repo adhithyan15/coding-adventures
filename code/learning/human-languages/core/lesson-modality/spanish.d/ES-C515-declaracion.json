@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C515-declaracion",
+    "language": "spanish",
+    "chapter": 515,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e90d6d1308254c54"
+  },
+  "findings": []
+}

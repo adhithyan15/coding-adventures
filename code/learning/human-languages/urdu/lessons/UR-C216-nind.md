@@ -14,7 +14,8 @@ romanization: "nīṅd"
 concept_tag: UR-SEHAT216-NIND
 prerequisites: [UR-C216-nabz, UR-C216-sans]
 sounds: []
-roots: []
+roots: [sanskrit-nidra]
+etymology_hook: "nīṅd ← Sanskrit nidrā 'sleep', a tadbhava (CDIAL 7200)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C216-sans]
 <!-- hl-knowledge: introduces=[UR-LEX-C216-SEHAT216-03]; assesses=[] -->
 
 **نیند** — *nīṅd* — "sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیند** (*nīṅd*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nidrā*, "sleep" (CDIAL 7200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

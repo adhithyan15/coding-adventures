@@ -13,7 +13,8 @@ gloss: "a cloud"
 concept_tag: LA-CAELUM-NUBES
 prerequisites: [LA-C88-vallis, LA-C88-spelunca]
 sounds: []
-roots: []
+roots: [nubes-latin]
+etymology_hook: "nūbēs 'cloud' — probably from PIE *(s)newdh- 'to cover': a cloud covers the sky"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C88-spelunca]
 <!-- hl-knowledge: introduces=[LA-LEX-C89-CAELUM-01]; assesses=[] -->
 
 **nūbēs, nūbis** — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūbēs** is probably inherited, from a Proto-Indo-European root *\*(s)newdh-*, "to cover, to veil" (EtymDB 2.1): a cloud covers the sky.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

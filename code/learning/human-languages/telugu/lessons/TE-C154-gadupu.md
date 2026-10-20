@@ -14,7 +14,8 @@ romanization: "gaḍupu"
 concept_tag: TE-VERB-GADUPU
 prerequisites: [TE-C154-gata, TE-C154-okasari]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross]
+etymology_hook: "gaḍupu: native Dravidian; DEDR 1109 lists gaḍupu 'to pass, cause to pass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C154-okasari]
 <!-- hl-knowledge: introduces=[TE-LEX-C154-GATAM154-05]; assesses=[] -->
 
 **గడుపు** — *gaḍupu* — "to spend (time)". Said of time: **నేను సెలవులను గ్రామంలో గడిపాను** — *nēnu selavulanu grāmaṁlō gaḍipānu* — "I spent the holidays in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడుపు** (*gaḍupu*) is native Dravidian. DEDR 1109 lists *kaḍapu* and *gaḍupu*, "to pass, cause to pass", with Tamil *kaṭa*, "to pass through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

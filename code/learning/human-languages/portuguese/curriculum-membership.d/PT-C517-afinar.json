@@ -1,0 +1,11 @@
+{
+  "id": "PT-C517-afinar",
+  "pathSegment": "PT-PATH-517-SOPROS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-517-SOPROS",
+      "order": 4
+    }
+  ]
+}

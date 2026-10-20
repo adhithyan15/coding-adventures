@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Iterum, Magister, Discipulus, Schola, Liber",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fc7271a95b40be7d",
+  "sourceHash": "fnv1a64:b53d385ccb0a4703",
   "lessons": [
     {
       "id": "LA-C53-iterum",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:284c2939e99fca91",
+      "sourceHash": "fnv1a64:a9dc17c867d8aaf9",
       "notice": null,
       "blocks": [
         {
@@ -268,7 +268,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word is one half of a matched pair and the other half is minister. Magis means \"more,\" minus means \"less,\" and both take the same old contrastive suffix -ter: the greater one and the lesser one. A Roman magister outranks a Roman minister, and a modern government minister is still, etymologically, a servant."
+              "text": "The word is one half of a matched pair and the other half is minister. Magis means \"more,\" minus means \"less,\" and both take the same old contrastive suffix -ter: the greater one and the lesser one (Lewis & Short). A Roman magister outranks a Roman minister, and a modern government minister is still, etymologically, a servant."
             },
             {
               "kind": "speech",
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b15c1eaa1478994",
+      "sourceHash": "fnv1a64:23335d10a4055bf6",
       "notice": null,
       "blocks": [
         {
@@ -600,7 +600,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin took it as schola, and every daughter kept it: Spanish escuela, Italian scuola, French école, Portuguese escola — and each of them props up the sc- with a vowel in front, exactly the way Portuguese props up escrever. English school, scholar and scholastic are loans; schedule is not, and the resemblance is a coincidence."
+              "text": "Latin borrowed it as schola, and every daughter kept it: Spanish escuela, Italian scuola, French école, Portuguese escola — and each of them props up the sc- with a vowel in front, exactly the way Portuguese props up escrever. English school, scholar and scholastic are loans; schedule is not, and the resemblance is a coincidence."
             }
           ]
         },

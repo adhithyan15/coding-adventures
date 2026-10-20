@@ -14,7 +14,8 @@ romanization: "lugha"
 concept_tag: AR-WORLD99-LUGHA
 prerequisites: [AR-C99-akhbar, AR-C99-balad]
 sounds: []
-roots: []
+roots: [l-gh-w]
+etymology_hook: "lugha: listed by Lane under l-gh-w; a link with Greek logos has been proposed, not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C99-balad]
 <!-- hl-knowledge: introduces=[AR-LEX-C99-WORLD99-04]; assesses=[] -->
 
 **لغة** — *lugha* — "a language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لغة** (*lugha*) is listed by Lane under *l-gh-w*, as the genuine speech of the Arabs. A link with Greek *logos*, "word", has been proposed and is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

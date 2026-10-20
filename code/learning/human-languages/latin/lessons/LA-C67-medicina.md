@@ -13,7 +13,8 @@ gloss: "medicine"
 concept_tag: LA-MORBUS-MEDICINA
 prerequisites: [LA-C67-tussis, LA-C67-dolor]
 sounds: []
-roots: []
+roots: [medicina-latin, medicus-latin, mederi-latin]
+etymology_hook: "medicīna 'medicine' — built on medicus 'doctor', from medeor 'to heal'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C67-dolor]
 <!-- hl-knowledge: introduces=[LA-LEX-C67-MORBUS-04]; assesses=[] -->
 
 **medicīna, medicīnae** — "medicine". What a **medicus** gives you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medicīna** is built on *medicus*, "a doctor", which comes from *medeor*, "to heal" (EtymDB 2.1). English *medicine* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

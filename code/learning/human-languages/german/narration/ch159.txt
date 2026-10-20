@@ -12,6 +12,9 @@ Before the new one: say the German for a parcel, then the German for a stamp.
 You'll want to know: die Adresse.
 die Adresse — "an address".
 
+The word, taken apart.
+Adresse from French adresse (EtymDB 2.1), from adresser, "to direct" — borrowed, like English address.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a stamp, then the German for an address.
 
 You'll want to know: die Telefonnummer.
 die Telefonnummer — "a phone number".
+
+The word, taken apart.
+Telefonnummer is Telefon + the word for "number", which came from Italian numero from Latin numerus, "number". EtymDB 2.1 has the Latin word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for an address, then the German for a phone n
 You'll want to know: das Internet.
 das Internet — "the internet".
 
+The word, taken apart.
+Internet from English Internet (EtymDB 2.1) — borrowed, built from Latin inter, "between", and English net.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a phone number, then the German for the i
 You'll want to know: die E-Mail.
 die E-Mail — "an email".
 
+The word, taken apart.
+E-Mail from English e-mail, short for "electronic mail" (EtymDB 2.1) — borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for the internet, then the German for an emai
 
 You'll want to know: die Nachricht.
 die Nachricht — "a message, the news".
+
+The word, taken apart.
+Nachricht is the word for "after" + a noun from the verb "to direct, to set right", Old High German rihten (EtymDB 2.1): first an instruction to go by, then news.
 
 What you've built.
 One more word for this chapter.

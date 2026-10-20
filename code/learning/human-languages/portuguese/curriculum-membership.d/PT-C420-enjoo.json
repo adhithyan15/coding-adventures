@@ -1,0 +1,11 @@
+{
+  "id": "PT-C420-enjoo",
+  "pathSegment": "PT-PATH-420-TERRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-420-TERRA",
+      "order": 3
+    }
+  ]
+}

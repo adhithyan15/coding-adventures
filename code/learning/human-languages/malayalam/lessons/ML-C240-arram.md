@@ -14,7 +14,8 @@ romanization: "aṟṟaṁ"
 concept_tag: ML-STHALAM240-ARRAM
 prerequisites: [ML-C239-totu, ML-C239-guha]
 sounds: []
-roots: []
+roots: [dravidian-aru-sever]
+etymology_hook: "aṟṟaṁ: native Dravidian, from the verb 'to be cut off'; Tamil aṟu (DEDR 315)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C239-guha]
 <!-- hl-knowledge: introduces=[ML-LEX-C240-STHALAM240-01]; assesses=[] -->
 
 **അറ്റം** — *aṟṟaṁ* — "the end, the tip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അറ്റം** (*aṟṟaṁ*) is native Dravidian, a noun from the verb "to be severed, cut off": the end is where a thing is cut; DEDR 315 lists the root with Tamil *aṟu*, Kannada *aṟu* and Telugu *aṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

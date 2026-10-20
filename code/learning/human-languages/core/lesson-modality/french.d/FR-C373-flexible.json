@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C373-flexible",
+    "language": "french",
+    "chapter": 373,
+    "sequence": 20920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf737d68085918ca"
+  },
+  "findings": []
+}

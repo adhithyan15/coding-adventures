@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7faad9a223b96f7d",
+  "sourceHash": "fnv1a64:36a36b1aa63aa51a",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1af31b4d2ced71f8",
+      "sourceHash": "fnv1a64:b5e845965a3769b5",
       "notice": null,
       "blocks": [
         {
@@ -51,6 +51,10 @@
             {
               "kind": "speech",
               "text": "You heard a light zi at the end of míngzi. Standing alone, this word has a sharp falling tone: zì. Stay with sound and meaning for this tiny step."
+            },
+            {
+              "kind": "speech",
+              "text": "Zì is inherited from Middle Chinese dziH; an older sense of the word was \"to bear and nurse children\"."
             }
           ]
         },
@@ -102,7 +106,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:22f45224442b4e48",
+      "sourceHash": "fnv1a64:536053b0363dea2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -146,6 +150,10 @@
             {
               "kind": "speech",
               "text": "Hide the pinyin. Read 字 (zì) from its familiar roof-over-child shape, then say its falling tone. You are attaching a standalone word to writing you already know."
+            },
+            {
+              "kind": "speech",
+              "text": "字 (zì) is inherited from Middle Chinese dziH (Guangyun, in Baxter's transcription). The Guangyun quotes the Shuowen dictionary for an older sense, \"to bear and nurse children\"; \"written character\" came later."
             }
           ]
         },
@@ -205,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7d60ef586ced764",
+      "sourceHash": "fnv1a64:289c31040bbe37d3",
       "notice": null,
       "blocks": [
         {
@@ -237,6 +245,10 @@
             {
               "kind": "speech",
               "text": "The second half is your known zì, written character. The first half, hàn, labels it as Han Chinese. Hear two clean falling tones: hàn-zì. The new first character stays hidden until the next lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Hànzì is built from Middle Chinese xanH, first a river's name and then the Han dynasty's, and dziH, \"written character\"."
             }
           ]
         },
@@ -563,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b990db26929425fc",
+      "sourceHash": "fnv1a64:9559284a81b25fbe",
       "notice": null,
       "blocks": [
         {
@@ -600,6 +612,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the two characters first without pinyin — Han Chinese + written character]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese. xanH was the name of a river (Guangyun); the Han dynasty took its name from that region, and Han came to mean Chinese. dziH is \"written character\"."
             }
           ]
         },
@@ -667,7 +683,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8fb387e79b61e70",
+      "sourceHash": "fnv1a64:c2095685a8d4d707",
       "notice": null,
       "blocks": [
         {
@@ -699,6 +715,10 @@
             {
               "kind": "speech",
               "text": "Keep the known falling hàn. Then let yǔ dip in third tone. The new written half waits; today the contrast is heard: hànzì is a character, hànyǔ is the language."
+            },
+            {
+              "kind": "speech",
+              "text": "Hànyǔ is built from Middle Chinese xanH, the Han river and dynasty, and ngjoX, \"words, speech\"."
             }
           ]
         },
@@ -1143,7 +1163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ef0b6afb36f8581",
+      "sourceHash": "fnv1a64:d6d468244f068a8b",
       "notice": null,
       "blocks": [
         {
@@ -1184,6 +1204,10 @@
             {
               "kind": "speech",
               "text": "It joins Han Chinese + language: hànyǔ, the Chinese language."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: xanH, the river that gave the Han dynasty its name, and ngjoX, \"words, speech\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

@@ -13,7 +13,8 @@ gloss: "to leave, to let"
 concept_tag: IT-VERB-LASCIARE
 prerequisites: [IT-C234-spostare, IT-C234-togliere]
 sounds: []
-roots: []
+roots: [laxare-latin]
+etymology_hook: "lasciare ← Latin laxare 'to loosen', from laxus 'loose' — English lax and relax"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C234-togliere]
 <!-- hl-knowledge: introduces=[IT-LEX-C234-VERBI234-04]; assesses=[] -->
 
 **lasciare** — "to leave, to let".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lasciare** ← Latin *laxare*, "to loosen" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

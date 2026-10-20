@@ -14,7 +14,8 @@ romanization: "blyúdo"
 concept_tag: RU-VESHCH222-BLYUDO
 prerequisites: [RU-C221-kartina, RU-C222-yeda]
 sounds: []
-roots: []
+roots: [gothic-biuths]
+etymology_hook: "блюдо is an old loan from Gothic biuþs 'a table, a dish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C222-yeda]
 <!-- hl-knowledge: introduces=[RU-LEX-C222-VESHCH222-02]; assesses=[] -->
 
 **блюдо** (*blyúdo*) — "a dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**блюдо** — an old loan from Gothic *biuþs*, "a table, a dish", from *biudan*, "to offer" (Vasmer); Finnish *pöytä*, "table", has the same source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

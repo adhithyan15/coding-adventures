@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:f0386646901bfa0f",
+  "lessonIds": [
+    "IT-C299-scontro",
+    "IT-C299-scontrarsi",
+    "IT-C299-schiantarsi",
+    "IT-C299-ammaccare",
+    "IT-C299-danneggiare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch299.txt",
+  "json": "italian/narration/ch299.json",
+  "textHash": "fnv1a64:6e8bc4babda47f7a",
+  "jsonHash": "fnv1a64:c1d28755dcd2854d",
+  "findings": []
+}

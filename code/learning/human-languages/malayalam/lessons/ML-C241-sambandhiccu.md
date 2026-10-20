@@ -14,7 +14,8 @@ romanization: "sambandhiccŭ"
 concept_tag: ML-KARANAM241-SAMBANDHICCU
 prerequisites: [ML-C240-innottu, ML-C240-vasam]
 sounds: []
-roots: []
+roots: [sanskrit-sambandha]
+etymology_hook: "sambandhiccŭ: from Sanskrit sambandha 'connection' + a Malayalam verb form: 'having connected'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C240-vasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C241-KARANAM241-01]; assesses=[] -->
 
 **സംബന്ധിച്ച്** — *sambandhiccŭ* — "regarding, about".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സംബന്ധിച്ച്** (*sambandhiccŭ*) is a Malayalam verb form, "having connected", built on Sanskrit *sambandha*, "connection", from the root *bandh*, "to bind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

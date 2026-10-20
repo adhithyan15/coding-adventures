@@ -13,7 +13,8 @@ gloss: "a problem"
 concept_tag: IT-SCUOLA115-PROBLEMA
 prerequisites: [IT-C115-compiti, IT-C115-risposta]
 sounds: []
-roots: []
+roots: [problema-latin]
+etymology_hook: "problema ← Latin problema, from Greek problema 'a thing put forward' — learned"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C115-risposta]
 <!-- hl-knowledge: introduces=[IT-LEX-C115-SCUOLA115-03]; assesses=[] -->
 
 **il problema** — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**problema** ← Latin *problema*, from Greek *problema*, "a thing put forward, a task" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

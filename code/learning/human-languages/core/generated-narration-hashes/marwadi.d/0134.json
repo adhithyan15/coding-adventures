@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 134,
-  "sourceHash": "fnv1a64:332c303bc57af2ed",
+  "sourceHash": "fnv1a64:2d5b1480aba73688",
   "lessonIds": [
     "MW-C134-makkhan",
     "MW-C134-chhachh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch134.txt",
   "json": "marwadi/narration/ch134.json",
-  "textHash": "fnv1a64:ebddc8bd0f5567a6",
-  "jsonHash": "fnv1a64:5cc6bedab47175d6",
+  "textHash": "fnv1a64:a7f3544cde9a6634",
+  "jsonHash": "fnv1a64:a3ee5272c2d59978",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "mirc"
 concept_tag: HI-THINGS141-MIRC
 prerequisites: [HI-C141-panir, HI-C141-sahad]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "mirc ← *maricca, a by-form CDIAL sets beside Sanskrit marīca 'peppercorn', an Austroasiatic loan (9875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C141-sahad]
 <!-- hl-knowledge: introduces=[HI-LEX-C141-THINGS141-04]; assesses=[] -->
 
 **मिर्च** — *mirc* — "a chilli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिर्च** (*mirc*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *\*maricca*, a by-form CDIAL reconstructs beside Sanskrit *marīca*, "peppercorn" (CDIAL 9875). The plain *marīca* gave Hindi a different word, *mirī*, "black pepper". CDIAL takes the Sanskrit word from an Austroasiatic language. When the chilli came to India, it took the name of black pepper.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

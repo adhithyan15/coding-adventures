@@ -13,7 +13,8 @@ gloss: "a million"
 concept_tag: GE-ZAHL138-MILLION
 prerequisites: [GE-C138-achtzig, GE-C138-neunzig]
 sounds: []
-roots: []
+roots: [mille-latin]
+etymology_hook: "Million ← Italian milione 'a great thousand', from Latin mīlle 'thousand' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C138-neunzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C138-ZAHL138-05]; assesses=[] -->
 
 **die Million** — "a million".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Million** ← Italian *milione*, "a great thousand", from Latin *mīlle*, "thousand" (EtymDB 2.1) — borrowed through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

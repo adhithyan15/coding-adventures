@@ -14,7 +14,8 @@ romanization: "paltulakki"
 concept_tag: TA-PORUL213-PALTULAKKI
 prerequisites: [TA-C213-kuppai, TA-C213-parpacai]
 sounds: []
-roots: []
+roots: [dravidian-pal-tooth, dravidian-tulanku-shine]
+etymology_hook: "பல்துலக்கி — native: pal 'tooth' (DEDR 3986) + tulakki 'polisher', from tulakku (DEDR 3360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C213-parpacai]
 <!-- hl-knowledge: introduces=[TA-LEX-C213-PORUL213-05]; assesses=[] -->
 
 **பல்துலக்கி** — *paltulakki* — "a toothbrush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பல்துலக்கி** (*paltulakki*) is native: *pal*, "tooth" (DEDR 3986), and *tulakki*, "the polisher", from *tulakku*, "to polish, to make shine" (DEDR 3360).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a cellar"
 concept_tag: FR-CHOSES200-CAVE
 prerequisites: [FR-C200-portail, FR-C200-cloture]
 sounds: []
-roots: []
+roots: [cavus-latin]
+etymology_hook: "cave ← Latin cavus 'hollow' — English cave and cavity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C200-cloture]
 <!-- hl-knowledge: introduces=[FR-LEX-C200-CHOSES200-03]; assesses=[] -->
 
 **la cave** — "a cellar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cave** ← Latin *cava*, "hollow places", from *cavus*, "hollow" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

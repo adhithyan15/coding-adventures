@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 102,
-  "sourceHash": "fnv1a64:a836aa90686eec00",
+  "sourceHash": "fnv1a64:1b935677db3f91cd",
   "lessonIds": [
     "FR-C102-police",
     "FR-C102-theatre",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch102.txt",
   "json": "french/narration/ch102.json",
-  "textHash": "fnv1a64:1aec6d641aaf9b8d",
-  "jsonHash": "fnv1a64:c7b1874d7789d774",
+  "textHash": "fnv1a64:3eb9066aebffb373",
+  "jsonHash": "fnv1a64:6228bc4b1bca46bc",
   "findings": []
 }

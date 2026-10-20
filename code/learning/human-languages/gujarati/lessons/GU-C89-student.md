@@ -14,7 +14,8 @@ romanization: "vidyārthī"
 concept_tag: GU-SCHOOL-STUDENT
 prerequisites: [GU-C88-letter, GU-C88-gift]
 sounds: []
-roots: []
+roots: [sanskrit-vidya, sanskrit-arthin]
+etymology_hook: "vidyārthī: Sanskrit vidyārthin 'one seeking knowledge', vidyā 'knowledge' + arthin 'seeking', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C88-gift]
 <!-- hl-knowledge: introduces=[GU-LEX-C89-SCHOOL-01]; assesses=[] -->
 
 **વિદ્યાર્થી** (*vidyārthī*) — "a student". Built on **વિદ્યા**, learning.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વિદ્યાર્થી** (*vidyārthī*) is a Sanskrit compound, taken over whole as a learned loan, a tatsama: *vidyā*, "knowledge", and *arthin*, "seeking". A student is one who seeks knowledge.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

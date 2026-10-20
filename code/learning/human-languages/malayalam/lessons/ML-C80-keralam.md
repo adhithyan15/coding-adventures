@@ -11,7 +11,8 @@ romanization: "kēraḷaṁ indya"
 concept_tag: ML-NOUN-PLACE-NAMES
 prerequisites: [ML-C80-uuru]
 sounds: []
-roots: []
+roots: [kerala-cera, sanskrit-sindhu]
+etymology_hook: "kēraḷaṁ: usually from Cēram, the Chera kingdom; indya ← English India ← Sanskrit sindhu 'river' (CDIAL 13415)"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +63,11 @@ Say *kēraḷaṁ* slowly and you will hear the retroflex **ള** in the middle 
 the sound you met in the name of the language itself. It is the same letter
 doing the same work, and it is worth noticing that the place and the tongue
 spoken there are built on the same sound.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കേരളം ഇന്ത്യ** (*kēraḷaṁ indya*): *kēraḷaṁ* is usually traced to *Cēram*, the land of the Chera kings, with a Dravidian ending; a popular story ties it instead to *kēram*, "coconut palm", and the question is not settled. *indya* is English *India*, which goes back through Greek and Persian to Sanskrit *sindhu*, "river, the Indus" (CDIAL 13415).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C80-ORIGIN-02, ML-LEX-C80-ORIGIN-03] -->

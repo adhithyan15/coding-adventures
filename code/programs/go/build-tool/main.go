@@ -564,6 +564,21 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed[closureProvenanceConsumer] = true
 	}
+	// Only the committed Go native reader consumes this exact external corpus.
+	// Seed before the ordinary fixture early return, including deleted old paths.
+	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") && (language == "all" || language == "go") {
+		found := false
+		for _, pkg := range packages {
+			if pkg.Name == "go/starlark-compiler" && pkg.Language == "go" {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", "go/starlark-compiler")
+		}
+		changed["go/starlark-compiler"] = true
+	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
@@ -815,6 +830,12 @@ func formatHashPackageError(packageName string) string {
 	return fmt.Sprintf("Error: HASH_PACKAGE_FAILED %q", packageName)
 }
 
+// shardWeights holds the measured per-package durations from -shard-weights,
+// or nil for sharding v1. It is process state set once by
+// runWithPackageHasher, like executor.PruneLeafCargoTargets, so that the
+// several places that compute shards all read the same choice.
+var shardWeights *plan.ShardWeights
+
 func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) int {
 	// CLI flags — using Go's standard flag package.
 	root := flag.String("root", "", "Repo root directory (auto-detect from .git)")
@@ -830,8 +851,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	shardCount := flag.Int("shard-count", 0, "Split emitted build plans into this many CI shards")
 	shardIndex := flag.Int("shard-index", -1, "Run only the selected shard from a build plan")
 	emitShardMatrix := flag.Bool("emit-shard-matrix", false, "Output build_shards JSON for GitHub Actions matrix expansion")
+	shardWeightsPath := flag.String("shard-weights", "", "Measured per-package durations (ci-package-durations-v1 JSON, repo-relative or absolute); selects locality-aware sharding v2")
 	ciGates := flag.String("ci-gates", cigates.DefaultRegistryPath, "CI gate registry (repo-relative) used to decide which Actions jobs this change needs; empty disables gating")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
+	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ and npm node_modules/ once it has built, when no package depends on it (CI disk budget; X-7)")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()
@@ -860,6 +883,21 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		return 1
 	}
 
+	// Measured shard weights. Asking for them and not getting them is an
+	// error, not a quiet return to sharding v1 (see plan.LoadShardWeights).
+	shardWeights = nil
+	if *shardWeightsPath != "" {
+		weightsPath := *shardWeightsPath
+		if !filepath.IsAbs(weightsPath) {
+			weightsPath = filepath.Join(repoRoot, filepath.FromSlash(weightsPath))
+		}
+		shardWeights, err = plan.LoadShardWeights(weightsPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error loading shard weights %s: %v\n", *shardWeightsPath, err)
+			return 1
+		}
+	}
+
 	// ── Plan-based execution path ─────────────────────────────────
 	//
 	// When --plan-file is set, we skip the expensive discovery/resolution/
@@ -868,6 +906,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// detect job.
 
 	var packages []discovery.Package
+	// Every package on this platform, before any shard or language filter.
+	var knownPackages []discovery.Package
 	var graph *directedgraph.Graph
 	var affectedSet map[string]bool
 	var changedPackageRoots map[string]bool
@@ -929,6 +969,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 				}
 			}
 			packages = packagesForPlatform(packages, runtime.GOOS)
+			// Before the shard and language filters narrow the list: BUILD
+			// validation resolves names against every package (X-7).
+			knownPackages = packages
 			platformState := bp.StateForPlatform(runtime.GOOS)
 
 			// Reconstruct dependency graph from edges.
@@ -955,7 +998,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 
 			if *shardIndex >= 0 {
 				if len(bp.Shards) == 0 {
-					bp.Shards = plan.ComputePlatformShards(bp, *shardCount)
+					bp.Shards = plan.ComputePlatformShardsWithWeights(bp, *shardCount, shardWeights)
 				}
 
 				shard, ok := plan.FindShard(bp.Shards, *shardIndex)
@@ -1179,7 +1222,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// discovery means "has a BUILD file". The two orphan gates independently
 		// scan Cargo manifests and direct established-lane roots so missing fronts
 		// cannot remain structurally invisible.
-		buildErr := validator.ValidateBuildFiles(packages, graph)
+		if knownPackages == nil {
+			knownPackages = packages
+		}
+		buildErr := validator.ValidateBuildFilesAgainst(packages, knownPackages, graph)
 		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
 		packageRootErr := validator.ValidateNoOrphanPackageRoots(repoRoot)
 		artifactErr := validator.ValidateNoTrackedNodeModules(repoRoot)
@@ -1268,6 +1314,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		tracker.Start()
 	}
 
+	executor.PruneLeafCargoTargets = *pruneLeafTargets
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -1545,7 +1592,7 @@ func emitBuildPlan(
 	}
 
 	if shardCount > 0 {
-		bp.Shards = plan.ComputePlatformShards(bp, shardCount)
+		bp.Shards = plan.ComputePlatformShardsWithWeights(bp, shardCount, shardWeights)
 	}
 
 	// Decide which CI jobs this change actually needs. A missing or malformed
@@ -1586,7 +1633,7 @@ func emitBuildPlan(
 
 	if alsoEmitShardMatrix {
 		if len(bp.Shards) == 0 {
-			bp.Shards = plan.ComputePlatformShards(bp, shardCount)
+			bp.Shards = plan.ComputePlatformShardsWithWeights(bp, shardCount, shardWeights)
 		}
 		if code := outputShardMatrix(bp.Shards); code != 0 {
 			return code

@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2d2afb0cc54ef1f1",
+  "sourceHash": "fnv1a64:b3ec3171fb81386e",
   "lessons": [
     {
       "id": "KA-C49-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92feee5cd010bee2",
+      "sourceHash": "fnv1a64:73e4d0a8de0596f6",
       "notice": null,
       "blocks": [
         {
@@ -55,6 +55,10 @@
             {
               "kind": "speech",
               "text": "Kannada and Telugu both took that and turned it toward truth, and you can watch the turn happen inside the word: what is true of a thing is what the thing is in itself, as against what is merely said about it. Said alone, ನಿಜ (nija) does the work of a whole sentence — 'true', 'that's right'."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 7181 lists Sanskrit nija, \"innate, one's own\"."
             }
           ]
         },
@@ -150,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c84e9765fbd61d4",
+      "sourceHash": "fnv1a64:c1ec9e68f3c319de",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +195,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾಕು (sāku) is native Dravidian, from sāl, \"to suffice\", and DEDR 2470 lists sāku, \"it is enough\", itself; the entry also has Tamil cāl, Telugu cālu and Malayalam cāla."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +216,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +265,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6042b45e3344bce",
+      "sourceHash": "fnv1a64:f7e18aca94f2c0be",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +332,10 @@
             {
               "kind": "speech",
               "text": "The road from there to 'certainly' is worth walking. A matter that has been cut is a matter that has been settled: nothing left hanging, no remainder to argue over. English does the very same thing with decide, which is Latin for cutting off, and with a clear-cut answer. Two languages, no contact between them, one metaphor."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 3797 lists Sanskrit khaṇḍita, \"broken\"."
             }
           ]
         },
@@ -412,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06c960356d875cb2",
+      "sourceHash": "fnv1a64:b80a10b2af514df8",
       "notice": null,
       "blocks": [
         {
@@ -448,6 +467,10 @@
             {
               "kind": "speech",
               "text": "Notice the last mark: ಃ, the visarga, a light breath let out at the end of a word. It is uncommon in everyday Kannada, and this is one of the few ordinary words that carries it."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 9187 lists Sanskrit bahu, \"much, many\"."
             }
           ]
         },
@@ -543,7 +566,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3644531b32781a26",
+      "sourceHash": "fnv1a64:34d1f0b05b9dfbff",
       "notice": null,
       "blocks": [
         {
@@ -592,6 +615,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಾಗೆ (hāge) is native Dravidian, built on the far-pointing base a-, \"that\". DEDR 1 lists hāge itself, \"in that manner, thus\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -602,7 +636,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -651,7 +685,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

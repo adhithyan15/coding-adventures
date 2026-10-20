@@ -4,7 +4,7 @@
   "chapter": 452,
   "title": "El reparto",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e81b501841a2af27",
+  "sourceHash": "fnv1a64:34c5c39f5173db59",
   "lessons": [
     {
       "id": "ES-C452-almacen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebf783a6bbf6071f",
+      "sourceHash": "fnv1a64:a10ed98316295eb2",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d40ced1f96f9c2f",
+      "sourceHash": "fnv1a64:5c4e0d5a7d115cdd",
       "notice": null,
       "blocks": [
         {
@@ -264,11 +264,11 @@
             },
             {
               "kind": "speech",
-              "text": "Latin then dropped the via and kept the adjective, which is how a word meaning \"broken\" ended up meaning \"route\". English took it from French as route, and also as rout — an army broken open — and routine, a way so well worn that you no longer choose it."
+              "text": "Latin then dropped the via and kept the adjective, which is how a word meaning \"broken\" ended up meaning \"route\". French wore it down to route, and Spanish took ruta from French. English took it from French too, as route, and also as rout — an army broken open — and routine, a way so well worn that you no longer choose it."
             },
             {
               "kind": "speech",
-              "text": "So roto and ruta are one word. A broken plate and a road through a mountain are the same idea applied to two different obstacles."
+              "text": "So roto and ruta are one Latin word: roto inherited, ruta borrowed back. A broken plate and a road through a mountain are the same idea applied to two different obstacles."
             }
           ]
         },
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40681ee2e67ca511",
+      "sourceHash": "fnv1a64:542e44d78d66b2fe",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94eda3e92d9cf40e",
+      "sourceHash": "fnv1a64:54f53f3bcf044576",
       "notice": null,
       "blocks": [
         {

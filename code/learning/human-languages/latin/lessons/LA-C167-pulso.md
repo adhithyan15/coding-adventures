@@ -13,7 +13,8 @@ gloss: "to knock, to beat"
 concept_tag: LA-VERB-PULSO
 prerequisites: [LA-C167-abicio, LA-C167-computo]
 sounds: []
-roots: []
+roots: [pulsare-latin, pellere-latin]
+etymology_hook: "pulsō 'to knock' — a frequentative of pellō 'to strike'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C167-computo]
 <!-- hl-knowledge: introduces=[LA-LEX-C167-ACT167-05]; assesses=[] -->
 
 **pulsō, pulsāre** — "to knock, to beat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulsō** is a frequentative of *pellō*, "to push, to strike" (EtymDB 2.1), built on its participle *pulsus*, "struck": to keep striking. English *pulse* comes from the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

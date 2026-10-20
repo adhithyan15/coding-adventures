@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:d804f1fb73a7ac83",
+  "lessonIds": [
+    "PT-C273-etapa",
+    "PT-C273-fase",
+    "PT-C273-sequencia",
+    "PT-C273-sucessao",
+    "PT-C273-cronologia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch273.txt",
+  "json": "portuguese/narration/ch273.json",
+  "textHash": "fnv1a64:b17b5f432bed7a89",
+  "jsonHash": "fnv1a64:67d965139c119db0",
+  "findings": []
+}

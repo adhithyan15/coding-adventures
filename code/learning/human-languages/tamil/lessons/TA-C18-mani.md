@@ -11,8 +11,8 @@ romanization: "maṇi"
 concept_tag: TA-TIME-HOUR
 prerequisites: [TA-C17-transparent-middle-synonyms, TA-C07-numbers-practice]
 sounds: [tamil-retroflex-nna, tamil-vowel-sign-i]
-roots: [tamil-mani-bell]
-etymology_hook: "மணி (maṇi, 'hour') — Tamil's own dictionaries (Wiktionary) split this into a native Dravidian 'bell, gong' word (→'hour', via the same bell-strikes-the-hour logic as Sanskrit's ghaṇṭā) and a wholly separate Sanskrit loan meaning 'gem' — though even the comparative Dravidian dictionary (DEDR) flags a possible Sanskrit connection for the whole family as unresolved, so treat 'native' as the best current account, not a closed case"
+roots: [dravidian-mani-bell]
+etymology_hook: "maṇi 'hour, bell': likely a native Dravidian bell word (DEDR 4672), not Sanskrit ghaṇṭā; DEDR queries Sanskrit maṇi"
 duration:
   max_seconds: 240
 requires:
@@ -34,7 +34,7 @@ reviews_of: [TA-C17-transparent-middle-synonyms, TA-C17-nanpakal-nalliravu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01] -->
 
-[PAUSE 2s] You've just watched Kannada and Telugu both borrow Sanskrit's "bell"
+[PAUSE 2s] You've watched Kannada and Telugu both borrow Sanskrit's "bell"
 word for "hour," matching Hindi exactly. Tamil goes its own way again here — with
 a genuinely tricky twist along the way.
 
@@ -48,7 +48,7 @@ same spelling — most likely a **native Dravidian** word, not the Sanskrit
 **घण्टा** (*ghaṇṭā*) behind Kannada's *gaṇṭe*, Telugu's *ganṭa*, and Hindi's
 *ghanṭā*. On this account, Tamil underwent the **same** "a bell announces the
 hour, so the bell-word becomes the hour-word" shift on its own, from a different
-starting point — though even the comparative Dravidian dictionary (DEDR) flags a
+starting point — though even the comparative Dravidian dictionary (DEDR 4672) flags a
 possible Sanskrit connection for this whole word-family as unresolved, so hold
 "native" as the best current account rather than a settled fact.
 

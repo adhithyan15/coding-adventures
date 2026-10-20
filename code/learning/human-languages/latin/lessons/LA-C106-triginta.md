@@ -13,7 +13,8 @@ gloss: "thirty"
 concept_tag: LA-NUMERI-TRIGINTA
 prerequisites: [LA-C105-multum, LA-C105-parum]
 sounds: []
-roots: []
+roots: [triginta-latin, tres-latin]
+etymology_hook: "trīgintā 'thirty' — inherited, usually traced to PIE *trid-komt 'three tens'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C105-parum]
 <!-- hl-knowledge: introduces=[LA-LEX-C106-NUMERI-01]; assesses=[] -->
 
 **trīgintā** — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**trīgintā** is inherited, usually traced to Proto-Indo-European *\*trid-komt*, "three tens" (EtymDB 2.1); Greek *triakonta*, "thirty", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

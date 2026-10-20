@@ -14,7 +14,8 @@ romanization: "medvéd"
 concept_tag: RU-ANIMALS2-BEAR
 prerequisites: [RU-C61-mouse, RU-C61-wolf]
 sounds: []
-roots: []
+roots: [pie-medhu, pie-ed]
+etymology_hook: "медведь ← Proto-Slavic *medvědĭ, 'honey-eater', a taboo name for the bear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C61-wolf]
 <!-- hl-knowledge: introduces=[RU-LEX-C61-ANIMALS2-04]; assesses=[] -->
 
 **медведь** (*medvéd*) — "a bear". Literally "honey-knower": the one who knows where the **мёд** is.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**медведь** ← Proto-Slavic *\*medvědĭ*, "honey-eater", from *мёд*, "honey", and the root of *есть*, "to eat" (Vasmer). It is a taboo name: hunters avoided the old word for "bear", the one kept in Latin *ursus* and Greek *árktos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

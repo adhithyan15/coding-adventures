@@ -14,7 +14,8 @@ romanization: "tōmu"
 concept_tag: TE-VERB-TOMU
 prerequisites: [TE-C157-rubbu, TE-C158-tondarapadu]
 sounds: []
-roots: []
+roots: [dravidian-toomu-rub]
+etymology_hook: "tōmu: native Dravidian; DEDR 3552 lists tōmu 'to rub, clean' with Gadba dōm- 'to clean by rubbing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C158-tondarapadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C158-KRIYA158-02]; assesses=[] -->
 
 **తోము** — *tōmu* — "to brush (teeth), to scour (pots)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తోము** (*tōmu*) is native Dravidian. DEDR 3552 lists *tōmu*, "to rub, clean", with Gadba *dōm-*, "to wash and clean by rubbing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

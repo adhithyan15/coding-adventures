@@ -14,7 +14,8 @@ romanization: "mōsaṁ cēyu"
 concept_tag: TE-VERB-MOSAM-CEYU
 prerequisites: [TE-C248-molakettu, TE-C248-pituku]
 sounds: []
-roots: []
+roots: [telugu-mosam-deceit, sey-do-dravidian]
+etymology_hook: "mōsaṁ cēyu: mōsaṁ, probably Sanskrit mōṣa 'theft' (CDIAL 10358), + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C248-pituku]
 <!-- hl-knowledge: introduces=[TE-LEX-C248-KRIYA248-03]; assesses=[] -->
 
 **మోసం చేయు** — *mōsaṁ cēyu* — "to cheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mōsaṁ*, "deceit", the first word of **మోసం చేయు** (*mōsaṁ cēyu*), is probably Sanskrit *mōṣa*, "theft", Prakrit *mōsa*, "stealing" (CDIAL 10358). *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

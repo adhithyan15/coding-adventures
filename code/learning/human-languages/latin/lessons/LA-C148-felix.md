@@ -13,7 +13,8 @@ gloss: "lucky, happy"
 concept_tag: LA-QUAL148-FELIX
 prerequisites: [LA-C147-tutus, LA-C147-periculosus]
 sounds: []
-roots: []
+roots: [felix]
+etymology_hook: "fēlīx 'lucky' — usually traced to PIE *dheh1- 'to suckle': first 'fruitful'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C147-periculosus]
 <!-- hl-knowledge: introduces=[LA-LEX-C148-QUAL148-01]; assesses=[] -->
 
 **fēlīx, fēlīcis** — "lucky, happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fēlīx** is usually traced to Proto-Indo-European *\*dheh1-*, "to suck, to suckle" (EtymDB 2.1), the root of *fēmina*, "woman": it first meant "fruitful", then lucky.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

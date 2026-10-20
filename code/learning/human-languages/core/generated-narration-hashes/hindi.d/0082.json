@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 82,
-  "sourceHash": "fnv1a64:e3d40c9d7fe54e85",
+  "sourceHash": "fnv1a64:65ef32b9ce31fcfe",
   "lessonIds": [
     "HI-C75-first",
     "HI-C75-second",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch82.txt",
   "json": "hindi/narration/ch82.json",
-  "textHash": "fnv1a64:9b9cc0b49f48ccd9",
-  "jsonHash": "fnv1a64:8b3ef05735c9796a",
+  "textHash": "fnv1a64:c19a5f4abefa5794",
+  "jsonHash": "fnv1a64:b759b57ffc0dd0c6",
   "findings": []
 }

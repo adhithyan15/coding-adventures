@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Une mauvaise entorse",
+  "label": "ch:fr-une-mauvaise-entorse",
+  "canDo": "I can talk about a sprain and how it heals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R481-revision-474-481",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about a sprain and how it heals.",
+    "assesses": [
+      "FR-LEX-C481-ENTORSE-03",
+      "FR-LEX-C481-ENTORSE-04",
+      "FR-LEX-C481-ENTORSE-05"
+    ]
+  }
+}

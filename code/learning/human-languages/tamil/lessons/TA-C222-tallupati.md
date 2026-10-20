@@ -14,7 +14,8 @@ romanization: "taḷḷupaṭi"
 concept_tag: TA-VELAI222-TALLUPATI
 prerequisites: [TA-C221-alippan, TA-C221-cirutai]
 sounds: []
-roots: []
+roots: [dravidian-tallu-push]
+etymology_hook: "தள்ளுபடி — native: taḷḷu 'to push away' (DEDR 3135) + paṭi, probably 'measure' (DEDR 3849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C221-cirutai]
 <!-- hl-knowledge: introduces=[TA-LEX-C222-VELAI222-01]; assesses=[] -->
 
 **தள்ளுபடி** — *taḷḷupaṭi* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தள்ளுபடி** (*taḷḷupaṭi*) is native: *taḷḷu*, "to push away, to reject" (DEDR 3135), and *paṭi*, probably "measure" (DEDR 3849): "a measure pushed off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

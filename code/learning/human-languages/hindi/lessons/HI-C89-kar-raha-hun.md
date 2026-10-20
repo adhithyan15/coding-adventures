@@ -14,7 +14,8 @@ romanization: "kar rahā hū̃"
 concept_tag: HI-GRAMMAR-PRESENT-CONTINUOUS
 prerequisites: [HI-C88-sintesis-bhavishya, HI-C05-karna, HI-C03-hun]
 sounds: []
-roots: []
+roots: [rah-remain, kr-do]
+etymology_hook: "rahā: from rahnā ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +63,8 @@ pictured as one you are **still inside**.
 
 English does the same thing from a different angle: *I am doing* uses a
 participle too, and *I remain at work* is the same metaphor spelled out.
+
+**रहना** comes from a reconstructed *\*rahati*, "remains" (CDIAL 10666).
 
 ## Grammar Lens: the stem is bare, and that is the point
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-01, HI-CONCEPT-C05-BOLTAHUN-01] -->

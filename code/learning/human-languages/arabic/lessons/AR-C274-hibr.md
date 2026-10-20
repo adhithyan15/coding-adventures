@@ -14,7 +14,8 @@ romanization: "ḥibr"
 concept_tag: AR-SHAY274-HIBR
 prerequisites: [AR-C273-tawabil, AR-C274-tabia2]
 sounds: []
-roots: []
+roots: [ḥ-b-r]
+etymology_hook: "ḥibr: built on the root ḥ-b-r, 'ink' (Lane); ḥibr is ink"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C274-tabia2]
 <!-- hl-knowledge: introduces=[AR-LEX-C274-SHAY274-02]; assesses=[] -->
 
 **حبر** — *ḥibr* — "ink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حبر** (*ḥibr*) is built on the native Arabic root *ḥ-b-r*, "ink; to adorn" (Lane). *Ḥibr* is ink.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

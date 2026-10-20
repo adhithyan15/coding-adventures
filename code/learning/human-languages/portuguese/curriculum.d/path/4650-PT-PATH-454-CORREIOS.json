@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-454-CORREIOS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-454-CORREIOS"
+  ],
+  "after": []
+}

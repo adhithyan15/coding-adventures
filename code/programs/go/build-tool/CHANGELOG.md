@@ -6,6 +6,66 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- `-shard-weights <file>` selects sharding v2: shards are balanced on each
+  package's measured build seconds (a `ci-package-durations-v1` file, from
+  `code/scripts/ci_package_durations.py`) and whole prerequisite closures are
+  kept together. v1 dealt packages by a heuristic and then copied each one's
+  prerequisites after it, so on the 2026-10-18 main plan 5,327 packages became
+  14,878 package builds over 15 shards; a 21-minute crate was rebuilt on
+  twelve of them. Over that same plan v2 makes 5,908 builds with every shard
+  at 69 serial minutes (v1: 134-233). An unmeasured package costs its
+  toolchain's median. An unreadable or malformed file is an error, never a
+  quiet fallback to v1. Without the flag, sharding v1 and its conformance
+  fixtures are untouched.
+- A `global:opam-switch` resource lock. Every OCaml package, and any BUILD
+  that runs `opam`, holds it for its whole build, because they all share one
+  opam switch. This is the executor-owned lock OCAML05 deferred, and it
+  replaces the `-jobs 1` CI applied to an entire invocation whenever OCaml
+  was active, which ran five main shards on one worker each (#17631).
+  `TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside` fails
+  both without the lock and with whole-run serialization.
+- A `global:ruby-gems` resource lock for every BUILD that runs `bundle
+  install` or `gem install`. They all write the runner Ruby's one gem home,
+  and RubyGems does not lock across processes: on PR #17759's first sharded
+  run, two Ruby packages compiled json-3.1.0's native extension in the same
+  directory at once and one failed with mkmf's temp log deleted under it.
+- `-prune-leaf-targets` also removes a leaf package's `node_modules/` (beside
+  a `package.json`) once it has built, by the same rules as Cargo `target/`:
+  leaves only, never through a symlink, while the package still holds its
+  locks. TypeScript `node_modules` were the largest consumer on that run's
+  fullest shard: 21 GB of shard 8 at 90% disk.
+
+- Exact STP01 cases.json changes schedule the committed Go starlark-compiler native reader on each platform, honoring language filters and failing before plan publication when that reader is missing.
+
+- `-prune-leaf-targets`. Once a package has built (pass or fail), the flag
+  deletes its own Cargo `target/` if no package depends on it. Main's full
+  build turns it on. Each Mosaic package and Rust program is a standalone
+  Cargo workspace that compiles its whole dependency tree into its own
+  `target/`. Kept until the end, those directories filled the runner disk,
+  so "No space left on device" and linker bus errors killed shards 5, 6 and
+  12 on every main run (X-7). Only `<package>/target` beside a `Cargo.toml`
+  is removed, so a shared workspace's output is never touched. A symlinked
+  `target/` is not followed, and a package with dependents keeps its output
+  (on a shard the graph is the whole repo's, so this holds across shards).
+  `TestPruneLeafCargoTarget` covers each case.
+
+### Fixed
+
+- `-validate-build-files` on a CI shard (`-plan-file … -shard-index N`) now
+  resolves names and paths against every package on the platform, not just
+  the shard's. A package's test-only dependencies (a cpanfile `on 'test'`
+  block) are not graph edges, so they are not pulled into its shard. Their
+  own prerequisites then looked like undeclared references. Shards 14 and 15
+  of every main run failed this way:
+  `perl/brainfuck-wasm-compiler … undeclared local package refs:
+  perl/wasm-execution` and the same for `perl/ir-to-wasm-compiler` (X-7).
+  The new `ValidateBuildFilesAgainst(packages, known, graph)` still checks
+  only the shard's packages. `ValidateBuildFiles` is unchanged, and
+  discovery mode still validates as before. A validator test pins the shard
+  case, and all 15 shards of a local `-force -shard-count 15` plan now pass.
+
+### Added
+
 - Case-exact native CI selection for the five checked `plan-*.json` fixtures.
   `replace-existing` schedules the Python build-tool tests and
   `portable-package-path` schedules TypeScript; the other three cases have

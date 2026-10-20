@@ -12,7 +12,7 @@ Before the new word: what did dīpaḥ mean?
 You'll want to know: हस्तः.
 हस्तः (hastaḥ) — "hand".
 You have अक्षि, कर्णः, मुखम्, नासिका and हृदयम् (akṣi, karṇaḥ, mukham, nāsikā, hṛdayam). हस्तः (hastaḥ) adds the hand.
-Its cousins run west rather than into Europe: Avestan zasta, Old Persian dasta, and modern Persian dast, all "hand". Latin went its own way with manus and shares nothing with this word at all — a reminder that the family tree branches, and that two languages can both be cousins of Sanskrit without being cousins of each other in any given word.
+Its cousins run west rather than into Europe: Avestan zasta, Old Persian dasta, and modern Persian dast, all "hand". Latin went its own way with manus, which is unrelated to this word — a reminder that the family tree branches, and that two languages can both be cousins of Sanskrit without being cousins of each other in any given word.
 
 What you've built.
 A sixth part of the body, and a cousin found next door rather than in Rome.
@@ -141,6 +141,9 @@ You'll want to know: केशः.
 केशः (keśaḥ) — "hair (of the head)".
 केशः (keśaḥ) is the hair on the head — the hair that grows out of शिरः (śiraḥ).
 And here the trail stops. No secure cousin has been found for केशः (keśaḥ) outside India: scholars have proposed several and settled on none. That is worth meeting on purpose, because the last four lessons made travel look easy. Some words have a history we can reconstruct in detail; some have one we cannot reconstruct at all. कर्णः, the ear, was the same case. Masculine -अः.
+
+The word, taken apart.
+Keśa is already in the Atharvaveda. The native grammarians derived it from the root √kliś (MW), but no secure cousin outside India is known, so its origin is not settled. It lives on as Hindi and Marathi kes (CDIAL 3471).
 
 What you've built.
 Five more parts of the body: hand, foot, head, tooth, hair.

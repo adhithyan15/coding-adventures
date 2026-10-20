@@ -14,7 +14,8 @@ romanization: "darâvardan"
 concept_tag: FA-VERB-DARAVARDAN
 prerequisites: [FA-C253-hel-dadan, FA-C253-andakhtan]
 sounds: []
-roots: []
+roots: [persian-avardan]
+etymology_hook: "darâvardan: Persian dar 'out' + âvardan 'to bring'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C253-andakhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C254-KONESH254-01]; assesses=[] -->
 
 **درآوردن** — *darâvardan* — "to take off (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*darâvardan* is *dar*, "out", with *âvardan*, "to bring": to bring out. Both are native Persian. *âvardan*, "to bring", is an inherited verb; it is usually traced to Middle Persian *āwurdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

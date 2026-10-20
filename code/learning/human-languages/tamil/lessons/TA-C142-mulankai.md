@@ -14,7 +14,8 @@ romanization: "muḻaṅkai"
 concept_tag: TA-THINGS142-MULANKAI
 prerequisites: [TA-C142-kannam, TA-C142-manikkattu]
 sounds: []
-roots: []
+roots: [dravidian-muzham-cubit, dravidian-talai-kai]
+etymology_hook: "முழங்கை — native: DEDR 4990 lists it, built on muḻam 'joint, cubit' + kai 'arm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C142-manikkattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C142-THINGS142-05]; assesses=[] -->
 
 **முழங்கை** — *muḻaṅkai* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முழங்கை** (*muḻaṅkai*) is native: DEDR 4990 lists *muḻaṅkai*, "elbow, forearm", built on *muḻam*, "cubit, joint", with *kai*, "hand, arm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ romanization: "allē"
 concept_tag: ML-WORD-TAG-QUESTION
 prerequisites: [ML-C77-alla, ML-C70-o]
 sounds: []
-roots: []
+roots: [illa-not-dravidian-alla]
+etymology_hook: "allē: native Dravidian, alla 'is not' (DEDR 234) + the asking -ē"
 duration:
-  max_seconds: 240
+  max_seconds: 286
 requires:
   knowledge: [ML-LEX-C77-ALLA-01, ML-CONCEPT-C70-O-01, ML-LEX-C48-ROLE-01]
 introduces:
@@ -46,6 +47,11 @@ statement into a genuine question.
 Look at the front of it. **അല്ലേ** opens on **അല്ല**, the word from the last
 lesson, and that containment is the whole of why it means what it means: it
 hangs *"or is it not so?"* on the end of a statement you have already made.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അല്ലേ** (*allē*) is native Dravidian: *alla*, "is not" (DEDR 234, with Tamil *al-* and Kannada *alla*), with the asking ending *-ē*.
 
 ## Grammar Lens: asking, and asking for agreement
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C77-ALLE-01, ML-CONCEPT-C70-O-01] -->

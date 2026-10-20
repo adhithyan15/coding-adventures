@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C366-immigrazione",
+    "language": "italian",
+    "chapter": 366,
+    "sequence": 21020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8801e0f2b1523431"
+  },
+  "findings": []
+}

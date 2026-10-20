@@ -14,7 +14,8 @@ romanization: "sāikal"
 concept_tag: MW-TOWN83-SAIKAL
 prerequisites: [MW-C83-pulis, MW-C83-nav]
 sounds: []
-roots: []
+roots: [english-cycle]
+etymology_hook: "sāikal ← English cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C83-nav]
 <!-- hl-knowledge: introduces=[MW-LEX-C83-TOWN83-05]; assesses=[] -->
 
 **साइकल** — *sāikal* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साइकल** (*sāikal*) is a loan from English *cycle*. It is the short form of *bicycle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

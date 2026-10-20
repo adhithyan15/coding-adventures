@@ -11,7 +11,8 @@ romanization: "tākkōl"
 concept_tag: ML-THINGS-KEY
 prerequisites: [ML-C128-yard, ML-C129-bed]
 sounds: []
-roots: []
+roots: [dravidian-tazh-bolt]
+etymology_hook: "tākkōl: native Dravidian, built on tāḻ 'bolt, lock'; Tamil tāḻ (DEDR 3179)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C129-bed]
 
 **താക്കോൽ** (*tākkōl*) — "a key". **താക്കോൽ എവിടെ?** — "where is the key?", the
 question every house hears.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താക്കോൽ** (*tākkōl*) is native Dravidian, built on *tāḻ*, "bolt, bar, lock"; DEDR 3179 lists the root with Tamil *tāḻ* and Kannada *tāḻ*. DEDR 3179 compares Sanskrit *tāḍa(ka)*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

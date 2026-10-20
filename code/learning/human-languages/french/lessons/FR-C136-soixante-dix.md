@@ -14,6 +14,7 @@ concept_tag: FR-NOMBRES88-SOIXANTE-DIX
 prerequisites: [FR-C136-zero, FR-C136-soixante]
 sounds: []
 roots: []
+etymology_hook: "soixante-dix — 'sixty-ten': soixante + dix"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C136-soixante]
 <!-- hl-knowledge: introduces=[FR-LEX-C136-NOMBRES88-03]; assesses=[] -->
 
 **soixante-dix** — "seventy". Literally "sixty-ten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soixante-dix** — "sixty-ten": *soixante*, "sixty", and *dix*, "ten". France counts the seventies on from sixty. *Soixante* ← Latin *sexāgintā* and *dix* ← *decem*, both inherited (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

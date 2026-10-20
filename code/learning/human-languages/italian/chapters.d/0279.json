@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Più tardi o prima",
+  "label": "ch:it-piu-tardi-o-prima",
+  "canDo": "I can say that something was interrupted, suspended, put off or done early, and name a stop along the way.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C279-tappa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say that something was interrupted, suspended, put off or done early, and name a stop along the way.",
+    "assesses": [
+      "IT-LEX-C279-RINVIO-03",
+      "IT-LEX-C279-RINVIO-04",
+      "IT-LEX-C279-RINVIO-05"
+    ]
+  }
+}

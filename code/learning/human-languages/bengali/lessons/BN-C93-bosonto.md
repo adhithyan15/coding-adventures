@@ -14,7 +14,8 @@ romanization: "bôsôntô"
 concept_tag: BN-TIME93-BOSONTO
 prerequisites: [BN-C92-roj, BN-C92-shit]
 sounds: []
-roots: []
+roots: [sanskrit-vasanta]
+etymology_hook: "bôsôntô ← Sanskrit vasanta 'spring season', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C92-shit]
 <!-- hl-knowledge: introduces=[BN-LEX-C93-TIME93-01]; assesses=[] -->
 
 **বসন্ত** — *bôsôntô* — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বসন্ত** (*bôsôntô*) is Sanskrit *vasanta*, "spring season", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

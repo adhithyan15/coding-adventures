@@ -14,7 +14,8 @@ romanization: "khaṛā honā"
 concept_tag: UR-VERB-KHARA-HONA
 prerequisites: [UR-C182-aram-karna, UR-C182-letna]
 sounds: []
-roots: []
+roots: [sanskrit-khadaka, sanskrit-bhavati]
+etymology_hook: "khaṛā ← khaḍaka, glossed 'erect' by CDIAL (3784); honā ← Sanskrit bhavati 'becomes, is' (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C182-letna]
 <!-- hl-knowledge: introduces=[UR-LEX-C182-ACT182-04]; assesses=[] -->
 
 **کھڑا ہونا** — *khaṛā honā* — "to stand up".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھڑا ہونا** (*khaṛā honā*) is "to become standing". CDIAL lists *khaṛā*, "standing erect", under Sanskrit *khaḍaka*, "a bolt, a post", for which it supposes an older sense "erect" (CDIAL 3784). *honā*, "to be", comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

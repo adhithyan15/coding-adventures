@@ -12,6 +12,9 @@ Before the new one: say the Latin for to paint, then the Latin for to lead.
 You'll want to know: faciō, facere.
 faciō, facere — "to make, to do".
 
+The word, taken apart.
+faciō is inherited, usually traced to Proto-Indo-European dheh1-, "to put, to place, to set" (EtymDB 2.1), with a k added to the root. English do is a cousin from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to lead, then the Latin for to make.
 
 You'll want to know: gerō, gerere.
 gerō, gerere — "to carry, to wear".
+
+The word, taken apart.
+gerō has no sure origin; no proposal is generally accepted. English gesture and digest come from its family.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to make, then the Latin for to carry.
 You'll want to know: induō, induere.
 induō, induere — "to put on (clothes)".
 
+The word, taken apart.
+induō is built from indu-, "into", an old form of in, and a verb -uō, "to put on" (EtymDB 2.1), found also in exuō, "to take off".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to carry, then the Latin for to put on.
 You'll want to know: exuō, exuere.
 exuō, exuere — "to take off (clothes)".
 
+The word, taken apart.
+exuō is ex, "out of", with the verb -uō, "to put on", found also in induō, "to put on clothes" (Lewis & Short): to get out of one's clothes.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to put on, then the Latin for to take off.
 
 You'll want to know: pūrgō, pūrgāre.
 pūrgō, pūrgāre — "to clean".
+
+The word, taken apart.
+pūrgō is contracted from pūrigō, "to make clean", from pūrum, "clean", and agō, "to make" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "to change"
 concept_tag: FR-VERB-CHANGER
 prerequisites: [FR-C175-garer, FR-C176-arreter]
 sounds: []
-roots: []
+roots: [cambiare-latin]
+etymology_hook: "changer ← Late Latin cambiare 'to exchange', from Gaulish — English change"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C176-arreter]
 <!-- hl-knowledge: introduces=[FR-LEX-C176-VERBES176-02]; assesses=[] -->
 
 **changer** — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**changer** ← Old French *changier* ← Late Latin *cambiare*, "to exchange", a word Latin took from Gaulish — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

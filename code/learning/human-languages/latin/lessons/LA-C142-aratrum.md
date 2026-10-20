@@ -13,7 +13,8 @@ gloss: "a plough"
 concept_tag: LA-THINGS142-ARATRUM
 prerequisites: [LA-C141-calix, LA-C142-furca]
 sounds: []
-roots: []
+roots: [aratrum-latin, arare-latin]
+etymology_hook: "arātrum 'plough' — inherited, usually traced to PIE *h2erh3trom 'plough'; Greek arotron is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C142-furca]
 <!-- hl-knowledge: introduces=[LA-LEX-C142-THINGS142-02]; assesses=[] -->
 
 **arātrum, arātrī** — "a plough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arātrum** is inherited, usually traced to Proto-Indo-European *\*h2erh3trom*, "plough", from *\*h2erh3-*, "to plough" (EtymDB 2.1); Greek *arotron*, "plough", is a cousin (Lewis & Short). *arō*, "to plough", is the Latin verb from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "ādare"
 concept_tag: KA-CONJ-BUT
 prerequisites: [KA-C67-or, KA-C64-in-that-case, KA-C51-blessing, KA-C49-enough, KA-C48-guest, KA-C48-farmer, KA-C65-trust]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ādare: native, 'if it becomes', from āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ there is no coffee."
 
 ಆದರೆ opens the second half of the sentence, not the first, exactly as English
 *but* does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆದರೆ** (*ādare*) is native Dravidian: the "if" form of *āgu*, "to become" (DEDR 333). "If it is so" turned into "but". DEDR 333 compares Sanskrit *ām*.
 
 ## Grammar Lens: a verb doing a conjunction's job
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C67-LINK-04]; assesses=[] -->

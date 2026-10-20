@@ -14,7 +14,8 @@ romanization: "jāyate"
 concept_tag: SA-VERB-JAYATE
 prerequisites: [SA-C231-pravasah, SA-C232-vartate]
 sounds: []
-roots: []
+roots: [sanskrit-jayate]
+etymology_hook: "jāyate ← root √jan 'be born'; MW compares Latin gignere; Gujarati jāvũ 'be born' (CDIAL 5204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C232-vartate]
 <!-- hl-knowledge: introduces=[SA-LEX-C232-ACT232-02]; assesses=[] -->
 
 **जायते** — *jāyate* — "is born, arises".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jāyate* is the present of the root √jan, "to be born" (MW), the root of *jantu*, "creature". MW compares Latin *gignere*, "to beget". It lives on as Gujarati *jāvũ*, "to be born" (CDIAL 5204).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

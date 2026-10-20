@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C322-lanterna",
+    "language": "italian",
+    "chapter": 322,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff0947f4b4639374"
+  },
+  "findings": []
+}

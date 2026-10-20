@@ -13,7 +13,8 @@ gloss: "to try, to try on"
 concept_tag: PT-VERB-EXPERIMENTAR
 prerequisites: [PT-C138-gritar, PT-C139-decidir]
 sounds: []
-roots: []
+roots: [experimentum-latin]
+etymology_hook: "experimentar ← Late Latin experimentare, from experimentum 'a trial'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C139-decidir]
 <!-- hl-knowledge: introduces=[PT-LEX-C139-VERBOS139-02]; assesses=[] -->
 
 **experimentar** — "to try, to try on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**experimentar** ← Late Latin *experimentare*, "to test" (EtymDB 2.1), from *experimentum*, "a trial" — a learned borrowing from Late Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

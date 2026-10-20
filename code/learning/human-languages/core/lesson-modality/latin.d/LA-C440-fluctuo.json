@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C440-fluctuo",
+    "language": "latin",
+    "chapter": 440,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:001a44762dc0ca50"
+  },
+  "findings": []
+}

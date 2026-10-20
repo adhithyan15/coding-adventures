@@ -14,7 +14,8 @@ romanization: "ṭoḷḷu"
 concept_tag: KA-GUNA256-TOLLU
 prerequisites: [KA-C255-gambhira, KA-C255-gundage]
 sounds: []
-roots: []
+roots: [dravidian-tolai-hole]
+etymology_hook: "ṭoḷḷu: native Dravidian, one word with Tamil toḷ and Telugu toli (DEDR 3528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C255-gundage]
 <!-- hl-knowledge: introduces=[KA-LEX-C256-GUNA256-01]; assesses=[] -->
 
 **ಟೊಳ್ಳು** — *ṭoḷḷu* — "hollow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟೊಳ್ಳು** (*ṭoḷḷu*) is native Dravidian, one word with Tamil *toḷ*, Telugu *toli* and Malayalam *toḷḷa* (DEDR 3528). DEDR lists *ṭoḷḷu*, "state of being hollow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

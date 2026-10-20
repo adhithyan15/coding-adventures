@@ -1,11 +1,21 @@
 //! The supervisor with per-agent brokers (D18S P2.6d-2b), end to end: a real
 //! broker binary, verified by digest and holding only its agent's keys, a
 //! scripted host, and the daemon's callback server over shared storage.
+//!
+//! On Linux the broker is confined by the Linux applier (P2.6d-3); on macOS
+//! by the Seatbelt shim, pinned by digest like the broker (P2.7b); on
+//! Windows by the AppContainer applier, its keys passed as handles
+//! (P2.8b-2).
+//!
+//! Each test has an agent of its own. On Windows a broker's container is
+//! named for its agent and runs one instance at a time, so tests running
+//! in parallel must not share one.
 
-#![cfg(target_os = "linux")]
+#![cfg(any(target_os = "linux", target_os = "macos", windows))]
 
 use std::collections::VecDeque;
 use std::fs;
+#[cfg(unix)]
 use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
@@ -14,7 +24,7 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 use chief_of_staff_broker_launcher::{
-    BrokerKeyFiles, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
+    BrokerKeyFiles, BrokerProgram, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
 };
 use chief_of_staff_broker_protocol::KeyKind;
 use chief_of_staff_channel_crypto::{
@@ -44,6 +54,8 @@ use storage_core::{InMemoryStorageBackend, StorageBackend};
 
 const HOST: &str = env!("CARGO_BIN_EXE_broker-e2e-host");
 const BROKER: &str = env!("CARGO_BIN_EXE_broker-e2e-broker");
+#[cfg(target_os = "macos")]
+const SHIM: &str = env!("CARGO_BIN_EXE_broker-e2e-seatbelt-shim");
 const PACKAGE_SEED: [u8; 32] = [42; 32];
 const KEY_ID: &str = "e2e-test";
 const SEED: [u8; 32] = [0x31; 32];
@@ -65,8 +77,44 @@ fn agent(name: &str) -> AgentId {
     AgentId::new(name.as_bytes().to_vec()).unwrap()
 }
 
+/// A writing agent of this test's own (see the module documentation).
+fn fresh_agent() -> AgentId {
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+    agent(&format!(
+        "weather-{}-{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed)
+    ))
+}
+
 fn pipeline() -> PipelineId {
     PipelineId::new(uuid_v7(1)).unwrap()
+}
+
+/// A binary, pinned to the digest of what is there now.
+fn pinned(path: &str) -> VerifiedExecutable {
+    let digest = coding_adventures_sha256::sha256(&fs::read(path).unwrap());
+    VerifiedExecutable::open(Path::new(path), digest).unwrap()
+}
+
+#[cfg(target_os = "linux")]
+fn broker_program(_scratch: &Scratch) -> BrokerProgram {
+    BrokerProgram::new(pinned(BROKER))
+}
+
+#[cfg(target_os = "macos")]
+fn broker_program(_scratch: &Scratch) -> BrokerProgram {
+    BrokerProgram::new(pinned(BROKER), pinned(SHIM)).unwrap()
+}
+
+/// On Windows, a copy in the scratch directory: the applier runs only a
+/// binary at its final path, whose file no one else may change, and the
+/// build directory may be writable by others.
+#[cfg(windows)]
+fn broker_program(scratch: &Scratch) -> BrokerProgram {
+    let copy = scratch.0.join("broker-e2e-broker.exe");
+    fs::copy(BROKER, &copy).unwrap();
+    BrokerProgram::new(pinned(copy.to_str().unwrap()))
 }
 
 // ---- a scratch area: the package, the key files, results -----------------
@@ -76,17 +124,35 @@ struct Scratch(PathBuf);
 impl Scratch {
     fn new() -> Self {
         static NEXT: AtomicUsize = AtomicUsize::new(0);
-        // Under Cargo's per-target scratch directory, not a shared /tmp,
-        // and created 0700 by this call alone (review round 1): the key
-        // files live here.
-        let path = Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!(
+        let name = format!(
             "broker-e2e-{}-{}",
             std::process::id(),
             NEXT.fetch_add(1, Ordering::Relaxed)
-        ));
-        let _ = fs::remove_dir_all(&path);
-        fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
-        Self(fs::canonicalize(path).unwrap())
+        );
+        // Under Cargo's per-target scratch directory, not a shared /tmp,
+        // and created 0700 by this call alone (review round 1): the key
+        // files live here.
+        #[cfg(unix)]
+        {
+            let path = Path::new(env!("CARGO_TARGET_TMPDIR")).join(name);
+            let _ = fs::remove_dir_all(&path);
+            fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
+            Self(fs::canonicalize(path).unwrap())
+        }
+        // On Windows, under the user's own temporary directory, whose
+        // list names only the user, SYSTEM and Administrators, as the
+        // key files' directory must; the build directory's may name
+        // others. The path is the canonical one, without the `\\?\`
+        // prefix, which is the spelling the applier compares.
+        #[cfg(windows)]
+        {
+            let path = std::env::temp_dir().join(name);
+            let _ = fs::remove_dir_all(&path);
+            fs::create_dir(&path).unwrap();
+            let canonical = fs::canonicalize(path).unwrap();
+            let text = canonical.to_str().unwrap();
+            Self(PathBuf::from(text.strip_prefix(r"\\?\").unwrap_or(text)))
+        }
     }
 
     /// A signed Deno package whose markers script the host.
@@ -109,10 +175,18 @@ impl Scratch {
         )
     }
 
+    /// A key file the owner-only policy accepts: mode 0600 on Unix; on
+    /// Windows owned by the user, with a protected list that names only
+    /// the user.
     fn key(&self, name: &str, bytes: &[u8; 32]) -> PathBuf {
         let path = self.0.join(name);
-        fs::write(&path, bytes).unwrap();
-        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        #[cfg(unix)]
+        {
+            fs::write(&path, bytes).unwrap();
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        }
+        #[cfg(windows)]
+        chief_of_staff_daemon_secret_file::write_test_secret(&path, bytes);
         path
     }
 
@@ -137,9 +211,10 @@ fn launch_bindings() -> LaunchBindings {
     .unwrap()
 }
 
-/// Resolves the one binding, until unwired.
+/// Resolves the one binding, for the world's agent, until unwired.
 struct Bindings {
     wired: Mutex<bool>,
+    agent: AgentId,
 }
 
 impl HostLaunchBindingProvider for Bindings {
@@ -161,7 +236,7 @@ impl HostLaunchBindingProvider for Bindings {
         Ok(HostPipelineBinding::new(
             pipeline(),
             registration.clone(),
-            agent("weather"),
+            self.agent.clone(),
             launch_bindings(),
         ))
     }
@@ -220,17 +295,19 @@ struct World {
     scratch: Scratch,
     backend: Arc<dyn StorageBackend>,
     bindings: Arc<Bindings>,
+    agent: AgentId,
 }
 
 impl World {
     fn new() -> Self {
+        let originator = fresh_agent();
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         ChannelDefinitionStore::new(&*backend)
             .create(
                 &ChannelDefinition::new(
                     channel(),
                     OriginatorIdentity {
-                        agent_id: agent("weather"),
+                        agent_id: originator.clone(),
                         public_key: OriginatorSigningKey::from_seed(SEED).public_key(),
                     },
                     vec![ReceiverIdentity {
@@ -250,14 +327,16 @@ impl World {
             backend,
             bindings: Arc::new(Bindings {
                 wired: Mutex::new(true),
+                agent: originator.clone(),
             }),
+            agent: originator,
         }
     }
 
     fn supervisor(&self, seed: &[u8; 32]) -> ProcessHostSupervisor {
         let declare = |kind, path| KeyFileDeclaration {
             pipeline_id: pipeline(),
-            agent_id: agent("weather"),
+            agent_id: self.agent.clone(),
             channel_id: channel(),
             kind,
             path,
@@ -270,8 +349,7 @@ impl World {
             declare(KeyKind::ChannelMasterKey, self.scratch.key("cmk", &CMK)),
         ])
         .unwrap();
-        let digest = coding_adventures_sha256::sha256(&fs::read(BROKER).unwrap());
-        let program = Arc::new(VerifiedExecutable::open(Path::new(BROKER), digest).unwrap());
+        let program = Arc::new(broker_program(&self.scratch));
         let metadata = Arc::new(Metadata(Mutex::new(
             (1..=10)
                 .map(|n| MessageMetadata {
@@ -311,7 +389,7 @@ fn await_phase(
     registration: &HostRegistration,
     expected: impl Fn(SupervisorPhase) -> bool,
 ) {
-    let deadline = Instant::now() + Duration::from_secs(10);
+    let deadline = Instant::now() + Duration::from_secs(30);
     loop {
         if let Ok(SupervisorObservation::Instance(instance)) = supervisor.inspect(registration) {
             if expected(instance.phase()) {
@@ -337,7 +415,7 @@ fn drive_until(
     registration: &HostRegistration,
     mut done: impl FnMut() -> bool,
 ) {
-    let deadline = Instant::now() + Duration::from_secs(10);
+    let deadline = Instant::now() + Duration::from_secs(30);
     while !done() {
         let _ = supervisor.inspect(registration);
         assert!(Instant::now() < deadline, "timed out");
@@ -345,9 +423,55 @@ fn drive_until(
     }
 }
 
+#[cfg(unix)]
 fn alive(pid: u32) -> bool {
     // SAFETY: signal 0 only checks that the process exists.
     unsafe { libc::kill(pid as libc::pid_t, 0) == 0 }
+}
+
+/// Killed from outside, as a crash would end it.
+#[cfg(unix)]
+fn kill(pid: u32) {
+    // SAFETY: killing the broker this test started.
+    unsafe { libc::kill(pid as libc::pid_t, libc::SIGKILL) };
+}
+
+/// Whether `pid` names a process that has not exited. A process that
+/// cannot be opened for some reason other than not existing counts as
+/// alive, so a refusal never passes for an end.
+#[cfg(windows)]
+fn alive(pid: u32) -> bool {
+    use windows_sys::Win32::Foundation::{
+        CloseHandle, GetLastError, ERROR_INVALID_PARAMETER, STILL_ACTIVE,
+    };
+    use windows_sys::Win32::System::Threading::{
+        GetExitCodeProcess, OpenProcess, PROCESS_QUERY_LIMITED_INFORMATION,
+    };
+    // SAFETY: the handle is checked, used for one query and closed; the
+    // exit code is written to a u32.
+    unsafe {
+        let process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, pid);
+        if process == 0 {
+            return GetLastError() != ERROR_INVALID_PARAMETER;
+        }
+        let mut code = 0u32;
+        let queried = GetExitCodeProcess(process, &mut code) != 0;
+        CloseHandle(process);
+        !queried || code == STILL_ACTIVE as u32
+    }
+}
+
+#[cfg(windows)]
+fn kill(pid: u32) {
+    use windows_sys::Win32::Foundation::CloseHandle;
+    use windows_sys::Win32::System::Threading::{OpenProcess, TerminateProcess, PROCESS_TERMINATE};
+    // SAFETY: the handle is checked, used once and closed.
+    unsafe {
+        let process = OpenProcess(PROCESS_TERMINATE, 0, pid);
+        assert_ne!(process, 0, "the broker could not be opened to end it");
+        TerminateProcess(process, 1);
+        CloseHandle(process);
+    }
 }
 
 // ---- the tests ------------------------------------------------------------
@@ -391,9 +515,8 @@ fn a_dead_broker_ends_its_host() {
     let broker = supervisor
         .broker_process_id(registration.host_name())
         .unwrap();
-    // SAFETY: killing the broker this test started.
-    unsafe { libc::kill(broker as libc::pid_t, libc::SIGKILL) };
-    let deadline = Instant::now() + Duration::from_secs(10);
+    kill(broker);
+    let deadline = Instant::now() + Duration::from_secs(30);
     let ended = loop {
         match supervisor.inspect(&registration) {
             Err(ProcessSupervisorError::Broker) => break true,

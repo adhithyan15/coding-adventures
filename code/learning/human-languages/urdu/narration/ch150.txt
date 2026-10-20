@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to jump, then the Urdu for to slip.
 You'll want to know: رنگنا.
 رنگنا — rangnā — "to dye, to colour".
 
+The word, taken apart.
+رنگنا (rangnā) is the verb of rang, "colour". rang has two possible sources, Sanskrit raṅga, "dye, colour" (CDIAL 10560), and Persian rang, "colour", and the two may have merged. CDIAL lists a Hindi rãgānā, "to be coloured", under raṅgayati, "dyes" (CDIAL 10570).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to slip, then the Urdu for to dye.
 
 You'll want to know: مٹانا.
 مٹانا — miṭānā — "to rub out, to erase".
+
+The word, taken apart.
+مٹانا (miṭānā) is the causing form of miṭnā, "to be rubbed out". CDIAL lists miṭnā under Sanskrit mṛṣṭa, "rubbed, washed" (CDIAL 10299).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to dye, then the Urdu for to rub out.
 You'll want to know: چھاپنا.
 چھاپنا — chhāpnā — "to print".
 
+The word, taken apart.
+چھاپنا (chhāpnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from chapp, "press, cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 4994). CDIAL notes that Punjabi and Sindhi took their verbs from this one.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to rub out, then the Urdu for to print.
 You'll want to know: دستخط کرنا.
 دستخط کرنا — dastkhat karnā — "to sign".
 
+The phrase, taken apart.
+دستخط کرنا (dastkhat karnā) is "to do the hand-writing". dastkhat, "a signature", joins Persian dast, "hand", and Arabic khaṭṭ, "a line, writing" (Lane, root kh-ṭ-ṭ), put together in Persian. karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to print, then the Urdu for to sign.
 
 You'll want to know: فون کرنا.
 فون کرنا — fon karnā — "to phone".
+
+The phrase, taken apart.
+فون کرنا (fon karnā) joins fon, borrowed from English phone, and karnā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

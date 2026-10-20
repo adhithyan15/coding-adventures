@@ -1,0 +1,1 @@
+| W1 | writing-runway | controlled Tamil location question | tea + where? → one untimed model-free line from meaning; no word bank, romanization, or copyable answer; timed A1 production remains open |

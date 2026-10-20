@@ -14,7 +14,8 @@ romanization: "cuccu"
 concept_tag: KA-VERB-CUCCU
 prerequisites: [KA-C278-tade, KA-C278-tayarisu]
 sounds: []
-roots: []
+roots: [dravidian-cerugu-insert]
+etymology_hook: "cuccu: native Dravidian (DEDR 2778)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C278-tayarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C279-KRIYE279-01]; assesses=[] -->
 
 **ಚುಚ್ಚು** — *cuccu* — "to prick, to pierce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚುಚ್ಚು** (*cuccu*) is native Dravidian (DEDR 2778). DEDR lists *cuccu*, "to make enter, put on a spit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

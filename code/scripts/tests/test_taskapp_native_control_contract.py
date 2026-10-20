@@ -85,11 +85,11 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         backend: sum(properties.values())
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
-        "xaml": 38,
-        "swiftui": 83,
-        "compose": 50,
-        "qt": 108,
-        "flutter": 107,
+        "xaml": 29,
+        "swiftui": 57,
+        "compose": 40,
+        "qt": 81,
+        "flutter": 69,
     }
 
 
@@ -150,6 +150,60 @@ def test_flutter_text_align_is_no_longer_baselined() -> None:
     assert any("unbaselined style drop 'text-align'" in error for error in errors)
 
 
+def test_flutter_drag_body_gap_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "gap"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'gap'" in error for error in errors)
+
+
+def test_flutter_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "box-shadow"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_compose_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("compose")
+    report["styleDegradations"].append(_style_entry("compose", "box-shadow"))
+
+    errors = validate_style_degradations("compose", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_swiftui_elevation_shadows_leave_only_one_inset_baseline() -> None:
+    report = _report("swiftui")
+    report["styleDegradations"].append(_style_entry("swiftui", "box-shadow"))
+
+    errors = validate_style_degradations("swiftui", report, "report.json")
+
+    assert any(
+        "style drop 'box-shadow' increased from at most 1 to 2" in error
+        for error in errors
+    )
+
+
+def test_swiftui_elevation_is_no_longer_baselined() -> None:
+    report = _report("swiftui")
+    report["styleDegradations"].append(_style_entry("swiftui", "elevation"))
+
+    errors = validate_style_degradations("swiftui", report, "report.json")
+
+    assert any("unbaselined style drop 'elevation'" in error for error in errors)
+
+
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
 def test_style_drop_ratchet_accepts_baseline_and_reductions(backend: str) -> None:
     report = _report(backend)
@@ -163,13 +217,14 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     backend = "xaml"
     report = _report(backend)
     report["styleDegradations"].append(_style_entry(backend, "new-property"))
-    report["styleDegradations"].append(_style_entry(backend, "width"))
+    report["styleDegradations"].append(_style_entry(backend, "border-style"))
 
     errors = validate_style_degradations(backend, report, "report.json")
 
     assert any("unbaselined style drop 'new-property'" in error for error in errors)
     assert any(
-        "style drop 'width' increased from at most 8 to 9" in error for error in errors
+        "style drop 'border-style' increased from at most 4 to 5" in error
+        for error in errors
     )
 
 
@@ -178,13 +233,13 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     [
         ("qt", "align", 1, "unbaselined style drop 'align'"),
         ("qt", "height", 1, "unbaselined style drop 'height'"),
-        ("qt", "width", 19, "style drop 'width' increased from at most 18 to 19"),
+        ("qt", "width", 4, "style drop 'width' increased from at most 3 to 4"),
         ("flutter", "align", 1, "unbaselined style drop 'align'"),
         (
             "flutter",
             "width",
-            24,
-            "style drop 'width' increased from at most 23 to 24",
+            1,
+            "unbaselined style drop 'width'",
         ),
     ],
 )

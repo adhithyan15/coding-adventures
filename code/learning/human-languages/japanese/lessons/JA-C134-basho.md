@@ -14,7 +14,8 @@ romanization: "basho"
 concept_tag: JA-THING134-BASHO
 prerequisites: [JA-W134-ba, JA-W10-shi, JA-W131-small-yo, JA-C134-denwa, JA-C132-kuruma, JA-C122-hitsuyou]
 sounds: [mora]
-roots: []
+roots: [japanese-ba-place, middle-chinese-srjox]
+etymology_hook: "basho: native ba 'place' + Sino-Japanese sho 所 'place'"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ something happens.
 The new sign is spent at once. **ば**, then **し** with a small **ょ**: two
 beats, *ba–sho*. The small **ょ** joins **し** into one beat, the way the small
 **ゃ** did in **でんしゃ**. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ばしょ** (*basho*) mixes the two layers: native *ba*, "place", read as a kun'yomi, and *sho*, "place", the on'yomi of its second character, borrowed from Chinese (Middle Chinese *srjoX*; JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-BASHO, JA-SCRIPT-BA-01, JA-LEX-ANCHOR-KABAN, JA-SCRIPT-SHI-01, JA-SCRIPT-SMALL-YO-01] -->

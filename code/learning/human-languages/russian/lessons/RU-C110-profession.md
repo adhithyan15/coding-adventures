@@ -14,7 +14,8 @@ romanization: "proféssiya"
 concept_tag: RU-THINGS110-PROFESSION
 prerequisites: [RU-C110-till, RU-C110-boss]
 sounds: []
-roots: []
+roots: [professio-latin]
+etymology_hook: "профессия perhaps came through German Profession from Latin professio 'a public declaration'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C110-boss]
 <!-- hl-knowledge: introduces=[RU-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **профессия** (*proféssiya*) — "a profession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**профессия** perhaps came through German *Profession* from Latin *professiō*, "a public declaration (of one's calling)" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

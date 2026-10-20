@@ -14,7 +14,8 @@ romanization: "tīpāvaḷi"
 concept_tag: TA-NERAM202-TIPAVALI
 prerequisites: [TA-C202-varai, TA-C202-tiruvila]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "தீபாவளி ← Sanskrit dīpāvalī 'a row of lamps', built on dīpa 'lamp' (CDIAL 6348)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C202-tiruvila]
 <!-- hl-knowledge: introduces=[TA-LEX-C202-NERAM202-04]; assesses=[] -->
 
 **தீபாவளி** — *tīpāvaḷi* — "Deepavali, the festival of lights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தீபாவளி** (*tīpāvaḷi*) is Sanskrit *dīpāvalī*, "a row of lamps", built on *dīpa*, "lamp" (CDIAL 6348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

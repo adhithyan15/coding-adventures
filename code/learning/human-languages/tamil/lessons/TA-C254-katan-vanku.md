@@ -14,7 +14,8 @@ romanization: "kaṭaṉ vāṅku"
 concept_tag: TA-VERB-KATAN-VANKU
 prerequisites: [TA-C253-oyvutiyam, TA-C253-canrital]
 sounds: []
-roots: []
+roots: [dravidian-kadan-debt, dravidian-vaangu-receive]
+etymology_hook: "கடன் வாங்கு — native: kaṭaṉ 'loan' (DEDR 1113) + vāṅku 'to receive' (DEDR 5336)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C253-canrital]
 <!-- hl-knowledge: introduces=[TA-LEX-C254-ACT254-01]; assesses=[] -->
 
 **கடன் வாங்கு** — *kaṭaṉ vāṅku* — "to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடன் வாங்கு** (*kaṭaṉ vāṅku*) is native: *kaṭaṉ*, "debt, loan" (DEDR 1113, which lists Kannada kaḍa), and *vāṅku*, "to receive, to take" (DEDR 5336): "take a loan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

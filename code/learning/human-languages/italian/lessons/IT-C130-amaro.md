@@ -13,7 +13,8 @@ gloss: "bitter"
 concept_tag: IT-QUALITA130-AMARO
 prerequisites: [IT-C129-stretto, IT-C129-arrabbiato]
 sounds: []
-roots: []
+roots: [amarus-latin]
+etymology_hook: "amaro ← Latin amarus 'bitter' — the bitter liqueur takes its name from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C129-arrabbiato]
 <!-- hl-knowledge: introduces=[IT-LEX-C130-QUALITA130-01]; assesses=[] -->
 
 **amaro** — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amaro** ← Latin *amarus*, "bitter" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

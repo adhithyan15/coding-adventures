@@ -14,7 +14,8 @@ romanization: "phel kôrā"
 concept_tag: BN-VERB-PHEL-KORA
 prerequisites: [BN-C214-chhobi-tola, BN-C214-pas-kora]
 sounds: []
-roots: []
+roots: [english-fail, sanskrit-karoti]
+etymology_hook: "phel kôrā: phel ← English fail + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C214-pas-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C214-ACT214-03]; assesses=[] -->
 
 **ফেল করা** — *phel kôrā* — "to fail (an exam)".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফেল করা** (*phel kôrā*) is *phel*, from English *fail*, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

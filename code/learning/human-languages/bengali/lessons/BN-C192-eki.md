@@ -14,7 +14,8 @@ romanization: "eki"
 concept_tag: BN-GUN192-EKI
 prerequisites: [BN-C192-jotil, BN-C192-alada]
 sounds: []
-roots: []
+roots: [sanskrit-eka]
+etymology_hook: "eki: ek 'one' ← eka (CDIAL 2462) + -i 'indeed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C192-alada]
 <!-- hl-knowledge: introduces=[BN-LEX-C192-GUN192-05]; assesses=[] -->
 
 **একই** — *eki* — "the same".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**একই** (*eki*) is *ek*, "one", from Sanskrit *eka*, "one" (CDIAL 2462), + the stressing ending *-i*: "one and the same".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

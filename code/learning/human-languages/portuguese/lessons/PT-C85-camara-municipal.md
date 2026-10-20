@@ -13,7 +13,8 @@ gloss: "a town hall"
 concept_tag: PT-LUGARES85-CAMARA-MUNICIPAL
 prerequisites: [PT-C85-correios, PT-C85-cinema]
 sounds: []
-roots: []
+roots: [latin-camera]
+etymology_hook: "câmara municipal: câmara ← Latin camera 'vaulted room'; municipal ← Latin municipalis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C85-cinema]
 <!-- hl-knowledge: introduces=[PT-LEX-C85-LUGARES85-05]; assesses=[] -->
 
 **a câmara municipal** — "a town hall". In Brazil, **a prefeitura**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**câmara municipal** is "municipal chamber": *câmara* ← Latin *camera*, "vaulted room", from Greek *kamara* (EtymDB 2.1), and *municipal* ← Latin *municipalis*, "of a free town" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "namir"
 concept_tag: AR-ANIMALS80-NAMIR
 prerequisites: [AR-C79-far, AR-C79-asad]
 sounds: []
-roots: []
+roots: [n-m-r]
+etymology_hook: "namir: built on the root n-m-r, 'the leopard' (Lane); Lane's namir is the leopard, named for its spots"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C79-asad]
 <!-- hl-knowledge: introduces=[AR-LEX-C80-ANIMALS80-01]; assesses=[] -->
 
 **نمر** — *namir* — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نمر** (*namir*) is built on the native Arabic root *n-m-r*, "the leopard; to be spotted" (Lane). Lane's *namir* is the leopard, named for its spots; "tiger" is a later use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

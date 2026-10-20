@@ -13,7 +13,8 @@ gloss: "similar"
 concept_tag: IT-QUAL219-SIMILE
 prerequisites: [IT-C218-silenzioso, IT-C219-uguale]
 sounds: []
-roots: []
+roots: [similis-latin]
+etymology_hook: "simile ← Latin similis 'like', a learned word — English similar and simile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C219-uguale]
 <!-- hl-knowledge: introduces=[IT-LEX-C219-QUAL219-02]; assesses=[] -->
 
 **simile** — "similar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**simile** ← Latin *similis*, "like" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

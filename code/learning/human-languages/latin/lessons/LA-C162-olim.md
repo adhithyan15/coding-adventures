@@ -13,7 +13,8 @@ gloss: "once, long ago; one day"
 concept_tag: LA-PAS162-OLIM
 prerequisites: [LA-C162-nuper, LA-C162-nudiustertius]
 sounds: []
-roots: []
+roots: [olim-latin, ille-latin]
+etymology_hook: "ōlim 'once' — built on ollus, old ille 'that': 'at that time'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C162-nudiustertius]
 <!-- hl-knowledge: introduces=[LA-LEX-C162-PAS162-03]; assesses=[] -->
 
 **ōlim** — "once, long ago; one day". It points to a time far off, usually long past: **Ōlim Rōma parva erat.** — "Long ago Rome was small." **erat** is "was", from **sum**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōlim** is built on *ollus*, "that", the archaic form of ille (Lewis & Short), with *-im*, an ending for a point in time: "at that time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

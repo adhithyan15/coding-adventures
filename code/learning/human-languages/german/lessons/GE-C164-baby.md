@@ -14,6 +14,7 @@ concept_tag: GE-THING164-BABY
 prerequisites: [GE-C164-cousine, GE-C164-enkelin]
 sounds: []
 roots: []
+etymology_hook: "Baby ← English baby — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C164-enkelin]
 <!-- hl-knowledge: introduces=[GE-LEX-C164-THING164-04]; assesses=[] -->
 
 **das Baby** — "a baby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Baby** ← English *baby* (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

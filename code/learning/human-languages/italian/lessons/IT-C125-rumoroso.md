@@ -13,7 +13,8 @@ gloss: "noisy"
 concept_tag: IT-QUALITA125-RUMOROSO
 prerequisites: [IT-C124-chiuso, IT-C124-tranquillo]
 sounds: []
-roots: []
+roots: [rumor-latin]
+etymology_hook: "rumoroso — rumore 'noise' + -oso 'full of'; rumore ← Latin rumor — English rumour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C124-tranquillo]
 <!-- hl-knowledge: introduces=[IT-LEX-C125-QUALITA125-01]; assesses=[] -->
 
 **rumoroso** — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rumoroso** — built from *rumore*, "noise", with *-oso*, "full of". *rumore* ← Latin *rumor*, "talk, rumour" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

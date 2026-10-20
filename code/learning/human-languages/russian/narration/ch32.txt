@@ -12,6 +12,9 @@ Before the new one: say the Russian for the face, then the Russian for blood.
 You'll want to know: боль.
 боль (bol) — "pain".
 
+The word, taken apart.
+боль (bol) from Proto-Slavic bolĭ — inherited, with the verb болеть, "to ache, to be ill". Vasmer sets it beside Gothic balwjan, "to torment", and Old English bealu, "evil", the bale of baleful, but notes that Berneker rejected the link.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for blood, then the Russian for pain.
 
 You'll want to know: болезнь.
 болезнь (bolézn) — "an illness". Built on боль (bol).
+
+The word, taken apart.
+болезнь (bolézn) — built from болеть, "to be ill", the verb of боль (bol), "pain", with the old noun suffix -знь that also makes жизнь, "life".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for pain, then the Russian for an illness.
 You'll want to know: лекарство.
 лекарство (lekárstvo) — "medicine".
 
+The word, taken apart.
+лекарство (lekárstvo) is лекарь, an old word for "doctor", with the noun suffix -ство. The root лек-, "cure", came into Slavic from Germanic; Vasmer calls the loan certain and compares Gothic lēkeis, "doctor". English leech, an old word for "physician", is from that Germanic word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for an illness, then the Russian for medicin
 You'll want to know: врач.
 врач (vrach) — "a doctor".
 
+The word, taken apart.
+врач (vrach) — a Church Slavonic word, Old Church Slavonic vračĭ; its -ра-, where East Slavic would say -оро-, marks it. Vasmer derives it from the root of врать, "to talk nonsense", and ворчать, "to grumble", so the first sense was "charmer, healer by spells"; Bulgarian врач (vrach) still means "sorcerer".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for medicine, then the Russian for a doctor.
 
 You'll want to know: больница.
 больница (bolnítsa) — "a hospital". Built on боль (bol) as well.
+
+The word, taken apart.
+больница (bolnítsa) is больной, "sick; a patient", with -ница, a suffix that names places: a place for the sick. The root is that of боль (bol), "pain". Vasmer relates боль (bol) to Old English bealu, "harm".
 
 What you've built.
 One more word for this chapter.

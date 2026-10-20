@@ -14,7 +14,8 @@ romanization: "okráina"
 concept_tag: RU-MESTO151-OKRAINA
 prerequisites: [RU-C151-mesto, RU-C151-tsentr]
 sounds: []
-roots: []
+roots: [slavic-kraji]
+etymology_hook: "окраина is о- + край 'edge' + -ина: the land along the edge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C151-tsentr]
 <!-- hl-knowledge: introduces=[RU-LEX-C151-MESTO151-03]; assesses=[] -->
 
 **окраина** (*okráina*) — "the outskirts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**окраина** is *о-*, "around", with *край*, "edge", and *-ина*: the land at the edge. Vasmer connects *край* with *кроить*, "to cut": an edge is where something is cut off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "surakṣitaḥ"
 concept_tag: SA-QUAL127-SURAKSITAH
 prerequisites: [SA-C127-tarunah, SA-C127-prasiddhah]
 sounds: []
-roots: []
+roots: [sanskrit-surakshita]
+etymology_hook: "surakṣita ← su 'well' + rakṣita 'protected' (√rakṣ 'protect'): 'well guarded' (MW; CDIAL 13499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C127-prasiddhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C127-QUAL127-05]; assesses=[] -->
 
 **सुरक्षितः** — *surakṣitaḥ* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*surakṣita* is built from *su* "well" and *rakṣita* "protected", from the root √rakṣ "protect, guard" (CDIAL 13499): "well protected", so "safe" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sar"
 concept_tag: FA-BODY27-SAR
 prerequisites: [FA-C20-avval, FA-C20-chaharom]
 sounds: []
-roots: []
+roots: [persian-sar]
+etymology_hook: "sar ← Middle Persian sar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C20-chaharom]
 <!-- hl-knowledge: introduces=[FA-LEX-C27-BODY27-01]; assesses=[] -->
 
 **سر** — *sar* — "the head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *sar*, "head" (EtymDB). EtymDB takes it further back to Proto-Iranian *\*sarah-*, "head". (EtymDB also lists Arabic *sirr*, "secret", but that is a different word that happens to look alike.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

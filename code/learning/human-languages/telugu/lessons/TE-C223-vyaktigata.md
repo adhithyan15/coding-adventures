@@ -14,7 +14,8 @@ romanization: "vyaktigata"
 concept_tag: TE-GUNAM223-VYAKTIGATA
 prerequisites: [TE-C222-bhinnamaina, TE-C222-nyayamaina]
 sounds: []
-roots: []
+roots: [sanskrit-gata]
+etymology_hook: "vyaktigata: Sanskrit vyakti 'individual' + gata 'gone, relating to' (CDIAL 4008)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C222-nyayamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C223-GUNAM223-01]; assesses=[] -->
 
 **వ్యక్తిగత** — *vyaktigata* — "personal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యక్తిగత** (*vyaktigata*) is Sanskrit: *vyakti*, "individual", and *gata*, "gone", here "relating to" (CDIAL 4008).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

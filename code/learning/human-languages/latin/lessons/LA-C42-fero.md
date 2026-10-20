@@ -6,7 +6,7 @@ sequence: 880
 chapter: 42
 type: word
 headword: ferō, ferre
-gloss: "I bring, I carry" — one verb built out of two unrelated roots, and the parent of transfer, refer, prefer, differ, offer and suffer
+gloss: '"I bring, I carry" — one verb built out of two unrelated roots, and the parent of transfer, refer, prefer, differ, offer and suffer'
 concept_tag: VERB-BRING
 prerequisites: [LA-C41-claudo, LA-C37-do]
 sounds: [macron-none-short-vowel, macron-long-vowel]

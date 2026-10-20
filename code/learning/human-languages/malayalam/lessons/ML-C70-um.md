@@ -11,9 +11,10 @@ romanization: "veḷḷavuṁ ariyuṁ"
 concept_tag: ML-JOIN-UM
 prerequisites: [ML-C15-vellam-ari]
 sounds: []
-roots: []
+roots: [dravidian-um-and, vellam-flood-white, ari-rice-dravidian]
+etymology_hook: "-um 'and' is native, as in Tamil; veḷḷam 'water' (DEDR 5503) and ari 'rice' (DEDR 215) are native too"
 duration:
-  max_seconds: 240
+  max_seconds: 278
 requires:
   knowledge: [ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02]
 introduces:
@@ -72,6 +73,8 @@ the two you will meet most:
 Neither is a special case to memorise. Both are the same instinct a mouth has
 when one sound runs into another, and Malayalam writes down what the mouth
 already does.
+
+**Where the words come from.** The ending *-um* is native Dravidian; Tamil joins a list with the same *-um*. Both nouns are native as well: *veḷḷam*, "water", is one word with Tamil *veḷḷam*, "flood" (DEDR 5503), and *ari*, "rice", with Tamil *ari* (DEDR 215).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-UM-01, ML-CONCEPT-C15-VELLAM-ARI-01] -->

@@ -13,7 +13,8 @@ gloss: "the day after tomorrow"
 concept_tag: LA-FUT163-PERENDIE
 prerequisites: [LA-C162-antea, LA-C162-accido]
 sounds: []
-roots: []
+roots: [perendie-latin, dies-latin]
+etymology_hook: "perendiē 'the day after tomorrow' — 'on the day beyond', with diē 'on the day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C162-accido]
 <!-- hl-knowledge: introduces=[LA-LEX-C163-FUT163-01]; assesses=[] -->
 
 **perendiē** — "the day after tomorrow". One day further on than **crās**: **Perendiē Rōmam ībō.** — "The day after tomorrow I will go to Rome." **ībō** is the future of **eō**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perendiē** is usually explained as a word for "beyond", like Greek *peran*, "on the other side" (Lewis & Short), with *diē*, "on the day": on the day beyond tomorrow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

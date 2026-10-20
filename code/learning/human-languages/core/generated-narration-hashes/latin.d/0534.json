@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:2752a43cc1ff8185",
+  "lessonIds": [
+    "LA-C534-osculum",
+    "LA-C534-basium",
+    "LA-C534-basio",
+    "LA-C534-suavium",
+    "LA-C534-amplexus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch534.txt",
+  "json": "latin/narration/ch534.json",
+  "textHash": "fnv1a64:44ac508b8a2f6cc2",
+  "jsonHash": "fnv1a64:03aea8ea24e9d66d",
+  "findings": []
+}

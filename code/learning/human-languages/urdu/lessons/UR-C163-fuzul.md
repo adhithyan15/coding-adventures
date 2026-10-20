@@ -14,7 +14,8 @@ romanization: "fuzūl"
 concept_tag: UR-SIFAT163-FUZUL
 prerequisites: [UR-C162-hindustani, UR-C162-surmai]
 sounds: []
-roots: []
+roots: [arabic-fudul]
+etymology_hook: "fuzūl ← Arabic fuḍūl 'excesses, what is left over', through Persian (Lane, root f-ḍ-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C162-surmai]
 <!-- hl-knowledge: introduces=[UR-LEX-C163-SIFAT163-01]; assesses=[] -->
 
 **فضول** — *fuzūl* — "pointless, wasteful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فضول** (*fuzūl*) is a loan from Arabic *fuḍūl*, "excesses, what is left over", which reached Urdu through Persian. Its Arabic root is *f-ḍ-l* (Lane). It is the plural of *faḍl*, "excess".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

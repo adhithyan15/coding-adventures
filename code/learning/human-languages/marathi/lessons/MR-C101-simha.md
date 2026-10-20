@@ -14,7 +14,8 @@ romanization: "siṁha"
 concept_tag: MR-ANIMALS101-SIMHA
 prerequisites: [MR-C100-paksi, MR-C101-undir]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "siṁha ← Sanskrit siṁha 'lion', a tatsama (CDIAL 13384)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C101-undir]
 <!-- hl-knowledge: introduces=[MR-LEX-C101-ANIMALS101-02]; assesses=[] -->
 
 **सिंह** — *siṁha* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सिंह** (*siṁha*) is Sanskrit *siṁha*, "lion", taken over whole as a learned loan, a tatsama (CDIAL 13384).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

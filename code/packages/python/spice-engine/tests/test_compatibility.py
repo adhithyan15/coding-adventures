@@ -946,6 +946,20 @@ R1 in out 1k
     assert noise.stop_frequency == pytest.approx(1.0e3)
 
 
+def test_resolve_deck_analyses_accepts_parser_style_noise_tails() -> None:
+    summary = resolve_deck_analyses(
+        """
+.noise V(out) V1 1k 2k temp=310
+.end
+"""
+    )
+
+    assert summary.diagnostics == ()
+    noise = summary.analyses[0]
+    assert noise.frequencies == pytest.approx((1.0e3, 2.0e3))
+    assert noise.temperature == pytest.approx(310.0)
+
+
 def test_resolve_deck_analyses_reports_invalid_cards() -> None:
     summary = resolve_deck_analyses(
         """

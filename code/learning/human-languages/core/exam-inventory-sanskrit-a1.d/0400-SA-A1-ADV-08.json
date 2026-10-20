@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-ADV-08",
+  "category": "Avyaya — the indeclinable and the adverb",
+  "label": "frequency: always, again, again and again",
+  "probe": [
+    "SA-LEX-C17-TIME-05",
+    "SA-LEX-PUNAH",
+    "SA-LEX-C49-REPLY-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADV-02"
+  ],
+  "note": "sadā, punaḥ and muhuḥ."
+}

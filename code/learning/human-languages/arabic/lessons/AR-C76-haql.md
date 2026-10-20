@@ -14,7 +14,8 @@ romanization: "ḥaql"
 concept_tag: AR-NATURE76-HAQL
 prerequisites: [AR-C76-hajar, AR-C76-raml]
 sounds: []
-roots: []
+roots: [ḥ-q-l]
+etymology_hook: "ḥaql: built on the root ḥ-q-l, 'young crops, a sown field' (Lane); Lane's ḥaql is a field of young green crops"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C76-raml]
 <!-- hl-knowledge: introduces=[AR-LEX-C76-NATURE76-05]; assesses=[] -->
 
 **حقل** — *ḥaql* — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حقل** (*ḥaql*) is built on the native Arabic root *ḥ-q-l*, "young crops, a sown field" (Lane). Lane's *ḥaql* is a field of young green crops.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

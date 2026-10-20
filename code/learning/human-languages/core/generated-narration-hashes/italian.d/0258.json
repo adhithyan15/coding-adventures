@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 258,
-  "sourceHash": "fnv1a64:1029564835d2d722",
+  "sourceHash": "fnv1a64:42f5721717a41eb9",
   "lessonIds": [
     "IT-C258-tifoso",
     "IT-C258-premio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch258.txt",
   "json": "italian/narration/ch258.json",
-  "textHash": "fnv1a64:b9892cb521f59594",
-  "jsonHash": "fnv1a64:bac6f47807981a75",
+  "textHash": "fnv1a64:18c0d7a3d0d4c6d1",
+  "jsonHash": "fnv1a64:528747ce5e6bcf62",
   "findings": []
 }

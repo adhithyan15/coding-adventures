@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:1586d15140a39d23",
+  "lessonIds": [
+    "IT-C315-celebrare",
+    "IT-C315-ricorrenza",
+    "IT-C315-anniversario",
+    "IT-C315-auguri",
+    "IT-C315-augurare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch315.txt",
+  "json": "italian/narration/ch315.json",
+  "textHash": "fnv1a64:86cdafc01a232b56",
+  "jsonHash": "fnv1a64:c1c95063df6462a3",
+  "findings": []
+}

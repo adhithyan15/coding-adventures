@@ -1,0 +1,11 @@
+{
+  "id": "IT-C457-spiccioli",
+  "pathSegment": "IT-PATH-457-CASSA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-457-CASSA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C261-yuvam",
+  "pathSegment": "SA-PATH-261-OBJ261",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-261-OBJ261",
+      "order": 1
+    }
+  ]
+}

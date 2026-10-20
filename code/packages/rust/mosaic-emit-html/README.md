@@ -131,7 +131,7 @@ static snapshot.
 | Icon                 | `<span class="icon">`                                 |
 | Grid                 | `<table>` with fixture-driven `<thead>`/`<tbody>`     |
 | Input (compatibility)| `<input type="text">` or `<textarea>`                 |
-| HostInput (UI29)     | `<input type="text" value="{{value}}">`               |
+| HostInput (UI29)     | `<input type="text" value="{{value}}">`; `<textarea>{{value}}</textarea>` with `multiline: true` (no `data-on-commit`) |
 | HostButton (UI29)    | `<button>{{label}}</button>`                          |
 | HostSlider (UI29)    | `<input type="range" value="{{value}}">`            |
 | HostScroll (UI29)    | `<div style="overflow-y:auto; overflow-x:hidden">` — the axis (UI61) |

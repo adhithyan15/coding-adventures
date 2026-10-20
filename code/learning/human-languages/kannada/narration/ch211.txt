@@ -12,6 +12,9 @@ Before the new one: say the Kannada for free time, then the Kannada for Ugadi.
 You'll want to know: ನಿಯಮಿತವಾಗಿ.
 ನಿಯಮಿತವಾಗಿ — niyamitavāgi — "regularly".
 
+The word, taken apart.
+ನಿಯಮಿತವಾಗಿ (niyamitavāgi) is niyamita, "regulated", from Sanskrit niyamita, "restrained, fixed by rule", with the adverb ending -āgi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for Ugadi, then the Kannada for regularly.
 
 You'll want to know: ಇಲ್ಲಿಯವರೆಗೆ.
 ಇಲ್ಲಿಯವರೆಗೆ — illiyavarege — "so far, until now".
+
+The word, taken apart.
+ಇಲ್ಲಿಯವರೆಗೆ (illiyavarege) is native Dravidian: illi, "here" (DEDR 410), and varege, "up to", which DEDR 5261 lists as Kannada vare, "limit; up to, till": "up to here".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for regularly, then the Kannada for so far.
 You'll want to know: ವರೆಗೆ.
 ವರೆಗೆ — varege — "until, up to".
 
+The word, taken apart.
+ವರೆಗೆ (varege) is native Dravidian, one word with Tamil varampu, Telugu varuju and Malayalam varampu (DEDR 5261). DEDR lists Kannada bara, vare, "limit; up to, till".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for so far, then the Kannada for until.
 You'll want to know: ಸದ್ಯಕ್ಕೆ.
 ಸದ್ಯಕ್ಕೆ — sadyakke — "for now, for the time being".
 
+The word, taken apart.
+ಸದ್ಯಕ್ಕೆ (sadyakke) is sadya, "the present", from Sanskrit sadyas, "on the same day, at the very moment" (CDIAL 13123), with -kke, "for": "for the present".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for until, then the Kannada for for now.
 
 You'll want to know: ಅವಧಿ.
 ಅವಧಿ — avadhi — "a period, a duration".
+
+The word, taken apart.
+ಅವಧಿ (avadhi) is Sanskrit avadhi, "limit, term", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

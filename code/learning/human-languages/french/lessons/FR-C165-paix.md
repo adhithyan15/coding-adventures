@@ -13,7 +13,8 @@ gloss: "peace"
 concept_tag: FR-CHOSES165-PAIX
 prerequisites: [FR-C164-fleuve, FR-C165-guerre]
 sounds: []
-roots: []
+roots: [pax-latin]
+etymology_hook: "paix ← Latin pax, pacis 'peace' — the pax behind payer; English peace"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C165-guerre]
 <!-- hl-knowledge: introduces=[FR-LEX-C165-CHOSES165-02]; assesses=[] -->
 
 **la paix** — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paix** ← Old French *pais* ← Latin *pax*, *pacis*, "peace" (EtymDB 2.1) — inherited: the *pax* behind *payer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "desire (Lust haben: to feel like)"
 concept_tag: GE-THING165-LUST
 prerequisites: [GE-C165-glueck, GE-C165-spass]
 sounds: []
-roots: []
+roots: [germanic-lustuz]
+etymology_hook: "Lust ← Old High German lust ← Proto-Germanic *lustuz 'pleasure' — the same word as English lust"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C165-spass]
 <!-- hl-knowledge: introduces=[GE-LEX-C165-THING165-04]; assesses=[] -->
 
 **die Lust** — "desire (Lust haben: to feel like)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lust** ← Old High German *lust* ← Proto-Germanic *\*lustuz*, "pleasure, desire" — inherited, the same word as English *lust*, which narrowed its meaning. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

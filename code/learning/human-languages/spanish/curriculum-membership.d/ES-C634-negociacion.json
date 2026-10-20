@@ -1,0 +1,11 @@
+{
+  "id": "ES-C634-negociacion",
+  "pathSegment": "ES-PATH-634-PACTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-634-PACTO",
+      "order": 1
+    }
+  ]
+}

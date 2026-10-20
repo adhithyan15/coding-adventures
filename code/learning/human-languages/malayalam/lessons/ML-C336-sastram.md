@@ -14,7 +14,8 @@ romanization: "śāstraṁ"
 concept_tag: ML-JOLI336-SASTRAM
 prerequisites: [ML-C336-yantram, ML-C336-krsi]
 sounds: []
-roots: []
+roots: [sanskrit-shastra]
+etymology_hook: "śāstraṁ ← Sanskrit śāstra 'command, treatise', a tatsama (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C336-krsi]
 <!-- hl-knowledge: introduces=[ML-LEX-C336-JOLI336-04]; assesses=[] -->
 
 **ശാസ്ത്രം** — *śāstraṁ* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശാസ്ത്രം** (*śāstraṁ*) ← Sanskrit *śāstra*, "command, treatise", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12422).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

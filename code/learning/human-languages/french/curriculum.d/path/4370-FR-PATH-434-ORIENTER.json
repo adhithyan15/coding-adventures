@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-434-ORIENTER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-434-ORIENTER"
+  ],
+  "after": []
+}

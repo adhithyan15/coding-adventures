@@ -1,0 +1,11 @@
+{
+  "id": "IT-C428-turbolenza",
+  "pathSegment": "IT-PATH-428-VOLO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-428-VOLO",
+      "order": 2
+    }
+  ]
+}

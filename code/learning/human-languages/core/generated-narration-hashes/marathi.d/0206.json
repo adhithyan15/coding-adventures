@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 206,
-  "sourceHash": "fnv1a64:e3fc3db01086beec",
+  "sourceHash": "fnv1a64:f120a4c276493ee2",
   "lessonIds": [
     "MR-C206-sarvajanik",
     "MR-C206-khajgi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch206.txt",
   "json": "marathi/narration/ch206.json",
-  "textHash": "fnv1a64:d02d21ff4e9ad426",
-  "jsonHash": "fnv1a64:dd4f3a04a29265fc",
+  "textHash": "fnv1a64:5e349f19abe61999",
+  "jsonHash": "fnv1a64:153d83737b8a4aaa",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "nichevó"
 concept_tag: RU-NEG136-NICHEGO
 prerequisites: [RU-C135-to-travel, RU-C136-nikto]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "ничего is a form of ничто, ни 'not even' + что 'what'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C136-nikto]
 <!-- hl-knowledge: introduces=[RU-LEX-C136-NEG136-02]; assesses=[] -->
 
 **ничего** (*nichevó*) — "nothing". Spelled with **г**, said with a *v*, like **сегодня**. **Я ничего не знаю.** — *ya nichevó ne znáyu* — "I don't know anything." On its own, **Ничего!** means "It's all right!", for instance after **Извините!**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ничего** is a form of *ничто*, "nothing": *ни*, "not even", with *что*, "what" (Vasmer). The *г* is said *в*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

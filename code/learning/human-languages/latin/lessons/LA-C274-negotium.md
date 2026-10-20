@@ -13,7 +13,8 @@ gloss: "business"
 concept_tag: LA-RES274-NEGOTIUM
 prerequisites: [LA-C273-neptis, LA-C274-otium]
 sounds: []
-roots: []
+roots: [negotium-latin, otium-latin]
+etymology_hook: "negōtium 'business' — nec 'not' + ōtium 'leisure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C274-otium]
 <!-- hl-knowledge: introduces=[LA-LEX-C274-RES274-02]; assesses=[] -->
 
 **negōtium, negōtiī** — "business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**negōtium** is *nec*, "not", with *ōtium*, "leisure" (Lewis & Short): no leisure, so business. Festus already took it apart this way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

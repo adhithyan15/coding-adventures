@@ -14,7 +14,8 @@ romanization: "praṇāmaḥ"
 concept_tag: SA-COURTESY-BOW
 prerequisites: [SA-C29-pardon, SA-C27-enough, SA-C28-journey]
 sounds: []
-roots: []
+roots: [sanskrit-pranama, sanskrit-nam-bend]
+etymology_hook: "praṇāma 'a bow' ← pra 'forward' + the root √nam 'bend, bow', the root of namas (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C29-pardon]
 **प्रणामः** is a bow — the act, named as a thing. It is *pra* + *nam*, "to bend forward".
 
 And you have met that *nam* twice already without being told. **नमस्ते** is *namas* + *te*, "a bow to you". **नमस्कारः** is *namas* + *kāra*, "the making of a bow". Now प्रणामः: the same bending root, a third time, with a prefix. Three of the first words in this book turn out to be one gesture described three ways.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Praṇāma* is built from the prefix *pra*, "forward", and the root √nam, "to bend,
+bow" (MW), the root inside *namas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

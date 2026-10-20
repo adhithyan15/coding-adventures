@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:1fb7669b05b42a9e",
+  "lessonIds": [
+    "SA-C260-mam",
+    "SA-C260-tvam",
+    "SA-C260-singular-object-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch260.txt",
+  "json": "sanskrit/narration/ch260.json",
+  "textHash": "fnv1a64:86ec70d51856f4f7",
+  "jsonHash": "fnv1a64:d05cdfe1d62a37f8",
+  "findings": []
+}

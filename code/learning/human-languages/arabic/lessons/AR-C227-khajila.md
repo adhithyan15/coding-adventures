@@ -14,7 +14,8 @@ romanization: "khajila"
 concept_tag: AR-VERB-KHAJILA
 prerequisites: [AR-C226-akhbara, AR-C226-ittafaqa]
 sounds: []
-roots: []
+roots: [kh-j-l]
+etymology_hook: "khajila: built on the root kh-j-l, 'to be ashamed, shy' (Lane); khajila is the plain verb, 'he was abashed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C226-ittafaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C227-ACT227-01]; assesses=[] -->
 
 **خجل** — *khajila* — "to be shy, to be embarrassed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خجل** (*khajila*) is built on the native Arabic root *kh-j-l*, "to be ashamed, shy" (Lane). *Khajila* is the plain verb, "he was abashed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

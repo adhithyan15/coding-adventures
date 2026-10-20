@@ -15,6 +15,7 @@ concept_tag: HI-THINGS149-CINTI
 prerequisites: [HI-C148-makkhi, HI-C149-macchar]
 sounds: []
 roots: []
+etymology_hook: "cīṇṭī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C149-macchar]
 <!-- hl-knowledge: introduces=[HI-LEX-C149-THINGS149-02]; assesses=[] -->
 
 **चींटी** — *cīṇṭī* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चींटी** (*cīṇṭī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

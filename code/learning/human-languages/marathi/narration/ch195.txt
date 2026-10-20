@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to protect, then the Marathi for to die.
 You'll want to know: सावध करणे.
 सावध करणे — sāvadh karṇe — "to warn".
 
+The word, taken apart.
+सावध, "alert", is Sanskrit sāvadhāna, "attentive": sa-, "with", and avadhāna, "attention", shortened. करणे is "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to die, then the Marathi for to warn.
 
 You'll want to know: पुरणे.
 पुरणे — purṇe — "to be enough".
+
+The word, taken apart.
+पुरणे (purṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūrayati, "fills" (CDIAL 8335). CDIAL glosses the Marathi verb "to satisfy".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to warn, then the Marathi for to be enou
 You'll want to know: जळणे.
 जळणे — jaḷṇe — "to burn".
 
+The word, taken apart.
+जळणे (jaḷṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jvalati, "burns brightly" (CDIAL 5306).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to be enough, then the Marathi for to bu
 You'll want to know: ठोठावणे.
 ठोठावणे — ṭhoṭhāvṇe — "to knock".
 
+The word, taken apart.
+The origin of ठोठावणे (ṭhoṭhāvṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to burn, then the Marathi for to knock.
 
 You'll want to know: तुलना करणे.
 तुलना करणे — tulnā karṇe — "to compare".
+
+The word, taken apart.
+तुलना is Sanskrit tulanā, "weighing, comparing", a tatsama built on tul, "to weigh". करणे is "to do".
 
 What you've built.
 One more word for this chapter.

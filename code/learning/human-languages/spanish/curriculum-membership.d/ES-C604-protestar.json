@@ -1,0 +1,11 @@
+{
+  "id": "ES-C604-protestar",
+  "pathSegment": "ES-PATH-604-PROTESTA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-604-PROTESTA",
+      "order": 0
+    }
+  ]
+}

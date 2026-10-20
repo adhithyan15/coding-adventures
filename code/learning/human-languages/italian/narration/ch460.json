@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 460,
+  "title": "Nel bosco",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:100007c88fbad44d",
+  "lessons": [
+    {
+      "id": "IT-C460-radura",
+      "sequence": 25910,
+      "title": "la radura — the clearing (in a wood)",
+      "headword": "la radura",
+      "romanization": "la radura",
+      "gloss": "the clearing (in a wood)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:406e94b95554d478",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the bank transfer, then the Italian for the instalment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la radura",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la radura — \"the clearing (in a wood)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Abbiamo mangiato in una radura. We ate in a clearing."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the trees are radi, far apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "radura is built on rado 'sparse', which is inherited from Latin rārus 'thin, far apart' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la radura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la radura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la radura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la radura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la radura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la radura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the bank transfer, then the Italian for the instalment, then say la radura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the bank transfer, then the Italian for the instalment, then say *la radura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la radura mean? (\"The clearing (in a wood)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C460-ruscello",
+      "sequence": 25920,
+      "title": "il ruscello — the brook, the stream",
+      "headword": "il ruscello",
+      "romanization": "il ruscello",
+      "gloss": "the brook, the stream",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b64420d29e8b228f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the instalment, then the Italian for the clearing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il ruscello",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il ruscello — \"the brook, the stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Beviamo l'acqua fresca del ruscello. We drink the cool water of the brook."
+            },
+            {
+              "kind": "speech",
+              "text": "A small, quiet stream; il fiume is a river."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ruscello is inherited from Vulgar Latin rīvuscellus (EtymDB), a little form of Latin rīvus 'stream'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il ruscello",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il ruscello*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il ruscello, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il ruscello*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il ruscello",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il ruscello*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the instalment, then the Italian for the clearing, then say il ruscello again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the instalment, then the Italian for the clearing, then say *il ruscello* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il ruscello mean? (\"The brook, the stream\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C460-torrente",
+      "sequence": 25930,
+      "title": "il torrente — the mountain stream, the torrent",
+      "headword": "il torrente",
+      "romanization": "il torrente",
+      "gloss": "the mountain stream, the torrent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73576a6fdfd5b6dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the clearing, then the Italian for the brook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il torrente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il torrente — \"the mountain stream, the torrent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dopo la pioggia il torrente è pieno. After the rain the mountain stream is full."
+            },
+            {
+              "kind": "speech",
+              "text": "Fast, and often dry in summer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torrente is inherited from Latin torrēns, torrentem 'rushing stream' (EtymDB), a form of torrēre 'to scorch'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il torrente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il torrente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il torrente, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il torrente*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il torrente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il torrente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the clearing, then the Italian for the brook, then say il torrente again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the clearing, then the Italian for the brook, then say *il torrente* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il torrente mean? (\"The mountain stream, the torrent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C460-cespuglio",
+      "sequence": 25940,
+      "title": "il cespuglio — the bush, the shrub",
+      "headword": "il cespuglio",
+      "romanization": "il cespuglio",
+      "gloss": "the bush, the shrub",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e88fd072b04e0df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the brook, then the Italian for the mountain stream."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il cespuglio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il cespuglio — \"the bush, the shrub\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il gatto si nasconde dietro un cespuglio. The cat hides behind a bush."
+            },
+            {
+              "kind": "speech",
+              "text": "Un cespuglio di rose — a rose bush."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cespuglio is traced in EtymDB to Latin caespuculum, a little form of caespes 'turf, sod'; it is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il cespuglio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il cespuglio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il cespuglio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il cespuglio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il cespuglio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il cespuglio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the brook, then the Italian for the mountain stream, then say il cespuglio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the brook, then the Italian for the mountain stream, then say *il cespuglio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il cespuglio mean? (\"The bush, the shrub\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C460-guadare",
+      "sequence": 25950,
+      "title": "guadare — to wade across, to ford",
+      "headword": "guadare",
+      "romanization": "guadare",
+      "gloss": "to wade across, to ford",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef60952bbf406314",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the mountain stream, then the Italian for the bush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guadare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guadare — \"to wade across, to ford\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Abbiamo guadato il ruscello a piedi. We waded across the brook on foot."
+            },
+            {
+              "kind": "speech",
+              "text": "Il guado — the ford."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guadare is built on guado 'ford', which is inherited from Latin vadum 'shallow place' (Lewis & Short), its gu- shaped by a Germanic word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guadare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guadare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guadare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guadare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with guadare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *guadare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the mountain stream, then the Italian for the bush, then say guadare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the mountain stream, then the Italian for the bush, then say *guadare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guadare mean? (\"To wade across, to ford\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R460-ripasso-453-460",
+      "sequence": 25960,
+      "title": "Ripasso dei capitoli 453–460",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 453-460",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:788dfe9dba65c43d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the hardware shop and the haberdashery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hardware shop, the haberdashery, the perfume shop, the herbalist's, the jeweller's",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hardware shop, the haberdashery, the perfume shop, the herbalist's, the jeweller's]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the delicatessen, the fishmonger's, the greengrocer, the cake shop, the rotisserie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the delicatessen, the fishmonger's, the greengrocer, the cake shop, the rotisserie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cobbler, to resole, the tailor, to shorten, the locksmith",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cobbler, to resole, the tailor, to shorten, the locksmith]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hairdresser, the barber, the beautician, the optician, to remove stains from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hairdresser, the barber, the beautician, the optician, to remove stains from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cashier, the small change, the fitting room, the clearance sale, to haggle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cashier, the small change, the fitting room, the clearance sale, to haggle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the registered letter, the shipping, the sender, to put postage on, to deliver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the registered letter, the shipping, the sender, to put postage on, to deliver]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to withdraw, the withdrawal, to charge, the bank transfer, the instalment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to withdraw, the withdrawal, to charge, the bank transfer, the instalment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the clearing, the brook, the mountain stream, the bush, to wade across",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the clearing, the brook, the mountain stream, the bush, to wade across]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hardware shop? (la ferramenta.) The haberdashery? (la merceria.) The perfume shop? (la profumeria.) The herbalist's? (l'erboristeria.) The jeweller's? (la gioielleria.) The delicatessen? (la salumeria.) The fishmonger's? (la pescheria.) The greengrocer? (il fruttivendolo.) The cake shop? (la pasticceria.) The rotisserie? (la rosticceria.) The cobbler? (il calzolaio.) To resole? (risuolare.) The tailor? (il sarto.) To shorten? (accorciare.) The locksmith? (il fabbro.) The hairdresser? (il parrucchiere.) The barber? (il barbiere.) The beautician? (l'estetista.) The optician? (l'ottico.) To remove stains from? (smacchiare.) The cashier? (il cassiere.) The small change? (gli spiccioli.) The fitting room? (il camerino.) The clearance sale? (la svendita.) To haggle? (mercanteggiare.) The registered letter? (la raccomandata.) The shipping? (la spedizione.) The sender? (il mittente.) To put postage on? (affrancare.) To deliver? (recapitare.) To withdraw? (prelevare.) The withdrawal? (il prelievo.) To charge? (addebitare.) The bank transfer? (il bonifico.) The instalment? (la rata.) The clearing? (la radura.) The brook? (il ruscello.) The mountain stream? (il torrente.) The bush? (il cespuglio.) To wade across? (guadare.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

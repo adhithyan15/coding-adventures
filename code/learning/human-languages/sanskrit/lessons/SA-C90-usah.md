@@ -14,7 +14,8 @@ romanization: "uṣaḥ"
 concept_tag: SA-TIME90-USAH
 prerequisites: [SA-C90-aparahnah, SA-C90-madhyaratrih]
 sounds: []
-roots: []
+roots: [sanskrit-ushas]
+etymology_hook: "uṣas 'dawn' is inherited: MW compares Greek ēōs and Latin aurōra (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C90-madhyaratrih]
 <!-- hl-knowledge: introduces=[SA-LEX-C90-TIME90-05]; assesses=[] -->
 
 **उषः** — *uṣaḥ* — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Uṣas* is inherited from Proto-Indo-European: MW compares Greek *ēōs* and Latin
+*aurōra*, "dawn", and EtymDB links them to one ancestor. In the Rigveda the dawn
+is a goddess.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

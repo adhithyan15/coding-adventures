@@ -14,7 +14,8 @@ romanization: "joṛā"
 concept_tag: HI-THG245-JORA
 prerequisites: [HI-C245-kuch, HI-C245-darjan]
 sounds: []
-roots: []
+roots: [indo-aryan-yutati]
+etymology_hook: "joṛā: CDIAL lists Hindi joṛ 'pair' under *yoṭa, a noun it reconstructs beside *yuṭati 'is joined' (10496)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C245-darjan]
 <!-- hl-knowledge: introduces=[HI-LEX-C245-THG245-05]; assesses=[] -->
 
 **जोड़ा** — *joṛā* — "a pair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जोड़ा** (*joṛā*) is a tadbhava, a word inherited and reshaped by sound change. It belongs with *\*yoṭa*, a noun CDIAL reconstructs from its descendants in the entry for *\*yuṭati*, "is joined" (CDIAL 10496). CDIAL lists Hindi *joṛ* and *joṛī*, "pair", there, and Gujarati *joṛā*, "a pair of shoes", but not the Hindi *joṛā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

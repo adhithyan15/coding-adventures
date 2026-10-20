@@ -14,7 +14,8 @@ romanization: "rakiba"
 concept_tag: AR-VERB-RAKIBA
 prerequisites: [AR-C191-warsha, AR-C191-tawqi]
 sounds: []
-roots: []
+roots: [r-k-b]
+etymology_hook: "rakiba: built on the root r-k-b, 'to ride, to mount' (Lane); rakiba is the plain verb, 'he rode'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C191-tawqi]
 <!-- hl-knowledge: introduces=[AR-LEX-C192-ACT192-01]; assesses=[] -->
 
 **ركب** — *rakiba* — "to ride, to get on (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ركب** (*rakiba*) is built on the native Arabic root *r-k-b*, "to ride, to mount" (Lane). *Rakiba* is the plain verb, "he rode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

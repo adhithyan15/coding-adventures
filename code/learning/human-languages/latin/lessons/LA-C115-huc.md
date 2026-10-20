@@ -13,7 +13,8 @@ gloss: "to here, hither"
 concept_tag: LA-LOC115-HUC
 prerequisites: [LA-C114-dexter, LA-C114-sinister]
 sounds: []
-roots: []
+roots: [huc-latin, hic-latin]
+etymology_hook: "hūc 'to here' — an old case form of hic 'this': to this place"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C114-sinister]
 <!-- hl-knowledge: introduces=[LA-LEX-C115-LOC115-01]; assesses=[] -->
 
 **hūc** — "to here, hither".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hūc** is an old case form of *hic*, "this": "to this place". Early Latin wrote it *hoc* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

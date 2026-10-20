@@ -13,7 +13,8 @@ gloss: "to enjoy"
 concept_tag: LA-VERB-FRUOR
 prerequisites: [LA-C230-appareo, LA-C231-verto]
 sounds: []
-roots: []
+roots: [frui-latin]
+etymology_hook: "fruor 'to enjoy' — inherited, usually traced to PIE *bhrug- 'to make use of'; English fruit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C231-verto]
 <!-- hl-knowledge: introduces=[LA-LEX-C231-ACT231-02]; assesses=[] -->
 
 **fruor, fruī** — "to enjoy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fruor** is inherited, usually traced to Proto-Indo-European *\*bhrug-*, "to make use of, to enjoy" (EtymDB 2.1). English *fruit* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

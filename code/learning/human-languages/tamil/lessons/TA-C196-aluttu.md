@@ -14,7 +14,8 @@ romanization: "aḻuttu"
 concept_tag: TA-VERB-ALUTTU
 prerequisites: [TA-C196-kili, TA-C196-ila]
 sounds: []
-roots: []
+roots: [dravidian-azhuttu-press]
+etymology_hook: "அழுத்து — native Dravidian (DEDR 285); Malayalam aḻuttuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C196-ila]
 <!-- hl-knowledge: introduces=[TA-LEX-C196-ACT196-03]; assesses=[] -->
 
 **அழுத்து** — *aḻuttu* — "to press".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழுத்து** (*aḻuttu*) is native Dravidian. DEDR 285 lists Malayalam *aḻuttuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

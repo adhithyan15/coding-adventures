@@ -13,7 +13,8 @@ gloss: "to move away"
 concept_tag: FR-VERB-ELOIGNER
 prerequisites: [FR-C149-souffrir, FR-C149-rever]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "s'éloigner ← Old French esloignier, built on loin 'far'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C149-rever]
 <!-- hl-knowledge: introduces=[FR-LEX-C150-VERBES150-01]; assesses=[] -->
 
 **s'éloigner** — "to move away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'éloigner** ← Old French *esloignier*, built on *loing*, "far", the old spelling of *loin* (EtymDB 2.1): to put far off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

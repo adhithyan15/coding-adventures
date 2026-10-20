@@ -14,7 +14,8 @@ romanization: "paina"
 concept_tag: TE-LOC101-PAINA
 prerequisites: [TE-C100-daggara, TE-C100-duram]
 sounds: []
-roots: []
+roots: [dravidian-pai-top]
+etymology_hook: "paina: native pai 'top, upon' (DEDR 4451), one word with Kannada pai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C100-duram]
 <!-- hl-knowledge: introduces=[TE-LEX-C101-LOC101-01]; assesses=[] -->
 
 **పైన** — *paina* — "above, on top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పైన** (*paina*) is native Dravidian: *pai*, "top; on, above", one word with Kannada *pai*, "upper" (DEDR 4451), with the ending *-na*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

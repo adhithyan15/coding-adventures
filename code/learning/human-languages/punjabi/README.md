@@ -37,6 +37,10 @@ current book is exam-ready or that the future certificate is externally
 accredited. Task inventories, mocks, rubrics, answer keys, calibration, and
 book-only human validation remain explicit backlog.
 
+Chapter 173 adds two short, pen-only retrieval returns for the already-taught
+A1 timed message and its separate repair. They preserve the first timed
+attempt and do not count as either full mock or human validation.
+
 ## Progress
 
 - **Chapter 1 — Greetings and the first written answer**

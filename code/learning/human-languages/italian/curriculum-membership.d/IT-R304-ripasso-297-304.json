@@ -1,0 +1,11 @@
+{
+  "id": "IT-R304-ripasso-297-304",
+  "pathSegment": "IT-PATH-304-TERREMOTO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-304-TERREMOTO",
+      "order": 5
+    }
+  ]
+}

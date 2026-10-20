@@ -13,7 +13,8 @@ gloss: "an ant"
 concept_tag: LA-THINGS132-FORMICA
 prerequisites: [LA-C132-apis, LA-C132-musca]
 sounds: []
-roots: []
+roots: [formica-latin]
+etymology_hook: "formīca 'ant' — inherited, usually traced to PIE *morwi- 'ant'; Greek myrmēx is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C132-musca]
 <!-- hl-knowledge: introduces=[LA-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **formīca, formīcae** — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**formīca** is inherited, usually traced to Proto-Indo-European *\*morwi-*, "ant" (EtymDB 2.1), with its first sound changed; Greek *myrmēx*, "ant", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

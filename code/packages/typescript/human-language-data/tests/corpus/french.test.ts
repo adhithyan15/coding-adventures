@@ -136,11 +136,11 @@ it("pins French modality", () => expectLanguageModality("french"));
 // with its Romance sisters and the areal change that retired it. Twelve lessons
 // now own one thing each; nine atoms, well under the ceiling.
 //
-// `finir` and `vendre` appear as EXAMPLES of the -ir and -re participle classes
-// and are deliberately not taught as vocabulary -- neither verb exists anywhere
-// in this corpus, and smuggling two headwords in to illustrate a pattern would
-// have been exactly the cramming the atom ceiling exists to prevent. The lesson
-// says so in as many words.
+// FR-C15-participe-ir-re shows the participles `fini` and `vendu` as EXAMPLES of
+// the -ir and -re classes, without their infinitives: `finir` gets its own
+// lesson later (FR-C37-finir) and `vendre` is not taught. Smuggling two
+// headwords in to illustrate a pattern would have been exactly the cramming the
+// atom ceiling exists to prevent. The lesson says so in as many words.
 // 24 -> 25 culture claims: the areal change. French, German and Italian each
 // swapped a simple past for a compound one, and they did it as NEIGHBOURS --
 // one change spreading by contact across a connected block -- while Spanish and
@@ -205,7 +205,12 @@ it("pins French lesson-content budgets", () =>
     // two reviews per run.
     // 1245 -> 1376: the fourth and last tranche, chapters 233-257: 125 word
     // lessons and two reviews per run. French attains A2 here.
-    lessons: 1376,
+    // 1376 -> 1412: chapters 258-267, the B1 core that realizes all five B1
+    // spine nodes (imparfait, reasons, travel, experience, conditionnel):
+    // 36 lessons, one reading and one writing, no idiom, sense or culture claim.
+    // 1412 -> 2772: chapters 268-531, the B1 vocabulary: 1,320 word lessons (one
+    // headword each) and 40 spaced reviews. French attains B1 here.
+    lessons: 2772,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,
@@ -233,6 +238,9 @@ it("pins French's writing runway, now complete at every level", () => {
     "controlled-composition",
     "timed-assessment-production",
     "connected-composition",
+    // FR-W267-six-lignes: six connected lines about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
+    "connected-composition",
   ]);
 });
 
@@ -243,6 +251,9 @@ it("pins French-owned objective activities without extending a global ledger", (
     .sort();
   expect(ids).toEqual([
     "FR-C18-oui-more-negative",
+    // FR-C259-lecture, the B1 core's first connected story: one objective
+    // check that the reader can tell the passé composé events from the scene.
+    "FR-C259-lecture-evenements",
     "FR-C45-details-age",
     "FR-C45-instructions-listen",
     "FR-C45-premiere-lecture-city",

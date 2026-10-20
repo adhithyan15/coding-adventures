@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:295128240b94519d",
+  "lessonIds": [
+    "IT-C418-biglietteria",
+    "IT-C418-abbonamento",
+    "IT-C418-timbrare",
+    "IT-C418-controllore",
+    "IT-C418-supplemento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch418.txt",
+  "json": "italian/narration/ch418.json",
+  "textHash": "fnv1a64:3135d60fbd592754",
+  "jsonHash": "fnv1a64:b86b25d8ec877dbc",
+  "findings": []
+}

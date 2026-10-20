@@ -14,7 +14,8 @@ romanization: "ūpar"
 concept_tag: UR-PLACE79-UPAR
 prerequisites: [UR-C78-andar, UR-C78-bahar]
 sounds: []
-roots: []
+roots: [indo-aryan-uppari]
+etymology_hook: "ūpar ← *uppari 'above', a reconstructed form; a tadbhava (CDIAL 2333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C78-bahar]
 <!-- hl-knowledge: introduces=[UR-LEX-C79-PLACE79-01]; assesses=[] -->
 
 **اوپر** — *ūpar* — "above, up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اوپر** (*ūpar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*uppari*, "above", a form CDIAL reconstructs from its descendants (CDIAL 2333). It is Sanskrit *upari*, "above", with its consonant doubled for emphasis.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

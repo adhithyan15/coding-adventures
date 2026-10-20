@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Chegou a ambulância",
+  "label": "ch:pt-chegou-a-ambulancia",
+  "canDo": "I can describe help arriving: the ambulance and its siren, the first-aiders and the stretcher.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C305-maca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can describe help arriving: the ambulance and its siren, the first-aiders and the stretcher.",
+    "assesses": [
+      "PT-LEX-C305-SOCORRO-03",
+      "PT-LEX-C305-SOCORRO-04",
+      "PT-LEX-C305-SOCORRO-05"
+    ]
+  }
+}

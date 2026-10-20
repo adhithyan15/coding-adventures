@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:c9ea230db520c938",
+  "lessonIds": [
+    "GE-C326-vorheizen",
+    "GE-C326-einfetten",
+    "GE-C326-backblech",
+    "GE-C326-auflaufform",
+    "GE-C326-braeunen"
+  ],
+  "tex": "german/book/chapters/ch326-ab-in-den-ofen.tex"
+}

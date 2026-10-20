@@ -11,7 +11,8 @@ romanization: ""
 concept_tag: VERB-NEGATE
 prerequisites: [ES-C06-hablo-espanol]
 sounds: []
-roots: []
+roots: [non-latin]
+etymology_hook: "no ← Latin non 'not', which lost its final n; Old Spanish still wrote non"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,11 @@ carrying the negation. Spanish never borrowed the habit. The word goes in front
 of the verb and the sentence is finished.
 
 That means every sentence you can already say, you can now also unsay.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**no** is Latin *non*, "not", which lost its final *-n*; Old Spanish still wrote *non*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-NOVERBO-01] -->

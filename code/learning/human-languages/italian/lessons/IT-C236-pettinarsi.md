@@ -13,7 +13,8 @@ gloss: "to comb one's hair"
 concept_tag: IT-VERB-PETTINARSI
 prerequisites: [IT-C236-riposare, IT-C236-svegliarsi]
 sounds: []
-roots: []
+roots: [pecten-latin]
+etymology_hook: "pettinarsi ← Latin pectinare 'to comb' + -si 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C236-svegliarsi]
 <!-- hl-knowledge: introduces=[IT-LEX-C236-VERBI236-03]; assesses=[] -->
 
 **pettinarsi** — "to comb one's hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pettinarsi** ← Latin *pectinare*, "to comb", from *pecten*, "a comb", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

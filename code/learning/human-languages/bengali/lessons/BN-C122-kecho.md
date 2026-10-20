@@ -14,7 +14,8 @@ romanization: "kechô"
 concept_tag: BN-THINGS122-KECHO
 prerequisites: [BN-C122-machhi, BN-C122-mosha]
 sounds: []
-roots: []
+roots: [indo-aryan-kencuka]
+etymology_hook: "kechô ← *keñcuka 'worm', a reconstructed form; a tadbhava (CDIAL 3459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C122-mosha]
 <!-- hl-knowledge: introduces=[BN-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **কেঁচো** — *kechô* — "an earthworm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কেঁচো** (*kechô*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*keñcuka*, "worm", a form CDIAL reconstructs from its descendants (CDIAL 3459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

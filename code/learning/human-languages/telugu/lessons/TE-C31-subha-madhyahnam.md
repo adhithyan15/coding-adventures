@@ -6,7 +6,7 @@ sequence: 590
 chapter: 31
 type: phrase
 headword: శుభ మధ్యాహ్నం
-gloss: "good afternoon" (śubha madhyāhnam), built on the widened "noon" word rather than the classical later-afternoon term
+gloss: '"good afternoon" (śubha madhyāhnam), built on the widened "noon" word rather than the classical later-afternoon term'
 romanization: "śubha madhyāhnam"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [TE-C28-madhyahnam-widened, TE-C29-subhodayam, TE-C30-subha-sayantram]
@@ -49,6 +49,11 @@ Telugu could instead have built the phrase on **అపరాహ్నం**
 not. Kannada made the same choice in **ಶುಭ ಮಧ್ಯಾಹ್ನ** (*śubha madhyāhna*):
 both languages chose the everyday “noon, widened” word from two available
 classical terms.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శుభ** (*śubha*) is Sanskrit *śubha*, "bright, auspicious, good" (CDIAL 12532), and **మధ్యాహ్నం** (*madhyāhnam*) is Sanskrit *madhyāhna*, "midday" (CDIAL 9818), with the Telugu noun ending *-ṁ*: both are taken over whole.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-PRAGMATICS-C28-MADHYAHNAM-WIDENED-01, TE-ETYMON-C28-MADHYAHNAM-WIDENED-02, TE-ETYMON-C29-SUBHODAYAM-01, TE-PRAGMATICS-C29-SUBHODAYAM-02, TE-ETYMON-C30-SUBHA-SAYANTRAM-01, TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02, TE-LEX-C31-SUBHA-MADHYAHNAM-01] -->

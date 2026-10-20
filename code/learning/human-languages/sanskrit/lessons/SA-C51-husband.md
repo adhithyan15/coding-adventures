@@ -14,7 +14,8 @@ romanization: "patiḥ"
 concept_tag: SA-KIN-PATI
 prerequisites: [SA-C50-verse, SA-C49-then, SA-C50-sound]
 sounds: []
-roots: []
+roots: [sanskrit-pati]
+etymology_hook: "pati 'master, husband' is inherited: MW compares Greek posis 'husband' and Latin potis 'able' (CDIAL 7727)"
 duration:
   max_seconds: 210
 requires:

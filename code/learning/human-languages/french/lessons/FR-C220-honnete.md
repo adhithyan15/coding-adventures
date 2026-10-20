@@ -14,6 +14,7 @@ concept_tag: FR-QUAL220-HONNETE
 prerequisites: [FR-C220-etranger-etrangere, FR-C220-aimable]
 sounds: []
 roots: []
+etymology_hook: "honnête ← Latin honestus 'honourable' — English honest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C220-aimable]
 <!-- hl-knowledge: introduces=[FR-LEX-C220-QUAL220-04]; assesses=[] -->
 
 **honnête** — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**honnête** ← Old French *honeste* ← Latin *honestus*, "honourable", from *honor* (EtymDB 2.1) — inherited; the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

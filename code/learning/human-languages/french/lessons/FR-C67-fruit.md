@@ -13,7 +13,8 @@ gloss: "a fruit"
 concept_tag: FR-VERBES19-FRUIT
 prerequisites: [FR-C67-poisson, FR-C67-poulet]
 sounds: []
-roots: []
+roots: [fructus-latin]
+etymology_hook: "fruit ← Latin fructus 'enjoyment, produce' — English fruit came from Old French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C67-poulet]
 <!-- hl-knowledge: introduces=[FR-LEX-C67-VERBES19-04]; assesses=[] -->
 
 **le fruit** — "a fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fruit** ← Old French *fruit* ← Latin *fructus*, "enjoyment, produce" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

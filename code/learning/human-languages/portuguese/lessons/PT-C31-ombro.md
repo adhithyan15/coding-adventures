@@ -13,7 +13,8 @@ gloss: "a shoulder"
 concept_tag: PT-CORPO2-OMBRO
 prerequisites: [PT-C31-nariz, PT-C31-pescoco]
 sounds: []
-roots: []
+roots: [umerus-latin]
+etymology_hook: "ombro ← Latin umerus 'shoulder' — English humerus, the arm bone, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C31-pescoco]
 <!-- hl-knowledge: introduces=[PT-LEX-C31-CORPO2-04]; assesses=[] -->
 
 **o ombro** — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ombro** ← Latin *umerus*, "shoulder" (EtymDB 2.1) — inherited. Latin *umerus* lost its middle vowel, and the *-mr-* that was left grew a *b*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

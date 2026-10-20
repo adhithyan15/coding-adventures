@@ -1,0 +1,20 @@
+{
+  "chapter": 283,
+  "title": "A connected A2 Tamil message",
+  "label": "ch:ta-a-connected-a2-tamil-message",
+  "canDo": "I can plan and write a connected 70–90 word Tamil message in Tamil script for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TA-W283-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 283 by writing a model-free 70–90 word connected Tamil message for a named reader and practical purpose.",
+    "assesses": [
+      "TA-LEX-C62-JOIN-05",
+      "TA-LEX-C76-JOIN-01",
+      "TA-GRAMMAR-C75-POLAR-01",
+      "TA-LEX-C40-DEIXIS-06"
+    ]
+  }
+}

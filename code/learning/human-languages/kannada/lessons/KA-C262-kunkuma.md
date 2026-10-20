@@ -14,7 +14,8 @@ romanization: "kuṅkuma"
 concept_tag: KA-VASTU262-KUNKUMA
 prerequisites: [KA-C261-jirale, KA-C262-torana]
 sounds: []
-roots: []
+roots: [sanskrit-kunkuma]
+etymology_hook: "kuṅkuma ← Sanskrit kuṅkuma 'saffron', a tatsama (CDIAL 3214)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C262-torana]
 <!-- hl-knowledge: introduces=[KA-LEX-C262-VASTU262-02]; assesses=[] -->
 
 **ಕುಂಕುಮ** — *kuṅkuma* — "kumkum, red vermilion powder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಂಕುಮ** (*kuṅkuma*) is Sanskrit *kuṅkuma*, "saffron", taken over whole as a learned loan, a tatsama (CDIAL 3214).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

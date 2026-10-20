@@ -13,7 +13,8 @@ gloss: "an engine"
 concept_tag: PT-COISAS249-MOTOR
 prerequisites: [PT-C248-conta-bancaria, PT-C248-emprestimo]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "motor ← Latin motor 'one that moves', from movere, probably through French moteur"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C248-emprestimo]
 <!-- hl-knowledge: introduces=[PT-LEX-C249-COISAS249-01]; assesses=[] -->
 
 **o motor** — "an engine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**motor** ← Latin *motor*, "one that moves" (EtymDB 2.1), from *movere*, "to move" — a learned borrowing from Latin. It probably came through French *moteur*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

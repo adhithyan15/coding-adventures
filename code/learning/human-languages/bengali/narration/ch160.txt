@@ -12,6 +12,9 @@ Before the new one: say the Bengali for yet, then the Bengali for otherwise.
 You'll want to know: বুদ্ধিমান.
 বুদ্ধিমান — buddhimān — "intelligent".
 
+The word, taken apart.
+বুদ্ধিমান (buddhimān) is Sanskrit buddhimat, "intelligent", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for otherwise, then the Bengali for intellig
 
 You'll want to know: পরিশ্রমী.
 পরিশ্রমী — pôrishrômī — "hardworking".
+
+The word, taken apart.
+পরিশ্রমী (pôrishrômī) is Sanskrit pariśrama, "exertion, toil", taken over whole, + the ending -ī, "having": "having toil".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for intelligent, then the Bengali for hardwo
 You'll want to know: লোভী.
 লোভী — lobhī — "greedy".
 
+The word, taken apart.
+লোভী (lobhī) is Sanskrit lobhin, "greedy", taken over whole as a learned loan, a tatsama (CDIAL 11147). It is built on lobha, "eager desire", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for hardworking, then the Bengali for greedy
 You'll want to know: চিন্তিত.
 চিন্তিত — chintitô — "worried".
 
+The word, taken apart.
+চিন্তিত (chintitô) is Sanskrit cintita, "thought about", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for greedy, then the Bengali for worried.
 
 You'll want to know: বুড়ো.
 বুড়ো — buṛo — "elderly, old (of a person)".
+
+The word, taken apart.
+বুড়ো (buṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from buḍḍha, "old", a form CDIAL reconstructs from its descendants (CDIAL 9271). CDIAL lists Bengali buṛā, "old", and notes that the initial b- makes direct descent from Sanskrit vṛddha, "grown", unlikely.
 
 What you've built.
 One more word for this chapter.

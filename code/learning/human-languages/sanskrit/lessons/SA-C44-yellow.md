@@ -14,7 +14,8 @@ romanization: "pītaḥ"
 concept_tag: SA-COLOUR-PITA
 prerequisites: [SA-C44-dark, SA-C42-mostly, SA-C43-humility]
 sounds: []
-roots: []
+roots: [sanskrit-pita-yellow]
+etymology_hook: "pīta 'yellow': MW guesses √pyai 'swell', from butter's colour; not settled; Hindi pīlā (CDIAL 8233)"
 duration:
   max_seconds: 210
 requires:
@@ -44,14 +45,22 @@ reviews_of: [SA-C44-dark]
 
 **पीतः** is yellow — turmeric, ripe grain, a marigold, the silk a bridegroom wears.
 
-Its older force is "made yellow", so a **पीतम्** वस्त्रम् is a cloth that has been dyed rather than one that grew that colour.
+Its shape looks like a past participle, but which verb it would belong to is not settled. A **पीतम्** वस्त्रम् is a yellow cloth.
 
 Hindi *pīlā* is the same word with an ending on it, and it is the yellow of every wall and every taxi.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW suggests that *pīta* "yellow" may come from the root √pyai, "to swell, be fat",
+after the colour of butter and oil; that derivation is not settled, and CDIAL 8230 sends
+the reader to *pitta*, "bile", instead.
+Hindi *pīlā* comes from its longer form *pītala* (CDIAL 8233).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Yellow, understood as a thing that was dyed.
+Yellow, and a word whose history is still open.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C42-REPLY-03, SA-LEX-C43-COURTESY-03] -->

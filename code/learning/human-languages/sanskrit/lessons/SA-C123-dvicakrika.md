@@ -14,7 +14,8 @@ romanization: "dvicakrikā"
 concept_tag: SA-THINGS123-DVICAKRIKA
 prerequisites: [SA-C122-khatva, SA-C123-pitham]
 sounds: []
-roots: []
+roots: [sanskrit-dvi, sanskrit-cakra]
+etymology_hook: "dvicakrikā ← dvi 'two' + cakra 'wheel' + -ikā: 'the little two-wheeler', a modern coinage like bi-cycle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C123-pitham]
 <!-- hl-knowledge: introduces=[SA-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **द्विचक्रिका** — *dvicakrikā* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dvicakrikā* is built from *dvi* "two" and *cakra* "wheel" with the suffix *-ikā*: "the little two-wheeler". It is a modern coinage, made the way English *bicycle* was made from Latin *bi-* "two" and Greek *kyklos* "wheel"; *cakra* lives on as Marathi *cāk* "wheel" (CDIAL 4538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

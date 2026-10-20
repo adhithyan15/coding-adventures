@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C526-recensire",
+    "language": "italian",
+    "chapter": 526,
+    "sequence": 29420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52049fbf008166b2"
+  },
+  "findings": []
+}

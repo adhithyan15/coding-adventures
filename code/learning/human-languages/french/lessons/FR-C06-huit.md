@@ -69,12 +69,14 @@ halfway along the same road.
 [PAUSE 1s]
 - [YOU SAY: "huit" — *weet*, no *h*, with the *t*]
 - [YOU SAY: the count so far, one through eight]
-- [YOU SAY: the road — "octō, oit, huit" — then "octobre", where the *oct-* held]
+- [YOU SAY: the road — "octō, oit, huit" — then the month, where the *oct-*
+  held (English "October" kept it too)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-HUIT-10, FR-LEX-SEPT-09] -->
 
 [PAUSE 3s] How do you say eight? (**huit**, *weet*.) What does French do with a
 written **h**? (Never pronounces it.) Which Latin word is *huit* worn down from,
-and where can you still see it? (**octō** — kept intact in **octobre**.) Next: the
+and where can you still see it? (**octō** — kept intact in the month: French's, and
+English **October**.) Next: the
 number nine.

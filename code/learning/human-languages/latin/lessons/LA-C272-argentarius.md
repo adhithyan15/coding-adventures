@@ -13,7 +13,8 @@ gloss: "a banker"
 concept_tag: LA-RES272-ARGENTARIUS
 prerequisites: [LA-C272-lanius, LA-C272-caupo]
 sounds: []
-roots: []
+roots: [argentarius-latin, argentum-latin]
+etymology_hook: "argentārius 'banker' — built on argentum 'silver, money'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C272-caupo]
 <!-- hl-knowledge: introduces=[LA-LEX-C272-RES272-03]; assesses=[] -->
 
 **argentārius, argentāriī** — "a banker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**argentārius** is built on *argentum*, "silver, money" (Lewis & Short), with *-ārius*, "one who deals in": a money-dealer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

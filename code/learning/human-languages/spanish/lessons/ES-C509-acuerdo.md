@@ -10,7 +10,8 @@ gloss: "the agreement"
 concept_tag: ES-REF-ACUERDO
 prerequisites: [ES-C509-meta, ES-C509-esperanza]
 sounds: []
-roots: []
+roots: [cor-latin]
+etymology_hook: "acuerdo — from acordar 'to agree', spoken Latin *accordare, built on cor 'heart' — English accord"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C509-esperanza]
 > *We reached an agreement.*
 
 *Estar de acuerdo* — to agree.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acuerdo** is the noun of *acordar*, "to agree", from spoken Latin *\*accordare*, built on *cor*, *cordis*, "heart": hearts brought together. The stressed *o* opens into *ue*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

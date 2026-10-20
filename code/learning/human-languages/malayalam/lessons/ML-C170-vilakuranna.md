@@ -14,7 +14,8 @@ romanization: "vilakuṟañña"
 concept_tag: ML-QUAL170-VILAKURANNA
 prerequisites: [ML-C169-tirakkulla, ML-C169-vilakutiya]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell, dravidian-kuru-short]
+etymology_hook: "vilakuṟañña: native Dravidian, 'whose price has dwindled': vila (DEDR 5421) + kuṟañña (DEDR 1851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C169-vilakutiya]
 <!-- hl-knowledge: introduces=[ML-LEX-C170-QUAL170-01]; assesses=[] -->
 
 **വിലകുറഞ്ഞ** — *vilakuṟañña* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിലകുറഞ്ഞ** (*vilakuṟañña*) is native Dravidian, "whose price has dwindled": *vila*, "price" (DEDR 5421), with *kuṟañña*, from the verb "to dwindle" (DEDR 1851, with Tamil *kuṟu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

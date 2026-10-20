@@ -12,6 +12,9 @@ Before the new one: say the Persian for alive, then the Persian for dead.
 You'll want to know: ترد.
 ترد — tord — "crisp, crunchy".
 
+The word, taken apart.
+tord is a native Persian word, but no source used here gives its older form, and its origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for dead, then the Persian for crisp.
 
 You'll want to know: آبدار.
 آبدار — âbdâr — "juicy".
+
+The word, taken apart.
+âbdâr is âb, "water, juice", with -dâr, "holding": juice-holding. Both are native; âb continues Middle Persian āb (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for crisp, then the Persian for juicy.
 You'll want to know: کنجکاو.
 کنجکاو — konjkâv — "curious".
 
+The word, taken apart.
+konjkâv is built from konj, "corner", and -kâv, "digging" (from kâvidan, "to dig, to search"): one who searches the corners. Both are native Persian words, inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for juicy, then the Persian for curious.
 You'll want to know: سختگیر.
 سختگیر — sakhtgir — "strict".
 
+The word, taken apart.
+sakhtgir is sakht, "hard", with -gir, "taking, gripping" (from gereftan): one who grips hard. sakht is inherited, from Middle Persian saxt (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for curious, then the Persian for strict.
 
 You'll want to know: زحمتکش.
 زحمتکش — zahmatkesh — "hard-working".
+
+The word, taken apart.
+zahmatkesh is zahmat, "trouble, toil", with -kesh, "bearing" (from keshidan): one who bears toil. zahmat is borrowed from Arabic zaḥma, "crowding, pressure" (root z-ḥ-m, Lane); kesh is native.
 
 What you've built.
 One more word for this chapter.

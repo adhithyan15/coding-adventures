@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Sui social",
+  "label": "ch:it-sui-social",
+  "canDo": "I can talk about posting online: publishing, commenting, forwarding a message, email and my inbox.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C403-casella",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about posting online: publishing, commenting, forwarding a message, email and my inbox.",
+    "assesses": [
+      "IT-LEX-C403-PUBBLICARE-03",
+      "IT-LEX-C403-PUBBLICARE-04",
+      "IT-LEX-C403-PUBBLICARE-05"
+    ]
+  }
+}

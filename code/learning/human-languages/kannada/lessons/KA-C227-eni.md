@@ -14,7 +14,8 @@ romanization: "ēṇi"
 concept_tag: KA-VASTU227-ENI
 prerequisites: [KA-C226-attige, KA-C227-garagasa]
 sounds: []
-roots: []
+roots: [kannada-eni-ladder]
+etymology_hook: "ēṇi: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C227-garagasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C227-VASTU227-02]; assesses=[] -->
 
 **ಏಣಿ** — *ēṇi* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಏಣಿ** (*ēṇi*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 218,
-  "sourceHash": "fnv1a64:5175ad61033fc37c",
+  "sourceHash": "fnv1a64:35fb48ae157abc09",
   "lessonIds": [
     "RU-C218-raznyy",
     "RU-C218-odinakovyy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch218.txt",
   "json": "russian/narration/ch218.json",
-  "textHash": "fnv1a64:9254245b3e118c0e",
-  "jsonHash": "fnv1a64:a83d37e2443503b7",
+  "textHash": "fnv1a64:46717963c50c3132",
+  "jsonHash": "fnv1a64:79b7a7b274722299",
   "findings": []
 }

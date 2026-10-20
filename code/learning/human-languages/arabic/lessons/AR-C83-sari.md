@@ -14,7 +14,8 @@ romanization: "sarīʿ"
 concept_tag: AR-ADJ83-SARI
 prerequisites: [AR-C82-qasir, AR-C83-bati]
 sounds: []
-roots: []
+roots: [s-r-ʿ]
+etymology_hook: "sarīʿ: built on the root s-r-ʿ, 'to be quick' (Lane); sarīʿ is the faʿīl adjective, 'fast'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C83-bati]
 <!-- hl-knowledge: introduces=[AR-LEX-C83-ADJ83-02]; assesses=[] -->
 
 **سريع** — *sarīʿ* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سريع** (*sarīʿ*) is built on the native Arabic root *s-r-ʿ*, "to be quick" (Lane). *Sarīʿ* is the *faʿīl* adjective, "fast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

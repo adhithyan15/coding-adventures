@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C400-windschutzscheibe",
+    "language": "german",
+    "chapter": 400,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34638f53da9a8158"
+  },
+  "findings": []
+}

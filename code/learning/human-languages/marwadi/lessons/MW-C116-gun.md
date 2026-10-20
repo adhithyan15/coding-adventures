@@ -14,7 +14,8 @@ romanization: "guṇ"
 concept_tag: MW-CAN116-GUN
 prerequisites: [MW-C115-kamai, MW-C115-naukri]
 sounds: []
-roots: []
+roots: [sanskrit-guna]
+etymology_hook: "guṇ ← Sanskrit guṇa 'strand of a cord; quality', a tatsama (CDIAL 4190)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C115-naukri]
 <!-- hl-knowledge: introduces=[MW-LEX-C116-CAN116-01]; assesses=[] -->
 
 **गुण** — *guṇ* — "a virtue, a good quality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गुण** (*guṇ*) is Sanskrit *guṇa*, "strand of a cord; quality", taken over whole as a learned loan, a tatsama (CDIAL 4190). The inherited form is Hindi *gun*, "rope"; **गुण** (*guṇ*) keeps the Sanskrit sense "quality".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

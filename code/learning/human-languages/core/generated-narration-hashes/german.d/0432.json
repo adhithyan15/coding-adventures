@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:1ddb5bdfd24b979a",
+  "lessonIds": [
+    "GE-C432-geschaeftsfuehrer",
+    "GE-C432-unannehmlichkeit",
+    "GE-C432-anzahlung",
+    "GE-C432-entschaedigen",
+    "GE-C432-entschaedigung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch432.txt",
+  "json": "german/narration/ch432.json",
+  "textHash": "fnv1a64:cdb41acf814d3e53",
+  "jsonHash": "fnv1a64:0b50e95c128418c8",
+  "findings": []
+}

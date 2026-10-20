@@ -14,7 +14,8 @@ romanization: "qarīb"
 concept_tag: AR-TIME88-QARIB
 prerequisites: [AR-C88-waqt, AR-C88-baid]
 sounds: []
-roots: []
+roots: [q-r-b]
+etymology_hook: "qarīb: built on the root q-r-b, 'to be near' (Lane); qarīb is the faʿīl adjective, 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C88-baid]
 <!-- hl-knowledge: introduces=[AR-LEX-C88-TIME88-04]; assesses=[] -->
 
 **قريب** — *qarīb* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قريب** (*qarīb*) is built on the native Arabic root *q-r-b*, "to be near" (Lane). *Qarīb* is the *faʿīl* adjective, "near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

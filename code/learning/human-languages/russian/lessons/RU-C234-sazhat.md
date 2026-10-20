@@ -14,7 +14,8 @@ romanization: "sazhát"
 concept_tag: RU-VERB-SAZHAT
 prerequisites: [RU-C233-prinosit, RU-C234-podmetat]
 sounds: []
-roots: []
+roots: [pie-sed]
+etymology_hook: "сажать goes with садить 'to plant, to seat', the 'make sit' form of сидеть 'to sit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C234-podmetat]
 <!-- hl-knowledge: introduces=[RU-LEX-C234-ACT234-02]; assesses=[] -->
 
 **сажать** (*sazhát*) — "to plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сажать** goes with *садить*, "to seat, to plant" (Vasmer), the "make sit" form of *сидеть*, "to sit": a planted seedling is set to sit in the ground.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

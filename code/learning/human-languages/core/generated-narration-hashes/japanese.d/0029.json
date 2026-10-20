@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 29,
-  "sourceHash": "fnv1a64:a1a4d73eb4b5f71a",
+  "sourceHash": "fnv1a64:6a0c9a866832fbc8",
   "lessonIds": [
     "JA-C29-tatsu",
     "JA-C29-naku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch29.txt",
   "json": "japanese/narration/ch29.json",
-  "textHash": "fnv1a64:6d04bd84f8fa1bf0",
-  "jsonHash": "fnv1a64:0725bfbb5de247f9",
+  "textHash": "fnv1a64:dfdf4d015890efd9",
+  "jsonHash": "fnv1a64:217eb5787f90a7e3",
   "findings": []
 }

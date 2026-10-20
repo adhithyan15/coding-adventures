@@ -1,0 +1,11 @@
+{
+  "id": "PT-C447-espreitar",
+  "pathSegment": "PT-PATH-447-PASSEIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-447-PASSEIO",
+      "order": 2
+    }
+  ]
+}

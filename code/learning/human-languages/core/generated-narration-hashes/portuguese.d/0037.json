@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 37,
-  "sourceHash": "fnv1a64:e7dcba1268b81ca1",
+  "sourceHash": "fnv1a64:388d4688d864c9ee",
   "lessonIds": [
     "PT-C37-filha",
     "PT-C37-avo-m",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch37.txt",
   "json": "portuguese/narration/ch37.json",
-  "textHash": "fnv1a64:97ed633370006e07",
-  "jsonHash": "fnv1a64:118c012d374d25fa",
+  "textHash": "fnv1a64:e3bf58173792643b",
+  "jsonHash": "fnv1a64:598f40063cc1fe6a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "oḻivākkuka"
 concept_tag: ML-VERB-OLIVAKKUKA
 prerequisites: [ML-C309-puttuka, ML-C309-vivarikkuka]
 sounds: []
-roots: []
+roots: [dravidian-ozhi-quit, aaka-dravidian]
+etymology_hook: "oḻivākkuka: native Dravidian, 'make free of': oḻivu (DEDR 1009) + ākkuka (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C309-vivarikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C309-KRIYA309-05]; assesses=[] -->
 
 **ഒഴിവാക്കുക** — *oḻivākkuka* — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴിവാക്കുക** (*oḻivākkuka*) is native Dravidian, "make it a vacancy": *oḻivu*, "being free, vacancy" (DEDR 1009), and *ākkuka*, "to make" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

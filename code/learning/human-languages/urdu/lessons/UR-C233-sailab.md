@@ -14,7 +14,8 @@ romanization: "sailāb"
 concept_tag: UR-CHIZ233-SAILAB
 prerequisites: [UR-C233-ole, UR-C233-zalzala]
 sounds: []
-roots: []
+roots: [arabic-sayl, persian-ab]
+etymology_hook: "sailāb: Arabic sayl 'a torrent' (Lane, root s-y-l) + Persian āb 'water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C233-zalzala]
 <!-- hl-knowledge: introduces=[UR-LEX-C233-CHIZ233-05]; assesses=[] -->
 
 **سیلاب** — *sailāb* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیلاب** (*sailāb*) joins Arabic *sayl*, "a torrent, a flood" (Lane, root *s-y-l*), and Persian *āb*, "water", put together in Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

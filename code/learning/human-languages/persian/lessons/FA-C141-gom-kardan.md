@@ -14,7 +14,8 @@ romanization: "gom kardan"
 concept_tag: FA-VERB-GOM-KARDAN
 prerequisites: [FA-C140-khamush-kardan, FA-C140-bidar-shodan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "gom kardan: Persian gom 'lost' (Middle Persian gum) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C140-bidar-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C141-KONESH141-01]; assesses=[] -->
 
 **گم کردن** — *gom kardan* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gom kardan* pairs *gom*, "lost", a native word usually traced to Middle Persian *gum*, with *kardan*, "to make": "to make lost". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

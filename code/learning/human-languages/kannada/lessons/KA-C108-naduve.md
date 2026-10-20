@@ -14,7 +14,8 @@ romanization: "naḍuve"
 concept_tag: KA-LOC108-NADUVE
 prerequisites: [KA-C108-horage, KA-C108-munde]
 sounds: []
-roots: []
+roots: [dravidian-nadu-middle]
+etymology_hook: "naḍuve: native Dravidian, one word with Tamil naṭu (DEDR 3584)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C108-munde]
 <!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-04]; assesses=[] -->
 
 **ನಡುವೆ** — *naḍuve* — "in the middle, between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಡುವೆ** (*naḍuve*) is native Dravidian, one word with Tamil *naṭu* (DEDR 3584). DEDR lists *naḍuve* itself, "the very middle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

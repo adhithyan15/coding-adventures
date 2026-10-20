@@ -12,6 +12,9 @@ Before the new one: say the Italian for TV, then the Italian for advertising.
 You'll want to know: il giornalista.
 il giornalista — "a journalist".
 
+The word, taken apart.
+giornalista — built from giornale, "a newspaper", with -ista. EtymDB 2.1 has no row for it; the parts are plain to see.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for advertising, then the Italian for a jour
 
 You'll want to know: l'architetto.
 l'architetto — "an architect".
+
+The word, taken apart.
+architetto from Latin architectus, from Greek architekton, "a master builder" — a learned borrowing. (EtymDB 2.1 records the Latin and Greek words.)
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a journalist, then the Italian for an ar
 You'll want to know: il dentista.
 il dentista — "a dentist".
 
+The word, taken apart.
+dentista — built from dente, "tooth", with -ista. EtymDB 2.1 has no row for it; the parts are plain to see.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for an architect, then the Italian for a den
 You'll want to know: il farmacista.
 il farmacista — "a pharmacist".
 
+The word, taken apart.
+farmacista — built from farmacia, "a chemist's", with -ista. farmacia from Medieval Latin pharmacia, from Greek pharmakeia, "the use of drugs". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a dentist, then the Italian for a pharma
 
 You'll want to know: il macellaio.
 il macellaio — "a butcher".
+
+The word, taken apart.
+macellaio — built from macello, "a slaughterhouse", with -aio, "one who works there". EtymDB 2.1 derives its Romanian cousin măcelar from Latin macellarius.
 
 What you've built.
 One more word for this chapter.

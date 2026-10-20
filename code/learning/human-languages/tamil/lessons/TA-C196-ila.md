@@ -14,7 +14,8 @@ romanization: "iḻa"
 concept_tag: TA-VERB-ILA
 prerequisites: [TA-C195-muyarci-cey, TA-C196-kili]
 sounds: []
-roots: []
+roots: [dravidian-izha-lose]
+etymology_hook: "இழ — native Dravidian (DEDR 501); Malayalam iḻakkuka 'to lose'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C196-kili]
 <!-- hl-knowledge: introduces=[TA-LEX-C196-ACT196-02]; assesses=[] -->
 
 **இழ** — *iḻa* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இழ** (*iḻa*) is native Dravidian. DEDR 501 lists Malayalam *iḻakkuka*, "to lose".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

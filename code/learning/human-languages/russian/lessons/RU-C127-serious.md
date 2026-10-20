@@ -14,7 +14,8 @@ romanization: "seryóznyy"
 concept_tag: RU-QUAL127-SERIOUS
 prerequisites: [RU-C127-kind, RU-C127-angry]
 sounds: []
-roots: []
+roots: [serius-latin]
+etymology_hook: "серьёзный ← French sérieux, from Medieval Latin seriosus, Latin serius 'grave'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C127-angry]
 <!-- hl-knowledge: introduces=[RU-LEX-C127-QUAL127-04]; assesses=[] -->
 
 **серьёзный** (*seryóznyy*) — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**серьёзный** is a recent loan from French *sérieux*, from Medieval Latin *sēriōsus*, Latin *sērius*, "grave" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

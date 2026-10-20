@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C634-persuadir",
+    "language": "spanish",
+    "chapter": 634,
+    "sequence": 21510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea18689b3e6236f4"
+  },
+  "findings": []
+}

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a burning feeling, then the Hindi for a sw
 You'll want to know: मोच.
 मोच — moc — "a sprain".
 
+The word, taken apart.
+The origin of मोच (moc) is uncertain. CDIAL has a reconstructed mocc, "twist, wring" (CDIAL 10351), but lists no Hindi form under it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a swelling, then the Hindi for a sprain.
 
 You'll want to know: हिचकी.
 हिचकी — hickī — "a hiccup".
+
+The word, taken apart.
+हिचकी (hickī) belongs with Hindi hīk, "hiccup", which CDIAL lists under Sanskrit hikkā, "hiccup" (CDIAL 14075). The word imitates the sound.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a sprain, then the Hindi for a hiccup.
 You'll want to know: झपकी.
 झपकी — jhapkī — "a nap".
 
+The word, taken apart.
+The origin of झपकी (jhapkī) is uncertain. It may belong with jhapaknā, which CDIAL lists under a reconstructed jhapp, "sudden movement" (CDIAL 5336).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a hiccup, then the Hindi for a nap.
 You'll want to know: करवट.
 करवट — karvaṭ — "turning over (in bed)".
 
+The word, taken apart.
+करवट (karvaṭ) is a tadbhava, a word inherited and reshaped by sound change. It comes from kaṭavṛtti, "turning on one's side", a form CDIAL reconstructs from its descendants (CDIAL 2635). It is built from kaṭi, "hip", and vṛtti, "turning".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a nap, then the Hindi for turning over.
 
 You'll want to know: अंगड़ाई.
 अंगड़ाई — aṅgṛāī — "a stretch (of the body)".
+
+The word, taken apart.
+अंगड़ाई (aṅgṛāī) is built on aṅg, "limb, body", from Sanskrit aṅga (CDIAL 114), but CDIAL does not list the word itself, so its exact path is uncertain.
 
 What you've built.
 One more word for this chapter.

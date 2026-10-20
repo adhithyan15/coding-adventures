@@ -14,7 +14,8 @@ romanization: "nadī"
 concept_tag: SA-LAND-NADI
 prerequisites: [SA-C32-wood, SA-C31-sky, SA-C32-tree]
 sounds: []
-roots: []
+roots: [sanskrit-nadi]
+etymology_hook: "nadī 'river' ← the root √nad 'roar, sound': the roaring one (MW; CDIAL 6943)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C32-wood]
 **नदी** says what a river does rather than what it is: the root behind it means "to roar, to sound". A river is the noisy one.
 
 It ends in long *-ī*, like **नारी** and **भगिनी**, and it has outlasted almost everything around it — Hindi, Marathi, Bengali, Gujarati and Nepali all still say *nadī*, and every river name ending in *-nadi* on an Indian map carries it whole.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nadī* is built on the root √nad, "to roar, sound" (MW, CDIAL 6943): the river is
+named as the roaring one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 185,
-  "sourceHash": "fnv1a64:86d70986bfde47fb",
+  "sourceHash": "fnv1a64:66c5041aba9e3856",
   "lessonIds": [
     "SA-C185-kiyat",
     "SA-C185-kidrsah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch185.txt",
   "json": "sanskrit/narration/ch185.json",
-  "textHash": "fnv1a64:a4a39f23e95a120d",
-  "jsonHash": "fnv1a64:7a91b9210c2e48ab",
+  "textHash": "fnv1a64:bc41d9352cb1079b",
+  "jsonHash": "fnv1a64:dba49334d2373692",
   "findings": []
 }

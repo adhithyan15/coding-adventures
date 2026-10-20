@@ -11,7 +11,8 @@ romanization: "pērundu"
 concept_tag: TA-NOUN-BUS
 prerequisites: [TA-C69-vehicle, TA-C67-veshti, TA-C68-price]
 sounds: []
-roots: []
+roots: [dravidian-peru-big]
+etymology_hook: "பேருந்து — a modern coinage: pēr 'big' (DEDR 4411) + untu 'vehicle', from untu 'to push' (DEDR 625)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ A made word, and you can take it apart. **பேர்-** is the big-word பெ
 This is the printed and announced word: it is what stands on the board at the stop and in the
 newspaper. In the street you will also hear the English "bus" said plainly, and both are
 understood — but only one of them is written on the board you have to read.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பேருந்து** (*pērundu*) is a modern Tamil coinage from native parts: *pēr*, "big" (DEDR 4411), and *untu*, a word for a motor vehicle, from the verb *untu*, "to push, to drive" (DEDR 625). A bus is "the big vehicle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

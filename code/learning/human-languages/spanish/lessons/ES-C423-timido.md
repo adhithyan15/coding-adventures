@@ -11,6 +11,7 @@ concept_tag: ES-COUNT-SHY
 prerequisites: [ES-C423-serio]
 sounds: [t-dental, accent-acute, stress-antepenultimate]
 roots: [timere-latin]
+etymology_hook: "tímido ← Latin timidus, from timere 'to fear' — English timid, intimidate"
 duration:
   max_seconds: 240
 requires:

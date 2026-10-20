@@ -14,7 +14,8 @@ romanization: "abhiprāya"
 concept_tag: KA-VASTU228-ABHIPRAYA
 prerequisites: [KA-C228-caduranga, KA-C228-havyasa]
 sounds: []
-roots: []
+roots: [sanskrit-abhipraya]
+etymology_hook: "abhiprāya ← Sanskrit abhiprāya 'aim, intention, opinion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C228-havyasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C228-VASTU228-04]; assesses=[] -->
 
 **ಅಭಿಪ್ರಾಯ** — *abhiprāya* — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಭಿಪ್ರಾಯ** (*abhiprāya*) is Sanskrit *abhiprāya*, "aim, intention, opinion", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "athnāʾa"
 concept_tag: AR-WAQT203-ATHNAA
 prerequisites: [AR-C203-sabiqan, AR-C203-akhiran]
 sounds: []
-roots: []
+roots: [ithnayn]
+etymology_hook: "athnāʾa: built on the root th-n-y, 'to fold, to bend' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C203-akhiran]
 <!-- hl-knowledge: introduces=[AR-LEX-C203-WAQT203-03]; assesses=[] -->
 
 **أثناء** — *athnāʾa* — "during".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أثناء** (*athnāʾa*) is built on the native Arabic root *th-n-y*, "to fold, to bend; two" (Lane). *Athnāʾ* is a plural, "folds, intervals": "during" is "in the folds of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

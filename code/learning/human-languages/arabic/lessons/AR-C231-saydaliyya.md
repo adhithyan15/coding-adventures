@@ -14,7 +14,8 @@ romanization: "ṣaydaliyya"
 concept_tag: AR-SIHHA231-SAYDALIYYA
 prerequisites: [AR-C231-wasfa, AR-C231-iyada]
 sounds: []
-roots: []
+roots: [saydalani]
+etymology_hook: "ṣaydaliyya: from ṣaydalānī 'druggist', whose source Lane's authorities dispute; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C231-iyada]
 <!-- hl-knowledge: introduces=[AR-LEX-C231-SIHHA231-04]; assesses=[] -->
 
 **صيدلية** — *ṣaydaliyya* — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صيدلية** (*ṣaydaliyya*) is built on *ṣaydalānī*, "druggist". Lane's sources derive that word from a place called Ṣaydalān, or from *ṣaydal*, or call it a Persian word arabicized. Lane also records the by-form *ṣandalānī*, which points to *ṣandal*, "sandalwood"; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

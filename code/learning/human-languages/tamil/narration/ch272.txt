@@ -12,6 +12,9 @@ Before the new one: say the Tamil for an orange, then the Tamil for a papaya.
 You'll want to know: அடையாள அட்டை.
 அடையாள அட்டை — aṭaiyāḷa aṭṭai — "an identity card".
 
+The word, taken apart.
+அடையாள அட்டை (aṭaiyāḷa aṭṭai) is native: aṭaiyāḷam, "mark, sign" (DEDR 89, which lists Malayalam aṭayāḷam), and aṭṭai, "cardboard" (DEDR 98): "the sign card".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a papaya, then the Tamil for an identity c
 
 You'll want to know: வரி.
 வரி — vari — "a tax; a line (of text)".
+
+The word, taken apart.
+வரி (vari) is native Dravidian. DEDR 5263 lists Malayalam vara, "line" and Kannada bare, "writing, lines". The entry glosses "line" and "to write"; the sense "tax" is probably the line in a register.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for an identity card, then the Tamil for a tax
 You'll want to know: விண்ணப்பம்.
 விண்ணப்பம் — viṇṇappam — "an application".
 
+The word, taken apart.
+விண்ணப்பம் (viṇṇappam) is a well-established loan from Sanskrit vijñāpana, "a request, a making known".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a tax; a line, then the Tamil for an appli
 You'll want to know: புகைப்படம்.
 புகைப்படம் — pukaippaṭam — "a photograph".
 
+The word, taken apart.
+புகைப்படம் (pukaippaṭam) is native pukai, "smoke" (DEDR 4240), and paṭam, "picture", from Sanskrit paṭa, "cloth" (CDIAL 7692): "smoke picture". Why "smoke" is not certain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for an application, then the Tamil for a photo
 
 You'll want to know: நகல்.
 நகல் — nakal — "a copy, a photocopy".
+
+The word, taken apart.
+நகல் (nakal) is a loan from Arabic naql, "copy, transcript", which reached Tamil through Hindustani.
 
 What you've built.
 One more word for this chapter.

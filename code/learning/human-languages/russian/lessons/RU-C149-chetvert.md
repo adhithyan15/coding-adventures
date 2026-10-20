@@ -14,7 +14,8 @@ romanization: "chétvert"
 concept_tag: RU-VREMYA149-CHETVERT
 prerequisites: [RU-C148-ustalyy, RU-C149-polchasa]
 sounds: []
-roots: []
+roots: [pie-kwetwores]
+etymology_hook: "четверть is from четвёртый 'fourth', on четыре 'four'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C149-polchasa]
 <!-- hl-knowledge: introduces=[RU-LEX-C149-VREMYA149-02]; assesses=[] -->
 
 **четверть** (*chétvert*) — "a quarter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**четверть** is built on *четвёртый*, "fourth", from *четыре*, "four": a fourth part.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

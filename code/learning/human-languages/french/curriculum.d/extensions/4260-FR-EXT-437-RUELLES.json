@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-437-RUELLES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe streets: the dead end, the alley, the avenue, the boulevard and the passer-by.",
+  "prerequisites": []
+}

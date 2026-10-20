@@ -11,7 +11,8 @@ romanization: "cittappā"
 concept_tag: TA-GRAND-CHITTAPPA
 prerequisites: [TA-C101-uncle, TA-C101-aunt]
 sounds: []
-roots: []
+roots: [dravidian-ciru-small, dravidian-appa-amma]
+etymology_hook: "சித்தப்பா — native: citta- 'small, younger', from ciṟu (DEDR 1594) + appā 'father' (DEDR 156)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C101-aunt]
 **சித்தப்பா** (*cittappā*) — your father's younger brother.
 
 It ends in **அப்பா**, "father": he is the *little father*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சித்தப்பா** (*cittappā*) is native: *citta-*, "small, younger", from *ciṟu*, "small" (DEDR 1594), and *appā*, "father" (DEDR 156). The father's younger brother is "the small father".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

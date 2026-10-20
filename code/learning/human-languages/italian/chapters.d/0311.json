@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Il giorno del sì",
+  "label": "ch:it-il-giorno-del-si",
+  "canDo": "I can talk about a wedding day: getting married, the ring, the veil, the bouquet and the favours.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C311-bomboniera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about a wedding day: getting married, the ring, the veil, the bouquet and the favours.",
+    "assesses": [
+      "IT-LEX-C311-SPOSARSI-03",
+      "IT-LEX-C311-SPOSARSI-04",
+      "IT-LEX-C311-SPOSARSI-05"
+    ]
+  }
+}

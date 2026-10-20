@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "To Have, and How Old You Are",
   "drivablePrefix": 14,
-  "sourceHash": "fnv1a64:566b5bdb639cee44",
+  "sourceHash": "fnv1a64:edc747333fee28fc",
   "lessons": [
     {
       "id": "FR-C14-jai",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d2b5c49b5b4fadf",
+      "sourceHash": "fnv1a64:6c8fcf90c9fe4e0d",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep that in mind as the paradigm fills in. You are learning six written forms and rather fewer sounds."
+              "text": "Keep that in mind as the paradigm fills in. You are learning six written forms and rather fewer sounds. Avoir itself is inherited from Latin habēre, \"to have\" (EtymDB 2.1)."
             }
           ]
         },
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb4b338e1e3cc2e",
+      "sourceHash": "fnv1a64:b57fd9c61dcedf7e",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "a is the form for il (he) and elle (she), and it is a single letter carrying an entire verb."
+              "text": "a is the form for il (he) and elle (she), and it is a single letter carrying an entire verb. It goes back to Latin habet, \"has\", worn down to one letter; avoir is inherited from habēre (EtymDB 2.1)."
             },
             {
               "kind": "speech",
@@ -810,7 +810,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7801093cbc3f3092",
+      "sourceHash": "fnv1a64:1dddbf5b0b25706c",
       "notice": null,
       "blocks": [
         {
@@ -860,7 +860,7 @@
             },
             {
               "kind": "speech",
-              "text": "There is a trap here worth meeting before you fall into it. ils ont is \"they have.\" ils sont is \"they are.\" One consonant apart, and both extremely common. The way to keep them apart is the liaison: ils ont buzzes — eel-z-o(n) — while ils sont hisses, eel so(n). The buzz means have."
+              "text": "There is a trap here worth meeting before you fall into it. ils ont is \"they have.\" In two chapters you will meet \"they are,\" one consonant away from it and just as common. The way to keep them apart is the liaison: ils ont buzzes — eel-z-o(n) — and the \"are\" form hisses. The buzz means have."
             },
             {
               "kind": "speech",
@@ -895,11 +895,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the trap — \"ils ont\" then \"ils sont\"; buzz means have",
+              "instruction": "\"elles ont\" — el-ZO(N), the same buzz; the buzz means have",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the trap — \"ils ont\" then \"ils sont\"; buzz means have]"
+              "source": "[YOU SAY: \"elles ont\" — *el-ZO(N)*, the same buzz; the buzz means have]"
             },
             {
               "kind": "prompt",
@@ -925,7 +925,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"they have\"? (ils ont, eel-ZO(N).) What does ils sont mean instead? (They are.) How do you tell them apart by ear? (ils ont buzzes; ils sont hisses.) What is unusual about ont among the six forms? (It is the only one with no a in it.) Next: where the whole verb came from."
+              "text": "How do you say \"they have\"? (ils ont, eel-ZO(N).) What tells your ear that it means have? (The buzz — ils ont links with a z; the \"they are\" form you meet later hisses.) What is unusual about ont among the six forms? (It is the only one with no a in it.) Next: where the whole verb came from."
             }
           ]
         }
@@ -1088,7 +1088,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99c53fde728dcc99",
+      "sourceHash": "fnv1a64:eaa0f3429df922d9",
       "notice": null,
       "blocks": [
         {
@@ -1189,11 +1189,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the trap — \"ils ont, ils sont\"; buzz for have, hiss for are",
+              "instruction": "\"ils ont\" with its liaison — eel-z-o(n); the buzz means have",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the trap — \"ils ont, ils sont\"; buzz for have, hiss for are]"
+              "source": "[YOU SAY: \"ils ont\" with its liaison — *eel-z-o(n)*; the buzz means have]"
             }
           ]
         },
@@ -1278,7 +1278,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all six forms without stopping. Which three sound effectively the same? (ai, as, a.) Which two endings can you always hear? (-ons and -ez.) How do you hear the difference between ils ont and ils sont? (The buzz — ont takes a liaison z, sont hisses.) What Latin verb is behind all of it? (habēre.)"
+              "text": "Give all six forms without stopping. Which three sound effectively the same? (ai, as, a.) Which two endings can you always hear? (-ons and -ez.) What do you hear in ils ont that marks it as have? (The buzz — ont takes a liaison z.) What Latin verb is behind all of it? (habēre.)"
             }
           ]
         }
@@ -1443,7 +1443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02475bdf7551eb9d",
+      "sourceHash": "fnv1a64:924993a1bc99ae69",
       "notice": null,
       "blocks": [
         {
@@ -1470,7 +1470,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English is its age: I am twenty. French has it:"
+              "text": "English is its age: you are twenty. French has it:"
             },
             {
               "kind": "speech",
@@ -1482,7 +1482,7 @@
             },
             {
               "kind": "speech",
-              "text": "The verb is avoir, never être. Je suis vingt ans is not a stylistic choice; it is simply wrong, and it is the single most common thing an English speaker gets wrong in their first month."
+              "text": "The verb is avoir, never \"to be.\" Building it with French's \"to be\" is not a stylistic choice; it is simply wrong, and it is the single most common thing an English speaker gets wrong in their first month."
             },
             {
               "kind": "speech",
@@ -1517,11 +1517,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the rule — \"avoir, never être\"",
+              "instruction": "the rule — \"avoir, never 'to be'\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the rule — \"avoir, never être\"]"
+              "source": "[YOU SAY: the rule — \"avoir, never 'to be'\"]"
             },
             {
               "kind": "prompt",
@@ -1565,7 +1565,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does French say \"I am twenty\"? (J'ai vingt ans — \"I have twenty years\".) Which verb, and which is wrong? (avoir; être is wrong.) Can you drop ans the way English drops \"years\"? (No.) What happens to the t of vingt before ans? (It wakes up — vin-t-a(n), a liaison.) Next: how to ask."
+              "text": "How does French say \"I'm twenty\"? (J'ai vingt ans — \"I have twenty years\".) Which verb, and which is wrong? (avoir; \"to be\" is wrong.) Can you drop ans the way English drops \"years\"? (No.) What happens to the t of vingt before ans? (It wakes up — vin-t-a(n), a liaison.) Next: how to ask."
             }
           ]
         }
@@ -1744,7 +1744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bcbe06b5c8b204a",
+      "sourceHash": "fnv1a64:3dd8bff8512592c2",
       "notice": null,
       "blocks": [
         {
@@ -1807,6 +1807,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "j'ai vingt ans — ai from Latin habeo, \"I have\"; vingt from Latin viginti; an from Latin annus, \"year\". All three are inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1855,7 +1866,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1886,7 +1897,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e05a988c22e96356",
+      "sourceHash": "fnv1a64:aaaf740246893120",
       "notice": null,
       "blocks": [
         {
@@ -1938,11 +1949,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the trap — \"ils ont, ils sont\"",
+              "instruction": "\"ils ont\" — the liaison buzz that means have",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the trap — \"ils ont, ils sont\"]"
+              "source": "[YOU SAY: \"ils ont\" — the liaison buzz that means *have*]"
             },
             {
               "kind": "repeat",
@@ -2059,7 +2070,7 @@
             },
             {
               "kind": "speech",
-              "text": "age is something you have — J'ai vingt ans, never je suis, and ans is compulsory. Every Romance language on the continent agrees with French, and every Germanic one disagrees."
+              "text": "age is something you have — J'ai vingt ans, never \"I am,\" and ans is compulsory. Every Romance language on the continent agrees with French, and every Germanic one disagrees."
             },
             {
               "kind": "speech",
@@ -2080,7 +2091,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the six forms of avoir. Ask a friend their age. (Quel âge as-tu?) Answer with your own. Which verb must you never use for age? (être.) Can ans be left out? (No.) Which other French verb shares avoir's root? (habiter.) How do you hear ils ont against ils sont? (The buzz against the hiss.)"
+              "text": "Give the six forms of avoir. Ask a friend their age. (Quel âge as-tu?) Answer with your own. Which verb must you never use for age? (The verb \"to be\".) Can ans be left out? (No.) Which other French verb shares avoir's root? (habiter.) What marks ils ont as have? (The buzz of its liaison.)"
             }
           ]
         }

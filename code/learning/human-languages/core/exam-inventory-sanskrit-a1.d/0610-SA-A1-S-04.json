@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-S-04",
+  "category": "Vākya — the sentence",
+  "label": "the copular and attributive sentence",
+  "probe": [
+    "SA-GRAMMAR-COPULA-IS-KEPT",
+    "SA-PATTERN-MY-NAME-IS",
+    "SA-PATTERN-I-AM-WELL"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-OS-05",
+    "A1-SV-03"
+  ],
+  "note": "mama nāma … asti and kuśalī asmi."
+}

@@ -13,7 +13,8 @@ gloss: "a baker"
 concept_tag: IT-LAVORO112-FORNAIO
 prerequisites: [IT-C111-commesso, IT-C111-contadino]
 sounds: []
-roots: []
+roots: [furnus-latin]
+etymology_hook: "fornaio ← Late Latin furnarius 'baker', from furnus 'oven' — English furnace shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C111-contadino]
 <!-- hl-knowledge: introduces=[IT-LEX-C112-LAVORO112-01]; assesses=[] -->
 
 **il fornaio** — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fornaio** ← Late Latin *furnarius*, "a baker", from *furnus*, "oven" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

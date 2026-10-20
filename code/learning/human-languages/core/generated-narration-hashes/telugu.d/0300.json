@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 300,
-  "sourceHash": "fnv1a64:b75137b5132682b9",
+  "sourceHash": "fnv1a64:9e4cb8473da66d9b",
   "lessonIds": [
     "TE-C300-butlu",
     "TE-C300-golusu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch300.txt",
   "json": "telugu/narration/ch300.json",
-  "textHash": "fnv1a64:6f592a18edc766c6",
-  "jsonHash": "fnv1a64:a8712f9be5562f6d",
+  "textHash": "fnv1a64:30abf420faee7c55",
+  "jsonHash": "fnv1a64:ccb8974d33b7e983",
   "findings": []
 }

@@ -115,8 +115,10 @@
     \vskip 1.0em \@plus\p@
     \setlength\@tempdima{2.8em}%
     \begingroup
-      \parindent \z@ \rightskip \@pnumwidth
-      \parfillskip -\@pnumwidth
+      % Give wrapped chapter titles a ragged right edge. Opposing fil glue in
+      % parfillskip preserves the final line's flush-right page number.
+      \parindent \z@ \rightskip \@pnumwidth plus 1fil
+      \parfillskip -\@pnumwidth plus -1fil
       \leavevmode \bfseries
       \advance\leftskip\@tempdima
       \hskip -\leftskip
@@ -128,6 +130,11 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+% Four-digit page numbers in this book now exceed book.cls's 1.55em TOC box.
+% Widen the number box and its title clearance together, as in the other
+% long human-language books, so pages past 999 fit without overfull lines.
+\renewcommand\@pnumwidth{2.4em}
+\renewcommand\@tocrmarg{3.4em}
 \makeatother
 
 % ---------------------------------------------------------------------------

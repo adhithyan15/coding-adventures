@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:2f7807f414cef7e4",
+  "lessonIds": [
+    "IT-C283-redazione",
+    "IT-C283-cronista",
+    "IT-C283-inviato",
+    "IT-C283-intervista",
+    "IT-C283-intervistare"
+  ],
+  "tex": "italian/book/chapters/ch283-in-redazione.tex"
+}

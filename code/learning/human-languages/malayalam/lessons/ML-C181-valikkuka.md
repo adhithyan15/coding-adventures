@@ -14,7 +14,8 @@ romanization: "valikkuka"
 concept_tag: ML-VERB-VALIKKUKA
 prerequisites: [ML-C181-tiriyuka, ML-C181-katakkuka]
 sounds: []
-roots: []
+roots: [dravidian-vali-pull]
+etymology_hook: "valikkuka: native Dravidian, one word with Tamil vali (DEDR 5282)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C181-katakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C181-KRIYA181-04]; assesses=[] -->
 
 **വലിക്കുക** — *valikkuka* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വലിക്കുക** (*valikkuka*) is native Dravidian, one word with Tamil *vali* (DEDR 5282).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

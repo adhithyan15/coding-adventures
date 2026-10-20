@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 66,
-  "sourceHash": "fnv1a64:306cb3498f01bc73",
+  "sourceHash": "fnv1a64:f3dffbac3f6080d9",
   "lessonIds": [
     "SA-C66-fever",
     "SA-C66-cough",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch66.txt",
   "json": "sanskrit/narration/ch66.json",
-  "textHash": "fnv1a64:0005abce691e899c",
-  "jsonHash": "fnv1a64:0f8ad6f4d35aa801",
+  "textHash": "fnv1a64:bf92028c403fa6de",
+  "jsonHash": "fnv1a64:993d79080fc71ad3",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "rudkhâne"
 concept_tag: FA-NATURE52-RUDKHANE
 prerequisites: [FA-C52-kuh, FA-C52-jangal]
 sounds: []
-roots: []
+roots: [persian-rud]
+etymology_hook: "rudkhâne: Persian rud 'river' + khâne 'house'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C52-jangal]
 <!-- hl-knowledge: introduces=[FA-LEX-C52-NATURE52-03]; assesses=[] -->
 
 **رودخانه** — *rudkhâne* — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rudkhâne* is built from *rud*, "river" (usually traced to Middle Persian *rōd*), and *khâne*, "house": the river's house, its bed. Both parts are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

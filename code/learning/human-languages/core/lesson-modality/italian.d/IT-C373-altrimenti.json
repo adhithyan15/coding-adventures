@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C373-altrimenti",
+    "language": "italian",
+    "chapter": 373,
+    "sequence": 21360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4389bdc4ff9332b1"
+  },
+  "findings": []
+}

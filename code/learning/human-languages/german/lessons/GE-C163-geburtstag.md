@@ -13,7 +13,8 @@ gloss: "a birthday"
 concept_tag: GE-THING163-GEBURTSTAG
 prerequisites: [GE-C162-gewitter, GE-C163-temperatur]
 sounds: []
-roots: []
+roots: [dagaz]
+etymology_hook: "Geburtstag — Geburt 'birth' + -s- + Tag 'day': the day of birth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C163-temperatur]
 <!-- hl-knowledge: introduces=[GE-LEX-C163-THING163-02]; assesses=[] -->
 
 **der Geburtstag** — "a birthday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geburtstag** is the word for "birth", Old High German *giburt*, + *-s-* + *Tag* (EtymDB 2.1): the day of your birth. English *birth* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

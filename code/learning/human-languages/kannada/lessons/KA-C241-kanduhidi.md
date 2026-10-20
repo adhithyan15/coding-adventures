@@ -14,7 +14,8 @@ romanization: "kaṇḍuhiḍi"
 concept_tag: KA-VERB-KANDUHIDI
 prerequisites: [KA-C241-hancikollu, KA-C241-dvesisu]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see, dravidian-pidi-seize]
+etymology_hook: "kaṇḍuhiḍi: native kaṇḍu 'having seen', from kāṇ (DEDR 1443), + hiḍi 'to catch' (DEDR 4148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C241-dvesisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C241-KRIYE241-04]; assesses=[] -->
 
 **ಕಂಡುಹಿಡಿ** — *kaṇḍuhiḍi* — "to find out, to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಂಡುಹಿಡಿ** (*kaṇḍuhiḍi*) is native Dravidian: *kaṇḍu*, "having seen", from *kāṇ*, "to see" (DEDR 1443), and *hiḍi*, "to catch, seize" (DEDR 4148): "to see and catch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ romanization: ennŭ cintikkunnu
 concept_tag: ML-QUOTATIVE-VERBS
 prerequisites: [ML-C72-ennu, ML-C34-codikkuka]
 sounds: []
-roots: []
+roots: [dravidian-en-say, sanskrit-cinta-thought]
+etymology_hook: "ennŭ cintikkunnu: native ennŭ 'saying' (DEDR 868) + a verb built on Sanskrit cintā 'thought' (CDIAL 4816)"
 duration:
-  max_seconds: 240
+  max_seconds: 243
 requires:
   knowledge: [ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C34-CODIKKUKA-01]
 introduces:
@@ -62,6 +63,11 @@ to know, or put as a question — without learning a new shape for any of them.
 The knowing verb keeps its own shape: **അറിയാം** puts what is known at the
 front and leaves the knower in the dative, so the sentence arrives at you rather
 than being done by you. The marker sits in front of it unchanged.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്ന് ചിന്തിക്കുന്നു** (*ennŭ cintikkunnu*) joins native *ennŭ*, a form of the verb "to say" (DEDR 868, with Tamil *eṉ*), to a verb built on Sanskrit *cintā*, "thought, care" (CDIAL 4816).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-VERBS-01, ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C33-CINTIKKUKA-01] -->

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C417-portique",
+  "pathSegment": "FR-PATH-417-DOUANE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-417-DOUANE",
+      "order": 2
+    }
+  ]
+}

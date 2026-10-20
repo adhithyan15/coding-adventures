@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Ao lume",
+  "label": "ch:pt-ao-lume",
+  "canDo": "I can say how food was cooked: fried, cooked in water, roasted, grilled or boiled.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R332-revisao-325-332",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say how food was cooked: fried, cooked in water, roasted, grilled or boiled.",
+    "assesses": [
+      "PT-LEX-C332-FRITAR-03",
+      "PT-LEX-C332-FRITAR-04",
+      "PT-LEX-C332-FRITAR-05"
+    ]
+  }
+}

@@ -12,7 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [FA-C04-hal]
 sounds: [rtl, short-vowels-unwritten, vav-o]
 roots: [persian-che, arabic-tawr]
-etymology_hook: Chetor is Persian che “what” plus Arabic-loan tor “manner”: literally “in what manner?”
+etymology_hook: 'Chetor is Persian che “what” plus Arabic-loan tor “manner”: literally “in what manner?”'
 duration:
   max_seconds: 220
 requires:
@@ -52,8 +52,8 @@ whole word: *che-tor*.
 ## The word, taken apart — a two-language compound
 <!-- hl-knowledge: introduces=[FA-ETYMON-CHE-TOR]; assesses=[] -->
 
-Persian Online takes **چطور** apart as Persian *che*, “what,” plus the
-Arabic loan **طور** *tor*, “manner.” The literal picture is “in what manner?”
+Persian Online takes **چطور** apart as Persian *che*, “what,” plus
+**طور** *tor*, “manner,” borrowed from Arabic *ṭawr*, “time, state, manner” (Lane). The literal picture is “in what manner?”
 That layered history is useful memory, but **chetor** is one everyday Persian
 question word now.
 

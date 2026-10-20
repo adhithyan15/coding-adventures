@@ -37,10 +37,18 @@
 > paragraph stating the CI-only host and artifact boundary. Corrective
 > `task-app-v0.5.1` published from
 > [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).
-> The compatible native-fidelity fixes accumulated since that patch are the
-> selected `task-app-v0.5.2` checkpoint in
+> The first compatible native-fidelity checkpoint, `task-app-v0.5.2`, published
+> from
 > [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262); the
 > verified downloadable artifact matrix remains unchanged.
+> The subsequent Flutter calendar, drag/drop, and elevation-reporting repairs
+> are the selected `task-app-v0.5.3` checkpoint in
+> [#17328](https://github.com/adhithyan15/coding-adventures/issues/17328), with
+> that same artifact boundary.
+> Qt control fill-width preservation is the next incremental fidelity slice in
+> [#17338](https://github.com/adhithyan15/coding-adventures/issues/17338): 15
+> exact input/button `width: 100%` drops leave the report while the three
+> remaining `Text` widths and unsupported mixed geometry stay explicit.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -60,6 +68,15 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 `/security-review` → PR → `/babysit-pr` → auto-merge.
 
 ## Product completion queue
+
+**Next priority: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
+— publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the
+immutable v0.5.7 publication/audit (#17610) are complete. The timeline
+milestone and legend-swatch diamonds now retain centered native Qt rotation
+through #17676, with both themes measuring 81 style drops instead of 83.
+Validate every existing release payload, publish after preparation merges,
+and audit the immutable assets before closing #17682. Artifact coverage is
+unchanged; preparation is not publication.
 
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and
@@ -105,9 +122,12 @@ links existing Mosaic work instead of duplicating it.
    generated notes omitted the explicit CI-only backend boundary; the
    immutable corrective `task-app-v0.5.1` patch is tracked by
    [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).
-   The selected compatible native-fidelity patch `task-app-v0.5.2` is tracked
-   by [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
-   without expanding the downloadable platform matrix.**
+   The compatible native-fidelity patch `task-app-v0.5.2` published from
+   [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
+   without expanding the downloadable platform matrix. The selected follow-up
+   patch, `task-app-v0.5.3`, is tracked by
+   [#17328](https://github.com/adhithyan15/coding-adventures/issues/17328) with
+   the same verified artifact boundary.**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**

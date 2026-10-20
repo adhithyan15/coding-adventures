@@ -14,7 +14,8 @@ romanization: "eḍāri"
 concept_tag: TE-STHALAM215-EDARI
 prerequisites: [TE-C214-rajadhani, TE-C214-jilla]
 sounds: []
-roots: []
+roots: [dravidian-edari-desert]
+etymology_hook: "eḍāri: Dravidian; DEDR 781 lists eḍāri 'desert', noting Tamil eṭār was taken from Telugu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C214-jilla]
 <!-- hl-knowledge: introduces=[TE-LEX-C215-STHALAM215-01]; assesses=[] -->
 
 **ఎడారి** — *eḍāri* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎడారి** (*eḍāri*) is Dravidian as far as DEDR records it: DEDR 781 lists *eḍāri*, "a desert, wilderness", and notes that Tamil *eṭār*, "open plain", was borrowed from Telugu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 145,
-  "sourceHash": "fnv1a64:a257c0d9bbf55615",
+  "sourceHash": "fnv1a64:888b3d7b0c73fe4d",
   "lessonIds": [
     "SA-C145-nandati",
     "SA-C145-krandati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch145.txt",
   "json": "sanskrit/narration/ch145.json",
-  "textHash": "fnv1a64:fc24ac02d004baa6",
-  "jsonHash": "fnv1a64:79eb6439e3c39a8c",
+  "textHash": "fnv1a64:674d7c51d62a2796",
+  "jsonHash": "fnv1a64:73f3fee89a26141a",
   "findings": []
 }

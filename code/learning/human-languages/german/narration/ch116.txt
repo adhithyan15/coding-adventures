@@ -14,6 +14,9 @@ An alarm clock is for the morning: say der Morgen, then der Tag.
 You'll want to know: der Wecker.
 der Wecker — "an alarm clock".
 
+The word, taken apart.
+Wecker is the verb "to wake someone" + -er: "the waker". The verb from Old High German wecchen from Proto-Germanic wakjaną, a cousin of English wake. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the German for an armchair, then the German for an alarm
 
 You'll want to know: das Handy.
 das Handy — "a mobile phone".
+
+The word, taken apart.
+Handy is taken from English handy (EtymDB 2.1), but German made it a noun for the mobile phone, a use English does not have.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the German for an alarm clock, then the German for a mob
 You'll want to know: die Kamera.
 die Kamera — "a camera".
 
+The word, taken apart.
+Kamera from New Latin camera obscura, "dark chamber" from Latin camera, "vaulted room" from Greek kamára (EtymDB 2.1) — borrowed: the first cameras were dark rooms.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the German for a mobile phone, then the German for a cam
 You'll want to know: die Brille.
 die Brille — "glasses".
 
+The word, taken apart.
+Brille from Middle High German brille (EtymDB 2.1), from berille, "beryl", from Latin bēryllus: the first eyeglass lenses were ground from beryl. Borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the German for a camera, then the German for glasses.
 
 You'll want to know: der Regenschirm.
 der Regenschirm — "an umbrella".
+
+The word, taken apart.
+Regenschirm is Regen, "rain", + Schirm, "screen, shield" (EtymDB 2.1): a shield against rain.
 
 What you've built.
 One more word for this chapter.

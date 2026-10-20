@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C354-frigo",
+    "language": "latin",
+    "chapter": 354,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe6989f132832342"
+  },
+  "findings": []
+}

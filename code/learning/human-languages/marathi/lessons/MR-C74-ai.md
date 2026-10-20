@@ -14,7 +14,8 @@ romanization: "āī"
 concept_tag: MR-HEALTH74-AI
 prerequisites: [MR-C74-duhkhi, MR-C74-vadil]
 sounds: []
-roots: []
+roots: [indo-aryan-ai-mother]
+etymology_hook: "āī ← *āī 'mother, aunt', probably a nursery word (CDIAL 997); DEDR 364 compares Ta. āy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C74-vadil]
 <!-- hl-knowledge: introduces=[MR-LEX-C74-HEALTH74-03]; assesses=[] -->
 
 **आई** — *āī* — "a mother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आई** (*āī*) goes back to *\*āī*, "mother, aunt", which CDIAL calls probably a nursery word (CDIAL 997). DEDR compares it with Dravidian words for "mother" such as Tamil *āy* and Kannada *āyi* (DEDR 364).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to hunt"
 concept_tag: LA-VERB-VENOR
 prerequisites: [LA-C172-sero, LA-C172-meto]
 sounds: []
-roots: []
+roots: [venari-latin]
+etymology_hook: "vēnor 'to hunt' — origin uncertain; English venison comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C172-meto]
 <!-- hl-knowledge: introduces=[LA-LEX-C172-ACT172-03]; assesses=[] -->
 
 **vēnor, vēnārī** — "to hunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vēnor** has no sure origin; EtymDB 2.1 records proposed links with Proto-Indo-European *\*wenh1-*, "to strive for, to desire", and *\*weyh1-*, "to pursue". English *venison*, "hunted meat", comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

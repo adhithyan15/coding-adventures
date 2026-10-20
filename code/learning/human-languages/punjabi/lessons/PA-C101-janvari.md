@@ -14,7 +14,8 @@ romanization: "janvarī"
 concept_tag: PA-TIME101-JANVARI
 prerequisites: [PA-C100-tarikh, PA-C101-hune]
 sounds: []
-roots: []
+roots: [english-january]
+etymology_hook: "janvarī ← English January"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C101-hune]
 <!-- hl-knowledge: introduces=[PA-LEX-C101-TIME101-02]; assesses=[] -->
 
 **ਜਨਵਰੀ** — *janvarī* — "January".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜਨਵਰੀ** (*janvarī*) is a loan from English *January*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

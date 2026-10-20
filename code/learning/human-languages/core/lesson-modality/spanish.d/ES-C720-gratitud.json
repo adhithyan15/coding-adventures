@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C720-gratitud",
+    "language": "spanish",
+    "chapter": 720,
+    "sequence": 25950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4c9d402fe7ab06a"
+  },
+  "findings": []
+}

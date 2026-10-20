@@ -11,6 +11,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [LA-C01-vale]
 sounds: [hard-c-t, macron-long-vowel]
 roots: [gratia, gratus, ago]
+etymology_hook: "grātiās agō 'I give thanks' — grātia 'favour', from grātus 'pleasing'; Italian grazie, Spanish gracias"
 duration:
   max_seconds: 240
 requires:

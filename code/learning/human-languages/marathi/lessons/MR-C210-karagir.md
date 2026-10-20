@@ -14,7 +14,8 @@ romanization: "kārāgīr"
 concept_tag: MR-VASTU210-KARAGIR
 prerequisites: [MR-C210-dantavaidya, MR-C210-khatik]
 sounds: []
-roots: []
+roots: [persian-karigar]
+etymology_hook: "kārāgīr: usually traced to Persian kārīgar 'workman, craftsman'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C210-khatik]
 <!-- hl-knowledge: introduces=[MR-LEX-C210-VASTU210-03]; assesses=[] -->
 
 **कारागीर** — *kārāgīr* — "a craftsman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कारागीर** (*kārāgīr*) is a loan, usually traced to Persian *kārīgar*, "workman, craftsman", built on *kār*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "innā"
 concept_tag: PA-DEF108-INNA
 prerequisites: [PA-C107-dove, PA-C107-kai]
 sounds: []
-roots: []
+roots: [sanskrit-iyattaka]
+etymology_hook: "innā: goes with Punjabi itṇā, which CDIAL lists under Sanskrit iyattaka 'so little' (CDIAL 1589)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C107-kai]
 <!-- hl-knowledge: introduces=[PA-LEX-C108-DEF108-01]; assesses=[] -->
 
 **ਇੰਨਾ** — *innā* — "this much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਇੰਨਾ** (*innā*) goes with Punjabi *itṇā*, which CDIAL lists under Sanskrit *iyattaka*, "so little", built on *iyant*, "so much" (CDIAL 1589). CDIAL does not list *innā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

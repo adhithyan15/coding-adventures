@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Der Teig",
+  "label": "ch:ge-der-teig",
+  "canDo": "I can describe making dough: dough, yeast, to knead, to roll out and a rolling pin.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R325-review-318-325",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can describe making dough: dough, yeast, to knead, to roll out and a rolling pin.",
+    "assesses": [
+      "GE-LEX-C325-TEIG-03",
+      "GE-LEX-C325-TEIG-04",
+      "GE-LEX-C325-TEIG-05"
+    ]
+  }
+}

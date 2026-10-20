@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-12",
+  "category": "Influencing the other person",
+  "label": "respond to a request; grant or refuse",
+  "probe": [
+    "SA-LEX-C27-REPLY-01",
+    "SA-LEX-C27-REPLY-03",
+    "SA-LEX-NA-NO"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F4-04",
+    "A1-F4-05",
+    "A1-F4-06"
+  ],
+  "note": "astu grants, alam refuses ('enough'), na declines. Idiomatic and taught."
+}

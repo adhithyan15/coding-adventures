@@ -14,7 +14,8 @@ romanization: "simanṟŭ"
 concept_tag: ML-VASTU216-SIMANRU
 prerequisites: [ML-C216-palaka, ML-C216-istika]
 sounds: []
-roots: []
+roots: [english-cement]
+etymology_hook: "simanṟŭ ← English cement"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C216-istika]
 <!-- hl-knowledge: introduces=[ML-LEX-C216-VASTU216-05]; assesses=[] -->
 
 **സിമന്റ്** — *simanṟŭ* — "cement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സിമന്റ്** (*simanṟŭ*) ← English *cement*, from Latin *caementum*, "rough-cut stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

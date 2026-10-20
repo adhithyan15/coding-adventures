@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an aunt, then the Marathi for an uncle.
 You'll want to know: नवरा.
 नवरा — navrā — "a husband".
 
+The word, taken apart.
+नवरा (navrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from navavaraka, "newly wed", a form CDIAL reconstructs from its descendants (CDIAL 7013). It is nava, "new", and vara, "bridegroom".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an uncle, then the Marathi for a husband
 
 You'll want to know: बायको.
 बायको — bāyko — "a wife".
+
+The word, taken apart.
+The origin of बायको (bāyko) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a husband, then the Marathi for a wife.
 You'll want to know: बाळ.
 बाळ — bāḷ — "a baby".
 
+The word, taken apart.
+बाळ (bāḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bāla, "young; boy" (CDIAL 9216). CDIAL lists the Marathi form bāḷ, "young", and suggests the Sanskrit word perhaps belongs to a word group that gives several words for "child".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a wife, then the Marathi for a baby.
 You'll want to know: माणूस.
 माणूस — māṇūs — "a person, a man".
 
+The word, taken apart.
+माणूस (māṇūs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mānuṣa, "human; man" (CDIAL 10049). It is built on manu, "man".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a baby, then the Marathi for a person.
 
 You'll want to know: बाई.
 बाई — bāī — "a woman".
+
+The word, taken apart.
+The origin of बाई (bāī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

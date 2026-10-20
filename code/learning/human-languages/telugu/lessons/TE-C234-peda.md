@@ -14,7 +14,8 @@ romanization: "pēḍa"
 concept_tag: TE-VASTUVU234-PEDA
 prerequisites: [TE-C234-kuppa, TE-C234-eruvu]
 sounds: []
-roots: []
+roots: [dravidian-peel-dung]
+etymology_hook: "pēḍa: native Dravidian; DEDR 4441 lists pēḍa 'dung of cattle' with Tamil pēḷ 'excrement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C234-eruvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C234-VASTUVU234-03]; assesses=[] -->
 
 **పేడ** — *pēḍa* — "cow dung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పేడ** (*pēḍa*) is native Dravidian. DEDR 4441 lists a nasalised *pēḍa*, "dung of cattle", with Tamil *pēḷ*, "excrement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

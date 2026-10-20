@@ -14,7 +14,8 @@ romanization: "golusu"
 concept_tag: TE-VASTUVU300-GOLUSU
 prerequisites: [TE-C299-majjiga, TE-C300-butlu]
 sounds: []
-roots: []
+roots: [dravidian-kolucu-chain]
+etymology_hook: "golusu: native Dravidian, one word with Tamil kolucu and Kannada golasu (DEDR 2134)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C300-butlu]
 <!-- hl-knowledge: introduces=[TE-LEX-C300-VASTUVU300-02]; assesses=[] -->
 
 **గొలుసు** — *golusu* — "a chain, a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొలుసు** (*golusu*) is native Dravidian, one word with Tamil *kolucu* and Kannada *golasu* (DEDR 2134). DEDR lists Telugu *golusu*, "a chain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:9271c95fdd58bd55",
+  "lessonIds": [
+    "IT-C396-contanti",
+    "IT-C396-saldo",
+    "IT-C396-assegno",
+    "IT-C396-versamento",
+    "IT-C396-deposito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch396.txt",
+  "json": "italian/narration/ch396.json",
+  "textHash": "fnv1a64:256f08f556c72025",
+  "jsonHash": "fnv1a64:e4092cef11a2ccf9",
+  "findings": []
+}

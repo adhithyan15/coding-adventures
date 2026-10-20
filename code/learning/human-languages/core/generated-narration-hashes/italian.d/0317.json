@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:d3b102901e1f2b77",
+  "lessonIds": [
+    "IT-C317-spumante",
+    "IT-C317-tappo",
+    "IT-C317-stappare",
+    "IT-C317-cavatappi",
+    "IT-C317-banchetto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch317.txt",
+  "json": "italian/narration/ch317.json",
+  "textHash": "fnv1a64:0c67835e09f8fca9",
+  "jsonHash": "fnv1a64:9da763f2cb387d43",
+  "findings": []
+}

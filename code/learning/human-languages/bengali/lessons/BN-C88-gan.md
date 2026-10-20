@@ -14,7 +14,8 @@ romanization: "gān"
 concept_tag: BN-NUMBERS88-GAN
 prerequisites: [BN-C88-prithibi, BN-C88-rong]
 sounds: []
-roots: []
+roots: [sanskrit-gana]
+etymology_hook: "gān ← Sanskrit gāna 'singing', inherited (CDIAL 4130)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C88-rong]
 <!-- hl-knowledge: introduces=[BN-LEX-C88-NUMBERS88-04]; assesses=[] -->
 
 **গান** — *gān* — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গান** (*gān*) is inherited from Sanskrit *gāna*, "singing", and has come down with almost no change (CDIAL 4130).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

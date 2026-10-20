@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:f76a508f499c4032",
+  "lessonIds": [
+    "IT-C431-caparra",
+    "IT-C431-acconto",
+    "IT-C431-disdire",
+    "IT-C431-penale",
+    "IT-C431-anticipare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch431.txt",
+  "json": "italian/narration/ch431.json",
+  "textHash": "fnv1a64:24d443d1dc2fb0bc",
+  "jsonHash": "fnv1a64:ea179b6c121ec590",
+  "findings": []
+}

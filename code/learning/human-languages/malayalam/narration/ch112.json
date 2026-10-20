@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Where to Go",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a4ecfa59fb483e58",
+  "sourceHash": "fnv1a64:358f3942db2cc9de",
   "lessons": [
     {
       "id": "ML-C112-bank",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e7e35a7182ef97c",
+      "sourceHash": "fnv1a64:28c30201070d1539",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാങ്ക് (bāṅkŭ) from English bank, which goes back through French and Italian banca, \"bench\", the money-changer's table."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -114,7 +125,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -271,7 +282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3f23a108a0314ae",
+      "sourceHash": "fnv1a64:49b69b05ea1b46da",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +319,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആശുപത്രി (āśupatri) is generally explained as English hospital, reshaped in the mouth and then given a Sanskrit-looking spelling. The Sanskrit look is a later dressing, not its source."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -330,7 +352,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -370,7 +392,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -11,9 +11,10 @@ gloss: "what is your name?"
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [PA-C02-tu-tusi, PA-C02-ki, PA-C02-hai, PA-S02-mamma-rara-lava]
 sounds: []
-roots: []
+roots: [sanskrit-yushmad, naaman-sanskrit, ka-interrogative]
+etymology_hook: "tuhāḍā on yuṣmad- 'you' (CDIAL 10511); nāṁ ← nāman (CDIAL 7067); kī ← kim (CDIAL 3164); hai"
 duration:
-  max_seconds: 170
+  max_seconds: 184
 requires:
   knowledge: [PA-LEX-NAAM-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-SCRIPT-RECOG-LAVA-01, PA-SCRIPT-RECOG-RA-01]
 introduces:
@@ -45,6 +46,11 @@ reviews_of: [PA-C02-ki, PA-C02-hai, PA-C02-tu-tusi, PA-S02-mamma-rara-lava]
 (name) + **ਕੀ** (what) + **ਹੈ** (is) → literally "**your name what is?**" Punjabi
 keeps the verb last again, and simply drops the question-word *kī* into the object
 slot.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Every word is inherited: *tuhāḍā* goes with *tusīṁ*, listed under Sanskrit *yuṣmad-* (CDIAL 10511); *nāṁ* is from *nāman* (CDIAL 7067), *kī* from *kim* (CDIAL 3164), and *hai* usually from *asti*.
 
 ## Grammar Lens: answering
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-YOUR-NAME-02, PA-PHRASE-MY-NAME-02] -->

@@ -14,7 +14,8 @@ romanization: "āgrahaṁ"
 concept_tag: ML-WANT145-AGRAHAM
 prerequisites: [ML-C144-hetu, ML-C144-nimittam, ML-C25-shubha-rathri]
 sounds: []
-roots: []
+roots: [sanskrit-agraha]
+etymology_hook: "āgrahaṁ ← Sanskrit āgraha 'insistence, eager desire', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C144-nimittam]
 <!-- hl-knowledge: introduces=[ML-LEX-C145-WANT145-01]; assesses=[] -->
 
 **ആഗ്രഹം** — *āgrahaṁ* — "a wish, a desire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആഗ്രഹം** (*āgrahaṁ*) ← Sanskrit *āgraha*, "insistence, eager desire", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

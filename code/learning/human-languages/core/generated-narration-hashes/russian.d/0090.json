@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 90,
-  "sourceHash": "fnv1a64:a30fe3221b4dbf2a",
+  "sourceHash": "fnv1a64:5e9fdab295ea4386",
   "lessonIds": [
     "RU-C90-car-park",
     "RU-C90-lift",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch90.txt",
   "json": "russian/narration/ch90.json",
-  "textHash": "fnv1a64:ca91e7076eb37367",
-  "jsonHash": "fnv1a64:dc6d2c87495174e7",
+  "textHash": "fnv1a64:d76535fe107927ae",
+  "jsonHash": "fnv1a64:8f446f66171fce30",
   "findings": []
 }

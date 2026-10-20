@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:aa12fe7a8374b7f7",
+  "lessonIds": [
+    "GE-C306-gratulieren",
+    "GE-C306-glueckwunsch",
+    "GE-C306-ueberreichen",
+    "GE-C306-beschenken",
+    "GE-C306-auspacken"
+  ],
+  "tex": "german/book/chapters/ch306-herzlichen-gluckwunsch.tex"
+}

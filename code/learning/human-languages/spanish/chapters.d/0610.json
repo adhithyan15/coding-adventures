@@ -1,0 +1,19 @@
+{
+  "chapter": 610,
+  "title": "Convivir",
+  "label": "ch:es-convivir",
+  "canDo": "I can talk about tolerance, migration and living together.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C610-convivencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 610: I can talk about tolerance, migration and living together.",
+    "assesses": [
+      "ES-LEX-C610-CONVIVIR-03",
+      "ES-LEX-C610-CONVIVIR-04",
+      "ES-LEX-C610-CONVIVIR-05"
+    ]
+  }
+}

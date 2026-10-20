@@ -11,7 +11,8 @@ romanization: "sambandhika"
 concept_tag: KA-KIN-RELATIVE
 prerequisites: [KA-C90-grandson, KA-C90-granddaughter]
 sounds: []
-roots: []
+roots: [sanskrit-sambandha]
+etymology_hook: "sambandhika ← Sanskrit sambandha 'kinship' (CDIAL 12955) + -ika 'belonging to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C90-granddaughter]
 "connection, relationship".
 
 **ಅವರು ನಮ್ಮ ಸಂಬಂಧಿಕರು** (*avaru namma sambandhikaru*) — "they are our relatives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಬಂಧಿಕ** (*sambandhika*) is built on Sanskrit *sambandha*, "connection, kinship" (CDIAL 12955), with the ending *-ika*, "one belonging to": a kinsman.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

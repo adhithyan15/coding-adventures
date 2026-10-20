@@ -12,7 +12,7 @@ concept_tag: AR-DAYS-WEEKDAYS
 prerequisites: [AR-C07-asif]
 sounds: [arabic-rtl, hamza-variants, definite-article-al]
 roots: [ahad-wahid, ithnayn, thalatha, arbaa, khamsa]
-etymology_hook: "Arabic weekdays are literally ordinal numbers — al-aḥad 'the first,' al-ithnayn 'the second' — a genuinely different system from Rome's planet-week"
+etymology_hook: "the weekdays are numbers: al-aḥad 'the one', al-ithnayn 'the two', then the roots of three, four, five (Lane)"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +60,11 @@ three…** This also tells you something about the week itself: counting
 starts from **Sunday**, so Sunday is "day one" — the Arabic week, like the
 Jewish and much of the Christian calendar tradition, begins where the
 European Monday-first convention doesn't.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+These weekdays are named by number. *Al-aḥad* is "the one" and *al-ithnayn* "the two"; *ath-thulāthāʾ*, *al-arbiʿāʾ* and *al-khamīs* are built on the roots of three, four and five, *th-l-th*, *r-b-ʿ* and *kh-m-s* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02] -->

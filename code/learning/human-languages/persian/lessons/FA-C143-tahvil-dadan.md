@@ -14,7 +14,8 @@ romanization: "tahvil dâdan"
 concept_tag: FA-VERB-TAHVIL-DADAN
 prerequisites: [FA-C143-yad-dadan, FA-C143-por-kardan]
 sounds: []
-roots: []
+roots: [arabic-tahwil]
+etymology_hook: "tahvil ← Arabic taḥwīl 'transfer, turning over', root ḥ-w-l (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C143-por-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C143-KONESH143-05]; assesses=[] -->
 
 **تحویل دادن** — *tahvil dâdan* — "to hand in, to deliver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tahvil dâdan* pairs *tahvil*, borrowed from Arabic *taḥwīl*, "transfer, turning over" (root *ḥ-w-l*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

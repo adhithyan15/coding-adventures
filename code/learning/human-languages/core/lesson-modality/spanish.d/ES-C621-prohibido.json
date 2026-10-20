@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C621-prohibido",
+    "language": "spanish",
+    "chapter": 621,
+    "sequence": 20840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d54b64f25b0fcd6"
+  },
+  "findings": []
+}

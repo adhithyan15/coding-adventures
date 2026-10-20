@@ -14,7 +14,8 @@ romanization: "pinvalikkuka"
 concept_tag: ML-VERB-PINVALIKKUKA
 prerequisites: [ML-C304-coriyuka, ML-C305-niksepikkuka]
 sounds: []
-roots: []
+roots: [dravidian-pin-behind, dravidian-vali-pull]
+etymology_hook: "pinvalikkuka: native Dravidian, 'pull back': pin (DEDR 4205) + valikka 'to pull' (DEDR 5282)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C305-niksepikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C305-KRIYA305-02]; assesses=[] -->
 
 **പിൻവലിക്കുക** — *pinvalikkuka* — "to withdraw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിൻവലിക്കുക** (*pinvalikkuka*) is native Dravidian, "pull back": *pin*, "behind" (DEDR 4205), and the verb "to draw, pull" (DEDR 5282, with Tamil *vali*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

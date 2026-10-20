@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tea, Water, Milk, and Rice",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0898aebd090e06f6",
+  "sourceHash": "fnv1a64:a7fdd8ea3051f122",
   "lessons": [
     {
       "id": "BN-C10-cha",
@@ -209,7 +209,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f49dee3e9e9a2351",
+      "sourceHash": "fnv1a64:f0d5f2a164d8f063",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -235,7 +235,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 13 taught you জল (jôl) খাওয়া, \"to drink water\" — literally \"water-eat\" — without ever teaching জল (jôl) by itself. Here it is, on its own."
+              "text": "Chapter 13 showed you that Bengali \"eats\" its drinks with খাওয়া. Here is the drink you need most: জল (jôl), and with it জল (jôl) খাওয়া, \"to drink water\" — literally \"water-eat.\""
             }
           ]
         },
@@ -360,7 +360,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did Chapter 13 already say with জল (jôl), without teaching it as a word? (জল (jôl) খাওয়া, \"to drink water.\") Is জল (jôl)'s root secure? (No — genuinely disputed.) Which everyday synonym for water traces cleanly to \"drinkable,\" from the root behind potion? (পানি.)"
+              "text": "How do you say \"drink water\"? (জল (jôl) খাওয়া, literally \"water-eat.\") Is জল (jôl)'s root secure? (No — genuinely disputed.) Which everyday synonym for water traces cleanly to \"drinkable,\" from the root behind potion? (পানি.)"
             },
             {
               "kind": "activity",

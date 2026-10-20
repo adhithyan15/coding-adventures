@@ -12,7 +12,7 @@ concept_tag: VERB-GO
 prerequisites: [FA-C06-budan]
 sounds: [rtl, short-vowels-unwritten]
 roots: [middle-persian-raftan, persian-present-stem-rav]
-etymology_hook: raftan carries a second form you must learn beside it — the present stem رو rav- — exactly the way English carries go beside went.
+etymology_hook: "raftan: inherited, usually traced to Middle Persian raftan"
 duration:
   max_seconds: 290
 requires:
@@ -70,8 +70,8 @@ are the same for every Persian verb.
 ## The word, taken apart — a split English has too
 <!-- hl-knowledge: introduces=[FA-STEM-RAV]; assesses=[] -->
 
-**رفتن** *raftan* continues Middle Persian *raftan*; its deeper Indo-European
-ancestry is genuinely unsettled, so no English cousin is claimed for it here.
+**رفتن** *raftan* is inherited: it is usually traced to Middle Persian *raftan*. Its
+deeper Indo-European ancestry is not settled, so no English cousin is claimed for it here.
 
 The split itself needs no excuse — English does the same thing. *Go* and *went*
 are two unrelated words sharing one verb; so are *be* and *was*. English calls

@@ -13,7 +13,8 @@ gloss: "cinnamon"
 concept_tag: PT-COISAS199-CANELA
 prerequisites: [PT-C198-lata, PT-C199-milho]
 sounds: []
-roots: []
+roots: [canna-latin]
+etymology_hook: "canela ← Medieval Latin canella 'little reed', from canna: rolled bark looks like reeds"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C199-milho]
 <!-- hl-knowledge: introduces=[PT-LEX-C199-COISAS199-02]; assesses=[] -->
 
 **a canela** — "cinnamon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canela** ← Medieval Latin *canella*, "little reed" (EtymDB 2.1), from *canna*, "reed" — a learned borrowing from Medieval Latin. Rolled cinnamon bark looks like little reeds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

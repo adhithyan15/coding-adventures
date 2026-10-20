@@ -13,7 +13,8 @@ gloss: "windy"
 concept_tag: GE-QUAL224-WINDIG
 prerequisites: [GE-C224-verschieden, GE-C224-vorsichtig]
 sounds: []
-roots: []
+roots: [germanic-windaz]
+etymology_hook: "windig — Wind + -ig: windy, the same build as in English"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C224-vorsichtig]
 <!-- hl-knowledge: introduces=[GE-LEX-C224-QUAL224-04]; assesses=[] -->
 
 **windig** — "windy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**windig** ← Middle High German *windic*: *Wind* + *-ig* — the same build as English *windy*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

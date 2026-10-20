@@ -11,7 +11,8 @@ gloss: very, a lot — the word that turns nine adjectives into eighteen without
 concept_tag: MR-LEX-KHUP
 prerequisites: [MR-R52-easy-hard-tall, MR-C31-naa-naa]
 sounds: [aspirated-kha, matra-oo]
-roots: []
+roots: [persian-khub]
+etymology_hook: "khūp 'very, a lot': usually traced to Persian khūb 'good, fine'; CDIAL has no entry for it"
 duration:
   max_seconds: 210
 requires:
@@ -61,6 +62,11 @@ It works on a verb and a noun too, where English would need *a lot* or *much*:
 That last one is worth having by heart. **खूप धन्यवाद** is the ordinary warm
 *thank you very much*, and you have owned **धन्यवाद** since chapter two with no
 way to strengthen it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खूप** (*khūp*) is usually traced to Persian *khūb*, "good, fine".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-KHUP, MR-LEX-MOTHA, MR-LEX-SUNDAR, MR-LEX-MITRA, MR-JOIN-NAA-NAA, MR-LEX-KATHIN] -->

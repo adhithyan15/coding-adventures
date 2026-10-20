@@ -14,7 +14,8 @@ romanization: "granítsa"
 concept_tag: RU-MESTO213-GRANITSA
 prerequisites: [RU-C212-sentyabr, RU-C212-oktyabr]
 sounds: []
-roots: []
+roots: [granica-slavic]
+etymology_hook: "граница is from грань 'an edge', first probably 'a point'; German Grenze was borrowed from Slavic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C212-oktyabr]
 <!-- hl-knowledge: introduces=[RU-LEX-C213-MESTO213-01]; assesses=[] -->
 
 **граница** (*granítsa*) — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**граница** is built on *грань*, "an edge, a facet" (Vasmer), which first probably meant "a point"; Vasmer relates it to Old High German *grana*, "whisker". German *Grenze*, "border", was borrowed from this Slavic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

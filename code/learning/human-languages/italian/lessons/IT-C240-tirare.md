@@ -14,6 +14,7 @@ concept_tag: IT-VERB-TIRARE
 prerequisites: [IT-C239-riconoscere, IT-C240-spingere]
 sounds: []
 roots: []
+etymology_hook: "tirare — origin uncertain; French tirer is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C240-spingere]
 <!-- hl-knowledge: introduces=[IT-LEX-C240-VERBI240-02]; assesses=[] -->
 
 **tirare** — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tirare** — its origin is uncertain. EtymDB 2.1 records none; it lists French *tirer* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

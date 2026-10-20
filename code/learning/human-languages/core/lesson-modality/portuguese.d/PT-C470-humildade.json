@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C470-humildade",
+    "language": "portuguese",
+    "chapter": 470,
+    "sequence": 26160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77118f6836536ed7"
+  },
+  "findings": []
+}

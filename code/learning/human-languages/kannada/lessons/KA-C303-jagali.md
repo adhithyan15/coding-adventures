@@ -14,7 +14,8 @@ romanization: "jagali"
 concept_tag: KA-VASTU303-JAGALI
 prerequisites: [KA-C302-siment, KA-C302-bidiru]
 sounds: []
-roots: []
+roots: [dravidian-jagati-platform]
+etymology_hook: "jagali: native Dravidian, one word with Telugu jagati (DEDR 2279)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C302-bidiru]
 <!-- hl-knowledge: introduces=[KA-LEX-C303-VASTU303-01]; assesses=[] -->
 
 **ಜಗಲಿ** — *jagali* — "a raised veranda, a front porch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಗಲಿ** (*jagali*) is native Dravidian, one word with Telugu *jagati* (DEDR 2279). DEDR lists *jagali*, "a raised place, a seat of mud or stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

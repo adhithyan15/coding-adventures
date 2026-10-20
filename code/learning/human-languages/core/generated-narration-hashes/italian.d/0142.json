@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 142,
-  "sourceHash": "fnv1a64:73b382201dbffde7",
+  "sourceHash": "fnv1a64:67c813f383cbabc6",
   "lessonIds": [
     "IT-C142-vincere",
     "IT-C142-rompere",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "italian/narration/ch142.txt",
   "json": "italian/narration/ch142.json",
-  "textHash": "fnv1a64:0635ce9c004f4822",
-  "jsonHash": "fnv1a64:a891ae11a635898e",
+  "textHash": "fnv1a64:b6f947679c6755e1",
+  "jsonHash": "fnv1a64:d8b7f0432c719a38",
   "findings": []
 }

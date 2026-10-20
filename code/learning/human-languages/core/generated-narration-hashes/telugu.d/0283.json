@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 283,
-  "sourceHash": "fnv1a64:a3ed1b1fa21789e9",
+  "sourceHash": "fnv1a64:eefdf3c2c5840fe6",
   "lessonIds": [
     "TE-C283-charj-ceyu",
     "TE-C283-tolagincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch283.txt",
   "json": "telugu/narration/ch283.json",
-  "textHash": "fnv1a64:f3b9a92400ea8c9c",
-  "jsonHash": "fnv1a64:397edc6d5383db14",
+  "textHash": "fnv1a64:a3265a06a479e6b4",
+  "jsonHash": "fnv1a64:0198f4ac75adfaba",
   "findings": []
 }

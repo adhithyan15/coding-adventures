@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C770-fruteria",
+    "language": "spanish",
+    "chapter": 770,
+    "sequence": 28540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c25c9846ad91d7e6"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 335,
+  "title": "Lūdī circēnsēs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1601ea48d2070162",
+  "lessons": [
+    {
+      "id": "LA-C335-auriga",
+      "sequence": 18050,
+      "title": "aurīga, aurīgae — a charioteer",
+      "headword": "aurīga, aurīgae",
+      "romanization": "aurīga, aurīgae",
+      "gloss": "a charioteer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bcedd17cc39d840",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to vow, then the Latin for a vow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aurīga, aurīgae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aurīga, aurīgae — \"a charioteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aurīga equōs celeriter agēbat. The charioteer was driving the horses fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 1st declension, though it ends in -a, like nauta. Famous charioteers grew very rich."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aurīga is explained by Lewis & Short as built on an old word for the reins and agō, \"to drive\": he who handles the reins. The details are not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aurīga, aurīgae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aurīga, aurīgae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aurīga, aurīgae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aurīga, aurīgae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aurīga, aurīgae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aurīga, aurīgae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to vow, then the Latin for a vow, then say aurīga, aurīgae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to vow, then the Latin for a vow, then say *aurīga, aurīgae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aurīga, aurīgae mean? (\"A charioteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C335-quadrigae",
+      "sequence": 18060,
+      "title": "quadrīgae, quadrīgārum — a four-horse chariot",
+      "headword": "quadrīgae, quadrīgārum",
+      "romanization": "quadrīgae, quadrīgārum",
+      "gloss": "a four-horse chariot",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d3aeef0274f3eef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a vow, then the Latin for a charioteer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: quadrīgae, quadrīgārum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quadrīgae, quadrīgārum — \"a four-horse chariot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Quadrīgae per circum volābant. The four-horse chariots flew round the circus."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, plural: four horses under one yoke."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quadrīgae is a shortened quadriiugae, from quattuor, \"four\", and iugum, \"yoke\" (Lewis & Short): four together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quadrīgae, quadrīgārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quadrīgae, quadrīgārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quadrīgae, quadrīgārum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quadrīgae, quadrīgārum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with quadrīgae, quadrīgārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *quadrīgae, quadrīgārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a vow, then the Latin for a charioteer, then say quadrīgae, quadrīgārum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a vow, then the Latin for a charioteer, then say *quadrīgae, quadrīgārum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does quadrīgae, quadrīgārum mean? (\"A four-horse chariot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C335-meta",
+      "sequence": 18070,
+      "title": "mēta, mētae — a turning post; a goal, a limit",
+      "headword": "mēta, mētae",
+      "romanization": "mēta, mētae",
+      "gloss": "a turning post; a goal, a limit",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c65fe21b0f149fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a charioteer, then the Latin for a four-horse chariot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mēta, mētae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mēta, mētae — \"a turning post; a goal, a limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aurīga prope mētam cecidit. The charioteer fell near the turning post."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. The cone-shaped posts at each end of the track, where crashes happened. Also any limit or goal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mēta is inherited from Proto-Italic mētā, \"boundary\" (EtymDB): a marker at the limit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēta, mētae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēta, mētae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēta, mētae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēta, mētae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mēta, mētae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mēta, mētae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a charioteer, then the Latin for a four-horse chariot, then say mēta, mētae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a charioteer, then the Latin for a four-horse chariot, then say *mēta, mētae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mēta, mētae mean? (\"A turning post; a goal, a limit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C335-factio",
+      "sequence": 18080,
+      "title": "factiō, factiōnis — a racing team; a party, a faction",
+      "headword": "factiō, factiōnis",
+      "romanization": "factiō, factiōnis",
+      "gloss": "a racing team; a party, a faction",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4d15ffe379d2e22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a four-horse chariot, then the Latin for a turning post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: factiō, factiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "factiō, factiōnis — \"a racing team; a party, a faction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer factiōnem viridem amābat. The boy loved the Green team."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, from faciō. The racing teams wore colours: white, red, green and blue. English faction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "factiō is built on faciō, \"to make, to do\" (EtymDB): a doing together, and so a group that acts together. English faction comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "factiō, factiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *factiō, factiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "factiō, factiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *factiō, factiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with factiō, factiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *factiō, factiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a four-horse chariot, then the Latin for a turning post, then say factiō, factiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a four-horse chariot, then the Latin for a turning post, then say *factiō, factiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does factiō, factiōnis mean? (\"A racing team; a party, a faction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C335-circensis",
+      "sequence": 18090,
+      "title": "circēnsis, circēnse — of the circus",
+      "headword": "circēnsis, circēnse",
+      "romanization": "circēnsis, circēnse",
+      "gloss": "of the circus",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c47fe13f7565b2eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a turning post, then the Latin for a racing team."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: circēnsis, circēnse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "circēnsis, circēnse — \"of the circus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lūdī circēnsēs per quīnque diēs fīēbant. The races in the circus went on for five days."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings. Lūdī circēnsēs: the races. A satirist said the people wanted only bread and races."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "circēnsis is built on circus, \"ring, racecourse\" (EtymDB), with the ending -ēnsis, \"belonging to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "circēnsis, circēnse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *circēnsis, circēnse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "circēnsis, circēnse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *circēnsis, circēnse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with circēnsis, circēnse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *circēnsis, circēnse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a turning post, then the Latin for a racing team, then say circēnsis, circēnse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a turning post, then the Latin for a racing team, then say *circēnsis, circēnse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does circēnsis, circēnse mean? (\"Of the circus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C661-conserje",
+    "language": "spanish",
+    "chapter": 661,
+    "sequence": 22910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7c30a1f795ccc23"
+  },
+  "findings": []
+}

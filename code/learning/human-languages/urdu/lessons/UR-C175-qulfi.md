@@ -14,7 +14,8 @@ romanization: "qulfī"
 concept_tag: UR-CHIZ175-QULFI
 prerequisites: [UR-C175-ras-malai, UR-C175-faluda]
 sounds: []
-roots: []
+roots: [arabic-qufl]
+etymology_hook: "qulfī: usually linked with qulf 'a lock', Arabic qufl (Lane, root q-f-l), after its sealed mould"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C175-faluda]
 <!-- hl-knowledge: introduces=[UR-LEX-C175-CHIZ175-03]; assesses=[] -->
 
 **قلفی** — *qulfī* — "kulfi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلفی** (*qulfī*) is usually linked with *qulf*, "a lock", the Urdu and Persian form of Arabic *qufl* (Lane, root *q-f-l*): the sweet is frozen in a sealed mould.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

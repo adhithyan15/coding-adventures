@@ -1,0 +1,11 @@
+{
+  "id": "ES-C605-violencia",
+  "pathSegment": "ES-PATH-605-PROBSOC",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-605-PROBSOC",
+      "order": 1
+    }
+  ]
+}

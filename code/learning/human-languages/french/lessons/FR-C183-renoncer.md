@@ -13,7 +13,8 @@ gloss: "to give up"
 concept_tag: FR-VERB-RENONCER
 prerequisites: [FR-C182-exagerer, FR-C182-feter]
 sounds: []
-roots: []
+roots: [nuntius-latin]
+etymology_hook: "renoncer ← Latin renuntiare 'to give up' — English renounce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C182-feter]
 <!-- hl-knowledge: introduces=[FR-LEX-C183-VERBES183-01]; assesses=[] -->
 
 **renoncer** — "to give up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**renoncer** ← Latin *renuntiare*, "to send back word, to give up" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

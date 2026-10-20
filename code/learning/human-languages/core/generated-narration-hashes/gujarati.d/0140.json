@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 140,
-  "sourceHash": "fnv1a64:838acf0e5eef4bed",
+  "sourceHash": "fnv1a64:5b4378d78d4789f0",
   "lessonIds": [
     "GU-C140-kapvu",
     "GU-C140-sivvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch140.txt",
   "json": "gujarati/narration/ch140.json",
-  "textHash": "fnv1a64:7fc2e7dd77663d2e",
-  "jsonHash": "fnv1a64:4a348c2f00daaeb4",
+  "textHash": "fnv1a64:9070673e276ea724",
+  "jsonHash": "fnv1a64:6e13e61c99f7fd54",
   "findings": []
 }

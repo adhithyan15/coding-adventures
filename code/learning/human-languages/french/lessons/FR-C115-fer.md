@@ -13,7 +13,8 @@ gloss: "iron; an iron (for clothes)"
 concept_tag: FR-MAISON67-FER
 prerequisites: [FR-C115-linge, FR-C115-lessive]
 sounds: []
-roots: []
+roots: [ferrum-latin]
+etymology_hook: "fer ← Latin ferrum 'iron' — English ferrous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C115-lessive]
 <!-- hl-knowledge: introduces=[FR-LEX-C115-MAISON67-04]; assesses=[] -->
 
 **le fer** — "iron; an iron (for clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fer** ← Latin *ferrum*, "iron" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C405-sorpassare",
+  "pathSegment": "IT-PATH-405-AUTOSTRADA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-405-AUTOSTRADA",
+      "order": 4
+    }
+  ]
+}

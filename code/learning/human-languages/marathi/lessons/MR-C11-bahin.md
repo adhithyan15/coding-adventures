@@ -12,7 +12,7 @@ concept_tag: MR-PEOPLE-SISTER
 prerequisites: [MR-C11-bhau]
 sounds: []
 roots: [sanskrit-bhagini, sanskrit-bhaj-share]
-etymology_hook: "बहीण continues Old Marathi bahiṇī, from Maharastri Prakrit bhaiṇī, from Sanskrit भगिनी bhaginī, traditionally connected to भज् bhaj- \"to share, to apportion\" — a root distinct from, and not a cousin of, the Indo-European *swésōr behind English sister"
+etymology_hook: "बहीण ← Prakrit bhaiṇī ← Sanskrit bhaginī, traditionally tied to bhaj- 'to share'; not kin to sister"
 duration:
   max_seconds: 280
 requires:

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-656-FRONTERA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can cross a border: customs and the customs officer, a visa, a passport stamp and a bag search.",
+  "prerequisites": []
+}

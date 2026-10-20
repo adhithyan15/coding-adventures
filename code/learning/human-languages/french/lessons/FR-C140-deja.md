@@ -13,7 +13,8 @@ gloss: "already"
 concept_tag: FR-PAS140-DEJA
 prerequisites: [FR-C139-lequel, FR-C139-nimporte-quoi]
 sounds: []
-roots: []
+roots: [iam-latin]
+etymology_hook: "déjà ← Middle French desja, from Latin iam 'already' — the ja of jamais"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C139-nimporte-quoi]
 <!-- hl-knowledge: introduces=[FR-LEX-C140-PAS140-01]; assesses=[] -->
 
 **déjà** — "already". It sits between **avoir** and the participle: **J'ai déjà parlé.** — "I have already spoken."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**déjà** ← Middle French *desja*, from *des*, "from", and Old French *ja*, "now, already", ← Latin *iam* — the *ja* of *jamais*. (EtymDB 2.1 has the Middle French form.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

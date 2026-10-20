@@ -14,7 +14,8 @@ romanization: "kit"
 concept_tag: RU-THINGS118-WHALE
 prerequisites: [RU-C118-squirrel, RU-C118-owl]
 sounds: []
-roots: []
+roots: [greek-ketos]
+etymology_hook: "кит ← Greek kētos 'a sea monster', through Old Church Slavonic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C118-owl]
 <!-- hl-knowledge: introduces=[RU-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **кит** (*kit*) — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кит** ← Old Church Slavonic *kitŭ*, from Greek *kêtos*, "a sea monster, a whale" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

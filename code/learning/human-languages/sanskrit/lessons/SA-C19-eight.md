@@ -14,7 +14,8 @@ romanization: "aṣṭa"
 concept_tag: SA-NUM-EIGHT
 prerequisites: [SA-C19-seven]
 sounds: []
-roots: []
+roots: [sanskrit-ashta]
+etymology_hook: "aṣṭau 'eight' is inherited: MW compares Latin octo, Greek oktō and English eight (CDIAL 941)"
 duration:
   max_seconds: 210
 requires:

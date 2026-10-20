@@ -13,7 +13,8 @@ gloss: "a rock, a boulder"
 concept_tag: LA-THINGS129-SAXUM
 prerequisites: [LA-C129-truncus, LA-C129-semen]
 sounds: []
-roots: []
+roots: [saxum-latin]
+etymology_hook: "saxum 'rock' — origin uncertain; often tied to PIE *sek- 'to cut'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C129-semen]
 <!-- hl-knowledge: introduces=[LA-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **saxum, saxī** — "a rock, a boulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saxum** is often traced to Proto-Indo-European *\*sek-*, "to cut" (EtymDB 2.1), the root of *secāre*, "to cut" (Lewis & Short), but the link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kale"
 concept_tag: KA-VASTU226-KALE
 prerequisites: [KA-C225-kabbu, KA-C225-pataki]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art]
+etymology_hook: "kale ← Sanskrit kalā 'any practical art', a tatsama (CDIAL 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C225-pataki]
 <!-- hl-knowledge: introduces=[KA-LEX-C226-VASTU226-01]; assesses=[] -->
 
 **ಕಲೆ** — *kale* — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲೆ** (*kale*) is Sanskrit *kalā*, "any practical art", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 2927). CDIAL notes that the Sanskrit word may itself have come from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

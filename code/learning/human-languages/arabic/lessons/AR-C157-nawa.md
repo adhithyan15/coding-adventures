@@ -14,7 +14,8 @@ romanization: "nawā"
 concept_tag: AR-VERB-NAWA
 prerequisites: [AR-C157-barnamaj, AR-C157-qarrara]
 sounds: []
-roots: []
+roots: [n-w-y]
+etymology_hook: "nawā: built on the root n-w-y, 'to intend' (Lane); nawā is the plain verb, 'he intended'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C157-qarrara]
 <!-- hl-knowledge: introduces=[AR-LEX-C157-MUSTAQBAL157-05]; assesses=[] -->
 
 **نوى** — *nawā* — "to intend, to mean to". **أنوي أن أزور جدتي** — *anwī an azūra jaddatī* — "I intend to visit my grandmother."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوى** (*nawā*) is built on the native Arabic root *n-w-y*, "to intend" (Lane). *Nawā* is the plain verb, "he intended".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

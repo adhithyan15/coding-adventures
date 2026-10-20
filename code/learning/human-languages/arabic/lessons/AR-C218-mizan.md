@@ -14,7 +14,8 @@ romanization: "mīzān"
 concept_tag: AR-SHAY218-MIZAN
 prerequisites: [AR-C218-mitraqa, AR-C218-mawdu]
 sounds: []
-roots: []
+roots: [w-z-n]
+etymology_hook: "mīzān: built on the root w-z-n, 'to weigh' (Lane); mīzān is an instrument noun, 'a thing to weigh with'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C218-mawdu]
 <!-- hl-knowledge: introduces=[AR-LEX-C218-SHAY218-03]; assesses=[] -->
 
 **ميزان** — *mīzān* — "scales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ميزان** (*mīzān*) is built on the native Arabic root *w-z-n*, "to weigh" (Lane). *Mīzān* is an instrument noun, "a thing to weigh with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

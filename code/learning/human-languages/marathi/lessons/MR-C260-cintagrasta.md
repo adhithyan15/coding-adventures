@@ -14,7 +14,8 @@ romanization: "cintāgrasta"
 concept_tag: MR-GUN260-CINTAGRASTA
 prerequisites: [MR-C260-udar, MR-C260-bolka]
 sounds: []
-roots: []
+roots: [sanskrit-cinta, sanskrit-grasta]
+etymology_hook: "cintāgrasta: Sanskrit cintā 'care' (CDIAL 4816) + grasta 'seized'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C260-bolka]
 <!-- hl-knowledge: introduces=[MR-LEX-C260-GUN260-03]; assesses=[] -->
 
 **चिंताग्रस्त** — *cintāgrasta* — "worried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिंताग्रस्त** (*cintāgrasta*) is a compound of Sanskrit parts: *cintā*, "thought, care" (CDIAL 4816), and *grasta*, "seized, swallowed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

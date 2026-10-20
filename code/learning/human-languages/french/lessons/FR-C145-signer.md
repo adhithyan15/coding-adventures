@@ -13,7 +13,8 @@ gloss: "to sign"
 concept_tag: FR-VERB-SIGNER
 prerequisites: [FR-C144-essayer, FR-C144-continuer]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "signer ← Latin signare 'to mark', from signum — English sign"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C144-continuer]
 <!-- hl-knowledge: introduces=[FR-LEX-C145-VERBES145-01]; assesses=[] -->
 
 **signer** — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**signer** ← Latin *signare*, "to mark", from *signum*, "a sign" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mayūraḥ"
 concept_tag: SA-ANIMAL-PEACOCK
 prerequisites: [SA-C80-crow, SA-C80-parrot]
 sounds: []
-roots: []
+roots: [sanskrit-mayura]
+etymology_hook: "mayūra 'peacock': origin disputed, Dravidian (cf. Tamil mayil), Austroasiatic or Iranian (CDIAL 9865)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C80-parrot]
 <!-- hl-knowledge: introduces=[SA-LEX-C80-BIRDS-03]; assesses=[] -->
 
 **मयूरः** (*mayūraḥ*) — "a peacock", who dances when the **वर्षा** comes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *mayūra* is disputed. CDIAL 9865 reports three proposals: a
+Dravidian source (compare Tamil *mayil*, DEDR 4642), an Austroasiatic one, and an
+old Indo-Iranian colour word. It lives on as Hindi *mor*, "peacock".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

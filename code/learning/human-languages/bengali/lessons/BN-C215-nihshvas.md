@@ -14,7 +14,8 @@ romanization: "niḥshvās"
 concept_tag: BN-SVASTHYO215-NIHSHVAS
 prerequisites: [BN-C215-rogi, BN-C215-nari]
 sounds: []
-roots: []
+roots: [sanskrit-nihshvasa]
+etymology_hook: "niḥshvās ← Sanskrit niḥśvāsa 'breath', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C215-nari]
 <!-- hl-knowledge: introduces=[BN-LEX-C215-SVASTHYO215-05]; assesses=[] -->
 
 **নিঃশ্বাস** — *niḥshvās* — "breath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিঃশ্বাস** (*niḥshvās*) is Sanskrit *niḥśvāsa*, "breath", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

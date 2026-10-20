@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 20,
-  "sourceHash": "fnv1a64:cd9c87d021b396db",
+  "sourceHash": "fnv1a64:66b16b08c85734c8",
   "lessonIds": [
     "ML-C20-pathinonnu-irupathu",
     "ML-C20-kalavastha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch20.txt",
   "json": "malayalam/narration/ch20.json",
-  "textHash": "fnv1a64:f71dfad631c9aa77",
-  "jsonHash": "fnv1a64:8a713733ea59ef73",
+  "textHash": "fnv1a64:bcf05d58b30593a3",
+  "jsonHash": "fnv1a64:b2729d06d69e3e81",
   "findings": []
 }

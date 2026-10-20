@@ -52,6 +52,11 @@ reviews_of: [IT-C26-quarto, IT-C23-amico-amica, IT-C25-gola, IT-C08-mezzogiorno-
 > **quinto** (masculine) · **quinta** (feminine) — **fifth**.
 > **il quinto piano** — the fifth floor. **la quinta volta** — the fifth time.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quinto** ← Latin *quintus*, "fifth", from *quinque*, "five" — inherited. (EtymDB 2.1)
+
 ## Sounds you'll need: why cinque and quinto do not match
 <!-- hl-knowledge: introduces=[IT-SOUND-QUINTO-03]; assesses=[] -->
 
@@ -64,8 +69,8 @@ which is why *cinque* opens like English *chin*. The ordinal was not pulled, and
 it still opens **kw-**: *KWIN-to*.
 
 So this pair is a sound change caught halfway through: one word moved and its twin
-did not. Listen for the same split in *dieci* against *decimo*, five lessons
-ahead — the cardinal softened, the ordinal did not.
+did not. Listen for the same split in *dieci* against the word for "tenth," five
+lessons ahead — the cardinal softened, the ordinal did not.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-QUINTO-02, IT-SOUND-QUINTO-03] -->
@@ -80,5 +85,3 @@ ahead — the cardinal softened, the ordinal did not.
 
 [PAUSE 3s] Why do *cinque* and *quinto* not rhyme? (**The cardinal softened its opening to
 *ch-* and the ordinal kept *kw-*.**) Say the fifth floor. (**Il quinto piano**.)
-And which pair five lessons ahead does the same thing? (***Dieci*** against
-***decimo***.)

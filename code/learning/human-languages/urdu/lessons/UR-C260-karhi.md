@@ -14,7 +14,8 @@ romanization: "kaṛhī"
 concept_tag: UR-CHIZ260-KARHI
 prerequisites: [UR-C260-kofta, UR-C260-tikka]
 sounds: []
-roots: []
+roots: [indo-aryan-kvathita]
+etymology_hook: "kaṛhī ← Sanskrit kvathita 'boiled', a tadbhava (CDIAL 3637)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C260-tikka]
 <!-- hl-knowledge: introduces=[UR-LEX-C260-CHIZ260-03]; assesses=[] -->
 
 **کڑھی** — *kaṛhī* — "kadhi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کڑھی** (*kaṛhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kvathita*, "boiled" (CDIAL 3637). Sanskrit already used its feminine for a spiced decoction made with milk.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

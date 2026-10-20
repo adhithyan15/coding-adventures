@@ -14,7 +14,8 @@ romanization: "paristhiti"
 concept_tag: TE-KARANAM258-PARISTHITI
 prerequisites: [TE-C258-prabhavam, TE-C258-abhivrddhi]
 sounds: []
-roots: []
+roots: [sanskrit-sthiti]
+etymology_hook: "paristhiti ← Sanskrit paristhiti, built on sthiti 'standing, existence' (CDIAL 13769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C258-abhivrddhi]
 <!-- hl-knowledge: introduces=[TE-LEX-C258-KARANAM258-05]; assesses=[] -->
 
 **పరిస్థితి** — *paristhiti* — "a situation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరిస్థితి** (*paristhiti*) is a learned word built on Sanskrit *sthiti*, "standing upright, continued existence" (CDIAL 13769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

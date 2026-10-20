@@ -12,6 +12,9 @@ Before the new one: say the Bengali for ever, then the Bengali for soon.
 You'll want to know: ইদানীং.
 ইদানীং — idānīng — "lately".
 
+The word, taken apart.
+ইদানীং (idānīng) is Sanskrit idānīm, "now, at this time", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for soon, then the Bengali for lately.
 
 You'll want to know: সারাদিন.
 সারাদিন — sārādin — "all day".
+
+The word, taken apart.
+সারাদিন (sārādin) is sārā, "whole", + din, "day". CDIAL lists Bengali sārā, "whole", under Sanskrit sāra, "hardness, best part" (CDIAL 13355), and din is Sanskrit dina, "day" (CDIAL 6328).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for lately, then the Bengali for all day.
 You'll want to know: সারারাত.
 সারারাত — sārārāt — "all night".
 
+The word, taken apart.
+সারারাত (sārārāt) is sārā, "whole", + rāt, "night". CDIAL lists Bengali sārā, "whole", under Sanskrit sāra, "hardness, best part" (CDIAL 13355), and rāt under rātrī, "night" (CDIAL 10702).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for all day, then the Bengali for all night.
 You'll want to know: দুপুরবেলা.
 দুপুরবেলা — dupurbelā — "the midday hours".
 
+The word, taken apart.
+দুপুরবেলা (dupurbelā) is dupur, "midday", usually explained as Sanskrit dviprahara, "the second watch" (CDIAL 8900), + belā, "time", from Sanskrit velā, "limit, time", a word CDIAL thinks probably Dravidian (CDIAL 12115).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for all night, then the Bengali for the midd
 
 You'll want to know: সকালবেলা.
 সকালবেলা — sôkālbelā — "the morning hours".
+
+The word, taken apart.
+সকালবেলা (sôkālbelā) is sôkāl, "morning", which matches Sanskrit sakāla, "seasonable" (CDIAL 13067), + belā, "time", from Sanskrit velā, "limit, time", a word CDIAL thinks probably Dravidian (CDIAL 12115).
 
 What you've built.
 One more word for this chapter.

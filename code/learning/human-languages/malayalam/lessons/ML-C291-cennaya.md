@@ -14,7 +14,8 @@ romanization: "cennāya"
 concept_tag: ML-VASTU291-CENNAYA
 prerequisites: [ML-C291-man, ML-C291-kala3]
 sounds: []
-roots: []
+roots: [dravidian-cem-red, dravidian-naay-dog]
+etymology_hook: "cennāya: native Dravidian, 'red dog': cem 'red' (DEDR 1931) + nāy 'dog' (DEDR 3650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C291-kala3]
 <!-- hl-knowledge: introduces=[ML-LEX-C291-VASTU291-05]; assesses=[] -->
 
 **ചെന്നായ** — *cennāya* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെന്നായ** (*cennāya*) is native Dravidian, "the red dog": *cem-*, "red" (DEDR 1931), and *nāy*, "dog" (DEDR 3650, with Tamil *nāy*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

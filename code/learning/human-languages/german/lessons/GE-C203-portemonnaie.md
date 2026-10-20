@@ -14,6 +14,7 @@ concept_tag: GE-THING203-PORTEMONNAIE
 prerequisites: [GE-C202-buerste, GE-C202-anzug]
 sounds: []
 roots: []
+etymology_hook: "Portemonnaie ← French porte-monnaie, 'carry-money' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C202-anzug]
 <!-- hl-knowledge: introduces=[GE-LEX-C203-THING203-01]; assesses=[] -->
 
 **das Portemonnaie** — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Portemonnaie** ← French *porte-monnaie*, "carry-money" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

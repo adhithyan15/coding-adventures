@@ -14,7 +14,8 @@ romanization: "shukāno"
 concept_tag: BN-VERB-SHUKANO
 prerequisites: [BN-C151-jholano, BN-C151-badha]
 sounds: []
-roots: []
+roots: [indo-aryan-shushkati]
+etymology_hook: "shukāno ← *śuṣkati 'becomes dry', a reconstructed form; a tadbhava (CDIAL 12552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C151-badha]
 <!-- hl-knowledge: introduces=[BN-LEX-C152-ACT152-01]; assesses=[] -->
 
 **শুকানো** — *shukāno* — "to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শুকানো** (*shukāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śuṣkati*, "becomes dry", a form CDIAL reconstructs from its descendants (CDIAL 12552). CDIAL lists the causing form, Bengali *sukāna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

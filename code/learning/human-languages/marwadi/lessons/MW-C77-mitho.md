@@ -14,7 +14,8 @@ romanization: "mīṭho"
 concept_tag: MW-ADJ77-MITHO
 prerequisites: [MW-C77-kalo, MW-C77-bhuro]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "mīṭho ← Sanskrit miṣṭa 'dainty, sweet', a tadbhava (CDIAL 10299, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C77-bhuro]
 <!-- hl-knowledge: introduces=[MW-LEX-C77-ADJ77-05]; assesses=[] -->
 
 **मीठो** — *mīṭho* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मीठो** (*mīṭho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *miṣṭa*, "dainty, sweet". CDIAL lists Old Marwari *sumīṭha* under it (CDIAL 10299). The Old Marwari row means "very sweet"; Hindi has *mīṭhā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-THING226-BEGRUESSUNG
 prerequisites: [GE-C226-aussprache, GE-C226-bedeutung]
 sounds: []
 roots: []
+etymology_hook: "Begrüßung — be- + grüßen 'to greet' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C226-bedeutung]
 <!-- hl-knowledge: introduces=[GE-LEX-C226-THING226-03]; assesses=[] -->
 
 **die Begrüßung** — "a greeting, a welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Begrüßung** is *be-* + *grüßen*, "to greet", + *-ung*. *grüßen* is the same verb as English *greet*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

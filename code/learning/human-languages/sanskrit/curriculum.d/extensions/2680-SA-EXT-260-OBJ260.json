@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-260-OBJ260",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can choose mām or tvām when one person is the object in a known frame.",
+  "prerequisites": [
+    "SA-EXT-259-POS259"
+  ]
+}

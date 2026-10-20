@@ -14,7 +14,8 @@ romanization: "praṇālika"
 concept_tag: TE-WANT107-PRANALIKA
 prerequisites: [TE-C107-kala, TE-C107-uddesam]
 sounds: []
-roots: []
+roots: [sanskrit-pranalika]
+etymology_hook: "praṇālika ← Sanskrit praṇālikā 'channel, course', with the final -ā shortened"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C107-uddesam]
 <!-- hl-knowledge: introduces=[TE-LEX-C107-WANT107-05]; assesses=[] -->
 
 **ప్రణాళిక** — *praṇālika* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రణాళిక** (*praṇālika*) is Sanskrit *praṇālikā*, "channel, course", taken over as a learned loan, a tatsama, with the final *-ā* shortened. The sense "plan" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

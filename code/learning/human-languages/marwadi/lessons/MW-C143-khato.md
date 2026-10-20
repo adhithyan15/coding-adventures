@@ -14,7 +14,8 @@ romanization: "khāṭo"
 concept_tag: MW-QUAL143-KHATO
 prerequisites: [MW-C143-tato, MW-C143-kharo]
 sounds: []
-roots: []
+roots: [sanskrit-khatta]
+etymology_hook: "khāṭo ← Sanskrit khaṭṭa 'sour', a tadbhava (CDIAL 3777, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C143-kharo]
 <!-- hl-knowledge: introduces=[MW-LEX-C143-QUAL143-03]; assesses=[] -->
 
 **खाटो** — *khāṭo* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाटो** (*khāṭo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭṭa*, "sour". CDIAL gives no Marwari form in this entry (CDIAL 3777); the match is through Gujarati *khāṭũ*. CDIAL asks whether it is connected with *kaṭu*, "pungent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

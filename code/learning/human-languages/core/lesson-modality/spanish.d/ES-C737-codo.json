@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C737-codo",
+    "language": "spanish",
+    "chapter": 737,
+    "sequence": 26790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c59b837bb0717245"
+  },
+  "findings": []
+}

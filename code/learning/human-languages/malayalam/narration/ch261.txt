@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a kilo, then the Malayalam for a thing
 You'll want to know: പോസ്റ്റ്മാൻ.
 പോസ്റ്റ്മാൻ — pōsṟṟmān — "a postman".
 
+The word, taken apart.
+പോസ്റ്റ്മാൻ (pōsṟṟmān) from English postman.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a thing, then the Malayalam for a post
 
 You'll want to know: അഭിമുഖം.
 അഭിമുഖം — abhimukhaṁ — "an interview".
+
+The word, taken apart.
+അഭിമുഖം (abhimukhaṁ) from Sanskrit abhimukha, "turned towards, facing", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 525). An interview is a sitting face to face.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a postman, then the Malayalam for an i
 You'll want to know: ഒഴിവ്.
 ഒഴിവ് — oḻivŭ — "a vacancy".
 
+The word, taken apart.
+ഒഴിവ് (oḻivŭ) is native Dravidian, the noun of the verb "to leave off, be free"; DEDR 1009 lists Malayalam oḻivu, "vacancy", itself, beside Tamil oḻi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for an interview, then the Malayalam for a
 You'll want to know: പരിശീലനം.
 പരിശീലനം — pariśīlanaṁ — "training".
 
+The word, taken apart.
+പരിശീലനം (pariśīlanaṁ) from Sanskrit pariśīlana, "practice, exercise", taken over whole as a tatsama, with Malayalam's noun ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a vacancy, then the Malayalam for trai
 
 You'll want to know: റിപ്പോർട്ട്.
 റിപ്പോർട്ട് — ṟippōrṭṭŭ — "a report".
+
+The word, taken apart.
+റിപ്പോർട്ട് (ṟippōrṭṭŭ) from English report.
 
 What you've built.
 One more word for this chapter.

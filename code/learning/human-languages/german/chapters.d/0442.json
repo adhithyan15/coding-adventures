@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Schnee in der Stadt",
+  "label": "ch:ge-schnee-in-der-stadt",
+  "canDo": "I can talk about a town in winter: black ice, clearing snow, gritting, the snowplough and slipping.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C442-rutschen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about a town in winter: black ice, clearing snow, gritting, the snowplough and slipping.",
+    "assesses": [
+      "GE-LEX-C442-GLATTEIS-03",
+      "GE-LEX-C442-GLATTEIS-04",
+      "GE-LEX-C442-GLATTEIS-05"
+    ]
+  }
+}

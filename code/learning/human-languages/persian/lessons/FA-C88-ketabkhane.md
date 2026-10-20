@@ -14,7 +14,8 @@ romanization: "ketâbkhâne"
 concept_tag: FA-LOC88-KETABKHANE
 prerequisites: [FA-C87-sahel, FA-C87-kelisa]
 sounds: []
-roots: []
+roots: [arabic-kitab, persian-khana]
+etymology_hook: "ketâbkhâne: ketâb ← Arabic kitāb 'book' (root k-t-b, Lane) + Persian khâne 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C87-kelisa]
 <!-- hl-knowledge: introduces=[FA-LEX-C88-LOC88-01]; assesses=[] -->
 
 **کتابخانه** — *ketâbkhâne* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ketâbkhâne* is a two-language compound (EtymDB): *ketâb*, "book", borrowed from Arabic *kitāb* (root *k-t-b*, Lane), with the native Persian *khâne*, "house": the house of books.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

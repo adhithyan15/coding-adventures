@@ -14,7 +14,8 @@ romanization: "ārsī"
 concept_tag: MW-THINGS123-ARSI
 prerequisites: [MW-C123-dari, MW-C123-pardo]
 sounds: []
-roots: []
+roots: [sanskrit-adarsha]
+etymology_hook: "ārsī ← Sanskrit ādarśa 'mirror', a tadbhava (CDIAL 1143, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C123-pardo]
 <!-- hl-knowledge: introduces=[MW-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **आरसी** — *ārsī* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरसी** (*ārsī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ādarśa*, "mirror". CDIAL gives no Marwari form in this entry (CDIAL 1143); the match is through Hindi *ārsī* and Gujarati *ārsī*. It is built on the root *dṛś*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

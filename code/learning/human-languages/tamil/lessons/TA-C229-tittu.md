@@ -14,7 +14,8 @@ romanization: "tiṭṭu"
 concept_tag: TA-VERB-TITTU
 prerequisites: [TA-C228-neci, TA-C229-parattu]
 sounds: []
-roots: []
+roots: [dravidian-tittu-revile]
+etymology_hook: "திட்டு — native Dravidian (DEDR 3220); Kannada tiṭṭu 'to scold', Telugu tiṭṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C229-parattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C229-ACT229-02]; assesses=[] -->
 
 **திட்டு** — *tiṭṭu* — "to scold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திட்டு** (*tiṭṭu*) is native Dravidian. DEDR 3220 lists Kannada *tiṭṭu*, "to scold" and Telugu *tiṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

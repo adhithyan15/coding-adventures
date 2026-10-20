@@ -14,7 +14,8 @@ romanization: "dā̃t"
 concept_tag: GU-BODY1-TOOTH
 prerequisites: [GU-C46-leg, GU-C46-belly]
 sounds: []
-roots: []
+roots: [danta-sanskrit]
+etymology_hook: "dāṁt ← Sanskrit danta 'tooth', a tadbhava (CDIAL 6152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C46-belly]
 <!-- hl-knowledge: introduces=[GU-LEX-C46-BODY1-04]; assesses=[] -->
 
 **દાંત** (*dā̃t*) — "a tooth, teeth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દાંત** (*dāṁt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *danta*, "tooth" (CDIAL 6152).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

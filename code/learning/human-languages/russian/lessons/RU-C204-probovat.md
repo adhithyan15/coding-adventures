@@ -14,7 +14,8 @@ romanization: "próbovat"
 concept_tag: RU-VERB-PROBOVAT
 prerequisites: [RU-C203-bankomat, RU-C203-moneta]
 sounds: []
-roots: []
+roots: [probare-latin]
+etymology_hook: "пробовать is from проба 'a test', probably through Polish próba or German Probe, from Latin proba"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C203-moneta]
 <!-- hl-knowledge: introduces=[RU-LEX-C204-ACT204-01]; assesses=[] -->
 
 **пробовать** (*próbovat*) — "to try, to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пробовать** comes from *проба*, "a test", probably through Polish *próba* or German *Probe*, from Medieval Latin *proba*, from *probāre*, "to test" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

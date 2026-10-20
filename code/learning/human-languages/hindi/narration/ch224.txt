@@ -12,6 +12,9 @@ Before the new one: say the Hindi for sport, then the Hindi for a ball.
 You'll want to know: बल्ला.
 बल्ला — ballā — "a bat".
 
+The word, taken apart.
+बल्ला (ballā) is listed by CDIAL in the sense "large beam, pole", under Sanskrit vala, "beam, pole" (CDIAL 11403). The sense "bat" probably grew from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a ball, then the Hindi for a bat.
 
 You'll want to know: जीत.
 जीत — jīt — "a win".
+
+The word, taken apart.
+जीत (jīt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jita, "won, conquered" (CDIAL 5224). jīt is the noun of jītnā, "to win".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a bat, then the Hindi for a win.
 You'll want to know: हार.
 हार — hār — "a defeat".
 
+The word, taken apart.
+हार (hār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hārayati, "loses" (CDIAL 14061). hār is the noun of hārnā, "to lose".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a win, then the Hindi for a defeat.
 You'll want to know: टीम.
 टीम — ṭīm — "a team".
 
+The word, taken apart.
+टीम (ṭīm) is a loan from English team.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a defeat, then the Hindi for a team.
 
 You'll want to know: दौड़.
 दौड़ — dauṛ — "a race, running".
+
+The word, taken apart.
+दौड़ (dauṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dravati, "runs" (CDIAL 6624). dauṛ is the noun of dauṛnā, "to run".
 
 What you've built.
 One more word for this chapter.

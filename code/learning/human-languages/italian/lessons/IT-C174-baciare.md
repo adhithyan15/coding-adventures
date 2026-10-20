@@ -13,7 +13,8 @@ gloss: "to kiss"
 concept_tag: IT-VERB-BACIARE
 prerequisites: [IT-C173-arte, IT-C173-partita]
 sounds: []
-roots: []
+roots: [basiare-latin]
+etymology_hook: "baciare ← Latin basiare 'to kiss' — French baiser is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C173-partita]
 <!-- hl-knowledge: introduces=[IT-LEX-C174-VERBI174-01]; assesses=[] -->
 
 **baciare** — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baciare** ← Latin *basiare*, "to kiss" — inherited. EtymDB 2.1 has no row for *baciare*; it derives Old French *baisier* and Venetian *baxar* from *basiare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

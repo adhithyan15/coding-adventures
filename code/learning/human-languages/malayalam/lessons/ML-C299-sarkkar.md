@@ -14,7 +14,8 @@ romanization: "sarkkār"
 concept_tag: ML-JOLI299-SARKKAR
 prerequisites: [ML-C298-tolilali, ML-C299-phaktari]
 sounds: []
-roots: []
+roots: [persian-sarkar]
+etymology_hook: "sarkkār ← Persian sarkār 'head of affairs', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C299-phaktari]
 <!-- hl-knowledge: introduces=[ML-LEX-C299-JOLI299-02]; assesses=[] -->
 
 **സർക്കാർ** — *sarkkār* — "the government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സർക്കാർ** (*sarkkār*) ← Persian *sarkār*, "head of affairs, authority", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

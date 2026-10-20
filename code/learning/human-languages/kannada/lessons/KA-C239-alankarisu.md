@@ -14,7 +14,8 @@ romanization: "alaṅkarisu"
 concept_tag: KA-VERB-ALANKARISU
 prerequisites: [KA-C238-sampadisu, KA-C239-acarisu]
 sounds: []
-roots: []
+roots: [sanskrit-alankara]
+etymology_hook: "alaṅkarisu: Sanskrit alaṅkāra 'ornament' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C239-acarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C239-KRIYE239-02]; assesses=[] -->
 
 **ಅಲಂಕರಿಸು** — *alaṅkarisu* — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಲಂಕರಿಸು** (*alaṅkarisu*) is Sanskrit *alaṅkāra*, "ornament", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

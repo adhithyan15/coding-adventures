@@ -14,7 +14,8 @@ romanization: "diruz"
 concept_tag: FA-TIME65-DIRUZ
 prerequisites: [FA-C65-daghighe, FA-C65-emruz]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "diruz: Persian di 'yesterday' + ruz 'day'; native, inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C65-emruz]
 <!-- hl-knowledge: introduces=[FA-LEX-C65-TIME65-03]; assesses=[] -->
 
 **دیروز** — *diruz* — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*diruz* is *di*, the old Persian word for "yesterday" (usually traced to Middle Persian *dīg*), with *ruz*, "day". Both parts are native; *ruz* continues Middle Persian *rōz* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lī̃bu"
 concept_tag: GU-THINGS115-LIBU
 prerequisites: [GU-C115-lasan, GU-C115-adu]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "līṁbu ← Sanskrit nimbū 'lime', itself from Austroasiatic, with l- for n- (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C115-adu]
 <!-- hl-knowledge: introduces=[GU-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **લીંબુ** (*lī̃bu*) — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લીંબુ** (*līṁbu*) is a tadbhava of Sanskrit *nimbū*, "the lime" (CDIAL 7247), with its first *n* changed to *l*. CDIAL reports that the Sanskrit word itself came from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

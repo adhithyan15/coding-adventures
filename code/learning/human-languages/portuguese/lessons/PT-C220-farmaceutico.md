@@ -13,7 +13,8 @@ gloss: "a pharmacist"
 concept_tag: PT-COISAS220-FARMACEUTICO
 prerequisites: [PT-C220-arquiteto, PT-C220-dentista]
 sounds: []
-roots: []
+roots: [pharmacia-latin]
+etymology_hook: "farmacêutico ← Late Latin pharmaceuticus, from Greek pharmakon 'drug'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C220-dentista]
 <!-- hl-knowledge: introduces=[PT-LEX-C220-COISAS220-04]; assesses=[] -->
 
 **o farmacêutico** — "a pharmacist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**farmacêutico** ← Late Latin *pharmaceuticus*, from Greek *pharmakeutikos*, built on *pharmakon*, "drug" — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

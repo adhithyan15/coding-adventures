@@ -14,7 +14,8 @@ romanization: "saslũ"
 concept_tag: GU-THINGS121-SASLU
 prerequisites: [GU-C121-prakas, GU-C121-chayo]
 sounds: []
-roots: []
+roots: [sanskrit-shasha]
+etymology_hook: "saslũ ← Sanskrit śaśa 'hare', a tadbhava (CDIAL 12357)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C121-chayo]
 <!-- hl-knowledge: introduces=[GU-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **સસલું** (*saslũ*) — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સસલું** (*saslũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śaśa*, "hare" (CDIAL 12357).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

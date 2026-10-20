@@ -14,7 +14,8 @@ romanization: "pardā"
 concept_tag: UR-THINGS107-PARDA
 prerequisites: [UR-C106-takiya, UR-C107-kambal]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "pardā: usually traced to Persian parda 'curtain, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C107-kambal]
 <!-- hl-knowledge: introduces=[UR-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **پردہ** — *pardā* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پردہ** (*pardā*) is a loan, usually traced to Persian *parda*, "curtain, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

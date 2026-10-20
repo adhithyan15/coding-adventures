@@ -14,7 +14,8 @@ romanization: "bârik"
 concept_tag: FA-QUAL124-BARIK
 prerequisites: [FA-C123-deraz, FA-C123-pahn]
 sounds: []
-roots: []
+roots: [persian-barik]
+etymology_hook: "bârik ← Middle Persian bārīk (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C123-pahn]
 <!-- hl-knowledge: introduces=[FA-LEX-C124-QUAL124-01]; assesses=[] -->
 
 **باریک** — *bârik* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bârik* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *bārīk*, "thin, fine" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

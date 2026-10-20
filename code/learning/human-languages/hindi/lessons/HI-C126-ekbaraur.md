@@ -14,7 +14,8 @@ romanization: "ek bār aur"
 concept_tag: HI-WHAT-ONE-MORE-TIME
 prerequisites: [HI-C126-kyakaha, HI-C126-nahinpata]
 sounds: []
-roots: []
+roots: [vara-sanskrit, sanskrit-apara]
+etymology_hook: "bār ← Sanskrit vāra 'one's turn' (CDIAL 11547); aur ← apara 'other' (CDIAL 434)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C126-nahinpata]
 **एक बार और** (*ek bār aur*) — "one more time".
 
 **एक**, "one", **बार**, "time", **और**, "more". **एक बार और बोलिए** — "say it one more time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एक बार और** (*ek bār aur*) is "one time more". *bār* comes from Sanskrit *vāra*, "one's turn" (CDIAL 11547), and *aur*, "more", from *apara*, "other" (CDIAL 434).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

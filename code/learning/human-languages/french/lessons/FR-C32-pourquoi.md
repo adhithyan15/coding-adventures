@@ -11,7 +11,7 @@ concept_tag: FR-QUESTION-WHY
 prerequisites: [FR-C32-combien]
 sounds: []
 roots: []
-etymology_hook: "French asks a question three ways -- voice, est-ce que, inversion -- and they differ in register rather than in meaning."
+etymology_hook: "pourquoi = pour (← Vulgar Latin por) + quoi (← Latin quid): 'for what', like English what for"
 duration:
   max_seconds: 240
 requires:
@@ -42,22 +42,21 @@ reviews_of: [FR-C32-combien]
 
 > **pourquoi** — why
 
-Take it apart: **pour** ("for") + **quoi** ("what"). *For what?* French built its
-*why* out of two words you can already see, and English does the same thing in
-*what for?*
+Take it apart:
 
-And the answer is built to match:
+**pour** ("for") + **quoi** ("what") → **pourquoi**
+
+*For what?* French built its *why* out of two words you can still see inside it,
+and English does the same thing in *what for?* Both halves are Latin underneath:
+*pour* ← Vulgar Latin *por*, *quoi* ← *quid*, "what" (EtymDB 2.1).
 
 > **Pourquoi ?** — Why?
-> **Parce que…** — Because…
 
-**Par ce que** is "by that which". So the question is *for what* and the answer is
-*by that which* — a matched pair, and the reason this book teaches them together
-rather than one now and one later.
+The answer, "because," is built to match — *by this that* against *for what* —
+and it gets a lesson of its own a few chapters on, where it joins two clauses into
+one sentence.
 
-That gives you the last of the five question words, and with *parce que* you can
-now join two clauses into one sentence, which is more than a question: it is the
-beginning of connected speech.
+That gives you the last of the five question words.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-LEX-QUAND-04, FR-LEX-COMMENT-05, FR-LEX-COMBIEN-06, FR-LEX-POURQUOI-07] -->
@@ -68,6 +67,5 @@ beginning of connected speech.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-LEX-QUAND-04, FR-LEX-COMMENT-05, FR-LEX-COMBIEN-06, FR-LEX-POURQUOI-07] -->
 
-[PAUSE 3s] What is **pourquoi** made of? (***pour*** + ***quoi*** — *for what*.) What
-answers it? (***Parce que…*** — because.) And what is *parce que* literally? (*By
-that which*.)
+[PAUSE 3s] What is **pourquoi** made of? (Two words, "for" and "what" — *for
+what?*) What does English build the same way? (*What for?*)

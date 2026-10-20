@@ -13,7 +13,8 @@ gloss: "marble"
 concept_tag: LA-RES249-MARMOR
 prerequisites: [LA-C248-labor2, LA-C249-lignum]
 sounds: []
-roots: []
+roots: [marmor-latin]
+etymology_hook: "marmor 'marble' — borrowed from Greek marmaros; English marble"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C249-lignum]
 <!-- hl-knowledge: introduces=[LA-LEX-C249-RES249-02]; assesses=[] -->
 
 **marmor, marmoris** — "marble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marmor** was borrowed from Greek *marmaros*, "a gleaming stone, marble" (Lewis & Short). English *marble* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

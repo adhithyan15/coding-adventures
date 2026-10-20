@@ -13,7 +13,8 @@ gloss: "public"
 concept_tag: LA-QUAL182-PUBLICUS
 prerequisites: [LA-C181-coctus, LA-C181-longinquus]
 sounds: []
-roots: []
+roots: [publicus-latin, populus-latin]
+etymology_hook: "pūblicus 'public' — from older poplicus, built on populus 'people'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C181-longinquus]
 <!-- hl-knowledge: introduces=[LA-LEX-C182-QUAL182-01]; assesses=[] -->
 
 **pūblicus, pūblica, pūblicum** — "public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pūblicus** comes from older *poplicus*, "of the people", as inscriptions write it (Lewis & Short), built on *populus*, "the people"; its spelling was probably influenced by *pūbēs*, "the grown men".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

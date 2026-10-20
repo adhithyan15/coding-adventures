@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:89467fbc47912fc4",
+  "lessonIds": [
+    "PT-C344-avaliar",
+    "PT-C344-juizo",
+    "PT-C344-julgar",
+    "PT-C344-objetivo",
+    "PT-C344-subjetivo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch344.txt",
+  "json": "portuguese/narration/ch344.json",
+  "textHash": "fnv1a64:00f81e5a9c28577b",
+  "jsonHash": "fnv1a64:437fa176b76ae438",
+  "findings": []
+}

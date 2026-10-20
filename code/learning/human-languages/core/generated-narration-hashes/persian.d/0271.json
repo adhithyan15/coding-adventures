@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 271,
-  "sourceHash": "fnv1a64:8fcc7073690e09a2",
+  "sourceHash": "fnv1a64:cae233fcea457ef4",
   "lessonIds": [
     "FA-C271-azad",
     "FA-C271-khareji",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch271.txt",
   "json": "persian/narration/ch271.json",
-  "textHash": "fnv1a64:5e782426541e3857",
-  "jsonHash": "fnv1a64:8f8dfe0e9a57b62a",
+  "textHash": "fnv1a64:685c6b347362d251",
+  "jsonHash": "fnv1a64:5ecb9de1ee554c4d",
   "findings": []
 }

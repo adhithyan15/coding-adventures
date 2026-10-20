@@ -14,7 +14,8 @@ romanization: "vijñāna"
 concept_tag: KA-KELASA233-VIJNANA
 prerequisites: [KA-C233-labha, KA-C233-nasta]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana]
+etymology_hook: "vijñāna ← Sanskrit vijñāna 'act of discerning', a tatsama (CDIAL 11707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C233-nasta]
 <!-- hl-knowledge: introduces=[KA-LEX-C233-KELASA233-04]; assesses=[] -->
 
 **ವಿಜ್ಞಾನ** — *vijñāna* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿಜ್ಞಾನ** (*vijñāna*) is Sanskrit *vijñāna*, "act of discerning", taken over whole as a learned loan, a tatsama (CDIAL 11707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

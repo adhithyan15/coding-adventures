@@ -27,7 +27,7 @@ You'll want to know: पहला.
 It agrees like any -ā adjective: पहला दिन (pahlā din), the first day, but पहली किताब (pahlī kitāb), the first book — feminine noun, feminine ending.
 
 The word, taken apart: no एक in it.
-There is no एक inside पहला (pahlā). It comes down from Sanskrit प्रथम (prathama), a word that already meant "foremost" before Hindi existed, and the number was never part of it.
+There is no एक inside पहला (pahlā). It comes down from prathilla, a form CDIAL reconstructs beside prathila, "first", and builds on Sanskrit प्रथम (prathama), a word that already meant "foremost" before Hindi existed (CDIAL 8652). The number was never part of it.
 You will meet its close relative constantly: पहले (pahle) — "before, earlier, first of all". खाने से पहले is "before eating". So in Hindi the word for first and the word for before are the same word wearing a different ending, which is a reasonable thing for a language to decide: putting one thing before another is putting it first.
 
 Guided Practice.
@@ -113,6 +113,9 @@ You'll want to know: तीसरा.
 Say तीन and then तीसरा and you can hear the number this time — the first ordinal where you can. And say dūsrā, tīsrā together: they rhyme, because they share an ending, -सरा, that they share with nothing else in the language.
 Two words with a private ending is not a pattern; it is a pair. The next lesson goes a third way, and the one after that finally states a rule.
 
+The word, taken apart.
+तीसरा (tīsrā) comes from a reconstructed triḥsara, "triple", built on Sanskrit tris, "three times" (CDIAL 6018). दूसरा (dūsrā) comes the same way from dviḥsara, "twofold" (CDIAL 6676).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: tīsrā]
@@ -190,6 +193,9 @@ You'll want to know: पाँचवाँ.
 पाँचवाँ (pā̃cvā̃) — "fifth".
 पाँचवाँ दिन (pā̃cvā̃ din), पाँचवीं किताब (pā̃cvī̃ kitāb).
 Two nasal hooks in one word: one over the पाँ, one over the वाँ. The chandrabindu you learned in the writing chapters is doing both.
+
+The word, taken apart.
+पाँचवाँ (pāṁcvāṁ) comes from Sanskrit pañcama, "fifth" (CDIAL 7669), the ordinal built on pañca, "five".
 
 Grammar Lens: the number, plus -वाँ.
 पाँच becomes पाँचवाँ (pā̃cvā̃). Nothing is taken away and nothing is reshaped: the cardinal stands whole and -वाँ goes on the end.

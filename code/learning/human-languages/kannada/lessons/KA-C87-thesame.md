@@ -11,7 +11,8 @@ romanization: "adē"
 concept_tag: KA-RESP-SAME
 prerequisites: [KA-C87-ohno, KA-C87-isthatso]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "adē: native adu 'that' (DEDR 1) + the emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C87-isthatso]
 emphatic **‑ಏ**.
 
 **ಅದೇ!** — "that's it! exactly that one!"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದೇ** (*adē*) is native Dravidian: *adu*, "that" (DEDR 1), with *-ē*, the ending that stresses: "that very one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ijtimāʿ"
 concept_tag: AR-AMAL221-IJTIMA
 prerequisites: [AR-C220-jazzar, AR-C221-taqrir]
 sounds: []
-roots: []
+roots: [jamaa-gather]
+etymology_hook: "ijtimāʿ: built on the root j-m-ʿ, 'to gather' (Lane); ijtimāʿ is the verbal noun of Form VIII, 'coming together'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C221-taqrir]
 <!-- hl-knowledge: introduces=[AR-LEX-C221-AMAL221-02]; assesses=[] -->
 
 **اجتماع** — *ijtimāʿ* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اجتماع** (*ijtimāʿ*) is built on the native Arabic root *j-m-ʿ*, "to gather" (Lane). *Ijtimāʿ* is the verbal noun of Form VIII, "coming together".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

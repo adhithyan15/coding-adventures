@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:f9d42be3aa817687",
+  "lessonIds": [
+    "PT-C372-cancelar",
+    "PT-C372-adiar",
+    "PT-C372-provisorio",
+    "PT-C372-definitivo",
+    "PT-C372-flexivel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch372.txt",
+  "json": "portuguese/narration/ch372.json",
+  "textHash": "fnv1a64:6d632bf9b2bfd3db",
+  "jsonHash": "fnv1a64:2593daba8ef4bd40",
+  "findings": []
+}

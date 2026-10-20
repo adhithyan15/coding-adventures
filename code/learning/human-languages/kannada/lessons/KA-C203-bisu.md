@@ -14,7 +14,8 @@ romanization: "bīsu"
 concept_tag: KA-VERB-BISU
 prerequisites: [KA-C203-aralu, KA-C203-badu]
 sounds: []
-roots: []
+roots: [dravidian-viicu-swing]
+etymology_hook: "bīsu: native Dravidian, one word with Tamil vīcu and Telugu vīcu (DEDR 5450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C203-badu]
 <!-- hl-knowledge: introduces=[KA-LEX-C203-KRIYE203-04]; assesses=[] -->
 
 **ಬೀಸು** — *bīsu* — "to blow (of wind)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೀಸು** (*bīsu*) is native Dravidian, one word with Tamil *vīcu* and Telugu *vīcu* (DEDR 5450). DEDR lists *bīsu*, "to swing, fan, blow as the wind": the old *v-* has become *b-*. DEDR 5450 compares Sanskrit *vīj*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

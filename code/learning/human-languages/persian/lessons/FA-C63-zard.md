@@ -14,7 +14,8 @@ romanization: "zard"
 concept_tag: FA-ADJ63-ZARD
 prerequisites: [FA-C63-ziba, FA-C63-sabz]
 sounds: []
-roots: []
+roots: [persian-zard]
+etymology_hook: "zard: inherited, usually traced to Middle Persian zard"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C63-sabz]
 <!-- hl-knowledge: introduces=[FA-LEX-C63-ADJ63-04]; assesses=[] -->
 
 **زرد** — *zard* — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zard* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zard*, "yellow". It is usually set beside English *yellow* as one Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

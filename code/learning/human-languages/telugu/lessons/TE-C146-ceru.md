@@ -14,7 +14,8 @@ romanization: "cēru"
 concept_tag: TE-VERB-CERU
 prerequisites: [TE-C145-duku, TE-C145-digu]
 sounds: []
-roots: []
+roots: [dravidian-ceer-join]
+etymology_hook: "cēru: native Dravidian, one word with Tamil cēr and Kannada sēr (DEDR 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C145-digu]
 <!-- hl-knowledge: introduces=[TE-LEX-C146-ACT146-01]; assesses=[] -->
 
 **చేరు** — *cēru* — "to reach, to join".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చేరు** (*cēru*) is native Dravidian, one word with Tamil *cēr* and Kannada *sēr* (DEDR 2814). DEDR lists Telugu *cēru*, "to join, reach, arrive at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

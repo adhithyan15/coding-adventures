@@ -14,7 +14,8 @@ romanization: "jibh"
 concept_tag: BN-BODY43-JIBH
 prerequisites: [BN-C43-rokto, BN-C43-hatu]
 sounds: []
-roots: []
+roots: [sanskrit-jihva]
+etymology_hook: "jibh ← Sanskrit jihvā 'tongue', a tadbhava (CDIAL 5228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C43-hatu]
 <!-- hl-knowledge: introduces=[BN-LEX-C43-BODY43-04]; assesses=[] -->
 
 **জিভ** — *jibh* — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জিভ** (*jibh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jihvā*, "tongue" (CDIAL 5228).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

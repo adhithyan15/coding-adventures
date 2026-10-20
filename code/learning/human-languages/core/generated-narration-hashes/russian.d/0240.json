@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 240,
-  "sourceHash": "fnv1a64:1f484a0e24d508ce",
+  "sourceHash": "fnv1a64:76f7a7225785d755",
   "lessonIds": [
     "RU-C240-noyabr",
     "RU-C240-dekabr",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch240.txt",
   "json": "russian/narration/ch240.json",
-  "textHash": "fnv1a64:1440e4f89872376b",
-  "jsonHash": "fnv1a64:798a38289c1d25ca",
+  "textHash": "fnv1a64:f1a7e3df316dac06",
+  "jsonHash": "fnv1a64:3c2ec9caf0f14693",
   "findings": []
 }

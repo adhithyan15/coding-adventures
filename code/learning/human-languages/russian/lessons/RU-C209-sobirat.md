@@ -14,7 +14,8 @@ romanization: "sobirát"
 concept_tag: RU-VERB-SOBIRAT
 prerequisites: [RU-C208-trogat, RU-C209-fotografirovat]
 sounds: []
-roots: []
+roots: [pie-bher]
+etymology_hook: "собирать is со- 'together' + бирать, from брать 'to take': to take together"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C209-fotografirovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C209-ACT209-02]; assesses=[] -->
 
 **собирать** (*sobirát*) — "to gather, to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**собирать** is *со-*, "together", with *-бирать*, from *брать*, "to take": to gather is to take things together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

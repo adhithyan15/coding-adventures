@@ -13,7 +13,8 @@ gloss: "exciting"
 concept_tag: GE-QUAL167-SPANNEND
 prerequisites: [GE-C167-unfreundlich, GE-C167-hoeflich]
 sounds: []
-roots: []
+roots: [germanic-spannana]
+etymology_hook: "spannend — 'stretching, tense', from spannen 'to stretch'; English span shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C167-hoeflich]
 <!-- hl-knowledge: introduces=[GE-LEX-C167-QUAL167-04]; assesses=[] -->
 
 **spannend** — "exciting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spannend** is the present participle of the verb "to stretch, to tighten", Old High German *spannan* ← Proto-Germanic *\*spannaną* (EtymDB 2.1): what keeps you tense. English *span* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

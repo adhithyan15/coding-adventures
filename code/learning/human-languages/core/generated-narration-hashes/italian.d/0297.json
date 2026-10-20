@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:a3e986f6d333a38c",
+  "lessonIds": [
+    "IT-C297-arrestare",
+    "IT-C297-arresto",
+    "IT-C297-manette",
+    "IT-C297-catturare",
+    "IT-C297-fuggire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch297.txt",
+  "json": "italian/narration/ch297.json",
+  "textHash": "fnv1a64:57f46be18171f1ef",
+  "jsonHash": "fnv1a64:7fd3ca251f8026bd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C758-voleibol",
+    "language": "spanish",
+    "chapter": 758,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a7bcbca48c830f1"
+  },
+  "findings": []
+}

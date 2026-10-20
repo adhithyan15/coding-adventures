@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 94,
-  "sourceHash": "fnv1a64:bc3a9bc5cb10fd2d",
+  "sourceHash": "fnv1a64:ae3c4641257775b6",
   "lessonIds": [
     "MR-C94-shala",
     "MR-C94-nakasha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch94.txt",
   "json": "marathi/narration/ch94.json",
-  "textHash": "fnv1a64:df13682c41380868",
-  "jsonHash": "fnv1a64:4dfd3ca7f9912e38",
+  "textHash": "fnv1a64:8b1fc195ff500f96",
+  "jsonHash": "fnv1a64:7b0c42c769bbb330",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sonnat"
 concept_tag: FA-CHIZ207-SONNAT
 prerequisites: [FA-C207-haft-sin, FA-C207-hediye]
 sounds: []
-roots: []
+roots: [arabic-sunna]
+etymology_hook: "sonnat ← Arabic sunna 'custom, way', root s-n-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C207-hediye]
 <!-- hl-knowledge: introduces=[FA-LEX-C207-CHIZ207-03]; assesses=[] -->
 
 **سنت** — *sonnat* — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sonnat* is borrowed from Arabic *sunna*, "custom, way". Its Arabic root is *s-n-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

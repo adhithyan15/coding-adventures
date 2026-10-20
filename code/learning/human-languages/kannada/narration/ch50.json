@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:da7d5d537c17c318",
+  "sourceHash": "fnv1a64:04b6b9888296b6f1",
   "lessons": [
     {
       "id": "KA-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be731e39f3425cc1",
+      "sourceHash": "fnv1a64:24c0f94abf2704fa",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಗ (īga) is native Dravidian, built on the near-pointing base i-, \"this\": this time. DEDR 410 lists īga itself, \"at this time, now\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48cdee11485a4fba",
+      "sourceHash": "fnv1a64:1f11c2f7fdbaaef9",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಡಿದ್ದು (nāḍiddu) is native Dravidian, built on nāḷ, \"day\", and DEDR 3656 lists nāḍiddu itself, \"the day after tomorrow\"; the entry also has Tamil nāḷ and Malayalam nāḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f3cc1437e482618",
+      "sourceHash": "fnv1a64:2289835600d46a7a",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,10 @@
             {
               "kind": "speech",
               "text": "That pra- is very old and very widely travelled. It is the pro- of Latin, the pro- of Greek and the forth of English, one prefix that four languages inherited rather than borrowed from one another. Wish someone ಶುಭ ಪ್ರಯಾಣ (prayāṇa), a good journey, and half the phrase is a word this book taught you on a quite different errand."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 8732 lists Sanskrit prayāṇa, \"setting out, journey\"."
             }
           ]
         },
@@ -412,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0de011730ea599e",
+      "sourceHash": "fnv1a64:4f79ea529a2defa3",
       "notice": null,
       "blocks": [
         {
@@ -453,6 +479,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊರಡು (horaḍu) is native Dravidian. DEDR 4333 lists it as hoṟaḍu and derives it from poṟa-paṭu, built on poṟa, \"the outside\", the same root as Tamil puṟam: to set out is to go outside."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -463,7 +500,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -512,7 +549,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001970422c09d15b",
+      "sourceHash": "fnv1a64:dde468a0b5d14616",
       "notice": null,
       "blocks": [
         {
@@ -588,6 +625,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge) is native Dravidian, \"a giving of leave\": bīḷ- is usually taken with biḍu, \"to let go, quit\" (DEDR 5393), and koḍuge, \"a gift\", is from koḍu, \"to give\" (DEDR 2053). DEDR 5393 notes that Sanskrit avamocana, \"inn\", is a calque of Tamil viṭuti, \"lodging place\", from this root."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -598,7 +646,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -647,7 +695,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

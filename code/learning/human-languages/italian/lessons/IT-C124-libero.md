@@ -13,7 +13,8 @@ gloss: "free"
 concept_tag: IT-QUALITA124-LIBERO
 prerequisites: [IT-C123-carino, IT-C124-occupato]
 sounds: []
-roots: []
+roots: [liber-free-latin]
+etymology_hook: "libero ← Latin liber 'free', a learned word — English liberty shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C124-occupato]
 <!-- hl-knowledge: introduces=[IT-LEX-C124-QUALITA124-02]; assesses=[] -->
 
 **libero** — "free".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**libero** ← Latin *liber*, "free" — a learned borrowing, taken from written Latin. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

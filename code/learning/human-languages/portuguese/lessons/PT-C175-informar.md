@@ -13,7 +13,8 @@ gloss: "to inform"
 concept_tag: PT-VERB-INFORMAR
 prerequisites: [PT-C174-avisar, PT-C174-bastar]
 sounds: []
-roots: []
+roots: [forma-latin]
+etymology_hook: "informar ← Latin informare 'to give shape to', from forma — English inform"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C174-bastar]
 <!-- hl-knowledge: introduces=[PT-LEX-C175-VERBOS175-01]; assesses=[] -->
 
 **informar** — "to inform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**informar** ← Latin *informare*, "to give shape to" (EtymDB 2.1), from *forma*, "shape" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

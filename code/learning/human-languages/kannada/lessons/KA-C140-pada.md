@@ -14,7 +14,8 @@ romanization: "pāda"
 concept_tag: KA-THINGS140-PADA
 prerequisites: [KA-C139-mise, KA-C140-gadda]
 sounds: []
-roots: []
+roots: [sanskrit-pada-foot]
+etymology_hook: "pāda ← Sanskrit pāda 'foot', a tatsama (CDIAL 8056)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C140-gadda]
 <!-- hl-knowledge: introduces=[KA-LEX-C140-THINGS140-02]; assesses=[] -->
 
 **ಪಾದ** — *pāda* — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾದ** (*pāda*) is Sanskrit *pāda*, "foot", taken over whole as a learned loan, a tatsama (CDIAL 8056).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "śaknoti"
 concept_tag: VERB-CAN
 prerequisites: [SA-R56-past, SA-C55-gantum]
 sounds: []
-roots: []
+roots: [sanskrit-shaknoti]
+etymology_hook: "śaknoti 'is able' ← the root √śak 'be able' (MW); it lives on as Hindi saknā 'can' (CDIAL 12252)"
 duration:
   max_seconds: 265
 requires:
@@ -67,6 +68,12 @@ one whole.
 
 (The **म्** of **गन्तुम्** is written **ं** here — *gantuṁ* — because a following
 consonant softens it. You have read that mark since the asking verb.)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śaknoti* is the present of the root √śak, "to be able", with the nasal syllable
+*-no-* (MW). It lives on as Hindi *saknā*, "to be able" (CDIAL 12252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

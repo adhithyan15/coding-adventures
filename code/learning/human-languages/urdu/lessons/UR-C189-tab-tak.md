@@ -14,7 +14,8 @@ romanization: "tab tak"
 concept_tag: UR-VAQT189-TAB-TAK
 prerequisites: [UR-C188-agast, UR-C189-jab-tak]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, sanskrit-tavatka]
+etymology_hook: "tab: listed by CDIAL under evam eva (2528); tak ← Sanskrit tāvatka (CDIAL 5805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C189-jab-tak]
 <!-- hl-knowledge: introduces=[UR-LEX-C189-VAQT189-02]; assesses=[] -->
 
 **تب تک** — *tab tak* — "till then".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تب تک** (*tab tak*) is "then, up to". CDIAL lists *tab*, "then", under Sanskrit *evam eva*, "exactly so", crossed with the pointing stem *ta-* (CDIAL 2528), and *tak*, "till", under Sanskrit *tāvatka*, built on *tāvant*, "so much" (CDIAL 5805).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

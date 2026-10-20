@@ -14,7 +14,8 @@ romanization: "bil"
 concept_tag: FA-CHIZ281-BIL
 prerequisites: [FA-C281-pich, FA-C281-arre]
 sounds: []
-roots: []
+roots: [persian-bil]
+etymology_hook: "bil ← Middle Persian bēl (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C281-arre]
 <!-- hl-knowledge: introduces=[FA-LEX-C281-CHIZ281-03]; assesses=[] -->
 
 **بیل** — *bil* — "a spade, a shovel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bil* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *bēl*, "spade" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

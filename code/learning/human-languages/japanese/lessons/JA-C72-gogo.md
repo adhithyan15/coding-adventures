@@ -14,7 +14,8 @@ romanization: "gogo"
 concept_tag: JA-TIME72-GOGO
 prerequisites: [JA-C71-oi, JA-C71-mei, JA-C19-kyoushitsu]
 sounds: []
-roots: []
+roots: [middle-chinese-ngux-noon, middle-chinese-huwx]
+etymology_hook: "gogo: Sino-Japanese 午 'noon' + 後 'after', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [JA-C71-mei]
 <!-- hl-knowledge: introduces=[JA-LEX-C72-TIME72-01]; assesses=[] -->
 
 **ごご** — *gogo* — "the afternoon, p.m.".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ごご** (*gogo*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "noon" (Middle Chinese *nguX*) and *go*, "after" (*huwX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

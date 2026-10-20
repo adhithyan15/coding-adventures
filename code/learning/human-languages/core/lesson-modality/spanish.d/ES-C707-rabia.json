@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C707-rabia",
+    "language": "spanish",
+    "chapter": 707,
+    "sequence": 25270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28ea16de22668c40"
+  },
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 30,
-  "sourceHash": "fnv1a64:465dbbbd84982301",
+  "sourceHash": "fnv1a64:b5ea6bd4653c1e13",
   "lessonIds": [
     "GE-C17-kopf",
     "GE-C17-kopf-more",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch30.txt",
   "json": "german/narration/ch30.json",
-  "textHash": "fnv1a64:cf58bca303ed3220",
-  "jsonHash": "fnv1a64:79b92b89ea6ac42f",
+  "textHash": "fnv1a64:e4f1a183f78653c3",
+  "jsonHash": "fnv1a64:8328323c4f3a7a39",
   "findings": []
 }

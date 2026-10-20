@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C491-tenerezza",
+    "language": "italian",
+    "chapter": 491,
+    "sequence": 27650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:140053330e95e9d0"
+  },
+  "findings": []
+}

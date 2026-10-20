@@ -14,7 +14,8 @@ romanization: "der se"
 concept_tag: UR-VAQT189-DER-SE
 prerequisites: [UR-C189-abhi-tak, UR-C189-isi-vaqt]
 sounds: []
-roots: []
+roots: [persian-der, sanskrit-sahita, sanskrit-sama]
+etymology_hook: "der 'late' usually traced to Persian dēr; se 'from' is inherited (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C189-isi-vaqt]
 <!-- hl-knowledge: introduces=[UR-LEX-C189-VAQT189-05]; assesses=[] -->
 
 **دیر سے** — *der se* — "late".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دیر سے** (*der se*) is "from lateness". *der* is usually traced to Persian *dēr*, "late". CDIAL lists *se* under Sanskrit *sahita*, "together with" (CDIAL 13310), and *sama*, "equal", has also been suggested (CDIAL 13173).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

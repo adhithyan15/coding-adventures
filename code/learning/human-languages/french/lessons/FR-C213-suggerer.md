@@ -14,6 +14,7 @@ concept_tag: FR-VERB-SUGGERER
 prerequisites: [FR-C213-soupconner, FR-C213-serrer]
 sounds: []
 roots: []
+etymology_hook: "suggérer ← Latin suggerere 'to bring up, to supply' — English suggest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C213-serrer]
 <!-- hl-knowledge: introduces=[FR-LEX-C213-VERBES213-05]; assesses=[] -->
 
 **suggérer** — "to suggest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suggérer** ← Latin *suggerere*, "to bring up, to supply" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

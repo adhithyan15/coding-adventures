@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 2,
-  "sourceHash": "fnv1a64:381bf919c4b5cc17",
+  "sourceHash": "fnv1a64:d2d28362907b96ab",
   "lessonIds": [
     "FR-C02-je",
     "FR-C02-me",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "french/narration/ch02.txt",
   "json": "french/narration/ch02.json",
-  "textHash": "fnv1a64:3838e1dd24f53f71",
-  "jsonHash": "fnv1a64:0c7636a722e7e155",
+  "textHash": "fnv1a64:64377badc3e9621c",
+  "jsonHash": "fnv1a64:4710fc1f5de442f7",
   "findings": []
 }

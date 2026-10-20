@@ -13,7 +13,8 @@ gloss: "always"
 concept_tag: GE-WANN-IMMER
 prerequisites: [GE-C94-lila, GE-C94-sekunde]
 sounds: []
-roots: []
+roots: [germanic-aiwaz]
+etymology_hook: "immer ← Middle High German immer, from Old High German io mēr 'ever more'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C94-sekunde]
 <!-- hl-knowledge: introduces=[GE-LEX-C94-WANN-04]; assesses=[] -->
 
 **immer** — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**immer** ← Middle High German *immer* (EtymDB 2.1), from Old High German *io mēr*, "ever more": the word for "ever" + the word for "more".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

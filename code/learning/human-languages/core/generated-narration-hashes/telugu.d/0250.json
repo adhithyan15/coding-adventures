@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 250,
-  "sourceHash": "fnv1a64:c6d4a25c274ba063",
+  "sourceHash": "fnv1a64:96f4f961ab9d57a7",
   "lessonIds": [
     "TE-C250-araceyyi",
     "TE-C250-madama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch250.txt",
   "json": "telugu/narration/ch250.json",
-  "textHash": "fnv1a64:63a5cb09fe8b5d7c",
-  "jsonHash": "fnv1a64:7eb1ea6e68b672b1",
+  "textHash": "fnv1a64:b4b4e5769e9d9c68",
+  "jsonHash": "fnv1a64:646bdd5d4fa42672",
   "findings": []
 }

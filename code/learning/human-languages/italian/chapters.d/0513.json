@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "La gara",
+  "label": "ch:it-la-gara",
+  "canDo": "I can describe a race: timing, distance and being out of breath.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C513-ansimare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can describe a race: timing, distance and being out of breath.",
+    "assesses": [
+      "IT-LEX-C513-GARA-03",
+      "IT-LEX-C513-GARA-04",
+      "IT-LEX-C513-GARA-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "pâru kardan"
 concept_tag: FA-VERB-PARU-KARDAN
 prerequisites: [FA-C225-varam-kardan, FA-C226-kud-dadan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "pâru kardan: Persian pâru 'shovel, oar' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C226-kud-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C226-KONESH226-02]; assesses=[] -->
 
 **پارو کردن** — *pâru kardan* — "to shovel; to row".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâru kardan* pairs *pâru*, "shovel, oar", a native Persian word, with *kardan*, "to do". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tauliā"
 concept_tag: PA-THINGS114-TAULIA
 prerequisites: [PA-C113-kanghi, PA-C114-saban]
 sounds: []
-roots: []
+roots: [portuguese-toalha]
+etymology_hook: "tauliā: usually traced to Portuguese toalha 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C114-saban]
 <!-- hl-knowledge: introduces=[PA-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **ਤੌਲੀਆ** — *tauliā* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤੌਲੀਆ** (*tauliā*) is a loan, usually traced to Portuguese *toalha*, "towel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

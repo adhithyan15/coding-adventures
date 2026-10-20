@@ -14,7 +14,8 @@ romanization: "solyónyy"
 concept_tag: RU-QUAL130-SALTY
 prerequisites: [RU-C129-narrow, RU-C130-bitter]
 sounds: []
-roots: []
+roots: [pie-seh2l]
+etymology_hook: "солёный is from соль 'salt'; Latin sal and English salt are cousins of соль"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C130-bitter]
 <!-- hl-knowledge: introduces=[RU-LEX-C130-QUAL130-02]; assesses=[] -->
 
 **солёный** (*solyónyy*) — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**солёный** is from *солить*, "to salt", and *соль*, "salt", a cousin of Latin *sāl* and English *salt* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

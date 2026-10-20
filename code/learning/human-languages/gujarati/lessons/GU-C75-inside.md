@@ -14,7 +14,8 @@ romanization: "andar"
 concept_tag: GU-WHERE2-INSIDE
 prerequisites: [GU-C75-ahead, GU-C75-behind]
 sounds: []
-roots: []
+roots: [persian-andar]
+etymology_hook: "andar: usually traced to Persian andar 'inside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C75-behind]
 <!-- hl-knowledge: introduces=[GU-LEX-C75-WHERE2-03]; assesses=[] -->
 
 **અંદર** (*andar*) — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અંદર** (*andar*) is a loan, usually traced to Persian *andar*, "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

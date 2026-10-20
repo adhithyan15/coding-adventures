@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-323-FAVOLA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-323-FAVOLA"
+  ],
+  "after": []
+}

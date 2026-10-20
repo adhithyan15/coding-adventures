@@ -11,6 +11,7 @@ concept_tag: ES-VERB-QUITAR
 prerequisites: [ES-C496-cerradura, ES-C496-colocar]
 sounds: []
 roots: []
+etymology_hook: "quitar ← Medieval Latin quitare 'to free from a debt', from quietus 'at rest' — English quit"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C496-colocar]
 > *Clear the table after eating.*
 
 *Quitarse la chaqueta* — to take off your jacket.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quitar** ← Medieval Latin *quitare*, "to set free from a debt", from Latin *quietus*, "at rest". English *quit* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

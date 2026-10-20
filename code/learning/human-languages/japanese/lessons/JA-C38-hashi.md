@@ -14,7 +14,8 @@ romanization: "hashi"
 concept_tag: JA-HOME38-HASHI
 prerequisites: [JA-C38-kagami, JA-C38-futon]
 sounds: []
-roots: []
+roots: [japanese-hashi]
+etymology_hook: "hashi: native Japanese, inherited, not borrowed; kanji 箸 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C38-futon]
 <!-- hl-knowledge: introduces=[JA-LEX-C38-HOME38-04]; assesses=[] -->
 
 **はし** — *hashi* — "chopsticks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はし** (*hashi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

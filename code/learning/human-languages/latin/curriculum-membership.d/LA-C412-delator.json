@@ -1,0 +1,11 @@
+{
+  "id": "LA-C412-delator",
+  "pathSegment": "LA-PATH-412-COGNITIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-412-COGNITIO",
+      "order": 3
+    }
+  ]
+}

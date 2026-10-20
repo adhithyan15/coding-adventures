@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C291-gendarme",
+    "language": "french",
+    "chapter": 291,
+    "sequence": 16670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2217a4c92d324fd5"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "prāyaḥ"
 concept_tag: SA-REPLY-PRAYAH
 prerequisites: [SA-C42-suddenly, SA-C40-butter, SA-C41-boat]
 sounds: []
-roots: []
+roots: [sanskrit-prayas-mostly]
+etymology_hook: "prāyas 'mostly': CDIAL 8951 calls it an old comparative of puru 'much', later felt as pra + aya 'going forth'"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C42-suddenly]
 
 **प्रायः** is "for the most part, in the main, usually".
 
-Say it when something holds most of the time and you would rather not promise more than that. It is *pra-*, "forward", with the going-piece you met in विहगः: what runs out in front, what happens in the main.
+Say it when something holds most of the time and you would rather not promise more than that. It is usually read as *pra-*, "forward", with *aya*, "a going": what runs out in front, what happens in the main.
 
 Beside सर्वम्, which claims everything, **प्रायः** claims almost everything and keeps its hedge.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL 8951 explains *prāyaḥ* as an old comparative connected with *puru*, "much",
+which speakers later heard as *pra* + *aya*, "going forth" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

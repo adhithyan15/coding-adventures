@@ -14,7 +14,8 @@ romanization: "vaṅkāya"
 concept_tag: TE-THINGS118-VANKAYA
 prerequisites: [TE-C118-tamata, TE-C118-bangaladumpa]
 sounds: []
-roots: []
+roots: [dravidian-vazhutalai-brinjal]
+etymology_hook: "vaṅkāya: vaṅga 'brinjal' (DEDR 5301) + kāya 'fruit'; DEDR compares Sanskrit vaṅga, vṛntāka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C118-bangaladumpa]
 <!-- hl-knowledge: introduces=[TE-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **వంకాయ** — *vaṅkāya* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వంకాయ** (*vaṅkāya*) is *vaṅga*, "brinjal", which DEDR 5301 lists with Kannada *badane*; and *kāya*, "unripe fruit". DEDR compares Sanskrit *bhaṇṭākī*, *vaṅga* and *vṛntāka*, "brinjal" (CDIAL 11503), names that CDIAL itself thinks probably go back to Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 149,
-  "sourceHash": "fnv1a64:9a04dc4aceb58980",
+  "sourceHash": "fnv1a64:9e0ff91e7853f2ae",
   "lessonIds": [
     "RU-C149-polchasa",
     "RU-C149-chetvert",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch149.txt",
   "json": "russian/narration/ch149.json",
-  "textHash": "fnv1a64:f258b042720a4c6b",
-  "jsonHash": "fnv1a64:cf7a76a6f8cffe33",
+  "textHash": "fnv1a64:3ead9b4344c397f3",
+  "jsonHash": "fnv1a64:eb8d57f58ab50c4c",
   "findings": []
 }

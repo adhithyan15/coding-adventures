@@ -14,7 +14,8 @@ romanization: "aslan"
 concept_tag: FA-NAFY136-ASLAN
 prerequisites: [FA-C136-hanuz, FA-C136-aya]
 sounds: []
-roots: []
+roots: [arabic-aslan]
+etymology_hook: "aslan ← Arabic aṣlan 'originally, at all', root ʾ-ṣ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C136-aya]
 <!-- hl-knowledge: introduces=[FA-LEX-C136-NAFY136-03]; assesses=[] -->
 
 **اصلا** — *aslan* — "at all; (with a negative) not at all". **اصلا خسته نیستم** — *aslan khaste nistam* — "I'm not tired at all."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aslan* is borrowed from Arabic *aṣlan*, "originally, at all". Its Arabic root is *ʾ-ṣ-l* (Lane). It is an adverb made from *aṣl*, "root, origin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

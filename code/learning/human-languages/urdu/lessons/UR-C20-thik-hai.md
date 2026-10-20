@@ -11,7 +11,8 @@ gloss: all right, agreed — the wellbeing word of chapter four doing a second j
 concept_tag: RESPONSE-OKAY
 prerequisites: [UR-C20-lekin, UR-C04-thik, UR-C02-mera-naam]
 sounds: [retroflex-aspirated-th]
-roots: []
+roots: [indo-aryan-thikka, asti]
+etymology_hook: "ṭhīk ← *ṭhīkka 'firm, right', probably from sthita 'standing' (CDIAL 5503); hai, usually traced to asti 'is'"
 duration:
   max_seconds: 235
 requires:
@@ -52,6 +53,11 @@ The copula of chapter two, **ہے**, does all the work. *ṭhīk hai* is what a
 speaker says to accept a plan, to agree with a claim, and to end a phone call —
 one phrase covering everything English spreads across *okay*, *fine*, *right*
 and *deal*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹھیک ہے** (*ṭhīk hai*) is "it is right". *ṭhīk* comes from a reconstructed *\*ṭhīkka*, "firm, right", which CDIAL derives, probably, from Sanskrit *sthita*, "standing" (CDIAL 5503); *hai*, "is", is usually traced to Sanskrit *asti*, "is".
 
 ## Grammar Lens: agreeing, and taking it back
 <!-- hl-knowledge: introduces=[]; assesses=[UR-FUNC-THIK-HAI, UR-GRAMMAR-NAHIN-VERB, UR-LEX-LEKIN, UR-LEX-NAHIN] -->

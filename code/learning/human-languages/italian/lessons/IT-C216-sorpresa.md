@@ -14,6 +14,7 @@ concept_tag: IT-SAL216-SORPRESA
 prerequisites: [IT-C216-vergogna, IT-C216-gelosia]
 sounds: []
 roots: []
+etymology_hook: "sorpresa — from sorprendere ← Old French sorprendre — English surprise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C216-gelosia]
 <!-- hl-knowledge: introduces=[IT-LEX-C216-SAL216-05]; assesses=[] -->
 
 **la sorpresa** — "surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sorpresa** is the past participle of *sorprendere*, "to surprise", used as a noun. *sorprendere* ← Old French *sorprendre*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

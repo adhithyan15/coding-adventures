@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C559-desfile",
+    "language": "spanish",
+    "chapter": 559,
+    "sequence": 17580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c62d91635833f22e"
+  },
+  "findings": []
+}

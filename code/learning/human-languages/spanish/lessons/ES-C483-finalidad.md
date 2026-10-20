@@ -10,7 +10,8 @@ gloss: "the purpose, the aim"
 concept_tag: ES-REF-FINALIDAD
 prerequisites: [ES-C483-infancia, ES-C483-costumbre]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "finalidad — final + -idad; Latin finalis, from finis 'an end': a purpose is an end aimed at"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C483-costumbre]
 > *The aim of the class is to speak more.*
 
 A formal word, common on forms and notices.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**finalidad** is built from *final*, "final", with *-idad*. *Final* is Latin *finalis*, from *finis*, "an end": a purpose is the end you aim at.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

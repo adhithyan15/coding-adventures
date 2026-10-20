@@ -12,6 +12,9 @@ Before the new one: say the Kannada for pepper, chilli, then the Kannada for cum
 You'll want to know: ಸಮುದ್ರ.
 ಸಮುದ್ರ — samudra — "the sea".
 
+The word, taken apart.
+ಸಮುದ್ರ (samudra) is Sanskrit samudra, "sea", taken over whole as a learned loan, a tatsama (CDIAL 13236).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for cumin, then the Kannada for the sea.
 
 You'll want to know: ಕಾಡು.
 ಕಾಡು — kāḍu — "a forest".
+
+The word, taken apart.
+ಕಾಡು (kāḍu) is native Dravidian, one word with Tamil kāṭu (DEDR 1438). DEDR lists kāḍu itself, "forest, jungle".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for the sea, then the Kannada for a forest.
 You'll want to know: ಮಣ್ಣು.
 ಮಣ್ಣು — maṇṇu — "soil, earth".
 
+The word, taken apart.
+ಮಣ್ಣು (maṇṇu) is native Dravidian, one word with Tamil maṇ (DEDR 4666). DEDR lists maṇṇu itself, "earth, clay, soil".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a forest, then the Kannada for soil.
 You'll want to know: ಕಲ್ಲು.
 ಕಲ್ಲು — kallu — "a stone".
 
+The word, taken apart.
+ಕಲ್ಲು (kallu) is native Dravidian, one word with Tamil kal and Telugu kallu (DEDR 1298).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for soil, then the Kannada for a stone.
 
 You'll want to know: ಗುಡುಗು.
 ಗುಡುಗು — guḍugu — "thunder".
+
+The word, taken apart.
+ಗುಡುಗು (guḍugu) is native Dravidian (DEDR 1659). DEDR lists guḍugu, "to thunder", from the rumbling sound guḍu. Its note points to similar sound-words in Indo-Aryan as well: the word imitates the noise.
 
 What you've built.
 One more word for this chapter.

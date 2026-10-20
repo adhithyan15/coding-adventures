@@ -13,7 +13,8 @@ gloss: "a hen"
 concept_tag: IT-ANIMALI3-GALLINA
 prerequisites: [IT-C69-volpe, IT-C70-serpente]
 sounds: []
-roots: []
+roots: [gallina-latin]
+etymology_hook: "gallina ← Latin gallina 'hen', from gallus 'rooster'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C70-serpente]
 <!-- hl-knowledge: introduces=[IT-LEX-C70-ANIMALI3-02]; assesses=[] -->
 
 **la gallina** — "a hen". It lays **l'uovo**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gallina** ← Latin *gallina*, "hen", from *gallus*, "rooster" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

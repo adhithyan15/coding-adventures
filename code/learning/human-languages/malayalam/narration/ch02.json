@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:687bca5822a4c297",
+  "sourceHash": "fnv1a64:7cee5484f137300c",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5dd7f32693fcd15a",
+      "sourceHash": "fnv1a64:34794ff18f5b63bb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -67,6 +67,10 @@
             {
               "kind": "speech",
               "text": "പേര് (pēr, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Telugu pēru, a cousin of Kannada hesaru (p becomes h). Being Tamil's closest sister, Malayalam keeps the native word, not Sanskrit nāma (Hindi nām, English name)."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4410 lists Malayalam pēr with Tamil peyar, Kannada pesar(u) and Telugu pēru."
             }
           ]
         },
@@ -457,7 +461,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:11cf5d1853f0a79d",
+      "sourceHash": "fnv1a64:c3eecbf648c5a4e2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -506,6 +510,10 @@
             {
               "kind": "speech",
               "text": "എന്റെ (enṟe) means \"my.\" It belongs to Malayalam's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need enṟe."
+            },
+            {
+              "kind": "speech",
+              "text": "Its en- is the oblique stem that DEDR 5160 gives for the first person, as in Tamil eṉ-."
             }
           ]
         },
@@ -903,7 +911,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:078a448c25163cf2",
+      "sourceHash": "fnv1a64:7057233da6b06086",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -956,6 +964,10 @@
             {
               "kind": "speech",
               "text": "Here's the point: Tamil, Kannada, and Telugu all use the zero copula — no word for \"is.\" Yet Malayalam, though it is Tamil's closest sister, grammaticalised a \"to be\" verb. So where Tamil says only eṉ peyar Arun, Malayalam adds āṇŭ: enṟe pēr Arun āṇŭ."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 333 lists that verb with Tamil ā, Kannada āgu and Telugu agu. DEDR 333 compares Sanskrit ām."
             }
           ]
         },
@@ -1002,11 +1014,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say athe, then say illa",
+              "instruction": "say ate, then say illa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *athe*, then say *illa*]"
+              "source": "[YOU RECALL: say *ate*, then say *illa*]"
             },
             {
               "kind": "prompt",
@@ -1373,7 +1385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:516b7543ded023b4",
+      "sourceHash": "fnv1a64:ec7e2fc273965660",
       "notice": null,
       "blocks": [
         {
@@ -1409,6 +1421,10 @@
             {
               "kind": "speech",
               "text": "Enṟe pēr Arun āṇŭ. becomes \"My name is Arun.\""
+            },
+            {
+              "kind": "speech",
+              "text": "All three words are native Dravidian: enṟe (DEDR 5160), pēr (DEDR 4410) and āṇŭ (DEDR 333). DEDR 333 compares Sanskrit ām."
             }
           ]
         },
@@ -1486,7 +1502,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b5f583cac4fda839",
+      "sourceHash": "fnv1a64:3dd970d41ccd7676",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1535,6 +1551,10 @@
             {
               "kind": "speech",
               "text": "നീ (nī, familiar \"you\") from Proto-Dravidian nīn — the same native root as Tamil nī, Kannada nīnu, Telugu nuvvu. നിങ്ങൾ (niṅṅaḷ) is the respectful/plural \"you\" — nī + a plural ending, the exact cousin of Tamil nīṅgaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 3684 lists Tamil nī, Kannada nīn(u) and Telugu nīvu; DEDR 3688 gives the plural, Malayalam niṅṅaḷ with Tamil nīṅkaḷ."
             }
           ]
         },
@@ -1936,7 +1956,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:449d44566defe4fc",
+      "sourceHash": "fnv1a64:554f37db8b969d1e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1985,6 +2005,10 @@
             {
               "kind": "speech",
               "text": "എന്ത് (entŭ, \"what\") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Telugu ēmiṭi, heading Malayalam's question family: entŭ (what), ār (who), eviṭe (where)."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5151 gathers that question stem: Malayalam ētu, e, Tamil yā, ētu."
             }
           ]
         },
@@ -2069,7 +2093,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07467bace883aed4",
+      "sourceHash": "fnv1a64:aaef59a663d9d7ed",
       "notice": null,
       "blocks": [
         {
@@ -2109,6 +2133,10 @@
             {
               "kind": "speech",
               "text": "Unlike the Tamil question (which had no verb), Malayalam carries its copula āṇŭ right inside the question-word entāṇŭ."
+            },
+            {
+              "kind": "speech",
+              "text": "Every part is native Dravidian: nī (DEDR 3684), pēr (DEDR 4410), entŭ (DEDR 5151) and āṇŭ (DEDR 333). DEDR 333 compares Sanskrit ām."
             }
           ]
         },
@@ -2186,7 +2214,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6d9f6e35a7062bb",
+      "sourceHash": "fnv1a64:51ac9ca2bd3695de",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -2257,6 +2285,10 @@
             {
               "kind": "speech",
               "text": "സന്തോഷം (santōṣaṁ, \"joy\") is Sanskrit — the same loan Kannada and Telugu use. So even Malayalam, the great keeper of native words (recall nandi for \"thanks\" in Chapter 1), reaches for Sanskrit here. The loanwords spread selectively, word by word — which is exactly what these cognate notes trace: native for \"name\" and \"thanks,\" Sanskrit for \"pleased.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit saṁtōṣa, \"satisfaction\", is CDIAL 12895."
             }
           ]
         },
@@ -2323,7 +2355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b24e5441d026c001",
+      "sourceHash": "fnv1a64:684432583f3475bf",
       "notice": null,
       "blocks": [
         {
@@ -2373,6 +2405,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുലി (puli) is native Dravidian, one word with Tamil puli, Kannada puli and Telugu puli (DEDR 4307)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2403,7 +2446,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -2595,7 +2638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eddd7c01b13c13bb",
+      "sourceHash": "fnv1a64:a2fed58bad5ac095",
       "notice": null,
       "blocks": [
         {
@@ -2645,6 +2688,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പെൺകുട്ടി (peṇkuṭṭi) is native Dravidian, a compound of two old words: the word for \"female\" (DEDR 4395, with Tamil peṇ and Kannada peṇ) and the word for \"the young of any creature, a child\" (DEDR 1670, with Tamil kuṭṭi). DEDR 4395 compares Sanskrit paṇḍa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -2675,7 +2729,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

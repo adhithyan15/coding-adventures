@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 95,
-  "sourceHash": "fnv1a64:29b7cbe9df419581",
+  "sourceHash": "fnv1a64:07e600fe605372f8",
   "lessonIds": [
     "TA-C95-exactly",
     "TA-C95-really",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch95.txt",
   "json": "tamil/narration/ch95.json",
-  "textHash": "fnv1a64:3aa1628c49214a5c",
-  "jsonHash": "fnv1a64:68f96e5ad389aa74",
+  "textHash": "fnv1a64:04f46f12cfa877fa",
+  "jsonHash": "fnv1a64:8d6142803e5c886f",
   "findings": []
 }

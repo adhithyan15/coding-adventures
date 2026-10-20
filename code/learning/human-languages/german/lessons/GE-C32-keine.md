@@ -13,7 +13,7 @@ sounds: [diphthong-ei]
 roots: [ohg-nihein]
 etymology_hook: "keine takes the -e that eine takes, because kein is ein with two letters on the front and nothing else changed — the ending machine underneath is the one that came with ein and eine"
 duration:
-  max_seconds: 230
+  max_seconds: 265
 requires:
   knowledge: [GE-LEX-KEIN-01, GE-LEX-EIN-EINE-01, GE-GRAMMAR-PLURAL-DIE-01, GE-LEX-DER-DIE-DAS-02]
 introduces:
@@ -55,6 +55,11 @@ because a German plural takes *die*:
 
 The extra **-e** is not a new ending. It is *eine*'s **-e**, unmoved. Put the
 *k* on the front of the word you already say and stop there.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**keine** is a form of *kein*, which grew from Old High German *nihein*, "not one": a negative fused onto the word for "one", later worn down to *kein*.
 
 ## Grammar Lens: one word cancels the whole family
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KEINE-01, GE-LEX-KEIN-01, GE-LEX-DER-DIE-DAS-02, GE-LEX-MILCH-02, GE-ETYMON-MILCH-04] -->

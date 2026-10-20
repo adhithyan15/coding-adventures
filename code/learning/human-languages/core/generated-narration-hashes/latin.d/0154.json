@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 154,
-  "sourceHash": "fnv1a64:4f7ce31f40309221",
+  "sourceHash": "fnv1a64:a5888f791553eacd",
   "lessonIds": [
     "LA-C154-iungo",
     "LA-C154-visito",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch154.txt",
   "json": "latin/narration/ch154.json",
-  "textHash": "fnv1a64:757d494c42b674ab",
-  "jsonHash": "fnv1a64:542e8a1bbaa7291d",
+  "textHash": "fnv1a64:e5827675e09c0021",
+  "jsonHash": "fnv1a64:87bdd0f0058c9621",
   "findings": []
 }

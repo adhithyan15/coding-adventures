@@ -13,7 +13,8 @@ gloss: "for (giving a reason)"
 concept_tag: LA-WHY113-NAM
 prerequisites: [LA-C112-quare, LA-C112-quamobrem]
 sounds: []
-roots: []
+roots: [latin-nam-for]
+etymology_hook: "nam 'for' — usually explained as an old case form of a pronoun stem: 'for that'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C112-quamobrem]
 <!-- hl-knowledge: introduces=[LA-LEX-C113-WHY113-01]; assesses=[] -->
 
 **nam** — "for (giving a reason)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nam** is usually explained as an old case form of a pronoun stem *na-*, "that" (Lewis & Short): "for that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: IT-LUOGHI87-AEROPORTO
 prerequisites: [IT-C86-sperare, IT-C86-desiderare]
 sounds: []
 roots: []
+etymology_hook: "aeroporto — built from aero- 'air' and the word for a port"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C86-desiderare]
 <!-- hl-knowledge: introduces=[IT-LEX-C87-LUOGHI87-01]; assesses=[] -->
 
 **l'aeroporto** — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aeroporto** — built from *aero-*, "air", and the word for a port. EtymDB 2.1 has no entry; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

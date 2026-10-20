@@ -13,7 +13,8 @@ gloss: "a roof"
 concept_tag: FR-MAISON26-TOIT
 prerequisites: [FR-C73-cle, FR-C73-mur]
 sounds: []
-roots: []
+roots: [tegere-latin]
+etymology_hook: "toit ← Latin tectum 'roof', from tegere 'to cover' — -ct- became -it, as in lait"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C73-mur]
 <!-- hl-knowledge: introduces=[FR-LEX-C74-MAISON26-01]; assesses=[] -->
 
 **le toit** — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toit** ← Latin *tectum*, "roof", from *tegere*, "to cover" (EtymDB 2.1 records the Latin word) — inherited: Latin *-ct-* became French *-it*, as in *lait* from Latin *lac*, *lactis*, through Vulgar Latin *\*lacte*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

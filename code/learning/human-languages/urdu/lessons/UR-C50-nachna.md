@@ -14,7 +14,8 @@ romanization: "nāchnā"
 concept_tag: UR-VERB-NACHNA
 prerequisites: [UR-C49-rona, UR-C50-gana]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nāchnā ← Sanskrit nṛtyati 'dances', a tadbhava (CDIAL 7583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C50-gana]
 <!-- hl-knowledge: introduces=[UR-LEX-C50-VERBS50-02]; assesses=[] -->
 
 **ناچنا** — *nāchnā* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناچنا** (*nāchnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtyati*, "dances" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

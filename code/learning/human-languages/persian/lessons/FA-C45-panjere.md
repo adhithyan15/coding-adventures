@@ -15,6 +15,7 @@ concept_tag: FA-HOME45-PANJERE
 prerequisites: [FA-C45-khane, FA-C45-otagh]
 sounds: []
 roots: []
+etymology_hook: "panjere: linked with panje 'paw, hand' or with Sanskrit piñjara 'cage'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C45-otagh]
 <!-- hl-knowledge: introduces=[FA-LEX-C45-HOME45-03]; assesses=[] -->
 
 **پنجره** — *panjere* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panjere* has two accounts. It is often linked with *panje*, "paw, hand", from *panj*, "five"; EtymDB instead sets it beside Sanskrit *piñjara*, "cage". Which is right is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

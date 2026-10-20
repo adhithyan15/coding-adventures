@@ -11,7 +11,8 @@ romanization: "veḷḷavaccu"
 concept_tag: TE-EXPRESS-PERMISSION
 prerequisites: [TE-C80-that, TE-C32-tinu]
 sounds: []
-roots: []
+roots: [vellu-go-dravidian, vaccu-come-dravidian]
+etymology_hook: "veḷḷavaccu: native veḷḷu 'go' (DEDR 5393) + vaccu 'come; may' (DEDR 5270)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C80-that]
 It is the same వచ్చు you met as "to come", doing a second job: what *comes* to you is what you may do.
 
 **వెళ్ళవచ్చు** — "you may go". **వెళ్ళవచ్చా?** — "may I go?", with the -ఆ of the last chapter. To refuse, the answer is **వద్దు**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెళ్ళవచ్చు** (*veḷḷavaccu*) is native Dravidian: *veḷḷu*, "to go" (DEDR 5393), and *vaccu*, "to come", here "may" (DEDR 5270), which DEDR glosses "to come, happen, be possible".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

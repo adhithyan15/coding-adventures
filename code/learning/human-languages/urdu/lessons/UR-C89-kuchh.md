@@ -14,7 +14,8 @@ romanization: "kuchh"
 concept_tag: UR-DEF89-KUCHH
 prerequisites: [UR-C89-har, UR-C89-koi]
 sounds: []
-roots: []
+roots: [sanskrit-kimcid]
+etymology_hook: "kuchh ← Sanskrit kiṃcid 'anything', a tadbhava (CDIAL 3144)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C89-koi]
 <!-- hl-knowledge: introduces=[UR-LEX-C89-DEF89-04]; assesses=[] -->
 
 **کچھ** — *kuchh* — "something, some".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کچھ** (*kuchh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kiṃcid*, "anything" (CDIAL 3144). CDIAL notes that its *-ch-* comes from the masculine *kaścid*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

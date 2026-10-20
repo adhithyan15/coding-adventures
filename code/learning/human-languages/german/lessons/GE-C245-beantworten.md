@@ -13,7 +13,8 @@ gloss: "to answer (a question)"
 concept_tag: GE-VERB-BEANTWORTEN
 prerequisites: [GE-C245-ausgeben, GE-C245-aussprechen]
 sounds: []
-roots: []
+roots: [germanic-wurda]
+etymology_hook: "beantworten — be- + antworten 'to answer'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C245-aussprechen]
 <!-- hl-knowledge: introduces=[GE-LEX-C245-VERB245-04]; assesses=[] -->
 
 **beantworten** — "to answer (a question)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**beantworten** is *be-* + *antworten*, "to answer", built on *Antwort*, "counter-word" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

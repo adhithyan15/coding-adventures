@@ -1,6 +1,41 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for native Ruby arithmetic AST token validation
+Status date: 2026-10-19 — restarted after an eight-day pause; shared-backend
+reds VM-D005 and #12032 closed
+
+## Restart — 2026-10-19
+
+The non-ALGOL rotation made no merges between 2026-10-11 and 2026-10-19. In
+that time the separately owned ALGOL stream merged forty-four PRs, each raising
+one hand-enumerated `sign`-offset cap by a single unit. PR #17793 replaces that
+cap with the derived `2^53 - 1` exact-integer budget, and its lesson shard
+records the anti-pattern.
+
+A full local `lang_matrix` run then showed the remaining reds were shared
+backend defects, not ALGOL frontend gaps:
+
+- **VM-D005 (x86_64):** `x86_64-backend` refused calls with more than six
+  integer arguments. A captured 4-D array value formal is eight values (a
+  handle, four lower bounds and three strides). Overflow arguments now use the
+  standard SysV and Microsoft x64 stack layouts.
+- **#12032 (JVM):** `iir-to-jvm-class-file` declared a fixed `max_stack = 8`,
+  which captured 3-D and 4-D `double[]` stores exceed. `max_stack` is now
+  measured by a verifier-style stack-depth dataflow over the emitted bytecode.
+
+With both fixed, `lang-aot/BUILD` runs the full-corpus
+`matrix_every_proven_cell_agrees` aggregate and
+`proven_columns_do_not_silently_skip` in CI. Before this, only the non-ALGOL
+aggregate ran. The rotation resumes with the queue below, plus two items found
+during this audit:
+
+- **VM-078:** ALGOL accepts runtime reals that can become non-finite or exceed
+  the i64 range, such as `exp(exp(exp(pick())))` and `entier(exp(...))`. The
+  portable formatter and `real_to_int_*` have no specified cross-backend
+  behaviour for those values.
+- **VM-079:** `twig-aot`'s `gc_stress_live_bytes_differential_on_linux` and
+  `gc_recursive_frame_live_bytes_differential_on_linux` fail locally on
+  `origin/main` (x86_64 Linux). They need triage to decide whether this is a
+  host difference or a real precise-GC regression.
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -8,7 +43,68 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
-## Prioritization run — 2026-09-30
+## VM-078 — LANG83 standard operation registry (2026-10-19)
+
+Owner direction: the dynamic frontends need a rich operation vocabulary, and
+every backend converts those operations into instructions it supports. There is
+no portable runtime and no shared or generated IIR helper library.
+[LANG83](LANG83-iir-standard-operation-registry.md) is the contract.
+
+**PR1a — contract (implemented on `claude/lang-vm-status-4xtyw8-op-registry`).**
+`interpreter_ir::op_registry::STANDARD_OPS` registers the operations existing
+frontends already rely on: output, strings, arithmetic and comparison, `f64`
+math and conversions. It also registers the PR1b ops `write_i64`,
+`i64_div_floor`, `i64_mod_floor` and `trap`. A unit test enforces the type-first
+naming rule. All nine backend crates declare `op_support`; the PR1b ops are
+`Refused` everywhere. `lang_aot::check_module_for` refuses unsupported ops at
+compile time before lowering. `lang-aot/tests/op_conformance.rs` compiles every
+`Lowered` case on six code-generation backends. It runs the cases on WASM, VM,
+JIT, LLVM and native. WASM, VM, JIT and BEAM output is now one ordered stream.
+Evidence: the ALGOL row mixing `print_i64` and `print_str` printed `ABC` on
+WASM/VM/JIT before the fix and prints `A1\nB-2\nC` after it.
+
+**VM-078b / PR1b — first op family on all nine backends (implemented on
+`claude/lang-vm-status-4xtyw8-op-lowering`, stacked on PR1a).** `write_i64`,
+`i64_div_floor`, `i64_mod_floor` and `trap` are `Lowered` on x86-64, AArch64,
+LLVM, WASM, JVM, CLR (textual IL), BEAM, VM and JIT. Every backend tests the
+zero divisor and `MIN / -1` explicitly before its hardware or library divide;
+none relies on a native divide for those edges. Every trap path flushes output
+first. Native traps call the new `__twig_trap` in `twig_runtime.c`. LLVM emits
+self-contained `linkonce_odr` `@__iir_trap` and `@__iir_write_i64`. WASM
+imports `env.__trap` and `env.__write_i64`. The JVM and CLR throw after
+flushing, BEAM calls `erlang:error('<kind>')`, the VM returns
+`VMError::Trap { kind }`, and the JIT's `TRAP` bytecode records the kind.
+`op_conformance` adds 10 PR1b cases and a real-`java` JVM column. It proves
+print-then-trap on WASM, VM, JIT, LLVM, native and JVM (276 compilations, 256
+executions locally). CLR and BEAM compile locally; CI executes them. AArch64
+is checked structurally against `aarch64-encoder`. vm-core's legacy `div`/`mod`
+no longer panic on `MIN / -1`: they wrap.
+
+**Next, in order:**
+
+1. **VM-078b follow-ups:** port `lang_matrix`'s data-less
+   `RunResult::Trapped` (and its WASM/VM/JIT hosts) to carry stdout and the
+   PR1b imports when the first language row emits a PR1b op (LANG83 PR2,
+   Ruby). The binary CLR `lower_iir_to_cil` path (32-bit simulator) refuses
+   the PR1b ops with a typed error. Make that refusal part of
+   `check_module_for` for `compile_iir_to_cil_artifact` if a frontend ever
+   targets it.
+2. **VM-078c (found by the PR1a conformance suite):** the native pipeline
+   miscompiles a `bool`-typed comparison with negative operands.
+   `jit_core::specialise` names the CIR op after the result hint
+   (`cmp_lt_bool`), so x86-64 compares at `bool` width. Twig
+   `(if (< (- 0 1) 2) 7 3)` exits 3 natively and 7 elsewhere. ALGOL's
+   `i64`-typed comparisons are unaffected.
+3. **VM-078d (found by the PR1a conformance suite):** the matrix JIT column
+   interprets every function that prints. `infer_type_status` does not count
+   `"void"` as concrete, so a function containing `call_builtin … : void` is
+   `PartiallyTyped`, and `execute_with_jit` never compiles it.
+   `op_conformance` compiles `main` explicitly; the matrix runner should do the
+   same, or the type-status rule should change.
+4. Register the bitwise family (`and or xor not shl shr`) with honest
+   declarations: LLVM lacks `shl`/`shr`, and the generic JIT lacks all six.
+   Replace the older builtin tables with derivations from `OP_SUPPORT`.
+
 
 PR #16208 delivered the first VM-067 guard and merged as
 `34a8061d145849dffdb6bb7cf90ce1b8fa638fa5` after required CI passed. The
@@ -500,21 +596,69 @@ The fresh selection rotates to LANG80's arithmetic operator/grouping token
 validation at the public AST boundary. Full Perl syntax and inventory
 exhaustiveness remain open.
 
-The separately owned ALGOL campaign remains outside this backlog.
+PR #17269 delivered LANG80 arithmetic/grouping AST token validation and
+merged as `fcefc380b65a0e7e8dbc88905c38b374fa88ecb5` after exact-head workflows
+and required gates passed. The Windows qpdf HTTP 504 setup failure recovered
+with a failed-job retry while its build-plan artifact remained available.
+Canonical operator/grouping tokens, native IIR execution and existing bounds
+are preserved. The refreshed selection rotates to a distinct own-source
+partial Perl 5.004_72 pair, including its source-backed CR whitespace change.
 
-The refreshed queue is:
+PR #17275 delivered the distinct own-source partial Perl 5.004_72 pair and
+merged as `87875d7dc74fdce6077daaf8189d9111dd72a502` after every exact-head
+workflow and required gate passed. Its source-backed CR whitespace and
+250-digit bound are retained; earlier pairs and LANG81 execution are unchanged.
+The refreshed inventory has 776 unique rows, 117 partial pairs and 659 pending,
+with none complete. The next selection rotates to PREP01 unsuffixed octal
+integer stringization, preserving raw spelling and generic bounds.
 
-1. **LANG80 Ruby (selected):** require canonical arithmetic/grouping syntax
-   tokens at the direct AST-to-IIR boundary; preserve current source and bounds.
-2. **LANG79 Python:** arithmetic AST token validation is complete; broader
-   native frontend semantics remain open. Host Python is oracle only.
-3. **LANG78 JavaScript:** restricted numeric division is complete; general
-   lexical-goal selection and broader native semantics remain open, Node oracle only.
-4. **PREP01 C:** unsuffixed hexadecimal integer stringization is complete.
-   Full C `#if`, broader stringize and general paste remain open.
-5. **LANG82 continued:** the partial Perl 5.004_71 subset is complete for its
-   declared contract. Continue distinct own-release source-backed pairs and
-   leave 5.004_01-t1 pending without its own source.
+PR #17284 delivered LANG79's float literal validation for caller-supplied
+Python ASTs and merged as `b0cd9e15aa467712fde66804071bec1b12fc0ed8`.
+FLOAT atoms now require the canonical `Name` kind with the `FLOAT` named type
+and a complete versioned ASCII spelling, checked before underscore removal
+and f64 conversion; valid exponent overflow still reaches IEEE infinity and
+fails only at display. Source behavior and resource bounds are unchanged.
+
+The next LANG79 selection is module-level float bindings (python-iir-compiler
+0.2.0): single-target `NAME = <float expression>`, rebinding, and NAME reads
+in every float-expression position. Bindings lower to `mov` into a `py:`
+register namespace. In this branch-free subset an unbound read is known at
+compile time and lowers to a raising `py_name_error` call, preserving earlier
+output as CPython does. Chained, tuple, annotated, augmented, attribute and
+subscript targets, binding `print`, integer values and unbound builtin or
+dunder reads are explicit compile errors; direct-AST NAME and EQUALS tokens
+require canonical kind and spelling. Host Python remains oracle only.
+
+
+The refreshed queue follows the user's 2026-10-11 consumer-priority correction.
+Alternate bounded work across the streams below; the list is not a requirement
+to finish one language before advancing another. At most two independent
+implementation PRs may be active. Include documentation, lesson shards,
+generated files and transitive dependencies in each DAG ownership audit.
+
+1. **PREP01 generic engine / MacroNib and MacroOct:** these are the first
+   consumers. 2026-10-19 audit: MacroOct lacked the pre-lex byte budgets
+   MacroNib and the C dialect enforce (8 MB dense input → ~2 GB before
+   rejection); fixed by macrooct-iir-compiler 0.3.0. Next demonstrated gap:
+   MacroNib is not wired into `lang-aot` (no `Language` variant, matrix rows,
+   or `PROGRAMS`-reading identity oracle like MacroOct's). Audit their existing composition and select a demonstrated gap
+   in preprocessing, provenance, bounds or IIR identity against hand-expanded
+   Nib/Oct. The already published octal-stringize PR #17281 is existing work;
+   further C-specific stages and full C preprocessing are long-term work,
+   not the default next PREP01 selection.
+2. **LANG79 Python:** arithmetic and float-literal AST token validation are
+   complete; module-level float bindings are the current slice. Integers,
+   strings, control flow and functions remain open. Host Python is oracle only.
+3. **LANG78 JavaScript:** restricted numeric division is complete. Top-level
+   numeric `let`/`const` bindings with the early duplicate-name SyntaxError and
+   runtime TDZ/undeclared ReferenceErrors (`javascript-iir-compiler` 0.2.0) are
+   the current slice. Assignment, control flow, general lexical-goal selection
+   and broader native semantics remain open, Node oracle only.
+4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
+   Continue distinct own-release source-backed pairs; full syntax remains open.
+5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;
+   broader native semantics remain open. Perl 5.004_01-t1 stays pending
+   without its own pinned source; no exhaustive release coverage is claimed.
 
 The following run records the first VM-067 selection.
 

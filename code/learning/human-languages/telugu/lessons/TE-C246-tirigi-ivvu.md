@@ -14,7 +14,8 @@ romanization: "tirigi ivvu"
 concept_tag: TE-VERB-TIRIGI-IVVU
 prerequisites: [TE-C245-taip-ceyu, TE-C246-appu-ivvu]
 sounds: []
-roots: []
+roots: [dravidian-tiri-turn, dravidian-ii-give]
+etymology_hook: "tirigi ivvu: native tirigi 'again' (DEDR 3246) + ivvu 'to give' (DEDR 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C246-appu-ivvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C246-KRIYA246-02]; assesses=[] -->
 
 **తిరిగి ఇవ్వు** — *tirigi ivvu* — "to give back, to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తిరిగి ఇవ్వు** (*tirigi ivvu*) is native Dravidian: *tirigi*, "again", which DEDR 3246 lists under *tirugu*, "to turn", one word with Tamil *tiri*, "to turn"; and *ivvu*, "to give" (DEDR 2598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

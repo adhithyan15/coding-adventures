@@ -14,7 +14,8 @@ romanization: "fāil"
 concept_tag: UR-CHIZ225-FAIL
 prerequisites: [UR-C225-risala, UR-C225-rabar]
 sounds: []
-roots: []
+roots: [english-file]
+etymology_hook: "fāil ← English file"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C225-rabar]
 <!-- hl-knowledge: introduces=[UR-LEX-C225-CHIZ225-05]; assesses=[] -->
 
 **فائل** — *fāil* — "a file, a folder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فائل** (*fāil*) is a loan from English *file*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

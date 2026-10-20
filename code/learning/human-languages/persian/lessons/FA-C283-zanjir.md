@@ -14,7 +14,8 @@ romanization: "zanjir"
 concept_tag: FA-CHIZ283-ZANJIR
 prerequisites: [FA-C283-shen, FA-C283-lastik]
 sounds: []
-roots: []
+roots: [persian-zanjir]
+etymology_hook: "zanjir: inherited, usually traced to Middle Persian zanjīr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C283-lastik]
 <!-- hl-knowledge: introduces=[FA-LEX-C283-CHIZ283-03]; assesses=[] -->
 
 **زنجیر** — *zanjir* — "a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zanjir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zanjīr*, "chain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

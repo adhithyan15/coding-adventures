@@ -14,7 +14,8 @@ romanization: "sômprôti"
 concept_tag: BN-ATIT145-SOMPROTI
 prerequisites: [BN-C144-molayem, BN-C144-khoskhose]
 sounds: []
-roots: []
+roots: [sanskrit-samprati]
+etymology_hook: "sômprôti ← Sanskrit saṁprati 'now, at present', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C144-khoskhose]
 <!-- hl-knowledge: introduces=[BN-LEX-C145-ATIT145-01]; assesses=[] -->
 
 **সম্প্রতি** — *sômprôti* — "recently". Bengali's simple past adds **-লাম** for "I": **আমি সম্প্রতি একটা বই পড়লাম** — *āmi sômprôti ekṭā bôi pôṛlām* — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সম্প্রতি** (*sômprôti*) is Sanskrit *saṁprati*, "now, at present", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

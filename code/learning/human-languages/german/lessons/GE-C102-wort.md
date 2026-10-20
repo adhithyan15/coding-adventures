@@ -13,7 +13,8 @@ gloss: "a word"
 concept_tag: GE-DINGE-WORT
 prerequisites: [GE-C101-tausend, GE-C102-null]
 sounds: []
-roots: []
+roots: [germanic-wurda]
+etymology_hook: "Wort ← Old High German wort ← Proto-Germanic *wurdą — the same word as English word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C102-null]
 <!-- hl-knowledge: introduces=[GE-LEX-C102-DINGE-02]; assesses=[] -->
 
 **das Wort** — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wort** ← Old High German *wort* ← Proto-Germanic *\*wurdą* — inherited, the same word as English *word*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

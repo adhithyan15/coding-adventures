@@ -14,7 +14,8 @@ romanization: "latā"
 concept_tag: SA-TREE-LATA
 prerequisites: [SA-C32-grass, SA-C30-garland, SA-C31-wind]
 sounds: []
-roots: []
+roots: [sanskrit-lata]
+etymology_hook: "latā 'creeper' is a classical word whose origin is not settled (MW; CDIAL 10928)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C32-grass]
 **लता** is anything that climbs rather than stands: a vine, a creeper, a trailing branch.
 
 Sanskrit poetry pairs it with **तरुः** so often that the two almost arrive together — the creeper and the tree it climbs. Unlike most of this chapter it has no European cousin worth naming; it is homegrown, and it went on to become one of the commonest given names in India. Ends in **-आ**, like **तारा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Latā* is a classical word for a creeper (MW). Its origin is not settled: CDIAL
+10928 compares it only tentatively with a reconstructed *\*laṭṭa-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

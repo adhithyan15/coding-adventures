@@ -14,7 +14,8 @@ romanization: "kunnŭ"
 concept_tag: ML-STHALAM239-KUNNU
 prerequisites: [ML-C238-kavala, ML-C239-mula2]
 sounds: []
-roots: []
+roots: [dravidian-kunru-hill]
+etymology_hook: "kunnŭ: native Dravidian, one word with Tamil kuṉṟam and Telugu koṇḍa (DEDR 1864)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C239-mula2]
 <!-- hl-knowledge: introduces=[ML-LEX-C239-STHALAM239-02]; assesses=[] -->
 
 **കുന്ന്** — *kunnŭ* — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുന്ന്** (*kunnŭ*) is native Dravidian, one word with Tamil *kuṉṟam* and Telugu *koṇḍa* (DEDR 1864).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

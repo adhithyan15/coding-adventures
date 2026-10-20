@@ -14,7 +14,8 @@ romanization: "veṭkappaṭu"
 concept_tag: TA-VERB-VETKAPPATU
 prerequisites: [TA-C257-veru, TA-C257-accariyappatu]
 sounds: []
-roots: []
+roots: [dravidian-velku-shame]
+etymology_hook: "வெட்கப்படு — native: veṭkam 'shyness, shame' (DEDR 5500) + paṭu 'to undergo' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C257-accariyappatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C257-ACT257-03]; assesses=[] -->
 
 **வெட்கப்படு** — *veṭkappaṭu* — "to feel shy, to be embarrassed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெட்கப்படு** (*veṭkappaṭu*) is native: *veṭkam*, "shyness, shame" (DEDR 5500), and *paṭu*, "to undergo" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

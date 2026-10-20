@@ -1,30 +1,12 @@
 import { expect, it } from "vitest";
-import { compileLessonActivities } from "../../../src/activity.js";
-import { measureContinuity } from "../../../src/continuity.js";
 import {
   DOC_SHARD_PLANS,
   defaultRepoRoot,
   unshardDocContents,
 } from "../../../src/doc-shard-cli.js";
 import { loadTrackLessons } from "../../../src/loader.js";
-import {
-  expectLanguageContinuity,
-  expectLanguageLessonBudgets,
-  expectLanguageModality,
-  languageWritingStages,
-} from "../assert-language-corpus.js";
 
 it("keeps Punjabi's session map aligned with canonical order", () => {
-  // 272 -> 278 rows: HL-C437 appends chapter 48, six `review` lessons, at the END
-  // of the sequence. Appending rather than inserting is why this is a six-row
-  // addition and not a renumbering: every existing session keeps its number.
-  // 278 -> 532 rows: chapters 49-98 (250 word lessons and four reviews) are
-  // appended the same way, after chapter 48.
-  // 532 -> 533 rows: HL-C443 inserts ਮੌਸਮ (mausam) before the chapter-20 ੌ
-  // lesson. This one IS an insertion, so every later session moves up by one.
-  // 533 -> 818 rows: Punjabi A1. Three chapter-6 continuations are INSERTED
-  // (every later session moves up by three), and chapters 99-152 (270 word
-  // lessons and twelve reviews) are appended after chapter 98.
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -39,30 +21,13 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  // 818 -> 820: chapter 7's hona and khana each split a continuation off.
-  // 820 -> 831: chapter 153 appends the 11-step fictional date-field runway.
-  // 831 -> 838: chapter 154 joins age, phone, and date in seven short steps.
-  // 838 -> 844: chapter 155 joins six taught fields in six bounded steps.
-  // 844 -> 863: chapter 156 builds an untimed named-reader message in 19 short steps.
-  // 863 -> 868: chapter 157 adds five bounded timed-writing and repair steps.
-  // 868 -> 872: four short, unscored writing-skill returns.
-  // 872 -> 874: two short, no-new-language Chapter 158 quality-word reviews.
-  // 874 -> 878: one separate unscored repair return and three old-word reviews.
-  // 878 -> 882: four separate Chapter 148 action-word returns.
-  // 882 -> 886: four separate Chapter 149 action-word returns.
-  // 886 -> 889: three short Chapter 162 A1 writing returns.
-  // 889 -> 893: four separate Chapter 163 action-word returns.
-  // 893 -> 896: three separate Chapter 164 action-word returns.
-  // 896 -> 900: four separate Chapter 165 action-word returns.
-  // 900 -> 903: three separate Chapter 166 action-word returns.
-  // 903 -> 905: two separate Chapter 167 action-word returns.
-  // 905 -> 908: three separate Chapter 168 date-form returns.
-  // 908 -> 910: two separate Chapter 169 fictional date-example returns.
-  // 911 -> 912: Chapter 171 retrieves the old fictional date repair.
-  // 912 -> 914: Chapter 172 opens by ear, then retrieves the old three-field
-  // line order in a separate stopped-only pen session.
-  expect(rows).toHaveLength(914);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 914 }, (_, index) => index + 1));
+
+  // Row count comes from the reconstructed direct owners. Identity equality
+  // below still rejects a missing or extra row; this derived range avoids a
+  // second mutable owner for the same assembled count.
+  expect(rows.map((row) => row.session)).toEqual(
+    Array.from({ length: rows.length }, (_, index) => index + 1),
+  );
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

@@ -13,7 +13,8 @@ gloss: "to get done"
 concept_tag: GE-VERB-ERLEDIGEN
 prerequisites: [GE-C248-erfahren, GE-C249-ergaenzen]
 sounds: []
-roots: []
+roots: [germanic-lithugaz]
+etymology_hook: "erledigen — er- + ledig 'free' + -en: to free yourself of a task"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C249-ergaenzen]
 <!-- hl-knowledge: introduces=[GE-LEX-C249-VERB249-02]; assesses=[] -->
 
 **erledigen** — "to get done".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erledigen** is *er-* + *ledig*, "free", + a verb ending: to free yourself of a task. *ledig* ← Proto-Germanic *\*liþugaz*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

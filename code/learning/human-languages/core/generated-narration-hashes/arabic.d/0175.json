@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 175,
-  "sourceHash": "fnv1a64:80e6dad502c6ecd2",
+  "sourceHash": "fnv1a64:ab4ab6469306c6e6",
   "lessonIds": [
     "AR-C175-sadaqa",
     "AR-C175-mujtama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch175.txt",
   "json": "arabic/narration/ch175.json",
-  "textHash": "fnv1a64:783341f2f07793c5",
-  "jsonHash": "fnv1a64:cf74ba18a6a2541f",
+  "textHash": "fnv1a64:2749a0361bc43ede",
+  "jsonHash": "fnv1a64:150564b98f2f8b71",
   "findings": []
 }

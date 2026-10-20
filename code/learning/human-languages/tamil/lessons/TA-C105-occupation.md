@@ -11,7 +11,8 @@ romanization: "toḻil"
 concept_tag: TA-WORK-OCCUPATION
 prerequisites: [TA-C104-birthday, TA-C105-signature]
 sounds: []
-roots: []
+roots: [dravidian-tozhil-work]
+etymology_hook: "தொழில் — native Dravidian (DEDR 3524); Malayalam toḻil 'business', Kannada tuḻil 'work'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C105-signature]
 **தொழில்** (*toḻil*) — "an occupation", "a trade".
 
 **உங்கள் தொழில் என்ன?** — "what is your occupation?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொழில்** (*toḻil*) is native Dravidian. DEDR 3524 lists Malayalam *toḻil*, "business" and Kannada *tuḻil*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

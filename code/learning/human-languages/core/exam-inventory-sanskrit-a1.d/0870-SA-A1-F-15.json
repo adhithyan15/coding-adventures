@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-F-15",
+  "category": "Relating socially",
+  "label": "address somebody respectfully, and choose the register",
+  "probe": [
+    "SA-LEX-BHAVAN",
+    "SA-LEX-TVAM",
+    "SA-GRAMMAR-POLITENESS-BY-PERSON",
+    "SA-GRAMMAR-RESPECTFUL-QUESTION"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F5-03"
+  ],
+  "note": "bhavān against tvam, and — the fact worth the lesson — bhavān takes a THIRD person verb. Sanskrit is polite by grammatical person, not by pronoun alone."
+}

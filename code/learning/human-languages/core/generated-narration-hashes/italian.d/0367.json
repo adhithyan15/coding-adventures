@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:77d0d24d0f818f34",
+  "lessonIds": [
+    "IT-C367-volontariato",
+    "IT-C367-volontario",
+    "IT-C367-associazione",
+    "IT-C367-beneficenza",
+    "IT-C367-comunita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch367.txt",
+  "json": "italian/narration/ch367.json",
+  "textHash": "fnv1a64:cac0d27f91cca2dc",
+  "jsonHash": "fnv1a64:68419ba9757339c7",
+  "findings": []
+}

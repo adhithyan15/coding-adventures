@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C411-svitare",
+    "language": "italian",
+    "chapter": 411,
+    "sequence": 23440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6461492cbb823fcb"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "palavīṉamāṉa"
 concept_tag: TA-GUNAM212-PALAVINAMANA
 prerequisites: [TA-C211-ilancivappu, TA-C211-paluppu]
 sounds: []
-roots: []
+roots: [sanskrit-bala, sanskrit-hina]
+etymology_hook: "பலவீனமான — palavīṉam ← Sanskrit bala 'strength' (CDIAL 9161) + hīna 'lacking' (CDIAL 14124)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C211-paluppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C212-GUNAM212-01]; assesses=[] -->
 
 **பலவீனமான** — *palavīṉamāṉa* — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பலவீனமான** (*palavīṉamāṉa*) is *palavīṉam*, "weakness", from Sanskrit *bala*, "strength" (CDIAL 9161), and *hīna*, "lacking" (CDIAL 14124), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 164,
-  "sourceHash": "fnv1a64:72cfbfdba2e0cbf4",
+  "sourceHash": "fnv1a64:dfc4901df9f7c991",
   "lessonIds": [
     "BN-C164-phail",
     "BN-C164-poshak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch164.txt",
   "json": "bengali/narration/ch164.json",
-  "textHash": "fnv1a64:13d57dcd47bfce56",
-  "jsonHash": "fnv1a64:717c14cecb9c2962",
+  "textHash": "fnv1a64:b0a723b6d6bc52de",
+  "jsonHash": "fnv1a64:4b000e010510d79a",
   "findings": []
 }

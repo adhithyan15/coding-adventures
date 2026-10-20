@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-315-A2WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can independently write a model-free connected 70–90 word Telugu message in Telugu script for a named reader and practical purpose.",
+  "prerequisites": [
+    "TE-EXT-314-PANI314"
+  ]
+}

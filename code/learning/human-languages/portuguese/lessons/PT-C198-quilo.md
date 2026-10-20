@@ -14,6 +14,7 @@ concept_tag: PT-COISAS198-QUILO
 prerequisites: [PT-C197-cabeleireiro, PT-C198-quantidade]
 sounds: []
 roots: []
+etymology_hook: "quilo ← French kilo, short for kilogramme, from Greek khilioi 'a thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C198-quantidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C198-COISAS198-02]; assesses=[] -->
 
 **o quilo** — "a kilo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quilo** ← French *kilo* — borrowed, short for *kilogramme*, built on Greek *khilioi*, "a thousand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

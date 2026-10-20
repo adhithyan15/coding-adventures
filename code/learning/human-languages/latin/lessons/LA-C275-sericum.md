@@ -13,7 +13,8 @@ gloss: "silk"
 concept_tag: LA-RES275-SERICUM
 prerequisites: [LA-C274-damnum, LA-C274-debitum]
 sounds: []
-roots: []
+roots: [sericum-latin]
+etymology_hook: "sēricum 'silk' — named after the Sērēs, the silk-making people of the far east"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C274-debitum]
 <!-- hl-knowledge: introduces=[LA-LEX-C275-RES275-01]; assesses=[] -->
 
 **sēricum, sēricī** — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sēricum** is built on *Sērēs*, "the Seres", the people of the far east whom the Romans knew as makers of silk (Lewis & Short): the Seric stuff. English *silk* probably comes from the same name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

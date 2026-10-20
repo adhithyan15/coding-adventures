@@ -13,7 +13,8 @@ gloss: "behind"
 concept_tag: PT-LUGARES89-ATRAS
 prerequisites: [PT-C88-oeste, PT-C89-em-frente]
 sounds: []
-roots: []
+roots: [trans-latin]
+etymology_hook: "atrás = a 'at' + trás, from Latin trans 'beyond' — English transport shares trans"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C89-em-frente]
 <!-- hl-knowledge: introduces=[PT-LEX-C89-LUGARES89-02]; assesses=[] -->
 
 **atrás** — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**atrás** is built from *a*, "at", and *trás*, "behind" (EtymDB 2.1), which ← Latin *trans*, "across, beyond" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Porre rimedio",
+  "label": "ch:it-porre-rimedio",
+  "canDo": "I can say how to fix a situation: find a remedy, sort things out, soften a problem or make up for it, or say it got worse.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C355-compensare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say how to fix a situation: find a remedy, sort things out, soften a problem or make up for it, or say it got worse.",
+    "assesses": [
+      "IT-LEX-C355-RIMEDIO-03",
+      "IT-LEX-C355-RIMEDIO-04",
+      "IT-LEX-C355-RIMEDIO-05"
+    ]
+  }
+}

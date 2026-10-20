@@ -14,7 +14,8 @@ romanization: "miksi"
 concept_tag: ML-VASTU295-MIKSI
 prerequisites: [ML-C294-vati, ML-C295-kukkar]
 sounds: []
-roots: []
+roots: [english-mixie]
+etymology_hook: "miksi ← Indian English mixie, from mixer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C295-kukkar]
 <!-- hl-knowledge: introduces=[ML-LEX-C295-VASTU295-02]; assesses=[] -->
 
 **മിക്സി** — *miksi* — "a mixer-grinder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മിക്സി** (*miksi*) ← Indian English *mixie*, from *mixer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

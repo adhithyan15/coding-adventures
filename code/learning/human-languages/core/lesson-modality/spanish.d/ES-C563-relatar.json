@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C563-relatar",
+    "language": "spanish",
+    "chapter": 563,
+    "sequence": 17820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e6441dbb313903f"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "zarf"
 concept_tag: FA-CHIZ203-ZARF
 prerequisites: [FA-C203-kaf, FA-C203-asansor]
 sounds: []
-roots: []
+roots: [arabic-zarf]
+etymology_hook: "zarf ← Arabic ẓarf 'vessel, container', root ẓ-r-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C203-asansor]
 <!-- hl-knowledge: introduces=[FA-LEX-C203-CHIZ203-05]; assesses=[] -->
 
 **ظرف** — *zarf* — "a dish, a container".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zarf* is borrowed from Arabic *ẓarf*, "vessel, container". Its Arabic root is *ẓ-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

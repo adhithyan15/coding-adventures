@@ -14,7 +14,8 @@ romanization: "ṣalāh"
 concept_tag: AR-SABAB267-SALAH
 prerequisites: [AR-C267-thaqafa, AR-C267-din]
 sounds: []
-roots: []
+roots: [ṣ-l-w]
+etymology_hook: "ṣalāh: listed by Lane under ṣ-l-w; usually traced to Aramaic ṣlōthā 'prayer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C267-din]
 <!-- hl-knowledge: introduces=[AR-LEX-C267-SABAB267-04]; assesses=[] -->
 
 **صلاة** — *ṣalāh* — "prayer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صلاة** (*ṣalāh*) is listed by Lane under *ṣ-l-w*. It is usually traced to Aramaic *ṣlōthā*, "prayer"; Lane's sources say the related *ṣalawāt*, "synagogues", is from Hebrew.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

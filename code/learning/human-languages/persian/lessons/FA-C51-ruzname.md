@@ -14,7 +14,8 @@ romanization: "ruznâme"
 concept_tag: FA-SCHOOL51-RUZNAME
 prerequisites: [FA-C50-bazi, FA-C51-name]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "ruznâme: Persian ruz 'day' + nâme 'writing', both inherited from Middle Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C51-name]
 <!-- hl-knowledge: introduces=[FA-LEX-C51-SCHOOL51-02]; assesses=[] -->
 
 **روزنامه** — *ruznâme* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ruznâme* is built from *ruz*, "day" (Middle Persian *rōz*, EtymDB), and *nâme*, "letter, writing" (Middle Persian *nāmag*): a daily writing. Both parts are inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

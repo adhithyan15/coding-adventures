@@ -1,0 +1,11 @@
+{
+  "id": "IT-C287-canale",
+  "pathSegment": "IT-PATH-287-DIRETTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-287-DIRETTA",
+      "order": 3
+    }
+  ]
+}

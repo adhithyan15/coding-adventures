@@ -14,7 +14,8 @@ romanization: "pâgard"
 concept_tag: FA-MAKAN232-PAGARD
 prerequisites: [FA-C232-zirzamin, FA-C232-rahpelle]
 sounds: []
-roots: []
+roots: [old-persian-pad]
+etymology_hook: "pâgard: Persian pâ 'foot' (Old Persian pād-) + gard 'turning'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C232-rahpelle]
 <!-- hl-knowledge: introduces=[FA-LEX-C232-MAKAN232-04]; assesses=[] -->
 
 **پاگرد** — *pâgard* — "a landing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâgard* is built from *pâ*, "foot", and *-gard*, "turning" (from *gardidan*, "to turn"): where the foot turns. *pâ* is inherited; Old Persian had *pād-*, "foot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

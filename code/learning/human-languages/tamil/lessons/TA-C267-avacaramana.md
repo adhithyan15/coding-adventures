@@ -14,7 +14,8 @@ romanization: "avacaramāṉa"
 concept_tag: TA-GUNAM267-AVACARAMANA
 prerequisites: [TA-C267-kuntana, TA-C267-mukkiyamana]
 sounds: []
-roots: []
+roots: [sanskrit-avasara]
+etymology_hook: "அவசரமான — avacaram ← Sanskrit avasara 'occasion' (CDIAL 858) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C267-mukkiyamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C267-GUNAM267-03]; assesses=[] -->
 
 **அவசரமான** — *avacaramāṉa* — "urgent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அவசரமான** (*avacaramāṉa*) is *avacaram*, "urgency", from Sanskrit *avasara*, "occasion" (CDIAL 858), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

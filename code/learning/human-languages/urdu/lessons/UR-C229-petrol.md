@@ -14,7 +14,8 @@ romanization: "peṭrol"
 concept_tag: UR-CHIZ229-PETROL
 prerequisites: [UR-C229-motar-saikil, UR-C229-trak]
 sounds: []
-roots: []
+roots: [english-petrol]
+etymology_hook: "peṭrol ← English petrol"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C229-trak]
 <!-- hl-knowledge: introduces=[UR-LEX-C229-CHIZ229-03]; assesses=[] -->
 
 **پیٹرول** — *peṭrol* — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیٹرول** (*peṭrol*) is a loan from English *petrol*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

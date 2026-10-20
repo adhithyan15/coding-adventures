@@ -1,0 +1,11 @@
+{
+  "id": "LA-C517-sudor",
+  "pathSegment": "LA-PATH-517-VENA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-517-VENA",
+      "order": 3
+    }
+  ]
+}

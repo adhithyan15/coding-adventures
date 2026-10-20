@@ -14,7 +14,8 @@ romanization: "nuḥās"
 concept_tag: AR-SHAY219-NUHAS
 prerequisites: [AR-C219-khashab, AR-C219-zujaj]
 sounds: []
-roots: []
+roots: [n-ḥ-s]
+etymology_hook: "nuḥās: an old noun for copper, listed by Lane under n-ḥ-s; Hebrew neḥoshet 'copper, bronze' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-zujaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-04]; assesses=[] -->
 
 **نحاس** — *nuḥās* — "copper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نحاس** (*nuḥās*), "copper", is an old noun that Lane lists under the native Arabic root *n-ḥ-s*, calling it a chaste Arabic word. Hebrew *neḥoshet*, "copper, bronze", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

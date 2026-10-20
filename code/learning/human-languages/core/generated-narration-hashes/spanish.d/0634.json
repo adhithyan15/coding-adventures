@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 634,
+  "sourceHash": "fnv1a64:7baf6e25512c9c8e",
+  "lessonIds": [
+    "ES-C634-negociar",
+    "ES-C634-negociacion",
+    "ES-C634-ceder",
+    "ES-C634-acordar",
+    "ES-C634-persuadir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch634.txt",
+  "json": "spanish/narration/ch634.json",
+  "textHash": "fnv1a64:f96ab339ac6ef15f",
+  "jsonHash": "fnv1a64:e575556047f004b8",
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "unknown"
 concept_tag: FR-QUAL160-INCONNU-INCONNUE
 prerequisites: [FR-C160-profond-profonde, FR-C160-bas-basse]
 sounds: []
-roots: []
+roots: [cognoscere-latin]
+etymology_hook: "inconnu — in- 'not' + connu, from connaître: not known"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C160-bas-basse]
 <!-- hl-knowledge: introduces=[FR-LEX-C160-QUAL160-03]; assesses=[] -->
 
 **inconnu / inconnue** — "unknown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inconnu** — *in-*, "not", and *connu*, the past participle of *connaître*: not known. *Connaître* ← Latin *cognōscere*, "to get to know" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

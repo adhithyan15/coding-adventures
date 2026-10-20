@@ -11,7 +11,8 @@ romanization: "jōpāna"
 concept_tag: KA-LEAVE-SAFELY
 prerequisites: [KA-C88-welcome, KA-C89-takecare]
 sounds: []
-roots: []
+roots: [dravidian-joke-care]
+etymology_hook: "jōpāna: native Dravidian, one word with Telugu jōka (DEDR 2871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C89-takecare]
 
 **ಜೋಪಾನವಾಗಿ ಹೋಗಿ** (*jōpānavāgi hōgi*) — "go safely", with the same **‑ಆಗಿ**
 ending as **ನಿಧಾನವಾಗಿ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೋಪಾನ** (*jōpāna*) is native Dravidian, one word with Telugu *jōka* (DEDR 2871). DEDR lists *jōpāna* itself, "looking after", in a Kannada dialect, with *jōke*, "care, caution".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

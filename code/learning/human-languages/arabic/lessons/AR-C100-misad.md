@@ -14,7 +14,8 @@ romanization: "miṣʿad"
 concept_tag: AR-LOC100-MISAD
 prerequisites: [AR-C99-lugha, AR-C99-qissa, AR-C01-al, AR-C01-al]
 sounds: []
-roots: []
+roots: [ṣ-ʿ-d]
+etymology_hook: "miṣʿad: built on the root ṣ-ʿ-d, 'to go up, to ascend' (Lane); miṣʿad is an instrument noun, 'a thing for going up'"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [AR-C99-qissa]
 <!-- hl-knowledge: introduces=[AR-LEX-C100-LOC100-01]; assesses=[] -->
 
 **مصعد** — *miṣʿad* — "a lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مصعد** (*miṣʿad*) is built on the native Arabic root *ṣ-ʿ-d*, "to go up, to ascend" (Lane). *Miṣʿad* is an instrument noun, "a thing for going up"; the lift is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

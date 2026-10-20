@@ -13,7 +13,8 @@ gloss: "only (so far), not until"
 concept_tag: GE-TIME171-ERST
 prerequisites: [GE-C170-endlich, GE-C170-noch]
 sounds: []
-roots: []
+roots: [germanic-airistaz]
+etymology_hook: "erst ← Old High German ērist 'first' ← Proto-Germanic *airistaz — the same word as English erst"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C170-noch]
 <!-- hl-knowledge: introduces=[GE-LEX-C171-TIME171-01]; assesses=[] -->
 
 **erst** — "only (so far), not until".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erst** ← Old High German *ērist*, "first" ← Proto-Germanic *\*airistaz*, "earliest" — inherited, the same word as old English *erst*, "formerly". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

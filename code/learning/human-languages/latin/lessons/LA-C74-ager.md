@@ -13,7 +13,8 @@ gloss: "a field"
 concept_tag: LA-OPUS-AGER
 prerequisites: [LA-C74-mercator, LA-C74-agricola]
 sounds: []
-roots: []
+roots: [ager-latin]
+etymology_hook: "ager 'field' — inherited, usually traced to PIE *h2egros; Greek agros and English acre are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C74-agricola]
 <!-- hl-knowledge: introduces=[LA-LEX-C74-OPUS-05]; assesses=[] -->
 
 **ager, agrī** — "a field". Where the **agricola** works.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ager** is inherited, usually traced to Proto-Indo-European *\*h2egros*, "field" (EtymDB 2.1). Greek *agros*, "field", and English *acre* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

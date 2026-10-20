@@ -14,7 +14,8 @@ romanization: "dyshát"
 concept_tag: RU-VERB-DYSHAT
 prerequisites: [RU-C207-bolet, RU-C207-lechit]
 sounds: []
-roots: []
+roots: [slavic-dykh]
+etymology_hook: "дышать ← Proto-Slavic *dyšati, with дух 'breath'; Lithuanian dūsėti 'to pant' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C207-lechit]
 <!-- hl-knowledge: introduces=[RU-LEX-C207-ACT207-03]; assesses=[] -->
 
 **дышать** (*dyshát*) — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дышать** ← Proto-Slavic *\*dyšati*, with *дух*, "breath", and *душа*, "soul" — inherited. Vasmer relates it to Lithuanian *dūsėti*, "to pant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

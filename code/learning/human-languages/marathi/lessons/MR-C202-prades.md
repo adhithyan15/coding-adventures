@@ -14,7 +14,8 @@ romanization: "pradeś"
 concept_tag: MR-JAGA202-PRADES
 prerequisites: [MR-C201-sevat, MR-C202-sima]
 sounds: []
-roots: []
+roots: [sanskrit-pradesha]
+etymology_hook: "pradeś ← Sanskrit pradeśa 'region, country', a tatsama (CDIAL 8668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C202-sima]
 <!-- hl-knowledge: introduces=[MR-LEX-C202-JAGA202-02]; assesses=[] -->
 
 **प्रदेश** — *pradeś* — "a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रदेश** (*pradeś*) is Sanskrit *pradeśa*, "region, country", taken over whole as a learned loan, a tatsama (CDIAL 8668). CDIAL lists the inherited Marathi form as *pais*, "place, space".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "And, Or, But",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:28a54bdf11f3eca4",
+  "sourceHash": "fnv1a64:716ee5d01417ef13",
   "lessons": [
     {
       "id": "HI-C68-aur",
@@ -372,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ce447b62e0978c1",
+      "sourceHash": "fnv1a64:b73c6b33d92a5847",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +415,7 @@
             },
             {
               "kind": "speech",
-              "text": "लेकिन (lekin) is Arabic — لكن (lākin) — and it walked into Hindi through Persian, in the same company as शुक्रिया. Beside it Hindi keeps the inherited पर, from Sanskrit परम्, \"beyond.\" Two words for but, one Persianate and one Sanskritic, is exactly what this language looks like: it almost never replaced a word, it collected a second one."
+              "text": "लेकिन (lekin) is Arabic — لكن (lākin) — and it walked into Hindi through Persian, in the same company as शुक्रिया. Beside it Hindi keeps an inherited word for but, from Sanskrit परम्, \"beyond.\" Two words for but, one Persianate and one Sanskritic, is exactly what this language looks like: it almost never replaced a word, it collected a second one."
             }
           ]
         },
@@ -451,11 +451,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the other Hindi word for but, the inherited one — par",
+              "instruction": "the five pieces लेकिन (lekin) is written with, in the order you hear them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the other Hindi word for *but*, the inherited one — *par*]"
+              "source": "[YOU SAY: the five pieces **लेकिन** is written with, in the order you hear them]"
             },
             {
               "kind": "prompt",

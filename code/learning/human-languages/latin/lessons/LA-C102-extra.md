@@ -13,7 +13,8 @@ gloss: "outside, beyond"
 concept_tag: LA-LOCUS-EXTRA
 prerequisites: [LA-C102-infra, LA-C102-intra]
 sounds: []
-roots: []
+roots: [extra-latin, exter-latin]
+etymology_hook: "extrā 'outside' — contracted from exterā (parte) 'on the outer side'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C102-intra]
 <!-- hl-knowledge: introduces=[LA-LEX-C102-LOCUS-05]; assesses=[] -->
 
 **extrā** — "outside, beyond". English *extra*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**extrā** is contracted from *exterā*, "on the outer side" (Lewis & Short), from *exter*, "being on the outside" (EtymDB 2.1). Old Latin wrote *extrād* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

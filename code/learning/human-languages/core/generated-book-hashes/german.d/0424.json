@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:3e78ba16659cc824",
+  "lessonIds": [
+    "GE-C424-gasthof",
+    "GE-C424-ferienwohnung",
+    "GE-C424-uebernachten",
+    "GE-C424-uebernachtung",
+    "GE-C424-halbpension"
+  ],
+  "tex": "german/book/chapters/ch424-wo-schlafen-wir.tex"
+}

@@ -14,7 +14,8 @@ romanization: "yānapatram"
 concept_tag: SA-TRV172-YANAPATRAM
 prerequisites: [SA-C171-pratiyogita, SA-C172-yatri]
 sounds: []
-roots: []
+roots: [sanskrit-yana, sanskrit-patra]
+etymology_hook: "yānapatra ← yāna 'vehicle' + patra 'leaf, document'; a modern coinage, not MW's yānapātra 'ship'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C172-yatri]
 <!-- hl-knowledge: introduces=[SA-LEX-C172-TRV172-02]; assesses=[] -->
 
 **यानपत्रम्** — *yānapatram* — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yānapatra* is built from *yāna* "vehicle, journey", from √yā "go", and *patra* "a leaf, a document": "the travel paper". It is a modern coinage, not to be confused with MW's *yānapātra* "a ship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maṉam"
 concept_tag: TA-GUNAM210-MANAM
 prerequisites: [TA-C209-irukkamana, TA-C209-talarvana]
 sounds: []
-roots: []
+roots: [sanskrit-manas]
+etymology_hook: "மனம் ← Sanskrit manas 'mind' (CDIAL 9822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C209-talarvana]
 <!-- hl-knowledge: introduces=[TA-LEX-C210-GUNAM210-01]; assesses=[] -->
 
 **மனம்** — *maṉam* — "the mind, the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மனம்** (*maṉam*) is a loan from Sanskrit *manas*, "mind" (CDIAL 9822).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

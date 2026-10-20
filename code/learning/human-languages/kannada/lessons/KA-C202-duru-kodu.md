@@ -14,7 +14,8 @@ romanization: "dūru koḍu"
 concept_tag: KA-VERB-DURU-KODU
 prerequisites: [KA-C201-nenapidu, KA-C201-mudrisu]
 sounds: []
-roots: []
+roots: [dravidian-tuuru-blame, dravidian-kodu-give]
+etymology_hook: "dūru koḍu: native dūru 'blame, complaint' (DEDR 3397) + koḍu 'to give' (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C201-mudrisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C202-KRIYE202-01]; assesses=[] -->
 
 **ದೂರು ಕೊಡು** — *dūru koḍu* — "to complain, to lodge a complaint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೂರು ಕೊಡು** (*dūru koḍu*) is native Dravidian: *dūru*, "blame, complaint", which DEDR 3397 lists as *dūṟu*, and *koḍu*, "to give" (DEDR 2053): "to give a complaint".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cā̃dnī"
 concept_tag: GU-THINGS120-CADNI
 prerequisites: [GU-C120-tophan, GU-C120-dharti, GU-C36-je-te]
 sounds: []
-roots: []
+roots: [indo-aryan-candrana]
+etymology_hook: "cāṁdnī: matches cāṁdarṇī 'moonlight', listed under *cāndraṇa, from candra 'moon' (CDIAL 4745)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C120-dharti]
 <!-- hl-knowledge: introduces=[GU-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **ચાંદની** (*cā̃dnī*) — "moonlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચાંદની** (*cāṁdnī*) matches Gujarati *cāṁdarṇī*, "moonlight", which CDIAL lists under a reconstructed *\*cāndraṇa*, "moonlight", built on Sanskrit *candra*, "moon" (CDIAL 4745).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

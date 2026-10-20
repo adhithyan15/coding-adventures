@@ -13,7 +13,8 @@ gloss: "to interpret, to translate"
 concept_tag: LA-VERB-INTERPRETOR
 prerequisites: [LA-C197-invito, LA-C197-explico]
 sounds: []
-roots: []
+roots: [interpretari-latin, interpres-latin, inter-latin]
+etymology_hook: "interpretor 'to interpret' — built on interpres 'go-between'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C197-explico]
 <!-- hl-knowledge: introduces=[LA-LEX-C197-ACT197-05]; assesses=[] -->
 
 **interpretor, interpretārī** — "to interpret, to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interpretor** is built on *interpres*, "a go-between, an agent" (Lewis & Short), whose first part is *inter*, "between"; the second part is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

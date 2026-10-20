@@ -14,7 +14,8 @@ romanization: "pūchhṇo"
 concept_tag: MW-VERB-PUCHHNO
 prerequisites: [MW-C57-likhno, MW-C57-sochno]
 sounds: []
-roots: []
+roots: [sanskrit-prcchati]
+etymology_hook: "pūchhṇo ← Sanskrit pṛcchati 'asks', a tadbhava (CDIAL 8352, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C57-sochno]
 <!-- hl-knowledge: introduces=[MW-LEX-C58-VERBS58-01]; assesses=[] -->
 
 **पूछणो** — *pūchhṇo* — "to ask".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूछणो** (*pūchhṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pṛcchati*, "asks". CDIAL lists Old Marwari *pūchaï* under it (CDIAL 8352).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

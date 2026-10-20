@@ -14,7 +14,8 @@ romanization: "vyāyāmaḥ"
 concept_tag: SA-WEL211-VYAYAMAH
 prerequisites: [SA-C210-sahapathi, SA-C210-cikitsakah]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama]
+etymology_hook: "vyāyāma ← vi + ā + √yam 'stretch': 'pulling different ways', then 'exertion' (MW; CDIAL 12209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C210-cikitsakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C211-WEL211-01]; assesses=[] -->
 
 **व्यायामः** — *vyāyāmaḥ* — "exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyāyāma* is built on *vi-ā-* and the root √yam, "to hold, stretch" (MW). In the Atharvaveda it means "dragging different ways, a contest"; later "exertion" and "exercise" (CDIAL 12209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

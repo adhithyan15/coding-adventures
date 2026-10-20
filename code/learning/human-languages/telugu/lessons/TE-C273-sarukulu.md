@@ -14,7 +14,8 @@ romanization: "sarukulu"
 concept_tag: TE-PANI273-SARUKULU
 prerequisites: [TE-C273-billu, TE-C273-taggimpu]
 sounds: []
-roots: []
+roots: [dravidian-carakku-goods]
+etymology_hook: "sarukulu: native Dravidian; DEDR 2353 lists saraku 'commodity' with Tamil carakku 'goods'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C273-taggimpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C273-PANI273-04]; assesses=[] -->
 
 **సరుకులు** — *sarukulu* — "groceries, goods".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సరుకులు** (*sarukulu*) is native Dravidian. DEDR 2353 lists *saraku*, "article, commodity", with Tamil *carakku* and Kannada *saraku*, "goods"; **సరుకులు** (*sarukulu*) is its plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "darvī"
 concept_tag: SA-THINGS119-DARVI
 prerequisites: [SA-C118-asandi, SA-C118-phalakam]
 sounds: []
-roots: []
+roots: [sanskrit-darvi]
+etymology_hook: "darvī 'ladle' (RV): 'the wooden one', from dru 'wood' (MW; CDIAL 6206), kin to English tree"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C118-phalakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **दर्वी** — *darvī* — "a ladle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*darvī* "a ladle" is old, in the Rigveda: MW explains it as "the wooden one", and CDIAL 6206 refers it to *dru* "tree, wood". MW sets that word beside Greek *drys* "oak" and English *tree*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

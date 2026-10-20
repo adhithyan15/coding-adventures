@@ -14,7 +14,8 @@ romanization: "farz"
 concept_tag: UR-CHIZ205-FARZ
 prerequisites: [UR-C205-qanun, UR-C205-haq]
 sounds: []
-roots: []
+roots: [arabic-fard]
+etymology_hook: "farz ← Arabic farḍ 'an ordinance, a duty', through Persian (Lane, root f-r-ḍ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C205-haq]
 <!-- hl-knowledge: introduces=[UR-LEX-C205-CHIZ205-03]; assesses=[] -->
 
 **فرض** — *farz* — "a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرض** (*farz*) is a loan from Arabic *farḍ*, "an ordinance, a duty", which reached Urdu through Persian. Its Arabic root is *f-r-ḍ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "juttī"
 concept_tag: PA-CLOTHES94-JUTTI
 prerequisites: [PA-C93-ghari, PA-C94-pagg]
 sounds: []
-roots: []
+roots: [sanskrit-yukta]
+etymology_hook: "juttī ← Sanskrit yukta 'joined, yoked', a tadbhava (CDIAL 10479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C94-pagg]
 <!-- hl-knowledge: introduces=[PA-LEX-C94-CLOTHES94-02]; assesses=[] -->
 
 **ਜੁੱਤੀ** — *juttī* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੁੱਤੀ** (*juttī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yukta*, "joined, yoked" (CDIAL 10479). CDIAL lists Punjabi *juttī*, "shoe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

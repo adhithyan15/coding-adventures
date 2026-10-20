@@ -13,7 +13,8 @@ gloss: "to show"
 concept_tag: LA-VERB-OSTENDO
 prerequisites: [LA-C156-solvo, LA-C157-reddo]
 sounds: []
-roots: []
+roots: [ostendere-latin, tendere-latin]
+etymology_hook: "ostendō 'to show' — obs- 'in front of' + tendō 'to stretch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C157-reddo]
 <!-- hl-knowledge: introduces=[LA-LEX-C157-ACT157-02]; assesses=[] -->
 
 **ostendō, ostendere** — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ostendō** is *obs-*, "in front of", an old form of ob, with *tendō*, "to stretch" (Lewis & Short): to stretch out before someone, to show.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

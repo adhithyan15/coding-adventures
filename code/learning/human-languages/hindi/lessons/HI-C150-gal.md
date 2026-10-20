@@ -14,7 +14,8 @@ romanization: "gāl"
 concept_tag: HI-THINGS150-GAL
 prerequisites: [HI-C150-angutha, HI-C150-nakhun]
 sounds: []
-roots: []
+roots: [sanskrit-galla]
+etymology_hook: "gāl ← Sanskrit galla 'cheek', perhaps from Dravidian; a tadbhava (CDIAL 4089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C150-nakhun]
 <!-- hl-knowledge: introduces=[HI-LEX-C150-THINGS150-05]; assesses=[] -->
 
 **गाल** — *gāl* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाल** (*gāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *galla*, "cheek" (CDIAL 4089). CDIAL notes the view that it comes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

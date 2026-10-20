@@ -13,7 +13,8 @@ gloss: "around"
 concept_tag: LA-LOC119-CIRCA
 prerequisites: [LA-C119-area, LA-C119-miliarium]
 sounds: []
-roots: []
+roots: [circa-latin, circum-latin, circus-latin]
+etymology_hook: "circā 'around' — a later form beside circum 'around', from circus 'a ring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C119-miliarium]
 <!-- hl-knowledge: introduces=[LA-LEX-C119-LOC119-03]; assesses=[] -->
 
 **circā** — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**circā** is a later form beside *circum*, "around" (Lewis & Short), which is the accusative of *circus*, "a ring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

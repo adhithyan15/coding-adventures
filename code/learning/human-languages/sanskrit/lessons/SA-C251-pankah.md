@@ -14,7 +14,8 @@ romanization: "paṅkaḥ"
 concept_tag: SA-THG251-PANKAH
 prerequisites: [SA-C251-lokah, SA-C251-prakrtih]
 sounds: []
-roots: []
+roots: [sanskrit-panka]
+etymology_hook: "paṅka 'mud', said to come from √pac 'spread' (MW); Hindi paṅkā (CDIAL 7645)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C251-prakrtih]
 <!-- hl-knowledge: introduces=[SA-LEX-C251-THG251-05]; assesses=[] -->
 
 **पंकः** — *paṅkaḥ* — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṅka* is mud or mire (MW), and MW reports that it is said to come from a root √pac, "to spread", so its origin is uncertain. It lives on as Hindi *paṅkā*, "mud", and the lotus is *paṅkaja*, "mud-born" (CDIAL 7645).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

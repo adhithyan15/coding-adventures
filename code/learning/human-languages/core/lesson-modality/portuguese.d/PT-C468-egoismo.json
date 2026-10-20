@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C468-egoismo",
+    "language": "portuguese",
+    "chapter": 468,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2aabf9c279a9408"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "nâzok"
 concept_tag: FA-SEFAT163-NAZOK
 prerequisites: [FA-C162-porharf, FA-C163-rangarang]
 sounds: []
-roots: []
+roots: [persian-nazok]
+etymology_hook: "nâzok: inherited, usually traced to Middle Persian nāzuk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C163-rangarang]
 <!-- hl-knowledge: introduces=[FA-LEX-C163-SEFAT163-02]; assesses=[] -->
 
 **نازک** — *nâzok* — "thin (of things)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâzok* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *nāzuk*, "delicate, thin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for fifty, then the Bengali for a hundred.
 You'll want to know: হাজার.
 হাজার — hājār — "a thousand".
 
+The word, taken apart.
+হাজার (hājār) is a loan, usually traced to Persian hazār, "thousand".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a hundred, then the Bengali for a thousa
 
 You'll want to know: পৃথিবী.
 পৃথিবী — prithibi — "the world".
+
+The word, taken apart.
+পৃথিবী (prithibi) is Sanskrit pṛthivī, "the earth, the broad one", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a thousand, then the Bengali for the wor
 You'll want to know: রং.
 রং — rông — "a colour".
 
+The word, taken apart.
+রং (rông) matches both Sanskrit raṅga, "dye, colour", under which CDIAL lists Bengali rāṅā, "red" (CDIAL 10560), and Persian rang, "colour"; the two may have run together.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for the world, then the Bengali for a colour
 You'll want to know: গান.
 গান — gān — "a song".
 
+The word, taken apart.
+গান (gān) is inherited from Sanskrit gāna, "singing", and has come down with almost no change (CDIAL 4130).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a colour, then the Bengali for a song.
 
 You'll want to know: ছুটি.
 ছুটি — chhuṭi — "a holiday".
+
+The word, taken apart.
+ছুটি (chhuṭi) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣuṭyate, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707).
 
 What you've built.
 One more word for this chapter.

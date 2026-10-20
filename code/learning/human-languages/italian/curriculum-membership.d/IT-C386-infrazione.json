@@ -1,0 +1,11 @@
+{
+  "id": "IT-C386-infrazione",
+  "pathSegment": "IT-PATH-386-VIOLAZIONE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-386-VIOLAZIONE",
+      "order": 2
+    }
+  ]
+}

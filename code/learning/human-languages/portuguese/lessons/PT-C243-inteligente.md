@@ -13,7 +13,8 @@ gloss: "intelligent"
 concept_tag: PT-QUAL243-INTELIGENTE
 prerequisites: [PT-C242-distante, PT-C243-jovem]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "inteligente ← Latin intellegens 'understanding' — English intelligent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C243-jovem]
 <!-- hl-knowledge: introduces=[PT-LEX-C243-QUAL243-02]; assesses=[] -->
 
 **inteligente** — "intelligent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inteligente** ← Latin *intellegens*, "understanding" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "mā"
 concept_tag: TE-PRONOUN-OUR
 prerequisites: [TE-C79-friends, TE-C32-raa]
 sounds: []
-roots: []
+roots: [dravidian-naam-we]
+etymology_hook: "mā, mana: native Dravidian, the oblique stems of mēmu (DEDR 5154) and manamu (DEDR 3647), 'we'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C79-friends]
 Telugu splits a word English does not. **మా** leaves the listener out: my family, not yours. **మన** takes the listener in: our country, yours and mine.
 
 **మా ఇల్లు** is my household. **మన దేశం** is the country we share. Choosing wrong is the mistake an examiner hears first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మా** (*mā*) is native Dravidian: the oblique stem of *mēmu*, "we", which DEDR 5154 lists with *mā-*, and its inclusive partner *mana*, the stem of *manamu* (DEDR 3647).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "always"
 concept_tag: IT-QUANDO-SEMPRE
 prerequisites: [IT-C78-mattina, IT-C78-minuto]
 sounds: []
-roots: []
+roots: [semper-latin]
+etymology_hook: "sempre ← Latin semper 'always' — Spanish siempre is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C78-minuto]
 <!-- hl-knowledge: introduces=[IT-LEX-C79-QUANDO-01]; assesses=[] -->
 
 **sempre** — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sempre** ← Latin *semper*, "always" — inherited. EtymDB 2.1 has no row for *sempre*; it derives Catalan and Galician *sempre* from *semper*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cakkaram"
 concept_tag: TA-PORUL221-CAKKARAM
 prerequisites: [TA-C220-tiraippatam, TA-C221-talaikkavacam]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "சக்கரம் ← Sanskrit cakra 'wheel' (CDIAL 4538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C221-talaikkavacam]
 <!-- hl-knowledge: introduces=[TA-LEX-C221-PORUL221-02]; assesses=[] -->
 
 **சக்கரம்** — *cakkaram* — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சக்கரம்** (*cakkaram*) is a loan from Sanskrit *cakra*, "wheel" (CDIAL 4538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C433-federa",
+    "language": "italian",
+    "chapter": 433,
+    "sequence": 24550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7c335e42195fedf"
+  },
+  "findings": []
+}

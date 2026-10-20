@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:03e0a3298595cc8d",
+  "sourceHash": "fnv1a64:303db9495fee8c2b",
   "lessons": [
     {
       "id": "IT-C04-arrivederci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:181b40deadafa10e",
+      "sourceHash": "fnv1a64:e1d75e994689e780",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does arrivederci literally promise? (\"Until we see each other again.\") What French and German goodbyes share that exact idea? (au revoir, auf Wiedersehen.) Which heavier Italian goodbye means \"to God,\" like Spanish adiós? (addio.) Next: \"see you tomorrow\" — a domani."
+              "text": "What does arrivederci literally promise? (\"Until we see each other again.\") What French and German goodbyes share that exact idea? (au revoir, auf Wiedersehen.) Which heavier Italian goodbye means \"to God,\" like Spanish adiós? (addio.) Next: \"see you tomorrow.\""
             }
           ]
         }
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f3ac78bbeddf185",
+      "sourceHash": "fnv1a64:41034ac14083c133",
       "notice": null,
       "blocks": [
         {
@@ -286,7 +286,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does domani come from, and what does it literally mean? (Dē māne — \"from the morning.\") Which Spanish word shares that māne root? (Mañana — morning and tomorrow.) Next: \"see you soon\" — a presto."
+              "text": "What does domani come from, and what does it literally mean? (Dē māne — \"from the morning.\") Which Spanish word shares that māne root? (Mañana — morning and tomorrow.) Next: \"see you soon.\""
             }
           ]
         }
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cf771c00652fa71",
+      "sourceHash": "fnv1a64:5fedde3233a252a3",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +415,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does presto mean, and where has English borrowed it? (\"Soon / quickly\" — in music and magic.) What \"stand\" root does it share with stare? (Latin stō/stāre.) Next: \"see you later\" — a più tardi."
+              "text": "What does presto mean, and where has English borrowed it? (\"Soon / quickly\" — in music and magic.) What \"stand\" root does it share with stare? (Latin stō/stāre.) Next: \"see you later.\""
             }
           ]
         }
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b60e63bf699d1e6",
+      "sourceHash": "fnv1a64:f45e0835db5c3a3a",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:dde4e020c13cb953",
+  "lessonIds": [
+    "LA-C338-legio",
+    "LA-C338-cohors",
+    "LA-C338-centurio",
+    "LA-C338-signifer",
+    "LA-C338-tribunus",
+    "LA-R338-review-331-338"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch338.txt",
+  "json": "latin/narration/ch338.json",
+  "textHash": "fnv1a64:db2416d13125a6d0",
+  "jsonHash": "fnv1a64:5e07bae00aed6cd6",
+  "findings": []
+}

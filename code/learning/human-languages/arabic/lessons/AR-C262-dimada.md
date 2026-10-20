@@ -14,7 +14,8 @@ romanization: "ḍimāda"
 concept_tag: AR-SIHHA262-DIMADA
 prerequisites: [AR-C262-isaf, AR-C262-harara]
 sounds: []
-roots: []
+roots: [ḍ-m-d]
+etymology_hook: "ḍimāda: built on the root ḍ-m-d, 'to bind (a wound)' (Lane); the word ḍimāda is a bandage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C262-harara]
 <!-- hl-knowledge: introduces=[AR-LEX-C262-SIHHA262-03]; assesses=[] -->
 
 **ضمادة** — *ḍimāda* — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضمادة** (*ḍimāda*) is built on the native Arabic root *ḍ-m-d*, "to bind (a wound)" (Lane). The word *ḍimāda* is a bandage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

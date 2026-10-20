@@ -14,7 +14,8 @@ romanization: "narsu"
 concept_tag: TE-AROGYAM209-NARSU
 prerequisites: [TE-C208-edurkonu, TE-C209-durada]
 sounds: []
-roots: []
+roots: [english-nurse]
+etymology_hook: "narsu ← English nurse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C209-durada]
 <!-- hl-knowledge: introduces=[TE-LEX-C209-AROGYAM209-02]; assesses=[] -->
 
 **నర్సు** — *narsu* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నర్సు** (*narsu*) is a loan from English *nurse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

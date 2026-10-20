@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 130,
-  "sourceHash": "fnv1a64:1d416e935b4232bd",
+  "sourceHash": "fnv1a64:754e146841369dde",
   "lessonIds": [
     "TA-C130-nari",
     "TA-C130-pampu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch130.txt",
   "json": "tamil/narration/ch130.json",
-  "textHash": "fnv1a64:37eadabce9495881",
-  "jsonHash": "fnv1a64:7182000fac2f3f91",
+  "textHash": "fnv1a64:2f96e589b46b4ca5",
+  "jsonHash": "fnv1a64:08e349ab57b84c20",
   "findings": []
 }

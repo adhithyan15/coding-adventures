@@ -6,13 +6,13 @@ sequence: 990
 chapter: 36
 type: word
 headword: طبق
-gloss: "a plate" — a second broken plural in the very same shape as akwāb, which turns a surprise into a pattern, and a root whose other child is a storey of a building
+gloss: '"a plate" — a second broken plural in the very same shape as akwāb, which turns a surprise into a pattern, and a root whose other child is a storey of a building'
 concept_tag: AR-OBJECT-PLATE
 romanization: ṭabaq
 prerequisites: [AR-C36-kub]
 sounds: [taa-emphatic, qaf, rtl-known-letters]
 roots: [t-b-q]
-etymology_hook: "طَبَق (ṭabaq, 'a plate, a dish') pluralises to أَطْباق (aṭbāq) in exactly the shape أَفْعال that gave أكواب (akwāb), so the broken plural stops being a surprise and becomes a pattern; the root ط-ب-ق means to cover or to lie in layers, which is why it also gives طابِق (ṭābiq, 'a storey of a building') and طَبَقة (ṭabaqa, 'a layer, a social class'), and its ط is the same emphatic tāʾ first named in طعام"
+etymology_hook: "ṭabaq: root ṭ-b-q 'to cover, to lie in layers' (Lane), giving ṭābiq 'storey' and ṭabaqa 'layer'"
 duration:
   max_seconds: 240
 requires:
@@ -73,6 +73,8 @@ thing that covers. Which is why the same root gives:
 A plate, a floor and a social class, off one idea about layers. And the plates
 themselves belong somewhere you already built: **مَطْعَم** (*maṭʿam*), the
 place of eating.
+
+*Ṭabaq* is built on this native root (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C36-TABAQ-01, AR-CONCEPT-C36-TABAQ-02, AR-CONCEPT-C36-KUB-01, AR-CONCEPT-C36-KUB-02, AR-CONCEPT-C36-ZAYT-02, AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C36-ZAYT-01] -->

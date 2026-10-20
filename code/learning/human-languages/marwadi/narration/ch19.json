@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Cheap and Goods: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8407a92f6a862995",
+  "sourceHash": "fnv1a64:0640eac660a8dc12",
   "lessons": [
     {
       "id": "MW-C14-hear-sasta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f489562be9b1a7c",
+      "sourceHash": "fnv1a64:22b5c778e4e52abe",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of sastā is not settled. CDIAL, searched by form and by meaning, has no entry for it; its words for \"cheap\", such as Sanskrit samargha (CDIAL 13187), do not match."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -114,7 +125,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ec58f8f4d17eb75",
+      "sourceHash": "fnv1a64:8a8af2ab663a928a",
       "notice": null,
       "blocks": [
         {
@@ -160,6 +171,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of सस्ता (sastā) is not settled. CDIAL, searched by form and by meaning, has no entry for it; its words for \"cheap\", such as Sanskrit samargha (CDIAL 13187), do not match."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -230,7 +252,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:712614439eb8026a",
+      "sourceHash": "fnv1a64:1c2d5a320d6284dc",
       "notice": null,
       "blocks": [
         {
@@ -289,6 +311,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sāmān is a loan, usually traced to Persian sāmān, \"goods, equipment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -334,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d99362c8d34fcc6",
+      "sourceHash": "fnv1a64:cfefc2dd0e339b75",
       "notice": null,
       "blocks": [
         {
@@ -389,6 +422,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सामान (sāmān) is a loan, usually traced to Persian sāmān, \"goods, equipment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -413,7 +457,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "ṭīkā"
 concept_tag: UR-SEHAT154-TIKA
 prerequisites: [UR-C153-palak, UR-C153-bhau]
 sounds: []
-roots: []
+roots: [indo-aryan-tikka]
+etymology_hook: "ṭīkā ← *ṭikka 'mark, spot', a reconstructed form; a tadbhava (CDIAL 5458)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C153-bhau]
 <!-- hl-knowledge: introduces=[UR-LEX-C154-SEHAT154-01]; assesses=[] -->
 
 **ٹیکا** — *ṭīkā* — "a vaccination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹیکا** (*ṭīkā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭikka*, "mark, spot", a form CDIAL reconstructs from its descendants (CDIAL 5458). CDIAL glosses the Hindi word "caste-mark"; Urdu also uses it for a vaccination.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

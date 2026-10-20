@@ -1,0 +1,11 @@
+{
+  "id": "FR-C381-exiger",
+  "pathSegment": "FR-PATH-381-AUTORISER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-381-AUTORISER",
+      "order": 4
+    }
+  ]
+}

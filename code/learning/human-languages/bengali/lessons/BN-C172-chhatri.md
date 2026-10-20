@@ -14,7 +14,8 @@ romanization: "chhātrī"
 concept_tag: BN-JINIS172-CHHATRI
 prerequisites: [BN-C171-joyar, BN-C172-kheladhula]
 sounds: []
-roots: []
+roots: [sanskrit-chatra-pupil]
+etymology_hook: "chhātrī ← Sanskrit chātrī 'female pupil', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C172-kheladhula]
 <!-- hl-knowledge: introduces=[BN-LEX-C172-JINIS172-02]; assesses=[] -->
 
 **ছাত্রী** — *chhātrī* — "a female student".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাত্রী** (*chhātrī*) is Sanskrit *chātrī*, "female pupil", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

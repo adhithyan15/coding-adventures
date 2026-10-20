@@ -14,6 +14,7 @@ concept_tag: FR-LIEU61-OUEST
 prerequisites: [FR-C109-nord, FR-C109-sud]
 sounds: []
 roots: []
+etymology_hook: "ouest ← Old English west — borrowed with nord and sud"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C109-sud]
 <!-- hl-knowledge: introduces=[FR-LEX-C109-LIEU61-04]; assesses=[] -->
 
 **l'ouest** — "the west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ouest** ← Old French *west* ← Old English *west* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a shopkeeper, then the Marathi for a cus
 You'll want to know: टाच.
 टाच — ṭāc — "a heel".
 
+The word, taken apart.
+The origin of टाच (ṭāc) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a customer, then the Marathi for a heel.
 
 You'll want to know: पापणी.
 पापणी — pāpṇī — "an eyelid; eyelashes".
+
+The word, taken apart.
+पापणी (pāpṇī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakṣman, "eyelashes" (CDIAL 7638). CDIAL glosses the Marathi word "eyelid".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a heel, then the Marathi for an eyelid; 
 You'll want to know: भुवई.
 भुवई — bhuvaī — "an eyebrow".
 
+The word, taken apart.
+भुवई (bhuvaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhrū, "eyebrow" (CDIAL 9688). CDIAL lists the Marathi forms as bhãvaī and bhõvaī.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an eyelid; eyelashes, then the Marathi f
 You'll want to know: घाम.
 घाम — ghām — "sweat".
 
+The word, taken apart.
+घाम (ghām) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gharma, "heat; sweat" (CDIAL 4445). CDIAL glosses the Marathi word "sweat".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an eyebrow, then the Marathi for sweat.
 
 You'll want to know: अश्रू.
 अश्रू — aśrū — "a tear".
+
+The word, taken apart.
+अश्रू (aśrū) is Sanskrit aśru, "tear", taken over whole as a learned loan, a tatsama (CDIAL 919). CDIAL lists the inherited Marathi form as āsū.
 
 What you've built.
 One more word for this chapter.

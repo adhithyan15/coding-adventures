@@ -14,7 +14,8 @@ romanization: "ammāyiyamma"
 concept_tag: ML-VASTU289-AMMAYIYAMMA
 prerequisites: [ML-C289-ammayi, ML-C289-marumakal]
 sounds: []
-roots: []
+roots: [dravidian-appa-amma]
+etymology_hook: "ammāyiyamma: native Dravidian, ammāyi (DEDR 183) + amma 'mother'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C289-marumakal]
 <!-- hl-knowledge: introduces=[ML-LEX-C289-VASTU289-04]; assesses=[] -->
 
 **അമ്മായിയമ്മ** — *ammāyiyamma* — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അമ്മായിയമ്മ** (*ammāyiyamma*) is native Dravidian: *ammāyi*, "aunt; mother-in-law" (DEDR 183), and *amma*, "mother". DEDR 183 compares Sanskrit *ambā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

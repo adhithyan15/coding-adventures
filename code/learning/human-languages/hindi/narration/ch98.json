@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "A Day, In The Order It Happens",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:00a9a30a3d52160a",
+  "sourceHash": "fnv1a64:3f46e381f53c430b",
   "lessons": [
     {
       "id": "HI-C90-se",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:246d47a6fa6c17bc",
+      "sourceHash": "fnv1a64:4c5117976f92f862",
       "notice": null,
       "blocks": [
         {
@@ -87,6 +87,10 @@
             {
               "kind": "speech",
               "text": "Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से (se) for exactly the same reason your hand does."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL traces से (se) to Sanskrit sahita, \"together with\" (CDIAL 13310), and lists it under sama, \"equal\", too (CDIAL 13173)."
             }
           ]
         },
@@ -199,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95268422ce321f28",
+      "sourceHash": "fnv1a64:77f7db9223ae128b",
       "notice": null,
       "blocks": [
         {
@@ -372,7 +376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a7c0b000b69de8f",
+      "sourceHash": "fnv1a64:a8130c8bc412dcf6",
       "notice": null,
       "blocks": [
         {
@@ -423,6 +427,10 @@
             {
               "kind": "speech",
               "text": "Its opposite, बैठना, is to sit — the same idea in the other direction."
+            },
+            {
+              "kind": "speech",
+              "text": "उठना (uṭhnā) comes from a reconstructed ut-sthāti, \"stands up\" (CDIAL 1900)."
             }
           ]
         },
@@ -533,7 +541,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f735df2818ea345f",
+      "sourceHash": "fnv1a64:432d5b1ca3b84bca",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eed5e81f5575d63",
+      "sourceHash": "fnv1a64:1788e4173e7c589f",
       "notice": null,
       "blocks": [
         {
@@ -769,6 +777,10 @@
             {
               "kind": "speech",
               "text": "सुबह से (se) पहले (pahle) is before morning — the time word, से (se), then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से (se)."
+            },
+            {
+              "kind": "speech",
+              "text": "पहला comes from a reconstructed prathila, \"first\" (CDIAL 8652)."
             }
           ]
         },
@@ -877,7 +889,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d35bca18ff1b9a1",
+      "sourceHash": "fnv1a64:4dd95cef97475152",
       "notice": null,
       "blocks": [
         {

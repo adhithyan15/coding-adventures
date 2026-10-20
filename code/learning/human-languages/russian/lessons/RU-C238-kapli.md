@@ -14,7 +14,8 @@ romanization: "kápli"
 concept_tag: RU-ZDOROV238-KAPLI
 prerequisites: [RU-C237-zarabatyvat, RU-C238-maz]
 sounds: []
-roots: []
+roots: [slavic-kapati]
+etymology_hook: "капли is the plural of капля 'a drop', from капать 'to drip'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C238-maz]
 <!-- hl-knowledge: introduces=[RU-LEX-C238-ZDOROV238-02]; assesses=[] -->
 
 **капли** (*kápli*) — "drops (medicine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**капли** is the plural of *капля*, "a drop", from *капать*, "to drip" (Vasmer); Berneker took the word as sound-imitation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

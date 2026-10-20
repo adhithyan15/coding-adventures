@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 80,
-  "sourceHash": "fnv1a64:1a0badd30a005652",
+  "sourceHash": "fnv1a64:0fc5f82b54406f50",
   "lessonIds": [
     "MR-C80-visarne",
     "MR-C80-pathavne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch80.txt",
   "json": "marathi/narration/ch80.json",
-  "textHash": "fnv1a64:58d9a1df36ff17e2",
-  "jsonHash": "fnv1a64:a8f188954e38aa51",
+  "textHash": "fnv1a64:2eec00d74002f479",
+  "jsonHash": "fnv1a64:d433298ef422a0b4",
   "findings": []
 }

@@ -12,6 +12,7 @@ concept_tag: TE-VERB-CEYU
 prerequisites: [TE-C05-maatlaadu, TE-C05-hamsa]
 sounds: [long-e]
 roots: [ceyu-do-dravidian, pani-work-dravidian]
+etymology_hook: "pani 'work' (DEDR 3884) and cēyu 'to do' (DEDR 1957) are both native Dravidian"
 duration:
   max_seconds: 180
 requires:
@@ -45,11 +46,11 @@ reviews_of: [TE-C05-maatlaadu, TE-C05-undu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C05-PANI-CEYU-02]; assesses=[] -->
 
-**చేయు** (*cēyu*, "to do, to make") is a core native Dravidian verb, and Telugu
+**చేయు** (*cēyu*, "to do, to make") is a core native Dravidian verb (DEDR 1957), and Telugu
 — like Hindi with *karnā* and Tamil with *sey* — builds compound verbs by putting
 a noun in front of it:
 
-- **పని చేయు** (*pani cēyu*) = "work-do" = "**to work**" (*pani*, "work")
+- **పని చేయు** (*pani cēyu*) = "work-do" = "**to work**" (*pani*, "work", DEDR 3884)
 - **వంట చేయు** (*vaṇṭa cēyu*) = "to cook"
 - **సహాయం చేయు** (*sahāyaṁ cēyu*) = "to help" (*sahāyaṁ* ← Sanskrit)
 

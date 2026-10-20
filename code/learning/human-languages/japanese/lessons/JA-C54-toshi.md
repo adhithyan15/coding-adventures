@@ -14,7 +14,8 @@ romanization: "toshi"
 concept_tag: JA-TIME54-TOSHI
 prerequisites: [JA-C54-ima, JA-C54-mainichi]
 sounds: []
-roots: []
+roots: [japanese-toshi-year]
+etymology_hook: "toshi: native Japanese, inherited, not borrowed; kanji 年 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C54-mainichi]
 <!-- hl-knowledge: introduces=[JA-LEX-C54-TIME54-05]; assesses=[] -->
 
 **とし** — *toshi* — "a year; age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とし** (*toshi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

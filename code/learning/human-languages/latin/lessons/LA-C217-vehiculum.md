@@ -13,7 +13,8 @@ gloss: "a vehicle"
 concept_tag: LA-RES217-VEHICULUM
 prerequisites: [LA-C217-fornax, LA-C217-lectica]
 sounds: []
-roots: []
+roots: [vehiculum-latin, vehere-latin]
+etymology_hook: "vehiculum 'vehicle' — built on vehō 'to carry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C217-lectica]
 <!-- hl-knowledge: introduces=[LA-LEX-C217-RES217-04]; assesses=[] -->
 
 **vehiculum, vehiculī** — "a vehicle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vehiculum** is built on *vehō*, "to carry" (Lewis & Short), with *-culum*, an ending for a means: a means of carrying.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

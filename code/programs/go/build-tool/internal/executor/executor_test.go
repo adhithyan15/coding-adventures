@@ -1338,3 +1338,228 @@ func TestOverlappingKeySetsDoNotDeadlock(t *testing.T) {
 		t.Fatal("overlapping key sets deadlocked")
 	}
 }
+
+// X-7: a leaf's own Cargo target/ goes after its build; anything a dependent
+// might read, or that is not a package-local Cargo target, stays.
+func TestPruneLeafCargoTarget(t *testing.T) {
+	makePkg := func(name string, cargo bool, target string) discovery.Package {
+		dir := t.TempDir()
+		if cargo {
+			if err := os.WriteFile(filepath.Join(dir, "Cargo.toml"), []byte("[package]\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		switch target {
+		case "dir":
+			if err := os.MkdirAll(filepath.Join(dir, "target", "debug"), 0o755); err != nil {
+				t.Fatal(err)
+			}
+		case "symlink":
+			outside := t.TempDir()
+			if err := os.Symlink(outside, filepath.Join(dir, "target")); err != nil {
+				t.Skip("symlinks unavailable:", err)
+			}
+		}
+		return discovery.Package{Name: name, Path: dir}
+	}
+	graph := directedgraph.New()
+	leaf := makePkg("rust/leaf", true, "dir")
+	lib := makePkg("rust/lib", true, "dir")
+	notCargo := makePkg("go/leaf", false, "dir")
+	linked := makePkg("rust/linked", true, "symlink")
+	for _, p := range []discovery.Package{leaf, lib, notCargo, linked} {
+		graph.AddNode(p.Name)
+	}
+	graph.AddEdge("rust/lib", "rust/leaf") // leaf depends on lib
+
+	for _, p := range []discovery.Package{leaf, lib, notCargo, linked} {
+		pruneLeafCargoTarget(p, graph)
+	}
+
+	exists := func(p discovery.Package) bool {
+		_, err := os.Lstat(filepath.Join(p.Path, "target"))
+		return err == nil
+	}
+	if exists(leaf) {
+		t.Error("a leaf Cargo package's target/ should be pruned")
+	}
+	if !exists(lib) {
+		t.Error("a package with dependents must keep its target/")
+	}
+	if !exists(notCargo) {
+		t.Error("a target/ with no Cargo.toml beside it is not Cargo's and must stay")
+	}
+	if !exists(linked) {
+		t.Error("a symlinked target/ must not be followed or removed")
+	}
+}
+
+func TestPruneLeafNodeModules(t *testing.T) {
+	makePkg := func(name string, manifest bool, modules string) discovery.Package {
+		dir := t.TempDir()
+		if manifest {
+			if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte("{}\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		switch modules {
+		case "dir":
+			dep := t.TempDir()
+			if err := os.MkdirAll(filepath.Join(dir, "node_modules", "left-pad"), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			// A file: dependency is installed as a symlink into the
+			// dependency's own directory, which must survive the prune.
+			if err := os.WriteFile(filepath.Join(dep, "index.js"), []byte("1\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Symlink(dep, filepath.Join(dir, "node_modules", "local-dep")); err != nil {
+				t.Skip("symlinks unavailable:", err)
+			}
+			t.Cleanup(func() {
+				if _, err := os.Stat(filepath.Join(dep, "index.js")); err != nil {
+					t.Error("pruning followed a file: dependency symlink into its target")
+				}
+			})
+		case "symlink":
+			if err := os.Symlink(t.TempDir(), filepath.Join(dir, "node_modules")); err != nil {
+				t.Skip("symlinks unavailable:", err)
+			}
+		}
+		return discovery.Package{Name: name, Path: dir}
+	}
+	graph := directedgraph.New()
+	leaf := makePkg("typescript/leaf", true, "dir")
+	lib := makePkg("typescript/lib", true, "dir")
+	noManifest := makePkg("python/leaf", false, "dir")
+	linked := makePkg("typescript/linked", true, "symlink")
+	for _, p := range []discovery.Package{leaf, lib, noManifest, linked} {
+		graph.AddNode(p.Name)
+	}
+	graph.AddEdge("typescript/lib", "typescript/leaf")
+
+	for _, p := range []discovery.Package{leaf, lib, noManifest, linked} {
+		pruneLeafCargoTarget(p, graph)
+	}
+
+	exists := func(p discovery.Package) bool {
+		_, err := os.Lstat(filepath.Join(p.Path, "node_modules"))
+		return err == nil
+	}
+	if exists(leaf) {
+		t.Error("a leaf npm package's node_modules/ should be pruned")
+	}
+	if !exists(lib) {
+		t.Error("a package with dependents must keep node_modules/: dependents resolve through it")
+	}
+	if !exists(noManifest) {
+		t.Error("a node_modules/ with no package.json beside it must stay")
+	}
+	if !exists(linked) {
+		t.Error("a symlinked node_modules/ must not be followed or removed")
+	}
+}
+
+func TestBuildResourceKeysSerializeEveryOpamSwitchUser(t *testing.T) {
+	root := makeFixture(t, map[string]string{"pkg/BUILD": "true"})
+	paths := map[string]string{filepath.Join(root, "pkg"): "pkg"}
+
+	for _, tc := range []struct {
+		name     string
+		language string
+		command  string
+		want     bool
+	}{
+		// Any OCaml package, even one whose first command is plain dune: it
+		// still compiles against the shared switch.
+		{"ocaml dune", "ocaml", "dune build", true},
+		{"ocaml opam install", "ocaml", "opam install . --deps-only --with-test -y", true},
+		{"opam exec after cd", "python", "cd fixture && opam exec -- dune runtest", true},
+		{"opam in a subshell", "go", "(opam pin add --no-action -y x ../x)", true},
+		{"word containing opam", "python", "python check_opamfile.py", false},
+		{"path containing opam", "rust", "cargo test -p opam-lockfile-parser", false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			pkg := discovery.Package{
+				Name:          "pkg",
+				Path:          filepath.Join(root, "pkg"),
+				BuildCommands: []string{tc.command},
+				Language:      tc.language,
+			}
+			got := false
+			for _, key := range buildResourceKeys(pkg, paths) {
+				got = got || key == OpamSwitchLockKey
+			}
+			if got != tc.want {
+				t.Fatalf("opam-switch lock for %q (%s) = %v, want %v", tc.command, tc.language, got, tc.want)
+			}
+		})
+	}
+}
+
+// TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside pins the
+// opam-switch lock where it matters -- in ExecuteBuilds -- rather than only in
+// the key helper. Each OCaml package claims a mkdir mutex that fails if the
+// other already holds it, so concurrent OCaml builds fail. The Python
+// package succeeds only if it sees the marker an OCaml build holds while it
+// runs, so a return to whole-run serialization (CI's old `-jobs 1`) fails too.
+func TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("uses shell commands that are only asserted on Unix runners")
+	}
+
+	shared := t.TempDir()
+	ocaml := "mkdir " + shared + "/switch && touch " + shared + "/seen && sleep 1 && rm " + shared + "/seen && rmdir " + shared + "/switch"
+	python := "for i in $(seq 1 50); do [ -e " + shared + "/seen ] && exit 0; sleep 0.1; done; exit 1"
+	root := makeFixture(t, map[string]string{
+		"a/BUILD": ocaml,
+		"b/BUILD": ocaml,
+		"c/BUILD": python,
+	})
+	packages := []discovery.Package{
+		{Name: "ocaml/a", Path: filepath.Join(root, "a"), BuildCommands: []string{ocaml}, Language: "ocaml"},
+		{Name: "ocaml/b", Path: filepath.Join(root, "b"), BuildCommands: []string{ocaml}, Language: "ocaml"},
+		{Name: "python/c", Path: filepath.Join(root, "c"), BuildCommands: []string{python}, Language: "python"},
+	}
+	graph := directedgraph.New()
+	hashes := map[string]string{}
+	for _, pkg := range packages {
+		graph.AddNode(pkg.Name)
+		hashes[pkg.Name] = pkg.Name
+	}
+
+	results := ExecuteBuilds(packages, graph, cache.New(), hashes, hashes, true, false, 3, nil, nil, false)
+	for _, pkg := range packages {
+		if results[pkg.Name].Status != "built" {
+			t.Fatalf("%s: %s (stderr: %s)", pkg.Name, results[pkg.Name].Status, results[pkg.Name].Stderr)
+		}
+	}
+}
+
+func TestBuildResourceKeysSerializeRubyGemInstalls(t *testing.T) {
+	root := makeFixture(t, map[string]string{"pkg/BUILD": "true"})
+	paths := map[string]string{filepath.Join(root, "pkg"): "pkg"}
+
+	for _, tc := range []struct {
+		command string
+		want    bool
+	}{
+		{"bundle install --quiet && bundle exec rspec", true},
+		{"gem install bundler --no-document", true},
+		{"cd ../dep && bundle install", true},
+		{"bundle exec rspec", false},
+		{"python install_gem_report.py", false},
+		{"npm install", false},
+	} {
+		t.Run(tc.command, func(t *testing.T) {
+			pkg := discovery.Package{Name: "pkg", Path: filepath.Join(root, "pkg"), BuildCommands: []string{tc.command}, Language: "ruby"}
+			got := false
+			for _, key := range buildResourceKeys(pkg, paths) {
+				got = got || key == RubyGemsLockKey
+			}
+			if got != tc.want {
+				t.Fatalf("ruby-gems lock for %q = %v, want %v", tc.command, got, tc.want)
+			}
+		})
+	}
+}

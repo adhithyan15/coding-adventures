@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C333-sollemnis",
+    "language": "latin",
+    "chapter": 333,
+    "sequence": 17960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f15e4e06226ee775"
+  },
+  "findings": []
+}

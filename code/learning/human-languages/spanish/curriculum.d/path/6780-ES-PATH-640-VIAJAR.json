@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-640-VIAJAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-640-VIAJAR"
+  ],
+  "after": []
+}

@@ -15,6 +15,7 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [HI-C04-milenge, HI-C02-hai]
 sounds: [matra-a]
 roots: [kalya-time]
+etymology_hook: "kal ← Sanskrit kalya 'dawn, tomorrow', built on kāla 'time' (CDIAL 3104)"
 duration:
   max_seconds: 240
 requires:
@@ -49,8 +50,8 @@ the trickiest words.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C04-KALMILTEHAIN-01, HI-CONCEPT-C04-MILENGE-01] -->
 
 **कल** (*kal*) means **both "tomorrow" and "yesterday"** — the same word for the
-day on either side of today. It is from Sanskrit **काल** (*kāla*, "time") — the
-very root that sits inside Punjabi's *akāl* ("timeless"). Hindi trusts context
+day on either side of today. It is from Sanskrit *kalya*, "dawn, tomorrow", built on
+**काल** (*kāla*, "time") (CDIAL 3104) — the very root that sits inside Punjabi's *akāl* ("timeless"). Hindi trusts context
 (and the verb's tense) to tell which *kal* you mean: *kal milte haiṁ* (present-ish
 → "**tomorrow**"), *kal milā* (past → "**yesterday**").
 

@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Der Streik",
+  "label": "ch:ge-der-streik",
+  "canDo": "I can report protests: a strike, to go on strike, to protest, to demonstrate and a crisis.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R277-review-270-277",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can report protests: a strike, to go on strike, to protest, to demonstrate and a crisis.",
+    "assesses": [
+      "GE-LEX-C277-STREIK-03",
+      "GE-LEX-C277-STREIK-04",
+      "GE-LEX-C277-STREIK-05"
+    ]
+  }
+}

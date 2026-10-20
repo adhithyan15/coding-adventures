@@ -56,9 +56,11 @@ The word that lets you offer a choice, which until now you could not do:
 > **Aquam aut vīnum?** — Water or wine?
 
 Latin has **two** words here and they are not interchangeable. **Aut** offers an
-**exclusive** choice: one or the other, not both. **Vel** offers an **indifferent**
-one: either will do. *Vel* is literally the imperative of *volō* — "choose, if you
-like" — which is the next chapter's verb.
+**exclusive** choice: one or the other, not both. It is inherited, usually traced
+to Proto-Indo-European *\*h₂ewti*, "on the other hand" (EtymDB 2.1). **Vel** offers an
+**indifferent** one: either will do. *Vel* is literally an old command form of
+the verb "to want" — "choose, if you like" — and that verb is the next
+chapter's.
 
 Logicians still use the distinction. The inclusive-or of Boolean algebra is
 called **vel** after the Latin, and it is inclusive precisely because *vel* was;
@@ -75,4 +77,4 @@ computer you have ever used.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C48-DENY-01, LA-LEX-C48-DENY-02, LA-LEX-C48-DENY-03, LA-LEX-C48-DENY-04, LA-LEX-C48-DENY-05] -->
 
-[PAUSE 3s] Which *or* excludes, and which does not? (***Aut*** excludes; ***vel*** does not.) What is *vel* literally? (**The imperative of *volō*** — choose if you like.)
+[PAUSE 3s] Which *or* excludes, and which does not? (***Aut*** excludes; ***vel*** does not.) What is *vel* literally? (**An old command form of "to want"** — choose if you like.)

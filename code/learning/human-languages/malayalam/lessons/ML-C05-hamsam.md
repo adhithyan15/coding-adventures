@@ -14,7 +14,8 @@ gloss: "a swan"
 concept_tag: ML-ANCHOR-HAMSAM
 prerequisites: [ML-S144-chillu-l]
 sounds: []
-roots: []
+roots: [sanskrit-hamsa]
+etymology_hook: "haṃsam ← Sanskrit haṁsa 'goose, swan', a tatsama (CDIAL 13937)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *haṃsam*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഹ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഹംസം** (*haṃsam*) ← Sanskrit *haṁsa*, "goose, swan", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13937).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-HAMSAM] -->

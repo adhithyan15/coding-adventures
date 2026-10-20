@@ -232,7 +232,7 @@ The letters in this word.
 આ (the independent long ā, for a word-initial vowel) + ભા (bhā) + ર (ra) (r) becomes આભાર (ābhār). Note again: no top line.
 
 The word, taken apart.
-આભાર (ābhār, "thanks, gratitude") is from Sanskrit આભાર (ābhāra, "a burden, an obligation"), from આ- (ā-, "toward") + the root ભૃ (bhṛ, "to bear, carry"). To thank someone is to acknowledge you now bear an obligation to them — the same idea as English oblige (Latin ob- + ligāre "to bind") and Portuguese obrigado. That root bhṛ is Proto-Indo-European bʰer-, the ancestor of English bear (to carry) and Latin ferre. (The more Sanskritic ધન્યવાદ dhanyavād is also used, but ābhār is the warm, everyday Gujarati word.)
+આભાર (ābhār, "thanks, gratitude") is from Sanskrit આભાર (ābhāra, "a load, a burden"), from આ- (ā-, "toward") + the root ભૃ (bhṛ, "to bear, carry"). To thank someone is to acknowledge you now bear an obligation to them — the same idea as English oblige (Latin ob- + ligāre "to bind") and Portuguese obrigado. That root bhṛ is Proto-Indo-European bʰer-, the ancestor of English bear (to carry) and Latin ferre. (The more Sanskritic ધન્યવાદ dhanyavād is also used, but ābhār is the warm, everyday Gujarati word.)
 
 Guided Practice.
 [pause 1 second]
@@ -268,6 +268,7 @@ The letters in this word.
 
 The word, taken apart.
 આવજો (āvjo) is the polite imperative of āvvũ, "to come" — literally "[please] come [again]." A Gujarati never signs off by saying "I'm leaving"; the parting word is come. It is the same "promise of return" that runs through the whole subcontinent — Tamil pōy varugiṟēṉ ("I'll go and come back"), Bengali āshi ("I'll come"), Hindi phir milenge ("we'll meet again") — here made into a single warm word built on the verb to come. (To one person, familiarly: આવજે āvje.)
+The verb itself is inherited: CDIAL lists āvvũ under Sanskrit āpayati, "causes to reach", whose Prakrit form āvaï already meant "comes" (CDIAL 1200).
 
 Guided Practice.
 [pause 1 second]
@@ -303,6 +304,7 @@ The letters in this word.
 
 The word, taken apart.
 હા (hā, "yes") and ના (nā, "no"). The "no" rides the ancient negative na- — the very same Proto-Indo-European ne behind English no, not, none, Latin nōn, Hindi nahīṁ, and Bengali nā. Of all the words in this book, this "no" reaches furthest unchanged: one syllable spoken, in some form, from Iceland to Gujarat for five thousand years.
+The "yes" is inherited too: CDIAL lists Gujarati hāṁ under Sanskrit ām, "yes", its h- added either for emphasis or from the verb "to be" (CDIAL 1235). The "no" goes with Gujarati na, "not", which CDIAL lists under Sanskrit na (CDIAL 6906).
 
 Guided Practice.
 [pause 1 second]
@@ -404,7 +406,7 @@ The letters in this word.
 સા (sā) + રું (rũ, with the nasal anusvāra on the u) becomes સારું (sārũ).
 
 The word, taken apart.
-સારું (sārũ, "good, fine, okay") is from Sanskrit સાર (sāra, "essence, substance, the best part") — the same sāra behind Bengali's sāramilla ("no matter"). As "okay/agreed" it oils every Gujarati conversation, the way English uses "alright."
+સારું (sārũ, "good, fine, okay") is from Sanskrit સાર (sāra, "essence, substance, the best part"; CDIAL 13355). As "okay/agreed" it oils every Gujarati conversation, the way English uses "alright."
 
 Grammar Lens: three genders, on the adjective.
 Listen to that ending, -ũ. Gujarati, like Marathi, keeps three genders from Sanskrit — masculine, feminine, and neuter — where Hindi and Punjabi kept only two. An adjective agrees with its noun in all three, and the ending is what changes:

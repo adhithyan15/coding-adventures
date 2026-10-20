@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 255,
-  "sourceHash": "fnv1a64:a50fc81ffa79c4b8",
+  "sourceHash": "fnv1a64:6d3deb221977d620",
   "lessonIds": [
     "ML-C255-laptoppu",
     "ML-C255-skrin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch255.txt",
   "json": "malayalam/narration/ch255.json",
-  "textHash": "fnv1a64:47dfd2956d1bdf2c",
-  "jsonHash": "fnv1a64:f070a504f3032ca1",
+  "textHash": "fnv1a64:5e31d26d6f127c11",
+  "jsonHash": "fnv1a64:a3fd79fe5f83aaff",
   "findings": []
 }

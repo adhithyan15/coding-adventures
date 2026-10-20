@@ -1,0 +1,11 @@
+{
+  "id": "LA-C454-obliquus",
+  "pathSegment": "LA-PATH-454-DEXTRORSUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-454-DEXTRORSUM",
+      "order": 2
+    }
+  ]
+}

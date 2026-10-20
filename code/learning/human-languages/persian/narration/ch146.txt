@@ -12,6 +12,9 @@ Before the new one: say the Persian for to believe, then the Persian for to call
 You'll want to know: به یاد آوردن.
 به یاد آوردن — be yâd âvardan — "to remember".
 
+The word, taken apart.
+be yâd âvardan is "to bring to memory": be, "to", yâd, "memory" (usually traced to Middle Persian ayād), and âvardan, "to bring". All are native Persian. âvardan, "to bring", is an inherited verb; it is usually traced to Middle Persian āwurdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to call, then the Persian for to remembe
 
 You'll want to know: حدس زدن.
 حدس زدن — hads zadan — "to guess".
+
+The word, taken apart.
+hads zadan pairs hads, borrowed from Arabic ḥads, "guessing, conjecture" (root ḥ-d-s, Lane), with the Persian verb zadan, "to strike". zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to remember, then the Persian for to gue
 You'll want to know: ترجیح دادن.
 ترجیح دادن — tarjih dâdan — "to prefer".
 
+The word, taken apart.
+tarjih dâdan pairs tarjih, borrowed from Arabic tarjīḥ, "giving more weight, preferring" (root r-j-ḥ, Lane), with the Persian verb dâdan, "to give". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to guess, then the Persian for to prefer
 You'll want to know: به نظر رسیدن.
 به نظر رسیدن — be nazar residan — "to seem".
 
+The word, taken apart.
+be nazar residan is "to reach the view": be, "to", nazar, "look, view", and residan, "to reach". nazar is borrowed from Arabic naẓar, "look, sight" (root n-ẓ-r, Lane); be and residan are native. residan, "to reach", is an inherited verb; it is usually traced to Middle Persian rasīdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to prefer, then the Persian for to seem.
 
 You'll want to know: نگران بودن.
 نگران بودن — negarân budan — "to be worried".
+
+The word, taken apart.
+negarân budan pairs negarân, "anxious, watchful", with budan, "to be". negarân is native, usually explained as built on negar-, "to look". budan, "to be", is an inherited verb; it is usually traced to Middle Persian būdan.
 
 What you've built.
 One more word for this chapter.

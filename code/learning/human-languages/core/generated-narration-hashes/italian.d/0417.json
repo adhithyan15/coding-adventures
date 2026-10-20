@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:b0bfd145f6d91025",
+  "lessonIds": [
+    "IT-C417-banchina",
+    "IT-C417-pensilina",
+    "IT-C417-capolinea",
+    "IT-C417-pullman",
+    "IT-C417-transitare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch417.txt",
+  "json": "italian/narration/ch417.json",
+  "textHash": "fnv1a64:21e8790f3d70217f",
+  "jsonHash": "fnv1a64:715e2c8c5fcb17e2",
+  "findings": []
+}

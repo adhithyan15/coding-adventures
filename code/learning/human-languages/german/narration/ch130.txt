@@ -14,6 +14,9 @@ Count eins, then say ein, the same word with its counting -s dropped. Then say s
 You'll want to know: rosa.
 rosa — "pink".
 
+The word, taken apart.
+rosa is Latin rosa, "rose": the colour of the flower — borrowed. EtymDB 2.1 has the German word but not its Latin source.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the German for a celebration, then the German for pink.
 
 You'll want to know: orange.
 orange — "orange (the colour)".
+
+The word, taken apart.
+orange from French orange, the fruit (EtymDB 2.1), whose name came west from Persian nārang through Arabic — borrowed; the colour is named after the fruit.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the German for pink, then the German for orange.
 You'll want to know: hübsch.
 hübsch — "pretty".
 
+The word, taken apart.
+hübsch from Middle High German hübesch, "courtly" (EtymDB 2.1), built on the word for "court", itself copying French courtois. Pretty was what suited the court.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the German for orange, then the German for pretty.
 You'll want to know: rund.
 rund — "round".
 
+The word, taken apart.
+rund from Middle High German runt from Old French ront, "circular" (EtymDB 2.1), from Latin rotundus — borrowed, like English round.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the German for pretty, then the German for round.
 
 You'll want to know: breit.
 breit — "wide".
+
+The word, taken apart.
+breit from Old High German breit from Proto-Germanic braidaz — inherited, the same word as English broad. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

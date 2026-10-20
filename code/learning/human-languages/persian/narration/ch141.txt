@@ -12,6 +12,9 @@ Before the new one: say the Persian for to switch off, then the Persian for to w
 You'll want to know: گم کردن.
 گم کردن — gom kardan — "to lose".
 
+The word, taken apart.
+gom kardan pairs gom, "lost", a native word usually traced to Middle Persian gum, with kardan, "to make": "to make lost". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to wake up, then the Persian for to lose
 
 You'll want to know: پیدا کردن.
 پیدا کردن — peydâ kardan — "to find".
+
+The word, taken apart.
+peydâ kardan pairs peydâ, "visible, found", with kardan, "to make": "to make visible". peydâ is native, usually traced to Middle Persian paydāg, "manifest". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to lose, then the Persian for to find.
 You'll want to know: پس دادن.
 پس دادن — pas dâdan — "to give back, to return (an item)".
 
+The word, taken apart.
+pas dâdan pairs pas, "back, behind", with dâdan, "to give": "to give back". pas is inherited: EtymDB traces it to Middle Persian pas, "then, behind". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to find, then the Persian for to give ba
 You'll want to know: حساب کردن.
 حساب کردن — hesâb kardan — "to settle the bill; to calculate".
 
+The word, taken apart.
+hesâb kardan pairs hesâb, borrowed from Arabic ḥisāb, "account, reckoning" (root ḥ-s-b, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to give back, then the Persian for to se
 
 You'll want to know: سفارش دادن.
 سفارش دادن — sefâresh dâdan — "to order (food, goods)".
+
+The word, taken apart.
+sefâresh dâdan pairs sefâresh, "commission, order", with dâdan, "to give". sefâresh is native, usually explained as built on sepâr-, the present stem of sepordan, "to entrust". dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
 
 What you've built.
 One more word for this chapter.

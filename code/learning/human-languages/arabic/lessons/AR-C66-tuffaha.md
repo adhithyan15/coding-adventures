@@ -14,7 +14,8 @@ romanization: "tuffāḥa"
 concept_tag: AR-FOOD66-TUFFAHA
 prerequisites: [AR-C66-aruzz, AR-C66-fakiha]
 sounds: []
-roots: []
+roots: [t-f-ḥ]
+etymology_hook: "tuffāḥa: built on the root t-f-ḥ, 'the apple' (Lane); Lane quotes a source calling it an Arabic word, not arabicized"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C66-fakiha]
 <!-- hl-knowledge: introduces=[AR-LEX-C66-FOOD66-03]; assesses=[] -->
 
 **تفاحة** — *tuffāḥa* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تفاحة** (*tuffāḥa*) is built on the native Arabic root *t-f-ḥ*, "the apple" (Lane). Lane quotes a source calling it an Arabic word, not arabicized; Hebrew *tappuaḥ*, "apple", is its cousin. *Tuffāḥa* is one apple.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

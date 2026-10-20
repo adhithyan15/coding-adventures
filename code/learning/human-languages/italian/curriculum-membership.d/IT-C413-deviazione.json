@@ -1,0 +1,11 @@
+{
+  "id": "IT-C413-deviazione",
+  "pathSegment": "IT-PATH-413-INGORGO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-413-INGORGO",
+      "order": 3
+    }
+  ]
+}

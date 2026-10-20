@@ -6,14 +6,14 @@ sequence: 540
 chapter: 30
 type: phrase
 headword: bonam noctem
-gloss: "good night" — genuine Latin grammar (wishes take the accusative, not the nominative), though the fixed phrase itself may be a later/modern convention rather than a directly-attested ancient formula
+gloss: '"good night" — genuine Latin grammar (wishes take the accusative, not the nominative), though the fixed phrase itself may be a later/modern convention rather than a directly-attested ancient formula'
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [LA-C29-nox]
 sounds: [macron-none-short-vowel, accusative-am-em]
 roots: [bonus-latin, nox-latin]
 etymology_hook: "bonam noctem, 'good night,' uses a genuinely classical Latin grammatical principle — Latin wishes and exclamations conventionally take the ACCUSATIVE case, not the nominative (the same 'Accusative of Exclamation' construction behind Fēlīcem nātālem, 'happy birthday'); be honest, though: while the accusative-of-wishing rule is solid, this SPECIFIC fixed phrase, bonam noctem, is NOT itself attested as a Roman farewell formula in any surviving classical text — a later, post-classical convention"
 duration:
-  max_seconds: 240
+  max_seconds: 279
 requires:
   knowledge: [LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03]
 introduces:
@@ -68,6 +68,11 @@ surviving classical text — it appears to be a later, post-classical
 convention, built correctly from real grammar but not itself a citation.
 Treat the grammar as reliable and the exact phrase as a well-formed
 construction, not a quotation from a Roman text.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bonam noctem** builds on *bonus* "good", which Old Latin wrote *duenos* (EtymDB 2.1). It is usually traced to Proto-Italic *\*dwenos*, "good", and perhaps to a root for "to show favour" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02] -->

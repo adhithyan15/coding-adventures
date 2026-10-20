@@ -14,7 +14,8 @@ romanization: "golāpi"
 concept_tag: BN-QUAL137-GOLAPI
 prerequisites: [BN-C136-gol, BN-C136-beguni, BN-C40-prothom-path]
 sounds: []
-roots: []
+roots: [persian-gulab]
+etymology_hook: "golāpi: golāp 'rose' + -i; golāp is usually traced to Persian gulāb 'rose-water'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C136-beguni]
 <!-- hl-knowledge: introduces=[BN-LEX-C137-QUAL137-01]; assesses=[] -->
 
 **গোলাপি** — *golāpi* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গোলাপি** (*golāpi*) is *golāp*, "rose", with the ending *-i*: "rose-coloured". *Golāp* is usually traced to Persian *gulāb*, "rose-water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "furushande"
 concept_tag: FA-THINGS116-FURUSHANDE
 prerequisites: [FA-C116-keshavarz, FA-C116-ranande]
 sounds: []
-roots: []
+roots: [persian-forukhtan]
+etymology_hook: "furushande: Persian furush- 'sell' (forukhtan) + -ande '-ing'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C116-ranande]
 <!-- hl-knowledge: introduces=[FA-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **فروشنده** — *furushande* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*furushande* is *furush-*, the present stem of *forukhtan*, "to sell", with *-ande*, "-ing": "the one selling". The verb is inherited, usually traced to Middle Persian *frōxtan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

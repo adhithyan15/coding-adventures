@@ -13,7 +13,8 @@ gloss: "a dream"
 concept_tag: GE-THING240-TRAUM
 prerequisites: [GE-C240-thema, GE-C240-tradition]
 sounds: []
-roots: []
+roots: [germanic-draumaz]
+etymology_hook: "Traum ← Middle High German troum — the same word as English dream"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C240-tradition]
 <!-- hl-knowledge: introduces=[GE-LEX-C240-THING240-03]; assesses=[] -->
 
 **der Traum** — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Traum** ← Middle High German *troum* (EtymDB 2.1), from Proto-Germanic *\*draumaz* — inherited, the same word as English *dream*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

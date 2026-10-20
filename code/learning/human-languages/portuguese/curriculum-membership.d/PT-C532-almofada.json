@@ -1,0 +1,11 @@
+{
+  "id": "PT-C532-almofada",
+  "pathSegment": "PT-PATH-532-ACOLHEDORA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-532-ACOLHEDORA",
+      "order": 1
+    }
+  ]
+}

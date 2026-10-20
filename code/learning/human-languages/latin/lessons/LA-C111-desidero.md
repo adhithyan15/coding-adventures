@@ -13,7 +13,8 @@ gloss: "to miss, to long for"
 concept_tag: LA-VERB-DESIDERO
 prerequisites: [LA-C111-cupio, LA-C111-opto]
 sounds: []
-roots: []
+roots: [desiderare-latin]
+etymology_hook: "dēsīderō 'to miss' — origin doubtful; often built from dē- + sīdus 'star', like cōnsīderō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C111-opto]
 <!-- hl-knowledge: introduces=[LA-LEX-C111-WANT111-04]; assesses=[] -->
 
 **dēsīderō, dēsīderāre** — "to miss, to long for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēsīderō** has no sure origin; Lewis & Short call it doubtful. A common account builds it, like *cōnsīderō*, "to examine closely", from *dē-*, "away from", and *sīdus*, *sīderis*, "star", but the story behind that is unclear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

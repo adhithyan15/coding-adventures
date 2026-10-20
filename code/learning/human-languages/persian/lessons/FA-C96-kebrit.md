@@ -14,7 +14,8 @@ romanization: "kebrit"
 concept_tag: FA-THINGS96-KEBRIT
 prerequisites: [FA-C95-ojagh, FA-C96-yakhchal]
 sounds: []
-roots: []
+roots: [arabic-kibrit]
+etymology_hook: "kebrit ← Arabic kibrīt 'sulphur' (EtymDB; root k-b-r-t, Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C96-yakhchal]
 <!-- hl-knowledge: introduces=[FA-LEX-C96-THINGS96-02]; assesses=[] -->
 
 **کبریت** — *kebrit* — "matches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kebrit* is borrowed from Arabic *kibrīt*, "sulphur" (EtymDB; root *k-b-r-t*, Lane); the first matches were sticks tipped with sulphur. Lane notes that some doubt the Arabic word is native Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

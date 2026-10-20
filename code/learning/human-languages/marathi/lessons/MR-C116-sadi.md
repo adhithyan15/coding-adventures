@@ -14,7 +14,8 @@ romanization: "sāḍī"
 concept_tag: MR-CLOTHES116-SADI
 prerequisites: [MR-C115-kapde, MR-C116-sadra]
 sounds: []
-roots: []
+roots: [sanskrit-shati]
+etymology_hook: "sāḍī ← Sanskrit śāṭī 'strip of cloth, garment', a tadbhava (CDIAL 12381)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C116-sadra]
 <!-- hl-knowledge: introduces=[MR-LEX-C116-CLOTHES116-02]; assesses=[] -->
 
 **साडी** — *sāḍī* — "a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साडी** (*sāḍī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śāṭī*, "strip of cloth, garment" (CDIAL 12381). CDIAL glosses the Marathi word "the sari given to the bride at a wedding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

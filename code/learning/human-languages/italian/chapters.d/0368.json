@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Vivere insieme",
+  "label": "ch:it-vivere-insieme",
+  "canDo": "I can talk about living together in society: tolerance, respect and integration.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C368-integrazione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about living together in society: tolerance, respect and integration.",
+    "assesses": [
+      "IT-LEX-C368-CONVIVENZA-03",
+      "IT-LEX-C368-CONVIVENZA-04",
+      "IT-LEX-C368-CONVIVENZA-05"
+    ]
+  }
+}

@@ -13,7 +13,8 @@ gloss: "a bedroom"
 concept_tag: GE-THING161-SCHLAFZIMMER
 prerequisites: [GE-C160-fehler, GE-C161-haus]
 sounds: []
-roots: []
+roots: [germanic-timra]
+etymology_hook: "Schlafzimmer — schlafen 'to sleep' + Zimmer 'room': a sleeping room"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C161-haus]
 <!-- hl-knowledge: introduces=[GE-LEX-C161-THING161-02]; assesses=[] -->
 
 **das Schlafzimmer** — "a bedroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schlafzimmer** is the stem of *schlafen*, "to sleep", + *Zimmer*, "room", which first meant "timber" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

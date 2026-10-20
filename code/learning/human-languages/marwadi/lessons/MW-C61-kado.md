@@ -14,7 +14,8 @@ romanization: "kā̃do"
 concept_tag: MW-VERBS61-KADO
 prerequisites: [MW-C61-nimbu, MW-C61-ato]
 sounds: []
-roots: []
+roots: [sanskrit-kanda]
+etymology_hook: "kā̃do ← Sanskrit kanda 'bulbous root', prob. from Dravidian (CDIAL 2723)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C61-ato]
 <!-- hl-knowledge: introduces=[MW-LEX-C61-VERBS61-04]; assesses=[] -->
 
 **कांदो** — *kā̃do* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कांदो** (*kā̃do*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kanda*, "bulbous root". CDIAL gives no Marwari form in this entry (CDIAL 2723); the match is through Hindi *kā̃dā* and Gujarati *kā̃do*. CDIAL thinks the Sanskrit word itself probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

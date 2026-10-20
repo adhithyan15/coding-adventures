@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:365af545567b7970",
+  "lessonIds": [
+    "PT-C300-capotar",
+    "PT-C300-travagem",
+    "PT-C300-danos",
+    "PT-C300-danificar",
+    "PT-C300-estrago",
+    "PT-R300-revisao-293-300"
+  ],
+  "tex": "portuguese/book/chapters/ch300-o-carro-capotou.tex"
+}

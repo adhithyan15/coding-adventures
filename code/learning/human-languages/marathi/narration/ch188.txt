@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a piece of jewellery, then the Marathi f
 You'll want to know: दिनदर्शिका.
 दिनदर्शिका — dindarśikā — "a calendar".
 
+The word, taken apart.
+दिनदर्शिका (dindarśikā) is a modern compound of Sanskrit parts: dina, "day", and darśikā, "one that shows", from dṛś, "to see".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a bangle, then the Marathi for a calenda
 
 You'll want to know: खेकडा.
 खेकडा — khekḍā — "a crab".
+
+The word, taken apart.
+खेकडा (khekḍā) is a tadbhava of Sanskrit karkaṭa, "crab" (CDIAL 2816). CDIAL thinks the word non-Aryan, comparing Santali kaṭkom, "crab".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a calendar, then the Marathi for a crab.
 You'll want to know: गरुड.
 गरुड — garuḍ — "an eagle".
 
+The word, taken apart.
+गरुड (garuḍ) is Sanskrit garuḍa, "a mythical bird", taken over whole as a learned loan, a tatsama (CDIAL 4041). Marathi uses the name of Vishnu's bird for the eagle.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a crab, then the Marathi for an eagle.
 You'll want to know: कोकिळा.
 कोकिळा — kokiḷā — "a cuckoo".
 
+The word, taken apart.
+कोकिळा (kokiḷā) is Sanskrit kokilā, "the Indian cuckoo", with Marathi ळ. CDIAL lists the inherited Marathi forms as koīḷ and koyāḷ (CDIAL 3483).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an eagle, then the Marathi for a cuckoo.
 
 You'll want to know: मधमाशी.
 मधमाशी — madhmāśī — "a bee".
+
+The word, taken apart.
+मधमाशी (madhmāśī) is "honey-fly": madh, "honey", from Sanskrit madhu (CDIAL 9784), and māśī, "fly", from Sanskrit makṣikā, "fly, bee" (CDIAL 9696).
 
 What you've built.
 One more word for this chapter.

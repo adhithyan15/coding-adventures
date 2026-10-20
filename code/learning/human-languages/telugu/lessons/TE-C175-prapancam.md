@@ -14,7 +14,8 @@ romanization: "prapañcaṁ"
 concept_tag: TE-STHALAM175-PRAPANCAM
 prerequisites: [TE-C174-loya, TE-C175-gumpu]
 sounds: []
-roots: []
+roots: [sanskrit-prapanca]
+etymology_hook: "prapañcaṁ ← Sanskrit prapañca 'expansion; the visible world', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C175-gumpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C175-STHALAM175-02]; assesses=[] -->
 
 **ప్రపంచం** — *prapañcaṁ* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రపంచం** (*prapañcaṁ*) is Sanskrit *prapañca*, "expansion; the visible world", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

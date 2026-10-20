@@ -1,0 +1,11 @@
+{
+  "id": "GE-C309-feuerwerk",
+  "pathSegment": "GE-PATH-309-SCHMUECKEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-309-SCHMUECKEN",
+      "order": 4
+    }
+  ]
+}

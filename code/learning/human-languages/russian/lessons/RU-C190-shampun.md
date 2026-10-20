@@ -14,7 +14,8 @@ romanization: "shampún"
 concept_tag: RU-VESHCH190-SHAMPUN
 prerequisites: [RU-C190-kran, RU-C190-tualet]
 sounds: []
-roots: []
+roots: [hindi-champo]
+etymology_hook: "шампунь ← English shampoo, from Hindi chāmpo 'press! knead!'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C190-tualet]
 <!-- hl-knowledge: introduces=[RU-LEX-C190-VESHCH190-05]; assesses=[] -->
 
 **шампунь** (*shampún*) — "shampoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шампунь** comes from English *shampoo*, from Hindi *chāmpo*, "press, knead!", first a massage in the bath.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

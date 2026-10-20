@@ -14,7 +14,8 @@ romanization: "hiroi"
 concept_tag: JA-ADJ50-HIROI
 prerequisites: [JA-C50-amai, JA-C50-nigai]
 sounds: []
-roots: []
+roots: [japanese-hiroi]
+etymology_hook: "hiroi: native Japanese, inherited, not borrowed; kanji 広い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C50-nigai]
 <!-- hl-knowledge: introduces=[JA-LEX-C50-ADJ50-03]; assesses=[] -->
 
 **ひろい** — *hiroi* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひろい** (*hiroi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

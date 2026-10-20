@@ -14,7 +14,8 @@ romanization: "bhinnamaina"
 concept_tag: TE-GUNAM222-BHINNAMAINA
 prerequisites: [TE-C222-adhunika, TE-C222-spastamaina]
 sounds: []
-roots: []
+roots: [sanskrit-bhinna, tamil-aaku-become]
+etymology_hook: "bhinnamaina: Sanskrit bhinna 'different' (CDIAL 9498) + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C222-spastamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C222-GUNAM222-04]; assesses=[] -->
 
 **భిన్నమైన** — *bhinnamaina* — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భిన్నమైన** (*bhinnamaina*) is Sanskrit *bhinna*, "split; different" (CDIAL 9498), with native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

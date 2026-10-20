@@ -13,7 +13,8 @@ gloss: "an admission ticket"
 concept_tag: GE-THING227-EINTRITTSKARTE
 prerequisites: [GE-C227-eindruck, GE-C227-eintritt]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "Eintrittskarte — Eintritt 'entry' + -s- + Karte 'card, ticket'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C227-eintritt]
 <!-- hl-knowledge: introduces=[GE-LEX-C227-THING227-05]; assesses=[] -->
 
 **die Eintrittskarte** — "an admission ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Eintrittskarte** is *Eintritt*, "entry", + *-s-* + *Karte*, "card": a card that lets you step in. *Karte* goes back to Latin *charta*, "paper", itself from Greek (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

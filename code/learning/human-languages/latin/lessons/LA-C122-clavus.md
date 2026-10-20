@@ -13,7 +13,8 @@ gloss: "a nail (to hammer)"
 concept_tag: LA-THINGS122-CLAVUS
 prerequisites: [LA-C121-catinus, LA-C121-candela]
 sounds: []
-roots: []
+roots: [clavus-latin]
+etymology_hook: "clāvus 'nail' — inherited, usually traced to PIE *(s)kleh2w- 'nail, hook'; kin to clāvis 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C121-candela]
 <!-- hl-knowledge: introduces=[LA-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **clāvus, clāvī** — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clāvus** is inherited, usually traced to Proto-Indo-European *\*(s)kleh2w-*, "nail, pin, hook" (EtymDB 2.1); *clāvis*, "key", and *claudō*, "to shut", belong to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

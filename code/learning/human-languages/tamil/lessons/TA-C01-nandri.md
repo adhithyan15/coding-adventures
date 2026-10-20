@@ -12,9 +12,10 @@ concept_tag: COURTESY-THANKS
 prerequisites: [TA-C01-illai]
 sounds: [dental-vs-alveolar-vs-retroflex-n, matra-i]
 roots: [nal]
+etymology_hook: "நன்றி — native 'goodness', built on nal 'good' (DEDR 3610), as in Malayalam nal and Kannada nal"
 reviews_of: [TA-C01-illai]
 duration:
-  max_seconds: 120
+  max_seconds: 275
 requires:
   knowledge: []
 introduces:
@@ -65,9 +66,9 @@ these three letters in the next lesson.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*Naṉṟi* grows from the root *nal*, “good” —
-so it literally means **“goodness.”** To thank, in Tamil, is to name the
-good someone did you.
+*Naṉṟi* grows from the root *nal* (DEDR 3610), “good” —
+so it literally means **“goodness.”** To thank, in Tamil, is naming the
+good done to you.
 
 ## Grammar lens
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

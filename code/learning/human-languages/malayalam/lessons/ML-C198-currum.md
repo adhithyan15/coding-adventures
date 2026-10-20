@@ -14,7 +14,8 @@ romanization: "cuṟṟuṁ"
 concept_tag: ML-STHALAM198-CURRUM
 prerequisites: [ML-C198-patinnaru, ML-C198-etire]
 sounds: []
-roots: []
+roots: [dravidian-curru-around]
+etymology_hook: "cuṟṟuṁ: native Dravidian, from the verb 'to go round'; Tamil cuṟṟu (DEDR 2715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C198-etire]
 <!-- hl-knowledge: introduces=[ML-LEX-C198-STHALAM198-05]; assesses=[] -->
 
 **ചുറ്റും** — *cuṟṟuṁ* — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുറ്റും** (*cuṟṟuṁ*) is native Dravidian, built on the verb "to go round"; DEDR 2715 lists the root with Tamil *cuṟṟu*, Kannada *suttu* and Telugu *cuṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

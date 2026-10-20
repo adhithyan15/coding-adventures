@@ -13,7 +13,8 @@ gloss: "a donkey"
 concept_tag: IT-ANIMALI120-ASINO
 prerequisites: [IT-C119-grotta, IT-C119-cascata]
 sounds: []
-roots: []
+roots: [asinus-latin]
+etymology_hook: "asino ← Latin asinus 'a donkey' — English ass is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C119-cascata]
 <!-- hl-knowledge: introduces=[IT-LEX-C120-ANIMALI120-01]; assesses=[] -->
 
 **l'asino** — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asino** ← Latin *asinus*, "a donkey" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

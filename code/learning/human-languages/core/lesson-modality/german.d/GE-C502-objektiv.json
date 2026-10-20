@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C502-objektiv",
+    "language": "german",
+    "chapter": 502,
+    "sequence": 26870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4903dcfbfae05f4"
+  },
+  "findings": []
+}

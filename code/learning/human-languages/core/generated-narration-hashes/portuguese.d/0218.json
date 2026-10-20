@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 218,
-  "sourceHash": "fnv1a64:03361e554f5a319f",
+  "sourceHash": "fnv1a64:4677930cb05fe2c1",
   "lessonIds": [
     "PT-C218-pequeno-almoco",
     "PT-C218-lanche",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch218.txt",
   "json": "portuguese/narration/ch218.json",
-  "textHash": "fnv1a64:2751573a91ad42e6",
-  "jsonHash": "fnv1a64:9ae5487af2fa3662",
+  "textHash": "fnv1a64:ff5f12fae58ff405",
+  "jsonHash": "fnv1a64:f8990686f0f8733c",
   "findings": []
 }

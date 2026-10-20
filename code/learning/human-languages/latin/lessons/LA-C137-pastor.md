@@ -13,7 +13,8 @@ gloss: "a shepherd"
 concept_tag: LA-THINGS137-PASTOR
 prerequisites: [LA-C137-sutor, LA-C137-tonsor]
 sounds: []
-roots: []
+roots: [pastor-latin, pascere-latin]
+etymology_hook: "pāstor 'shepherd' — built on pāscō 'to feed, to graze', from PIE *peh2-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C137-tonsor]
 <!-- hl-knowledge: introduces=[LA-LEX-C137-THINGS137-05]; assesses=[] -->
 
 **pāstor, pāstōris** — "a shepherd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pāstor** is built on *pāscō*, "to feed, to graze" (Lewis & Short), with *-tor*, "one who does it". *pāscō* is usually traced to Proto-Indo-European *\*peh2-*, "to guard, to graze" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

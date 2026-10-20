@@ -14,7 +14,8 @@ romanization: "peṅku"
 concept_tag: TE-VASTUVU271-PENKU
 prerequisites: [TE-C270-rokali, TE-C271-sunnam]
 sounds: []
-roots: []
+roots: [dravidian-penku-tile]
+etymology_hook: "peṅku: native Dravidian; DEDR 4385 lists peṅku 'tile' with Kannada heñcu 'tile'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C271-sunnam]
 <!-- hl-knowledge: introduces=[TE-LEX-C271-VASTUVU271-02]; assesses=[] -->
 
 **పెంకు** — *peṅku* — "a roof tile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెంకు** (*peṅku*) is native Dravidian. DEDR 4385 lists *peṅku*, "tile, potsherd", with Kannada *heñcu*, "tile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

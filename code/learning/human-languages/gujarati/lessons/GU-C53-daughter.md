@@ -14,7 +14,8 @@ romanization: "dīkrī"
 concept_tag: GU-FAMILY3-DAUGHTER
 prerequisites: [GU-C53-wife, GU-C53-son]
 sounds: []
-roots: []
+roots: [indo-aryan-dikka]
+etymology_hook: "dīkrī: with dīkro 'son', listed under *dikka 'lump'; CDIAL queries the sense (CDIAL 6326)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C53-son]
 <!-- hl-knowledge: introduces=[GU-LEX-C53-FAMILY3-03]; assesses=[] -->
 
 **દીકરી** (*dīkrī*) — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **દીકરી** (*dīkrī*), with *dīkro*, "son", under a reconstructed *\*dikka*, "lump", and queries how the sense developed (CDIAL 6326).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

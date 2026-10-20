@@ -14,7 +14,8 @@ romanization: "dast zadan"
 concept_tag: FA-VERB-DAST-ZADAN
 prerequisites: [FA-C147-malidan, FA-C147-pashidan]
 sounds: []
-roots: []
+roots: [persian-dast, persian-zadan]
+etymology_hook: "dast zadan: dast 'hand' (Old Persian dasta-, EtymDB) + zadan 'to strike'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C147-pashidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C148-KONESH148-01]; assesses=[] -->
 
 **دست زدن** — *dast zadan* — "to touch; to clap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dast zadan* pairs *dast*, "hand", with *zadan*, "to strike": to strike with the hand. *dast* is inherited: Old Persian had *dasta-*, "hand" (EtymDB). *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

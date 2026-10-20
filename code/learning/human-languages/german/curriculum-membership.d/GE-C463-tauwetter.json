@@ -1,0 +1,11 @@
+{
+  "id": "GE-C463-tauwetter",
+  "pathSegment": "GE-PATH-463-RAUREIF",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-463-RAUREIF",
+      "order": 3
+    }
+  ]
+}

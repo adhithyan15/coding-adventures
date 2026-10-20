@@ -13,7 +13,8 @@ gloss: "to tell; to count"
 concept_tag: PT-VERB-CONTAR
 prerequisites: [PT-C133-alugar, PT-C133-reparar]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "contar ← Latin computare 'to reckon': counting and telling share one verb — English count"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C133-reparar]
 <!-- hl-knowledge: introduces=[PT-LEX-C133-VERBOS133-04]; assesses=[] -->
 
 **contar** — "to tell; to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**contar** ← Latin *computare*, "to reckon" (EtymDB 2.1) — inherited. Counting and telling share one verb, as in English *recount*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

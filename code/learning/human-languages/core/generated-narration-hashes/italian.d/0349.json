@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:3fd0dd34b4c9bff9",
+  "lessonIds": [
+    "IT-C349-effetto",
+    "IT-C349-provocare",
+    "IT-C349-causare",
+    "IT-C349-fattore",
+    "IT-C349-ragione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch349.txt",
+  "json": "italian/narration/ch349.json",
+  "textHash": "fnv1a64:f3ac9a4acfda5629",
+  "jsonHash": "fnv1a64:c24baa3adfa8cac0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C291-refurtiva",
+  "pathSegment": "IT-PATH-291-SCIPPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-291-SCIPPO",
+      "order": 4
+    }
+  ]
+}

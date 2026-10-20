@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for the face, then the Punjabi for blood.
 You'll want to know: ਲੱਤ.
 ਲੱਤ — latt — "a leg".
 
+The word, taken apart.
+ਲੱਤ (latt) is a tadbhava, a word inherited and reshaped by sound change. It comes from lattā, "foot, kick", a form CDIAL reconstructs from its descendants (CDIAL 10931).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for blood, then the Punjabi for a leg.
 
 You'll want to know: ਗੋਡਾ.
 ਗੋਡਾ — goḍā — "a knee".
+
+The word, taken apart.
+ਗੋਡਾ (goḍā) is a tadbhava, a word inherited and reshaped by sound change. It comes from goḍḍa, "foot, leg, knee", a form CDIAL reconstructs from its descendants (CDIAL 4272).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a leg, then the Punjabi for a knee.
 You'll want to know: ਬੁਖ਼ਾਰ.
 ਬੁਖ਼ਾਰ — bukhār — "a fever".
 
+The word, taken apart.
+ਬੁਖ਼ਾਰ (bukhār) is a loan from Arabic bukhār, "vapour, steam", which reached Punjabi through Persian. Its Arabic root is b-kh-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a knee, then the Punjabi for a fever.
 You'll want to know: ਹਸਪਤਾਲ.
 ਹਸਪਤਾਲ — haspatāl — "a hospital".
 
+The word, taken apart.
+ਹਸਪਤਾਲ (haspatāl) is a loan from English hospital.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a fever, then the Punjabi for a hospital
 
 You'll want to know: ਬੀਮਾਰ.
 ਬੀਮਾਰ — bīmār — "ill, sick".
+
+The word, taken apart.
+ਬੀਮਾਰ (bīmār) is a loan, usually traced to Persian bīmār, "ill, sick".
 
 What you've built.
 One more word for this chapter.

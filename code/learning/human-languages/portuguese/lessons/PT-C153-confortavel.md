@@ -13,7 +13,8 @@ gloss: "comfortable"
 concept_tag: PT-QUAL153-CONFORTAVEL
 prerequisites: [PT-C152-apesar-de, PT-C152-infelizmente]
 sounds: []
-roots: []
+roots: [fortis-latin]
+etymology_hook: "confortável — from the verb to comfort ← Late Latin confortare 'to strengthen', from fortis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C152-infelizmente]
 <!-- hl-knowledge: introduces=[PT-LEX-C153-QUAL153-01]; assesses=[] -->
 
 **confortável** — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**confortável** is built from the verb "to comfort" and *-ável*, "-able" (EtymDB 2.1). The verb ← Late Latin *confortare*, "to strengthen", from *fortis*, "strong" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

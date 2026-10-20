@@ -14,7 +14,8 @@ romanization: "plechó"
 concept_tag: RU-BODY2-SHOULDER
 prerequisites: [RU-C30-finger, RU-C30-neck]
 sounds: []
-roots: []
+roots: [slavic-plece]
+etymology_hook: "плечо ← Proto-Slavic *pleťe; Vasmer compares Latvian plecs 'shoulder' and words for 'flat', a link not certain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C30-neck]
 <!-- hl-knowledge: introduces=[RU-LEX-C30-BODY2-04]; assesses=[] -->
 
 **плечо** (*plechó*) — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плечо** ← Proto-Slavic *\*pleťe* — inherited. Vasmer compares Latvian *plecs*, "shoulder", and words for "flat" such as Greek *plax*, "a level plain", but he also gives a second possible source, so the deeper origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

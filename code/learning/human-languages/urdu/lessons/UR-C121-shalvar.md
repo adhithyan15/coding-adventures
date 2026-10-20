@@ -14,7 +14,8 @@ romanization: "shalvār"
 concept_tag: UR-THINGS121-SHALVAR
 prerequisites: [UR-C120-kabab, UR-C120-biryani]
 sounds: []
-roots: []
+roots: [persian-shalvar]
+etymology_hook: "shalvār: usually traced to Persian shalvār 'trousers'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C120-biryani]
 <!-- hl-knowledge: introduces=[UR-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **شلوار** — *shalvār* — "loose trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شلوار** (*shalvār*) is a loan, usually traced to Persian *shalvār*, "trousers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

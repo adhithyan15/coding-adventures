@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Comida na loja",
+  "label": "ch:pt-comida-na-loja",
+  "canDo": "I can shop for food: the grocer's, the deli, the fruit shop, the wine shop and slicing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C450-fatiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can shop for food: the grocer's, the deli, the fruit shop, the wine shop and slicing.",
+    "assesses": [
+      "PT-LEX-C450-MERCEARIA-03",
+      "PT-LEX-C450-MERCEARIA-04",
+      "PT-LEX-C450-MERCEARIA-05"
+    ]
+  }
+}

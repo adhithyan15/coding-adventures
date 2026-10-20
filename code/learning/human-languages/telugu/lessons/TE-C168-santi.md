@@ -14,7 +14,8 @@ romanization: "śānti"
 concept_tag: TE-AROGYAM168-SANTI
 prerequisites: [TE-C168-garvam, TE-C168-utsaham]
 sounds: []
-roots: []
+roots: [sanskrit-shanti]
+etymology_hook: "śānti ← Sanskrit śānti 'cessation; rest, peace', a tatsama (CDIAL 12391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C168-utsaham]
 <!-- hl-knowledge: introduces=[TE-LEX-C168-AROGYAM168-04]; assesses=[] -->
 
 **శాంతి** — *śānti* — "peace, calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శాంతి** (*śānti*) is Sanskrit *śānti*, "cessation; rest, peace", taken over whole as a learned loan, a tatsama (CDIAL 12391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

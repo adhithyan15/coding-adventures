@@ -14,7 +14,8 @@ romanization: "khāro"
 concept_tag: MW-QUAL143-KHARO
 prerequisites: [MW-C142-suko, MW-C143-tato]
 sounds: []
-roots: []
+roots: [sanskrit-kshara]
+etymology_hook: "khāro ← Sanskrit kṣāra 'corrosive; alkali', a tadbhava (CDIAL 3674, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C143-tato]
 <!-- hl-knowledge: introduces=[MW-LEX-C143-QUAL143-02]; assesses=[] -->
 
 **खारो** — *khāro* — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खारो** (*khāro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣāra*, "corrosive; alkali". CDIAL lists Marwari *khāro* under it, glossed "bitter"; Hindi *khārā* and Gujarati *khārũ* there mean "alkaline, saline" (CDIAL 3674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

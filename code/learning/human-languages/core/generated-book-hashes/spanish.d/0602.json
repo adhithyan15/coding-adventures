@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 602,
+  "sourceHash": "fnv1a64:9ac4218a9cb9b414",
+  "lessonIds": [
+    "ES-C602-voto",
+    "ES-C602-elecciones",
+    "ES-C602-candidato",
+    "ES-C602-votante",
+    "ES-C602-democracia"
+  ],
+  "tex": "spanish/book/chapters/ch602-las-elecciones.tex"
+}

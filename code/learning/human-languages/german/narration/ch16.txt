@@ -13,6 +13,9 @@ You'll want to know: der Vater.
 der Vater — "father."
 A der-word, two syllables, and the first letter is a trap for an English eye.
 
+The word, taken apart.
+Vater from Old High German fater from Proto-Germanic fadēr — inherited, the same word as English father. (EtymDB 2.1).
+
 Sounds you'll need.
 v-as-f — German v is an f. You were given this on vier, "four," and it has not changed: Vater opens FAH-, never VAH-.
 vowel-a-long — the a is long and open, the ah of English father.
@@ -79,6 +82,9 @@ The father's first sound changed. This one held.
 You'll want to know: die Mutter.
 die Mutter — "mother."
 A die-word beside der Vater, and the pair is how the two articles are usually first met in a sentence about people.
+
+The word, taken apart.
+Mutter from Old High German muoter from Proto-Germanic mōdēr — inherited, the same word as English mother. (EtymDB 2.1).
 
 Sounds you'll need.
 mund-short-u — the u is short, the vowel of English put, not the uh of English mother.
@@ -148,6 +154,9 @@ die Eltern — "parents."
 It takes die, like every plural you have met, and there is no singular form of it. You cannot say "one Eltern"; a single one is der Vater or die Mutter.
 Underneath, it is a comparative that hardened into a noun: it means "the older ones." English had the same formation and kept it as elders, narrowed to people of standing rather than to the two who raised you.
 
+The word, taken apart.
+Eltern from Old High German eltirōn from Proto-Germanic alþizô, "older" — inherited; EtymDB 2.1 sets it beside English elders.
+
 Why it's said this way.
 Every word in this chapter is inherited. Not one of them was bought.
 That is not an accident of this list. The words a language uses every hour of every day are the ones an incoming language cannot displace, and there is nothing more everyday than the people in a house. Rome ran the calendar, so German took the calendar's words. Rome did not run anybody's family.
@@ -180,6 +189,9 @@ Out of the parents and into their children. This one you can almost read already
 You'll want to know: der Bruder.
 der Bruder — "brother."
 A der-word. Set it beside English brother and one vowel is the whole distance: oo where English has uh.
+
+The word, taken apart.
+Bruder from Old High German bruoder from Proto-Germanic brōþēr — inherited, the same word as English brother. (EtymDB 2.1).
 
 Sounds you'll need.
 vowel-u-long — a long oo, as in English food.
@@ -280,6 +292,9 @@ die Schwester — "sister."
 SHVES-ter. A die-word, and the counterpart of der Bruder.
 On the page it looks unrelated to sister. In the mouth it is not: take the shv back to a plain s and what is left — s-e-s-t-e-r — is the English word with one vowel moved.
 
+The word, taken apart.
+Schwester from Old High German swester from Proto-Germanic swestēr — inherited, the same word as English sister. (EtymDB 2.1).
+
 Sounds you'll need.
 schw-cluster — shv-, straight into the vowel.
 herz-short-e — a short open e, the vowel of English bed.
@@ -348,9 +363,12 @@ You'll want to know: die Geschwister.
 die Geschwister — "siblings," brothers and sisters as a set.
 Consider what is inside it. Take off the Ge- at the front and -schwister is Schwester, which you own — the same shv, the same ending. A plural, so die, and like Eltern it has no singular.
 
+The word, taken apart.
+Geschwister from Middle High German geswister from Old High German giswestar (EtymDB 2.1): the gathering prefix ge- on Schwester.
+
 Why it's said this way.
 The odd part is that a word built on Schwester covers the brothers too. Two boys and no girls in a house are still die Geschwister.
-German built the collective on the word that happened to be there, and the collective then outranked the piece it was made from. English never built one at all: it says brothers and sisters and reaches for the Latin-derived siblings when it needs a single term.
+German built the collective on the word that happened to be there, and the collective then outranked the piece it was made from. English never built one at all: it says brothers and sisters, and for a single term it revived siblings, an Old English word for "relatives".
 
 Guided Practice.
 [pause 1 second]

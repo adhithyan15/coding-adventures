@@ -14,7 +14,8 @@ romanization: "śodhayati"
 concept_tag: SA-VERB-SODHAYATI
 prerequisites: [SA-C176-nivedayati, SA-C176-amantrayati]
 sounds: []
-roots: []
+roots: [sanskrit-shodhayati]
+etymology_hook: "śodhayati ← causative of √śudh 'become pure': 'makes pure' (MW), hence 'cleans, corrects'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C176-amantrayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C176-ACT176-04]; assesses=[] -->
 
 **शोधयति** — *śodhayati* — "cleans, corrects".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śodhayati* is the causative of the root √śudh, "to be purified, become pure" (MW). So it comes from "makes pure", which covers both cleaning a thing and correcting a text.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

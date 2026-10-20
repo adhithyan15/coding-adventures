@@ -11,10 +11,10 @@ gloss: "first — the one word in the set with no number inside it at all"
 concept_tag: MR-ORDINAL-FIRST
 prerequisites: [MR-C60-tisra, MR-C59-paise, MR-C56-akra, MR-C41-kholi]
 sounds: []
-roots: []
-etymology_hook: "Molesworth marks पहिला as shared with Hindustani पहला and records a second life for it as an adverb, 'At first; in the beginning'"
+roots: [sanskrit-prathama, indo-aryan-prathila]
+etymology_hook: "pahilā ← *prathilla 'first', a form CDIAL builds on Sanskrit prathama 'first' (CDIAL 8652)"
 duration:
-  max_seconds: 230
+  max_seconds: 280
 requires:
   knowledge: [MR-LEX-TISRA, MR-GRAMMAR-ORDINAL-SET, MR-LEX-DUSRA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-PAISE, MR-LEX-AKRA, MR-LEX-KHOLI]
 introduces:
@@ -50,6 +50,11 @@ reviews_of: [MR-C60-tisra, MR-C59-paise, MR-C56-akra, MR-C41-kholi]
 > **पहिला** — *pahilā* — **first**
 
 > **पहिली खोली** — *pahilī khoolī* — **the first room**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पहिला** comes from *\*prathilla*, "first", which CDIAL builds on Sanskrit *prathama* (CDIAL 8652).
 
 ## Grammar Lens: why *first* arrives third
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHILA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-GRAMMAR-ORDINAL-SET] -->

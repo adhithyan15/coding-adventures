@@ -13,7 +13,8 @@ gloss: "a booking"
 concept_tag: IT-COSE192-PRENOTAZIONE
 prerequisites: [IT-C192-frontiera, IT-C192-dogana]
 sounds: []
-roots: []
+roots: [notare-latin]
+etymology_hook: "prenotazione ← Late Latin praenotatio 'a noting beforehand' — a booking is noted in advance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C192-dogana]
 <!-- hl-knowledge: introduces=[IT-LEX-C192-COSE192-05]; assesses=[] -->
 
 **la prenotazione** — "a booking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prenotazione** ← Late Latin *praenotatio*, "a noting beforehand" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

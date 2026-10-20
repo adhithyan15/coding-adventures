@@ -14,7 +14,8 @@ romanization: "hamārā"
 concept_tag: HI-DET-OUR
 prerequisites: [HI-C84-uska]
 sounds: []
-roots: []
+roots: [sanskrit-asmaka]
+etymology_hook: "hamārā ← Sanskrit asmāka 'ours', a tadbhava (CDIAL 988)"
 duration:
   max_seconds: 240
 requires:
@@ -44,9 +45,14 @@ so the next word brings no new grammar — only a new owner.
 
 **हमारा** (*hamārā*) — "our."
 
-Built on **हम** (*ham*), "we," which you have met. Before a feminine noun it is
-*hamārī*; before a plural or an oblique it is *hamāre*, exactly as *merā*
+Built on the pronoun for *we*: **हम** (*ham*) + a possessive ending → **हमारा**.
+The pronoun gets its own lesson soon. Before a feminine noun it is *hamārī*; before a plural or an oblique it is *hamāre*, exactly as *merā*
 behaves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हमारा** (*hamārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *asmāka*, "ours" (CDIAL 988). CDIAL notes an added *-r-* element.
 
 ## Grammar Lens: where Hindi says "our" and English says "my"
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-02, HI-LEX-C84-POSS-01] -->

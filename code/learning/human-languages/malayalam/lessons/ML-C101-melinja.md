@@ -11,7 +11,8 @@ romanization: "meliñña"
 concept_tag: ML-THIN
 prerequisites: [ML-C101-kuriya, ML-C42-adjective-system, ML-C22-paccha-manja]
 sounds: []
-roots: []
+roots: [dravidian-mel-soft]
+etymology_hook: "meliñña: native Dravidian, from the verb 'to grow thin'; Tamil mel 'soft, slender' (DEDR 5078)"
 duration:
   max_seconds: 250
 requires:
@@ -63,6 +64,8 @@ and still does not change:
 |---|---|
 | **കുറിയ കുട്ടി** | *kuṟiya kuṭṭi* |
 | **മെലിഞ്ഞ കുട്ടി** | *meliñña kuṭṭi* |
+
+**Where the word comes from.** It is native Dravidian, a form of the verb "to grow thin": DEDR 5078 lists it with Tamil *mel*, "soft, tender", and Kannada *mel(u)*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-THIN-01, ML-LEX-C101-SHORT-01, ML-CONCEPT-C36-KUTTI-01] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C279-in-anticipo",
+  "pathSegment": "IT-PATH-279-RINVIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-279-RINVIO",
+      "order": 3
+    }
+  ]
+}

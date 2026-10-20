@@ -12,6 +12,9 @@ Before the new one: say the Marathi for old (things), then the Marathi for bad.
 You'll want to know: गरम.
 गरम — garam — "hot".
 
+The word, taken apart.
+गरम (garam) is a loan, usually traced to Persian garm, "warm, hot".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for bad, then the Marathi for hot.
 
 You'll want to know: थंड.
 थंड — thaṇḍ — "cold".
+
+The word, taken apart.
+थंड (thaṇḍ) is inherited. CDIAL lists it under Sanskrit stabdha, "stiff; solidified (as water)", through a form thaṇḍha, which it says was influenced by another word (CDIAL 13676). DEDR compares Tamil taṇ, "cold, cool" (DEDR 3045).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for hot, then the Marathi for cold.
 You'll want to know: हळू.
 हळू — haḷū — "slowly".
 
+The word, taken apart.
+हळू (haḷū) is a tadbhava of Sanskrit laghu, "light; slight, quick", with its consonants swapped round (CDIAL 10896).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for cold, then the Marathi for slowly.
 You'll want to know: जलद.
 जलद — jalad — "fast".
 
+The word, taken apart.
+जलद (jalad) is a loan, usually traced to Persian jald, "quick, swift".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for slowly, then the Marathi for fast.
 
 You'll want to know: महाग.
 महाग — mahāg — "expensive".
+
+The word, taken apart.
+महाग (mahāg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahārgha, "high-priced" (CDIAL 9954). It is mahā, "great", and argha, "price".
 
 What you've built.
 One more word for this chapter.

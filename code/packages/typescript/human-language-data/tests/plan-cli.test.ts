@@ -1,9 +1,9 @@
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
-import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { runCompletionPlan } from "../src/plan-cli.js";
-import { defaultCurriculumRoot } from "../src/loader.js";
+import { defaultCurriculumRoot, loadLanguageRegistry } from "../src/loader.js";
 import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 
 // `plan-cli` had no test file at all, so every one of the security review's dirty
@@ -99,6 +99,16 @@ function copyInto(root: string, inventoriesOnly: boolean): void {
         recursive: true,
         filter: readByPlan,
       });
+    }
+    // The assessment-prerequisite screen now verifies that every registered
+    // track directory exists before reporting its missing artifacts. Preserve
+    // that real directory boundary without copying lessons: this fixture is
+    // intentionally an inventory-only corpus with every mock still absent.
+    for (const track of loadLanguageRegistry(root).languages) {
+      if (typeof track.id !== "string" || !/^[a-z][a-z0-9-]*$/.test(track.id)) {
+        throw new Error(`inventory fixture: unsafe track id '${String(track.id)}'`);
+      }
+      mkdirSync(join(root, track.id));
     }
   } else {
     cpSync(defaultCurriculumRoot(), root, { recursive: true, filter: readByPlan });

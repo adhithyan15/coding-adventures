@@ -15,6 +15,7 @@ concept_tag: MR-GUN204-BHITRA
 prerequisites: [MR-C204-lajalu, MR-C204-sur]
 sounds: []
 roots: []
+etymology_hook: "bhitrā: origin not settled; CDIAL lists only Old Marathi bheḍa 'timid' under bhīta 'frightened' (CDIAL 9511)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C204-sur]
 <!-- hl-knowledge: introduces=[MR-LEX-C204-GUN204-04]; assesses=[] -->
 
 **भित्रा / भित्री** — *bhitrā / bhitrī* — "fearful, cowardly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **भित्रा** (*bhitrā*) is not settled. CDIAL has no entry for it; under Sanskrit *bhīta*, "frightened", it lists only Old Marathi *bheḍa*, "timid" (CDIAL 9511).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

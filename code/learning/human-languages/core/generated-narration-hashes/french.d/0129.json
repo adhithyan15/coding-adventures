@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 129,
-  "sourceHash": "fnv1a64:258f651fa7968777",
+  "sourceHash": "fnv1a64:75928fe15d96c6ea",
   "lessonIds": [
     "FR-C129-dessin",
     "FR-C129-vie",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch129.txt",
   "json": "french/narration/ch129.json",
-  "textHash": "fnv1a64:5bfea07be56a26be",
-  "jsonHash": "fnv1a64:18beb7ce6dd60e6b",
+  "textHash": "fnv1a64:cb0fee6014ee4dc5",
+  "jsonHash": "fnv1a64:2c815d1ae17883a3",
   "findings": []
 }

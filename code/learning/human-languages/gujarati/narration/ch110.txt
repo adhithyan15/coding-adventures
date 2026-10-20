@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for rubbish, then the Gujarati for a basket
 You'll want to know: પેટી.
 પેટી (peṭī) — "a box".
 
+The word, taken apart.
+પેટી (peṭī) is a tadbhava. CDIAL lists it under peṭṭa, one of several forms beside Sanskrit piṭaka, "basket, box", which it calls non-Aryan (CDIAL 8164).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a basket, then the Gujarati for a box.
 
 You'll want to know: બરણી.
 બરણી (barṇī) — "a jar".
+
+The word, taken apart.
+The origin of બરણી (barṇī) is not settled. CDIAL has no entry for it. DEDR lists Dravidian words for a jar or casket, such as Kannada and Tulu baraṇi, "china jar", and Tamil paraṇi, but no Gujarati word, so whether બરણી (barṇī) belongs with them is not known (DEDR 3954).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a box, then the Gujarati for a jar.
 You'll want to know: મીણબત્તી.
 મીણબત્તી (mīṇbattī) — "a candle".
 
+The word, taken apart.
+મીણબત્તી (mīṇbattī) is "wax-wick": mīṇ, "beeswax", from the lexical Sanskrit madana, "beeswax" (CDIAL 9778), and battī, "wick", the Hindi form of Sanskrit varti, "wick" (CDIAL 11359).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a jar, then the Gujarati for a candle.
 You'll want to know: તકિયો.
 તકિયો (takiyo) — "a pillow".
 
+The word, taken apart.
+તકિયો (takiyo) is a loan, usually traced to Persian takya, "pillow, support", a word Persian took from Arabic. Its Arabic root is w-k-ʾ, "to lean" (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a candle, then the Gujarati for a pillo
 
 You'll want to know: ઢીંગલી.
 ઢીંગલી (ḍhī̃glī) — "a doll".
+
+The word, taken apart.
+The origin of ઢીંગલી (ḍhī̃glī) (ḍhīṁglī) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for this chapter.

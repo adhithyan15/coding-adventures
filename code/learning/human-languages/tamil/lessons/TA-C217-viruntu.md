@@ -14,7 +14,8 @@ romanization: "viruntu"
 concept_tag: TA-PORUL217-VIRUNTU
 prerequisites: [TA-C217-manamakan, TA-C217-niccayatarttam]
 sounds: []
-roots: []
+roots: [dravidian-viruntu-feast]
+etymology_hook: "விருந்து — native Dravidian (DEDR 5415); Malayalam virunnu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C217-niccayatarttam]
 <!-- hl-knowledge: introduces=[TA-LEX-C217-PORUL217-04]; assesses=[] -->
 
 **விருந்து** — *viruntu* — "a feast, a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விருந்து** (*viruntu*) is native Dravidian. DEDR 5415 lists Malayalam *virunnu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

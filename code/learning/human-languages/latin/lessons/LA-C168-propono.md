@@ -13,7 +13,8 @@ gloss: "to propose, to put forward"
 concept_tag: LA-VERB-PROPONO
 prerequisites: [LA-C168-praeparo, LA-C168-commodo]
 sounds: []
-roots: []
+roots: [proponere-latin, ponere-latin]
+etymology_hook: "prōpōnō 'to propose' — prō 'forward' + pōnō 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C168-commodo]
 <!-- hl-knowledge: introduces=[LA-LEX-C168-ACT168-05]; assesses=[] -->
 
 **prōpōnō, prōpōnere** — "to propose, to put forward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prōpōnō** is *prō*, "forward", with *pōnō*, "to put" (EtymDB 2.1): to put forward.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

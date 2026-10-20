@@ -1,0 +1,11 @@
+{
+  "id": "PT-C440-concelho",
+  "pathSegment": "PT-PATH-440-MORADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-440-MORADA",
+      "order": 3
+    }
+  ]
+}

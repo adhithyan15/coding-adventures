@@ -14,7 +14,8 @@ romanization: "mānacitram"
 concept_tag: SA-TRV231-MANACITRAM
 prerequisites: [SA-C230-avasarah, SA-C230-anubhavah]
 sounds: []
-roots: []
+roots: [sanskrit-mana, sanskrit-citra]
+etymology_hook: "mānacitra = māna 'measure' + citra 'picture': a measured picture; the compound is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C230-anubhavah]
 <!-- hl-knowledge: introduces=[SA-LEX-C231-TRV231-01]; assesses=[] -->
 
 **मानचित्रम्** — *mānacitram* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mānacitra* is a compound of *māna*, "measure, standard" (CDIAL 10041), and *citra*, "picture": a picture drawn to measure. MW does not list the compound, so it is a modern pairing for a map.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

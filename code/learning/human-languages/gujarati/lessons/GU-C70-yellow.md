@@ -14,7 +14,8 @@ romanization: "pīḷo"
 concept_tag: GU-COLOUR1-YELLOW
 prerequisites: [GU-C69-fish, GU-C70-red]
 sounds: []
-roots: []
+roots: [sanskrit-pitala]
+etymology_hook: "pīḷo: listed under Sanskrit pītala 'yellow', built on pīta 'yellow' (CDIAL 8233)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C70-red]
 <!-- hl-knowledge: introduces=[GU-LEX-C70-COLOUR1-02]; assesses=[] -->
 
 **પીળો** (*pīḷo*) — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પીળો** (*pīḷo*) is a tadbhava. CDIAL lists Gujarati *pīḷũ* under the lexical Sanskrit *pītala*, "yellow", built on *pīta*, "yellow" (CDIAL 8233).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

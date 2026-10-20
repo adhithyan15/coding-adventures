@@ -11,7 +11,8 @@ gloss: "eighth — the third in a row you can build without being told"
 concept_tag: MR-ORDINAL-EIGHTH
 prerequisites: [MR-C61-satva, MR-C60-chautha, MR-C57-pandhra, MR-C41-kholi]
 sounds: []
-roots: []
+roots: [sanskrit-ashtama]
+etymology_hook: "āṭhvā ← Sanskrit aṣṭama 'eighth', a tadbhava (CDIAL 937)"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ reviews_of: [MR-C61-satva, MR-C60-chautha, MR-C57-pandhra, MR-C41-kholi]
 
 **आठ** + **वा**, with the retroflex **ठ** carried through untouched.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **आठवा** (*āṭhvā*) under Sanskrit *aṣṭama*, "eighth" (CDIAL 937).
+
 ## Grammar Lens: the pair to keep apart
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-AATHVA, MR-LEX-CHAUTHA, MR-GRAMMAR-ORDINAL-VA] -->
 
@@ -60,7 +66,7 @@ Two words in this set both end in a **-था**/**-वा** you might blur toget
 | | |
 |---|---|
 | **चौथा** (*chauthā*) | fourth — an inherited word, **-था** |
-| **आठवा** (*āṭhvā*) | eighth — a built word, **आठ** + **-वा** |
+| **आठवा** (*āṭhvā*) | eighth — a regular word, **आठ** + **-वा** |
 
 They are not the same ending, and the test is quick: take the ending off and see
 whether a number is left standing. **आठवा** minus **-वा** leaves **आठ**.

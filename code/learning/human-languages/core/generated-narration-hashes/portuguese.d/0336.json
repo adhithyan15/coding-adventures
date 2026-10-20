@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:2148631006f0e5ae",
+  "lessonIds": [
+    "PT-C336-tema",
+    "PT-C336-questao",
+    "PT-C336-debate",
+    "PT-C336-debater",
+    "PT-C336-argumento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch336.txt",
+  "json": "portuguese/narration/ch336.json",
+  "textHash": "fnv1a64:d30f99ffab6b1f59",
+  "jsonHash": "fnv1a64:750bd1ea72cbaa83",
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "a window"
 concept_tag: FR-MAISON25-FENETRE
 prerequisites: [FR-C72-noix, FR-C73-cuisine]
 sounds: []
-roots: []
+roots: [fenestra-latin]
+etymology_hook: "fenêtre ← Latin fenestra 'window' — English defenestrate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C73-cuisine]
 <!-- hl-knowledge: introduces=[FR-LEX-C73-MAISON25-02]; assesses=[] -->
 
 **la fenêtre** — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fenêtre** ← Old French *fenestre* ← Latin *fenestra*, "window" — inherited. (EtymDB 2.1) The circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

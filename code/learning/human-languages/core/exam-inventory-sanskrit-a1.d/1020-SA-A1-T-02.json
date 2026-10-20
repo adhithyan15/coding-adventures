@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-T-02",
+  "category": "Temporal notions",
+  "label": "locating a day: today, yesterday, tomorrow — and the week, month and year",
+  "probe": [
+    "SA-LEX-C17-TIME-03",
+    "SA-LEX-C17-TIME-04",
+    "SA-LEX-SHVAH",
+    "SA-LEX-C28-LEAVE-02",
+    "SA-LEX-C45-DAYTIME-04",
+    "SA-LEX-C45-DAYTIME-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG4-02"
+  ],
+  "note": "adya, hyaḥ, śvaḥ, paraśvaḥ, māsaḥ, saṁvatsaraḥ -- an unusually full set, and as of chapter 56 two of the three relative days can finally be USED: adya with the present and hyaḥ with the past. śvaḥ still waits on a future tense the track does not teach. THE WEEKDAY NAMES, THE MONTH NAMES AND THE SIX SEASON NAMES ARE ALL STILL ABSENT, so a learner has the relative days and no calendar; chapter 61 adds the generic ṛtuḥ and not the six names."
+}

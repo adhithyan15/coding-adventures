@@ -11,7 +11,8 @@ gloss: name, assembled from known signs
 concept_tag: WORD-NAME
 prerequisites: [MW-W05-na]
 sounds: [dental-n, long-aa]
-roots: [SANSKRIT-NAMAN-NAME, PIE-NOMN-NAME]
+roots: [SANSKRIT-NAMAN-NAME, PIE-NOMN-NAME, naaman-sanskrit]
+etymology_hook: "nām ← Sanskrit nāman 'name' (CDIAL 7067), kept in its Sanskrit shape; English name is the same old word"
 duration:
   max_seconds: 150
 requires:
@@ -46,6 +47,11 @@ Say *nām* and its meaning. [YOU WRITE: **न** once]
 > **न** + **ा** + **म** → **नाम** — *nām* — name
 
 Nothing new is hiding here: dental **न**, known long **ा**, and known **म**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाम** (*nām*) goes back to Sanskrit *nāman*, "name", the same ancient word as English *name*. CDIAL lists Gujarati *nām* under it, and an older Marwari form *nāva* (CDIAL 7067); *nām* keeps the Sanskrit shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NAAM-01, MW-LEX-NAAM-01] -->

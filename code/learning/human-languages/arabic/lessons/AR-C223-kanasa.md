@@ -14,7 +14,8 @@ romanization: "kanasa"
 concept_tag: AR-VERB-KANASA
 prerequisites: [AR-C222-tajir, AR-C223-rattaba]
 sounds: []
-roots: []
+roots: [k-n-s]
+etymology_hook: "kanasa: built on the root k-n-s, 'to sweep' (Lane); kanasa is the plain verb, 'he swept'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C223-rattaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C223-ACT223-02]; assesses=[] -->
 
 **كنس** — *kanasa* — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كنس** (*kanasa*) is built on the native Arabic root *k-n-s*, "to sweep" (Lane). *Kanasa* is the plain verb, "he swept".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

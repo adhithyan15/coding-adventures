@@ -14,7 +14,8 @@ romanization: "pāṭhavṇe"
 concept_tag: MR-VERB-PATHAVNE
 prerequisites: [MR-C79-nachne, MR-C80-visarne]
 sounds: []
-roots: []
+roots: [sanskrit-prasthapayati]
+etymology_hook: "pāṭhavṇe ← Sanskrit prasthāpayati 'sends', a tadbhava (CDIAL 8607)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C80-visarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C80-VERBS80-02]; assesses=[] -->
 
 **पाठवणे** — *pāṭhavṇe* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाठवणे** (*pāṭhavṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prasthāpayati*, "puts aside, sends", built on *sthā*, "to stand" (CDIAL 8607).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

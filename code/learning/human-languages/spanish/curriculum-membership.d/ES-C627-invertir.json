@@ -1,0 +1,11 @@
+{
+  "id": "ES-C627-invertir",
+  "pathSegment": "ES-PATH-627-GASTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-627-GASTO",
+      "order": 4
+    }
+  ]
+}

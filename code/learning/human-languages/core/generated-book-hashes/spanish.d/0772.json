@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 772,
+  "sourceHash": "fnv1a64:460dfe05608e8d3c",
+  "lessonIds": [
+    "ES-C772-brisa",
+    "ES-C772-soplar",
+    "ES-C772-ladera",
+    "ES-C772-resbalar",
+    "ES-C772-brujula"
+  ],
+  "tex": "spanish/book/chapters/ch772-cuesta-arriba.tex"
+}

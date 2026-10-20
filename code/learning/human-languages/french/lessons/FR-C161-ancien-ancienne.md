@@ -13,7 +13,8 @@ gloss: "former, ancient"
 concept_tag: FR-QUAL161-ANCIEN-ANCIENNE
 prerequisites: [FR-C160-sur-sure, FR-C161-moderne]
 sounds: []
-roots: []
+roots: [ante-latin]
+etymology_hook: "ancien ← Vulgar Latin *anteanus, from ante 'before' — English ancient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C161-moderne]
 <!-- hl-knowledge: introduces=[FR-LEX-C161-QUAL161-02]; assesses=[] -->
 
 **ancien / ancienne** — "former, ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ancien** ← Old French *ancien* ← Vulgar Latin *\*anteanus*, from Latin *ante*, "before" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

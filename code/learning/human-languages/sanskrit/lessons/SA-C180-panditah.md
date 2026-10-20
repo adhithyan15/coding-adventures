@@ -14,7 +14,8 @@ romanization: "paṇḍitaḥ"
 concept_tag: SA-PPL180-PANDITAH
 prerequisites: [SA-C180-caurah, SA-C180-yacakah]
 sounds: []
-roots: []
+roots: [sanskrit-pandita]
+etymology_hook: "paṇḍita 'learned' is of uncertain origin (CDIAL 7718); MW links it to paṇḍā 'wisdom'; English pundit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C180-yacakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C180-PPL180-04]; assesses=[] -->
 
 **पण्डितः** — *paṇḍitaḥ* — "a scholar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṇḍita* is of uncertain origin: CDIAL 7718 says it has no certain etymology. MW files it beside *paṇḍā*, "wisdom", and notes the view that it stands for *spandita*. CDIAL lists Hindi *paṇḍā*, "temple priest", among its descendants, and English took the word as *pundit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

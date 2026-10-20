@@ -13,7 +13,8 @@ gloss: "a television"
 concept_tag: PT-CASA93-TELEVISAO
 prerequisites: [PT-C92-comboio, PT-C93-tapete]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "televisão = tele- 'far' (from Greek) + the word for vision (← Latin visio)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C93-tapete]
 <!-- hl-knowledge: introduces=[PT-LEX-C93-CASA93-02]; assesses=[] -->
 
 **a televisão** — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**televisão** is built from *tele-*, "far" (from Greek *tēle*), and the word for vision (EtymDB 2.1), which ← Latin *visio*, "sight", from *videre*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

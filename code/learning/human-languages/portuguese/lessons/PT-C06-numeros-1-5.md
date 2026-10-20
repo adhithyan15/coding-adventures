@@ -64,10 +64,10 @@ signature Portuguese twists: heavy **nasal vowels**, and a number that still
 ## Grammar Lens: um/uma and the gendered "two" (dois/duas)
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-NUMEROS-1-5-04]; assesses=[] -->
 
-**um** is also "a/an," gendered **um** (masc.) / **uma** (fem.): *um café*, *uma
-cerveja*. That much matches Spanish. The surprise is **two**: Portuguese still
+**um** is also "a/an," gendered **um** (masc.) / **uma** (fem.): *um dia*, *uma
+noite*. That much matches Spanish. The surprise is **two**: Portuguese still
 inflects it — **dois** (masc.) / **duas** (fem.) — a direct survival of Latin
-*duo* (masc.) / *duae* (fem.). So it's *dois cafés* but *duas cervejas*. Spanish
+*duo* (masc.) / *duae* (fem.). So it's *dois dias* but *duas noites*. Spanish
 levelled this to a single *dos* centuries ago; Portuguese kept the old split. The
 rest (*três, quatro, cinco*) don't change.
 
@@ -76,7 +76,7 @@ rest (*três, quatro, cinco*) don't change.
 
 [PAUSE 1s]
 - [YOU SAY: "um, dois, três, quatro, cinco" — count up]
-- [YOU SAY: the gendered two — "dois cafés" (masc.) / "duas cervejas" (fem.)]
+- [YOU SAY: the gendered two — "dois dias" (masc.) / "duas noites" (fem.)]
 - [YOU SAY: each with its English cousin — "dois/duo, três/trio, cinco/quintet"]
 
 ## Wrap-up Recall

@@ -14,7 +14,8 @@ romanization: "nârangi"
 concept_tag: FA-CHIZ241-NARANGI
 prerequisites: [FA-C241-golabi, FA-C241-anjir]
 sounds: []
-roots: []
+roots: [persian-naranj]
+etymology_hook: "nârangi: nâranj (usually traced to Sanskrit nāraṅga) + -i; English orange is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C241-anjir]
 <!-- hl-knowledge: introduces=[FA-LEX-C241-CHIZ241-03]; assesses=[] -->
 
 **نارنگی** — *nârangi* — "a tangerine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nârangi* is *nâranj*, "bitter orange", with *-i*. *nâranj* is usually traced to Sanskrit *nāraṅga*, "orange tree"; English *orange* comes from the same word through Arabic and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

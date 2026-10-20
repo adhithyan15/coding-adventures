@@ -1,0 +1,11 @@
+{
+  "id": "ES-C633-riqueza",
+  "pathSegment": "ES-PATH-633-RIQUEZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-633-RIQUEZA",
+      "order": 2
+    }
+  ]
+}

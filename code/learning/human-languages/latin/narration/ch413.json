@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 413,
+  "title": "The Verdict",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6e1418fed4fdca57",
+  "lessons": [
+    {
+      "id": "LA-C413-condemno",
+      "sequence": 22070,
+      "title": "condemnō, condemnāre — to condemn, to find guilty",
+      "headword": "condemnō, condemnāre",
+      "romanization": "condemnō, condemnāre",
+      "gloss": "to condemn, to find guilty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48872638573f6ede",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an informer, then the Latin for a defence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: condemnō, condemnāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "condemnō, condemnāre — \"to condemn, to find guilty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iūdicēs eum furtī condemnāvērunt. The judges found him guilty of theft."
+            },
+            {
+              "kind": "speech",
+              "text": "condemnō, condemnāre, condemnāvī, condemnātum, with the charge in the genitive. English condemn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "condemnō is built from con- and damnō \"to condemn\" (EtymDB; Lewis & Short), which comes from damnum \"a loss, a fine\". English condemn comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "condemnō, condemnāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *condemnō, condemnāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "condemnō, condemnāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *condemnō, condemnāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with condemnō, condemnāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *condemnō, condemnāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an informer, then the Latin for a defence, then say condemnō, condemnāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an informer, then the Latin for a defence, then say *condemnō, condemnāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does condemnō, condemnāre mean? (\"To condemn, to find guilty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C413-damnatio",
+      "sequence": 22080,
+      "title": "damnātiō, damnātiōnis — a conviction, a condemnation",
+      "headword": "damnātiō, damnātiōnis",
+      "romanization": "damnātiō, damnātiōnis",
+      "gloss": "a conviction, a condemnation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4c492c241d4acca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a defence, then the Latin for to condemn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: damnātiō, damnātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "damnātiō, damnātiōnis — \"a conviction, a condemnation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post damnātiōnem in exsilium iit. After his conviction he went into exile."
+            },
+            {
+              "kind": "speech",
+              "text": "damnātiō, damnātiōnis f., the noun of damnō. English damnation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "damnātiō is the noun built on damnō \"to condemn\" (EtymDB; Lewis & Short), from damnum \"a loss\". English damnation comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damnātiō, damnātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *damnātiō, damnātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damnātiō, damnātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *damnātiō, damnātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with damnātiō, damnātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *damnātiō, damnātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a defence, then the Latin for to condemn, then say damnātiō, damnātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a defence, then the Latin for to condemn, then say *damnātiō, damnātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does damnātiō, damnātiōnis mean? (\"A conviction, a condemnation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C413-absolutio",
+      "sequence": 22090,
+      "title": "absolūtiō, absolūtiōnis — an acquittal",
+      "headword": "absolūtiō, absolūtiōnis",
+      "romanization": "absolūtiō, absolūtiōnis",
+      "gloss": "an acquittal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fed1d20419c30d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to condemn, then the Latin for a conviction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: absolūtiō, absolūtiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absolūtiō, absolūtiōnis — \"an acquittal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post absolūtiōnem domum rediit. After his acquittal he went home."
+            },
+            {
+              "kind": "speech",
+              "text": "absolūtiō, absolūtiōnis f., the noun of absolvō, to set loose. English absolution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absolūtiō is the noun built on absolvō \"to set loose, to acquit\" (EtymDB; Lewis & Short), from ab and solvō \"to loosen\". English absolution comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absolūtiō, absolūtiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absolūtiō, absolūtiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absolūtiō, absolūtiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absolūtiō, absolūtiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with absolūtiō, absolūtiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *absolūtiō, absolūtiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to condemn, then the Latin for a conviction, then say absolūtiō, absolūtiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to condemn, then the Latin for a conviction, then say *absolūtiō, absolūtiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does absolūtiō, absolūtiōnis mean? (\"An acquittal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C413-deprecor",
+      "sequence": 22100,
+      "title": "dēprecor, dēprecārī — to beg to be spared, to plead against",
+      "headword": "dēprecor, dēprecārī",
+      "romanization": "dēprecor, dēprecārī",
+      "gloss": "to beg to be spared, to plead against",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c8c051a1f5266dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a conviction, then the Latin for an acquittal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēprecor, dēprecārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēprecor, dēprecārī — \"to beg to be spared, to plead against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Reus poenam dēprecātus est. The accused begged to be spared the punishment."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: dēprecor, dēprecārī, dēprecātus sum, dē + precor, to pray: to pray a thing away. English deprecate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēprecor is built from dē \"away\" and precor \"to pray\" (EtymDB; Lewis & Short): to pray a thing away. English deprecate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēprecor, dēprecārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēprecor, dēprecārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēprecor, dēprecārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēprecor, dēprecārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēprecor, dēprecārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēprecor, dēprecārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a conviction, then the Latin for an acquittal, then say dēprecor, dēprecārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a conviction, then the Latin for an acquittal, then say *dēprecor, dēprecārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēprecor, dēprecārī mean? (\"To beg to be spared, to plead against\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C413-patrocinium",
+      "sequence": 22110,
+      "title": "patrōcinium, patrōciniī — defence in court, advocacy; protection",
+      "headword": "patrōcinium, patrōciniī",
+      "romanization": "patrōcinium, patrōciniī",
+      "gloss": "defence in court, advocacy; protection",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c277a7c2a185d26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an acquittal, then the Latin for to beg to be spared."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: patrōcinium, patrōciniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patrōcinium, patrōciniī — \"defence in court, advocacy; protection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Patrōcinium causidicī reum nōn adiūvit. The advocate's defence did not help the accused."
+            },
+            {
+              "kind": "speech",
+              "text": "patrōcinium, patrōciniī n., built on patrōnus: the patron's protection, and his pleading in court."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patrōcinium is built on patrōnus \"a patron, a defender\" (EtymDB; Lewis & Short), which comes from pater \"a father\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrōcinium, patrōciniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrōcinium, patrōciniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrōcinium, patrōciniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrōcinium, patrōciniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with patrōcinium, patrōciniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *patrōcinium, patrōciniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an acquittal, then the Latin for to beg to be spared, then say patrōcinium, patrōciniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an acquittal, then the Latin for to beg to be spared, then say *patrōcinium, patrōciniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does patrōcinium, patrōciniī mean? (\"Defence in court, advocacy; protection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

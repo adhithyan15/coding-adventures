@@ -14,7 +14,8 @@ romanization: "baththa"
 concept_tag: AR-VERB-BATHTHA
 prerequisites: [AR-C258-ikhtalafa, AR-C259-nashara]
 sounds: []
-roots: []
+roots: [b-th-th]
+etymology_hook: "baththa: built on the root b-th-th, 'to scatter, to spread' (Lane); baththa is 'to spread abroad', to broadcast"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C259-nashara]
 <!-- hl-knowledge: introduces=[AR-LEX-C259-ACT259-02]; assesses=[] -->
 
 **بث** — *baththa* — "to broadcast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بث** (*baththa*) is built on the native Arabic root *b-th-th*, "to scatter, to spread" (Lane). *Baththa* is "to spread abroad", to broadcast.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C360-absurdus",
+    "language": "latin",
+    "chapter": 360,
+    "sequence": 19370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2328de3158a9e5da"
+  },
+  "findings": []
+}

@@ -15,6 +15,7 @@ concept_tag: GREETING-FORMAL
 prerequisites: [HI-C01-namaste]
 sounds: [devanagari-inherent-a, matra-aa]
 roots: [nam, kaara]
+etymology_hook: "namaskār: Sanskrit namas 'a bow' + kāra 'the making', from the root kṛ 'to do'"
 duration:
   max_seconds: 240
 requires:

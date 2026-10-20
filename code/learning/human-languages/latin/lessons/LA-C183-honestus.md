@@ -13,7 +13,8 @@ gloss: "honourable"
 concept_tag: LA-QUAL183-HONESTUS
 prerequisites: [LA-C183-notus, LA-C183-celeber]
 sounds: []
-roots: []
+roots: [honestus-latin, honos-latin]
+etymology_hook: "honestus 'honourable' — built on honōs 'honour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C183-celeber]
 <!-- hl-knowledge: introduces=[LA-LEX-C183-QUAL183-03]; assesses=[] -->
 
 **honestus, honesta, honestum** — "honourable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**honestus** is built on *honōs*, "honour, office" (Lewis & Short), the older form of honor: endowed with honour. Where *honōs* comes from is unknown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vāsal"
 concept_tag: TA-WELCOME-THRESHOLD
 prerequisites: [TA-C49-many-thanks, TA-C48-now, TA-C49-affection]
 sounds: []
-roots: []
+roots: [dravidian-vaayil-doorway]
+etymology_hook: "வாசல் — native Dravidian (DEDR 5354); Malayalam vātil, Kannada bāgil, Telugu vākili"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C49-many-thanks]
 Tamil separates the opening from the thing that shuts it. *kadavu*, which you have, is the door itself — the plank on its hinges. *vāsal* is the doorway: the gap, the step, and the strip of ground in front of it.
 
 Almost everything that happens when a guest arrives happens at the *vāsal* rather than inside it, which is why the word carries more than architecture.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாசல்** (*vāsal*) is native Dravidian. DEDR 5354 lists Malayalam *vātil*, Kannada *bāgil* and Telugu *vākili*. The entry lists *vāyil* and *vācal* side by side.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

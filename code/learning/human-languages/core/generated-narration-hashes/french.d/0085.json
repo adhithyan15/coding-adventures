@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 85,
-  "sourceHash": "fnv1a64:b0553f3b95a321df",
+  "sourceHash": "fnv1a64:02b834516e273375",
   "lessonIds": [
     "FR-C85-vache",
     "FR-C85-cochon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch85.txt",
   "json": "french/narration/ch85.json",
-  "textHash": "fnv1a64:72a3f440dcbd97e5",
-  "jsonHash": "fnv1a64:57dab93fe75212b4",
+  "textHash": "fnv1a64:9a76d46191cf9208",
+  "jsonHash": "fnv1a64:aeb94ff885e194be",
   "findings": []
 }

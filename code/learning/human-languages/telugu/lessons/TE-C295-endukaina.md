@@ -14,7 +14,8 @@ romanization: "endukainā"
 concept_tag: TE-KARANAM295-ENDUKAINA
 prerequisites: [TE-C295-vijayam, TE-C295-akaram]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "endukainā: native enduku 'why' (DEDR 5151) + ainā 'even if' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C295-akaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C295-KARANAM295-03]; assesses=[] -->
 
 **ఎందుకైనా** — *endukainā* — "in case, to be on the safe side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎందుకైనా** (*endukainā*) is native Dravidian: *enduku*, "for what, why", on the question base *e-* (DEDR 5151), with *ainā*, "even if it is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,14 +4,14 @@
   "chapter": 7,
   "title": "Days of the Week",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6e0dc4d47364f3ea",
+  "sourceHash": "fnv1a64:3ddc63ea78b5c2e5",
   "lessons": [
     {
       "id": "PT-C07-dias-1",
       "sequence": 350,
       "title": "segunda to sexta — the week that got numbered",
-      "headword": "segunda, terça, quarta, quinta, sexta(-feira)",
-      "romanization": "segunda, terça, quarta, quinta, sexta(-feira)",
+      "headword": "segunda, terça, quarta, quinta, sexta, -feira",
+      "romanization": "segunda, terça, quarta, quinta, sexta, -feira",
       "gloss": "the weekdays (Mon–Fri) — Portuguese NUMBERS its days instead of naming planets",
       "script": "latin",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00115571dc7b7cff",
+      "sourceHash": "fnv1a64:25c4587872731414",
       "notice": null,
       "blocks": [
         {
@@ -135,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "How is Portuguese unique among Romance languages here? (It numbers its weekdays — feiras — instead of naming planet-gods.) What does feira mean, and its English cousin? (\"Feast-day,\" from fēria; English fair.) What number hides in quinta-feira? (Five — quinta from quintus, cousin of cinco.) Next: the two days that kept their old names — sábado and domingo."
+              "text": "How is Portuguese unique among Romance languages here? (It numbers its weekdays — feiras — instead of naming planet-gods.) What does feira mean, and its English cousin? (\"Feast-day,\" from fēria; English fair.) What number hides in quinta-feira? (Five — quinta from quintus, cousin of cinco.) Next: the two days that kept their old names — Saturday and Sunday."
             }
           ]
         }

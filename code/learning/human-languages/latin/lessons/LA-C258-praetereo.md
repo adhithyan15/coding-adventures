@@ -13,7 +13,8 @@ gloss: "to go past"
 concept_tag: LA-VERB-PRAETEREO
 prerequisites: [LA-C258-somnio, LA-C258-pello]
 sounds: []
-roots: []
+roots: [praeterire-latin, ire-latin]
+etymology_hook: "praetereō 'to go past' — praeter 'past' + eō 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C258-pello]
 <!-- hl-knowledge: introduces=[LA-LEX-C258-ACT258-03]; assesses=[] -->
 
 **praetereō, praeterīre** — "to go past".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**praetereō** is *eō*, "to go" (EtymDB 2.1), with *praeter*, "past, beyond": to go past.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,7 @@ concept_tag: RU-BODY-MOUTH
 romanization: rot
 prerequisites: [RU-C09-nos]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-rutu]
 etymology_hook: "рот is native Slavic, probably related to рыть 'to dig, to burrow' (a snout rooting the ground) — no secure link to English mouth, whose own root is entirely separate Germanic *munþaz"
 duration:
   max_seconds: 250

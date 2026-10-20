@@ -13,7 +13,8 @@ gloss: "to dare"
 concept_tag: LA-VERB-AUDEO
 prerequisites: [LA-C108-calceus, LA-C109-queo]
 sounds: []
-roots: []
+roots: [audere-latin, avidus-latin]
+etymology_hook: "audeō 'to dare' — usually traced to avidus 'eager': first 'to be eager'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C109-queo]
 <!-- hl-knowledge: introduces=[LA-LEX-C109-CAN109-02]; assesses=[] -->
 
 **audeō, audēre** — "to dare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**audeō** is usually traced to *avidus*, "eager, greedy" (EtymDB 2.1), from *aveō*, "to long for": to dare was first to be eager.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "samyak"
 concept_tag: SA-REPLY-SAMYAK
 prerequisites: [SA-C36-slowly, SA-C34-body, SA-C35-bed]
 sounds: []
-roots: []
+roots: [sanskrit-samyak]
+etymology_hook: "samyak ← samyañc 'turned together': sam 'together' + the root √añc 'bend, go' (CDIAL 13245)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C36-slowly]
 **सम्यक्** confirms that a thing has been done right.
 
 It is *sam*, "together" — the *sam-* inside **समुद्रः** and **संस्कृतम्** — joined to a piece meaning "turned, directed": turned the right way, all of a piece. Beside **साधु** it is the cooler of the two. **साधु** praises the person; **सम्यक्** confirms the thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Samyak* is a form of *samyañc*, "turned together, entire", built from *sam*
+"together" and the root √añc, "to bend, go" (MW, CDIAL 13245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

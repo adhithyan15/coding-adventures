@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to chat, then the Marathi for to deliver
 You'll want to know: दाबणे.
 दाबणे — dābṇe — "to press".
 
+The word, taken apart.
+दाबणे (dābṇe) comes from a reconstructed dabb-, "press" (CDIAL 6173). CDIAL reports A. Master's view that it comes from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to deliver, then the Marathi for to pres
 
 You'll want to know: खोकणे.
 खोकणे — khokṇe — "to cough".
+
+The word, taken apart.
+खोकणे (khokṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from khokkh, "bark, cough", a form CDIAL reconstructs from its descendants (CDIAL 3926).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to press, then the Marathi for to cough.
 You'll want to know: थरथरणे.
 थरथरणे — thartharṇe — "to tremble".
 
+The word, taken apart.
+थरथरणे (thartharṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from thar, "tremble", a form CDIAL reconstructs from its descendants (CDIAL 6092). CDIAL compares Buddhist Sanskrit tharatharāyamāṇa, "trembling".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to cough, then the Marathi for to trembl
 You'll want to know: मत देणे.
 मत देणे — mat deṇe — "to vote".
 
+The word, taken apart.
+मत is Sanskrit mata, "thought, opinion", a tatsama. देणे comes from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to tremble, then the Marathi for to vote
 
 You'll want to know: स्वागत करणे.
 स्वागत करणे — svāgat karṇe — "to welcome".
+
+The word, taken apart.
+स्वागत is Sanskrit svāgata, "welcome", a tatsama: su-, "well", and āgata, "come". करणे is "to do".
 
 What you've built.
 One more word for this chapter.

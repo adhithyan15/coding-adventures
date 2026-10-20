@@ -10,7 +10,8 @@ gloss: "compulsory"
 concept_tag: ES-REF-OBLIGATORIO
 prerequisites: [ES-C479-inscribirse, ES-C479-cancelar]
 sounds: []
-roots: []
+roots: [ligare-latin]
+etymology_hook: "obligatorio ← Late Latin obligatorius 'binding', from obligare, ob- + ligare 'to tie' — English obligatory"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C479-cancelar]
 > *Wearing a helmet is compulsory.*
 
 The opposite on a notice is *opcional* or *voluntario*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obligatorio** ← Late Latin *obligatorius*, "binding", from *obligare*, "to bind": *ob-* and *ligare*, "to tie" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

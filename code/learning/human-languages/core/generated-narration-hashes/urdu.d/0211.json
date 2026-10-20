@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 211,
-  "sourceHash": "fnv1a64:52f7e8f550cd627b",
+  "sourceHash": "fnv1a64:93f9a944b821fd36",
   "lessonIds": [
     "UR-C211-sekretari",
     "UR-C211-mainejar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch211.txt",
   "json": "urdu/narration/ch211.json",
-  "textHash": "fnv1a64:d48bc07a6dfb1d3f",
-  "jsonHash": "fnv1a64:8179f612e0037511",
+  "textHash": "fnv1a64:175f11e80816980c",
+  "jsonHash": "fnv1a64:93cc3ddf159f3b1a",
   "findings": []
 }

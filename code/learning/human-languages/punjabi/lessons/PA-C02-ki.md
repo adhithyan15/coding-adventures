@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [PA-C02-tu-tusi]
 sounds: [bihari-ii]
 roots: [ka-interrogative]
+etymology_hook: "kī: CDIAL lists Punjabi kī 'what!' and 'whether ... or' under Sanskrit kim 'what, why' (CDIAL 3164)"
 duration:
   max_seconds: 170
 requires:

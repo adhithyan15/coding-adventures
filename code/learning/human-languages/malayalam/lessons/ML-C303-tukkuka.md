@@ -14,7 +14,8 @@ romanization: "tūkkuka"
 concept_tag: ML-VERB-TUKKUKA
 prerequisites: [ML-C302-ariyuka, ML-C302-araykkuka]
 sounds: []
-roots: []
+roots: [dravidian-tungu-hang]
+etymology_hook: "tūkkuka: native Dravidian, 'make hang', to weigh; Tamil tūṅku (DEDR 3376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C302-araykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C303-KRIYA303-01]; assesses=[] -->
 
 **തൂക്കുക** — *tūkkuka* — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൂക്കുക** (*tūkkuka*) is native Dravidian, the causative of the verb "to hang, be weighed"; DEDR 3376 lists the root with Tamil *tūṅku* and Kannada *tūgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

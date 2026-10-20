@@ -14,7 +14,8 @@ romanization: "sekrét"
 concept_tag: RU-VESHCH200-SEKRET
 prerequisites: [RU-C199-turist, RU-C199-tekst]
 sounds: []
-roots: []
+roots: [secernere-latin]
+etymology_hook: "секрет perhaps came through Polish sekret or from French secret, Latin secretus 'set apart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C199-tekst]
 <!-- hl-knowledge: introduces=[RU-LEX-C200-VESHCH200-01]; assesses=[] -->
 
 **секрет** (*sekrét*) — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**секрет** — from Peter the Great's time; it perhaps came through Polish *sekret*, or from French *secret*, from Latin *sēcrētus*, "set apart, hidden" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

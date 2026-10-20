@@ -14,7 +14,8 @@ romanization: "pachī"
 concept_tag: GU-WHEN-LATER
 prerequisites: [GU-C77-sometimes, GU-C77-now]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pachī 'after' ← *paśca 'hinder part', drawn from paścāt (CDIAL 7990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C77-now]
 <!-- hl-knowledge: introduces=[GU-LEX-C77-WHEN-04]; assesses=[] -->
 
 **પછી** (*pachī*) — "later, after".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પછી** (*pachī*) is a tadbhava. CDIAL lists it under *\*paśca*, "hinder part", a form drawn from Sanskrit *paścāt*, "behind, afterward" (CDIAL 7990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "burā"
 concept_tag: PA-ADJ80-BURA
 prerequisites: [PA-C79-navam, PA-C79-purana]
 sounds: []
-roots: []
+roots: [indo-aryan-bura]
+etymology_hook: "burā ← *bura 'defective', a reconstructed form; a tadbhava (CDIAL 9289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C79-purana]
 <!-- hl-knowledge: introduces=[PA-LEX-C80-ADJ80-01]; assesses=[] -->
 
 **ਬੁਰਾ** — *burā* — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੁਰਾ** (*burā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bura*, "defective", a form CDIAL reconstructs from its descendants (CDIAL 9289). CDIAL lists Punjabi *burā*, "wicked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

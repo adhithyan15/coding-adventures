@@ -14,7 +14,8 @@ romanization: "cillaṟai"
 concept_tag: TA-VELAI191-CILLARAI
 prerequisites: [TA-C191-kacalar, TA-C191-taiyalkarar]
 sounds: []
-roots: []
+roots: [dravidian-cillarai-small]
+etymology_hook: "சில்லறை — native Dravidian (DEDR 2574); Kannada cillaṟe 'fractional quantities'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C191-taiyalkarar]
 <!-- hl-knowledge: introduces=[TA-LEX-C191-VELAI191-05]; assesses=[] -->
 
 **சில்லறை** — *cillaṟai* — "small change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சில்லறை** (*cillaṟai*) is native Dravidian. DEDR 2574 lists Kannada *cillaṟe*, "fractional quantities".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

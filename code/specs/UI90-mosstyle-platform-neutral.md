@@ -1,6 +1,6 @@
 # UI90 — a typed, platform-neutral mosstyle
 
-**Status:** Draft, for review. No code until this is agreed (specs first).
+**Status:** All §5 decisions settled (2026-10-12). Ready for implementation in the §6 order.
 **Implements:** `MOSAIC-BACKLOG.md` X-6, and the direction in #12029
 ("evolve from a CSS superset into a typed, platform-neutral style
 language"). Builds on UI15 (mosstyle), UI49 (slot states) and UI41
@@ -11,7 +11,17 @@ language"). Builds on UI15 (mosstyle), UI49 (slot states) and UI41
 > mosstyle expresses every styling decision without platform-specific
 > vocabulary or abstraction leaks. *(Decided 2026-10-08.)*
 
-The principle has two halves, and the design needs both:
+> Every app can be branded in whatever ways its author wants, and still
+> feels like a native citizen of its platform: it uses the platform's own
+> controls, and mosstyle exposes ways to style them. *(Decided 2026-10-11,
+> §5.1.)*
+
+> Copy what existing design systems already do; do not reinvent it. A
+> design made in Figma (or a similar tool) should become a native Mosaic
+> app quickly: first a working app on sample data, then wired to a real
+> backend. *(Decided 2026-10-12, §5.2–§5.4.)*
+
+The principle has three parts, and the design needs all of them:
 
 - **No leaks.** Nothing in a `.msl` file is written for one backend: no XAML
   resource lookup, no CSS function, no web-only layout trick. The first
@@ -20,6 +30,13 @@ The principle has two halves, and the design needs both:
 - **Enough expressiveness.** Every decision an author really makes has a
   neutral way to say it. Otherwise authors reach for a leak, which is what
   happened.
+- **Native controls, styled, never replaced.** Every backend renders the
+  platform's own control: a WinUI `Button`, a SwiftUI `Button`, a Material
+  `Button`, a `QPushButton`, an HTML `<button>`. A style changes how that
+  control looks. It never swaps in a custom-drawn lookalike. Whatever the
+  author leaves unstyled keeps the platform's look and behaviour, including
+  focus, hover and press feedback, accessibility, and reduced motion.
+  Branding is opt-in, one decision at a time.
 
 ## 2. Where mosstyle is today
 
@@ -101,10 +118,10 @@ report a degradation, which #12022 turns into a gate failure.
 
 | Property | Type | Replaces |
 |---|---|---|
-| `type-role` | `display` \| `title` \| `heading` \| `body` \| `label` \| `caption` | most `font-size` / `font-weight` pairs. Each backend maps it to its own type ramp |
-| `font-size` | Length | (still allowed when a role does not fit) |
+| `type-role` | Material 3's type scale: `display-`, `headline-`, `title-`, `body-` and `label-`, each with `-large`, `-medium` or `-small` (15 roles) | most `font-size` / `font-weight` pairs. Each backend maps it to its own type ramp (§5.2) |
+| `font-size` | Length | (allowed when no role fits. It still scales with the user's text size, §5.2) |
 | `font-weight` | `regular` \| `medium` \| `semibold` \| `bold` | `400`/`600`, `SemiBold` |
-| `font` | `system` \| `mono` \| `serif` \| *brand face token* | CSS font stacks, the `font` shorthand |
+| `font` | `system` \| `mono` \| `serif` \| *brand face token* (a font shipped with the app, §5.4) | CSS font stacks, the `font` shorthand |
 | `tracking` | `tight` \| `normal` \| `wide` | `letter-spacing: 0.07em` |
 | `text-case` | `none` \| `upper` \| `lower` | `text-transform` |
 | `text-align` | `start` \| `center` \| `end` | `left`/`right` |
@@ -159,9 +176,10 @@ style:
 
 ### 3.3 Tokens: brand, system and mode
 
-#12029 is blocked on "brand vs native": a fixed brand palette and native
-look-and-feel conflict. The proposal is to let **each token say which kind
-it is**, so the author decides per decision rather than per app:
+#12029 was blocked on "brand vs native": a fixed brand palette and native
+look-and-feel seemed to conflict. **Decided (2026-10-11, §5.1):** they do not
+conflict. Each token says which kind it is, so the author decides one
+decision at a time rather than once for the whole app:
 
 - **Brand tokens** carry a fixed value to every platform. Today's palettes
   are this kind.
@@ -181,12 +199,19 @@ it is**, so the author decides per decision rather than per app:
   This table is the only place platform names appear, and it lives in the
   emitters, never in a `.msl` file.
 - **Mode-aware tokens** hold a light and a dark value, so one stylesheet
-  covers both modes:
+  covers both modes. This copies Apple's Color Sets, XAML's
+  `ThemeDictionaries` and Figma's variable modes (§5.3):
 
   ```text
   token color-text   { light: #1f1a14 ; dark: #f4efe6 ; }
   token color-card   { light: #ffffff ; dark: #2a2420 / 0.96 ; }
+  token color-border { light: #d9cfc2 ; dark: #4a4038 ;
+                       light-high-contrast: #000000 ; dark-high-contrast: #ffffff ; }
   ```
+
+  `light` and `dark` are both required; a token with one and not the other
+  is a compile error. The high-contrast values are optional and fall back
+  to the plain mode's value, as Apple's do.
 
   The host's mode, from UI48's environment, selects the value. System
   tokens are mode-aware by nature. The `.light.msl`/`.dark.msl` pairs then
@@ -220,6 +245,10 @@ layouts cover structure.
     values;
   - passes the emitters **typed values**, not strings.
 - **The emitters**:
+  - render each part as the platform's native control, and apply styles to
+    that control (§1);
+  - emit nothing for a property the author left unset, so the control keeps
+    the platform's default for it;
   - lower every property in the table, or report a degradation (#12022);
   - delete every pass-through rule. The audit lists ten, including:
     - XAML's "uppercase means native" values and its verbatim font and
@@ -235,8 +264,9 @@ layouts cover structure.
 There are 186 files and about 6,300 declarations, so migration has to be
 mechanical where it can be, and gated where it can't.
 
-1. **Version the language.** A package opts in with `[style] version = 2`
-   in `mosaic-package.toml`.
+1. **Version the language.** A package opts in with `[styles] version = 2`
+   in `mosaic-package.toml` (the existing `[styles]` section, beside
+   `token_palette`).
    - A v1 package compiles as today, plus warnings for every v2 error.
    - A v2 package gets the errors.
    - MosaicBook and CI report each package's version and warning count.
@@ -265,19 +295,80 @@ mechanical where it can be, and gated where it can't.
 Order by value: the toolkit first, since every app inherits it; then
 TaskApp, which has the drop ratchet; then the rest.
 
-## 5. Decisions needed
+## 5. Decisions
 
-1. **Brand vs native (the #12029 blocker).** Is §3.3's per-token split
-   (brand tokens fixed, system tokens per host) the intended answer? For
-   example: Trestle keeps its warm surfaces as brand tokens, and takes
-   `$system-accent` and `$system-focus` from the host.
-2. **Type roles.** Should `type-role` be the preferred way to set text size,
-   with `font-size` kept only for exceptions, or the only way?
-3. **Mode syntax.** Mode-aware tokens (§3.3), or `scheme dark { … }` blocks
-   inside a part?
-4. **Brand faces.** Should a custom font travel as a package asset
-   (bundled per platform), or stay out of scope for now, with `font` limited
-   to `system`/`mono`/`serif`?
+1. **Brand vs native (the #12029 blocker).** **Decided 2026-10-11: yes, the
+   per-token split.** In the decision's words: "Every person building an
+   app will want to be able to 'brand' the app in whatever ways they want.
+   But the app should also feel like a native citizen of the platform. As
+   long as we use native controls and expose ways for people to style them,
+   I am more than fine with it." This is now part of §1. Brand tokens are
+   fixed, system tokens resolve per host, and unstyled properties keep the
+   platform default. For example, Trestle can keep its warm surfaces as
+   brand tokens and take `$system-accent` and `$system-focus` from the
+   host.
+
+Decisions 2–4 were settled on 2026-10-12 by one rule: "We can copy whatever
+existing systems have come up with. I do not want to reinvent the wheel."
+The goal behind it is going from a Figma design to a native app quickly, so
+each choice below is also the one that imports from Figma without
+translation.
+
+2. **Type roles.** **Decided: roles first, sizes allowed, as every platform
+   does.** Apple, Material and Windows all ship named text styles and still
+   accept an explicit size, so mosstyle does the same:
+   - `type-role` takes Material 3's 15-role type scale (`display-large` …
+     `label-small`). Compose and Flutter use these exact names. The Material
+     3 Figma kit names its text styles the same way. Apple and Windows map
+     each role to their nearest text style; the mapping table lands with the
+     emitter work (§6 step 5).
+   - `font-size` stays for the cases no role fits. Like
+     `Font.custom(_:size:relativeTo:)` on Apple and `sp` units on Android,
+     an explicit size still scales with the user's text-size setting, so
+     accessibility is not lost.
+   - Values stay typed throughout: an unknown role or a non-length size is
+     a compile error.
+3. **Mode syntax.** **Decided: mode-aware tokens (§3.3).** Every system
+   surveyed keeps mode out of component styles. Components name a role; the
+   role holds a value per mode:
+   - Apple: a Color Set with Any, Dark and high-contrast appearances;
+   - XAML: `ThemeDictionaries` with `Light`, `Dark` and `HighContrast`;
+   - Compose and Flutter: a light and a dark `ColorScheme` with the same
+     role names, which the emitters generate from the tokens;
+   - Figma: one variable with a column per mode;
+   - CSS is the outlier with `@media (prefers-color-scheme)` blocks, and it
+     added `light-dark()` to move towards per-value modes.
+
+   No `scheme dark { … }` blocks. High contrast is a mode from the start,
+   because Apple and Windows both have it.
+4. **Brand faces.** **Decided: custom fonts ship with the app.** A font
+   file is a package asset, declared in the package manifest with its
+   licence file next to it, and each emitter bundles it the platform's own
+   way:
+   - Apple: `UIAppFonts` (iOS) or `ATSApplicationFontsPath` (macOS);
+   - Android: `res/font`;
+   - Flutter: `fonts:` in `pubspec.yaml`;
+   - Windows: package content, referenced as `ms-appx:///…#Family`;
+   - Qt: `QFontDatabase::addApplicationFont`;
+   - web: `@font-face`.
+
+   A brand face token names the family. When a weight is missing from the
+   shipped files, the platform's own synthesis or fallback applies.
+
+### 5.5 Design-tool alignment
+
+The decisions above line up with what Figma and the W3C Design Tokens
+Community Group format already express:
+
+| Figma / DTCG | mosstyle |
+|---|---|
+| Variable collection with modes | mode-aware tokens (`light`, `dark`, high contrast) |
+| Colour, number and dimension variables | brand tokens of the matching type |
+| Text styles named on the Material 3 scale | `type-role` |
+| Font family in a text style | brand face token, plus the shipped font files |
+
+Importing a design is UI91's job (`UI91-design-import.md`; `MOSAIC-BACKLOG.md` DN-1
+and DN-2). This table is the contract it imports into.
 
 ## 6. Order of work
 
@@ -287,7 +378,25 @@ TaskApp, which has the drop ratchet; then the rest.
    - `UnknownProperty` and `TypeMismatch`;
    - the colour syntax;
    - v1 warnings.
-3. **Tokens:** system tokens in every emitter, then mode-aware tokens.
+
+   *Done (2026-10-14).*
+   - `mosstyle_compiler::v2::check` implements the §3.1 table and the §3.2
+     value types.
+   - `[styles] version` is parsed by `mosaic-package-manifest`.
+   - `build_package` fails a v2 package on any finding, and returns a v1
+     package's findings as `BuildResult::style_findings`.
+   - `mosaic-compile pkg` prints the count; `MOSAIC_STYLE_FINDINGS=1` lists
+     each finding.
+   - The toolkit has 108 findings today, 82 of them `border-radius`.
+
+   Not yet done:
+   - The part-kind rule of §3.5 (text properties on text parts). It needs
+     the layout's part kinds.
+   - Brand faces in `font`, which come with step 3.
+   - Checking a token's own value, rather than its value where it is used.
+   - MosaicBook and CI reporting each package's version and count.
+3. **Tokens:** system tokens in every emitter, then mode-aware tokens
+   (with high contrast), then brand faces shipped as package assets.
 4. **`style migrate`**, run on the toolkit; then the toolkit flips to v2.
 5. **Emitters:** delete pass-throughs, then lower the new properties
    (`type-role`, `tracking`, `text-case`, `max-lines`, `align-main`,

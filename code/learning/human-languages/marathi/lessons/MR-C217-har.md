@@ -14,7 +14,8 @@ romanization: "hār"
 concept_tag: MR-VASTU217-HAR
 prerequisites: [MR-C216-halad, MR-C216-jire]
 sounds: []
-roots: []
+roots: [sanskrit-hara-necklace]
+etymology_hook: "hār ← Sanskrit hāra 'necklace', a tadbhava (CDIAL 14059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C216-jire]
 <!-- hl-knowledge: introduces=[MR-LEX-C217-VASTU217-01]; assesses=[] -->
 
 **हार** — *hār* — "a necklace, a garland".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हार** (*hār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hāra*, "necklace" (CDIAL 14059). CDIAL glosses the Marathi word "garland; line".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

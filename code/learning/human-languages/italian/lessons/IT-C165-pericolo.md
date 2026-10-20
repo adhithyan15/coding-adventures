@@ -13,7 +13,8 @@ gloss: "danger"
 concept_tag: IT-COSE165-PERICOLO
 prerequisites: [IT-C165-permesso, IT-C165-divieto]
 sounds: []
-roots: []
+roots: [periculum-latin]
+etymology_hook: "pericolo ← Latin periculum 'a trial, a danger', a learned word — English peril is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C165-divieto]
 <!-- hl-knowledge: introduces=[IT-LEX-C165-COSE165-04]; assesses=[] -->
 
 **il pericolo** — "danger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pericolo** ← Latin *periculum*, "a trial, a danger" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *pericolo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

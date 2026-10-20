@@ -14,7 +14,8 @@ romanization: "mutaʾakkid"
 concept_tag: AR-SIFA272-MUTAAKKID
 prerequisites: [AR-C271-banafsaji, AR-C272-mudhish]
 sounds: []
-roots: []
+roots: [ʾ-k-d]
+etymology_hook: "mutaʾakkid: built on the root ʾ-k-d, 'to make firm', which Lane gives as a variant of w-k-d"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C272-mudhish]
 <!-- hl-knowledge: introduces=[AR-LEX-C272-SIFA272-02]; assesses=[] -->
 
 **متأكد** — *mutaʾakkid* — "sure, certain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متأكد** (*mutaʾakkid*) is built on the native Arabic root *ʾ-k-d*, "to make firm", which Lane gives as a variant of *w-k-d*. *Mutaʾakkid* is the Form V participle, "made firm", hence "sure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

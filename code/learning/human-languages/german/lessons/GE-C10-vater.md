@@ -45,6 +45,11 @@ reviews_of: [GE-C06-vier, GE-C09-jahreszeiten]
 
 A *der*-word, two syllables, and the first letter is a trap for an English eye.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Vater** ← Old High German *fater* ← Proto-Germanic *\*fadēr* — inherited, the same word as English *father*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-V-AS-F-01, GE-LEX-VATER-01] -->
 

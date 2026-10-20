@@ -12,6 +12,9 @@ Before the new one: say the German for next year, then the German for to plan.
 You'll want to know: die Miete.
 die Miete — "the rent". The noun behind mieten: Die Miete ist hoch. — "The rent is high."
 
+The word, taken apart.
+Miete from Old High German miata, "payment" from Proto-Germanic mēzdō — inherited. (EtymDB 2.1) English meed, "reward", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ You'll want to know: die Anzeige.
 die Anzeige — "an advert".
 [once you have stopped driving — read: the advert]
 The advert says Zimmer frei. Miete: 400 Euro im Monat. A room is free, at 400 euros a month.
+
+The word, taken apart.
+Anzeige is the noun of a verb built from an-, "at, to", + zeigen, "to show" from Old High German zeigōn (EtymDB 2.1): an announcement shown to the public.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ der Termin — "an appointment".
 [once you have stopped driving — read: the message]
 The message says Ihr Termin: Montag, zehn Uhr. Your appointment is on Monday at ten: be there before ten.
 
+The word, taken apart.
+Termin from Latin terminus, "boundary, limit, end" (EtymDB 2.1) — borrowed: a fixed point in time. English term shares it.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ die Öffnungszeiten — "opening hours".
 [once you have stopped driving — read: the door]
 The door says Montag bis Freitag, neun bis achtzehn Uhr. Open on weekdays from nine to six: not on Saturday.
 
+The word, taken apart.
+Öffnungszeiten is the noun of "to open", Old High German offanōn, English open, + Zeit in the plural (EtymDB 2.1): opening times.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ You'll want to know: die Quittung.
 die Quittung — "a receipt".
 [once you have stopped driving — read: the receipt]
 The receipt says Quittung: Miete, 400 Euro. The rent is paid: keep it.
+
+The word, taken apart.
+Quittung is built on quitt, "settled, free of debt", which EtymDB 2.1 lists beside French quitte and English quit; they go back to Latin quiētus, "at rest". A receipt shows you are quit.
 
 What you've built.
 One more word for this chapter.

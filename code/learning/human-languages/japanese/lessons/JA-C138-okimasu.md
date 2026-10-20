@@ -14,7 +14,8 @@ romanization: "okimasu"
 concept_tag: JA-VERB-OKIRU
 prerequisites: [JA-R137-pencil-and-ticket, JA-W137-pu, JA-W136-zo, JA-C130-makka]
 sounds: []
-roots: []
+roots: [japanese-okiru, japanese-masu-polite]
+etymology_hook: "okimasu: native okiru 'get up' + polite -masu, usually traced to older mairasu"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +57,11 @@ the polite form of a verb in *-iru* or *-eru* like this one, take off the
 last **る** and add **ます**: *oki-ru* becomes *oki-masu*.
 
 > **まいあさ おきます。** — *maiasa okimasu* — "I get up every morning."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おきます** (*okimasu*) is native *okiru*, "to get up", with the polite ending *-masu*. The verb is inherited rather than borrowed; *-masu* is usually traced to an older humble verb, *mairasu*, "to offer", though that account is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C138-OKIMASU] -->

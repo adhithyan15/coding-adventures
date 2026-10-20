@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 169,
-  "sourceHash": "fnv1a64:9a77b33d60e046fa",
+  "sourceHash": "fnv1a64:376acd07cea47e48",
   "lessonIds": [
     "RU-C169-prosba",
     "RU-C169-pomoshch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch169.txt",
   "json": "russian/narration/ch169.json",
-  "textHash": "fnv1a64:4139306dbdcc6821",
-  "jsonHash": "fnv1a64:dba72d991d2d6cfb",
+  "textHash": "fnv1a64:afe541fa8414b4bf",
+  "jsonHash": "fnv1a64:35f5c1ebe8c70b2a",
   "findings": []
 }

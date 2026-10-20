@@ -14,7 +14,8 @@ romanization: "mahāpaur"
 concept_tag: MR-VASTU179-MAHAPAUR
 prerequisites: [MR-C179-nyayalay, MR-C179-nyayadhis]
 sounds: []
-roots: []
+roots: [sanskrit-maha, sanskrit-paura]
+etymology_hook: "mahāpaur: Sanskrit mahā 'great' + paura 'citizen' (CDIAL 8419); a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C179-nyayadhis]
 <!-- hl-knowledge: introduces=[MR-LEX-C179-VASTU179-03]; assesses=[] -->
 
 **महापौर** — *mahāpaur* — "a mayor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महापौर** (*mahāpaur*) is a modern compound of Sanskrit parts: *mahā*, "great", and *paura*, "citizen" (CDIAL 8419).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

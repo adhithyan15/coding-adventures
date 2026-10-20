@@ -13,7 +13,8 @@ gloss: "fruit"
 concept_tag: GE-ESSEN1-OBST
 prerequisites: [GE-C69-fleisch, GE-C69-huhn]
 sounds: []
-roots: []
+roots: [germanic-ubatja]
+etymology_hook: "Obst ← Old High German obaz 'fruit' ← Proto-Germanic *ubatją; the final t was added later"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C69-huhn]
 <!-- hl-knowledge: introduces=[GE-LEX-C69-ESSEN1-04]; assesses=[] -->
 
 **das Obst** — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Obst** ← Old High German *obaz*, "fruit" ← Proto-Germanic *\*ubatją*, "produce" — inherited. (EtymDB 2.1) The final *t* was added in later German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

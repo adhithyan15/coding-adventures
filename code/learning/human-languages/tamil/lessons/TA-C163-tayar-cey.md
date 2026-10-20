@@ -14,7 +14,8 @@ romanization: "tayār cey"
 concept_tag: TA-VERB-TAYAR-CEY
 prerequisites: [TA-C162-nakar, TA-C162-tukku]
 sounds: []
-roots: []
+roots: [arabic-tayyar, sey-do-dravidian]
+etymology_hook: "தயார் செய் — tayār 'ready' ← Arabic ṭayyār 'swift', via Hindustani + native sey 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C162-tukku]
 <!-- hl-knowledge: introduces=[TA-LEX-C163-ACT163-01]; assesses=[] -->
 
 **தயார் செய்** — *tayār cey* — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தயார் செய்** (*tayār cey*) is *tayār*, "ready", a loan from Arabic *ṭayyār*, "flying, swift", which took the sense "ready" in Persian and Hindustani, with native *sey*, "to do" (DEDR 1957): "make ready".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

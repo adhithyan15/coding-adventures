@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:e0985089541cdee7",
+  "lessonIds": [
+    "IT-C421-molo",
+    "IT-C421-pontile",
+    "IT-C421-imbarcarsi",
+    "IT-C421-sbarcare",
+    "IT-C421-salpare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch421.txt",
+  "json": "italian/narration/ch421.json",
+  "textHash": "fnv1a64:874567347c46f820",
+  "jsonHash": "fnv1a64:4141ecbda06be924",
+  "findings": []
+}

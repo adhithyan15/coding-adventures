@@ -14,7 +14,8 @@ romanization: "rupayā"
 concept_tag: HI-NOUN-RUPEE
 prerequisites: [HI-C72-money, HI-C71-very, HI-C70-play]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rupayā: usually traced to Sanskrit rūpya 'bearing a stamp; silver' (CDIAL 10805)"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,11 @@ The ु under the र is the short *u* matra, hanging below the letter rather th
 above it.
 
 A price is said in रुपये: **दस रुपये**, and you have counted to ten already.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुपया** (*rupayā*) is usually traced to Sanskrit *rūpya*, "bearing a stamp; silver" (CDIAL 10805). CDIAL lists the same word in Hindi as *rūpā*, "silver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

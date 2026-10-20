@@ -13,7 +13,8 @@ gloss: "dry"
 concept_tag: LA-CALIDUS-SICCUS
 prerequisites: [LA-C95-calidus, LA-C95-frigidus]
 sounds: []
-roots: []
+roots: [siccus-latin]
+etymology_hook: "siccus 'dry' — probably from PIE *seyk- 'dry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C95-frigidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C95-CALIDUS-03]; assesses=[] -->
 
 **siccus, sicca, siccum** — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**siccus** is probably inherited, from a Proto-Indo-European root *\*seyk-*, "dry" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

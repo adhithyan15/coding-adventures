@@ -14,7 +14,8 @@ romanization: "nirupyogī"
 concept_tag: MR-GUN259-NIRUPYOGI
 prerequisites: [MR-C259-guntaguntica, MR-C259-avasyak]
 sounds: []
-roots: []
+roots: [sanskrit-upayoga]
+etymology_hook: "nirupyogī: Sanskrit nir- 'without' + upayoga 'use' + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C259-avasyak]
 <!-- hl-knowledge: introduces=[MR-LEX-C259-GUN259-05]; assesses=[] -->
 
 **निरुपयोगी** — *nirupyogī* — "useless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निरुपयोगी** (*nirupyogī*) is Sanskrit *nir-*, "without", and *upayoga*, "use", with the ending *-ī*: "without use".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

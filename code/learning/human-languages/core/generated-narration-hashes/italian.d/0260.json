@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:c4604605c5813e7c",
+  "lessonIds": [
+    "IT-W260-my-own-line"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch260.txt",
+  "json": "italian/narration/ch260.json",
+  "textHash": "fnv1a64:8443a340ddd22608",
+  "jsonHash": "fnv1a64:286450111b8b11e1",
+  "findings": []
+}

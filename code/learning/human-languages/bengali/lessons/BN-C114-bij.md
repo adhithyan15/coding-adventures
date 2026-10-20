@@ -14,7 +14,8 @@ romanization: "bij"
 concept_tag: BN-THINGS114-BIJ
 prerequisites: [BN-C114-shishir, BN-C114-shikor]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bij ← Sanskrit bīja 'seed', a tatsama; CDIAL lists the inherited form biā (CDIAL 9250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C114-shikor]
 <!-- hl-knowledge: introduces=[BN-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **বীজ** — *bij* — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বীজ** (*bij*) is Sanskrit *bīja*, "seed", taken over whole as a learned loan, a tatsama (CDIAL 9250). The word inherited from it is *biā*, "seed", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

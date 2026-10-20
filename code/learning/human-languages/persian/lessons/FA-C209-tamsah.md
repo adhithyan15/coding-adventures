@@ -14,7 +14,8 @@ romanization: "tamsâh"
 concept_tag: FA-CHIZ209-TAMSAH
 prerequisites: [FA-C208-dama, FA-C209-bolbol]
 sounds: []
-roots: []
+roots: [arabic-timsah]
+etymology_hook: "tamsâh ← Arabic timsāḥ, usually traced to Egyptian (Coptic msah)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C209-bolbol]
 <!-- hl-knowledge: introduces=[FA-LEX-C209-CHIZ209-02]; assesses=[] -->
 
 **تمساح** — *tamsâh* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamsâh* is borrowed from Arabic *timsāḥ*, "crocodile", a word usually traced to Egyptian, Coptic *msah*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

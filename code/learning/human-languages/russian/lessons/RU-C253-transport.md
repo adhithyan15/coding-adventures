@@ -14,7 +14,8 @@ romanization: "tránsport"
 concept_tag: RU-VESHCH253-TRANSPORT
 prerequisites: [RU-C253-istoriya, RU-C253-shakhmaty]
 sounds: []
-roots: []
+roots: [transportare-latin]
+etymology_hook: "транспорт came from French, Dutch or German transport, Latin transportare 'to carry across'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C253-shakhmaty]
 <!-- hl-knowledge: introduces=[RU-LEX-C253-VESHCH253-04]; assesses=[] -->
 
 **транспорт** (*tránsport*) — "transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**транспорт** — from 1720; it came from French or Dutch *transport* or German *Transport* (Vasmer), from Latin *trānsportāre*, "to carry across".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

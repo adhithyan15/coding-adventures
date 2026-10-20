@@ -14,7 +14,8 @@ romanization: "mā̃s"
 concept_tag: MW-VERBS58-MAS
 prerequisites: [MW-C58-puchhno, MW-C58-karno]
 sounds: []
-roots: []
+roots: [sanskrit-mamsa]
+etymology_hook: "mā̃s ← Sanskrit māṃsa 'flesh'; CDIAL lists Hindi and Gujarati mā̃s (CDIAL 9982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C58-karno]
 <!-- hl-knowledge: introduces=[MW-LEX-C58-VERBS58-03]; assesses=[] -->
 
 **मांस** — *mā̃s* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मांस** (*mā̃s*) goes back to Sanskrit *māṃsa*, "flesh", and keeps its shape almost whole. CDIAL lists Hindi and Gujarati *mā̃s* under it (CDIAL 9982); it gives no Marwari form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

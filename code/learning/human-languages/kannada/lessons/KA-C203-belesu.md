@@ -14,7 +14,8 @@ romanization: "beḷesu"
 concept_tag: KA-VERB-BELESU
 prerequisites: [KA-C202-samparkisu, KA-C202-carcisu]
 sounds: []
-roots: []
+roots: [dravidian-vilai-grow]
+etymology_hook: "beḷesu: native Dravidian, 'make grow', from beḷe 'to grow' (DEDR 5437)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C202-carcisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C203-KRIYE203-01]; assesses=[] -->
 
 **ಬೆಳೆಸು** — *beḷesu* — "to grow (plants), to raise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಳೆಸು** (*beḷesu*) is native Dravidian, from *beḷe*, "to grow", and DEDR 5437 lists *beḷasu*, "to cause to grow", itself; the entry also has Tamil *viḷai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

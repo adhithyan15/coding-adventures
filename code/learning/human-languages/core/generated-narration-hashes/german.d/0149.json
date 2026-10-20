@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 149,
-  "sourceHash": "fnv1a64:6ddec7447af15386",
+  "sourceHash": "fnv1a64:ef64c6ee3c2baf0c",
   "lessonIds": [
     "GE-C149-nennen",
     "GE-C149-riechen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch149.txt",
   "json": "german/narration/ch149.json",
-  "textHash": "fnv1a64:c19f55ef77bb4cd7",
-  "jsonHash": "fnv1a64:7c58b1a1fefd3233",
+  "textHash": "fnv1a64:31cb0fe07d929205",
+  "jsonHash": "fnv1a64:f572525964892e86",
   "findings": []
 }

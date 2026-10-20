@@ -148,7 +148,7 @@ werden is a lost English verb — weorthan, "to turn, to come to be" — and its
 English: toward. the buried meaning: turning to.
 English: backward. the buried meaning: turning back.
 English: worth. the buried meaning: what a thing turns out to be.
-So werden means "to turn into," and every time you say toward you are using the same root without knowing it.
+So werden means "to turn into," and every time you say toward you are using the same root without knowing it. Werden from Old High German werdan, "to turn" (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -293,8 +293,8 @@ A German participle standing in front of a noun is working as an adjective, and 
 [a table of 3 rows, read aloud]
 ein geschriebener Brief means a written letter.
 der angekommene Zug means the arrived train.
-die eingeschlafene Katze means the fallen-asleep cat.
-Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, "cat", gets a lesson of its own later; here it is only carrying the ending.)
+die eingeschlafene Mutter means the fallen-asleep mother.
+Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle.
 So German did not lose participle endings everywhere. It lost them in exactly one construction: the perfect.
 
 Sounds you'll need.
@@ -304,9 +304,9 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "der angekommene Zug"]
 [pause 8 seconds for the answer]
-[your turn — say: "die eingeschlafene Katze"]
+[your turn — say: "die eingeschlafene Mutter"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "sie ist gegangen" (no ending) … "die eingeschlafene Katze" (ending)]
+[your turn — say: the contrast — "sie ist gegangen" (no ending) … "die eingeschlafene Mutter" (ending)]
 [pause 8 seconds for the answer]
 [your turn — say: "die müde Mutter" — an ordinary adjective doing the same thing]
 [pause 8 seconds for the answer]

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C365-discrimination",
+    "language": "french",
+    "chapter": 365,
+    "sequence": 20500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e54727e1b8d6a05"
+  },
+  "findings": []
+}

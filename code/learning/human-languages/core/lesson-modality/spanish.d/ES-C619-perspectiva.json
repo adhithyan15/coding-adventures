@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C619-perspectiva",
+    "language": "spanish",
+    "chapter": 619,
+    "sequence": 20730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0f928c98729ed97"
+  },
+  "findings": []
+}

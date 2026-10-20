@@ -13,7 +13,8 @@ gloss: "a balcony"
 concept_tag: PT-COISAS157-VARANDA
 prerequisites: [PT-C157-apartamento, PT-C157-sala-de-jantar]
 sounds: []
-roots: []
+roots: [vara-latin]
+etymology_hook: "varanda — probably from the rod word (← Latin vara 'forked pole'); English veranda came from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C157-sala-de-jantar]
 <!-- hl-knowledge: introduces=[PT-LEX-C157-COISAS157-03]; assesses=[] -->
 
 **a varanda** — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**varanda** is probably built on the word for a rod (EtymDB 2.1), from Latin *vara*, "forked pole"; the link is not certain. English *veranda* came from the Portuguese word through India.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

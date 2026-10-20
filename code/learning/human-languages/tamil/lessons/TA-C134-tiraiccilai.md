@@ -14,7 +14,8 @@ romanization: "tiraiccīlai"
 concept_tag: TA-THINGS134-TIRAICCILAI
 prerequisites: [TA-C133-muti, TA-C133-tol2]
 sounds: []
-roots: []
+roots: [dravidian-tirai-curtain, dravidian-ciilai-cloth]
+etymology_hook: "திரைச்சீலை — native: tirai 'curtain' (DEDR 3244; Malayalam tira) + cīlai 'cloth' (DEDR 2629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C133-tol2]
 <!-- hl-knowledge: introduces=[TA-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **திரைச்சீலை** — *tiraiccīlai* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திரைச்சீலை** (*tiraiccīlai*) is native: *tirai*, "curtain, screen" (DEDR 3244, which also has Malayalam *tira*), and *cīlai*, "cloth" (DEDR 2629).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "právilo"
 concept_tag: RU-VESHCH228-PRAVILO
 prerequisites: [RU-C227-malchik, RU-C228-oshibka]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "правило is from править 'to set straight', from правый 'right, straight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C228-oshibka]
 <!-- hl-knowledge: introduces=[RU-LEX-C228-VESHCH228-02]; assesses=[] -->
 
 **правило** (*právilo*) — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**правило** is *править*, "to set straight, to rule", with *-ло*, a suffix for a tool: "what sets things straight". *правый* is "straight, right". Vasmer thinks *правый* probably kin to Latin *probus*, "upright".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

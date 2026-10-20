@@ -14,7 +14,8 @@ romanization: "bakrī"
 concept_tag: MR-VASTU218-BAKRI
 prerequisites: [MR-C218-koli, MR-C218-mhais]
 sounds: []
-roots: []
+roots: [sanskrit-barkara]
+etymology_hook: "bakrī ← Sanskrit barkara 'kid, lamb; goat', a tadbhava (CDIAL 9153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C218-mhais]
 <!-- hl-knowledge: introduces=[MR-LEX-C218-VASTU218-03]; assesses=[] -->
 
 **बकरी** — *bakrī* — "a she-goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बकरी** (*bakrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *barkara*, "kid, lamb; goat" (CDIAL 9153).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

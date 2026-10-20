@@ -14,7 +14,8 @@ romanization: "koylā"
 concept_tag: HI-THG269-KOYLA
 prerequisites: [HI-C268-ag, HI-C268-rakh]
 sounds: []
-roots: []
+roots: [sanskrit-kokila-coal]
+etymology_hook: "koylā ← Sanskrit kokila 'lighted coal, charcoal', a tadbhava (CDIAL 3484)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C268-rakh]
 <!-- hl-knowledge: introduces=[HI-LEX-C269-THG269-01]; assesses=[] -->
 
 **कोयला** — *koylā* — "coal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोयला** (*koylā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kokila*, "lighted coal, charcoal" (CDIAL 3484). CDIAL notes that the Sanskrit word was made over from a Middle Indo-Aryan *koila*, which has been traced to Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

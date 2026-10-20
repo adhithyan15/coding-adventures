@@ -11,6 +11,7 @@ concept_tag: ARGUMENT-CLAIM
 prerequisites: [ES-C269-durante, ES-C267-pregunta-si-no, ES-C267-verdad-no]
 sounds: [vowel-e, vowel-o]
 roots: [opinari]
+etymology_hook: "opinión ← Latin opinio, from opinari 'to suppose': a supposing made a thing — English opinion"
 duration:
   max_seconds: 240
 requires:
@@ -53,7 +54,7 @@ reviews_of: [ES-C269-durante]
 
 **en mi opinión** — "in my opinion."
 
-*Opinión* is Latin **opinari**, "to suppose, to think" — and the *-ión* ending is
+*Opinión* is Latin **opinio**, from **opinari**, "to suppose, to think" — and the *-ión* ending is
 the same one you met in *habitación*, turning a verb into the noun for its
 result. An opinion is *a supposing*, made into a thing you can hand someone.
 

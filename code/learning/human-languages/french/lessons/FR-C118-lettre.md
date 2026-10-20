@@ -13,7 +13,8 @@ gloss: "a letter"
 concept_tag: FR-OBJETS70-LETTRE
 prerequisites: [FR-C118-collier, FR-C118-parfum]
 sounds: []
-roots: []
+roots: [littera-latin]
+etymology_hook: "lettre ← Latin littera 'a letter of the alphabet' — English letter and literate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C118-parfum]
 <!-- hl-knowledge: introduces=[FR-LEX-C118-OBJETS70-05]; assesses=[] -->
 
 **la lettre** — "a letter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lettre** ← Old French *letre* ← Latin *littera*, "a letter of the alphabet" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

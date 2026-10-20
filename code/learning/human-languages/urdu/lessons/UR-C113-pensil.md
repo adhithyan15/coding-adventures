@@ -14,7 +14,8 @@ romanization: "pensil"
 concept_tag: UR-THINGS113-PENSIL
 prerequisites: [UR-C113-chitthi, UR-C113-khat]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C113-khat]
 <!-- hl-knowledge: introduces=[UR-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **پنسل** — *pensil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پنسل** (*pensil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

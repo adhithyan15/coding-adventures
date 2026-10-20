@@ -14,7 +14,8 @@ romanization: "muccaḷa"
 concept_tag: KA-VASTU220-MUCCALA
 prerequisites: [KA-C219-oratu, KA-C219-jigutu]
 sounds: []
-roots: []
+roots: [dravidian-muccu-shut]
+etymology_hook: "muccaḷa: native Dravidian; DEDR 4915 lists muccaḷa 'lid' under muccu 'to close'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C219-jigutu]
 <!-- hl-knowledge: introduces=[KA-LEX-C220-VASTU220-01]; assesses=[] -->
 
 **ಮುಚ್ಚಳ** — *muccaḷa* — "a lid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಚ್ಚಳ** (*muccaḷa*) is native Dravidian, from *muccu*, "to close, cover", and DEDR 4915 lists *muccaḷa*, "covering, lid", itself; the entry also has Tamil *muccu* and Telugu *mūyu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

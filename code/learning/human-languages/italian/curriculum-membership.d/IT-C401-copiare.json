@@ -1,0 +1,11 @@
+{
+  "id": "IT-C401-copiare",
+  "pathSegment": "IT-PATH-401-FILE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-401-FILE",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "yue"
 concept_tag: JA-WHY98-YUE
 prerequisites: [JA-C98-tame, JA-C98-sei]
 sounds: []
-roots: []
+roots: [japanese-yue]
+etymology_hook: "yue: native Japanese, inherited, not borrowed; usually kana, kanji 故 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C98-sei]
 <!-- hl-knowledge: introduces=[JA-LEX-C98-WHY98-05]; assesses=[] -->
 
 **ゆえ** — *yue* — "a reason (formal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆえ** (*yue*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

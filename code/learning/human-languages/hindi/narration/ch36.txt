@@ -18,18 +18,18 @@ Two letters. घ (gha), the breathy pair of ga, then र (ra), already yours fro
 
 Grammar Lens: the word arrives with a gender.
 घर (ghar) = "house, home." And it is masculine.
-Every Hindi noun is masculine or feminine. Not the thing — the word. There is nothing manly about a house; the gender is a fact about ghar the way its spelling is, and you learn the two together or you learn them twice.
+Every Hindi noun is masculine or feminine. Not the thing — the word: the gender is a fact about ghar the way its spelling is.
 It is not decoration: it changes the words around the noun. Because ghar is masculine, "my house" is मेरा घर (merā ghar), the masculine मेरा, exactly as in मेरा नाम.
-Whole sentence: यह मेरा घर है (yah merā ghar hai), "this is my house."
+Whole sentence: घर मेरा है (ghar merā hai), "the house is mine."
 
 The word, taken apart: घर.
-घर (ghar) comes from Sanskrit गृह (gṛha), worn smooth through Prakrit ghara into the short word you just said. Hindi kept गृह too, borrowed back out of Sanskrit for formal use, so both shapes survive.
+घर (ghar) comes from ghara, "house", already in the Pali canon (CDIAL 4428). It is usually taken as the spoken form of Sanskrit गृह (gṛha), but CDIAL calls that sound change phonetically difficult: likely, not proven. Hindi kept गृह too, for formal use.
 Further back, gṛha descends from an ancient root meaning enclosure, gʰerdʰ- — and English holds two plain descendants of it: yard and garden. Slavic holds the -grad in Belgrade, "town."
-So the oldest sense is not walls and a roof. It is a fenced-in piece of ground. You enclose the land first; the house is what goes inside afterwards.
+So, if the link holds, the oldest sense is not walls and a roof but a fenced-in piece of ground.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: ghar — house; then merā ghar; then yah merā ghar hai]
+[your turn — say: ghar — house; then merā ghar; then ghar merā hai]
 [pause 8 seconds for the answer]
 [your turn — say: merā nām and merā ghar one after the other — the same merā, because both nouns are masculine]
 [pause 8 seconds for the answer]

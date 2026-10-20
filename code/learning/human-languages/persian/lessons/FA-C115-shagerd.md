@@ -15,6 +15,7 @@ concept_tag: FA-THINGS115-SHAGERD
 prerequisites: [FA-C114-emtehan, FA-C114-amuzgar]
 sounds: []
 roots: []
+etymology_hook: "shâgerd: native Iranian; Armenian ašakert 'disciple' is usually traced to an older form of it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C114-amuzgar]
 <!-- hl-knowledge: introduces=[FA-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **شاگرد** — *shâgerd* — "a pupil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâgerd* is a native Iranian word for a pupil or apprentice. Armenian *ašakert*, "disciple", is usually traced to an older Iranian form of the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

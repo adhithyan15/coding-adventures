@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 220,
-  "sourceHash": "fnv1a64:095e032eb32e3ae3",
+  "sourceHash": "fnv1a64:e380060adfb97041",
   "lessonIds": [
     "HI-C220-jhanda",
     "HI-C220-bacpan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch220.txt",
   "json": "hindi/narration/ch220.json",
-  "textHash": "fnv1a64:0f05250867ae41f0",
-  "jsonHash": "fnv1a64:ea13608c71ea4c83",
+  "textHash": "fnv1a64:b25843d1220b49d2",
+  "jsonHash": "fnv1a64:5d3a6b76519e0319",
   "findings": []
 }

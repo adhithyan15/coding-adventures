@@ -1,0 +1,11 @@
+{
+  "id": "PT-C468-invejar",
+  "pathSegment": "PT-PATH-468-INVEJA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-468-INVEJA",
+      "order": 2
+    }
+  ]
+}

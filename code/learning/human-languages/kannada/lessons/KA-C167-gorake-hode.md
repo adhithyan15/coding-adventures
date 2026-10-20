@@ -14,7 +14,8 @@ romanization: "gorake hoḍe"
 concept_tag: KA-VERB-GORAKE-HODE
 prerequisites: [KA-C167-bembalisu, KA-C167-sidi]
 sounds: []
-roots: []
+roots: [dravidian-kurai-snore, dravidian-putai-beat]
+etymology_hook: "gorake hoḍe: native goṟake 'snoring' (DEDR 1852) + hoḍe 'to strike' (DEDR 4252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C167-sidi]
 <!-- hl-knowledge: introduces=[KA-LEX-C167-KRIYE167-05]; assesses=[] -->
 
 **ಗೊರಕೆ ಹೊಡೆ** — *gorake hoḍe* — "to snore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೊರಕೆ ಹೊಡೆ** (*gorake hoḍe*) is native Dravidian: *gorake*, "snoring", which DEDR 1852 lists as *goṟaku*, *gorke*, and *hoḍe*, "to strike, beat", from older *poḍe* (DEDR 4252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:095ca583c72d12ea",
+  "lessonIds": [
+    "GE-C325-teig",
+    "GE-C325-hefe",
+    "GE-C325-kneten",
+    "GE-C325-ausrollen",
+    "GE-C325-nudelholz",
+    "GE-R325-review-318-325"
+  ],
+  "tex": "german/book/chapters/ch325-der-teig.tex"
+}

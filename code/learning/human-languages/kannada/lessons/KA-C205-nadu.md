@@ -14,7 +14,8 @@ romanization: "nādu"
 concept_tag: KA-VERB-NADU
 prerequisites: [KA-C205-turi, KA-C205-sosu]
 sounds: []
-roots: []
+roots: [dravidian-nanai-wet]
+etymology_hook: "nādu: native Dravidian; DEDR 3630 lists nādu 'to moisten, wet, soak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C205-sosu]
 <!-- hl-knowledge: introduces=[KA-LEX-C205-KRIYE205-04]; assesses=[] -->
 
 **ನಾದು** — *nādu* — "to knead (dough)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾದು** (*nādu*) is native Dravidian, of the root for "to get wet", and DEDR 3630 lists *nādu*, "to moisten, wet, soak", itself: kneading works water into flour; the entry also has Tamil *naṉai*, Telugu *nānu* and Malayalam *nana*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

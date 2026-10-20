@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a list, then the Kannada for a griddle.
 You'll want to know: ಹಿತ್ತಾಳೆ.
 ಹಿತ್ತಾಳೆ — hittāḷe — "brass".
 
+The word, taken apart.
+ಹಿತ್ತಾಳೆ (hittāḷe) is a tadbhava of Sanskrit pittala, "brass" (CDIAL 8184): the p- became h- and the l became ḷ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a griddle, then the Kannada for brass.
 
 You'll want to know: ಕಟ್ಟಿಗೆ.
 ಕಟ್ಟಿಗೆ — kaṭṭige — "firewood, wood".
+
+The word, taken apart.
+Where ಕಟ್ಟಿಗೆ (kaṭṭige) comes from is uncertain. It may be a tadbhava of Sanskrit kāṣṭhikā, "a piece of wood" (CDIAL 3120), through Prakrit kaṭṭha, but no source records the Kannada word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for brass, then the Kannada for firewood.
 You'll want to know: ಉಣ್ಣೆ.
 ಉಣ್ಣೆ — uṇṇe — "wool".
 
+The word, taken apart.
+ಉಣ್ಣೆ (uṇṇe) is a tadbhava of Sanskrit ūrṇā, "wool" (CDIAL 2424), through Prakrit uṇṇā. DEDR 604 has a Kannada uṇṇe, "tick", but that is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for firewood, then the Kannada for wool.
 You'll want to know: ಸಿಮೆಂಟ್.
 ಸಿಮೆಂಟ್ — simeṇṭ — "cement".
 
+The word, taken apart.
+ಸಿಮೆಂಟ್ (simeṇṭ) is a loan from English cement.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for wool, then the Kannada for cement.
 
 You'll want to know: ಬಿದಿರು.
 ಬಿದಿರು — bidiru — "bamboo".
+
+The word, taken apart.
+ಬಿದಿರು (bidiru) is native Dravidian, one word with Tamil vetir and Telugu veduru (DEDR 5485). DEDR lists bidir(u), "bamboo".
 
 What you've built.
 One more word for this chapter.

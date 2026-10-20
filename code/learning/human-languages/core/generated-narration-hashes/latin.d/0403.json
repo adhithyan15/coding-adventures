@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:491b2098105e6dfe",
+  "lessonIds": [
+    "LA-C403-doctus",
+    "LA-C403-indoctus",
+    "LA-C403-eruditus",
+    "LA-C403-sciens",
+    "LA-C403-imperitus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch403.txt",
+  "json": "latin/narration/ch403.json",
+  "textHash": "fnv1a64:e6b6245f903a079b",
+  "jsonHash": "fnv1a64:77ad12212734fc76",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "Cambios en el trabajo",
+  "label": "ch:es-cambios-en-el-trabajo",
+  "canDo": "I can talk about changes at work: a promotion, a final settlement, someone taking over, a dismissal and resigning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C553-renunciar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can talk about changes at work: a promotion, a final settlement, someone taking over, a dismissal and resigning.",
+    "assesses": [
+      "ES-LEX-C553-EMPLEO-03",
+      "ES-LEX-C553-EMPLEO-04",
+      "ES-LEX-C553-EMPLEO-05"
+    ]
+  }
+}

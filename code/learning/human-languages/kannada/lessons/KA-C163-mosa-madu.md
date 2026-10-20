@@ -14,7 +14,8 @@ romanization: "mōsa māḍu"
 concept_tag: KA-VERB-MOSA-MADU
 prerequisites: [KA-C163-anumanapadu, KA-C163-sahisu]
 sounds: []
-roots: []
+roots: [sanskrit-mosha, maadu-do-dravidian]
+etymology_hook: "mōsa māḍu: mōsa 'deceit' ← Sanskrit moṣa 'theft' (CDIAL 10358) + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C163-sahisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C163-KRIYE163-03]; assesses=[] -->
 
 **ಮೋಸ ಮಾಡು** — *mōsa māḍu* — "to cheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೋಸ ಮಾಡು** (*mōsa māḍu*) is *mōsa*, "deceit", from Sanskrit *moṣa*, "theft" (CDIAL 10358), through Prakrit *mōsa*, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

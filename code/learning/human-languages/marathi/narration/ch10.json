@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7cc95ee2f0bfb43b",
+  "sourceHash": "fnv1a64:cfaf7d307cc342e2",
   "lessons": [
     {
       "id": "MR-C03-kasa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a3b3bb482e7d71e0",
+      "sourceHash": "fnv1a64:b824ec5f43046092",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c90e0c514b2615e",
+      "sourceHash": "fnv1a64:9fed03de95ec8a0e",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +209,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each word is inherited. CDIAL lists तुम्ही under Sanskrit yuṣmad-, \"you\" (plural), with its t- from tvam, \"thou\" (CDIAL 10511), and कसे under kīdṛśa, \"of what kind\" (CDIAL 3197). आहात is a form of आहे, which CDIAL lists under asti, \"is\", though Bloch gives it another origin (CDIAL 977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -219,7 +230,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +261,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +292,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3102882eb92ca54e",
+      "sourceHash": "fnv1a64:25407eb3846803fd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -328,7 +339,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मी (mī, \"I\") descends from Sanskrit अहम् (aham, \"I\"), which wore down over centuries to the short mī. That aham comes from PIE h₁eǵ(H)om — the ancestor of Latin ego and English I. And notice its family tie to last chapter's माझं (mājhaṁ, \"my\"): the same first-person m- thread runs through \"I\" and \"my,\" just as English pairs I with me/my."
+              "text": "मी (mī, \"I\") does not come from Sanskrit अहम् (aham, \"I\"), the cousin of Latin ego and English I. CDIAL lists it under the first-person base ma- of mayā, \"by me\": the \"by me\" form took the place of aham (CDIAL 9691). Notice its family tie to last chapter's माझं (mājhaṁ, \"my\"): the same first-person m- thread runs through \"I\" and \"my,\" just as English pairs I with me/my."
             }
           ]
         },
@@ -339,7 +350,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Pair मी with the copula आहे: मी आहे (mī āhe, \"I am\"). To answer that you are well, reach back to Chapter 4's बरं (baraṁ, \"fine\") in its gendered form: मी बरा आहे (mī barā āhe, a man) / मी बरी आहे (mī barī āhe, a woman) — \"I am fine.\""
+              "text": "Pair मी with the copula आहे: मी आहे (mī āhe, \"I am\"). To answer that you are well, reach back to Chapter 4's बरं (baraṁ, \"fine\"): the next lesson gives it the gendered form that sits between मी and आहे."
             }
           ]
         },
@@ -366,11 +377,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I am fine\" for yourself (mī barā/barī āhe)",
+              "instruction": "\"baraṁ\" — fine — then \"mī āhe\" once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I am fine\" for yourself (*mī barā/barī āhe*)]"
+              "source": "[YOU SAY: \"baraṁ\" — fine — then \"mī āhe\" once more]"
             }
           ]
         },
@@ -406,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45966de2477c019c",
+      "sourceHash": "fnv1a64:b0f02e4b5a502a71",
       "notice": null,
       "blocks": [
         {
@@ -455,6 +466,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी (mī) comes from Sanskrit mayā, \"by me\", on the first-person base ma- (CDIAL 9691). आहे CDIAL lists under asti, \"is\", though Bloch gives it another origin (CDIAL 977). The origin of बरा is not settled: neither CDIAL nor DEDR has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the copula changes with the subject",
           "segments": [
@@ -465,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +518,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +549,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e87d54a9037fed6e",
+      "sourceHash": "fnv1a64:4f75949d1eb6ff54",
       "notice": null,
       "blocks": [
         {
@@ -655,7 +677,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a96f11d15bd5890a",
+      "sourceHash": "fnv1a64:0306ea788d983ec4",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +730,7 @@
             },
             {
               "kind": "speech",
-              "text": "मी (mī) — I; Sanskrit aham becomes Latin ego, English I."
+              "text": "मी (mī) — I; from Sanskrit mayā, \"by me\", which took the place of aham (CDIAL 9691)."
             },
             {
               "kind": "speech",

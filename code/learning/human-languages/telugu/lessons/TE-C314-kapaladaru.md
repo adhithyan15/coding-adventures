@@ -14,7 +14,8 @@ romanization: "kāpalādāru"
 concept_tag: TE-PANI314-KAPALADARU
 prerequisites: [TE-C314-plambaru, TE-C314-mekanikku]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard, persian-dar-holder]
+etymology_hook: "kāpalādāru: built on native kāpu 'guarding' (DEDR 1416) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C314-mekanikku]
 <!-- hl-knowledge: introduces=[TE-LEX-C314-PANI314-04]; assesses=[] -->
 
 **కాపలాదారు** — *kāpalādāru* — "a watchman, a guard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాపలాదారు** (*kāpalādāru*) is built on native *kāpu*, "guarding", one word with Tamil *kāppu*, "watching, guard" (DEDR 1416), with Persian *-dār*, "holder", through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caṭṭi"
 concept_tag: ML-VASTU207-CATTI
 prerequisites: [ML-C207-tara, ML-C207-melukutiri]
 sounds: []
-roots: []
+roots: [dravidian-catti-pot]
+etymology_hook: "caṭṭi: native Dravidian, one word with Tamil caṭṭi and Kannada caṭṭi (DEDR 2306)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C207-melukutiri]
 <!-- hl-knowledge: introduces=[ML-LEX-C207-VASTU207-03]; assesses=[] -->
 
 **ചട്ടി** — *caṭṭi* — "a cooking pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചട്ടി** (*caṭṭi*) is native Dravidian, one word with Tamil *caṭṭi*, Kannada *caṭṭi* and Telugu *caṭṭi* (DEDR 2306).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

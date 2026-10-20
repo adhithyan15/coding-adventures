@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 121,
-  "sourceHash": "fnv1a64:da1509ad58b9c2f5",
+  "sourceHash": "fnv1a64:622cded2c4426f59",
   "lessonIds": [
     "UR-C121-shalvar",
     "UR-C121-dupatta",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch121.txt",
   "json": "urdu/narration/ch121.json",
-  "textHash": "fnv1a64:63af937b683087f7",
-  "jsonHash": "fnv1a64:fe030e7539bd2693",
+  "textHash": "fnv1a64:9e6c831877150fa1",
+  "jsonHash": "fnv1a64:f5df750837cab05c",
   "findings": []
 }

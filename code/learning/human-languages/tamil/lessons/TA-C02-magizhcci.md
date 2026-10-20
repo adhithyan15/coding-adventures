@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [TA-C02-en-peyar]
 sounds: [zha-retroflex-glide]
 roots: [magizh-dravidian]
+etymology_hook: "மகிழ்ச்சி — native: the noun of magiḻ 'to rejoice' (DEDR 4618); Malayalam makiḻuka"
 reviews_of: [TA-C02-en-peyar, TA-C02-ungal-peyar-enna]
 duration:
   max_seconds: 180

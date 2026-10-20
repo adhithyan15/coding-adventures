@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a fan, then the Gujarati for a lock.
 You'll want to know: છત.
 છત (chat) — "a roof, a ceiling".
 
+The word, taken apart.
+છત (chat) comes from chatti, "covering", a form CDIAL reconstructs on the root chad, "to cover" (CDIAL 4971).
+
 What you've built.
 One more word for roof, wall and garden.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a lock, then the Gujarati for a roof.
 
 You'll want to know: દીવાલ.
 દીવાલ (dīvāl) — "a wall".
+
+The word, taken apart.
+દીવાલ (dīvāl) is a loan, usually traced to Persian dīvār, "wall". Gujarati ends it in l.
 
 What you've built.
 One more word for roof, wall and garden.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a roof, then the Gujarati for a wall.
 You'll want to know: આંગણું.
 આંગણું (ā̃gaṇũ) — "a courtyard". The open ground in front of a ઘર.
 
+The word, taken apart.
+આંગણું (ā̃gaṇũ) (āṁgaṇũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅgaṇa, "courtyard" (CDIAL 118).
+
 What you've built.
 One more word for roof, wall and garden.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a wall, then the Gujarati for a courtya
 You'll want to know: બગીચો.
 બગીચો (bagīco) — "a garden".
 
+The word, taken apart.
+બગીચો (bagīco) is a loan, usually traced to Persian bāghcha, "small garden".
+
 What you've built.
 One more word for roof, wall and garden.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a courtyard, then the Gujarati for a ga
 
 You'll want to know: સરનામું.
 સરનામું (sarnāmũ) — "an address".
+
+The word, taken apart.
+સરનામું (sarnāmũ) is a loan, usually traced to Persian sar-nāma, the heading of a letter: sar, "head", and nāma, "letter".
 
 What you've built.
 One more word for roof, wall and garden.

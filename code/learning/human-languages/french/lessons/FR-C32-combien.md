@@ -11,7 +11,7 @@ concept_tag: FR-QUESTION-HOWMANY
 prerequisites: [FR-C32-comment]
 sounds: []
 roots: []
-etymology_hook: "French asks a question three ways -- voice, est-ce que, inversion -- and they differ in register rather than in meaning."
+etymology_hook: "combien = Old French com 'how' + bien 'well' (← Latin bene): 'how much' was once 'how well'"
 duration:
   max_seconds: 240
 requires:
@@ -48,7 +48,8 @@ reviews_of: [FR-C32-comment]
 **English splits this and French does not.** *Much* for things you measure, *many*
 for things you count — French uses **combien** for both and lets the noun sort it
 out. One word fewer to choose between, and one of the rare places French is
-simpler than English.
+simpler than English. *Combien* is Old French *com* + *bien*, "how well", with
+*bien* ← Latin *bene* (EtymDB 2.1).
 
 Note **combien de** before a noun. The *de* is not optional and does not change
 for number: *combien de personnes*, *combien d'argent*.

@@ -13,7 +13,8 @@ gloss: "to uncover, to discover"
 concept_tag: LA-VERB-DETEGO
 prerequisites: [LA-C231-desum, LA-C232-furor]
 sounds: []
-roots: []
+roots: [detegere-latin, tegere-latin]
+etymology_hook: "dētegō 'to uncover' — dē 'off' + tegō 'to cover'; English detect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C232-furor]
 <!-- hl-knowledge: introduces=[LA-LEX-C232-ACT232-02]; assesses=[] -->
 
 **dētegō, dētegere** — "to uncover, to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dētegō** is *dē*, "off", with *tegō*, "to cover" (EtymDB 2.1): to take the cover off. English *detect* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

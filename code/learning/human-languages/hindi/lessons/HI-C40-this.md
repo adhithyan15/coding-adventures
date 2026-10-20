@@ -14,7 +14,8 @@ romanization: "yah"
 concept_tag: HI-DEIXIS-THIS
 prerequisites: [HI-C37-dudh, HI-C38-aankh]
 sounds: []
-roots: []
+roots: [sanskrit-esha]
+etymology_hook: "yah ← Sanskrit eṣa 'this', a tadbhava (CDIAL 2530)"
 duration:
   max_seconds: 210
 requires:
@@ -46,9 +47,14 @@ reviews_of: []
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **वह** *vah*, which you will meet in a moment. The two of them
+Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **y-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**यह** (*yah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *eṣa*, "this" (CDIAL 2530).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-01, HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02] -->

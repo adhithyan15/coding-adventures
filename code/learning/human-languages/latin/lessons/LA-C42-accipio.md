@@ -6,7 +6,7 @@ sequence: 890
 chapter: 42
 type: word
 headword: accipiō, obtineō
-gloss: "I get" — two verbs, each one a prefix bolted onto a verb you already know, and each one bent out of shape by the join
+gloss: '"I get" — two verbs, each one a prefix bolted onto a verb you already know, and each one bent out of shape by the join'
 concept_tag: VERB-GET
 prerequisites: [LA-C42-fero, LA-C39-capio, LA-C39-adiuvo]
 sounds: [macron-none-short-vowel, macron-long-vowel]
@@ -72,17 +72,17 @@ The *d* of *ad* turned into the *c* it was leaning on — **ad-capere**
 becoming **accipere**. And the *a* of *capere*, now buried in a longer word,
 thinned to *i*. English **accept** and **acceptance** come from here.
 
-**Obtinēre** is *ob*, "over against," plus *tenēre*, "to hold." The same
-vowel thinning shows: not *ob-tenēre* but **obtinēre**. English took it
-whole as **obtain**.
+*ob* ("over against") + *tenēre* ("to hold") → **obtinēre**
+
+The same thinning shows: *e* to *i*. English took it whole as **obtain**.
 
 Now put **adiuvō** next to them. It is *ad* plus *iuvāre* — the same *ad*,
 sitting in front of a vowel, where it had nothing to lean on and so stayed
 itself. One prefix, two states: kept in *adiuvō*, swallowed in *accipiō*.
 
 Two flags. English **receive** is from *recipere*, a different prefix on the
-same verb. And **retain** and **contain** belong to *tenēre* at large, not
-to *obtinēre*.
+same verb. And **retain** and **contain** belong to the plain hold-verb at
+large, not to *obtinēre*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-ACCIPIO-01, LA-LEX-OBTINEO-02, LA-ETYMON-ACCIPIO-OBTINEO-03, LA-LEX-CAPIO-01, LA-LEX-ADIUVO-01, LA-LEX-FERO-01] -->
@@ -90,15 +90,15 @@ to *obtinēre*.
 [PAUSE 1s]
 - [YOU SAY: "accipiō, accipis, accipit" — I, you, he or she receives]
 - [YOU SAY: "obtineō, obtinēs, obtinet" — I, you, he or she gets hold of]
-- [YOU SAY: the verb inside each one — capiō, and the hold-verb tenēre]
+- [YOU SAY: the verb inside *accipiō* — capiō]
 - [YOU SAY: the prefix in three states — adiuvō, accipiō, obtineō]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-ACCIPIO-01, LA-LEX-OBTINEO-02, LA-ETYMON-ACCIPIO-OBTINEO-03, LA-LEX-CAPIO-01, LA-ETYMON-CAPIO-02, LA-LEX-ADIUVO-01, LA-ETYMON-ADIUVO-02, LA-LEX-FERO-01, LA-GRAMMAR-FERO-SUPPLETION-02, LA-ETYMON-FERO-03] -->
 
-[PAUSE 3s] How does Latin say "I receive", and "they receive"?
-(**Accipiō**, **accipiunt**.) Which verb is buried inside it, and what
-happened to that verb's *a*? (**Capiō**; it **thinned to *i***.) What are
-the two pieces of *obtinēre*? (***Ob*** and ***tenēre***, "to hold.") Which
-earlier verb shows the same *ad-* unswallowed? (**Adiuvō**.) And which verb
-means "I bring"? (**Ferō**.)
+[PAUSE 3s] How does Latin say "I receive", and "they receive"? (**Accipiō**,
+**accipiunt**.) Which verb is buried inside it, and what happened to that verb's
+*a*? (**Capiō**; it **thinned to *i***.) What are the two pieces of *obtinēre*?
+(***Ob***, "over against," and the verb "to hold.") Which earlier verb shows the
+same *ad-* unswallowed? (**Adiuvō**.) And which verb means "I bring"?
+(**Ferō**.)

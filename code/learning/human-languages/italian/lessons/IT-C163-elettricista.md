@@ -13,7 +13,8 @@ gloss: "an electrician"
 concept_tag: IT-COSE163-ELETTRICISTA
 prerequisites: [IT-C162-caricabatterie, IT-C163-meccanico]
 sounds: []
-roots: []
+roots: [electrum-latin]
+etymology_hook: "elettricista — from the word for 'electric', from Greek elektron 'amber' — English electric"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C163-meccanico]
 <!-- hl-knowledge: introduces=[IT-LEX-C163-COSE163-02]; assesses=[] -->
 
 **l'elettricista** — "an electrician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elettricista** — built from the word for "electric" with *-ista*. That word goes back to Latin *electrum*, "amber", from Greek *elektron*: rubbed amber gives a spark. (EtymDB 2.1 records the Latin and Greek words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

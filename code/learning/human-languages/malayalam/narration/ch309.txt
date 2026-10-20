@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to take a photo, then the Malayalam fo
 You'll want to know: കുറയ്ക്കുക.
 കുറയ്ക്കുക — kuṟaykkuka — "to reduce".
 
+The word, taken apart.
+കുറയ്ക്കുക (kuṟaykkuka) is native Dravidian, the causative of the verb "to dwindle": "make less"; DEDR 1851 lists the root with Tamil kuṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to type, then the Malayalam for to red
 
 You'll want to know: തിരിച്ചറിയുക.
 തിരിച്ചറിയുക — tiriccaṟiyuka — "to recognize".
+
+The word, taken apart.
+തിരിച്ചറിയുക (tiriccaṟiyuka) is native Dravidian, "to know again": tiriccu, "turning back" (DEDR 3246, with Tamil tiri), and aṟiyuka, "to know" (DEDR 314).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to reduce, then the Malayalam for to r
 You'll want to know: പൂട്ടുക.
 പൂട്ടുക — pūṭṭuka — "to lock".
 
+The word, taken apart.
+പൂട്ടുക (pūṭṭuka) is native Dravidian, the causative of the verb "to be closed, be yoked"; DEDR 4361 lists the root with Tamil pūṇ, Kannada pūṇ and Telugu pūnu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to recognize, then the Malayalam for t
 You'll want to know: വിവരിക്കുക.
 വിവരിക്കുക — vivarikkuka — "to describe, to explain".
 
+The word, taken apart.
+വിവരിക്കുക (vivarikkuka) is built on Sanskrit vivaraṇa, "opening up, explanation", from vivara, "an opening" (CDIAL 11915), with the ending that makes a Malayalam verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to lock, then the Malayalam for to des
 
 You'll want to know: ഒഴിവാക്കുക.
 ഒഴിവാക്കുക — oḻivākkuka — "to avoid".
+
+The word, taken apart.
+ഒഴിവാക്കുക (oḻivākkuka) is native Dravidian, "make it a vacancy": oḻivu, "being free, vacancy" (DEDR 1009), and ākkuka, "to make" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

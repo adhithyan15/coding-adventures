@@ -14,7 +14,8 @@ romanization: "léto"
 concept_tag: RU-SEASONS-SUMMER
 prerequisites: [RU-C71-winter, RU-C71-spring]
 sounds: []
-roots: []
+roots: [slavic-leto]
+etymology_hook: "лето ← Proto-Slavic *lěto; Vasmer reports a possible link with Irish laithe 'day', but the origin is open"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C71-spring]
 <!-- hl-knowledge: introduces=[RU-LEX-C71-SEASONS-04]; assesses=[] -->
 
 **лето** (*léto*) — "summer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лето** ← Proto-Slavic *\*lěto*, "summer; year" — inherited. Its deeper origin is uncertain: Vasmer reports a possible link with Old Irish *laithe*, "day", and Old Gutnish *laþigs*, "in spring", and others with *лить*, "to pour". It also counts years: *пять лет*, "five years".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

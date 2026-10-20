@@ -14,7 +14,8 @@ romanization: "sveṭar"
 concept_tag: GU-THINGS112-SVETAR
 prerequisites: [GU-C112-patto, GU-C112-rumal]
 sounds: []
-roots: []
+roots: [english-sweater]
+etymology_hook: "sveṭar ← English sweater"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C112-rumal]
 <!-- hl-knowledge: introduces=[GU-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **સ્વેટર** (*sveṭar*) — "a sweater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સ્વેટર** (*sveṭar*) is a loan from English *sweater*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pōrvai"
 concept_tag: TA-THINGS119-PORVAI
 prerequisites: [TA-C119-tuntu, TA-C119-talaiyanai, TA-C23-day-family-register, TA-C23-day-family-register, TA-C24-night-register-darkness, TA-C24-iravu]
 sounds: []
-roots: []
+roots: [dravidian-por-wrap]
+etymology_hook: "போர்வை — native Dravidian (DEDR 4590); Malayalam pōrkkuka 'to wrap'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C119-talaiyanai]
 <!-- hl-knowledge: introduces=[TA-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **போர்வை** — *pōrvai* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போர்வை** (*pōrvai*) is native Dravidian. DEDR 4590 lists Malayalam *pōrkkuka*, "to wrap". It is the noun of *pōr*, "to wrap oneself in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:d04f604ddd27202f",
+  "lessonIds": [
+    "FR-C380-norme",
+    "FR-C380-reglement",
+    "FR-C380-obligatoire",
+    "FR-C380-facultatif",
+    "FR-C380-obligation"
+  ],
+  "tex": "french/book/chapters/ch380-les-regles.tex"
+}

@@ -14,7 +14,8 @@ romanization: "gæs"
 concept_tag: BN-JINIS175-GS
 prerequisites: [BN-C175-boti, BN-C175-shilnora]
 sounds: []
-roots: []
+roots: [english-gas]
+etymology_hook: "gæs ← English gas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C175-shilnora]
 <!-- hl-knowledge: introduces=[BN-LEX-C175-JINIS175-05]; assesses=[] -->
 
 **গ্যাস** — *gæs* — "gas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গ্যাস** (*gæs*) is a loan from English *gas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

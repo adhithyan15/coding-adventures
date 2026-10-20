@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-612-SINO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-612-SINO"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "añce kacēri"
 concept_tag: KA-STHALA250-ANCE-KACERI
 prerequisites: [KA-C250-gudisalu, KA-C250-badavane]
 sounds: []
-roots: []
+roots: [dravidian-ance-post, hindustani-kacahri]
+etymology_hook: "añce kacēri: native añce 'the post' (DEDR 54) + kacēri 'office' ← Hindustani kacahrī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C250-badavane]
 <!-- hl-knowledge: introduces=[KA-LEX-C250-STHALA250-04]; assesses=[] -->
 
 **ಅಂಚೆ ಕಚೇರಿ** — *añce kacēri* — "a post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಚೆ ಕಚೇರಿ** (*añce kacēri*) is *añce*, "the post, a relay", native Dravidian (DEDR 54, with Tamil *añcal*), and *kacēri*, "office", from Hindustani *kacahrī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

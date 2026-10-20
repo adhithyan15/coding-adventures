@@ -13,7 +13,7 @@ sounds: [z-ts, herz-short-e]
 roots: [germanic-langitinaz]
 etymology_hook: "Lenz is the older German word for spring and is cousin to English Lent, which was the spring fast before it was anything else — both come from a root meaning the lengthening of the days"
 duration:
-  max_seconds: 170
+  max_seconds: 180
 requires:
   knowledge: [GE-LEX-FRUEHLING-01, GE-LEX-JAHRESZEIT-01, GE-LEX-ZEIT-01]
 introduces:
@@ -52,6 +52,11 @@ It is older than *Frühling*, and it is the twin of English **Lent** — which w
 the *spring* season before the Church attached a fast to it. Both go back to a
 root about the **lengthening** of the days, which is the one thing a northern
 spring reliably does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Lenz** ← Old High German *lenzo* ← Proto-Germanic *\*langatīnaz*, "spring", built from "long" and "day" — inherited, a cousin of English *Lent*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-LENZ-01, GE-LEX-ZEIT-01] -->

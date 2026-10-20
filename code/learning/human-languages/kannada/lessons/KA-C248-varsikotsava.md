@@ -14,7 +14,8 @@ romanization: "vārṣikōtsava"
 concept_tag: KA-KALA248-VARSIKOTSAVA
 prerequisites: [KA-C247-rajyotsava, KA-C248-dasaka]
 sounds: []
-roots: []
+roots: [sanskrit-varshika, sanskrit-utsava]
+etymology_hook: "vārṣikōtsava ← Sanskrit vārṣika 'annual' (CDIAL 11571) + utsava 'festival' (CDIAL 1876)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C248-dasaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C248-KALA248-02]; assesses=[] -->
 
 **ವಾರ್ಷಿಕೋತ್ಸವ** — *vārṣikōtsava* — "an anniversary; an annual day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾರ್ಷಿಕೋತ್ಸವ** (*vārṣikōtsava*) is Sanskrit *vārṣika*, "annual" (CDIAL 11571), and *utsava*, "festival" (CDIAL 1876): "the yearly festival".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: go to school; attend school
 concept_tag: ZH-SCHOOL-ATTEND
 prerequisites: [ZH-R15-school-map-2]
 sounds: [tone-4, tone-2]
-roots: []
-etymology_hook: Go onto study becomes go to school; both characters are already secure.
+roots: [middle-chinese-dzyangx, middle-chinese-haewk]
+etymology_hook: "shàngxué: built from Middle Chinese dzyangX 'to go up' and haewk 'learning'"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-R15-school-map-2, ZH-C07-shang, ZH-C13-xue]
 
 Drop firmly on *shàng*, then rise on *xué*. No new character is hiding in the
 word.
+
+*Shàngxué* is built from Middle Chinese *dzyangX*, "to go up", and *haewk*,
+"learning".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHANGXUE-01] -->

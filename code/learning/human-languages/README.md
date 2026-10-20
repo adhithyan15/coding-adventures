@@ -39,7 +39,7 @@ Every track shares the same shape:
 ```text
 <language>/
   README.md                  what this track is, how to use it, current progress
-  CHANGELOG.d/               append-only per-chapter release-note owners in sharded tracks
+  CHANGELOG.d/               append-only per-chapter release-note owners
   CHANGELOG.md               ignored local view rendered from CHANGELOG.d when needed
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
   curriculum-membership.d/   one direct path/extension membership owner per lesson
@@ -51,9 +51,11 @@ Every track shares the same shape:
   book/                        authored LaTeX fragments + chapters; book.tex is projected on demand
 ```
 
-For every track with a `CHANGELOG.d/`, add one ranked fragment there; never
-edit or commit the rendered `CHANGELOG.md`. The document-shard check rejects
-missing, malformed, linked, case-fold-colliding, or resurrected owners.
+For every track, add one ranked fragment to `CHANGELOG.d/`; never edit or
+commit the rendered `CHANGELOG.md`. The document-shard check rejects missing,
+malformed, linked, case-fold-colliding, or resurrected owners. Spanish also
+keeps 52 preserved historical implementation reports in `change-notes.d/`;
+those are not release-note shards and new changelog entries do not go there.
 
 The machine-readable layer alongside the tracks is:
 
@@ -63,7 +65,7 @@ core/spine.d/*.json             ordered, language-independent can-do spine: one 
 core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
 core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
 core/reading-reach-floor.d/<language>--<level>.json reading-reach ratchet, one owner per task shape
-core/exam-inventory-{hindi,malayalam,marathi}-a1.d/*.json A1 metadata + one owner per exam point
+core/exam-inventory-{hindi,malayalam,marathi,sanskrit}-a1.d/*.json A1 metadata + one owner per exam point
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
@@ -87,7 +89,7 @@ under `tests/exam-inventories/<language>.test.ts` or a track's older independent
 `tests/exam-inventory-<language>.test.ts`. Adding one track's lesson or probe must
 not edit a corpus-wide exam test.
 
-The Hindi, Malayalam, and Marathi A1 inventories are point-owned as well. Each `_meta.json` holds the
+The Hindi, Malayalam, Marathi, and Sanskrit A1 inventories are point-owned as well. Each `_meta.json` holds the
 stable source/scope contract plus the ordered point-id completeness manifest;
 each `NNNN-<point-id>.json` owns exactly one full point. The loader reconstructs
 the unchanged public inventory, rejects missing/extra/reordered/noncanonical

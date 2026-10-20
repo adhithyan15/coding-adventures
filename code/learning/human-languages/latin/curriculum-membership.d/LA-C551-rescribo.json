@@ -1,0 +1,11 @@
+{
+  "id": "LA-C551-rescribo",
+  "pathSegment": "LA-PATH-551-CAPS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-551-CAPS",
+      "order": 4
+    }
+  ]
+}

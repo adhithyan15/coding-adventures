@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Saying and Seeing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:31ec73b9657a1f52",
+  "sourceHash": "fnv1a64:93cf6aa2026ffde8",
   "lessons": [
     {
       "id": "AR-C29-qala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe74ae4036d7f978",
+      "sourceHash": "fnv1a64:7f900fd695f066a1",
       "notice": null,
       "blocks": [
         {
@@ -103,6 +103,10 @@
             {
               "kind": "speech",
               "text": "Those first two are the very patterns met back in shukran, which paired shākir (\"thankful\") with mashkūr (\"thanked\"). Learn a pattern once and it works on every root — which is why Arabic vocabulary grows in families rather than one word at a time."
+            },
+            {
+              "kind": "speech",
+              "text": "Qāla is built on this native root (Lane); Hebrew qōl, \"voice\", is usually counted a cousin."
             }
           ]
         },
@@ -178,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e332b241f5b4f72",
+      "sourceHash": "fnv1a64:07bcdd5c1c18dad5",
       "notice": null,
       "blocks": [
         {
@@ -253,6 +257,10 @@
             {
               "kind": "speech",
               "text": "Seeing, opinion, mirror, vision: four words, one skeleton, no memorising four unrelated forms."
+            },
+            {
+              "kind": "speech",
+              "text": "Raʾā is built on this native root (Lane); Hebrew rāʾā, \"he saw\", is its cousin."
             }
           ]
         },

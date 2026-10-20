@@ -14,7 +14,8 @@ romanization: "hāsā"
 concept_tag: BN-VERB-HASA
 prerequisites: [BN-C49-khola, BN-C50-dhoya]
 sounds: []
-roots: []
+roots: [indo-aryan-hasyate]
+etymology_hook: "hāsā ← *hasyate 'one laughs', a reconstructed form; a tadbhava (CDIAL 14048)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C50-dhoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C50-VERBS50-02]; assesses=[] -->
 
 **হাসা** — *hāsā* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাসা** (*hāsā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hasyate*, "one laughs", a form CDIAL reconstructs from its descendants (CDIAL 14048). It is a passive of Sanskrit *hasati*, "laughs".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

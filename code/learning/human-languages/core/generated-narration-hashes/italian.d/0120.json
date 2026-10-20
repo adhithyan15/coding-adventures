@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 120,
-  "sourceHash": "fnv1a64:cfc8d6bfa2ab485a",
+  "sourceHash": "fnv1a64:691172919b7212bd",
   "lessonIds": [
     "IT-C120-asino",
     "IT-C120-coniglio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch120.txt",
   "json": "italian/narration/ch120.json",
-  "textHash": "fnv1a64:67684b548fbf2bdb",
-  "jsonHash": "fnv1a64:66749f8019143c57",
+  "textHash": "fnv1a64:409a7d7a52fae404",
+  "jsonHash": "fnv1a64:5568818b8b1113ab",
   "findings": []
 }

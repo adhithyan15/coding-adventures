@@ -14,7 +14,8 @@ romanization: "pāk"
 concept_tag: UR-SIFAT163-PAK
 prerequisites: [UR-C163-majbur, UR-C163-azad]
 sounds: []
-roots: []
+roots: [persian-pak]
+etymology_hook: "pāk: usually traced to Persian pāk 'pure, clean'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C163-azad]
 <!-- hl-knowledge: introduces=[UR-LEX-C163-SIFAT163-04]; assesses=[] -->
 
 **پاک** — *pāk* — "pure, clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پاک** (*pāk*) is a loan, usually traced to Persian *pāk*, "pure, clean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

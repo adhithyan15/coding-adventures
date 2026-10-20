@@ -15,6 +15,7 @@ concept_tag: FA-THINGS107-CHANE
 prerequisites: [FA-C107-pashe, FA-C107-magas]
 sounds: []
 roots: []
+etymology_hook: "châne: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C107-magas]
 <!-- hl-knowledge: introduces=[FA-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **چانه** — *châne* — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*châne* is a native Persian word, but its origin is not settled. EtymDB sets it beside English *chin* and Latin *gena*, "cheek", but no source used here shows how the sounds match, so that link is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

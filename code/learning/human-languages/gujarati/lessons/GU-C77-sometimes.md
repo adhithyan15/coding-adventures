@@ -14,7 +14,8 @@ romanization: "kyārek"
 concept_tag: GU-WHEN-SOMETIMES
 prerequisites: [GU-C76-again, GU-C77-always]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kyārek: kyāre 'when' + ek 'one'; CDIAL has no entry for kyāre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C77-always]
 <!-- hl-knowledge: introduces=[GU-LEX-C77-WHEN-02]; assesses=[] -->
 
 **ક્યારેક** (*kyārek*) — "sometimes". Built on **ક્યારે**, when.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ક્યારેક** (*kyārek*) is *kyāre*, "when", with *ek*, "one". CDIAL has no entry for *kyāre*, so beyond its question stem its history is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

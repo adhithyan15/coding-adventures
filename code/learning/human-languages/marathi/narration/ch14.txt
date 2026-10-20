@@ -18,11 +18,11 @@ who: तू (you, familiar). Marathi: आहेस. said: āhes.
 who: तुम्ही (you, respectful). Marathi: आहात. said: āhāt.
 
 Sounds you'll need: अ, स, णे and आ, हे.
-अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. हे is ह ha with the same -e stroke: ā-he.
+अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. And ह + े becomes हे, ha with the same -e stroke: ā-he.
 
-The word, taken apart — the oldest verb in the family.
-Sanskrit's word for "is" was अस्ति ásti, sitting on the stem as-, and that stem goes back to the Indo-European root h₁es-. It surfaces almost everywhere the family reaches: Latin est, Greek estí, German ist, and English is. Asṇe is built straight on it.
-आहे itself is the contested piece. Some trace it to ásti directly; others route it through a Middle Indo-Aryan verb acchai "stays, remains." The family is not in doubt, the exact line of descent is — so treat it as an open question rather than a settled fact.
+The word, taken apart — a near miss with is.
+Sanskrit's word for "is" was अस्ति ásti, from the Indo-European root es-: Latin est, German ist, English is. Asṇe looks built on it, but CDIAL files it under āsate, "sits, exists" (CDIAL 1480), or ākṣeti, "abides" (CDIAL 1031). It began as staying put, not as being.
+आहे is the contested piece. CDIAL weighs ásti (CDIAL 977), ābhavati, "is present" (CDIAL 1226), and āsate (CDIAL 1480), and settles on none, so treat its descent as an open question.
 
 Grammar Lens: the sentence ends on आहे.
 English slots is into the middle of a sentence: "My name is Sara." Marathi holds it back to the very end:
@@ -54,6 +54,9 @@ You'll want to know: जाणे.
 जाणे — jāṇe — to go.
 Strip the infinitive ending -णे and the stem is जा- jā-. On that stem Marathi builds the everyday present: जातो (jāto) and जाते (jāte).
 Both mean "I go." Neither is more correct than the other. Which one you may say is decided by something the English sentence never mentions.
+
+The word, taken apart.
+जाणे (jāṇe) is inherited from Sanskrit yāti, "goes" (CDIAL 10452).
 
 Sounds you'll need: जा, णे.
 ज is ja, and the upright stroke after it is the long ā — together जा jā. णे you met last lesson: retroflex ण with the -e stroke. Two syllables, jā-ṇe, with the tongue curled back for that second one.
@@ -95,12 +98,12 @@ Same infinitive ending, same machinery: stem ये- ye-, present येतो (
 You met yeto in Chapter 4 as a farewell — Marathi takes its leave by saying "I come," promising the return rather than announcing the departure.
 
 Sounds you'll need: ये, णे.
-य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on हे in āhe. Two syllables: ye-ṇe.
+य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on the last syllable of आहे. Two syllables: ye-ṇe.
 
-The word, taken apart — one root, two directions.
+The word, taken apart — one prefix, two directions.
 Sanskrit had a verb of travelling, yā-, whose present was याति yāti "goes, travels." Middle Indo-Aryan turned that initial y- into a j-, giving Prakrit jāi — and that is Marathi जाणे (jāṇe).
-Now put a prefix on it. Sanskrit आ- ā- means "toward, hither," and आयाति āyāti is "travels toward here" — that is, comes. Worn down through the same centuries, āyāti is Marathi येणे (yeṇe).
-So going and coming are not two verbs in this family. They are one verb of travelling, and the only difference is a prefix meaning "this way." English keeps a faint echo of the same trick in go against in-coming, but it needs two separate roots to do what Sanskrit did with one.
+Sanskrit had a second verb of going, eti, on the root i. Put a prefix on it: आ- ā- means "toward, hither," and ā- with eti is aiti, "comes near" — that is, comes. CDIAL lists Marathi येणे (yeṇe) under aiti (CDIAL 2534).
+So coming is going with a prefix meaning "this way." जाणे (jāṇe) and येणे (yeṇe) grew from two different verbs of going, but येणे (yeṇe) still carries the prefix that turned one direction into the other.
 
 Guided Practice.
 [pause 1 second]
@@ -108,12 +111,12 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "I come" in your own gender — "mī yeto" or "mī yete"]
 [pause 8 seconds for the answer]
-[your turn — say: the derivation — "yāti … āyāti … yeṇe"]
+[your turn — say: the derivation — "ā- + eti … aiti … yeṇe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit root do jāṇe and yeṇe share? (yā-, to travel.) What single piece turns going into coming? (The prefix आ- ā-, "toward here.") Next: an infinitive that is also a noun, and the gender Hindi does not have.
+What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit verb does CDIAL list yeṇe under? (aiti, "comes near".) What single piece turns going into coming? (The prefix आ- ā-, "toward here.") Next: an infinitive that is also a noun, and the gender Hindi does not have.
 
 
 Lesson 4 of 6.
@@ -156,11 +159,11 @@ What are the two things खाणे (khāṇe) means? (To eat, and eating as a 
 
 
 Lesson 5 of 6.
-पाहणे (pāhṇe) — "to see," a root you already own.
+पाहणे (pāhṇe) — "to see," and a cousin it does not have.
 
 Warm-up.
 [pause 2 seconds]
-Say "I eat" in your own gender — mī khāto or mī khāte. The next verb runs on the same endings, and on a root you have been using in English all your life without knowing it.
+Say "I eat" in your own gender — mī khāto or mī khāte. The next verb runs on the same endings, and its history comes with a warning about words that only look related.
 
 You'll want to know: पाहणे.
 पाहणे — pāhṇe — to see, to watch.
@@ -169,24 +172,23 @@ Stem पाह- pāh-, present पाहतो (pāhto) and पाहते (pā
 Sounds you'll need: पा, ह, णे.
 प is pa without the puff of breath that kha had. Add the upright stroke for long ā: पा pā. Then ह ha, and the णे you now know by heart. Three light syllables, pā-ha-ṇe, usually spoken as two: pāh-ṇe.
 
-The word, taken apart — one root, a dozen English words.
-Sanskrit's verb for seeing was पश्यति paśyati, on the root paś-, and Marathi's pāhṇe descends from its prefixed form प्रपश्यति prapaśyati, "looks out at."
-Now the payoff. That paś- is the Indo-European root spek-, "to observe." Sanskrit dropped the s- and swapped the consonants around; Latin kept them in order as speciō, "I look." From the Latin side English inherited an enormous family, every one of them a cousin of pāhṇe:
-spectacle, inspect, respect, suspect, prospect, species, specimen, speculate, telescope, and — through Italian — spy.
-So a Marathi speaker asking you to pāhṇe something is asking you to inspect it, in the most literal ancestral sense the word has.
+The word, taken apart — looking for, not looking at.
+You will often read that pāhṇe comes from Sanskrit पश्यति paśyati, "sees", in its prefixed form prapaśyati, "looks out at". That root, paś-, is the Indo-European spek-, "to observe", which reached English through Latin as spectacle, inspect and spy. It is a good story, and CDIAL does not tell it.
+CDIAL files Marathi pāhṇẽ, "to see, to search", under pracāh, "look for", a form it reconstructs from its descendants (CDIAL 8492), and lists pāhije, "it is needed", beside it. It builds pracāh on cāh, "see, look for, desire", the verb behind Hindi cāhnā, "to want" (CDIAL 4775), and it notes prabhāti, "appears", as a possible second source (CDIAL 8709).
+So pāhṇe began as looking for something, and spectacle and spy are look-alikes, not cousins.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "pāhṇe" — to see — then "I see" in your own gender]
 [pause 8 seconds for the answer]
-[your turn — say: the derivation — "paśyati … prapaśyati … pāhṇe"]
+[your turn — say: the derivation CDIAL gives — "pracāh, look for … pāhṇe"]
 [pause 8 seconds for the answer]
-[your turn — say: four English cousins — "spectacle, inspect, species, spy"]
+[your turn — say: the look-alikes that are not its cousins — "spectacle, inspect, spy"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the stem of pāhṇe? (पाह-, pāh-.) Which Sanskrit verb is it from? (पश्यति paśyati, in its prefixed form prapaśyati.) Name three English words from the same ancient root. (Spectacle, inspect, species, spy — any three.) Next: a verb Marathi mostly refuses to use, and what it says instead.
+What is the stem of pāhṇe? (पाह-, pāh-.) Which form does CDIAL trace it to? (pracāh, "look for".) Are spectacle and spy its cousins? (No — they belong to paśyati, a look-alike.) Next: a verb Marathi mostly refuses to use, and what it says instead.
 
 
 Lesson 6 of 6.
@@ -202,7 +204,7 @@ You'll want to know: माहीत असणे and जाणणे.
 Marathi has an inherited verb for knowing and barely uses it. Everyday speech says māhīt asṇe, "to be known," built on asṇe.
 
 Sounds you'll need: मा, ही, त.
-म is ma; with the long-ā stroke, मा. ही is ह ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t.
+म is ma; with the long-ā stroke, मा. Then ह + ी becomes ही, ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t.
 
 Grammar Lens: knowledge comes to you, you do not do it.
 मला माहीत आहे — malā māhīt āhe — "I know."

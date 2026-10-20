@@ -1,0 +1,11 @@
+{
+  "id": "IT-C412-pedone",
+  "pathSegment": "IT-PATH-412-VIGILE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-412-VIGILE",
+      "order": 1
+    }
+  ]
+}

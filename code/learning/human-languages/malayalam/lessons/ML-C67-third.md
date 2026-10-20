@@ -11,7 +11,8 @@ romanization: "mūnnāṁ"
 concept_tag: ML-ORDINAL-THIRD
 prerequisites: [ML-C67-second, ML-C66-ear-of-grain, ML-C63-pain, ML-C51-respect]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "mūnnāṁ: native Dravidian, 'three' + -āṁ; Tamil mūṉṟām is the same word (DEDR 5052)"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +55,11 @@ of the word.
 | **മൂന്ന്** (*mūnnŭ*) | **മൂന്നാം** (*mūnnāṁ*) |
 
 **മൂന്നാം കസേര** (*mūnnāṁ kasēra*), the third chair.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൂന്നാം** (*mūnnāṁ*) is native Dravidian: DEDR 5052 lists it with Tamil *mūṉṟām*, "third", built on *mūṉṟu*, "three".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C67-ORDINAL-05, ML-LEX-C67-ORDINAL-03] -->

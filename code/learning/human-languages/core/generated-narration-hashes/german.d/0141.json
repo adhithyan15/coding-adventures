@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 141,
-  "sourceHash": "fnv1a64:88edab67227435e4",
+  "sourceHash": "fnv1a64:98f2e40d0ef567e6",
   "lessonIds": [
     "GE-C141-zahlen",
     "GE-C141-mieten",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch141.txt",
   "json": "german/narration/ch141.json",
-  "textHash": "fnv1a64:bb24302ce81c44c8",
-  "jsonHash": "fnv1a64:0a989dc62d96169b",
+  "textHash": "fnv1a64:9e1e7475e6597394",
+  "jsonHash": "fnv1a64:4d8832d4aad172d5",
   "findings": []
 }

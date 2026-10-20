@@ -11,7 +11,8 @@ romanization: "aṅgaḍi"
 concept_tag: TE-NOUN-SHOP
 prerequisites: [TE-C71-son-in-law]
 sounds: []
-roots: []
+roots: [dravidian-angadi-shop]
+etymology_hook: "aṅgaḍi: native Dravidian, one word with Tamil aṅkāṭi 'bazaar' (DEDR 35), which queries Sanskrit aṅgaṇa"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C71-son-in-law]
 It is inherited, and it is the older and homelier of the two words available. City Telugu will as often reach for a borrowed word for a store, but the అంగడి is the one at the end of the బాట.
 
 You are known in an అంగడి. Nobody there opens with a price; they open by asking whether your household is well.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అంగడి** (*aṅgaḍi*) is native Dravidian, one word with Tamil *aṅkāṭi*, "bazaar", and Kannada *aṅgaḍi*, "shop" (DEDR 35). DEDR compares, with a query, Sanskrit *aṅgaṇa*, "courtyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

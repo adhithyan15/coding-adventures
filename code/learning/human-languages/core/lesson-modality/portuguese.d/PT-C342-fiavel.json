@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C342-fiavel",
+    "language": "portuguese",
+    "chapter": 342,
+    "sequence": 19570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37a37f679f04b418"
+  },
+  "findings": []
+}

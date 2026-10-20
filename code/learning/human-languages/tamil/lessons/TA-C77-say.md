@@ -11,7 +11,8 @@ romanization: "sol"
 concept_tag: VERB-SAY
 prerequisites: [TA-C76-choice]
 sounds: []
-roots: []
+roots: [dravidian-col-say]
+etymology_hook: "சொல் — native Dravidian (DEDR 2855); Malayalam colluka, Kannada sol"
 duration:
   max_seconds: 220
 requires:
@@ -56,6 +57,11 @@ speaker finds that odd: a word is what saying produces.
 
 You will need this verb for the next lesson, because Tamil has a particular way of handing
 somebody else's words to it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சொல்** (*sol*) is native Dravidian. DEDR 2855 lists Malayalam *colluka* and Kannada *sol*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

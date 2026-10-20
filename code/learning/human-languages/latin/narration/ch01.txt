@@ -18,7 +18,7 @@ The word, taken apart.
 Salvē (to one person) / salvēte (to several) is the imperative of salvēre, "to be in good health," from salvus "safe, sound, whole." To greet in Latin is to wish someone health. That root fans out into English — save, safe, salvage, salvation, salute, salubrious, the toast "salut!" — and into the Romance children as the word for health itself: Spanish salud, Italian salute, French salut.
 
 Grammar Lens.
-salvē vs. salvēte: Latin changes the ending to mark one listener (-e) versus many (-ēte). This is the feature that defines Latin — meaning carried in endings, not in word order or extra words. English lost almost all of it; its Romance grandchildren kept some. You will meet it in every chapter.
+salvē vs. salvēte: Latin changes the ending to mark one listener (-e) or many (-ēte). This is the feature that defines Latin — meaning carried in endings, not in word order or extra words. English lost almost all of it; its Romance grandchildren kept some. You will meet it in every chapter.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — follow one greeting you can see.
@@ -106,7 +106,7 @@ Sounds you'll need.
 Avē = AH-weh (again the w-sound for v). Two syllables, the second long.
 
 The word, taken apart.
-Avē is the more formal greeting — "hail" — from avēre "to fare well, to be eager." It survives in English essentially unchanged inside the prayer "Ave Maria" ("Hail, Mary"), and stands in Catullus's famous avē atque valē — "hail and farewell" — spoken at his brother's grave, pairing the word you say on arrival with the one you say on leaving (next lesson).
+Avē is the more formal greeting — "hail" — from avēre "to fare well, to be eager." It survives in English essentially unchanged inside the prayer "Ave Maria" ("Hail, Mary"), and stands in Catullus's famous avē atque valē — "hail and farewell" — spoken at his brother's grave, pairing the word you say on arrival with the one you say on leaving (next lesson). Romans heard avē as a form of avēre; many scholars now think it began as a Punic greeting meaning "live!".
 
 Why it's said this way.
 Avē carried rank and ritual — addressed to emperors and gods (avē, Caesar). For an everyday "hi," Romans reached for salvē; avē was the bow, not the wave.
@@ -136,7 +136,7 @@ Sounds you'll need.
 Valē = WAH-leh. Like salvē, a health-and-strength wish frozen into a command.
 
 The word, taken apart.
-Valē (singular) / valēte (plural) is the imperative of valēre, "to be strong, to be well." So goodbye in Latin literally wishes you strength. The root is an English gold mine: value, valid, valiant, valour, valence, prevail, convalesce, ambivalent ("strong both ways"). And the Romance children carry valēre as their verb "to be worth": Spanish valer, Italian valere, French valoir.
+Valē (singular) / valēte (plural) is the imperative of valēre, "to be strong, to be well." So goodbye in Latin literally wishes you strength. Valēre is inherited, usually traced to Proto-Indo-European walh₂-, "to be strong" (EtymDB 2.1). The root is an English gold mine: value, valid, valiant, valour, valence, prevail, convalesce, ambivalent ("strong both ways"). And the Romance children carry valēre as their verb "to be worth": Spanish valer, Italian valere, French valoir.
 
 Grammar Lens.
 salvē, avē, valē are all the same shape — a bare imperative, a command form of a verb about health or strength. Latin doesn't say "hello/goodbye"; it orders you to thrive. Feel the -ē / -ēte pair recur: know it once, and you can address one friend or a whole room in any of the three.
@@ -198,7 +198,7 @@ Sounds you'll need.
 Ita = IH-tah; nōn = nōne, with a long ō.
 
 The word, taken apart.
-Classical Latin had no simple "yes." To agree you said ita ("thus, so"), sīc ("so, in this way"), certē ("certainly"), or you just repeated the verb — asked "are you coming?", you answered "I'm coming." It was sīc that hardened into the Romance "yes": Spanish and Italian sí / sì, French si (the emphatic yes). "No" is easier: nōn ("not"), from older ne-oenum "not one thing" — the ancient negative ne- that also gives English no, not, none, never, and which you will meet again as Sanskrit na and Hindi nahīṇ.
+Classical Latin had no simple "yes." To agree you said ita ("thus, so"), sīc ("so, in this way"), certē ("certainly"), or you repeated the verb — asked "are you coming?", you answered "I'm coming." It was sīc that hardened into the Romance "yes": Spanish and Italian sí / sì, French si (the emphatic yes). "No" is easier: nōn ("not"), from older ne-oenum "not one thing" — the ancient negative ne- that also gives English no, not, none, never, and which you will meet again as Sanskrit na and Hindi nahīṇ.
 
 Why it's said this way.
 A language that carries so much in its verb endings barely needs a "yes" word — the verb is the answer. This is a real window into how Latin thinks: agreement lives in the sentence, not in a little particle bolted on.
@@ -256,6 +256,6 @@ nōn from ne- becomes English no, not, none; cousin of Sanskrit na.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Catullus wrote avē atque valē at his brother's grave. Translate it, and say what each verb literally wishes. ("Hail and farewell"; avē "fare well" on meeting, valē "be strong" on parting.)
+Catullus wrote avē atque valē at his brother's tomb. Translate it, and say what each verb literally wishes. ("Hail and farewell"; avē "fare well" on meeting, valē "be strong" on parting.)
 [question — say your answer, then pause 8 seconds]
 Which Latin root links vale to English valid and value?

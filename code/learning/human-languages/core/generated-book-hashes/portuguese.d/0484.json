@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:7b7d5c281cc4a75d",
+  "lessonIds": [
+    "PT-C484-enxaqueca",
+    "PT-C484-tonto",
+    "PT-C484-tontura",
+    "PT-C484-nausea",
+    "PT-C484-vomitar"
+  ],
+  "tex": "portuguese/book/chapters/ch484-dores-de-cabeca-e-nauseas.tex"
+}

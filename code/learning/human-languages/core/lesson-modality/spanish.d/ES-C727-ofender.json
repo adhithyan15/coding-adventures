@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C727-ofender",
+    "language": "spanish",
+    "chapter": 727,
+    "sequence": 26290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87b084fc20c9c0d7"
+  },
+  "findings": []
+}

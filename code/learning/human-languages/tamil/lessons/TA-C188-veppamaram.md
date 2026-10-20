@@ -14,7 +14,8 @@ romanization: "vēppamaram"
 concept_tag: TA-PORUL188-VEPPAMARAM
 prerequisites: [TA-C188-tamarai, TA-C188-mallikai]
 sounds: []
-roots: []
+roots: [dravidian-veempu-neem, dravidian-maram-tree]
+etymology_hook: "வேப்பமரம் — native: vēmpu 'neem' (DEDR 5531; Kannada bēvu) + maram 'tree' (DEDR 4711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C188-mallikai]
 <!-- hl-knowledge: introduces=[TA-LEX-C188-PORUL188-04]; assesses=[] -->
 
 **வேப்பமரம்** — *vēppamaram* — "a neem tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வேப்பமரம்** (*vēppamaram*) is native: *vēmpu*, "neem" (DEDR 5531; Kannada *bēvu*), and *maram*, "tree" (DEDR 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

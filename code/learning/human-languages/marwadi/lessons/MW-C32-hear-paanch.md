@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-FIVE
 prerequisites: [MW-C32-chaar]
 sounds: [unaspirated-p, nasal-vowel, unaspirated-ch]
 roots: [sanskrit-panca]
-etymology_hook: The nasal the ear learned in haan saa in chapter 3 is the one thing five adds to four.
+etymology_hook: "pāṅch ← Sanskrit pañca 'five', a tadbhava (CDIAL 7655, Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -52,6 +52,11 @@ plain *ch*; *pāṅch* ends with it. Say them back to back and hear the sound mo
 from the front of one word to the back of the other.
 
 Count the whole set: *ek, do, tīn, chār, pāṅch*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāṅch* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañca*, "five". CDIAL lists Marwari *pā̃c* under it (CDIAL 7655). English *five* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANCH-01] -->

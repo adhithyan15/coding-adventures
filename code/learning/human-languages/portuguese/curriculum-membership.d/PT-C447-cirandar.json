@@ -1,0 +1,11 @@
+{
+  "id": "PT-C447-cirandar",
+  "pathSegment": "PT-PATH-447-PASSEIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-447-PASSEIO",
+      "order": 3
+    }
+  ]
+}

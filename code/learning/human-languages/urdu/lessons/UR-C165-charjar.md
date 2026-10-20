@@ -14,7 +14,8 @@ romanization: "chārjar"
 concept_tag: UR-CHIZ165-CHARJAR
 prerequisites: [UR-C165-laiptap, UR-C165-printar]
 sounds: []
-roots: []
+roots: [english-charger]
+etymology_hook: "chārjar ← English charger"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C165-printar]
 <!-- hl-knowledge: introduces=[UR-LEX-C165-CHIZ165-05]; assesses=[] -->
 
 **چارجر** — *chārjar* — "a charger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چارجر** (*chārjar*) is a loan from English *charger*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

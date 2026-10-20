@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C423-accoster",
+    "language": "french",
+    "chapter": 423,
+    "sequence": 23480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f41f6497b194f98"
+  },
+  "findings": []
+}

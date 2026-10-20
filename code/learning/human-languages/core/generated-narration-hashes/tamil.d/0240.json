@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 240,
-  "sourceHash": "fnv1a64:0e12cc208ec4ac06",
+  "sourceHash": "fnv1a64:98f283107bbb744f",
   "lessonIds": [
     "TA-C240-urutiyana",
     "TA-C240-vattamana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch240.txt",
   "json": "tamil/narration/ch240.json",
-  "textHash": "fnv1a64:c6c7190a6695958c",
-  "jsonHash": "fnv1a64:780674b80493047e",
+  "textHash": "fnv1a64:df48f801ec9b69ce",
+  "jsonHash": "fnv1a64:ce3a2398fe6c5503",
   "findings": []
 }

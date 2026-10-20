@@ -14,7 +14,8 @@ romanization: "gosht"
 concept_tag: UR-VERBS53-GOSHT
 prerequisites: [UR-C53-nahana, UR-C53-chhorna]
 sounds: []
-roots: []
+roots: [persian-gosht]
+etymology_hook: "gosht: usually traced to Persian gōsht 'meat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C53-chhorna]
 <!-- hl-knowledge: introduces=[UR-LEX-C53-VERBS53-04]; assesses=[] -->
 
 **گوشت** — *gosht* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گوشت** (*gosht*) is a loan, usually traced to Persian *gōsht*, "meat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

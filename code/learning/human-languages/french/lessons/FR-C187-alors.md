@@ -13,7 +13,8 @@ gloss: "in that case, so"
 concept_tag: FR-TEMPS187-ALORS
 prerequisites: [FR-C186-courage, FR-C186-honte]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "alors — à + Old French lors, from Latin illa hora 'at that hour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C186-honte]
 <!-- hl-knowledge: introduces=[FR-LEX-C187-TEMPS187-01]; assesses=[] -->
 
 **alors** — "in that case, so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alors** — *à* and Old French *lors*, "then", ← Latin *illa hora*, "at that hour". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

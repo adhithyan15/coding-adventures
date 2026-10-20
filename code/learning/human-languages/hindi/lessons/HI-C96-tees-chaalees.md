@@ -14,7 +14,8 @@ romanization: "tīs cālīs"
 concept_tag: HI-NUMBERS-THIRTY-FORTY
 prerequisites: [HI-C22-gyarah-bees]
 sounds: []
-roots: []
+roots: [sanskrit-trimshat, sanskrit-catvarimshat]
+etymology_hook: "tīs ← Sanskrit triṁśat '30' (CDIAL 6015); cālīs ← catvāriṁśat '40' (CDIAL 4656)"
 duration:
   max_seconds: 220
 requires:
@@ -45,6 +46,11 @@ your counting has ended until now.
 **तीस** (*tīs*) — thirty.
 
 **चालीस** (*cālīs*) — forty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तीस चालीस** (*tīs cālīs*) is two tadbhavas, words inherited and reshaped by sound change. *tīs* comes from Sanskrit *triṁśat*, "thirty" (CDIAL 6015), and *cālīs* from *catvāriṁśat*, "forty" (CDIAL 4656).
 
 ## Grammar Lens: the tens are the part worth learning
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C96-TENS-01, HI-LEX-C96-TENS-02] -->

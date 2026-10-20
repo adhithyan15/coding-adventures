@@ -481,7 +481,7 @@ supervisor:**
 | Linux | Landlock restricts ptracing outside the domain (ABI v1), and seccomp denies the syscalls outright. **Each agent must call `landlock_restrict_self()` in its own process after fork** — a domain shared across agents does not separate them. At negotiated **ABI 0 the seccomp filter is the sole mechanism, and distinct UIDs become required rather than recommended.** | none |
 | OpenBSD | `pledge` lacking `ptrace`, `proc`, and `ps`; procfs has not existed since 5.7 | none |
 | FreeBSD | capability mode returns `ECAPMODE` for every global-namespace call; the only process handles are `procdesc` descriptors, and the agent holds none | none |
-| Windows | each agent gets its own AppContainer SID; `CreateAppContainerProfile` needs no administrator. **Container names derive from the attested `agent_id`; `ERROR_ALREADY_EXISTS` without a verified matching SID is a launch failure** — otherwise two agents silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
+| Windows | each agent gets its own AppContainer SID, which needs no administrator. **The SID is derived from a name that is the digest of the attested `agent_id`** (`DeriveAppContainerSidFromAppContainerName`; its profile exists only around each process creation, step 8), so two agents never silently share one principal. Agents run as LPAC, or `ALL APPLICATION PACKAGES` (S-1-15-2-1) is explicitly denied on supervisor-owned objects, since every AppContainer token carries it. | none |
 | macOS | Seatbelt `(deny mach-priv-task-port)`, `(deny mach-lookup)`, `(deny process-info*)`. `process-info*` alone gates enumeration, **not Mach task-port acquisition, which is the actual memory-read vector.** The broker and supervisor are built with the Hardened Runtime and without `com.apple.security.get-task-allow`; absent that, a same-UID caller can take their task ports regardless of the agent's own profile. | none |
 
 Distinct UIDs on Unix remain **recommended** as defence in depth against a gap
@@ -603,9 +603,8 @@ apart. This design has no such namespace. Principal separation remains
 not a launch failure.
 
 Where an OS supplies per-agent principals for free it is still used: an
-AppContainer profile *is* a SID and `CreateAppContainerProfile` needs no
-administrator, so each Windows agent gets its own and profiles are never
-shared.
+AppContainer SID needs no administrator, so each Windows agent gets its own,
+derived from its `agent_id`, and never shared (step 8).
 
 #### The checkable half is key NAMES, and that is accepted
 
@@ -1918,10 +1917,56 @@ through S-I3 before two weeks are spent on Windows.
         - Behaviour change, fail-closed: a host bound to a channel with no
           configured keys fails to launch, rather than failing each
           channel request.
-        - **Open decision for the owner before 2c:** the verified launch
-          exists only on Linux. Off Linux, either `channel_keys` is refused
-          at startup (S-P3), or the old in-daemon path stays until the
-          macOS and Windows steps.
+        - **Owner's decision (2026-10-12): refuse.** Off Linux, where no
+          verified broker launch exists yet, `channel_keys` is refused at
+          startup (S-P3). There is no in-daemon fallback on any platform.
+          macOS gains channels with P2.7b, and Windows with step 8.
+
+        **How.**
+        - *The daemon.* A non-empty `channel_keys` without `[hosts.broker]`
+          stops the daemon at startup (`ChannelKeysNeedBroker`). Off Linux
+          `[hosts.broker]` is itself refused (`BrokerUnsupported`), so
+          there `channel_keys` cannot be configured at all. The daemon
+          opens no channel key file: authority provisioning keeps only
+          the model providers, and `compose_channel_brokers` is public so
+          a test composes the brokers exactly as the daemon does.
+        - *The data plane.* `ChannelKeyAuthority`,
+          `ExactChannelKeyAuthority` and the service's receive, publish
+          and acknowledge are deleted. A channel request that reaches the
+          service anyway is answered `Unauthorized`. In production none
+          can: the next rule stops such a host before it runs.
+        - *The supervisor.* `refusing_unbrokered_channels()` makes a
+          host whose launch bindings name any channel fail to launch
+          (`ChannelsNeedBroker`) unless channel brokers are configured.
+          The orchestrator always sets it. With brokers configured, a
+          channel with no key slot already fails the broker's launch
+          (`slots_for`), so in both cases the host never runs. The
+          supervisor's own tests, which answer channel requests through
+          the manual adapter API, leave it unset.
+        - *One broker body.* `chief-of-staff-agent-broker`'s library
+          exports the process entry point (`run_inherited`), so the
+          production binary and each test fixture binary are one call.
+        - *Tests.* The weather reference agent (P1.5) and the level-one
+          host's production-composition test now run their channels
+          through a real, confined broker, and assert one ran. Off Linux
+          they show the composition refusing instead, until P2.7b brings
+          the broker to macOS.
+          (P2.7b: they now run through a broker on macOS as well.)
+
+        **Status: done.** No channel key's bytes reach the daemon process
+        on any platform (the launcher opens each key file only to pass its
+        descriptor to the broker), and no host bound to a channel runs
+        without its broker.
+
+        Review notes, recorded:
+        - `process::run_inherited` is a safe function that adopts
+          descriptors 3..3+n. It is sound only as the whole of `main` in a
+          process the launcher exec'd, which its documentation says. The
+          library is `deny(unsafe_code)` so that this one module can
+          allow it, and a unit test keeps any other `allow` out.
+        - The host crate's test broker is behind the `test-broker`
+          feature, so a release build or `cargo install` of the host does
+          not produce it.
      3. **P2.6d-3:** the broker's sandbox plan (Linux, P2.4 applier):
         - its key descriptors and its pipes, nothing else;
         - no network;
@@ -2001,8 +2046,639 @@ through S-I3 before two weeks are spent on Windows.
           `[hosts.broker]`).
      4. **P2.6d-4:** non-channel requests (completions and tools) are
         served on a worker thread, off the refresh path.
-7. **macOS Seatbelt** (Tier A).
+
+        **How.** Each host gets one dispatch worker when a dispatcher is
+        configured. A request the budget admits, and that is not a channel
+        operation for a broker, is handed to that worker; the supervisor's
+        thread goes straight back to the other hosts. The worker calls the
+        dispatcher and answers through the shared host link, exactly as a
+        broker's relay does (2b): encrypting and queueing under one lock,
+        so frames still reach the host in sequence order.
+        - One outstanding request per host is all the control protocol
+          allows, so the worker's queue holds one.
+        - A request with the worker is not offered to the manual adapter
+          API, as for one with the broker.
+        - If the worker cannot answer (the host stopped reading, or the
+          dispatcher returned a response that does not answer the
+          request), it records the fault on the link; the next refresh
+          ends the host with that error, as the synchronous path did.
+        - The host's end drops the worker's queue. A dispatch already
+          running finishes on its own (it is bounded by the dispatcher's
+          own timeouts) and then finds the link closed. A request queued
+          just before the end is not dispatched.
+        - A restart waits until the previous incarnation's dispatch has
+          finished (`DispatchBusy`; the reconciler retries), so a host
+          restarted while its dispatcher hangs cannot pile up workers.
+        - A dispatcher that panics ends its host rather than leaving it
+          waiting forever.
+
+        **Status: done.** A host waiting on a slow dispatch no longer
+        holds the supervisor: another host's requests and heartbeats are
+        served meanwhile (tested with a dispatcher that blocks until
+        released).
+7. **macOS Seatbelt** (Tier A). macOS has none of the three things the
+   Linux applier (steps 4 and 5) is built on:
+   - there is no `execveat`, so every exec is by path;
+   - Seatbelt is installed by `sandbox_init`, which compiles its profile
+     and so allocates. A forked child of the multi-threaded supervisor may
+     make only async-signal-safe calls, so it cannot install a profile
+     between fork and exec;
+   - there is no listener that could allow exactly one exec.
+
+   So the install happens in a fresh process image: **the Seatbelt shim**,
+   a small binary of our own, pinned by SHA-256 like the broker.
+
+   ```text
+     supervisor                         shim (fresh image)        agent
+     ---------------------------------  ------------------------  ---------
+     MacosConfinement::prepare_verified
+       re-verifies shim and agent
+       checks paths and grants
+       builds the profile (a String)
+     apply(&mut command)
+       checks the environment
+       captures argv and envp, with
+       the instructions (profile,
+       agent and grant inodes, fds)
+       parks inherited fds
+     spawn ── fork, isolate,
+              execve(shim) ──────────►  places inherited fds
+                                        checks its environment
+                                        RLIMIT_CORE = 0
+                                        same inodes?
+                                        sandbox_init(profile)
+                                        launch probes (S-P4)
+                                        only 0-2 (+ keys) open?
+                                        same inodes?
+                                        execve(agent) ──────────► first
+                                                                  instruction,
+                                                                  confined
+   ```
+
+   Seatbelt applies to the whole process and survives exec, so the agent's
+   first instruction runs under the profile (S-I4c). Any failure in the
+   shim exits 127 without exec'ing (S-P3).
+
+   **The profile.** It starts `(deny default)` and allows only these:
+
+   ```text
+     operation                     on
+     ----------------------------  ---------------------------------------
+     process-exec                  the agent's canonical path (literal)
+     file-read*, file-map-exec.    the agent; /usr/lib; /System/Library;
+                                   /System/Volumes/Preboot/Cryptexes/OS;
+                                   /System/Cryptexes/OS;
+                                   /private/preboot/Cryptexes/OS
+                                   (dyld and its shared cache, under
+                                   each name Seatbelt may resolve it to)
+     file-read-data                /dev/urandom, /dev/random
+     file-read-data, -write-data   /dev/null
+     file-read-metadata            any path (dyld stats its search paths)
+     file-read-data                the directory / itself, not beneath it
+                                   (dyld opens it to find its cache)
+     sysctl-read                   a fixed list of hw.* and kern.* names
+                                   (CPU count, page and cache sizes, OS
+                                   version; kern.bootargs and
+                                   security.mac.lockdown_mode_state,
+                                   without which dyld halts on macOS 26),
+                                   and hw.optional.*
+     signal, process-info*         the agent itself only
+     each Direct fs grant          file-read-data or file-write-data on
+                                   its literal path
+   ```
+
+   Everything else is denied: `mach-lookup` and `mach-priv-task-port`
+   (S-I5's macOS row), `process-fork`, `process-info*` for any other
+   process, `network*` (every net grant is brokered), `ipc-posix*`,
+   `iokit-open` and every other path. Every other sysctl is denied too:
+   `kern.proc.*` lists every process, and `kern.procargs2` reads the argv
+   and environment of any process of the same user, the supervisor's
+   among them (review round 1). On macOS 26 the default deny alone did
+   not refuse `kern.procargs2` or `proc_pidpath` on another process (CI,
+   P2.7a), so the profile ends with explicit denials of both,
+   `(deny process-info* (target others))` and
+   `(deny sysctl-read (sysctl-name-prefix "kern.proc"))`, last so that
+   they win.
+
+   **Grants.** A Direct grant must name an existing regular file through
+   no symlink, as on Linux. It must not be the agent or the shim, and a
+   write grant must not lie under a system library directory. Its literal
+   is the canonical path, compared byte for byte, because Seatbelt matches
+   resolved paths (`/var` is `/private/var`).
+
+   Linux pins a grant to an inode (the Landlock rule is added on a
+   descriptor). Seatbelt matches by path for the agent's whole life, so
+   on macOS what matters is who can put a different file at that path
+   (review round 1). A grant therefore gets the executables' path rules
+   below, and its file must also be owned by root or the supervisor's
+   user and writable by no one else. The shim re-checks each grant's
+   `(dev, ino)` with the agent's.
+
+   **Exec by path, pinned to an inode.** The supervisor re-verifies the
+   agent's digest through its descriptor when it prepares the
+   confinement, which a launcher does for every launch. The path is what
+   runs, so it also checks that:
+   - the path is canonical;
+   - the path names the same `(dev, ino)` as the hashed descriptor;
+   - every directory above it is owned by root or the supervisor's user
+     and is writable by no one else, unless it is sticky. "Writable" is
+     judged by the mode bits and by the ACL, on sticky directories too
+     (an ACL `delete_child` is honoured before the sticky bit): an
+     `allow` entry, inherited or not, granting `add_file`,
+     `delete_child` or any other change refuses;
+   - it lies on a local APFS or HFS volume that honours ownership. On a
+     volume that ignores ownership, every file reads as the caller's; on
+     FAT-family volumes a replaced file can reuse an inode number.
+
+   The shim checks the `(dev, ino)` again immediately before `execv`.
+   The same rules apply to the shim's own path.
+
+   **The launch probes (S-P4).** After `sandbox_init`, the shim requires
+   a denial (`EPERM`, or `EACCES`, which is not ambient either) from two
+   operations that succeed or fail differently without the profile:
+   - reading its own executable (which the supervisor just hashed, so
+     the read is permitted without the profile);
+   - a TCP connect to `127.0.0.1:1` (`ECONNREFUSED` without the profile).
+
+   Any other outcome exits 127. The profile's full coverage is checked in
+   CI by a probe agent on `macos-latest`.
+
+   **Descriptors and the environment.**
+   - `apply` captures argv and the environment, as on Linux, and the
+     child's hook execs the shim with exactly those. Changes to the
+     command afterwards do not reach the shim. A refused command is
+     poisoned, so spawning it anyway fails.
+   - Spawn isolation (step 2) marks every descriptor above 2 close-on-exec.
+   - For a broker, `apply_inheriting` parks the key descriptors as
+     close-on-exec duplicates, and closes the caller's copies. (Not at a
+     high floor: macOS's default soft descriptor limit is 256.) The
+     hook clears close-on-exec on exactly the parked ones. The shim moves
+     them to 3..3+n and closes the parked copies.
+   - Just before the exec, the shim lists its open descriptors
+     (`proc_pidinfo`, `PROC_PIDLISTFDS`) and refuses any it was not told
+     about. A list too long to read refuses too.
+   - The environment's closed set is Linux's (`GRANTABLE_ENVIRONMENT`):
+     no `DYLD_*`, ever. The supervisor checks it, and the shim checks its
+     own environment again.
+
+   **Residuals, recorded.**
+   - *Exec by path.* Between the shim's last inode check and `execv`,
+     the path can be swapped by anyone able to write its directory. The
+     directory rule leaves only root and an unsandboxed process of the
+     supervisor's own user, which already equal the supervisor.
+   - *Re-exec.* The agent may exec its own image again, under the same
+     profile. That gives it nothing it did not have.
+   - *Metadata.* `stat` (and `readlink`) of any path answers, as on
+     Linux: dyld stats its search paths.
+   - *dyld before the shim's `main`.* A `DYLD_*` variable would load code
+     into the shim before it can check anything. The supervisor never
+     passes one. Signing the shim with the Hardened Runtime makes dyld
+     ignore them, and is recommended for release builds.
+   - *Deprecated API.* `sandbox_init` with a profile string is
+     deprecated and undocumented, as recorded above. It is what
+     `sandbox-exec` and production browsers use.
+   - *Task ports.* The Hardened Runtime without `get-task-allow` (S-I5)
+     is a signing property of the release build, and is not checked at
+     launch.
+
+   Sub-steps:
+   1. **P2.7a:** the shim, `chief-of-staff-macos-sandbox`'s
+      `MacosConfinement`, and `VerifiedExecutable` on macOS. Tested on
+      `macos-latest`: a probe agent proves each denial, and that a
+      Direct grant is readable while its neighbour is not.
+   2. **P2.7b:** the broker on macOS. The launcher confines it through
+      `MacosConfinement::apply_inheriting`, and the daemon accepts
+      `[hosts.broker]` on macOS with the shim pinned in its config. The
+      broker end-to-end test runs on `macos-latest`.
+
+      **How.**
+      - *Config.* `[hosts.broker]` gains `seatbelt_shim` and
+        `seatbelt_shim_sha256`. They come as a pair: one without the
+        other is refused when the config is read, on every platform.
+
+        ```toml
+        [hosts.broker]
+        executable = "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
+        sha256 = "<64 hex>"
+        seatbelt_shim = "~/.chief-of-staff/bin/chief-of-staff-seatbelt-shim"
+        seatbelt_shim_sha256 = "<64 hex>"
+        ```
+
+        On macOS the pair is required: `[hosts.broker]` without it stops
+        the daemon at startup (`BrokerShimMissing`), since there is no
+        confined launch without the shim. On Linux the shim is not
+        opened; the Linux applier needs none.
+
+        The shim is as trusted as the broker. It runs unconfined while it
+        holds the parked key descriptors, until its `sandbox_init`, so its
+        digest is a trust anchor on the same footing as the broker's.
+      - *The program.* The launcher takes a `BrokerProgram`. On Linux it
+        holds the verified broker. On macOS it holds the verified broker
+        and the verified shim. The shim is refused when it is the broker,
+        by inode or by digest: a copy of the broker pinned as the shim
+        would ignore the instructions and run unconfined, holding the
+        keys. Both paths are checked at startup against the applier's path
+        rules, as every launch checks them, so a layout that would refuse
+        every launch stops the daemon once (`BrokerShim`). Elsewhere no
+        value of it can exist, so `launch` cannot be reached and
+        `[hosts.broker]` is still refused (`BrokerUnsupported`).
+      - *The launch.* It takes the Linux steps in the same order. First
+        the secret directories are checked and the key slots computed.
+        Then `MacosConfinement::prepare_verified` runs, with a plan of no
+        capabilities for `OsFamily::Macos`: it re-verifies both binaries
+        and builds the profile. The key files are opened next, and
+        `apply_inheriting` places them at 3..3+n. The broker is spawned,
+        sent Bootstrap, and its Ready is checked. The profile grants
+        nothing beyond the base. The broker reads its own image and the
+        system libraries, holds its keys and its pipes, and can open no
+        other file by path. It has no network and cannot fork, and exec
+        is limited to its own image (the re-exec residual above).
+      - *Tests.* `chief-of-staff-broker-e2e` runs on `macos-latest`. It
+        uses a shim fixture binary, the macOS crate's own shim body
+        under another name, pinned by digest like the broker. The
+        weather reference agent and the level-one host's
+        production-composition test run their channels through a real
+        broker on macOS too, through the host's `test-broker` shim
+        fixture. The Linux-only assertions, `NoNewPrivs` and the seccomp
+        mode, stay Linux-only.
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
+
+   Windows has an OS principal per agent for free, and the kernel checks it
+   on every access, so there is no filter to install and no shim to run.
+   What it lacks is a way to say any of this through Rust's `Command`:
+   `PROC_THREAD_ATTRIBUTE_*` needs `STARTUPINFOEXW`, and std's support for
+   it (`raw_attribute`) is unstable. So the applier creates the process
+   itself, with `CreateProcessW`, and owns the child it returns.
+
+   ```text
+     supervisor                                        agent
+     ------------------------------------------------  ----------------
+     WindowsConfinement::prepare_verified(plan, agent, agent_id)
+       re-verifies the agent through its held handle
+       the path is canonical and names that handle
+       the AppContainer SID for agent_id
+       an ACE: that SID may read and execute the image
+     spawn(argv, env, stdin, stdout)
+       a job: kill-on-close, one process, UI limits
+       CreateProcessW(SUSPENDED, attributes below)
+       launch checks (S-P4), from outside:
+         token is AppContainer, LPAC, that SID,
+         no capabilities, Low integrity
+         the process is in the job
+         its mitigation policies are the ones set
+         its image is the file whose handle is held
+       ResumeThread ───────────────────────────────►  first
+                                                       instruction,
+                                                       confined
+   ```
+
+   Nothing of the agent runs before the checks pass: the process is
+   created suspended, so not even its loader has run. It is created
+   detached, with no console: a console needs a console host, which
+   Windows starts as a child of the agent, in its job and under its
+   policies, all of which forbid one. Any failed check
+   terminates it through the job and refuses the launch (S-P3).
+
+   **The attributes.** One `PROC_THREAD_ATTRIBUTE_LIST` carries them all:
+
+   ```text
+     attribute                       value
+     ------------------------------  -----------------------------------------
+     SECURITY_CAPABILITIES           the agent's AppContainer SID, no
+                                     capabilities: no network, no
+                                     library or device access
+     ALL_APPLICATION_PACKAGES_POLICY OPT_OUT: a less privileged AppContainer
+                                     (LPAC), so ALL APPLICATION PACKAGES
+                                     (S-1-15-2-1) grants nothing (S-I5)
+     HANDLE_LIST                     stdin, stdout, stderr (NUL), and the
+                                     handles passed on (S-I3); nothing else
+     JOB_LIST                        the job, so the process is in it from
+                                     its creation
+     CHILD_PROCESS_POLICY            RESTRICTED: it can create no process
+     MITIGATION_POLICY               (DEP and SEHOP for a 32-bit agent),
+                                     bottom-up and high-entropy
+                                     ASLR, terminate on heap corruption,
+                                     strict handle checks, no extension
+                                     points, no dynamic code, no remote or
+                                     low-label images, system32 first, no
+                                     non-Microsoft DLLs, no non-system fonts
+   ```
+
+   **The job** has `KILL_ON_JOB_CLOSE`, an active-process limit of one,
+   `DIE_ON_UNHANDLED_EXCEPTION`, and every UI restriction (desktop,
+   display settings, exit, global atoms, user handles, clipboard, system
+   parameters). The supervisor holds the only handle to it, so dropping
+   the child kills the agent and anything it could have started.
+
+   **The principal (S-I5's Windows row).** Each agent gets its own
+   AppContainer SID, derived (`DeriveAppContainerSidFromAppContainerName`)
+   from the name `chief-of-staff.<32 hex digits>`: the first 16 bytes of
+   SHA-256 over the attested `agent_id`. The derivation is deterministic,
+   so an agent has the same principal on every launch, and two agents
+   share one only through a SHA-256 collision. A profile
+   (`CreateAppContainerProfile`) gives the agent a storage folder under
+   `%LOCALAPPDATA%\Packages` and a registry key, both writable by its SID
+   and kept across runs, which is persistent state S-I1 does not allow.
+   But `CreateProcessW` needs one: it looks the SID up among the
+   registered profiles and fails with `ERROR_FILE_NOT_FOUND` otherwise
+   (seen on windows-2025; an earlier draft of this step said the kernel
+   needed only the SID). So the profile exists only around the creation:
+   registered just before `CreateProcessW`, removed (folder and key with
+   it) while the agent is still suspended, before any check and before its
+   first instruction. The process keeps its container through its token.
+   After the removal, the storage folder Windows reported for the profile
+   must be gone (`DeleteAppContainerProfile` can succeed and leave storage
+   it could not delete). A removal that fails, or leaves the folder, ends
+   the agent unrun. Only a process with the agent's SID could write to the
+   profile while it exists, so the supervisor runs at most one instance of
+   an agent at a time: a spawn claims the agent's name, and the claim is
+   released only once that instance has exited (one that does not exit
+   within ten seconds of being ended keeps it for good). The
+   register-create-remove span is serialized within the supervisor, so one
+   creation never loses its profile to another's removal. A profile found
+   already registered was left by an earlier spawn whose removal failed,
+   or by a crash inside that span; it is removed like a fresh one.
+
+   **Exec by path, pinned to a held handle (S-K1).** `CreateProcessW` takes
+   a path, never a handle. So:
+   - `VerifiedExecutable` on Windows opens the file sharing read only, so
+     no one can write, rename or delete it while it is held. It does not
+     follow a reparse point at the last component and refuses one, and it
+     refuses anything but a regular file. Its digest is checked through
+     the held handle at open and before every launch.
+   - The share mode keeps out handles opened while it is held, not a
+     writable mapping someone made earlier. So, as the Unix owner and mode
+     rule does, the file must be owned by this user, Administrators, SYSTEM
+     or TrustedInstaller, and its access list may give no one else any
+     write-class right (write or append data, delete, change the list or
+     the owner, generic write or all). A file with no list is refused.
+   - The path must be canonical: exactly the final path of the held handle
+     (`GetFinalPathNameByHandleW`), case included.
+   - After the suspended creation, the child's image name
+     (`QueryFullProcessImageNameW`, the path the image was opened by) and
+     the held handle's final path must both still equal the verified path.
+     The held file cannot be renamed, and a directory above it cannot be
+     renamed while it is open without delete sharing; these checks confirm
+     that the path led to the held file at the creation.
+
+   **Reading its own image.** An LPAC token cannot read a file merely
+   because ALL APPLICATION PACKAGES may. The applier adds one ACE to the
+   agent's image: its AppContainer SID may read and execute it. The ACE
+   stays, since it grants that agent only what every launch of it needs.
+   It is added by reading the list, adding to it and writing it back
+   through a handle reopened from the held one, never by path. That
+   read-modify-write is serialized within the supervisor, so two agents
+   prepared at once from one image never drop each other's entry.
+   The working directory is the system directory, which ALL RESTRICTED
+   APPLICATION PACKAGES (S-1-15-2-2) may read.
+
+   **LPAC, as the launch check reads it.** `TokenIsLessPrivilegedAppContainer`
+   cannot, by inference, be queried on windows-2025 (an unlabelled
+   `ERROR_INVALID_PARAMETER` from the launch check, which every token query
+   now labels). What makes a token LPAC is its `WIN://NOALLAPPPKG` security
+   attribute, which access checks consult to leave out ALL APPLICATION
+   PACKAGES, so the check reads `TokenSecurityAttributes` for it when the
+   information class is refused. Any other failure refuses the launch.
+
+   **The environment** is the closed set of the macOS applier: only names
+   set on the command, each in the grantable set, with plain values. It is
+   passed as an explicit Unicode block, never inherited. The applier adds
+   two names Windows needs: `SystemRoot`, which its own libraries read,
+   and `LOCALAPPDATA`, without which `CreateProcessW` refuses an
+   AppContainer (`ERROR_ENVVAR_NOT_FOUND`, seen on windows-2025). The
+   latter is set to the container's own `AC` folder, where Windows is
+   reported to point it in any case, and which is removed before the agent
+   runs; Windows may point `TEMP` and `TMP` there as well.
+
+   **Direct grants (P2.8c).** Only a `Direct` `fs:read` of one exact file
+   is expressed. Each is an allow ACE on that file for the agent's
+   AppContainer SID. Every other `Direct` rule refuses the launch
+   (`Unsupported`), never runs without it:
+   - *Create, delete and list* would need rights over a whole directory,
+     as on Linux and macOS.
+   - *Write* is refused on Windows for a reason of its own. An
+     AppContainer token is Low integrity, and the default no-write-up
+     policy refuses a write to an ordinary (Medium) file whatever its
+     list says. Expressing the grant would mean lowering the file's
+     label to Low for the agent's life. Every Low-integrity process of
+     the user whose list entries already admit it could then write the
+     file too. If the supervisor died, the label would stay lowered. So
+     a write stays brokered on Windows (step 6). Lowering the label would
+     be a decision of its own, recorded if ever taken.
+
+   Each grant is checked when the confinement is prepared. The file is
+   opened, and that handle is held from then until the agent has exited:
+   - It is opened for reading, sharing read and write but **not delete**,
+     with the last component's reparse point not followed. While it is
+     held, the file cannot be renamed or deleted, and no directory above
+     it can be renamed, so the path names this file for the agent's whole
+     life. Its owner may still write it, as on macOS.
+   - It must be a regular file and not a reparse point. A directory, a
+     junction, a symbolic link, a device or a reserved name (`NUL`,
+     `COM1.txt`) is refused. A device has no final path, which the next
+     check needs.
+   - The path must be exactly the handle's final path, case included, as
+     the image's must.
+   - The executable's owner and access-list rule applies:
+     - the owner must be the user, Administrators, SYSTEM or
+       TrustedInstaller;
+     - no one else may hold any write-class right.
+
+     This is macOS's "owned by root or this user and writable by no one
+     else". Who can change the file matters, because the grant lasts as
+     long as the agent does.
+   - It must not be the agent's own image. Identity is compared by volume
+     serial number and file index, so a hard link to the image is the
+     image.
+   - The rest of S-I6's never-grantable set (the vault, the audit log,
+     the shim, the broker, the plan files) is the supervisor's to check
+     at step 9, as on Linux. Only it knows those paths.
+
+   *The ACE.* One per grant:
+   - it names the agent's SID, with read rights (`FILE_GENERIC_READ`),
+     never execute, and is not inheritable;
+   - it is added before `CreateProcessW`, by the image's
+     read-modify-write, through a handle reopened from the held one and
+     under the same lock;
+   - it is merged into the SID's allow entry if one is there already
+     (`GRANT_ACCESS`), so granting twice leaves one entry;
+   - the list is written back with its protection as it was. A protected
+     list, such as an owner-only file's, must not start inheriting its
+     directory's entries;
+   - a list that cannot be changed refuses the launch, for example a
+     file whose owner is SYSTEM;
+   - after it is written, the owner and access-list rule is checked
+     again on the held handle. Writing a list back re-applies its
+     directory's inheritable entries, which the check at preparation
+     never saw. A file someone else may now write refuses the launch,
+     and the grant is taken back.
+
+   *Removal.* Once the agent has exited, every explicit ACE naming its
+   SID is removed from each granted file, under the same lock. "Exited"
+   means the child's drop has ended its job and seen the exit, or a
+   spawn failed after the ACEs were added. If the process has not exited
+   within the drop's ten seconds, the ACEs are removed anyway: removing
+   access early only denies more. The image keeps its ACE (above).
+
+   *Residuals.*
+   - A supervisor that dies while the agent runs leaves the ACE, and so
+     does a removal that fails. The entry admits only that agent's SID,
+     which only that agent's own later runs hold, one at a time. But any
+     such run can read the file, even one whose plan no longer grants
+     it, until a run that does grant it ends and removes the entry. A
+     record of applied grants, swept at the next preparation, would
+     close this; it is not built.
+   - The list is serialized only within this process. A second
+     supervisor, or someone editing the list at the same moment, could
+     restore an entry just removed, or drop one. The daemon is the only
+     supervisor.
+   - A deny entry naming the agent's SID is not a supported control.
+     Granting merges with it, and removal does not restore it. What an
+     agent may read is its plan's.
+   - At step 9 the supervisor checks S-I6's never-grantable set. It must
+     compare by file identity, as the image check here does, not by
+     path: a hard link to the vault is the vault.
+   - The file's owner can change its contents while the agent reads it,
+     as on macOS. Linux pins the inode, but not the bytes.
+
+   **Residuals, recorded.**
+   - *A concurrent std spawn.* A handle on the list must be inheritable.
+     std's `Command` spawns with `bInheritHandles=TRUE` and no list, so a
+     std child created by another supervisor thread in the window could
+     inherit one: the agent's stdin (and read what is sent to it), its
+     stdout (and hold the supervisor's end-of-file back). The applier marks
+     the handles immediately before its `CreateProcessW` and closes its
+     copies right after. **Before 8b passes a broker's keys this way, every
+     Windows spawn in the supervisor takes one spawn lock** (std's and this
+     applier's; P2.8b-1), so the window holds no other spawn. It ends
+     entirely when every agent spawn goes through this applier (step 9).
+     Every std spawn in the daemon process takes it: the host, the
+     broker launcher's, the approval helpers' (notification, biometric,
+     hardware key), and the host runtime's verified Deno run (P2.8b-2).
+     A new spawn site must too.
+   - *One agent, two instances.* Two launches of one `agent_id` would share
+     a SID, and processes of one AppContainer can open each other; either
+     could also write into the profile the other's spawn registers. So a
+     supervisor runs one instance of an agent at a time (above). Before 8b
+     a broker runs under a SID of its own (P2.8b-1: a `chief-of-staff-broker.`
+     container over the agent's digest). The claim is per agent id, but
+     the supervisor's busy check is per pipeline and agent. So a second
+     pipeline's broker for the same agent, while the first runs, is
+     refused (`BrokerLaunch`), never run beside it. A broker that does
+     not exit within ten seconds of being ended keeps its agent's claim
+     until the daemon restarts. Both fail closed, at the cost of
+     availability.
+   - *One supervisor per user.* The profile span and the one-instance rule
+     hold within one supervisor process. A second supervisor, or any tool
+     of the same user, managing the same agent's profile could make a
+     creation fail (its profile removed early, `ERROR_FILE_NOT_FOUND`).
+     A second supervisor running the same agent would also reopen the
+     shared-SID window above, caught then only by the folder check (the
+     profile's registry key is not re-checked). The daemon is the only
+     supervisor.
+   - *Old image ACEs.* An agent's image keeps the ACE for its SID after
+     the agent is gone; reinstalling the agent reuses it.
+   - *Grants.* Until 8c no `Direct` grant could run, and a plan with one
+     was refused (`Unsupported`). From 8c a read grant runs (above), and
+     every other `Direct` rule is still refused.
+
+   Sub-steps:
+   1. **P2.8a:** `VerifiedExecutable` on Windows, and
+      `chief-of-staff-windows-sandbox`: `WindowsConfinement` and its
+      `ConfinedChild`. Tested on `windows-2025`: a probe agent proves each
+      denial against an unconfined control. The denials are files outside
+      the agent, the network, processes, other processes' handles, the
+      registry outside its container, inherited handles, and the token
+      and policies themselves.
+   2. **P2.8b:** the broker on Windows. Its key handles go on the handle
+      list, and their values reach it in one environment variable. The
+      supervisor-wide spawn lock and the broker's own SID come first (see
+      the residuals). The daemon accepts `[hosts.broker]` on Windows, and
+      the broker end-to-end tests run on `windows-2025`. In two parts, so
+      that each piece is proven natively before anything depends on it:
+      - **P2.8b-1, the pieces.**
+        - *Owner-only key files on Windows.* `open_owner_only_secret`,
+          `read_owner_only_secret_from` and `check_owner_only_directory`
+          gain Windows forms (today they refuse there). A key file passes
+          the same policy `read_owner_only_secret` already enforces: the
+          user owns it, and a protected DACL holds exactly one allow ACE,
+          the user's. It is opened through held, delete-locked ancestors,
+          sharing read only, never through a reparse point, and the
+          policy is checked on the open handle; that handle is what the
+          broker inherits, and the broker checks it again before reading
+          exactly the key's length from it. A secret directory passes if
+          the user, SYSTEM or Administrators own it and every allow ACE
+          names one of those three, or CREATOR OWNER on an inherit-only
+          entry (it becomes a child's creator, and only those three can
+          create here); a user profile's own directories pass as created,
+          and nothing else may list or change it.
+        - *One spawn lock.* `chief_of_staff_spawn_isolation::spawn_lock()`
+          is a process-wide lock. Every process creation in the
+          supervisor holds it: the applier's whole inheritable span (from
+          marking the listed handles to closing its copies), and every
+          std `Command::spawn` in the daemon process makes (the host, the
+          launcher's, the approval helpers'), through
+          `chief_of_staff_spawn_isolation::spawn`. So no std child, which
+          inherits every inheritable handle, can be created while a
+          broker's key handles are inheritable. The applier's listed
+          handles and the lock are one value, so the handles are closed
+          before the lock is released on every path, a panic's included.
+        - *The broker's own container.* `WindowsConfinement` gains a
+          broker role. Its container is named
+          `chief-of-staff-broker.<32 hex>` over the same digest of the
+          agent's id, a namespace no agent's `chief-of-staff.<32 hex>`
+          can reach. So a broker and its agent have different SIDs (they
+          cannot open each other as one AppContainer may its own), and
+          the one-instance rule holds for each independently.
+        - *The broker adopts its keys.* On Windows the broker reads
+          `CHIEF_OF_STAFF_HANDLES` (the applier's variable), adopts
+          exactly as many handles as the bootstrap names slots, in order,
+          and refuses (exit 66) a count that differs, a repeat, or a value
+          that is not a multiple of 4 below 2^32 (Windows ignores a handle
+          value's low two bits; larger values are pseudo-handles). This
+          replaces the
+          Unix descriptor walk; `serve_process` is unchanged.
+        - Each is tested on `windows-2025`: the key-file policy and its
+          refusals, the lock's exclusion, two containers for one agent,
+          and the broker binary, confined by the applier, loading keys
+          from handles and answering `Ready`.
+      - **P2.8b-2, the wiring.**
+        - *The launch.* The launcher gains a Windows `BrokerProgram`: the
+          broker alone, with no shim. It launches through the applier with
+          the plan for `OsFamily::Windows`, in the order Linux and macOS
+          use:
+          1. secret directories;
+          2. slots;
+          3. `prepare_verified_broker` over the agent's id, which
+             re-verifies the binary;
+          4. the key files, opened owner-only;
+          5. the spawn, with the files as the handle list;
+          6. Bootstrap and the `Ready` check.
+
+          Bootstrapping a started broker and checking its `Ready` is one
+          function, shared by every platform.
+        - *One broker child.* The broker child is one type,
+          `BrokerChild`: std's `Child` on Unix, the applier's
+          `ConfinedChild` on Windows. It offers its id, whether it has
+          exited (seen without reaping) and its end. On Unix the end kills
+          the session, then reaps. On Windows it ends the job and waits up
+          to ten seconds; a broker that outlives that keeps its
+          container's claim for good. So `LaunchedBroker`, the relay and
+          `OwnedBroker` are the same code on every OS. (An earlier draft
+          planned a trait here. One cfg'd type does the same with less.)
+        - *The daemon* verifies `[hosts.broker]` on Windows as on Linux.
+        - *The end-to-end tests.* `broker-e2e`'s supervised tests run on
+          `windows-2025`, with an agent per test, because a container
+          runs one instance at a time.
+   3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
+      SID, checked as on macOS and removed when the agent ends. Read only:
+      a write grant is refused (see "Direct grants" above). Tested on
+      `windows-2025`:
+      - the probe agent reads a granted file and is denied its neighbour;
+      - after the agent ends, the file names no ACE for its SID;
+      - a write grant, a directory, a junction, a file someone else may
+        write, a non-canonical spelling and the agent's own image are
+        each refused.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
    as the S-I8 inner layer, not deleted.

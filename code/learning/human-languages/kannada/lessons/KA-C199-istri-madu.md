@@ -14,7 +14,8 @@ romanization: "istri māḍu"
 concept_tag: KA-VERB-ISTRI-MADU
 prerequisites: [KA-C199-hasu, KA-C199-madacu]
 sounds: []
-roots: []
+roots: [portuguese-istri, maadu-do-dravidian]
+etymology_hook: "istri māḍu: istri 'an iron' through Hindustani istrī + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C199-madacu]
 <!-- hl-knowledge: introduces=[KA-LEX-C199-KRIYE199-04]; assesses=[] -->
 
 **ಇಸ್ತ್ರಿ ಮಾಡು** — *istri māḍu* — "to iron (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಸ್ತ್ರಿ ಮಾಡು** (*istri māḍu*) is *istri*, "an iron for clothes", through Hindustani *istrī*, whose deeper origin is not settled, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

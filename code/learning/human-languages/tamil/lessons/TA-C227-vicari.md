@@ -14,7 +14,8 @@ romanization: "vicāri"
 concept_tag: TA-VERB-VICARI
 prerequisites: [TA-C226-mel, TA-C227-tiruttu]
 sounds: []
-roots: []
+roots: [sanskrit-vicara]
+etymology_hook: "விசாரி — a verb from Sanskrit vicāra 'pondering, enquiry' (CDIAL 11683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C227-tiruttu]
 <!-- hl-knowledge: introduces=[TA-LEX-C227-ACT227-02]; assesses=[] -->
 
 **விசாரி** — *vicāri* — "to enquire, to ask about".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விசாரி** (*vicāri*) is a verb made from Sanskrit *vicāra*, "pondering, enquiry" (CDIAL 11683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

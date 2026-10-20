@@ -13,7 +13,8 @@ gloss: "to repair"
 concept_tag: IT-VERB-RIPARARE
 prerequisites: [IT-C135-restare, IT-C135-affittare]
 sounds: []
-roots: []
+roots: [reparare-latin]
+etymology_hook: "riparare ← Latin reparare 'to restore' — English repair is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C135-affittare]
 <!-- hl-knowledge: introduces=[IT-LEX-C135-VERBI135-05]; assesses=[] -->
 
 **riparare** — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riparare** ← Latin *reparare*, "to restore, to repair" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

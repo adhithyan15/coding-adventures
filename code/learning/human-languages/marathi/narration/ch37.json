@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Who, and How Many",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:03ea58ecb83ea4fb",
+  "sourceHash": "fnv1a64:044955fb8ac7f19b",
   "lessons": [
     {
       "id": "MR-C37-kon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d16420a23fe7648f",
+      "sourceHash": "fnv1a64:5e8d52309b4a42e0",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "तो कोण आहे? — to koṇ āhe? — who is that?"
+              "text": "तू कोण आहेस? — tū koṇ āhes? — who are you?"
             },
             {
               "kind": "speech",
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "कोण (koṇ) comes down from Sanskrit कः (kaḥ, \"who\"), by way of the older Marathi कवण. English who and Latin quis grew from the same Indo-European stem, which is why the family feels oddly familiar."
+              "text": "कोण (koṇ) comes down from Sanskrit kaḥ punar, \"who\" (CDIAL 2575), by way of the older Marathi कवण. English who and Latin quis grew from the same Indo-European stem."
             },
             {
               "kind": "speech",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b096a1e6a62b8d5f",
+      "sourceHash": "fnv1a64:f09ce4cdac81c893",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "किती (kitī) is Sanskrit कति (kati, \"how many\") barely changed. Latin quot and English how many carry the same ancient stem."
+              "text": "किती (kitī) goes back to kiyatta, \"how great\", a form CDIAL builds like Sanskrit kiyant, \"how much\" (CDIAL 3167). Latin quot and English how many carry the same ancient stem."
             },
             {
               "kind": "speech",

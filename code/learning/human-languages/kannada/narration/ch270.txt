@@ -12,6 +12,9 @@ Before the new one: say the Kannada for information, then the Kannada for a mark
 You'll want to know: ಭೂಗೋಳ.
 ಭೂಗೋಳ — bhūgōḷa — "geography".
 
+The word, taken apart.
+ಭೂಗೋಳ (bhūgōḷa) is Sanskrit bhū, "world, ground" (CDIAL 9546), and gōla, "ball" (CDIAL 4321), with the l written ḷ: "the earth's ball".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a mark, then the Kannada for geography.
 
 You'll want to know: ಪದ.
 ಪದ — pada — "a word".
+
+The word, taken apart.
+ಪದ (pada) is Sanskrit pada, "footstep, track, place", taken over whole as a learned loan, a tatsama (CDIAL 7747). In Sanskrit grammar the same word names a word, a single step of speech.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for geography, then the Kannada for a word.
 You'll want to know: ವಾಕ್ಯ.
 ವಾಕ್ಯ — vākya — "a sentence".
 
+The word, taken apart.
+ವಾಕ್ಯ (vākya) is Sanskrit vākya, "speech, words", taken over whole as a learned loan, a tatsama (CDIAL 11468).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a word, then the Kannada for a sentence.
 You'll want to know: ಕ್ಷೌರಿಕ.
 ಕ್ಷೌರಿಕ — kṣaurika — "a barber".
 
+The word, taken apart.
+ಕ್ಷೌರಿಕ (kṣaurika) is Sanskrit kṣaurika, built on kṣaura, "shaving" (CDIAL 3756): "the one who shaves".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a sentence, then the Kannada for a barbe
 
 You'll want to know: ಧೋಬಿ.
 ಧೋಬಿ — dhōbi — "a washerman, a laundryman".
+
+The word, taken apart.
+ಧೋಬಿ (dhōbi) is Hindustani dhobī, "washerman", which CDIAL 6886 traces to a reconstructed dhauvati, "washes".
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C379-assenza",
+  "pathSegment": "IT-PATH-379-LICEO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-379-LICEO",
+      "order": 2
+    }
+  ]
+}

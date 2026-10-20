@@ -11,8 +11,8 @@ gloss: yes, respectfully
 concept_tag: RESPONSE-YES
 prerequisites: [MW-W03-anusvara]
 sounds: [breathy-h, long-aa, vowel-nasalization]
-roots: []
-etymology_hook: The answer word हां is followed by respectful सा, already familiar from राम-राम सा.
+roots: [sanskrit-am-yes]
+etymology_hook: "hā̃ ← Sanskrit ām 'yes', with an added h- (CDIAL 1235); honorific sā: origin not settled"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +48,11 @@ as two separate known pieces.
 The first word answers yes. Familiar **सा** keeps the answer respectful. A
 scholarly Marwari text edition identifies *hā(n)-sā* as the polite affirmative,
 and a Rajasthan Sahitya Akademi dialogue writes **हां सा** in context.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हां सा** (*hā(n) sā*) puts the respectful *sā* after *hā̃*, "yes". CDIAL lists Hindi and Gujarati *hā̃*, "yes", under Sanskrit *ām*, "yes", with an *h-* it calls emphatic or taken from the verb "to be" (CDIAL 1235); it gives no Marwari form there. The origin of *sā* is not settled (see CDIAL 13930 for a possible Gujarati relative).
 
 ## Writing — guided, then delayed
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01] -->

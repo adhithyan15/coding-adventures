@@ -11,7 +11,8 @@ romanization: "kuḷitukō"
 concept_tag: KA-VERB-SIT
 prerequisites: [KA-C43-come, KA-C41-where]
 sounds: []
-roots: []
+roots: [dravidian-kulir-sit, dravidian-kol-take]
+etymology_hook: "kuḷitukō: native kuḷi- 'to squat, sit' (DEDR 1835) + kō 'take', the self-directed helper (DEDR 2151)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C43-come]
 **ಕುಳಿತುಕೋ** (*kuḷitukō*) — "sit".
 
 Longer than it looks: the *-ko* on the end is a reflexive, so it is closer to 'seat yourself' than to a bare order.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಳಿತುಕೋ** (*kuḷitukō*) is native Dravidian: the verb for "to squat, sit down", which DEDR 1835 lists as Kannada *kuḷir* and *kuḷḷu* (Tamil *kuḷir*), and *kō*, "take", the command form of *koḷḷu*, "to take" (DEDR 2151). The *kō* turns the action back on the doer: sit yourself down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

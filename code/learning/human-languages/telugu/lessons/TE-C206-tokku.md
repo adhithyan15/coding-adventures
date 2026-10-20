@@ -14,7 +14,8 @@ romanization: "tokku"
 concept_tag: TE-VERB-TOKKU
 prerequisites: [TE-C206-jaru, TE-C206-veladu]
 sounds: []
-roots: []
+roots: [dravidian-turi-tread]
+etymology_hook: "tokku: native Dravidian; DEDR 3522 lists trokku 'to tread' with Kannada tuḻi 'to tread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C206-veladu]
 <!-- hl-knowledge: introduces=[TE-LEX-C206-KRIYA206-04]; assesses=[] -->
 
 **తొక్కు** — *tokku* — "to tread on, to pedal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తొక్కు** (*tokku*) is native Dravidian. DEDR 3522 gives it as *trokku*, "to tread, trample", with Kannada *tuḻi*, "to tread". DEDR 3477 *tokku*, "a chutney", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

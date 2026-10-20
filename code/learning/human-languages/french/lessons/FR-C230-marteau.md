@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES230-MARTEAU
 prerequisites: [FR-C230-aiguille, FR-C230-clou]
 sounds: []
 roots: []
+etymology_hook: "marteau ← Latin martulus 'a hammer'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C230-clou]
 <!-- hl-knowledge: introduces=[FR-LEX-C230-CHOSES230-04]; assesses=[] -->
 
 **le marteau** — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marteau** ← Vulgar Latin *\*martellus* ← Latin *martulus*, "a hammer" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

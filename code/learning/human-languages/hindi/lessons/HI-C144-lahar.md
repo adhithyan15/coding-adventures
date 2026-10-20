@@ -14,7 +14,8 @@ romanization: "lahar"
 concept_tag: HI-THINGS144-LAHAR
 prerequisites: [HI-C144-patthar, HI-C144-ret]
 sounds: []
-roots: []
+roots: [sanskrit-lahari]
+etymology_hook: "lahar ← Sanskrit laharī 'large wave', a tadbhava (CDIAL 10999)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C144-ret]
 <!-- hl-knowledge: introduces=[HI-LEX-C144-THINGS144-03]; assesses=[] -->
 
 **लहर** — *lahar* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लहर** (*lahar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laharī*, "large wave" (CDIAL 10999).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

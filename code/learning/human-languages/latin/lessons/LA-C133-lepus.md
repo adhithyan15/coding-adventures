@@ -13,7 +13,8 @@ gloss: "a hare"
 concept_tag: LA-THINGS133-LEPUS
 prerequisites: [LA-C133-aranea, LA-C133-rana]
 sounds: []
-roots: []
+roots: [lepus-latin]
+etymology_hook: "lepus 'hare' — origin uncertain; Varro compared Sicilian Greek leporis"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C133-rana]
 <!-- hl-knowledge: introduces=[LA-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **lepus, leporis** — "a hare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lepus** has no sure origin; Varro already compared a Sicilian Greek *leporis*, "hare" (Lewis & Short), and it may be a loan from a language of the Mediterranean.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

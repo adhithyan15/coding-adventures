@@ -12,7 +12,7 @@ concept_tag: UR-LEX-LAHORE
 prerequisites: [UR-C27-mulk, UR-C27-shahr, UR-C23-mein, UR-C02-mera-naam]
 sounds: []
 roots: []
-etymology_hook: "Lahore is said to be Lavapuri, the city of Lava -- a son of Rama in the Ramayana -- so the largest Urdu-speaking city in the world carries a Sanskrit name from a Hindu epic. The layering that made the language made the map too."
+etymology_hook: "Lāhaur: traditionally explained as Lavapuri 'the city of Lava', a son of Rama; the account is a tradition"
 duration:
   max_seconds: 240
 requires:

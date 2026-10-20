@@ -14,7 +14,8 @@ romanization: "ā̃gaḷī"
 concept_tag: GU-BODY2-FINGER
 prerequisites: [GU-C46-tooth, GU-C46-hair]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "āṁgaḷī ← Sanskrit aṅguli 'finger, toe', a tadbhava (CDIAL 135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C46-hair]
 <!-- hl-knowledge: introduces=[GU-LEX-C47-BODY2-01]; assesses=[] -->
 
 **આંગળી** (*ā̃gaḷī*) — "a finger". Five on each **હાથ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આંગળી** (*āṁgaḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅguli*, "finger, toe" (CDIAL 135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

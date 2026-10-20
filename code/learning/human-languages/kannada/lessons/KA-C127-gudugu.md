@@ -14,7 +14,8 @@ romanization: "guḍugu"
 concept_tag: KA-THINGS127-GUDUGU
 prerequisites: [KA-C127-mannu, KA-C127-kallu]
 sounds: []
-roots: []
+roots: [dravidian-gudu-rumble]
+etymology_hook: "guḍugu: native Dravidian (DEDR 1659)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C127-kallu]
 <!-- hl-knowledge: introduces=[KA-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **ಗುಡುಗು** — *guḍugu* — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಡುಗು** (*guḍugu*) is native Dravidian (DEDR 1659). DEDR lists *guḍugu*, "to thunder", from the rumbling sound *guḍu*. Its note points to similar sound-words in Indo-Aryan as well: the word imitates the noise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

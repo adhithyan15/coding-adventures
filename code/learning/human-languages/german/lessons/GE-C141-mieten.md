@@ -13,7 +13,8 @@ gloss: "to rent"
 concept_tag: GE-VERB-MIETEN
 prerequisites: [GE-C140-fallen, GE-C141-zahlen]
 sounds: []
-roots: []
+roots: [germanic-mezdo]
+etymology_hook: "mieten — the verb of the word for 'rent', Old High German miata 'payment'; English meed is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C141-zahlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C141-VERB141-02]; assesses=[] -->
 
 **mieten** — "to rent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mieten** is the verb made from the word for "rent", Old High German *miata*, "payment" ← Proto-Germanic *\*mēzdō* (EtymDB 2.1). English *meed*, "reward", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

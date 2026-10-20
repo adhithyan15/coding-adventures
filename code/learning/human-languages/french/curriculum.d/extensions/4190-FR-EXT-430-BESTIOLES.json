@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-430-BESTIOLES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about bugs and light in a room: the bedbug, the cockroach, the mosquito net, the shutter and the blind.",
+  "prerequisites": []
+}

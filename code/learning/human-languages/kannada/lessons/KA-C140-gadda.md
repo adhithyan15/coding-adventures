@@ -14,7 +14,8 @@ romanization: "gaḍḍa"
 concept_tag: KA-THINGS140-GADDA
 prerequisites: [KA-C139-kanniru, KA-C139-mise]
 sounds: []
-roots: []
+roots: [dravidian-gadda-beard]
+etymology_hook: "gaḍḍa: native Dravidian, one word with Telugu gaḍḍamu (DEDR 1156)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C139-mise]
 <!-- hl-knowledge: introduces=[KA-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **ಗಡ್ಡ** — *gaḍḍa* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಡ್ಡ** (*gaḍḍa*) is native Dravidian, one word with Telugu *gaḍḍamu* (DEDR 1156). DEDR notes that Tamil *keṭṭam*, "beard", is a loan from Telugu.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

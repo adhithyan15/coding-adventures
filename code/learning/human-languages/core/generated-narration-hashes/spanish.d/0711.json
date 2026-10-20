@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 711,
+  "sourceHash": "fnv1a64:49d97475d4313ddb",
+  "lessonIds": [
+    "ES-C711-emocion",
+    "ES-C711-emocionado",
+    "ES-C711-emocionante",
+    "ES-C711-emotivo",
+    "ES-C711-conmover",
+    "ES-R711-repaso-704-711"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch711.txt",
+  "json": "spanish/narration/ch711.json",
+  "textHash": "fnv1a64:c434f801e4b38d59",
+  "jsonHash": "fnv1a64:3b8d376a56177a6b",
+  "findings": []
+}

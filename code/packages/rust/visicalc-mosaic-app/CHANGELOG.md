@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-13
+
+- Open and Save now use UI87's standard `files.open` / `files.save` kinds,
+  with `accept: ["application/vnd.coding-adventures.visicalc+json"]`, so they
+  work on native hosts (#16927). The retired singular `file.open` /
+  `file.save`, with their `mimeType` + `extension` pair, were answered only by
+  the browser executor, so a native host never completed them. Every host
+  maps the vendor type to the `.visicalc` extension, so the suggested
+  `Workbook.visicalc` is accepted.
+
 ## 2026-09-20
 
 - Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).

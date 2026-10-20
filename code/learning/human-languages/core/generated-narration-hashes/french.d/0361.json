@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:11a5560d7c33c803",
+  "lessonIds": [
+    "FR-C361-stresse",
+    "FR-C361-epuise",
+    "FR-C361-efficace",
+    "FR-C361-efficacite",
+    "FR-C361-productivite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch361.txt",
+  "json": "french/narration/ch361.json",
+  "textHash": "fnv1a64:3389f1a002b6da52",
+  "jsonHash": "fnv1a64:ab192a594779b4c9",
+  "findings": []
+}

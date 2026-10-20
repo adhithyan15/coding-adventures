@@ -1,0 +1,11 @@
+{
+  "id": "PT-C484-vomitar",
+  "pathSegment": "PT-PATH-484-ENXAQUECA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-484-ENXAQUECA",
+      "order": 4
+    }
+  ]
+}

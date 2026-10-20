@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 120,
-  "sourceHash": "fnv1a64:9dc33b38ab6d13ed",
+  "sourceHash": "fnv1a64:7affd74c0d066eca",
   "lessonIds": [
     "MR-C120-sutti",
     "MR-C120-sangit",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch120.txt",
   "json": "marathi/narration/ch120.json",
-  "textHash": "fnv1a64:1d8a809b655294dd",
-  "jsonHash": "fnv1a64:df2b50b2260f0ced",
+  "textHash": "fnv1a64:f9be49a02c747d15",
+  "jsonHash": "fnv1a64:018298441ec54055",
   "findings": []
 }

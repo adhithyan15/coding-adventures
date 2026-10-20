@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:9ccb17482d9a83b1",
+  "lessonIds": [
+    "IT-C512-torneo",
+    "IT-C512-semifinale",
+    "IT-C512-qualificarsi",
+    "IT-C512-medaglia",
+    "IT-C512-podio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch512.txt",
+  "json": "italian/narration/ch512.json",
+  "textHash": "fnv1a64:70b0dcf1bea2e507",
+  "jsonHash": "fnv1a64:ef6e9a908cf811ab",
+  "findings": []
+}

@@ -12,6 +12,9 @@ Before the new one: say the Latin for a thread, then the Latin for wool.
 You'll want to know: linteum, linteī.
 linteum, linteī — "a linen cloth, a towel".
 
+The word, taken apart.
+linteum comes from līnum, "flax" (Lewis & Short), through linteus, "made of linen". English linen and line belong to the same family.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for wool, then the Latin for a linen cloth.
 
 You'll want to know: sāpō, sāpōnis.
 sāpō, sāpōnis — "soap".
+
+The word, taken apart.
+sāpō was borrowed from Germanic, as Lewis & Short note. The Germanic word is usually reconstructed as Proto-Germanic saipōn, "soap, salve" (EtymDB 2.1); English soap comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a linen cloth, then the Latin for soap.
 You'll want to know: spongia, spongiae.
 spongia, spongiae — "a sponge".
 
+The word, taken apart.
+spongia was borrowed from Greek spongia, "sponge" (Lewis & Short), from spongos, "sponge" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for soap, then the Latin for a sponge.
 You'll want to know: urna, urnae.
 urna, urnae — "a water jar".
 
+The word, taken apart.
+urna is linked by Lewis & Short with ūrō, "to burn", as a vessel of fired clay, but that account is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a sponge, then the Latin for a water jar.
 
 You'll want to know: calix, calicis.
 calix, calicis — "a cup".
+
+The word, taken apart.
+calix is related to Greek kylix, "a drinking cup" (EtymDB 2.1), though whether Latin borrowed it is uncertain. It is a different word from Greek kalyx, "a flower bud". English chalice comes from it through French.
 
 What you've built.
 One more word for this chapter.

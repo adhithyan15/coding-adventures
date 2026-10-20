@@ -14,7 +14,8 @@ romanization: "itsumo"
 concept_tag: JA-TIME55-ITSUMO
 prerequisites: [JA-C55-natsu, JA-C55-fuyu]
 sounds: []
-roots: []
+roots: [japanese-itsu-when, japanese-mo]
+etymology_hook: "itsumo: native itsu 'when' + mo 'also, even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C55-fuyu]
 <!-- hl-knowledge: introduces=[JA-LEX-C55-TIME55-04]; assesses=[] -->
 
 **いつも** — *itsumo* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いつも** (*itsumo*) is native: *itsu*, "when", with *mo*, "also, even", so "at any time" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

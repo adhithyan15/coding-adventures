@@ -1,0 +1,11 @@
+{
+  "id": "ES-R631-repaso-624-631",
+  "pathSegment": "ES-PATH-631-REBAJAS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-631-REBAJAS",
+      "order": 5
+    }
+  ]
+}

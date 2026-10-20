@@ -14,6 +14,7 @@ concept_tag: FR-QUAL159-IMPOLI-IMPOLIE
 prerequisites: [FR-C159-inconfortable, FR-C159-poli-polie]
 sounds: []
 roots: []
+etymology_hook: "impoli — im- 'not' + poli"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C159-poli-polie]
 <!-- hl-knowledge: introduces=[FR-LEX-C159-QUAL159-04]; assesses=[] -->
 
 **impoli / impolie** — "rude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impoli** — *im-*, "not", and *poli*, "polite". *Poli* ← Latin *polītus*, "polished" (EtymDB 2.1), and *im-* is Latin *in-*, "not", before *p*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

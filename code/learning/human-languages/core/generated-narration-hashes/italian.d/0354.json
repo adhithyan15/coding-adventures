@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:36e9e07b91b5ac5e",
+  "lessonIds": [
+    "IT-C354-ostacolo",
+    "IT-C354-ostacolare",
+    "IT-C354-impedire",
+    "IT-C354-favorire",
+    "IT-C354-consentire",
+    "IT-R354-ripasso-347-354"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch354.txt",
+  "json": "italian/narration/ch354.json",
+  "textHash": "fnv1a64:4dd3794b9d7ff327",
+  "jsonHash": "fnv1a64:19a16d14e0d88164",
+  "findings": []
+}

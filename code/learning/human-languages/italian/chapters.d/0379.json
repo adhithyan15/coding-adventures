@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "A scuola",
+  "label": "ch:it-a-scuola",
+  "canDo": "I can talk about secondary school: attending it, absences, the school report and the head teacher.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C379-preside",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about secondary school: attending it, absences, the school report and the head teacher.",
+    "assesses": [
+      "IT-LEX-C379-LICEO-03",
+      "IT-LEX-C379-LICEO-04",
+      "IT-LEX-C379-LICEO-05"
+    ]
+  }
+}

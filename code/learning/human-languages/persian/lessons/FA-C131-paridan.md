@@ -14,7 +14,8 @@ romanization: "paridan"
 concept_tag: FA-VERB-PARIDAN
 prerequisites: [FA-C131-pardakhtan, FA-C131-amukhtan]
 sounds: []
-roots: []
+roots: [persian-par-wing]
+etymology_hook: "paridan: Persian par 'wing' (Middle Persian parr) + -idan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C131-amukhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C131-QUAL131-04]; assesses=[] -->
 
 **پریدن** — *paridan* — "to jump, to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paridan* is built on *par*, "wing, feather", with the verb ending *-idan*. *par* is native, usually traced to Middle Persian *parr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

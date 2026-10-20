@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Changed - docs and help text describe three-file components (MB-12)
+
+- The README's reload triggers now list `.mil`, `.mll`, `.msl` and
+  `.stories.json`, as `watcher.go` watches them, not just `.mosaic` and
+  `.stories.json`. The story format, the stack diagram and the
+  `/api/stories` example now describe three-file components. They also say
+  that `--check` fails a component with no stories file, and that
+  `source_path` is empty for three-file components.
+- `--root`'s help text and the startup log say "components" rather than
+  ".mosaic files". The same stale wording is fixed in the comments of
+  `watcher.go`, `main.go` and `preview.go`. No behaviour changes.
+
 ### Fixed - a broken stories file is shown, not hidden (#16928)
 
 `/api/stories` always returned a component's `storiesError` (invalid JSON,

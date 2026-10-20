@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Morgens im Bad",
+  "label": "ch:ge-morgens-im-bad",
+  "canDo": "I can describe my routine in the bathroom.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C530-schlafanzug",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can describe my routine in the bathroom.",
+    "assesses": [
+      "GE-LEX-C530-BAD-03",
+      "GE-LEX-C530-BAD-04",
+      "GE-LEX-C530-BAD-05"
+    ]
+  }
+}

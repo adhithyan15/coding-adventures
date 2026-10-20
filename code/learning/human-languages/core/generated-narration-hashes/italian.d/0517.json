@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:fecb8ece606dcd43",
+  "lessonIds": [
+    "IT-C517-orchestra",
+    "IT-C517-sinfonia",
+    "IT-C517-spartito",
+    "IT-C517-accordare",
+    "IT-C517-comporre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch517.txt",
+  "json": "italian/narration/ch517.json",
+  "textHash": "fnv1a64:d67fc00ff0ef6e75",
+  "jsonHash": "fnv1a64:34d5f9674e56b9f4",
+  "findings": []
+}

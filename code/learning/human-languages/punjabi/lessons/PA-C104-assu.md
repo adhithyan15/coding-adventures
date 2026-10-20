@@ -14,7 +14,8 @@ romanization: "assū"
 concept_tag: PA-TIME104-ASSU
 prerequisites: [PA-C104-savan, PA-C104-bhado]
 sounds: []
-roots: []
+roots: [sanskrit-ashvayuja]
+etymology_hook: "assū ← Sanskrit aśvayuja 'the month Āśvina, September-October', a tadbhava (CDIAL 925)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C104-bhado]
 <!-- hl-knowledge: introduces=[PA-LEX-C104-TIME104-05]; assesses=[] -->
 
 **ਅੱਸੂ** — *assū* — "Assu, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅੱਸੂ** (*assū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aśvayuja*, "the month Āśvina, September-October" (CDIAL 925).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

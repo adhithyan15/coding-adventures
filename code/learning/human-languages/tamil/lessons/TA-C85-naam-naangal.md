@@ -11,7 +11,8 @@ romanization: nām / nāṅgaḷ
 concept_tag: TA-WE-INCLUSIVE-EXCLUSIVE
 prerequisites: [TA-C85-avargal, TA-C03-naan]
 sounds: []
-roots: []
+roots: [dravidian-naam-we]
+etymology_hook: "நாம் / நாங்கள் — native Dravidian (DEDR 3647); Malayalam nām"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ decide every time.
 **"Shall we go?"** said to a friend is **நாம்** — the invitation is the point.
 **"We went yesterday"** said to somebody who stayed behind is **நாங்கள்**, and
 using நாம் there would tell them they had been present when they were not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாம் / நாங்கள்** (*nām / nāṅgaḷ*) is native Dravidian. DEDR 3647 lists Malayalam *nām*. The entry lists both *nām*, "we", and *nāṅkaḷ*, "we (not you)".
 
 ## Grammar Lens: the piece you can already see
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C85-NAAM-NAANGAL-01, TA-LEX-C85-AVARGAL-01] -->

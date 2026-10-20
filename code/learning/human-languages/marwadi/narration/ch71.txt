@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a cow, then the Marwadi for a buffalo.
 You'll want to know: बकरी.
 बकरी — bakrī — "a goat".
 
+The word, taken apart.
+बकरी (bakrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from barkara, "kid, lamb; goat". CDIAL gives no Marwari form in this entry (CDIAL 9153); the match is through Hindi bakrī.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a buffalo, then the Marwadi for a goat.
 
 You'll want to know: भेड़.
 भेड़ — bheṛ — "a sheep".
+
+The word, taken apart.
+भेड़ (bheṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bheḍra, "ram". CDIAL gives no Marwari form in this entry (CDIAL 9606); the match is through Hindi bheṛ. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a goat, then the Marwadi for a sheep.
 You'll want to know: चिड़ी.
 चिड़ी — chiṛī — "a sparrow, a small bird".
 
+The word, taken apart.
+चिड़ी (chiṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṭaka, "sparrow". CDIAL gives no Marwari form in this entry (CDIAL 4571); the match is through Hindi ciṛī. CDIAL calls the word imitative and lists ciṛī under a variant it reconstructs, ciṭaka.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a sheep, then the Marwadi for a sparrow.
 You'll want to know: नाहर.
 नाहर — nāhar — "a lion, a tiger".
 
+The word, taken apart.
+CDIAL lists Hindi nāhar, "tiger", under two reconstructions, nakhadara, "tearing with the claws" (CDIAL 6919), and nakharin, "having claws" (CDIAL 6921). Both are built on Sanskrit nakha, "claw"; which one is the source is not settled, and CDIAL gives no Marwari form.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a sparrow, then the Marwadi for a lion.
 
 You'll want to know: हाथी.
 हाथी — hāthī — "an elephant".
+
+The word, taken apart.
+हाथी (hāthī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hastin, "having hands; elephant". CDIAL lists Marwari hāthī under it (CDIAL 14039). CDIAL asks whether the Sanskrit word reshaped an older karin, perhaps of non-Aryan origin, tied to hasta, "hand", by popular etymology.
 
 What you've built.
 One more word for this chapter.

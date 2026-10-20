@@ -10,7 +10,7 @@ gloss: thirteen — the rule's first run, and it is exactly what you would predi
 concept_tag: GE-NUMBER-13
 prerequisites: [GE-C12-ziffer-plus-zehn]
 sounds: [diphthong-ei, z-ts]
-roots: []
+roots: [thrijiz-germanic, tehun-germanic]
 etymology_hook: "dreizehn is drei plus zehn with nothing added and nothing changed, and English thirteen is the same compound with three worn down to thir-"
 duration:
   max_seconds: 150
@@ -49,6 +49,11 @@ chapter working.
 
 English wore its digit down — *three* became *thir-* — and German did not touch
 its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dreizehn** ← Old High German *drīzehan* ← Proto-Germanic *\*þritehun*, "three-ten" — the same compound as English *thirteen*. (EtymDB 2.1)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-EI-AS-EYE-01, GE-LEX-DREIZEHN-01] -->

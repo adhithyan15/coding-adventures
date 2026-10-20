@@ -14,7 +14,8 @@ romanization: "pâlto"
 concept_tag: FA-CHIZ204-PALTO
 prerequisites: [FA-C203-asansor, FA-C203-zarf]
 sounds: []
-roots: []
+roots: [french-paletot]
+etymology_hook: "pâlto ← French paletot 'overcoat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C203-zarf]
 <!-- hl-knowledge: introduces=[FA-LEX-C204-CHIZ204-01]; assesses=[] -->
 
 **پالتو** — *pâlto* — "an overcoat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâlto* is borrowed from French *paletot*, "overcoat" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

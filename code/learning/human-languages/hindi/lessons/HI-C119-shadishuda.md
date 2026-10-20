@@ -14,7 +14,8 @@ romanization: "śādīśudā"
 concept_tag: HI-ABOUT-MARRIED
 prerequisites: [HI-C119-pesha, HI-C119-shadi]
 sounds: []
-roots: []
+roots: [persian-shadi-shuda]
+etymology_hook: "śādīśudā: a Hindustani compound of Persian parts, shādī 'joy, wedding' + shuda 'become'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C119-shadi]
 **शादीशुदा** (*śādīśudā*) — "married".
 
 It is **शादी** with **-शुदा**, "having been done". **क्या आप शादीशुदा हैं?** — "are you married?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शादीशुदा** (*śādīśudā*) is a compound made in Hindustani from Persian parts: *shādī*, "joy", which Hindi uses for a wedding, and *shuda*, "become".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

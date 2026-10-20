@@ -14,7 +14,8 @@ romanization: "kāḷo"
 concept_tag: MW-ADJ77-KALO
 prerequisites: [MW-C77-lal, MW-C77-nilo]
 sounds: []
-roots: []
+roots: [sanskrit-kala-black]
+etymology_hook: "kāḷo ← Sanskrit kāla 'black'; CDIAL reports a view that it came from Dravidian (CDIAL 3083)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C77-nilo]
 <!-- hl-knowledge: introduces=[MW-LEX-C77-ADJ77-03]; assesses=[] -->
 
 **काळो** — *kāḷo* — "black".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काळो** (*kāḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāla*, "black, dark-blue". CDIAL lists Marwari *kāḷo* under it (CDIAL 3083). CDIAL reports a view that the Sanskrit word came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

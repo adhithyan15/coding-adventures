@@ -14,7 +14,8 @@ romanization: "ummīd"
 concept_tag: MW-WANT112-UMMID
 prerequisites: [MW-C112-lalach, MW-C112-sapno]
 sounds: []
-roots: []
+roots: [persian-ummed]
+etymology_hook: "ummīd: usually traced to Persian ummēd 'hope'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C112-sapno]
 <!-- hl-knowledge: introduces=[MW-LEX-C112-WANT112-04]; assesses=[] -->
 
 **उम्मीद** — *ummīd* — "an expectation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उम्मीद** (*ummīd*) is a loan, usually traced to Persian *ummēd*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

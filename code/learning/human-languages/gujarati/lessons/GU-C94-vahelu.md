@@ -14,7 +14,8 @@ romanization: "vahelũ"
 concept_tag: GU-TIME94-VAHELU
 prerequisites: [GU-C93-vasant, GU-C94-pankhar]
 sounds: []
-roots: []
+roots: [sanskrit-vahin]
+etymology_hook: "vahelũ: listed by CDIAL, as 'quick', under Sanskrit vahin 'drawing well' (CDIAL 11462)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C94-pankhar]
 <!-- hl-knowledge: introduces=[GU-LEX-C94-TIME94-02]; assesses=[] -->
 
 **વહેલું** (*vahelũ*) — "early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **વહેલું** (*vahelũ*), in the sense "quick", under Sanskrit *vahin*, "drawing well", from *vah*, "to carry, draw" (CDIAL 11462).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

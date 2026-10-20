@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Hablan --- They, and Ustedes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7ad0557d441ae557",
+  "sourceHash": "fnv1a64:9b0c11e5a2416642",
   "lessons": [
     {
       "id": "ES-C07-hablan",
@@ -12,14 +12,14 @@
       "title": "hablan — \"they speak,\" and \"you all speak\"",
       "headword": "hablan",
       "romanization": "hablan",
-      "gloss": "they speak\" — and, across most of the Spanish-speaking world, \"you all speak",
+      "gloss": "\"they speak\" — and, across most of the Spanish-speaking world, \"you all speak\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:407b6577cdf44bb8",
+      "sourceHash": "fnv1a64:df92c8b1446cb5b5",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ustedes is vuestras mercedes, \"your graces\", worn down. Merced is Latin merces, mercedis, \"pay, reward\" (Lewis & Short), which came to mean favour, then grace. The -n of hablan is the Latin -nt of amant, \"they love\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -172,7 +183,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

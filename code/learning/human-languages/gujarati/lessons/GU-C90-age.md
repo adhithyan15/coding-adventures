@@ -14,7 +14,8 @@ romanization: "ummar"
 concept_tag: GU-LIFE-AGE
 prerequisites: [GU-C90-wedding, GU-C90-birthday]
 sounds: []
-roots: []
+roots: [arabic-umr-life]
+etymology_hook: "ummar ← Arabic ʿumr 'life, lifetime', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C90-birthday]
 <!-- hl-knowledge: introduces=[GU-LEX-C90-LIFE-03]; assesses=[] -->
 
 **ઉંમર** (*ummar*) — "age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઉંમર** (*ummar*) is a loan from Arabic *ʿumr*, "life, lifetime", which reached Gujarati through Persian. Its Arabic root is *ʿ-m-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

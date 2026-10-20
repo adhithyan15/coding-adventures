@@ -1,0 +1,11 @@
+{
+  "id": "IT-C288-approfondire",
+  "pathSegment": "IT-PATH-288-ANNUNCIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-288-ANNUNCIO",
+      "order": 4
+    }
+  ]
+}

@@ -11,7 +11,8 @@ romanization: "enimidava"
 concept_tag: TE-ORDINAL-EIGHTH
 prerequisites: [TE-C82-seventh, TE-C81-third, TE-C80-congratulations, TE-C70-mosquito, TE-C72-weight, TE-C39-tii, TE-S131-vowel-sign-vocalic-r]
 sounds: [independent-e]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "enimidava: native enimidi 'eight' (DEDR 784) + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -56,6 +57,11 @@ Which is the useful way to hold the rule: it is not "drop the *u*", it is **drop
 whatever vowel is at the end**. The ending does not know which vowel it replaced.
 
 Note the short **ఎ** at the front, against the long **ఏ** of the last lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎనిమిదవ** (*enimidava*) is native Dravidian: *enimidi*, "eight", filed with Tamil *eṭṭu* (DEDR 784), with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C82-ORDINAL-03] -->

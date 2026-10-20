@@ -14,7 +14,8 @@ romanization: "borī"
 concept_tag: HI-THG252-BORI
 prerequisites: [HI-C251-litar, HI-C251-mitar]
 sounds: []
-roots: []
+roots: [indo-aryan-bora]
+etymology_hook: "borī ← *bora 'sacking, sack', a reconstructed form; a tadbhava (CDIAL 9320)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C251-mitar]
 <!-- hl-knowledge: introduces=[HI-LEX-C252-THG252-01]; assesses=[] -->
 
 **बोरी** — *borī* — "a sack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोरी** (*borī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bora*, "sacking, sack", a form CDIAL reconstructs from its descendants (CDIAL 9320).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

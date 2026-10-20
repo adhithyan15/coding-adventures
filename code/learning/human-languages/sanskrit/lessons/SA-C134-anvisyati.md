@@ -14,7 +14,8 @@ romanization: "anviṣyati"
 concept_tag: SA-VERB-ANVISYATI
 prerequisites: [SA-C134-sthapayati, SA-C134-presayati]
 sounds: []
-roots: []
+roots: [sanskrit-anvishyati]
+etymology_hook: "anviṣyati ← anu 'after' + √iṣ 'seek, wish': 'seeks after, searches' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C134-presayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C134-ACT134-05]; assesses=[] -->
 
 **अन्विष्यति** — *anviṣyati* — "searches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anviṣyati* comes from *anu* "after" and the root √iṣ "seek, wish" (MW's third √iṣ): "seeks after, searches". It is the same √iṣ as *icchati* "wishes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "râz"
 concept_tag: FA-CHIZ278-RAZ
 prerequisites: [FA-C277-nojavan, FA-C278-sofre]
 sounds: []
-roots: []
+roots: [persian-raz]
+etymology_hook: "râz ← Middle Persian rāz (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C278-sofre]
 <!-- hl-knowledge: introduces=[FA-LEX-C278-CHIZ278-02]; assesses=[] -->
 
 **راز** — *râz* — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râz* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *rāz*, "secret, mystery" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

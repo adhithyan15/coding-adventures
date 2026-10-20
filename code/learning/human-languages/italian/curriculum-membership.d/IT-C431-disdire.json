@@ -1,0 +1,11 @@
+{
+  "id": "IT-C431-disdire",
+  "pathSegment": "IT-PATH-431-CAPARRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-431-CAPARRA",
+      "order": 2
+    }
+  ]
+}

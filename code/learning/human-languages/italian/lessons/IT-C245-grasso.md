@@ -13,7 +13,8 @@ gloss: "fat"
 concept_tag: IT-QUAL245-GRASSO
 prerequisites: [IT-C245-ruvido, IT-C245-profondo]
 sounds: []
-roots: []
+roots: [crassus-latin]
+etymology_hook: "grasso ← Vulgar Latin grassus, from crassus 'thick' — English crass is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C245-profondo]
 <!-- hl-knowledge: introduces=[IT-LEX-C245-QUAL245-04]; assesses=[] -->
 
 **grasso** — "fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grasso** ← Vulgar Latin *grassus*, from Latin *crassus*, "thick, fat" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

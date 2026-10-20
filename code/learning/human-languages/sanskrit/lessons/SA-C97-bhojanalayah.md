@@ -14,7 +14,8 @@ romanization: "bhojanālayaḥ"
 concept_tag: SA-LOC97-BHOJANALAYAH
 prerequisites: [SA-C96-visvavidyalayah, SA-C97-karyalayah]
 sounds: []
-roots: []
+roots: [sanskrit-bhojana, sanskrit-alaya]
+etymology_hook: "bhojanālaya ← bhojana 'meal' (√bhuj 'enjoy, eat') + ālaya 'dwelling'; a modern pairing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C97-karyalayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C97-LOC97-02]; assesses=[] -->
 
 **भोजनालयः** — *bhojanālayaḥ* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhojanālaya* is built from *bhojana* "a meal, food", from the root √bhuj "enjoy, eat" (MW), and *ālaya* "dwelling, house". The pairing for a restaurant is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

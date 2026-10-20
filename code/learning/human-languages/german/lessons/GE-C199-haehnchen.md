@@ -13,7 +13,8 @@ gloss: "a chicken (to eat)"
 concept_tag: GE-THING199-HAEHNCHEN
 prerequisites: [GE-C199-frucht, GE-C199-karotte]
 sounds: []
-roots: []
+roots: [germanic-hano]
+etymology_hook: "Hähnchen — the word for 'cock' + -chen 'little': a young cock, ready to eat"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C199-karotte]
 <!-- hl-knowledge: introduces=[GE-LEX-C199-THING199-04]; assesses=[] -->
 
 **das Hähnchen** — "a chicken (to eat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Hähnchen** is the word for "cock, rooster", Old High German *hano* ← Proto-Germanic *\*hanô* (EtymDB 2.1), + *-chen*, "little". The same root gives English *hen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

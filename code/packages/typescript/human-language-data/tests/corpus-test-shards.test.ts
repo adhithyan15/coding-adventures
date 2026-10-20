@@ -89,12 +89,19 @@ describe("corpus test shard ownership", () => {
     )).rejects.toThrow(/discovery mismatch/);
   });
 
-  it.skipIf(process.platform === "win32")("rejects symlink owners", async () => {
+  it("rejects symlink owners", async (ctx) => {
     const root = fixtureRoot("gujarati", ["a-first-deadbeef.case.ts"]);
-    symlinkSync(
-      join(root, "gujarati", "a-first-deadbeef.case.ts"),
-      join(root, "gujarati", "b-second-1234abcd.case.ts"),
-    );
+    try {
+      symlinkSync(
+        join(root, "gujarati", "a-first-deadbeef.case.ts"),
+        join(root, "gujarati", "b-second-1234abcd.case.ts"),
+        "file",
+      );
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
     await expect(loadCorpusTestShards(
       "gujarati",
       pathToFileURL(join(root, "gujarati.test.ts")).href,

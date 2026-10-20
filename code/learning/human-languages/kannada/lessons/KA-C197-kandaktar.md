@@ -14,7 +14,8 @@ romanization: "kaṇḍakṭar"
 concept_tag: KA-KELASA197-KANDAKTAR
 prerequisites: [KA-C197-kavalugara, KA-C197-kuli]
 sounds: []
-roots: []
+roots: [english-conductor]
+etymology_hook: "kaṇḍakṭar ← English conductor"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C197-kuli]
 <!-- hl-knowledge: introduces=[KA-LEX-C197-KELASA197-03]; assesses=[] -->
 
 **ಕಂಡಕ್ಟರ್** — *kaṇḍakṭar* — "a bus conductor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಂಡಕ್ಟರ್** (*kaṇḍakṭar*) is a loan from English *conductor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 134,
-  "sourceHash": "fnv1a64:c8b77b80b8df45f0",
+  "sourceHash": "fnv1a64:1ad080b8fc8f4f84",
   "lessonIds": [
     "PT-C134-nada",
     "PT-C134-nenhum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch134.txt",
   "json": "portuguese/narration/ch134.json",
-  "textHash": "fnv1a64:1a52b39476ff548d",
-  "jsonHash": "fnv1a64:41ee8093f98bb354",
+  "textHash": "fnv1a64:8a6abedd41e24041",
+  "jsonHash": "fnv1a64:78d906b22968963c",
   "findings": []
 }

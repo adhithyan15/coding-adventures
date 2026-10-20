@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a shortcut, then the Japanese for the s
 You'll want to know: あたり.
 あたり — atari — "the area around".
 
+The word, taken apart.
+あたり (atari) is native, usually taken as the noun made from ataru, "to touch, to face", by its stem; JMdict writes it with a character for "side, vicinity", read as a kun'yomi. It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for the surroundings, then the Japanese for
 
 You'll want to know: ふもと.
 ふもと — fumoto — "the foot of a mountain".
+
+The word, taken apart.
+ふもと (fumoto) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for the area around, then the Japanese for 
 You'll want to know: とかい.
 とかい — tokai — "the city".
 
+The word, taken apart.
+とかい (tokai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, "capital" (Middle Chinese tu) and kai, "meet, gather" (hwajH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for the foot of a mountain, then the Japane
 You'll want to know: あいだ.
 あいだ — aida — "between".
 
+The word, taken apart.
+あいだ (aida) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for the city, then the Japanese for between
 
 You'll want to know: ちほう.
 ちほう — chihou — "a region".
+
+The word, taken apart.
+ちほう (chihou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chi, "earth, land" (Middle Chinese dijH) and hō, "region, direction" (pjang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.

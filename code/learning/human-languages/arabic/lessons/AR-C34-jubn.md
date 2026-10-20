@@ -6,13 +6,13 @@ sequence: 920
 chapter: 34
 type: word
 headword: جبن
-gloss: "cheese" — and an honest limit on the root system, because the very same three letters also spell cowardice and the two are not one idea
+gloss: '"cheese" — and an honest limit on the root system, because the very same three letters also spell cowardice and the two are not one idea'
 concept_tag: AR-FOOD-CHEESE
 romanization: jubn
 prerequisites: [AR-C34-lahm, AR-W07-hook-family-ha-kha]
 sounds: [jim, rtl-known-letters]
 roots: [j-b-n]
-etymology_hook: "جُبْن (jubn, 'cheese') is written with the same letters as جُبْن ('cowardice', whose جَبان jabān is 'a coward'), and Arabic lexicographers list these as separate entries rather than one idea — a needed correction to the habit of reading every shared spelling as a shared root; Arabic's cheese word did not reach English, which took cheese from Latin cāseus, while the جِبْنة (jibna) of everyday speech shows the same tied tāʾ that marks قهوة feminine"
+etymology_hook: "jubn 'cheese': listed by Lane under j-b-n; jubn 'cowardice' is a separate homonym, not the same idea"
 duration:
   max_seconds: 240
 requires:

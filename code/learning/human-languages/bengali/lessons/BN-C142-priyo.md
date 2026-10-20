@@ -14,7 +14,8 @@ romanization: "priyô"
 concept_tag: BN-QUAL142-PRIYO
 prerequisites: [BN-C141-bipojjonok, BN-C141-nirapod]
 sounds: []
-roots: []
+roots: [sanskrit-priya]
+etymology_hook: "priyô ← Sanskrit priya 'beloved', a tatsama; CDIAL lists Middle Bengali piyā 'dear' (CDIAL 8974)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C141-nirapod]
 <!-- hl-knowledge: introduces=[BN-LEX-C142-QUAL142-01]; assesses=[] -->
 
 **প্রিয়** — *priyô* — "dear, favourite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রিয়** (*priyô*) is Sanskrit *priya*, "beloved", taken over whole as a learned loan, a tatsama (CDIAL 8974). Middle Bengali *piyā*, "dear", is the inherited form CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

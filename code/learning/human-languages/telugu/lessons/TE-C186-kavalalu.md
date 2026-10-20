@@ -14,7 +14,8 @@ romanization: "kavalalu"
 concept_tag: TE-VASTUVU186-KAVALALU
 prerequisites: [TE-C186-manavaralu, TE-C186-tallidandrulu]
 sounds: []
-roots: []
+roots: [dravidian-kaval-fork]
+etymology_hook: "kavalalu: native Dravidian; DEDR 1325 lists kavalu 'twins' beside kava 'pair'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C186-tallidandrulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C186-VASTUVU186-04]; assesses=[] -->
 
 **కవలలు** — *kavalalu* — "twins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కవలలు** (*kavalalu*) is native Dravidian. DEDR 1325 lists *kavalu*, "twins", beside *kava*, "pair, couple", with Kannada *kaval*, "pair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

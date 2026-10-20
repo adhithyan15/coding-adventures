@@ -14,7 +14,8 @@ romanization: "darroj"
 concept_tag: MR-VEL230-DARROJ
 prerequisites: [MR-C230-suruvat, MR-C230-mudat]
 sounds: []
-roots: []
+roots: [persian-dar-in, persian-roz]
+etymology_hook: "darroj: Persian dar 'in' + rōz 'day', usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C230-mudat]
 <!-- hl-knowledge: introduces=[MR-LEX-C230-VEL230-03]; assesses=[] -->
 
 **दररोज** — *darroj* — "daily, every single day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दररोज** (*darroj*) is usually traced to Persian *dar*, "in, at", and *rōz*, "day": "day by day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

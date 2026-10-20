@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C445-campanile",
+    "language": "italian",
+    "chapter": 445,
+    "sequence": 25150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a0a3e82ce46870a"
+  },
+  "findings": []
+}

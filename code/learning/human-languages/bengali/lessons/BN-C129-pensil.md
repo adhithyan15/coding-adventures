@@ -14,7 +14,8 @@ romanization: "pensil"
 concept_tag: BN-THINGS129-PENSIL
 prerequisites: [BN-C129-mosjid, BN-C129-girja]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C129-girja]
 <!-- hl-knowledge: introduces=[BN-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **পেন্সিল** — *pensil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেন্সিল** (*pensil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

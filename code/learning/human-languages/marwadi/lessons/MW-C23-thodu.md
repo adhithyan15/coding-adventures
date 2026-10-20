@@ -11,8 +11,8 @@ gloss: a little, written with the dotted flap of kapda and the short u of dukan
 concept_tag: MW-QUANTITY-A-LITTLE-WRITTEN
 prerequisites: [MW-C23-hear-thodu]
 sounds: [aspirated-th, long-o, retroflex-flap, short-u]
-roots: []
-etymology_hook: The nukta that turned cloth into kapda comes back, and it is the one mark a hand tends to forget.
+roots: [sanskrit-stoka]
+etymology_hook: "thoṛu ← Sanskrit stoka 'a drop, a little', with an added -ṛ- (CDIAL 13720, Marwari row)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +48,11 @@ Three of this track's most easily confused marks meet in four signs. **ड़** 
 **ड** with the nukta under it, exactly as in **कपड़ा** and **घोड़ो**; the short
 **ु** hangs beneath it. Write **कपड़ा**, **घोड़ो**, and **थोड़ु** in a column and
 check that all three dots sit at the same height.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थोड़ु** (*thoṛu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *stoka*, "drop; a little". CDIAL lists Marwari *thoṛo* under it (CDIAL 13720). CDIAL explains the *ṛ* as an added suffix.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THODU-01, MW-SCRIPT-NUKTA-01] -->

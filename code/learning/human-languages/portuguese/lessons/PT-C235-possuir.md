@@ -13,7 +13,8 @@ gloss: "to own"
 concept_tag: PT-VERB-POSSUIR
 prerequisites: [PT-C234-partilhar, PT-C235-dobrar]
 sounds: []
-roots: []
+roots: [possidere-latin]
+etymology_hook: "possuir ← Latin possidere 'to possess' — English possess"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C235-dobrar]
 <!-- hl-knowledge: introduces=[PT-LEX-C235-VERBOS235-02]; assesses=[] -->
 
 **possuir** — "to own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**possuir** ← Latin *possidere*, "to possess" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

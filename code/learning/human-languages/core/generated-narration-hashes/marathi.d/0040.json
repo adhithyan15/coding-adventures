@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 40,
-  "sourceHash": "fnv1a64:b9eb4339968e3661",
+  "sourceHash": "fnv1a64:169a6314d98028f4",
   "lessonIds": [
     "MR-W40-i-independent",
     "MR-C40-ithe",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch40.txt",
   "json": "marathi/narration/ch40.json",
-  "textHash": "fnv1a64:8fb13ae007f1224f",
-  "jsonHash": "fnv1a64:7153903041698580",
+  "textHash": "fnv1a64:3e6776e0e3aac8da",
+  "jsonHash": "fnv1a64:5257300105b0aef3",
   "findings": []
 }

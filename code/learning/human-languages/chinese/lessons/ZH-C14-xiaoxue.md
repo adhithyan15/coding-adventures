@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-PRIMARY
 gloss: primary school, built from known characters
 prerequisites: [ZH-C14-hear-xiaoxue]
 sounds: [tone-3, tone-2]
-roots: []
-etymology_hook: One newly learned character and one reviewed character carry the spoken school word.
+roots: [middle-chinese-sjewx, middle-chinese-haewk]
+etymology_hook: "xiǎoxué: 'small' + 'learning', from Middle Chinese sjewX and haewk; once a child's first schooling"
 duration:
   max_seconds: 150
 requires:
@@ -42,6 +42,10 @@ reviews_of: [ZH-C14-hear-xiaoxue, ZH-C14-xiao, ZH-C13-xue]
 > **小学** — *xiǎoxué* — **primary school**
 
 Read the pair as one word without pinyin: low, then rising.
+
+Both are inherited from Middle Chinese, *sjewX* and *haewk* (Guangyun, in
+Baxter's transcription). Older texts use the pair for a child's first schooling;
+"primary school" is the modern sense.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAOXUE-01, ZH-SCRIPT-XIAO-01, ZH-SCRIPT-XUE-01] -->

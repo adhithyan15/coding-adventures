@@ -14,7 +14,8 @@ romanization: "adhyāpakaḥ"
 concept_tag: SA-SCHOOL-TEACHER
 prerequisites: [SA-C83-school, SA-C83-student]
 sounds: []
-roots: []
+roots: [sanskrit-adhyapaka]
+etymology_hook: "adhyāpaka 'teacher', 'one who makes study' ← adhi + the root √i 'go' (MW); worn down to jhā (CDIAL 278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C83-student]
 <!-- hl-knowledge: introduces=[SA-LEX-C83-SCHOOL-03]; assesses=[] -->
 
 **अध्यापकः** (*adhyāpakaḥ*) — "a teacher", the school word beside **गुरुः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Adhyāpaka* is built on the causative of *adhi* + the root √i, "to go over,
+study": "one who makes others study" (MW, CDIAL 278). Worn down, it became *jhā*,
+the name of a Maithili Brahman community.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

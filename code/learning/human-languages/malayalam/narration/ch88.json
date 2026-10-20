@@ -4,14 +4,14 @@
   "chapter": 88,
   "title": "Counting Past Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c29937df711513e2",
+  "sourceHash": "fnv1a64:0e103238af15626d",
   "lessons": [
     {
       "id": "ML-C88-tens",
       "sequence": 3080,
-      "title": "മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) — the tens",
+      "title": "മുപ്പത് — എൺപത് (muppatŭ — eṇpatŭ) — the tens",
       "headword": "മുപ്പത് — എൺപത്",
-      "romanization": "muppatŭ — eṇpathŭ",
+      "romanization": "muppatŭ — eṇpatŭ",
       "gloss": "thirty to eighty — six words that are all the same word, and the one that has worn down",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82638a2dcb99eb56",
+      "sourceHash": "fnv1a64:05c8c4659a9cee11",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
                 "അമ്പത് ampatŭ, 50. built on: five.",
                 "അറുപത് aṟupatŭ, 60. built on: six.",
                 "എഴുപത് eḻupatŭ, 70. built on: seven.",
-                "എൺപത് eṇpathŭ, 80. built on: eight."
+                "എൺപത് eṇpatŭ, 80. built on: eight."
               ]
             },
             {
@@ -82,6 +82,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുപ്പത് — എൺപത് (muppatŭ — eṇpatŭ) are native Dravidian, each a small number joined to -patŭ, the combining form of \"ten\": DEDR 3918 lists Tamil muppatu, \"thirty\", and nāṟpatu, \"forty\", built the same way, and DEDR 784 lists Tamil eṇ-patu, \"eighty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: the digits are worn, some more than others",
           "segments": [
@@ -113,7 +124,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -162,7 +173,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -193,7 +204,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a65cf50941cb3419",
+      "sourceHash": "fnv1a64:cfbc23c446c6dd6f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -254,7 +265,7 @@
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "എൺപത് eṇpathŭ 80. built from: eight tens.",
+                "എൺപത് eṇpatŭ 80. built from: eight tens.",
                 "തൊണ്ണൂറ് 90. built from: a hundred, reduced.",
                 "നൂറ് 100. built from: itself."
               ]
@@ -271,6 +282,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൊണ്ണൂറ് നൂറ് (toṇṇūṟŭ nūṟŭ): nūṟŭ, \"a hundred\", is native Dravidian, one word with Tamil nūṟu, Kannada nūṟu and Telugu nūṟu (DEDR 3729). toṇṇūṟŭ, \"ninety\", ends in the same hundred-word; its first part is an old element whose meaning is disputed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -319,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -481,9 +503,9 @@
     {
       "id": "ML-R88-numbers-recall",
       "sequence": 3110,
-      "title": "(counting past twenty) (irupathinŭ mēle enna ōrmma) — from cold",
+      "title": "(counting past twenty) (irupatinŭ mēle enna ōrmma) — from cold",
       "headword": "(counting past twenty)",
-      "romanization": "irupathinŭ mēle enna ōrmma",
+      "romanization": "irupatinŭ mēle enna ōrmma",
       "gloss": "cold retrieval of the tens, the one that breaks the run, a hundred, and how a ten joins a digit",
       "script": "malayalam",
       "modality": "sight",
@@ -491,7 +513,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e46796a7723ad5a9",
+      "sourceHash": "fnv1a64:aba8bf581b68a9a9",
       "notice": {
         "modality": "sight",
         "needs": [

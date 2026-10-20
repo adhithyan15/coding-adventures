@@ -14,6 +14,9 @@ Before the new one: say the German for a lift, then the German for to fly.
 You'll want to know: der Teppich.
 der Teppich — "a rug, a carpet".
 
+The word, taken apart.
+Teppich from Old High German teppih, from Latin tapētum, "carpet, tapestry" (EtymDB 2.1 has the Latin word), itself from Greek — borrowed. English tapestry shares the word.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the German for to fly, then the German for a rug.
 
 You'll want to know: der Fernseher.
 der Fernseher — "a television".
+
+The word, taken apart.
+Fernseher is the word for "far" + sehen, "to see", + -er: "the far-seer". It translates television piece by piece, Greek tēle, "far", + Latin vīsiō, "seeing". sehen from Proto-Germanic sehwaną. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the German for a rug, then the German for a television.
 You'll want to know: der Computer.
 der Computer — "a computer".
 
+The word, taken apart.
+Computer from English computer, from compute + -er (EtymDB 2.1), and compute from Latin computāre, "to reckon" — borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the German for a television, then the German for a compu
 You'll want to know: der Kühlschrank.
 der Kühlschrank — "a fridge".
 
+The word, taken apart.
+Kühlschrank is the word for "cool" + Schrank, "cupboard": a cooling cupboard. The "cool" word, Old High German kuoli, is listed in EtymDB 2.1 beside English cool.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the German for a computer, then the German for a fridge.
 
 You'll want to know: der Herd.
 der Herd — "a cooker".
+
+The word, taken apart.
+Herd from Old High German herd from Proto-Germanic herþaz, "hearth" — inherited, the same word as English hearth. (EtymDB 2.1) A cooker took over the hearth's job.
 
 What you've built.
 One more word for this chapter.

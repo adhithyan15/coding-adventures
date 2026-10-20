@@ -48,7 +48,7 @@ coincidir — to coincide, and in everyday use to clash.
 Me coincide con el trabajo — it clashes with work. That is the ordinary reason somebody gives for not taking a place.
 
 The word, taken apart.
-co- together, plus the same -incidir family as decidir — things falling together.
+co- together, plus incidir, "to fall upon", from Latin cadere, "to fall" — things falling together. It only looks like decidir, whose root is caedere, "to cut".
 Your English eye can read it without help, and that is the point worth taking:
 [a table of 3 rows, read aloud]
 coincidir means coincide.
@@ -82,7 +82,7 @@ equivocarse — to be mistaken, to get it wrong.
 Nos hemos equivocado — we have made a mistake. It is how a shop apologises without naming who is at fault.
 
 The word, taken apart.
-aequus equal, plus vox voice. Equal voice — two things that sound the same and get taken for each other.
+Late Latin aequivocāre (EtymDB 2.1): aequus equal, plus vox voice. Equal voice — two things that sound the same and get taken for each other.
 That is a precise picture of what a mistake is, and the same two pieces give you a word you may already recognise:
 [a table of 2 rows, read aloud]
 word: equivocarse. the equal voice in it: to confuse two things.
@@ -116,13 +116,15 @@ You'll want to know: tardar.
 tardar — to take time, to be long about something.
 Tardo una hora — it takes me an hour. ¿Cuánto tarda? — how long does it take?
 
+The word, taken apart.
+tardar from Latin tardare, "to slow down, to delay" (Lewis & Short), from tardus, "slow" — the tardus behind la tarde. El retraso is another family, built on tras, "behind", Latin trans.
+
 Grammar Lens: the delay and the duration.
 el retraso and tardar are not interchangeable, and the difference is worth having exactly:
 [a table of 2 rows, read aloud]
 you mean: it is later than promised. you say: lleva retraso.
 you mean: it takes this long. you say: tarda una hora.
 A journey that tarda two hours is not late — two hours is what the journey costs. A train with retraso has broken a promise. English blurs both into late and takes, and a reader who maps one to one will misread a station announcement.
-Both come from tardus, slow, so the shared root is real and the split is recent.
 
 Guided Practice.
 [pause 1 second]
@@ -157,6 +159,7 @@ Spanish verb: comer. English needs: to have lunch.
 Spanish verb: cenar. English needs: to have dinner.
 comer is the trap in that list. You already hold it as to eat, and in Spain it also means specifically to have lunch — ¿has comido? at four in the afternoon is asking whether you have had lunch, not whether you have eaten anything at all today.
 So the three verbs are a set, and comer belongs to it as well as to the general sense.
+Cenar is Latin cenare, from cena, the main meal of the Roman day (Lewis & Short).
 
 Guided Practice.
 [pause 1 second]

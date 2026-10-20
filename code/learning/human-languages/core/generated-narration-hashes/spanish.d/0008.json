@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 8,
-  "sourceHash": "fnv1a64:573769b84d845426",
+  "sourceHash": "fnv1a64:6f6ead8179d650ad",
   "lessonIds": [
     "ES-C04-estar",
     "ES-C04-estar-estado",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch08.txt",
   "json": "spanish/narration/ch08.json",
-  "textHash": "fnv1a64:fa8fd2b0ac8656d9",
-  "jsonHash": "fnv1a64:845e2b952d0111a0",
+  "textHash": "fnv1a64:7551fb0d9917e9f5",
+  "jsonHash": "fnv1a64:adf57a48700bdb0b",
   "findings": []
 }

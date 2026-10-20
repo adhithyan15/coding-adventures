@@ -14,7 +14,8 @@ romanization: "bhallūkaḥ"
 concept_tag: SA-THINGS112-BHALLUKAH
 prerequisites: [SA-C112-naksatram, SA-C112-suryah]
 sounds: []
-roots: []
+roots: [sanskrit-bhalluka]
+etymology_hook: "bhallūka 'bear': CDIAL 9415 weighs an Indo-European and an Austroasiatic source; origin disputed; Hindi bhālū"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C112-suryah]
 <!-- hl-knowledge: introduces=[SA-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **भल्लूकः** — *bhallūkaḥ* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhallūka* "a bear" has a disputed origin: CDIAL 9415 reports EWA's view that it may be Indo-European with an expressive *-ll-*, and Przyluski's that it is Austroasiatic. It lives on as Hindi *bhālū* "bear" (CDIAL 9415).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

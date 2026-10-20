@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 96,
-  "sourceHash": "fnv1a64:bf22ecdc3dd3219e",
+  "sourceHash": "fnv1a64:d6a2315492c6d475",
   "lessonIds": [
     "MR-C96-phul",
     "MR-C96-pan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch96.txt",
   "json": "marathi/narration/ch96.json",
-  "textHash": "fnv1a64:b55afffcc06582e0",
-  "jsonHash": "fnv1a64:1c8e260d0b5d216b",
+  "textHash": "fnv1a64:f7867fc9023df8eb",
+  "jsonHash": "fnv1a64:20a9275400cb1eb4",
   "findings": []
 }

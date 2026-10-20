@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C413-tamponare",
+    "language": "italian",
+    "chapter": 413,
+    "sequence": 23510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed24a81e395fbc4b"
+  },
+  "findings": []
+}

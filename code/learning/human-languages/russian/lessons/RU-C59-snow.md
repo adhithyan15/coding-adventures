@@ -14,7 +14,8 @@ romanization: "sneg"
 concept_tag: RU-WEATHER-SNOW
 prerequisites: [RU-C58-cloud, RU-C59-rain]
 sounds: []
-roots: []
+roots: [pie-sneygwh]
+etymology_hook: "снег ← Proto-Slavic *sněgŭ; Latin nix, Greek nipha and English snow are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C59-rain]
 <!-- hl-knowledge: introduces=[RU-LEX-C59-WEATHER-02]; assesses=[] -->
 
 **снег** (*sneg*) — "snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**снег** ← Proto-Slavic *\*sněgŭ* — inherited. Vasmer lists Lithuanian *sniẽgas*, Gothic *snaiws*, Greek *nípha* and Latin *nix*, all "snow": English *snow* is a cousin, from PIE *\*sneygʷʰ-*, "to snow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

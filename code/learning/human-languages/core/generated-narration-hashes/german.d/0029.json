@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:6974ef74f86450db",
+  "sourceHash": "fnv1a64:d220914eb38d2ca3",
   "lessonIds": [
     "GE-C16-perfekt-sein",
     "GE-C16-kommen",
@@ -17,7 +17,7 @@
   "drivablePrefix": 8,
   "text": "german/narration/ch29.txt",
   "json": "german/narration/ch29.json",
-  "textHash": "fnv1a64:011c7848e209922b",
-  "jsonHash": "fnv1a64:16f2075c42f02f02",
+  "textHash": "fnv1a64:053ef820432d5bee",
+  "jsonHash": "fnv1a64:d9d0a1a5d1275225",
   "findings": []
 }

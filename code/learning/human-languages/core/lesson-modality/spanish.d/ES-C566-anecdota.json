@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C566-anecdota",
+    "language": "spanish",
+    "chapter": 566,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84f1869551b6a533"
+  },
+  "findings": []
+}

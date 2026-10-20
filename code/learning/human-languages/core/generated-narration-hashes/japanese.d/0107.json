@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 107,
-  "sourceHash": "fnv1a64:c2d27e6d221a7e2b",
+  "sourceHash": "fnv1a64:688ebbc30a2f9ac7",
   "lessonIds": [
     "JA-C107-doro",
     "JA-C107-hokori",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch107.txt",
   "json": "japanese/narration/ch107.json",
-  "textHash": "fnv1a64:6a5f4ab7e37877bc",
-  "jsonHash": "fnv1a64:662a2282da4737d4",
+  "textHash": "fnv1a64:d653b34afcc94d6b",
+  "jsonHash": "fnv1a64:fdcee17ffc3971ad",
   "findings": []
 }

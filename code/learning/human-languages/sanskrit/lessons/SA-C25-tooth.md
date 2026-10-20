@@ -14,7 +14,8 @@ romanization: "dantaḥ"
 concept_tag: SA-BODY-TOOTH
 prerequisites: [SA-C25-head, SA-C23-daughter, SA-C24-cloth]
 sounds: []
-roots: []
+roots: [danta-sanskrit]
+etymology_hook: "danta 'tooth' is inherited, the same word as Latin dēns, Greek odous and English tooth (CDIAL 6152)"
 duration:
   max_seconds: 210
 requires:

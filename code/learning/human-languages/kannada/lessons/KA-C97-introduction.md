@@ -11,7 +11,8 @@ romanization: "paricaya"
 concept_tag: KA-COUR-INTRO
 prerequisites: [KA-C96-wellbeing, KA-C97-pardon]
 sounds: []
-roots: []
+roots: [sanskrit-paricaya]
+etymology_hook: "paricaya ← Sanskrit paricaya 'acquaintance', a tatsama (CDIAL 7807)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C97-pardon]
 
 **ನಿಮ್ಮ ಪರಿಚಯ ಸಂತೋಷ** (*nimma paricaya santōṣa*) — "pleased to meet you",
 literally "your acquaintance is a joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪರಿಚಯ** (*paricaya*) is Sanskrit *paricaya*, "acquaintance", taken over whole as a learned loan, a tatsama (CDIAL 7807).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

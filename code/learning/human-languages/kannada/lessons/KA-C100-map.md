@@ -11,7 +11,8 @@ romanization: "nakṣe"
 concept_tag: KA-FIND-MAP
 prerequisites: [KA-C99-stomachache, KA-C99-weight]
 sounds: []
-roots: []
+roots: [arabic-naqsha]
+etymology_hook: "nakṣe ← Hindustani naqśā 'map, plan', from Arabic naqš 'a drawing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C99-weight]
 in **ಕ್ಷಮಿಸಿ**.
 
 **ನಕ್ಷೆ ತೋರಿಸಿ** (*nakṣe tōrisi*) — "please show me the map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಕ್ಷೆ** (*nakṣe*) came through Hindustani *naqśā*, "a map, a plan", which goes back to Arabic *naqš*, "a drawing, an engraving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

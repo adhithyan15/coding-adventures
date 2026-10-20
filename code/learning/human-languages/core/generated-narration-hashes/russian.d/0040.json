@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 40,
-  "sourceHash": "fnv1a64:ef410e02a45d607d",
+  "sourceHash": "fnv1a64:018fa252ba8c0a10",
   "lessonIds": [
     "RU-C40-spat",
     "RU-C40-sidet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch40.txt",
   "json": "russian/narration/ch40.json",
-  "textHash": "fnv1a64:e45f30d3cc0f211e",
-  "jsonHash": "fnv1a64:190b493ac1d376ee",
+  "textHash": "fnv1a64:e5e77d95b7c319da",
+  "jsonHash": "fnv1a64:2fbdd475d72aef63",
   "findings": []
 }

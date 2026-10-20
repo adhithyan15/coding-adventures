@@ -13,7 +13,8 @@ gloss: "rarely"
 concept_tag: IT-TEMPO153-RARAMENTE
 prerequisites: [IT-C152-sonno, IT-C152-sogno]
 sounds: []
-roots: []
+roots: [rarus-latin]
+etymology_hook: "raramente — raro 'rare' ← Latin rarus + the adverb ending -mente"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C152-sogno]
 <!-- hl-knowledge: introduces=[IT-LEX-C153-TEMPO153-01]; assesses=[] -->
 
 **raramente** — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raramente** — built from *raro*, "rare" ← Latin *rarus*, "thin, scattered" (EtymDB 2.1), with *-mente*, the adverb ending, which began as Latin *mente*, "with a mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

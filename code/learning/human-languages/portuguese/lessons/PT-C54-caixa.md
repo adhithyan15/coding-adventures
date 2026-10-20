@@ -13,7 +13,8 @@ gloss: "a box"
 concept_tag: PT-COISAS3-CAIXA
 prerequisites: [PT-C53-relogio, PT-C54-oculos]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "caixa ← Catalan caixa 'box', from Latin capsa — English case and cash share capsa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C54-oculos]
 <!-- hl-knowledge: introduces=[PT-LEX-C54-COISAS3-02]; assesses=[] -->
 
 **a caixa** — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caixa** — borrowed, most likely from Catalan *caixa*, "box". EtymDB 2.1 traces it only to Old Portuguese *cajxa*; it derives the Catalan word, through Old Provençal *caissa*, from Latin *capsa*, "box".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

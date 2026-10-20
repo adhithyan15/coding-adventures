@@ -13,6 +13,9 @@ You'll want to know: आना.
 आना (ānā) — "to come".
 Every Hindi infinitive ends in -ना (-nā), so this is 'to come' in the form a dictionary lists.
 
+The word, taken apart.
+आना (ānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under āpayati, "causes to reach", from the verb whose old form āpa meant "came towards"; Prakrit already had āvaï, "comes" (CDIAL 1200).
+
 What you've built.
 Take off -ना and add the endings you already know: आता (ātā, masculine), आती (ātī, feminine), आते (āte, respectful or plural). The action-chaining lesson will put आता हूँ after a chained action; now the form will already be yours.
 
@@ -40,6 +43,9 @@ Before the new one: what did ānā mean?
 You'll want to know: बैठना.
 बैठना (baiṭhnā) — "to sit".
 Same -ना ending. Once you see it, you can spot an infinitive anywhere in a text without knowing the verb.
+
+The word, taken apart.
+बैठना (baiṭhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from upaviśati, "sits down" (CDIAL 2245). The -ṭh- goes back to its past form upaviṣṭa, "seated".
 
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
@@ -69,6 +75,9 @@ You'll want to know: खड़ा होना.
 खड़ा होना (khaṛā honā) — "to stand".
 Two words: an adjective khaṛā, 'upright', plus honā, 'to be'. Hindi builds many verbs this way, from a word plus a light verb.
 
+The word, taken apart.
+खड़ा होना (khaṛā honā) is two inherited words. खड़ा (khaṛā), "standing", is listed by CDIAL under Sanskrit khaḍaka, "a bolt, a post", for which it sets up an older sense "erect" (CDIAL 3784). The same entry reconstructs a verb khaḍati, "stands", but lists only a few hill-dialect verbs under it; khaṛā sits with the post. होना (honā), "to be, to become", comes from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -96,6 +105,9 @@ Before the new one: what did khaṛā honā mean?
 You'll want to know: देना.
 देना (denā) — "to give".
 The plain 'give', and one of the light verbs Hindi uses to build compounds of its own.
+
+The word, taken apart.
+देना (denā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more everyday action. That closes the run: four everyday actions, each met on its own.

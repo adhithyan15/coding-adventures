@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:d57a2dc28144f1a8",
+  "lessonIds": [
+    "PT-C462-abafado",
+    "PT-C462-seca",
+    "PT-C462-aragem",
+    "PT-C462-insolacao",
+    "PT-C462-transpirar"
+  ],
+  "tex": "portuguese/book/chapters/ch462-o-calor.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C337-insaporire",
+  "pathSegment": "IT-PATH-337-CONDIRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-337-CONDIRE",
+      "order": 2
+    }
+  ]
+}

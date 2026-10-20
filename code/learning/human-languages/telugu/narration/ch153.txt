@@ -12,6 +12,9 @@ Before the new one: say the Telugu for shade, then the Telugu for a stream.
 You'll want to know: ఎవరూ.
 ఎవరూ — evarū — "nobody (with a negative verb)". Telugu negates a past verb with లేదు (lēdu) joined onto it: ఎవరూ రాలేదు — evarū rālēdu — "Nobody came." To say something is not a thing, it uses కాదు (kādu): ఇది నా ఇల్లు కాదు — idi nā illu kādu — "This is not my house."
 
+The word, taken apart.
+ఎవరూ (evarū) is native Dravidian: evaru, "who" (DEDR 5151), with -ū, "even, any": with a negative verb, "nobody".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a stream, then the Telugu for nobody.
 
 You'll want to know: ఎప్పుడూ.
 ఎప్పుడూ — eppuḍū — "never (with a negative verb); always". నేను ఎప్పుడూ మాంసం తినను — nēnu eppuḍū māṁsaṁ tinanu — "I never eat meat."
+
+The word, taken apart.
+ఎప్పుడూ (eppuḍū) is native Dravidian: eppuḍu, "when" (DEDR 5151, 4559), with -ū, "even, any".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for nobody, then the Telugu for never.
 You'll want to know: ఎక్కడా.
 ఎక్కడా — ekkaḍā — "nowhere, not anywhere (with a negative verb)". నాకు ఆ పుస్తకం ఎక్కడా దొరకలేదు — nāku ā pustakaṁ ekkaḍā dorakalēdu — "I couldn't find that book anywhere."
 
+The word, taken apart.
+ఎక్కడా (ekkaḍā) is native Dravidian: ekkaḍa, "where" (DEDR 5151), with the ending -ā: with a negative verb, "nowhere".
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Telugu for never, then the Telugu for nowhere.
 
 You'll want to know: ఎవరైనా.
 ఎవరైనా — evarainā — "anyone, someone". A yes-or-no question ends in -ఆ (-ā): ఉన్నారు becomes ఉన్నారా. అక్కడ ఎవరైనా ఉన్నారా? — akkaḍa evarainā unnārā? — "Is anyone there?"
+
+The word, taken apart.
+ఎవరైనా (evarainā) is native Dravidian: evaru, "who" (DEDR 5151), and ayinā, "even if it be", from agu, "to be" (DEDR 333).
 
 What you've built.
 One more word for this chapter.
@@ -128,6 +140,9 @@ Before the new one: say the Telugu for nowhere, then the Telugu for anyone.
 You'll want to know: ఏమైనా.
 ఏమైనా — ēmainā — "anything, something". మీకు ఏమైనా కావాలా? — mīku ēmainā kāvālā? — "Do you need anything?"
 [once you have stopped driving — read: two words again — ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ]
+
+The word, taken apart.
+ఏమైనా (ēmainā) is native Dravidian: ēmi, "what" (DEDR 5151), and ayinā, "even if it be" (DEDR 333).
 
 What you've built.
 One more word for this chapter.

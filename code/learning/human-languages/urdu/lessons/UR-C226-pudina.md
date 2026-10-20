@@ -14,7 +14,8 @@ romanization: "pudīnā"
 concept_tag: UR-CHIZ226-PUDINA
 prerequisites: [UR-C225-fail, UR-C226-dhaniya]
 sounds: []
-roots: []
+roots: [persian-pudina]
+etymology_hook: "pudīnā: usually traced to Persian pūdina 'mint'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C226-dhaniya]
 <!-- hl-knowledge: introduces=[UR-LEX-C226-CHIZ226-02]; assesses=[] -->
 
 **پودینہ** — *pudīnā* — "mint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پودینہ** (*pudīnā*) is a loan, usually traced to Persian *pūdina*, "mint".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

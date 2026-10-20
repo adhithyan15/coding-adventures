@@ -14,6 +14,7 @@ concept_tag: IT-VERB-SPRECARE
 prerequisites: [IT-C240-spingere, IT-C240-tirare]
 sounds: []
 roots: []
+etymology_hook: "sprecare — origin uncertain; EtymDB records no source"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C240-tirare]
 <!-- hl-knowledge: introduces=[IT-LEX-C240-VERBI240-03]; assesses=[] -->
 
 **sprecare** — "to waste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sprecare** — its origin is uncertain. EtymDB 2.1 records the word but not where it came from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

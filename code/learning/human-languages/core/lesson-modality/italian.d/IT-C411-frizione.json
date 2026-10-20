@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C411-frizione",
+    "language": "italian",
+    "chapter": 411,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2783f618a921dba"
+  },
+  "findings": []
+}

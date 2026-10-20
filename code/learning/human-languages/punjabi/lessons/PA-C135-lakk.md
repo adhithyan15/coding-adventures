@@ -14,7 +14,8 @@ romanization: "lakk"
 concept_tag: PA-THINGS135-LAKK
 prerequisites: [PA-C135-chati, PA-C135-pitth]
 sounds: []
-roots: []
+roots: [indo-aryan-lakka-waist]
+etymology_hook: "lakk ← *lakka 'waist, loins', a reconstructed form; a tadbhava (CDIAL 10879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C135-pitth]
 <!-- hl-knowledge: introduces=[PA-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **ਲੱਕ** — *lakk* — "a waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲੱਕ** (*lakk*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lakka*, "waist, loins", a form CDIAL reconstructs from its descendants (CDIAL 10879).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

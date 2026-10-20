@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 214,
-  "sourceHash": "fnv1a64:68ff8770cb42b701",
+  "sourceHash": "fnv1a64:6aeba0cff112a66d",
   "lessonIds": [
     "BN-C214-chhobi-tola",
     "BN-C214-pas-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch214.txt",
   "json": "bengali/narration/ch214.json",
-  "textHash": "fnv1a64:5419b146a067ec1d",
-  "jsonHash": "fnv1a64:feb6d5010df836f9",
+  "textHash": "fnv1a64:1ef034c558bb5986",
+  "jsonHash": "fnv1a64:89f15a21c46be0e5",
   "findings": []
 }

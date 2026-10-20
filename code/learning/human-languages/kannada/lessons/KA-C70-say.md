@@ -11,7 +11,8 @@ romanization: "hēḷu"
 concept_tag: KA-VERB-SAY
 prerequisites: [KA-C69-why, KA-S137-letter-la, KA-C44-speak, KA-C55-path, KA-C54-tree, KA-C53-cloud, KA-C42-old, KA-C42-new]
 sounds: []
-roots: []
+roots: [pesu-speak-dravidian]
+etymology_hook: "hēḷu: native Dravidian, one word with Tamil pēcu (DEDR 4430)"
 duration:
   max_seconds: 210
 requires:
@@ -53,6 +54,11 @@ tell me the way." The **-ಇ** on the end is the polite request ending, so ಹ�
 The reason this verb arrives here rather than with the other verbs is what comes
 next: it is the verb a reported sentence hangs on, and until the following lesson
 there was nothing to hang.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೇಳು** (*hēḷu*) is native Dravidian, one word with Tamil *pēcu* (DEDR 4430). DEDR gives the older Kannada *pēḻ*, "to say": the *p-* has become *h-* and the *ḻ* has become *ḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: TONE-SHIFT
 prerequisites: [ES-C272-tomar-el-pelo]
 sounds: [vowel-e, vowel-o]
 roots: [mirari]
+etymology_hook: "mira ← mirar, Latin mirari 'to marvel at' — English miracle, admire, mirror"
 duration:
   max_seconds: 240
 requires:
@@ -50,7 +51,7 @@ reviews_of: [ES-C272-tomar-el-pelo]
 **mira** — "look."
 
 It is the command form of *mirar*, "to look" — Latin **mirari**, "to wonder at,
-to marry at", which also gave English **miracle**, **admire** and **mirror**.
+to marvel at", which also gave English **miracle**, **admire** and **mirror**.
 
 But dropped at the start of a sentence it has stopped being a command. Nobody is
 being asked to look at anything. *Mira, no es así* — "look, it isn't like

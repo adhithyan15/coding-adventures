@@ -14,7 +14,8 @@ romanization: "kaḷeda"
 concept_tag: KA-HINDE155-KALEDA
 prerequisites: [KA-C155-ittichege, KA-C155-igagale]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass]
+etymology_hook: "kaḷeda: native, 'spent, gone by', from kaḷe 'to spend (time)' (DEDR 1356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C155-igagale]
 <!-- hl-knowledge: introduces=[KA-LEX-C155-HINDE155-03]; assesses=[] -->
 
 **ಕಳೆದ** — *kaḷeda* — "last, previous". **ಕಳೆದ ವರ್ಷ ನಾನು ಮೈಸೂರಿಗೆ ಹೋದೆ** — *kaḷeda varṣa nānu maisūrige hōde* — "Last year I went to Mysuru."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಳೆದ** (*kaḷeda*) is native Dravidian: the "which has been" form of *kaḷe*, "to send forth, spend (time)", which DEDR 1356 lists. Last week is the week that has been spent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nuṇa paṟayuka"
 concept_tag: ML-VERB-NUNA-PARAYUKA
 prerequisites: [ML-C227-parkku-ceyyuka, ML-C228-paratippetuka]
 sounds: []
-roots: []
+roots: [dravidian-nunai-lie, dravidian-parai-say]
+etymology_hook: "nuṇa paṟayuka: native Dravidian, nuṇa 'a lie' (DEDR 3703) + paṟayuka 'say' (DEDR 4031)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C228-paratippetuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C228-KRIYA228-02]; assesses=[] -->
 
 **നുണ പറയുക** — *nuṇa paṟayuka* — "to tell a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നുണ പറയുക** (*nuṇa paṟayuka*) is native Dravidian: *nuṇa*, "calumny, a lie" (DEDR 3703, with Tamil *nuṇai*), and *paṟayuka*, "to say" (DEDR 4031).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

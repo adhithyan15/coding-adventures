@@ -14,7 +14,8 @@ romanization: "tablā"
 concept_tag: HI-THG264-TABLA
 prerequisites: [HI-C263-basuri, HI-C264-sitar]
 sounds: []
-roots: []
+roots: [arabic-tabl]
+etymology_hook: "tablā ← Arabic ṭabl 'a drum', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C264-sitar]
 <!-- hl-knowledge: introduces=[HI-LEX-C264-THG264-02]; assesses=[] -->
 
 **तबला** — *tablā* — "a tabla".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तबला** (*tablā*) is a loan from Arabic *ṭabl*, "a drum", which reached Hindi through Persian. Its Arabic root is *ṭ-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

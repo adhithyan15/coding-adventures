@@ -14,7 +14,8 @@ romanization: "simeṇṭu"
 concept_tag: TE-VASTUVU306-SIMENTU
 prerequisites: [TE-C305-vidiyo, TE-C306-ukku]
 sounds: []
-roots: []
+roots: [english-cement]
+etymology_hook: "simeṇṭu ← English cement"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C306-ukku]
 <!-- hl-knowledge: introduces=[TE-LEX-C306-VASTUVU306-02]; assesses=[] -->
 
 **సిమెంటు** — *simeṇṭu* — "cement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సిమెంటు** (*simeṇṭu*) is a loan from English *cement*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

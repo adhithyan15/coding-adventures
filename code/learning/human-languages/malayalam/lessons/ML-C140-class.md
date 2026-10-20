@@ -11,7 +11,8 @@ romanization: "klās"
 concept_tag: ML-CLASS-CLASS
 prerequisites: [ML-C140-pencil, ML-C140-paper]
 sounds: []
-roots: []
+roots: [english-class]
+etymology_hook: "klās ← English class, from Latin classis 'a division'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C140-paper]
 <!-- hl-knowledge: introduces=[ML-LEX-C140-SCHOOL-04]; assesses=[] -->
 
 **ക്ലാസ്** (*klās*) — "a class", a lesson or a classroom, from English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്ലാസ്** (*klās*) ← English *class*, from Latin *classis*, "a division of the people".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

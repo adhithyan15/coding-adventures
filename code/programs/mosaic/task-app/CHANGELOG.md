@@ -4,8 +4,134 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.2` accumulate here until the next version is
+Entries added after `task-app-v0.5.8` accumulate here until the next version is
 cut.
+
+### Changed — web host theme colours are generated from the stylesheets
+
+The new `tests/host_theme_tokens.rs` reads `TaskApp.{light,dark}.msl` with
+mosstyle and writes `host/web/src/theme-tokens.generated.ts`. That module is
+the eight `part.property` values the web host has to paint before or around
+the emitted component. The test fails when the committed module is stale, and
+it names any part or property the host reads that the stylesheet no longer has.
+This replaces hand-kept copies in `host/web/src/theme.ts`. See
+`host/web/CHANGELOG.md`.
+
+## [0.5.8] - 2026-10-16
+
+### Fixed — Qt milestone diamonds retain their authored rotation (#17675)
+
+Timeline milestone markers and their legend swatches retain centered 45-degree
+rotation in Qt. Both themes now measure 81 Qt style drops instead of 83;
+unsupported transforms remain reported. Release artifact coverage is unchanged.
+
+## [0.5.7] - 2026-10-16
+
+### Fixed — SwiftUI milestone markers retain their diamond rotation (#17502)
+
+TaskApp's timeline and calendar milestone squares now rotate by their authored
+45 degrees in SwiftUI. Single finite degree rotations preserve centered visual
+rotation and the original layout footprint; unsupported units, transform chains,
+and invalid angles remain explicit debt. The measured SwiftUI inventory falls
+from 59 to 57 style drops.
+
+## [0.5.6] - 2026-10-14
+
+### Fixed — SwiftUI drag-body gaps leave the degradation report (#17481)
+
+SwiftUI now recognizes the authored spacing already emitted by drag and drop
+body stacks. All four TaskApp gap false positives leave the measured inventory,
+reducing SwiftUI from 63 to 59 style drops. Unsupported values and parts reused
+on non-spacing primitives remain reported; drag behavior is unchanged.
+
+## [0.5.5] - 2026-10-13
+
+### Fixed — XAML preserves the seven-column calendar grid (#17394)
+
+XAML now lowers complete direct-child percentage groups to proportional Grid
+stars and the Calendar package's wrapping repeated day cells to a seven-column
+`UniformGridLayout`. Fresh strict generation retires the seven weekday widths,
+the repeated cell width, and `flex-wrap`, reducing the measured XAML style
+inventory from 38 to 29. Partial, mixed, invalid, and unsupported wrapping
+shapes remain explicit debt.
+
+### Fixed — Qt elevation shadows leave the degradation report (#17386)
+
+Qt now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits equivalent native `MultiEffect`
+depth. Fresh strict generation retires ten false-positive shadow omissions and
+reduces the measured Qt style inventory from 93 to 83. A raw shadow without
+elevation and the inset theme-toggle moon effect remain explicit debt.
+
+## [0.5.4] - 2026-10-12
+
+### Fixed — SwiftUI elevation tokens emit native shadows (#17365)
+
+SwiftUI now lowers supported `raised` and `overlay` elevation tokens to fixed
+native `.shadow` modifiers. Fresh strict generation retires ten elevation drops
+and ten paired non-inset shadow omissions, reducing the measured SwiftUI style
+inventory from 83 to 63. Standalone raw shadows, inset shadows, and unsupported
+elevation values remain explicit debt.
+
+### Fixed — Compose elevation shadows leave the degradation report (#17356)
+
+Compose now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Compose style inventory from 50 to 40. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Qt controls preserve fill widths (#17338)
+
+Qt now lowers exact `width: 100%` declarations on TaskApp inputs and buttons
+to `Layout.fillWidth: true`. Fresh strict generation retires all 15 affected
+control-width omissions and reduces the measured Qt style inventory from 108
+to 93. The three remaining Qt width drops are `Text` geometry; other
+percentages and mixed fixed/fill states remain explicit debt.
+
+## [0.5.3] - 2026-10-12
+
+### Fixed — Flutter conditional drag gaps emit complete Dart (#17313)
+
+Flutter now emits the shared gap helper whenever an undecorated drag/drop body
+starting with `If`/`Else` calls it, and decorated conditional bodies retain any
+following ordinary child in the evaluated vertical list. This prevents an
+undefined Dart helper and silent child loss without changing TaskApp's current
+style-degradation inventory or native drag semantics.
+
+### Fixed — Flutter elevation shadows leave the degradation report (#17308)
+
+Flutter now treats a non-inset `box-shadow` paired with a supported Mosaic
+`elevation` token as consumed when it emits the equivalent native depth. Fresh
+strict generation retires ten false-positive shadow omissions and reduces the
+measured Flutter style inventory from 79 to 69. A raw shadow without elevation
+and the inset theme-toggle moon effect remain explicit debt.
+
+### Fixed — Flutter preserves drag-and-drop child spacing (#17301)
+
+Flutter now applies authored `gap` values to the evaluated vertical child lists
+inside `HostDraggable` and `HostDropTarget`. Board-card single-child gaps remain
+safe no-ops, while the board-column and calendar drop targets preserve spacing
+between loop-produced cards and events. Fresh strict generation retires all
+four Flutter `gap` omissions and reduces the measured style inventory from 83
+to 79 without changing native drag, keyboard, or drop semantics.
+
+### Fixed — Flutter preserves the seven-column calendar layout (#17289)
+
+Flutter now lowers valid percentage widths on bounded direct row children to
+proportional flex shares and lowers wrapping rows to native `Wrap` widgets with
+fractionally sized children. TaskApp's seven weekday headers and 42 day cells
+therefore preserve their authored seven-column geometry. Fresh strict generation
+retires seven `width` omissions and the calendar grid's `flex-wrap` omission,
+reducing Flutter's measured style inventory from 91 to 83. Invalid percentages
+and percentages without a finite parent remain explicit debt.
+
+### Fixed — Flutter style-ratchet tests match the retired width debt (#17273)
+
+The focused native-control-contract suite now expects Flutter's measured 91
+style degradations and rejects an eighth dropped `width`, matching the
+post-#17254 baseline of seven. This is a test-only correction; it does not
+change TaskApp runtime or release coverage.
 
 ## [0.5.2] - 2026-10-11
 

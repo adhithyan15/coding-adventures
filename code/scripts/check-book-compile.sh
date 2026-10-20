@@ -73,6 +73,7 @@ STRICT=0
 MANIFEST=""
 BOOK_ROOT=""
 WANTED=()
+WANTED_COUNT=0
 for arg in "$@"; do
   case "$arg" in
     --strict) STRICT=1 ;;
@@ -110,7 +111,7 @@ for arg in "$@"; do
       sed -n '2,50p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
       exit 0 ;;
     -*) echo "unknown option: $arg" >&2; exit 2 ;;
-    *)  WANTED+=("$arg") ;;
+    *)  WANTED+=("$arg"); WANTED_COUNT=$((WANTED_COUNT + 1)) ;;
   esac
 done
 
@@ -211,6 +212,7 @@ SKIPPED=0
 # FAILED because "broken" and "unknown" are different findings, and only
 # `--strict` collapses the second into a non-zero exit.
 UNVERIFIED=()
+UNVERIFIED_COUNT=0
 
 # One converter, whichever is present. `convert` is NOT probed: on Windows that
 # name belongs to the NTFS filesystem conversion tool, and running it against an
@@ -325,6 +327,7 @@ compile_book() {
 # because it happens to exist. The static hostile-input test seam keeps its
 # legacy source-root discovery when materialization is disabled.
 BOOK_DIRS=()
+BOOK_DIR_COUNT=0
 if [ -n "$COMPILE_INPUT_ROOT" ]; then
   for generated_root in "$COMPILE_INPUT_ROOT"/*/book/book.tex; do
     [ -f "$generated_root" ] || continue
@@ -335,8 +338,9 @@ if [ -n "$COMPILE_INPUT_ROOT" ]; then
       exit 2
     fi
     BOOK_DIRS+=("$source_dir")
+    BOOK_DIR_COUNT=$((BOOK_DIR_COUNT + 1))
   done
-  if [ ${#BOOK_DIRS[@]} -eq 0 ]; then
+  if [ "$BOOK_DIR_COUNT" -eq 0 ]; then
     echo "CANNOT VERIFY: materialization produced no generated book roots." >&2
     exit 2
   fi
@@ -344,13 +348,17 @@ else
   for source_root in "$BOOKS"/*/book/book.tex; do
     [ -f "$source_root" ] || continue
     BOOK_DIRS+=("$(dirname "$source_root")")
+    BOOK_DIR_COUNT=$((BOOK_DIR_COUNT + 1))
   done
 fi
 
-for dir in "${BOOK_DIRS[@]}"; do
+# Bash 3.2 (the macOS system Bash) treats an empty array as unbound under
+# `set -u`. The conditional expansion yields zero words when there are no
+# source roots, preserving the strict zero-books verdict below.
+for dir in "${BOOK_DIRS[@]+"${BOOK_DIRS[@]}"}"; do
   track="$(basename "$(dirname "$dir")")"
 
-  if [ ${#WANTED[@]} -gt 0 ]; then
+  if [ "$WANTED_COUNT" -gt 0 ]; then
     found=0
     for want in "${WANTED[@]}"; do [ "$want" = "$track" ] && found=1; done
     [ "$found" = 1 ] || continue
@@ -410,16 +418,19 @@ for dir in "${BOOK_DIRS[@]}"; do
   # two array entries. Not an injection (every expansion below is quoted), but a
   # spurious failure is still a failure nobody can act on.
   svgs=()
+  svg_count=0
   # Use the MSYS find explicitly and avoid `sort -z`: Git Bash can resolve
   # `sort` to Windows' `sort.exe`, which consumes `-z` as a filename and leaves
   # this array empty. That would bypass both conversion and the required clean
   # skip, then report a misleading XeLaTeX failure for every illustrated book.
   # Enumeration order does not affect the gate; every SVG is converted first.
-  mapfile -d '' -t svgs \
-    < <(/usr/bin/find "$dir/figures" -name '*.svg' -type f -print0 2>/dev/null)
+  while IFS= read -r -d '' svg; do
+    svgs+=("$svg")
+    svg_count=$((svg_count + 1))
+  done < <(/usr/bin/find "$dir/figures" -name '*.svg' -type f -print0 2>/dev/null)
 
-  if [ ${#svgs[@]} -gt 0 ] && [ -z "$CONVERTER" ]; then
-    reason="$(printf '%d figure(s) need an SVG-to-PDF converter; none of rsvg-convert, inkscape or magick is on PATH (install librsvg2-bin)' "${#svgs[@]}")"
+  if [ "$svg_count" -gt 0 ] && [ -z "$CONVERTER" ]; then
+    reason="$(printf '%d figure(s) need an SVG-to-PDF converter; none of rsvg-convert, inkscape or magick is on PATH (install librsvg2-bin)' "$svg_count")"
     if [ "$STRICT" = 1 ]; then
       printf 'FAIL %-12s CANNOT VERIFY: %s\n' "$track" "$reason"
       FAILED=$((FAILED + 1))
@@ -428,10 +439,11 @@ for dir in "${BOOK_DIRS[@]}"; do
       SKIPPED=$((SKIPPED + 1))
     fi
     UNVERIFIED+=("$track: $reason")
+    UNVERIFIED_COUNT=$((UNVERIFIED_COUNT + 1))
     continue
   fi
 
-  for svg in "${svgs[@]}"; do
+  for svg in "${svgs[@]+"${svgs[@]}"}"; do
     # `find -type f` vetted the INPUT; the derived output path is unchecked, and
     # writing through a committed `figures/foo.pdf` symlink would land outside
     # the tree.
@@ -515,7 +527,7 @@ printf '\ncompiled %d, skipped %d, failed %d\n' "$COMPILED" "$SKIPPED" "$FAILED"
 # gate hollow in the first place: "compiled 0, skipped 1, failed 0" and exit 0.
 if [ "$STRICT" = 1 ] && [ "$COMPILED" = 0 ]; then
   echo "STRICT: no book was compiled, so this run verified nothing." >&2
-  if [ ${#UNVERIFIED[@]} -gt 0 ]; then
+  if [ "$UNVERIFIED_COUNT" -gt 0 ]; then
     printf '  %s\n' "${UNVERIFIED[@]}" >&2
   else
     echo "  no track matched the requested selection: ${WANTED[*]:-<all>}" >&2
@@ -531,9 +543,9 @@ fi
 
 # Lenient mode. Say plainly that this is weaker than the gate, so a green local
 # run is never read as the gate having passed.
-if [ ${#UNVERIFIED[@]} -gt 0 ]; then
+if [ "$UNVERIFIED_COUNT" -gt 0 ]; then
   echo
-  echo "NOTE: this was a lenient (non-gate) run and ${#UNVERIFIED[@]} track(s) were NOT verified:"
+  echo "NOTE: this was a lenient (non-gate) run and $UNVERIFIED_COUNT track(s) were NOT verified:"
   printf '  %s\n' "${UNVERIFIED[@]}"
   echo "CI runs this script with --strict, where each of those is a failure."
 fi

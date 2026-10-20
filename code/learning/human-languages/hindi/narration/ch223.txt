@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a problem, then the Hindi for a remedy.
 You'll want to know: आदत.
 आदत — ādat — "a habit".
 
+The word, taken apart.
+आदत (ādat) is a loan from Arabic ʿāda, "custom, habit", which reached Hindi through Persian. Its Arabic root is ʿ-w-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a remedy, then the Hindi for a habit.
 
 You'll want to know: शौक़.
 शौक़ — śauq — "a hobby, a liking".
+
+The word, taken apart.
+शौक़ (śauq) is a loan from Arabic shawq, "longing, desire", which reached Hindi through Persian. Its Arabic root is sh-w-q (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a habit, then the Hindi for a hobby.
 You'll want to know: सपना.
 सपना — sapnā — "a dream".
 
+The word, taken apart.
+सपना (sapnā) goes back to Sanskrit svapna, "sleep, dream" (CDIAL 13904), though CDIAL does not list the Hindi form. The dream-words of the sister languages, such as Gujarati samṇũ, sit under a separate form supna, "dream" (CDIAL 13481), and Hindi is not among them either.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a hobby, then the Hindi for a dream.
 You'll want to know: खेलकूद.
 खेलकूद — khelkūd — "sport, games".
 
+The word, taken apart.
+खेलकूद (khelkūd) is "play-and-jump": khel, from a reconstructed khel-, "play" (CDIAL 3918), and kūd, from Sanskrit kūrdati, "leaps", which CDIAL takes, probably, from Dravidian (CDIAL 3412).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a dream, then the Hindi for sport.
 
 You'll want to know: गेंद.
 गेंद — gẽd — "a ball".
+
+The word, taken apart.
+गेंद (gẽd) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from genduka, "ball for play" (CDIAL 4248). CDIAL notes that the related kanduka has been traced to Dravidian.
 
 What you've built.
 One more word for this chapter.

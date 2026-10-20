@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 577,
+  "sourceHash": "fnv1a64:01d919922a378b63",
+  "lessonIds": [
+    "ES-C577-argumentar",
+    "ES-C577-objecion",
+    "ES-C577-convencido",
+    "ES-C577-razonable",
+    "ES-C577-logico"
+  ],
+  "tex": "spanish/book/chapters/ch577-defender-una-idea.tex"
+}

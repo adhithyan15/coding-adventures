@@ -14,7 +14,8 @@ romanization: "khasira"
 concept_tag: AR-VERB-KHASIRA
 prerequisites: [AR-C110-adat, AR-C110-malaka]
 sounds: []
-roots: []
+roots: [kh-s-r]
+etymology_hook: "khasira: built on the root kh-s-r, 'to lose, to suffer loss' (Lane); khasira is the plain verb, 'he lost'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C110-malaka]
 <!-- hl-knowledge: introduces=[AR-LEX-C110-CAN110-03]; assesses=[] -->
 
 **خسر** — *khasira* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خسر** (*khasira*) is built on the native Arabic root *kh-s-r*, "to lose, to suffer loss" (Lane). *Khasira* is the plain verb, "he lost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

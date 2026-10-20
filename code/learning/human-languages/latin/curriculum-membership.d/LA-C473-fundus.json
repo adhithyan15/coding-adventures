@@ -1,0 +1,11 @@
+{
+  "id": "LA-C473-fundus",
+  "pathSegment": "LA-PATH-473-RUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-473-RUS",
+      "order": 1
+    }
+  ]
+}

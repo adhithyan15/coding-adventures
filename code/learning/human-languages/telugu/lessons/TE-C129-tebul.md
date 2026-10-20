@@ -14,7 +14,8 @@ romanization: "ṭēbul"
 concept_tag: TE-THINGS129-TEBUL
 prerequisites: [TE-C129-binde, TE-C129-biruva]
 sounds: []
-roots: []
+roots: [english-table]
+etymology_hook: "ṭēbul ← English table"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C129-biruva]
 <!-- hl-knowledge: introduces=[TE-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **టేబుల్** — *ṭēbul* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టేబుల్** (*ṭēbul*) is a loan from English *table*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prema"
 concept_tag: SA-WEL239-PREMA
 prerequisites: [SA-C238-calakah, SA-C239-asa]
 sounds: []
-roots: []
+roots: [sanskrit-preman]
+etymology_hook: "preman 'love' ← root √prī 'please, love'; MW compares English friend (CDIAL 8999)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C239-asa]
 <!-- hl-knowledge: introduces=[SA-LEX-C239-WEL239-02]; assesses=[] -->
 
 **प्रेम** — *prema* — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prema* is the nominative of *preman*, "love", built on the root √prī, "to please, love" (MW; CDIAL 8999). The root is inherited from Indo-European: MW compares English *friend*. *Priya*, "dear", comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

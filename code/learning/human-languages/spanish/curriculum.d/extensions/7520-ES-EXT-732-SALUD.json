@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-732-SALUD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how I look after my health and when someone gets worse.",
+  "prerequisites": []
+}

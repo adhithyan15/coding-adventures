@@ -14,7 +14,8 @@ romanization: "marz"
 concept_tag: FA-MAKAN267-MARZ
 prerequisites: [FA-C267-varzeshgah, FA-C267-paytakht]
 sounds: []
-roots: []
+roots: [persian-marz]
+etymology_hook: "marz: inherited, usually traced to Middle Persian marz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C267-paytakht]
 <!-- hl-knowledge: introduces=[FA-LEX-C267-MAKAN267-03]; assesses=[] -->
 
 **مرز** — *marz* — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*marz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *marz*, "border". EtymDB takes it back to the Indo-European root *\*mereǵ-*, "edge, boundary", the root usually also given for English *mark*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

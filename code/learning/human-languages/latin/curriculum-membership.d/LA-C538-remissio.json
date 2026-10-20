@@ -1,0 +1,11 @@
+{
+  "id": "LA-C538-remissio",
+  "pathSegment": "LA-PATH-538-OTIU",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-538-OTIU",
+      "order": 4
+    }
+  ]
+}

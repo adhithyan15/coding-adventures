@@ -1,0 +1,11 @@
+{
+  "id": "IT-C271-se-piove",
+  "pathSegment": "IT-PATH-271-SE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-271-SE",
+      "order": 1
+    }
+  ]
+}

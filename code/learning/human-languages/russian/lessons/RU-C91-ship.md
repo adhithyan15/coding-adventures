@@ -14,7 +14,8 @@ romanization: "korábl'"
 concept_tag: RU-LOC91-SHIP
 prerequisites: [RU-C91-underground, RU-C91-tram]
 sounds: []
-roots: []
+roots: [greek-karabos]
+etymology_hook: "корабль is an old loan from Greek karabion, karabos 'a boat', first 'a crab'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C91-tram]
 <!-- hl-knowledge: introduces=[RU-LEX-C91-LOC91-04]; assesses=[] -->
 
 **корабль** (*korábl'*) — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**корабль** — an old loan from Greek *karábion*, *kárabos*, "a boat", first "a crab"; Vasmer dates it early because it has *б*, not *в*. Spanish *carabela*, "caravel", has the same source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

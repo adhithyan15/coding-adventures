@@ -14,7 +14,8 @@ romanization: "paratṇe"
 concept_tag: MR-VERB-PARATNE
 prerequisites: [MR-C153-utarne, MR-C153-pohocne]
 sounds: []
-roots: []
+roots: [sanskrit-parivartate]
+etymology_hook: "paratṇe ← Sanskrit parivartate 'revolves, turns round', a tadbhava (CDIAL 7872)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C153-pohocne]
 <!-- hl-knowledge: introduces=[MR-LEX-C154-ACT154-01]; assesses=[] -->
 
 **परतणे** — *paratṇe* — "to return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परतणे** (*paratṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *parivartate*, "revolves, turns round" (CDIAL 7872).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

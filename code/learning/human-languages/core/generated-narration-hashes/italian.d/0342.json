@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:1aaa4e552eef9aa5",
+  "lessonIds": [
+    "IT-C342-ammettere",
+    "IT-C342-concordare",
+    "IT-C342-consenso",
+    "IT-C342-compromesso",
+    "IT-C342-cedere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch342.txt",
+  "json": "italian/narration/ch342.json",
+  "textHash": "fnv1a64:0976a422183a230d",
+  "jsonHash": "fnv1a64:3ebe225f4a06e2a3",
+  "findings": []
+}

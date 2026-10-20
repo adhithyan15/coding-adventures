@@ -14,7 +14,8 @@ romanization: "bediriñcu"
 concept_tag: TE-VERB-BEDIRINCU
 prerequisites: [TE-C284-cimmu, TE-C284-pisuku]
 sounds: []
-roots: []
+roots: [dravidian-bedaru-fear]
+etymology_hook: "bediriñcu: native Dravidian, from bedaru 'to fear' (DEDR 4401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C284-pisuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C285-KRIYA285-01]; assesses=[] -->
 
 **బెదిరించు** — *bediriñcu* — "to threaten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బెదిరించు** (*bediriñcu*) is native Dravidian, made from *bedaru*, "to fear, be startled", which DEDR 4401 lists with Kannada *bedaṟu*, "to take fright": "to frighten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

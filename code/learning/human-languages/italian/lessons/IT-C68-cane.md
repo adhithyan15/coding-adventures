@@ -13,7 +13,8 @@ gloss: "a dog"
 concept_tag: IT-ANIMALI1-CANE
 prerequisites: [IT-C67-vento, IT-C67-fuoco]
 sounds: []
-roots: []
+roots: [canis-latin]
+etymology_hook: "cane ← Latin canis 'dog' — English canine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C67-fuoco]
 <!-- hl-knowledge: introduces=[IT-LEX-C68-ANIMALI1-01]; assesses=[] -->
 
 **il cane** — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cane** ← Latin *canis*, "dog" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

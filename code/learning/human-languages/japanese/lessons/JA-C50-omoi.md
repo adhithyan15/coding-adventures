@@ -14,7 +14,8 @@ romanization: "omoi"
 concept_tag: JA-ADJ50-OMOI
 prerequisites: [JA-C50-hiroi, JA-C50-semai]
 sounds: []
-roots: []
+roots: [japanese-omoi]
+etymology_hook: "omoi: native Japanese, inherited, not borrowed; kanji 重い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C50-semai]
 <!-- hl-knowledge: introduces=[JA-LEX-C50-ADJ50-05]; assesses=[] -->
 
 **おもい** — *omoi* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おもい** (*omoi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

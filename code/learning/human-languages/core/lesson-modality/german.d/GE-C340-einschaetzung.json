@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C340-einschaetzung",
+    "language": "german",
+    "chapter": 340,
+    "sequence": 18530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:891a4c7c8d57b656"
+  },
+  "findings": []
+}

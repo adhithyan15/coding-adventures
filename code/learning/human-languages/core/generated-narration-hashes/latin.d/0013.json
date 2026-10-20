@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 13,
-  "sourceHash": "fnv1a64:ba6c43e31b2958ff",
+  "sourceHash": "fnv1a64:c72181e0e0b85ea7",
   "lessonIds": [
     "LA-C13-hora"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch13.txt",
   "json": "latin/narration/ch13.json",
-  "textHash": "fnv1a64:23c993b6510cf1f7",
-  "jsonHash": "fnv1a64:a4535e668698c9a6",
+  "textHash": "fnv1a64:127327d9852cdee8",
+  "jsonHash": "fnv1a64:cd354963cc3927f1",
   "findings": []
 }

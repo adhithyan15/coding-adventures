@@ -57,6 +57,12 @@ and inheritable handles still pass to the child, because std spawns with
 that S-I3 asks for cannot be passed through stable `std`; that is D18S build
 step 8.
 
+`spawn_lock()` and `spawn(&mut Command)` (D18S P2.8b-1) are one process-wide
+spawn lock. The Windows applier holds it while the handles on its list are
+inheritable; every std spawn in the supervisor goes through `spawn`. So no std
+child, which on Windows inherits every inheritable handle, is created in that
+span, when a broker's key handles are among them.
+
 ## A verified executable
 
 The per-agent broker (D18S P2.6d) runs from a binary pinned by its SHA-256

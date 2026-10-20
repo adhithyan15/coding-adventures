@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C371-imprevisto",
+    "language": "portuguese",
+    "chapter": 371,
+    "sequence": 21070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1a1f7da10f12f79"
+  },
+  "findings": []
+}

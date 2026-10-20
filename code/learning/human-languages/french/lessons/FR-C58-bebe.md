@@ -14,6 +14,7 @@ concept_tag: FR-FAMILLE10-BEBE
 prerequisites: [FR-C58-voisin, FR-C58-invite]
 sounds: []
 roots: []
+etymology_hook: "bébé ← English baby, borrowed in the 1800s"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C58-invite]
 <!-- hl-knowledge: introduces=[FR-LEX-C58-FAMILLE10-03]; assesses=[] -->
 
 **le bébé** — "a baby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bébé** ← English *baby* — borrowed in the 19th century.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

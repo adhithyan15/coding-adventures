@@ -14,7 +14,8 @@ romanization: "prati"
 concept_tag: TE-GUNAM180-PRATI
 prerequisites: [TE-C180-pradhana, TE-C180-mottam]
 sounds: []
-roots: []
+roots: [sanskrit-prati]
+etymology_hook: "prati ← Sanskrit prati 'towards, against', a tatsama (CDIAL 8540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C180-mottam]
 <!-- hl-knowledge: introduces=[TE-LEX-C180-GUNAM180-03]; assesses=[] -->
 
 **ప్రతి** — *prati* — "every, each".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రతి** (*prati*) is Sanskrit *prati*, "towards, against", taken over whole as a learned loan, a tatsama (CDIAL 8540). Telugu uses it for "every, each".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

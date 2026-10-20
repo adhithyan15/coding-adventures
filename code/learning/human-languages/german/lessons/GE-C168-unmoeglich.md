@@ -13,7 +13,8 @@ gloss: "impossible"
 concept_tag: GE-QUAL168-UNMOEGLICH
 prerequisites: [GE-C167-spannend, GE-C167-moeglich]
 sounds: []
-roots: []
+roots: [germanic-magan]
+etymology_hook: "unmöglich — un- 'not' + möglich 'possible'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C167-moeglich]
 <!-- hl-knowledge: introduces=[GE-LEX-C168-QUAL168-01]; assesses=[] -->
 
 **unmöglich** — "impossible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unmöglich** is *un-*, "not", + *möglich*, "possible", which is built on *mögen*, the verb behind English *may*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

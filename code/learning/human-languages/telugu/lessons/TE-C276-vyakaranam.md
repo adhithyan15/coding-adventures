@@ -14,7 +14,8 @@ romanization: "vyākaraṇaṁ"
 concept_tag: TE-PANI276-VYAKARANAM
 prerequisites: [TE-C276-jivasastram, TE-C276-arthasastram]
 sounds: []
-roots: []
+roots: [sanskrit-vyakarana]
+etymology_hook: "vyākaraṇaṁ ← Sanskrit vyākaraṇa 'separation, grammatical analysis', a tatsama (CDIAL 12182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C276-arthasastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C276-PANI276-04]; assesses=[] -->
 
 **వ్యాకరణం** — *vyākaraṇaṁ* — "grammar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యాకరణం** (*vyākaraṇaṁ*) is Sanskrit *vyākaraṇa*, "separation, grammatical analysis", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12182).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "strict"
 concept_tag: GE-QUAL222-STRENG
 prerequisites: [GE-C222-sparsam, GE-C222-sportlich]
 sounds: []
-roots: []
+roots: [germanic-strangaz]
+etymology_hook: "streng ← Old High German strengi 'strong' — the same word as English strong"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C222-sportlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C222-QUAL222-03]; assesses=[] -->
 
 **streng** — "strict".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**streng** ← Middle High German *strenge* ← Old High German *strengi*, "strong" — inherited, the same word as English *strong*. (EtymDB 2.1) Strict is strong in rule.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

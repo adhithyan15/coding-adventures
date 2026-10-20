@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-MAYUSCULAS
 prerequisites: [ES-C425-sintesis-deletreo]
 sounds: []
 roots: []
+etymology_hook: "mayúscula ← Latin maiusculus 'somewhat larger'; minúscula ← minusculus 'somewhat smaller'"
 duration:
   max_seconds: 240
 requires:

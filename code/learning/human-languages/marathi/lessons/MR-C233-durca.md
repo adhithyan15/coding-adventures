@@ -14,7 +14,8 @@ romanization: "dūrcā"
 concept_tag: MR-GUN233-DURCA
 prerequisites: [MR-C233-gadad, MR-C233-phikat]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūrcā: dūr 'far' ← Sanskrit dūra 'distant' (CDIAL 6495) + -cā 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C233-phikat]
 <!-- hl-knowledge: introduces=[MR-LEX-C233-GUN233-03]; assesses=[] -->
 
 **दूरचा** — *dūrcā* — "distant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दूरचा** (*dūrcā*) is *dūr*, "far", from Sanskrit *dūra*, "distant" (CDIAL 6495), with **-चा**, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

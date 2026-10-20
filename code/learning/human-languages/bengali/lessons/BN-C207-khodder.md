@@ -14,7 +14,8 @@ romanization: "khôdder"
 concept_tag: BN-KAJ207-KHODDER
 prerequisites: [BN-C207-dam, BN-C207-dokandar]
 sounds: []
-roots: []
+roots: [persian-kharidar]
+etymology_hook: "khôdder: usually traced to Persian kharīdār 'buyer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C207-dokandar]
 <!-- hl-knowledge: introduces=[BN-LEX-C207-KAJ207-03]; assesses=[] -->
 
 **খদ্দের** — *khôdder* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খদ্দের** (*khôdder*) is usually traced to Persian *kharīdār*, "buyer", worn down in Bengali.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

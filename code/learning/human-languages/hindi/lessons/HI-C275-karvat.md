@@ -14,7 +14,8 @@ romanization: "karvaṭ"
 concept_tag: HI-THG275-KARVAT
 prerequisites: [HI-C275-hicki, HI-C275-jhapki]
 sounds: []
-roots: []
+roots: [indo-aryan-katavrtti]
+etymology_hook: "karvaṭ ← *kaṭavṛtti 'turning on one's side', a reconstructed form; a tadbhava (CDIAL 2635)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C275-jhapki]
 <!-- hl-knowledge: introduces=[HI-LEX-C275-THG275-04]; assesses=[] -->
 
 **करवट** — *karvaṭ* — "turning over (in bed)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**करवट** (*karvaṭ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kaṭavṛtti*, "turning on one's side", a form CDIAL reconstructs from its descendants (CDIAL 2635). It is built from *kaṭi*, "hip", and *vṛtti*, "turning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "the morning"
 concept_tag: PT-QUANDO1-MANHA
 prerequisites: [PT-C70-semana, PT-C70-mes]
 sounds: []
-roots: []
+roots: [maneana-latin]
+etymology_hook: "manhã ← Vulgar Latin *maneana, from Latin mane 'in the morning'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C70-mes]
 <!-- hl-knowledge: introduces=[PT-LEX-C70-QUANDO1-03]; assesses=[] -->
 
 **a manhã** — "the morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manhã** ← Vulgar Latin *\*maneana* (EtymDB 2.1), from Latin *mane*, "in the morning" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

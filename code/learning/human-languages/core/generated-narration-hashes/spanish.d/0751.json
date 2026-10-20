@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 751,
+  "sourceHash": "fnv1a64:6e2caf679dae112a",
+  "lessonIds": [
+    "ES-C751-aficion",
+    "ES-C751-pasatiempo",
+    "ES-C751-coleccionar",
+    "ES-C751-coleccion",
+    "ES-C751-acuarela",
+    "ES-R751-repaso-744-751"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch751.txt",
+  "json": "spanish/narration/ch751.json",
+  "textHash": "fnv1a64:7d2287645a3986ca",
+  "jsonHash": "fnv1a64:75b0c07ea59de7e4",
+  "findings": []
+}

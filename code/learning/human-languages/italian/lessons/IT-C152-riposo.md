@@ -13,7 +13,8 @@ gloss: "rest"
 concept_tag: IT-SAL152-RIPOSO
 prerequisites: [IT-C152-visita, IT-C152-dieta]
 sounds: []
-roots: []
+roots: [repausare-latin]
+etymology_hook: "riposo — from Late Latin repausare 'to rest' — English repose is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C152-dieta]
 <!-- hl-knowledge: introduces=[IT-LEX-C152-SAL152-03]; assesses=[] -->
 
 **il riposo** — "rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**riposo** is the noun of the verb for "to rest", which goes back to Late Latin *repausare*, "to rest". EtymDB 2.1 has no row for the Italian verb; it derives Spanish *reposar* and French *reposer* from *repausare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

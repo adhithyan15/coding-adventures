@@ -14,7 +14,8 @@ romanization: "jībôn"
 concept_tag: BN-JINIS228-JIBON
 prerequisites: [BN-C227-sotyo, BN-C228-brthota]
 sounds: []
-roots: []
+roots: [sanskrit-jivana]
+etymology_hook: "jībôn ← Sanskrit jīvana 'life', a tatsama (CDIAL 5243)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C228-brthota]
 <!-- hl-knowledge: introduces=[BN-LEX-C228-JINIS228-02]; assesses=[] -->
 
 **জীবন** — *jībôn* — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জীবন** (*jībôn*) is Sanskrit *jīvana*, "life", taken over whole as a learned loan, a tatsama (CDIAL 5243). The inherited form is *jion*, "remaining alive", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

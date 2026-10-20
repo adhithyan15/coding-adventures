@@ -1,0 +1,11 @@
+{
+  "id": "PT-C505-tela",
+  "pathSegment": "PT-PATH-505-PINTURA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-505-PINTURA",
+      "order": 2
+    }
+  ]
+}

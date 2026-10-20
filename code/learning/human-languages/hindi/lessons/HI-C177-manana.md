@@ -14,7 +14,8 @@ romanization: "manānā"
 concept_tag: HI-VERB-MANANA
 prerequisites: [HI-C176-cakhna, HI-C177-sughna]
 sounds: []
-roots: []
+roots: [sanskrit-manyate]
+etymology_hook: "manānā: the causing form of mānnā 'to accept', from Sanskrit manyate 'thinks, honours' (CDIAL 9857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C177-sughna]
 <!-- hl-knowledge: introduces=[HI-LEX-C177-ACT177-02]; assesses=[] -->
 
 **मनाना** — *manānā* — "to celebrate, to persuade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मनाना** (*manānā*) is the causing form of *mānnā*, "to accept, honour": to persuade is to make someone accept, and to celebrate is to honour a day. CDIAL lists both under Sanskrit *manyate*, "thinks, honours" (CDIAL 9857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

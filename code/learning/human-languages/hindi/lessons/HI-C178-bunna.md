@@ -14,7 +14,8 @@ romanization: "bunnā"
 concept_tag: HI-VERB-BUNNA
 prerequisites: [HI-C177-ubalna, HI-C177-talna]
 sounds: []
-roots: []
+roots: [indo-aryan-vunati]
+etymology_hook: "bunnā ← *vunāti 'weaves', a reconstructed form; a tadbhava (CDIAL 11773)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C177-talna]
 <!-- hl-knowledge: introduces=[HI-LEX-C178-ACT178-01]; assesses=[] -->
 
 **बुनना** — *bunnā* — "to weave, to knit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुनना** (*bunnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vunāti*, "weaves", a form CDIAL reconstructs from its descendants (CDIAL 11773). CDIAL explains the *u* as taken from other forms of Sanskrit *vayati*, "weaves".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

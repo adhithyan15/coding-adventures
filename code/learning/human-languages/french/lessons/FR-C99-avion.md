@@ -13,7 +13,8 @@ gloss: "an aeroplane"
 concept_tag: FR-VILLE51-AVION
 prerequisites: [FR-C99-banque, FR-C99-train]
 sounds: []
-roots: []
+roots: [avis-latin]
+etymology_hook: "avion — coined in the 1890s from Latin avis 'bird' — English aviation shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C99-train]
 <!-- hl-knowledge: introduces=[FR-LEX-C99-VILLE51-05]; assesses=[] -->
 
 **l'avion** — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avion** — coined in the 1890s by the engineer Clément Ader from Latin *avis*, "bird" (EtymDB 2.1 records the Latin word).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to hide, then the Marathi for to win.
 You'll want to know: भरणे.
 भरणे — bharṇe — "to fill".
 
+The word, taken apart.
+भरणे (bharṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, "bears, brings; fills" (CDIAL 9397).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to win, then the Marathi for to fill.
 
 You'll want to know: बदलणे.
 बदलणे — badalṇe — "to change".
+
+The word, taken apart.
+बदलणे (badalṇe) is a loan from Arabic badal, "a substitute, an exchange", which reached Marathi through Persian. Its Arabic root is b-d-l (Lane). Marathi made a verb of it with -ṇe.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to fill, then the Marathi for to change.
 You'll want to know: धरणे.
 धरणे — dharṇe — "to hold".
 
+The word, taken apart.
+धरणे (dharṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dharati, "holds, keeps" (CDIAL 6747).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to change, then the Marathi for to hold.
 You'll want to know: पडणे.
 पडणे — paḍṇe — "to fall".
 
+The word, taken apart.
+पडणे (paḍṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from patati, "flies; falls" (CDIAL 7722).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to hold, then the Marathi for to fall.
 
 You'll want to know: मांस.
 मांस — māṁs — "meat".
+
+The word, taken apart.
+मांस (māṁs) is Sanskrit māṁsa, "flesh", taken over whole as a learned loan, a tatsama (CDIAL 9982). CDIAL lists the inherited Marathi forms mās and māṁs.
 
 What you've built.
 One more word for this chapter.

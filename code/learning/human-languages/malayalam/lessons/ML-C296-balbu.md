@@ -14,7 +14,8 @@ romanization: "baḷbŭ"
 concept_tag: ML-VASTU296-BALBU
 prerequisites: [ML-C296-kattila, ML-C296-toluttu]
 sounds: []
-roots: []
+roots: [english-bulb]
+etymology_hook: "baḷbŭ ← English bulb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C296-toluttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C296-VASTU296-03]; assesses=[] -->
 
 **ബൾബ്** — *baḷbŭ* — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബൾബ്** (*baḷbŭ*) ← English *bulb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kṛte"
 concept_tag: SA-WHY241-KRTE
 prerequisites: [SA-C240-pratyaham, SA-C240-nityam]
 sounds: []
-roots: []
+roots: [kr-do]
+etymology_hook: "kṛte 'for the sake of' is the locative of kṛta 'done', from √kṛ 'do' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C240-nityam]
 <!-- hl-knowledge: introduces=[SA-LEX-C241-WHY241-01]; assesses=[] -->
 
 **कृते** — *kṛte* — "for the sake of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṛte* comes from *kṛta*, "done", the past participle of the root √kṛ, "to do" (MW); it is its locative. "In the doing of", and so "for the sake of"; *mama kṛte* is "for me".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

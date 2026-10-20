@@ -14,7 +14,8 @@ romanization: "vniz"
 concept_tag: RU-MESTO214-VNIZ
 prerequisites: [RU-C214-vperyod, RU-C214-vverkh]
 sounds: []
-roots: []
+roots: [pie-ni]
+etymology_hook: "вниз is в 'into' + низ 'the bottom': downward"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C214-vverkh]
 <!-- hl-knowledge: introduces=[RU-LEX-C214-MESTO214-05]; assesses=[] -->
 
 **вниз** (*vniz*) — "down, downwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вниз** is *в*, "into", with *низ*, "the bottom": downward. Vasmer derives *низ* from the PIE *\*ni*, "down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

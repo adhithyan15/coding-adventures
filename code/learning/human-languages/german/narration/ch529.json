@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 529,
+  "title": "Renovieren",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6d8edb17bce36a7f",
+  "lessons": [
+    {
+      "id": "GE-C529-renovieren",
+      "sequence": 28220,
+      "title": "renovieren — to renovate, to do up",
+      "headword": "renovieren",
+      "romanization": "renovieren",
+      "gloss": "to renovate, to do up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa124b6dbbd79361",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for dustbin, then the German for to dispose of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: renovieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "renovieren — \"to renovate, to do up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vor dem Einzug haben wir die Wohnung renoviert. Before moving in, we did up the flat."
+            },
+            {
+              "kind": "speech",
+              "text": "Regular, Perfekt without ge-: hat renoviert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "renovieren was borrowed from Middle French renover (EtymDB), from Latin renovāre \"to make new\", built on novus \"new\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renovieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renovieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renovieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renovieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with renovieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *renovieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for dustbin, then the German for to dispose of, then say renovieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for dustbin, then the German for to dispose of, then say *renovieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does renovieren mean? (\"To renovate, to do up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C529-tapete",
+      "sequence": 28230,
+      "title": "die Tapete — wallpaper",
+      "headword": "die Tapete",
+      "romanization": "die Tapete",
+      "gloss": "wallpaper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d47900ad6b9b183c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to dispose of, then the German for to renovate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Tapete",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Tapete — \"wallpaper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die alte Tapete im Flur ist hässlich. The old wallpaper in the hall is ugly."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Tapeten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tapete comes from Medieval Latin tapeta \"wall carpet\" (EtymDB), from Latin tapēte \"carpet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Tapete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Tapete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Tapete, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Tapete*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Tapete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Tapete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to dispose of, then the German for to renovate, then say die Tapete again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to dispose of, then the German for to renovate, then say *die Tapete* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Tapete mean? (\"Wallpaper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C529-tapezieren",
+      "sequence": 28240,
+      "title": "tapezieren — to wallpaper",
+      "headword": "tapezieren",
+      "romanization": "tapezieren",
+      "gloss": "to wallpaper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1601b7d9d1318aef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to renovate, then the German for wallpaper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tapezieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tapezieren — \"to wallpaper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Am Wochenende tapeziert meine Schwester das Kinderzimmer. At the weekend my sister is wallpapering the children's room."
+            },
+            {
+              "kind": "speech",
+              "text": "Regular, Perfekt without ge-: hat tapeziert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tapezieren is built on Tapete \"wallpaper\", from Medieval Latin tapeta \"wall carpet\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapezieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapezieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapezieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapezieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tapezieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tapezieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to renovate, then the German for wallpaper, then say tapezieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to renovate, then the German for wallpaper, then say *tapezieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tapezieren mean? (\"To wallpaper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C529-fliese",
+      "sequence": 28250,
+      "title": "die Fliese — tile",
+      "headword": "die Fliese",
+      "romanization": "die Fliese",
+      "gloss": "tile",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b74c82bb5b2cc62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for wallpaper, then the German for to wallpaper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Fliese",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Fliese — \"tile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Bad sind die Fliesen weiß. In the bathroom the tiles are white."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Fliesen. Also die Kachel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fliese was borrowed from Middle Low German vlīse (EtymDB), a word of the north."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Fliese",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Fliese*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Fliese, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Fliese*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Fliese",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Fliese*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for wallpaper, then the German for to wallpaper, then say die Fliese again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for wallpaper, then the German for to wallpaper, then say *die Fliese* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Fliese mean? (\"Tile\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C529-dachboden",
+      "sequence": 28260,
+      "title": "der Dachboden — attic, loft",
+      "headword": "der Dachboden",
+      "romanization": "der Dachboden",
+      "gloss": "attic, loft",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a6e195a13448f55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to wallpaper, then the German for tile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Dachboden",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Dachboden — \"attic, loft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die alten Spielsachen liegen auf dem Dachboden. The old toys are in the attic."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Dachböden."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dachboden is built on Dach \"roof\", inherited from Old High German dah, from Proto-Germanic þaką (EtymDB), and Boden \"floor\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Dachboden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Dachboden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Dachboden, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Dachboden*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Dachboden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Dachboden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to wallpaper, then the German for tile, then say der Dachboden again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to wallpaper, then the German for tile, then say *der Dachboden* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Dachboden mean? (\"Attic, loft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R529-review-522-529",
+      "sequence": 28270,
+      "title": "Words from chapters 522–529 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 522-529",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1ce09ba644f1519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for to borrow and to leaf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to borrow, to leaf, bookmark, publisher, translation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to borrow, to leaf, bookmark, publisher, translation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "remote control, to flick through channels, series, season, ratings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: remote control, to flick through channels, series, season, ratings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comedy, tragedy, documentary, subtitle, to dub",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: comedy, tragedy, documentary, subtitle, to dub]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stream, to subscribe to, video game, to play video games, headphones",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stream, to subscribe to, video game, to play video games, headphones]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dust, to wipe, to sweep, to vacuum, cloth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dust, to wipe, to sweep, to vacuum, cloth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumble dryer, clothes line, clothes peg, to iron, to fold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tumble dryer, clothes line, clothes peg, to iron, to fold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mess, to clear out, rubbish, dustbin, to dispose of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mess, to clear out, rubbish, dustbin, to dispose of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to renovate, wallpaper, to wallpaper, tile, attic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to renovate, wallpaper, to wallpaper, tile, attic]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To borrow? (ausleihen.) To leaf? (blättern.) Bookmark? (das Lesezeichen.) Publisher? (der Verlag.) Translation? (die Übersetzung.) Remote control? (die Fernbedienung.) To flick through channels? (zappen.) Series? (die Serie.) Season? (die Staffel.) Ratings? (die Einschaltquote.) Comedy? (die Komödie.) Tragedy? (die Tragödie.) Documentary? (der Dokumentarfilm.) Subtitle? (der Untertitel.) To dub? (synchronisieren.) To stream? (streamen.) To subscribe to? (abonnieren.) Video game? (das Videospiel.) To play video games? (zocken.) Headphones? (der Kopfhörer.) Dust? (der Staub.) To wipe? (wischen.) To sweep? (fegen.) To vacuum? (staubsaugen.) Cloth? (der Lappen.) Tumble dryer? (der Trockner.) Clothes line? (die Wäscheleine.) Clothes peg? (die Wäscheklammer.) To iron? (bügeln.) To fold? (falten.) Mess? (die Unordnung.) To clear out? (ausmisten.) Rubbish? (der Abfall.) Dustbin? (die Mülltonne.) To dispose of? (entsorgen.) To renovate? (renovieren.) Wallpaper? (die Tapete.) To wallpaper? (tapezieren.) Tile? (die Fliese.) Attic? (der Dachboden.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

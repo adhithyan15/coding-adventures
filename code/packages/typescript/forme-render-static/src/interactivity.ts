@@ -1,6 +1,6 @@
 import { types as utilTypes } from "node:util";
 import { isLogicalIdShape } from "@coding-adventures/forme-identity";
-import { parseFragment } from "parse5";
+import { Parser, html as parse5Html } from "parse5";
 import {
   canonicalInteractivityDocument,
   validateInteractivityDocument,
@@ -276,7 +276,7 @@ export function collectElementIdCounts(
   wanted?: ReadonlySet<string>,
 ): ReadonlyMap<string, number> {
   const counts = new Map<string, number>();
-  const fragment = parseFragment(html);
+  const fragment = parseInteractivityFragment(html);
   type HtmlNode = { readonly nodeName: string; readonly attrs?: readonly { readonly name: string; readonly value: string }[]; readonly childNodes?: readonly unknown[] };
   const stack: HtmlNode[] = [fragment as typeof fragment & HtmlNode];
   let visited = 0;
@@ -294,4 +294,106 @@ export function collectElementIdCounts(
     for (let index = children.length - 1; index >= 0; index--) stack.push(children[index] as HtmlNode);
   }
   return counts;
+}
+
+const HTML_BUTTON_SCOPE_BOUNDARIES = new Set([
+  parse5Html.TAG_ID.APPLET,
+  parse5Html.TAG_ID.BUTTON,
+  parse5Html.TAG_ID.CAPTION,
+  parse5Html.TAG_ID.HTML,
+  parse5Html.TAG_ID.MARQUEE,
+  parse5Html.TAG_ID.OBJECT,
+  parse5Html.TAG_ID.TABLE,
+  parse5Html.TAG_ID.TD,
+  parse5Html.TAG_ID.TEMPLATE,
+  parse5Html.TAG_ID.TH,
+]);
+const MATHML_SCOPE_BOUNDARIES = new Set([
+  parse5Html.TAG_ID.ANNOTATION_XML,
+  parse5Html.TAG_ID.MI,
+  parse5Html.TAG_ID.MN,
+  parse5Html.TAG_ID.MO,
+  parse5Html.TAG_ID.MS,
+  parse5Html.TAG_ID.MTEXT,
+]);
+const SVG_SCOPE_BOUNDARIES = new Set([
+  parse5Html.TAG_ID.DESC,
+  parse5Html.TAG_ID.FOREIGN_OBJECT,
+  parse5Html.TAG_ID.TITLE,
+]);
+
+/**
+ * Parse with exact parse5 tree construction while avoiding its quadratic
+ * repeated search for an open `<p>` on deeply nested block documents. The
+ * cache follows parse5's live open-element stack, including transient elements
+ * synthesized while recovering from malformed input. Unusual middle-stack
+ * mutations rebuild the cache before parsing continues. All other parser
+ * bookkeeping and every tree-adapter operation remain standard parse5.
+ */
+function parseInteractivityFragment(html: string) {
+  const parser = Parser.getFragmentParser();
+  installParagraphScopeCache(parser);
+  parser.tokenizer.write(html, true);
+  return parser.getFragment();
+}
+
+function installParagraphScopeCache(parser: ReturnType<typeof Parser.getFragmentParser>): void {
+  const stack = parser.openElements;
+  const paragraphInScope: boolean[] = [];
+
+  const extend = (index: number): void => {
+    const tagId = stack.tagIDs[index];
+    const namespace = parser.treeAdapter.getNamespaceURI(stack.items[index]);
+    const previous = index === 0 ? false : paragraphInScope[index - 1];
+    paragraphInScope[index] = namespace === parse5Html.NS.HTML && tagId === parse5Html.TAG_ID.P
+      ? true
+      : isButtonScopeBoundary(namespace, tagId) ? false : previous;
+  };
+  const rebuild = (): void => {
+    paragraphInScope.length = stack.stackTop + 1;
+    for (let index = 0; index <= stack.stackTop; index++) extend(index);
+  };
+  rebuild();
+
+  const push = stack.push.bind(stack);
+  stack.push = (element, tagId) => {
+    push(element, tagId);
+    extend(stack.stackTop);
+  };
+  const pop = stack.pop.bind(stack);
+  stack.pop = () => {
+    pop();
+    paragraphInScope.length = stack.stackTop + 1;
+  };
+  const shortenToLength = stack.shortenToLength.bind(stack);
+  stack.shortenToLength = index => {
+    shortenToLength(index);
+    paragraphInScope.length = stack.stackTop + 1;
+  };
+  const replace = stack.replace.bind(stack);
+  stack.replace = (oldElement, newElement) => {
+    replace(oldElement, newElement);
+    rebuild();
+  };
+  const insertAfter = stack.insertAfter.bind(stack);
+  stack.insertAfter = (referenceElement, newElement, newElementId) => {
+    insertAfter(referenceElement, newElement, newElementId);
+    rebuild();
+  };
+  const remove = stack.remove.bind(stack);
+  stack.remove = element => {
+    remove(element);
+    rebuild();
+  };
+
+  const hasInButtonScope = stack.hasInButtonScope.bind(stack);
+  stack.hasInButtonScope = tagId => tagId === parse5Html.TAG_ID.P
+    ? (paragraphInScope[stack.stackTop] ?? false)
+    : hasInButtonScope(tagId);
+}
+
+function isButtonScopeBoundary(namespace: string, tagId: number): boolean {
+  if (namespace === parse5Html.NS.HTML) return HTML_BUTTON_SCOPE_BOUNDARIES.has(tagId);
+  if (namespace === parse5Html.NS.MATHML) return MATHML_SCOPE_BOUNDARIES.has(tagId);
+  return namespace === parse5Html.NS.SVG && SVG_SCOPE_BOUNDARIES.has(tagId);
 }

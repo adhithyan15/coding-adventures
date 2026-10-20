@@ -12,6 +12,9 @@ Before the new one: say the Kannada for experience, then the Kannada for a resig
 You'll want to know: ದಿನಸಿ.
 ದಿನಸಿ — dinasi — "groceries, provisions".
 
+The word, taken apart.
+The origin of ದಿನಸಿ (dinasi) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a resignation, then the Kannada for groc
 
 You'll want to know: ಲಾಭ.
 ಲಾಭ — lābha — "profit, gain".
+
+The word, taken apart.
+ಲಾಭ (lābha) is Sanskrit lābha, "finding, profit", taken over whole as a learned loan, a tatsama (CDIAL 11018).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for groceries, then the Kannada for profit.
 You'll want to know: ನಷ್ಟ.
 ನಷ್ಟ — naṣṭa — "a loss (of money)".
 
+The word, taken apart.
+ನಷ್ಟ (naṣṭa) is Sanskrit naṣṭa, "lost, perished", taken over whole as a learned loan, a tatsama (CDIAL 7027). What is lost is a loss.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for profit, then the Kannada for a loss.
 You'll want to know: ವಿಜ್ಞಾನ.
 ವಿಜ್ಞಾನ — vijñāna — "science".
 
+The word, taken apart.
+ವಿಜ್ಞಾನ (vijñāna) is Sanskrit vijñāna, "act of discerning", taken over whole as a learned loan, a tatsama (CDIAL 11707).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a loss, then the Kannada for science.
 
 You'll want to know: ಇತಿಹಾಸ.
 ಇತಿಹಾಸ — itihāsa — "history".
+
+The word, taken apart.
+ಇತಿಹಾಸ (itihāsa) is Sanskrit itihāsa, from iti ha āsa, "so indeed it was": history is what is told as having happened. A tatsama.
 
 What you've built.
 One more word for this chapter.

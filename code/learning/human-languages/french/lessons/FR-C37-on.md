@@ -5,7 +5,7 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1550
 chapter: 41
 type: word
-headword: on
+headword: 'on'
 gloss: "one, people, and in practice we — a noun for man that turned into a pronoun"
 concept_tag: FR-PRONOUN-ON
 prerequisites: [FR-C37-ne-chute, FR-C05-parler, FR-C29-personne]

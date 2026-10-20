@@ -14,7 +14,8 @@ romanization: "agala"
 concept_tag: KA-QUAL142-AGALA
 prerequisites: [KA-C142-sundara, KA-C142-ala]
 sounds: []
-roots: []
+roots: [dravidian-akal-wide]
+etymology_hook: "agala: native Dravidian; DEDR 8 lists agala 'width' under agal 'to be spacious'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C142-ala]
 <!-- hl-knowledge: introduces=[KA-LEX-C142-QUAL142-03]; assesses=[] -->
 
 **ಅಗಲ** — *agala* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಗಲ** (*agala*) is native Dravidian, from *agal*, "to be spacious", and DEDR 8 lists *agala*, "width", itself; the entry also has Tamil *akal*, Telugu *agalu* and Malayalam *akaluka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

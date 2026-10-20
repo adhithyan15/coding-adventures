@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a minister, then the Urdu for a king.
 You'll want to know: شرمانا.
 شرمانا — sharmānā — "to be shy".
 
+The word, taken apart.
+شرمانا (sharmānā) is a verb made from sharm, "shame", usually traced to Persian sharm, with the verb ending -ānā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a king, then the Urdu for to be shy.
 
 You'll want to know: جھگڑنا.
 جھگڑنا — jhagaṛnā — "to quarrel".
+
+The word, taken apart.
+جھگڑنا (jhagaṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhaggaḍ, "quarrel", a form CDIAL reconstructs from its descendants (CDIAL 5321). It is a form CDIAL gives beside a reconstructed jhagaḍ, "quarrel".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to be shy, then the Urdu for to quarrel.
 You'll want to know: منانا.
 منانا — manānā — "to celebrate; to win round".
 
+The word, taken apart.
+منانا (manānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from manyate, "thinks, honours; agrees" (CDIAL 9857). It is the causing form of mānnā, "to accept": to win someone round is to make them agree.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to quarrel, then the Urdu for to celebrate;
 You'll want to know: ملانا.
 ملانا — milānā — "to mix; to introduce".
 
+The word, taken apart.
+ملانا (milānā) is the causing form of milnā, "to meet": to mix or introduce is to make things meet. CDIAL lists milnā under Sanskrit milati, "meets" (CDIAL 10133).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to celebrate; to win round, then the Urdu f
 
 You'll want to know: جوڑنا.
 جوڑنا — joṛnā — "to join, to add up".
+
+The word, taken apart.
+جوڑنا (joṛnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from yoṭayati, "joins", a form CDIAL reconstructs from its descendants (CDIAL 10496). It is a form CDIAL gives beside a reconstructed yuṭati, "is joined", and CDIAL calls its link with Sanskrit yuj-, "to join", obscure.
 
 What you've built.
 One more word for this chapter.

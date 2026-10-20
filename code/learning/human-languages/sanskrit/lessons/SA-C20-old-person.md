@@ -14,7 +14,8 @@ romanization: "vṛddhaḥ"
 concept_tag: SA-NOUN-ELDER
 prerequisites: [SA-C20-child, SA-C18-from-where, SA-C19-nine]
 sounds: []
-roots: []
+roots: [sanskrit-vrddha]
+etymology_hook: "vṛddha 'grown, old' ← the root √vṛdh 'grow, increase' (MW; CDIAL 12073)"
 duration:
   max_seconds: 210
 requires:
@@ -53,6 +54,12 @@ increase." An elder is not a thing that has lasted; an elder is someone who has
 grown.
 
 English flattens both into "old" and loses the compliment.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vṛddha* is the past participle of the root √vṛdh, "to grow, increase": "grown",
+and so "grown old" (MW, CDIAL 12073).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

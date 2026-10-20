@@ -14,7 +14,8 @@ romanization: "riyāḍa"
 concept_tag: AR-SHAY277-RIYADA
 prerequisites: [AR-C277-fariq, AR-C277-sibaq]
 sounds: []
-roots: []
+roots: [r-w-ḍ]
+etymology_hook: "riyāḍa: built on the root r-w-ḍ, 'to train, to tame' (Lane); riyāḍa is training, exercise"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C277-sibaq]
 <!-- hl-knowledge: introduces=[AR-LEX-C277-SHAY277-05]; assesses=[] -->
 
 **رياضة** — *riyāḍa* — "sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رياضة** (*riyāḍa*) is built on the native Arabic root *r-w-ḍ*, "to train, to tame" (Lane). *Riyāḍa* is training, exercise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

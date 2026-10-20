@@ -13,7 +13,8 @@ gloss: "an ambulance"
 concept_tag: IT-SAL243-AMBULANZA
 prerequisites: [IT-C242-rivolgersi, IT-C243-cerotto]
 sounds: []
-roots: []
+roots: [ambulare-latin]
+etymology_hook: "ambulanza ← French ambulance, from ambulant 'walking' — English ambulance"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C243-cerotto]
 <!-- hl-knowledge: introduces=[IT-LEX-C243-SAL243-02]; assesses=[] -->
 
 **l'ambulanza** — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ambulanza** ← French *ambulance* — borrowed. EtymDB 2.1 has no row for *ambulanza*; it builds the French word on *ambulant*, "walking", from Latin *ambulare*, "to walk": a field hospital that moved.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for the present, then the Hindi for spring.
 You'll want to know: पतझड़.
 पतझड़ — patjhaṛ — "autumn".
 
+The word, taken apart.
+पतझड़ (patjhaṛ) is "leaf-fall": pat, "leaf", from Sanskrit pattra (CDIAL 7733), and jhaṛ, from jhaṛnā, "to fall", which CDIAL lists under a reconstructed jhaṭati, "falls" (CDIAL 5328).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for spring, then the Hindi for autumn.
 
 You'll want to know: कारण.
 कारण — kāraṇ — "a reason, a cause".
+
+The word, taken apart.
+कारण (kāraṇ) is Sanskrit kāraṇa, "cause", taken over whole as a learned loan, a tatsama (CDIAL 3057). CDIAL lists the inherited form as kāran.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for autumn, then the Hindi for a reason.
 You'll want to know: नतीजा.
 नतीजा — natījā — "a result".
 
+The word, taken apart.
+नतीजा (natījā) is a loan from Arabic natīja, "result, outcome", which reached Hindi through Persian. Its Arabic root is n-t-j (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a reason, then the Hindi for a result.
 You'll want to know: समस्या.
 समस्या — samasyā — "a problem".
 
+The word, taken apart.
+समस्या (samasyā) is Sanskrit samasyā, "a puzzle set to be completed", taken over whole as a learned loan, a tatsama. Hindi uses it for any problem.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a result, then the Hindi for a problem.
 
 You'll want to know: उपाय.
 उपाय — upāy — "a remedy, a way out".
+
+The word, taken apart.
+उपाय (upāy) is Sanskrit upāya, "approach; means", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C361-confirmo",
+  "pathSegment": "LA-PATH-361-ARGUMENTUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-361-ARGUMENTUM",
+      "order": 4
+    }
+  ]
+}

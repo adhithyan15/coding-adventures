@@ -14,7 +14,8 @@ romanization: "nidrā"
 concept_tag: SA-NEEDS-SLEEP
 prerequisites: [SA-C66-illness, SA-C66-health, SA-C64-prathama-pathanam]
 sounds: []
-roots: []
+roots: [sanskrit-nidra]
+etymology_hook: "nidrā 'sleep' ← ni + the root √drā 'sleep'; MW compares Latin dormiō; Hindi nīd (CDIAL 7200)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,12 @@ reviews_of: [SA-C66-health]
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-01]; assesses=[] -->
 
 **निद्रा** (*nidrā*) — "sleep". It comes at **रात्रिः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nidrā* is built from *ni*, "down", and the root √drā, "to sleep", which MW
+compares with Latin *dormiō*. It lives on as Hindi *nīd*, "sleep" (CDIAL 7200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

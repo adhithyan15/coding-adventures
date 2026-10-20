@@ -13,7 +13,8 @@ gloss: "a daughter"
 concept_tag: PT-FAMILIA1-FILHA
 prerequisites: [PT-C36-feliz, PT-C36-triste]
 sounds: []
-roots: []
+roots: [filia-latin]
+etymology_hook: "filha ← Latin filia 'daughter' — English filial shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C36-triste]
 <!-- hl-knowledge: introduces=[PT-LEX-C37-FAMILIA1-01]; assesses=[] -->
 
 **a filha** — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**filha** ← Latin *filia*, "daughter" (EtymDB 2.1) — inherited. Latin *-li-* became the *lh* sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

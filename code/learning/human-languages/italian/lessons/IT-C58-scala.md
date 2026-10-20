@@ -13,7 +13,8 @@ gloss: "stairs; a ladder"
 concept_tag: IT-CASA3-SCALA
 prerequisites: [IT-C58-camera, IT-C58-pavimento]
 sounds: []
-roots: []
+roots: [scala-latin]
+etymology_hook: "scala ← Latin scala 'ladder', from scandere 'to climb' — English scale and escalator"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C58-pavimento]
 <!-- hl-knowledge: introduces=[IT-LEX-C58-CASA3-03]; assesses=[] -->
 
 **la scala** — "stairs; a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scala** ← Latin *scala*, "ladder, stairs", from *scandere*, "to climb" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

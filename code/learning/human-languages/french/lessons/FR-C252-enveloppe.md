@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES252-ENVELOPPE
 prerequisites: [FR-C252-impot, FR-C252-formulaire]
 sounds: []
 roots: []
+etymology_hook: "enveloppe — from the verb 'to wrap up' — English envelope"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C252-formulaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C252-CHOSES252-03]; assesses=[] -->
 
 **l'enveloppe** — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enveloppe** — formed from the verb for "to wrap up" (EtymDB 2.1), built from *en-* and an Old French verb for "to wrap" of uncertain origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

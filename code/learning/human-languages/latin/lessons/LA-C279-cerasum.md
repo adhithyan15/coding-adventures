@@ -13,7 +13,8 @@ gloss: "a cherry"
 concept_tag: LA-RES279-CERASUM
 prerequisites: [LA-C278-verbum, LA-C278-nomen]
 sounds: []
-roots: []
+roots: [cerasum-latin]
+etymology_hook: "cerasum 'cherry' — borrowed from Greek kerasos; English cherry"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C278-nomen]
 <!-- hl-knowledge: introduces=[LA-LEX-C279-RES279-01]; assesses=[] -->
 
 **cerasum, cerasī** — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cerasum** was borrowed from Greek *kerasos*, "cherry tree", itself probably from a language of Asia Minor. English *cherry* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

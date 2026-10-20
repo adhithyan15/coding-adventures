@@ -14,7 +14,8 @@ romanization: "sâheb"
 concept_tag: FA-CAN90-SAHEB
 prerequisites: [FA-C89-forsat, FA-C90-abzar]
 sounds: []
-roots: []
+roots: [arabic-sahib]
+etymology_hook: "sâheb ← Arabic ṣāḥib 'companion, owner', root ṣ-ḥ-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C90-abzar]
 <!-- hl-knowledge: introduces=[FA-LEX-C90-CAN90-02]; assesses=[] -->
 
 **صاحب** — *sâheb* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâheb* is borrowed from Arabic *ṣāḥib*, "companion, owner". Its Arabic root is *ṣ-ḥ-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

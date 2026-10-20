@@ -14,7 +14,8 @@ romanization: "kaṭhoraḥ"
 concept_tag: SA-QUAL155-KATHORAH
 prerequisites: [SA-C155-usnah, SA-C155-sitah]
 sounds: []
-roots: []
+roots: [sanskrit-kathora]
+etymology_hook: "kaṭhora 'hard, harsh', with kaṭhina, is perhaps borrowed from Dravidian (CDIAL 2650, after EWA)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C155-sitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C155-QUAL155-05]; assesses=[] -->
 
 **कठोरः** — *kaṭhoraḥ* — "harsh, rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṭhora* "hard, stiff, harsh" belongs with *kaṭhina* "hard" (CDIAL 2651), and CDIAL 2650, after EWA, groups both as perhaps borrowed from Dravidian, comparing Tamil *kaṭṭu* "hardness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

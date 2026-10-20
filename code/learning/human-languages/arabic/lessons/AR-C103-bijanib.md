@@ -14,7 +14,8 @@ romanization: "bi-jānib"
 concept_tag: AR-LOC103-BIJANIB
 prerequisites: [AR-C102-khalfa, AR-C102-bayna]
 sounds: []
-roots: []
+roots: [j-n-b]
+etymology_hook: "bi-jānib: bi- 'at, by' + jānib 'side', from the root j-n-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C102-bayna]
 <!-- hl-knowledge: introduces=[AR-LEX-C103-LOC103-01]; assesses=[] -->
 
 **بجانب** — *bi-jānib* — "beside, next to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بجانب** (*bi-jānib*) is built from the preposition *bi-*, "at, by", and *jānib*, "side", the active participle of the root *j-n-b* (Lane): "at the side of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

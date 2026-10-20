@@ -14,7 +14,8 @@ romanization: "rummān"
 concept_tag: AR-THINGS120-RUMMAN
 prerequisites: [AR-C119-khall, AR-C120-murabba]
 sounds: []
-roots: []
+roots: [r-m-n]
+etymology_hook: "rummān: built on the root r-m-n, 'the pomegranate' (Lane); Lane gives it under r-m-n and r-m-m"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C120-murabba]
 <!-- hl-knowledge: introduces=[AR-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **رمان** — *rummān* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رمان** (*rummān*) is built on the native Arabic root *r-m-n*, "the pomegranate" (Lane). Lane gives it under *r-m-n* and *r-m-m*; Hebrew *rimmon*, "pomegranate", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

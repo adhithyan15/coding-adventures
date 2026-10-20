@@ -14,7 +14,8 @@ romanization: "uzhé"
 concept_tag: RU-NUM1-ALREADY
 prerequisites: [RU-C74-now, RU-C74-later]
 sounds: []
-roots: []
+roots: [slavic-ju]
+etymology_hook: "уже: Vasmer finds two old words merged, one a cousin of Lithuanian jaũ and Gothic ju 'already'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C74-later]
 <!-- hl-knowledge: introduces=[RU-LEX-C75-NUM1-01]; assesses=[] -->
 
 **уже** (*uzhé*) — "already".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**уже** — Vasmer finds two old words fused in it: Proto-Slavic *\*ju*, "already", a cousin of Lithuanian *jaũ* and Gothic *ju*, "already", and a particle *\*u*; *-же* adds weight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

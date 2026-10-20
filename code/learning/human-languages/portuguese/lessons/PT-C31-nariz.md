@@ -13,7 +13,8 @@ gloss: "the nose"
 concept_tag: PT-CORPO2-NARIZ
 prerequisites: [PT-C30-dente, PT-C31-lingua]
 sounds: []
-roots: []
+roots: [naris-latin]
+etymology_hook: "nariz ← Latin nares 'nostrils', through a longer Vulgar Latin form"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C31-lingua]
 <!-- hl-knowledge: introduces=[PT-LEX-C31-CORPO2-02]; assesses=[] -->
 
 **o nariz** — "the nose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nariz** ← Latin *nares*, "nostrils" (EtymDB 2.1), through a longer Vulgar Latin form — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

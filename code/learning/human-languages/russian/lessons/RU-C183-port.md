@@ -14,7 +14,8 @@ romanization: "port"
 concept_tag: RU-MESTO183-PORT
 prerequisites: [RU-C183-doroga, RU-C183-shosse]
 sounds: []
-roots: []
+roots: [portus-latin]
+etymology_hook: "порт came through English port or German Port from French port, Latin portus 'harbour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C183-shosse]
 <!-- hl-knowledge: introduces=[RU-LEX-C183-MESTO183-05]; assesses=[] -->
 
 **порт** (*port*) — "a port".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**порт**, "harbour", is recorded from 1702; it came through English *port* or German *Port* from French *port*, Latin *portus* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

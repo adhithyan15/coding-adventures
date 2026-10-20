@@ -12,6 +12,9 @@ Before the new one: say the Latin for a month, then the Latin for the dawn.
 You'll want to know: saepe.
 saepe — "often".
 
+The word, taken apart.
+saepe is usually explained as an old neuter form of saepis, "thick, crowded" (Lewis & Short): what comes thick and fast comes often.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for the dawn, then the Latin for often.
 
 You'll want to know: semper.
 semper — "always".
+
+The word, taken apart.
+semper is usually linked with semel, "once", and the particle -per, "through, all along" (Lewis & Short): all in one stretch, so always.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for often, then the Latin for always.
 You'll want to know: numquam.
 numquam — "never".
 
+The word, taken apart.
+numquam is ne, "not", fused with umquam, "ever" (Lewis & Short): not ever.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for always, then the Latin for never.
 You'll want to know: nunc.
 nunc — "now".
 
+The word, taken apart.
+nunc is an old num, "now", with the pointing particle -ce, "here" (Lewis & Short). num is usually traced to Proto-Indo-European nu, "now" (EtymDB 2.1); English now is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for never, then the Latin for now.
 
 You'll want to know: mox.
 mox — "soon".
+
+The word, taken apart.
+mox is probably inherited, from a Proto-Indo-European moks, "quickly, soon" (EtymDB 2.1); Lewis & Short still call it doubtful.
 
 What you've built.
 One more word for this chapter.

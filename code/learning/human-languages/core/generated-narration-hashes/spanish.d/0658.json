@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 658,
+  "sourceHash": "fnv1a64:a9abfe22d3e3949e",
+  "lessonIds": [
+    "ES-C658-ferry",
+    "ES-C658-crucero",
+    "ES-C658-navegar",
+    "ES-C658-muelle",
+    "ES-C658-desembarcar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch658.txt",
+  "json": "spanish/narration/ch658.json",
+  "textHash": "fnv1a64:d69d5d645325efd3",
+  "jsonHash": "fnv1a64:e7f512d6f32dd2a3",
+  "findings": []
+}

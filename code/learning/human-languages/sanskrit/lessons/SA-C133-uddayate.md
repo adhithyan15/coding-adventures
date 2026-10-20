@@ -14,7 +14,8 @@ romanization: "uḍḍayate"
 concept_tag: SA-VERB-UDDAYATE
 prerequisites: [SA-C133-nicah, SA-C133-unnatah]
 sounds: []
-roots: []
+roots: [sanskrit-uddayate, sanskrit-uddiyate]
+etymology_hook: "uḍḍayate ← ud-√ḍī 'fly up', on √ḍī 'fly' (MW; CDIAL 1697); Hindi uṛnā, Marathi uḍṇe 'to fly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C133-unnatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C133-QUAL133-03]; assesses=[] -->
 
 **उड्डयते** — *uḍḍayate* — "flies".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uḍḍayate* comes from *ud-√ḍī* "fly up, soar", the root √ḍī "fly" with *ud* "up" (MW; CDIAL 1697). It lives on as Hindi *uṛnā* and Marathi *uḍṇe* "to fly" (CDIAL 1697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

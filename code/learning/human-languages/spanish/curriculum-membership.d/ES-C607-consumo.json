@@ -1,0 +1,11 @@
+{
+  "id": "ES-C607-consumo",
+  "pathSegment": "ES-PATH-607-AMBIENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-607-AMBIENTE",
+      "order": 1
+    }
+  ]
+}

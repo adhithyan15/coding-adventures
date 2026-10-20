@@ -14,7 +14,8 @@ romanization: "syn"
 concept_tag: RU-FAMILY1-SON
 prerequisites: [RU-C34-sadness, RU-C34-tiredness]
 sounds: []
-roots: []
+roots: [pie-suhnus]
+etymology_hook: "сын ← Proto-Slavic *synŭ; Lithuanian sūnùs, Sanskrit sūnu and English son are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C34-tiredness]
 <!-- hl-knowledge: introduces=[RU-LEX-C35-FAMILY1-01]; assesses=[] -->
 
 **сын** (*syn*) — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сын** ← Proto-Slavic *\*synŭ* — inherited from PIE *\*suHnús*, "son". Vasmer lists Lithuanian *sūnùs*, Sanskrit *sūnú-* and Gothic *sunus*, so English *son* is a cousin, and he links the word with a Sanskrit verb "to give birth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

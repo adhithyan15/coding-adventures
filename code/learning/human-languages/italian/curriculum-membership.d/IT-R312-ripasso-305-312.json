@@ -1,0 +1,11 @@
+{
+  "id": "IT-R312-ripasso-305-312",
+  "pathSegment": "IT-PATH-312-ANTENATI",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-312-ANTENATI",
+      "order": 5
+    }
+  ]
+}

@@ -13,7 +13,8 @@ gloss: "to cool down"
 concept_tag: IT-VERB-RAFFREDDARE
 prerequisites: [IT-C205-smettere, IT-C205-fermare]
 sounds: []
-roots: []
+roots: [frigidus-latin]
+etymology_hook: "raffreddare — ra- + freddo 'cold': to make cold — from Latin frigidus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C205-fermare]
 <!-- hl-knowledge: introduces=[IT-LEX-C206-VERBI206-01]; assesses=[] -->
 
 **raffreddare** — "to cool down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raffreddare** — built on *freddo*, "cold", with *ra-*: to make cold. *freddo* goes back to Latin *frigidus*, "cold". EtymDB 2.1 has no row for the verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 440
 chapter: 21
 type: phrase
 headword: volup est convēnisse
-gloss: "it is a pleasure to have met you" — an attested Plautine phrase that can fill a conversational slot for which Classical Latin has no single fixed idiom
+gloss: '"it is a pleasure to have met you" — an attested Plautine phrase that can fill a conversational slot for which Classical Latin has no single fixed idiom'
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [LA-C20-name-case-variation]
 sounds: [macron-long-vowel, perfect-infinitive]
@@ -56,6 +56,11 @@ literally "**you, [name], [it] is-a-pleasure to-have-met**," or naturally,
 
 Put together: "**to have met [you] is a pleasure.**" This is a genuine,
 attested line — not a modern reconstruction.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volup est convēnisse** is built from Latin parts. *volup* "pleasant" goes with *voluptās* "pleasure"; Lewis & Short connect both with Greek *elpis* "hope" and compare *volō* "I want", a link still made but not certain. *convēnisse* comes from *conveniō* "I meet", made of *con-* "together" and *veniō* "I come" (EtymDB 2.1); *veniō* is usually traced to Proto-Indo-European *\*gwem-*, "to step" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01] -->

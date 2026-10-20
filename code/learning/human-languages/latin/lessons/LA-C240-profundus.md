@@ -13,7 +13,8 @@ gloss: "deep"
 concept_tag: LA-QUAL240-PROFUNDUS
 prerequisites: [LA-C239-propter, LA-C240-asper]
 sounds: []
-roots: []
+roots: [profundus-latin, fundus-latin]
+etymology_hook: "profundus 'deep' — prō + fundus 'bottom'; English profound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C240-asper]
 <!-- hl-knowledge: introduces=[LA-LEX-C240-QUAL240-02]; assesses=[] -->
 
 **profundus, profunda, profundum** — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profundus** is *prō*, "forward, down", with *fundus*, "bottom" (EtymDB 2.1): reaching far down. English *profound* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

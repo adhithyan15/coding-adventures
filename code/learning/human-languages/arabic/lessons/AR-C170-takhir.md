@@ -14,7 +14,8 @@ romanization: "taʾkhīr"
 concept_tag: AR-WAQT170-TAKHIR
 prerequisites: [AR-C170-mubakkiran, AR-C170-yawmiyyan]
 sounds: []
-roots: []
+roots: [ʾ-kh-r]
+etymology_hook: "taʾkhīr: built on the root ʾ-kh-r, 'to come after, to be late' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C170-yawmiyyan]
 <!-- hl-knowledge: introduces=[AR-LEX-C170-WAQT170-03]; assesses=[] -->
 
 **تأخير** — *taʾkhīr* — "a delay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تأخير** (*taʾkhīr*) is built on the native Arabic root *ʾ-kh-r*, "to come after, to be late" (Lane). *Taʾkhīr* is the verbal noun of Form II, "putting off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

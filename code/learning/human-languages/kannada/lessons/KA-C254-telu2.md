@@ -14,7 +14,8 @@ romanization: "teḷu"
 concept_tag: KA-GUNA254-TELU2
 prerequisites: [KA-C253-jivana, KA-C253-niyama]
 sounds: []
-roots: []
+roots: [dravidian-tel-thin]
+etymology_hook: "teḷu: native Dravidian (DEDR 3434)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C253-niyama]
 <!-- hl-knowledge: introduces=[KA-LEX-C254-GUNA254-01]; assesses=[] -->
 
 **ತೆಳು** — *teḷu* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೆಳು** (*teḷu*) is native Dravidian (DEDR 3434). DEDR lists *teḷ*, *teḷu*, "thinness, fineness". DEDR 3434 compares Sanskrit *talina*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

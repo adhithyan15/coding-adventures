@@ -14,7 +14,8 @@ romanization: "keḷage"
 concept_tag: KA-LOC108-KELAGE
 prerequisites: [KA-C107-dura, KA-C107-mele]
 sounds: []
-roots: []
+roots: [dravidian-kiizh-below]
+etymology_hook: "keḷage: native Dravidian, one word with Tamil kīḻ (DEDR 1619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C107-mele]
 <!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-01]; assesses=[] -->
 
 **ಕೆಳಗೆ** — *keḷage* — "below, underneath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಳಗೆ** (*keḷage*) is native Dravidian, one word with Tamil *kīḻ* (DEDR 1619). DEDR gives the older Kannada *kīḻ*, *kiḻ*, "below, under".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

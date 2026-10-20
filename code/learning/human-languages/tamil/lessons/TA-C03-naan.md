@@ -12,6 +12,7 @@ concept_tag: PRONOUN-I
 prerequisites: [TA-C02-en]
 sounds: [long-aa, final-n]
 roots: [yaan-dravidian]
+etymology_hook: "நான் — native Dravidian (DEDR 5160); Malayalam ñān, Kannada nān, Telugu nēnu — not kin to English me"
 reviews_of: [TA-C02-en]
 duration:
   max_seconds: 180

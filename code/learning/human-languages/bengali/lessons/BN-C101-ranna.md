@@ -14,7 +14,8 @@ romanization: "rānnā"
 concept_tag: BN-ACT101-RANNA
 prerequisites: [BN-C100-soronjam, BN-C100-poddhoti]
 sounds: []
-roots: []
+roots: [sanskrit-randhana]
+etymology_hook: "rānnā ← Sanskrit randhana 'cooking', a tadbhava (CDIAL 10615)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C100-poddhoti]
 <!-- hl-knowledge: introduces=[BN-LEX-C101-ACT101-01]; assesses=[] -->
 
 **রান্না** — *rānnā* — "cooking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রান্না** (*rānnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *randhana*, "cooking" (CDIAL 10615).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

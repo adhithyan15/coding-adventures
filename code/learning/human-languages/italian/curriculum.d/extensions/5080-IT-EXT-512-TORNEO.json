@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-512-TORNEO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a tournament all the way to the medals.",
+  "prerequisites": []
+}

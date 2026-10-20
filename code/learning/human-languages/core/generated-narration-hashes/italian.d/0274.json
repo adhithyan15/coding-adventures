@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:028d419f2636fd9f",
+  "lessonIds": [
+    "IT-C274-nel-frattempo",
+    "IT-C274-contemporaneamente",
+    "IT-C274-non-appena",
+    "IT-C274-a-un-certo-punto",
+    "IT-C274-d-un-tratto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch274.txt",
+  "json": "italian/narration/ch274.json",
+  "textHash": "fnv1a64:ce3311cba4dc0b5e",
+  "jsonHash": "fnv1a64:6a3f073480a19dff",
+  "findings": []
+}

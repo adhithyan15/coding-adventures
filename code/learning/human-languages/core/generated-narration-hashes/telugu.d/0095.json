@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 95,
-  "sourceHash": "fnv1a64:25da569da927d76f",
+  "sourceHash": "fnv1a64:9564c56bda06d610",
   "lessonIds": [
     "TE-C95-intelugu",
     "TE-C95-howsay",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch95.txt",
   "json": "telugu/narration/ch95.json",
-  "textHash": "fnv1a64:9d2bbaa95011d313",
-  "jsonHash": "fnv1a64:84dfc33997c58602",
+  "textHash": "fnv1a64:329757121493a522",
+  "jsonHash": "fnv1a64:c9a6b8f7f9a7976d",
   "findings": []
 }

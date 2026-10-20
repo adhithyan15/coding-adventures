@@ -14,7 +14,8 @@ romanization: "sūcane"
 concept_tag: KA-ODU157-SUCHANE
 prerequisites: [KA-C156-nirikshisu, KA-C157-velapatti]
 sounds: []
-roots: []
+roots: [sanskrit-sucana]
+etymology_hook: "sūcane ← Sanskrit sūcanā 'pointing out, indication'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [KA-C157-velapatti]
 
 The notice says **ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ** — *indu aṅgaḍi muccide* — "The shop is
 closed today." Come back on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೂಚನೆ** (*sūcane*) is Sanskrit *sūcanā*, "a pointing out, an indication", with Kannada's *-e* for the Sanskrit *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Because, and Therefore",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:361623d0e28b523d",
+  "sourceHash": "fnv1a64:5589f3621339829f",
   "lessons": [
     {
       "id": "GU-C34-kemke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e833626d0c40e20",
+      "sourceHash": "fnv1a64:b79d8972909d0ca0",
       "notice": null,
       "blocks": [
         {
@@ -72,6 +72,10 @@
             {
               "kind": "speech",
               "text": "(what happened) કેમકે (kemke) (the reason)."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for kem or for ke in this sense, so the deeper history of કેમકે (kemke) is not settled."
             }
           ]
         },
@@ -147,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f725e7889e112408",
+      "sourceHash": "fnv1a64:0a4f89475e8001bb",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +204,10 @@
             {
               "kind": "speech",
               "text": "This is also where the repair kit pays off. If the reason comes back too fast, you now have both halves of that exchange too — ask kem, and if the answer outruns you, say samajto nathī and get it again."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for kem or for kemke, so their deeper history is not settled."
             }
           ]
         },
@@ -373,7 +381,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e267968c6a794b2",
+      "sourceHash": "fnv1a64:93191f8f272c29ad",
       "notice": null,
       "blocks": [
         {
@@ -422,6 +430,10 @@
             {
               "kind": "speech",
               "text": "The two are worth holding apart from the start. A cause and a purpose are different answers to the same why, and languages that use one word for both make their learners guess."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for માટે (māṭe), searched by form and by meaning, so its origin is not settled."
             }
           ]
         },
@@ -497,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f1accaa93d3c044",
+      "sourceHash": "fnv1a64:81dee864e1b62546",
       "notice": null,
       "blocks": [
         {
@@ -542,6 +554,10 @@
             {
               "kind": "speech",
               "text": "The word says so itself. તે is that, and the -થી ending means from — so તેથી (tethī) is literally from that, which is what a conclusion is. You have seen that -થી before, on the end of નથી, where it was the worn-down is; here it is the separate postposition meaning from. Same two letters, two different histories, and it is worth knowing they are not the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists the forms of te under the Sanskrit demonstrative stem ta- (CDIAL 5612); it has no entry for the ending -thī, \"from\"."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "vārtā"
 concept_tag: SA-THG249-VARTA
 prerequisites: [SA-C248-panah, SA-C248-sulkam]
 sounds: []
-roots: []
+roots: [sanskrit-varta]
+etymology_hook: "vārtā 'livelihood, news' ← vṛtti 'way of life', from √vṛt 'turn, proceed'; Hindi bāt (CDIAL 11564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C248-sulkam]
 <!-- hl-knowledge: introduces=[SA-LEX-C249-THG249-01]; assesses=[] -->
 
 **वार्ता** — *vārtā* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vārtā* is built on *vṛtti*, "way of life, conduct", from the root √vṛt, "to turn, proceed" (MW). It first meant "livelihood, business", then "tidings" (CDIAL 11564), and it lives on as Hindi *bāt*, "talk, matter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

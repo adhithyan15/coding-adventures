@@ -14,7 +14,8 @@ romanization: "pârche"
 concept_tag: FA-CHIZ173-PARCHE
 prerequisites: [FA-C173-mes, FA-C173-plastik]
 sounds: []
-roots: []
+roots: [persian-para]
+etymology_hook: "pârche: Persian pâre 'piece' (Middle Persian pārag) + -che"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C173-plastik]
 <!-- hl-knowledge: introduces=[FA-LEX-C173-CHIZ173-04]; assesses=[] -->
 
 **پارچه** — *pârche* — "cloth, fabric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pârche* is *pâre*, "piece", with the small-thing ending *-che*: a piece of cloth. *pâre* is native, usually traced to Middle Persian *pārag*, "piece".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

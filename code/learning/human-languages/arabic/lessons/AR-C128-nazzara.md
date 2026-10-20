@@ -14,7 +14,8 @@ romanization: "naẓẓāra"
 concept_tag: AR-THINGS128-NAZZARA
 prerequisites: [AR-C127-siwar, AR-C127-qurt]
 sounds: []
-roots: []
+roots: [n-ẓ-r]
+etymology_hook: "naẓẓāra: built on the root n-ẓ-r, 'to look at' (Lane); naẓẓāra is an instrument word, 'a thing to look through'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C127-qurt]
 <!-- hl-knowledge: introduces=[AR-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **نظارة** — *naẓẓāra* — "glasses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نظارة** (*naẓẓāra*) is built on the native Arabic root *n-ẓ-r*, "to look at" (Lane). *Naẓẓāra* is an instrument word, "a thing to look through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

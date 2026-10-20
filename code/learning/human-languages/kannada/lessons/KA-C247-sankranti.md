@@ -14,7 +14,8 @@ romanization: "saṅkrānti"
 concept_tag: KA-KALA247-SANKRANTI
 prerequisites: [KA-C247-dasara, KA-C247-dipavali]
 sounds: []
-roots: []
+roots: [sanskrit-sankranti]
+etymology_hook: "saṅkrānti ← Sanskrit saṁkrānti 'passage of a heavenly body', a tatsama (CDIAL 12835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C247-dipavali]
 <!-- hl-knowledge: introduces=[KA-LEX-C247-KALA247-03]; assesses=[] -->
 
 **ಸಂಕ್ರಾಂತಿ** — *saṅkrānti* — "Sankranti, the January harvest festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಕ್ರಾಂತಿ** (*saṅkrānti*) is Sanskrit *saṁkrānti*, "passage of a heavenly body", taken over whole as a learned loan, a tatsama (CDIAL 12835). Kannada writes the nasal before *k* as *ṅ*. The festival marks the sun's passage into a new sign.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

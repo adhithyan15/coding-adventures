@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C513-gareggiare",
+    "language": "italian",
+    "chapter": 513,
+    "sequence": 28750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7fc35dc9a18c228"
+  },
+  "findings": []
+}

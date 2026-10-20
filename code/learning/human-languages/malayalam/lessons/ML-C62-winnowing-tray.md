@@ -11,7 +11,8 @@ romanization: "muṟaṁ"
 concept_tag: ML-NOUN-WINNOWING-TRAY
 prerequisites: [ML-C62-broom, ML-C60-elephant]
 sounds: []
-roots: []
+roots: [dravidian-muram-winnow]
+etymology_hook: "muṟaṁ: native Dravidian, one word with Tamil muṟam and Kannada moṟa (DEDR 5005)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Native Dravidian: a flat plaited tray with a lip on three sides, woven from bamb
 Its work needs the wind. Grain is tossed up off the മുറം and *kāṟṟŭ* carries the husk sideways while the heavy part drops back — a machine with no moving parts, run on weather.
 
 *Ari*, the raw rice on the kitchen shelf, has been through one of these on its way there.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുറം** (*muṟaṁ*) is native Dravidian, one word with Tamil *muṟam* and Kannada *moṟa* (DEDR 5005).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

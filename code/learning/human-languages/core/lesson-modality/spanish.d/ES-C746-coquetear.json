@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C746-coquetear",
+    "language": "spanish",
+    "chapter": 746,
+    "sequence": 27280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd8b6a632e7f6ed3"
+  },
+  "findings": []
+}

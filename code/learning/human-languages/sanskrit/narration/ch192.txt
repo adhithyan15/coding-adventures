@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a pestle, then the Sanskrit for a sieve
 You'll want to know: हारः.
 हारः — hāraḥ — "a necklace".
 
+The word, taken apart.
+MW lists "necklace, string of pearls" among the senses of hāra, a noun of the root √hṛ, "to carry, take". CDIAL 14059 treats the necklace word as a separate hāra, so the link is not settled. It lives on as Punjabi and Gujarati hār, "necklace".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a sieve, then the Sanskrit for a neckla
 
 You'll want to know: मुकुटम्.
 मुकुटम् — mukuṭam — "a crown".
+
+The word, taken apart.
+mukuṭa was borrowed from Dravidian, CDIAL 10144 says, comparing Tamil mukaṭu, "top, highest part" (DEDR 4888). It lives on as Hindi mauṛ, the crown a bridegroom wears.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a necklace, then the Sanskrit for a cro
 You'll want to know: अधोवस्त्रम्.
 अधोवस्त्रम् — adhovastram — "a lower garment".
 
+The word, taken apart.
+adhovastra is a compound of adhas, "below", and vastra, "garment", built on the root √vas, "to wear" (MW). MW compares √vas with Latin vestis, "garment", and English wear; MW does not list this compound itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a crown, then the Sanskrit for a lower 
 You'll want to know: परिधानम्.
 परिधानम् — paridhānam — "clothing".
 
+The word, taken apart.
+paridhāna is built on pari, "around", and the root √dhā, "to put, place" (MW): clothing is what is put round you. MW compares √dhā with English do, and CDIAL 7838 traces Hindi pahirnā, "clothes", to paridhāna.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a lower garment, then the Sanskrit for 
 
 You'll want to know: वसनम्.
 वसनम् — vasanam — "a garment".
+
+The word, taken apart.
+vasana is built on the root √vas, "to wear, put on" (MW; CDIAL 11436), the root of vastra. MW compares Latin vestis, "garment", and English wear, so it is an inherited Indo-European root.
 
 What you've built.
 One more word for this chapter.

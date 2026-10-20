@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 77,
-  "sourceHash": "fnv1a64:3a60c0e9cdfcd7e0",
+  "sourceHash": "fnv1a64:8db6a13667f614ca",
   "lessonIds": [
     "UR-C77-hamesha",
     "UR-C77-kabhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch77.txt",
   "json": "urdu/narration/ch77.json",
-  "textHash": "fnv1a64:fc9625f760906426",
-  "jsonHash": "fnv1a64:aec39d02f1fd0955",
+  "textHash": "fnv1a64:de05b04a22f664b6",
+  "jsonHash": "fnv1a64:b7a08444e7813430",
   "findings": []
 }

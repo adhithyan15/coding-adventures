@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to hear, then the Marathi for to get up.
 You'll want to know: धावणे.
 धावणे — dhāvṇe — "to run".
 
+The word, taken apart.
+धावणे (dhāvṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhāvati, "runs, flows" (CDIAL 6802).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to get up, then the Marathi for to run.
 
 You'll want to know: खेळणे.
 खेळणे — kheḷṇe — "to play".
+
+The word, taken apart.
+खेळणे (kheḷṇe) is inherited from a reconstructed khēl-, "play" (CDIAL 3918). CDIAL links it with Sanskrit krīḍati, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to run, then the Marathi for to play.
 You'll want to know: विकणे.
 विकणे — vikṇe — "to sell".
 
+The word, taken apart.
+विकणे (vikṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vikrīyate, "is sold" (CDIAL 11642). CDIAL notes that the Marathi verb moved from "to be sold" to "to sell".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to play, then the Marathi for to sell.
 You'll want to know: उघडणे.
 उघडणे — ughaḍṇe — "to open".
 
+The word, taken apart.
+उघडणे (ughaḍṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from udghaṭati, "is open", a form CDIAL reconstructs from its descendants (CDIAL 1968).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to sell, then the Marathi for to open.
 
 You'll want to know: शिजवणे.
 शिजवणे — shijavṇe — "to cook".
+
+The word, taken apart.
+शिजवणे (shijavṇe) is the "make" form of Marathi śijṇẽ, "to be cooked by boiling". CDIAL lists that verb under Sanskrit sidhyati, "succeeds, is well cooked" (CDIAL 13408), and also, as another possibility, under a reconstructed śrīyate, "is cooked", where it adds "or possibly from svidyate" (CDIAL 12712).
 
 What you've built.
 One more word for this chapter.

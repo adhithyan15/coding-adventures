@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:0274293857a15481",
+  "lessonIds": [
+    "IT-C298-banda",
+    "IT-C298-complice",
+    "IT-C298-aggredire",
+    "IT-C298-aggressione",
+    "IT-C298-minacciare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch298.txt",
+  "json": "italian/narration/ch298.json",
+  "textHash": "fnv1a64:fc5494023d5b7c6e",
+  "jsonHash": "fnv1a64:98643cad4083b0a8",
+  "findings": []
+}

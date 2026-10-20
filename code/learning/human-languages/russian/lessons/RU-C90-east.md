@@ -14,7 +14,8 @@ romanization: "vostók"
 concept_tag: RU-LOC90-EAST
 prerequisites: [RU-C90-north, RU-C90-south]
 sounds: []
-roots: []
+roots: [slavic-teku]
+etymology_hook: "восток is Church Slavonic, copying Greek anatolē 'the rising'; folk Russian had всток"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C90-south]
 <!-- hl-knowledge: introduces=[RU-LEX-C90-LOC90-05]; assesses=[] -->
 
 **восток** (*vostók*) — "the east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**восток** — taken from Church Slavonic, says Vasmer; dialects kept native *всток*. Old Church Slavonic *vŭstokŭ*, "the rising (of the sun)", copies Greek *anatolḗ*, "rising, east".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

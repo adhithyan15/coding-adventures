@@ -14,7 +14,8 @@ romanization: "yogaḥ"
 concept_tag: SA-WEL211-YOGAH
 prerequisites: [SA-C210-cikitsakah, SA-C211-vyayamah]
 sounds: []
-roots: []
+roots: [sanskrit-yoga]
+etymology_hook: "yoga ← root √yuj 'yoke, join': 'yoking', then the discipline (MW; CDIAL 10526); MW compares English yoke"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C211-vyayamah]
 <!-- hl-knowledge: introduces=[SA-LEX-C211-WEL211-02]; assesses=[] -->
 
 **योगः** — *yogaḥ* — "yoga".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yoga* is built on the root √yuj, "to yoke, join" (MW). In the Rigveda it means "yoking, employment" (CDIAL 10526), and later the discipline that yokes the mind. MW compares √yuj with English *yoke* and Latin *iugum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

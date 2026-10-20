@@ -42,7 +42,7 @@ reviews_of: [ES-C04-y, ES-C06-cafe]
 
 > *¿Café* ***o*** *agua?* — Coffee or water?
 
-**o** is the whole word. Latin's was ***aut***, and it wore all the way down to
+**o** is the whole word. It comes from Latin ***aut***, and it wore all the way down to
 a single letter — which is about as far as a word can go without disappearing.
 
 ## Why it's said this way

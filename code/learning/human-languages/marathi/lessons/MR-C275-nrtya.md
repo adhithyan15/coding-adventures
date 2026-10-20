@@ -14,7 +14,8 @@ romanization: "nṛtya"
 concept_tag: MR-VASTU275-NRTYA
 prerequisites: [MR-C275-natak, MR-C275-citrapat]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nṛtya: Sanskrit nṛtya 'dancing', on nṛtyati 'dances' (CDIAL 7583); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C275-citrapat]
 <!-- hl-knowledge: introduces=[MR-LEX-C275-VASTU275-04]; assesses=[] -->
 
 **नृत्य** — *nṛtya* — "dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नृत्य** (*nṛtya*) is Sanskrit *nṛtya*, "dancing", a tatsama built on *nṛtyati*, "dances" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

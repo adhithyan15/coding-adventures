@@ -1,0 +1,11 @@
+{
+  "id": "IT-C443-settentrionale",
+  "pathSegment": "IT-PATH-443-CARDINALI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-443-CARDINALI",
+      "order": 0
+    }
+  ]
+}

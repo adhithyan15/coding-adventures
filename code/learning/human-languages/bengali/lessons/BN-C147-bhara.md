@@ -14,7 +14,8 @@ romanization: "bhāṛā"
 concept_tag: BN-PORA147-BHARA
 prerequisites: [BN-C147-taimtebil, BN-C147-notish]
 sounds: []
-roots: []
+roots: [indo-aryan-bharta]
+etymology_hook: "bhāṛā ← *bhārta 'pertaining to servants', a reconstructed form; a tadbhava (CDIAL 9468)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C147-notish]
 <!-- hl-knowledge: introduces=[BN-LEX-C147-PORA147-03]; assesses=[] -->
 
 **ভাড়া** — *bhāṛā* — "rent; a fare". The money for a room, or for a ride: **বাড়ি ভাড়া** — *bāṛi bhāṛā* — "the rent for a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাড়া** (*bhāṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhārta*, "pertaining to servants", a form CDIAL reconstructs from its descendants (CDIAL 9468). CDIAL lists Bengali *bhāṛā*, "hire, rent", under it, through Middle Indo-Aryan *bhāṭa*, "wages".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

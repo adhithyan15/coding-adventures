@@ -14,7 +14,8 @@ romanization: "pūṇṭu"
 concept_tag: TA-THINGS124-PUNTU
 prerequisites: [TA-C124-milakay, TA-C124-inci]
 sounds: []
-roots: []
+roots: [dravidian-puundu-herb]
+etymology_hook: "பூண்டு — native Dravidian (DEDR 4360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C124-inci]
 <!-- hl-knowledge: introduces=[TA-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **பூண்டு** — *pūṇṭu* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பூண்டு** (*pūṇṭu*) is native Dravidian (DEDR 4360). The entry glosses *pūṇṭu* "small plant, herb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

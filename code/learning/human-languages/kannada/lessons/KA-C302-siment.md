@@ -14,7 +14,8 @@ romanization: "simeṇṭ"
 concept_tag: KA-VASTU302-SIMENT
 prerequisites: [KA-C302-kattige, KA-C302-unne]
 sounds: []
-roots: []
+roots: [english-cement]
+etymology_hook: "simeṇṭ ← English cement"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C302-unne]
 <!-- hl-knowledge: introduces=[KA-LEX-C302-VASTU302-04]; assesses=[] -->
 
 **ಸಿಮೆಂಟ್** — *simeṇṭ* — "cement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಮೆಂಟ್** (*simeṇṭ*) is a loan from English *cement*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

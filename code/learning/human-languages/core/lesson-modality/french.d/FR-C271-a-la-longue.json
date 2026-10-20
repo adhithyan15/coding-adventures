@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C271-a-la-longue",
+    "language": "french",
+    "chapter": 271,
+    "sequence": 15680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b617c2bca3db363"
+  },
+  "findings": []
+}

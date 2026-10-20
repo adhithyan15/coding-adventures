@@ -14,7 +14,8 @@ romanization: "oṭṭuṁ"
 concept_tag: ML-KARANAM317-OTTUM
 prerequisites: [ML-C317-entayalum, ML-C317-verute]
 sounds: []
-roots: []
+roots: [malayalam-ottum]
+etymology_hook: "oṭṭuṁ 'not at all': a native word, -uṁ 'even' after a first part of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C317-verute]
 <!-- hl-knowledge: introduces=[ML-LEX-C317-KARANAM317-04]; assesses=[] -->
 
 **ഒട്ടും** — *oṭṭuṁ* — "not at all".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒട്ടും** (*oṭṭuṁ*) ends in *-uṁ*, "even"; the origin of its first part is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -9,7 +9,7 @@ Before we start: you can do this one in the car, but part of it needs your eyes.
 
 Warm-up.
 [pause 2 seconds]
-Four of these five are old Dravidian friends. The very first one is Telugu going its own way.
+All five are old Dravidian friends, but the very first one wears Telugu's own shape.
 
 You'll want to know: The five.
 [a table of 5 rows, read aloud]
@@ -21,7 +21,7 @@ numeral: ౫ (5). word: ఐదు. said: aidu.
 The symbols ౧ ౨ ౩ ౪ ౫ are Telugu's own digits.
 
 The word, taken apart - The odd one, then the family.
-One is where Telugu leaves the family. Its cousins agree — Tamil oṉṟu, Kannada ondu, Malayalam onnu, all from an old oṉ- — but Telugu says okaṭi, a different formation altogether. It's the number to memorise fresh rather than reason across from Tamil.
+One is where Telugu looks least like the family. Its cousins sound alike — Tamil oṉṟu, Kannada ondu, Malayalam onnu — but Telugu says okaṭi, built differently on the same root: DEDR 990 files them together. It's the number to memorise fresh rather than reason across from Tamil.
 From two onward, the family closes ranks again:
 [a table of 4 rows, read aloud]
 2. Tamil: iraṇṭu. Telugu: reṇḍu.
@@ -38,14 +38,14 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "okaṭi, reṇḍu, mūḍu, nālugu, aidu"]
 [pause 8 seconds for the answer]
-[your turn — say: the maverick — "okaṭi", NOT the oṉṟu/ondu/onnu of its cousins]
+[your turn — say: the odd shape — "okaṭi", beside the oṉṟu/ondu/onnu of its cousins]
 [pause 8 seconds for the answer]
 [your turn — say: the family — "iraṇṭu becomes reṇḍu", the opening vowel dropped]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Telugu. (Okaṭi, reṇḍu, mūḍu, nālugu, aidu.) Which number does Telugu form unlike the rest of the family, and what do the others say? (One — Telugu okaṭi vs oṉṟu / ondu / onnu.) How does reṇḍu relate to Tamil iraṇṭu? (The opening vowel was dropped.) What vowel do most Telugu words here end in? (‑u.) Next: six to ten.
+Count to five in Telugu. (Okaṭi, reṇḍu, mūḍu, nālugu, aidu.) Which number does Telugu shape unlike the rest of the family, and what do the others say? (One — Telugu okaṭi vs oṉṟu / ondu / onnu.) How does reṇḍu relate to Tamil iraṇṭu? (The opening vowel was dropped.) What vowel do most Telugu words here end in? (‑u.) Next: six to ten.
 
 
 Lesson 2 of 8.
@@ -141,12 +141,12 @@ numeral: ౧౦ (10). word: పది. said: padi.
 The word, taken apart - Seven, and a lost sound.
 Six is an easy cousin (Tamil āṟu becomes Telugu āru). Seven is more interesting: Tamil ēḻu carries the rare ḻ (the zh of Tamiḻ); Kannada hardened it to ḷ (ēḷu); Telugu went further still and turned it into a plain ḍ — ēḍu. One inherited sound, three fates across the three scripts.
 
-The word, taken apart - Eight and nine strike out alone.
+The word, taken apart - Eight and nine look least like their cousins.
 Here Telugu strays furthest from its cousins —.
 [a table of 2 rows, read aloud]
 number: 8. Tamil / Malayalam: eṭṭu / eṭṭu. Telugu: enimidi.
 number: 9. Tamil / Malayalam: oṉpatu / onpatu. Telugu: tommidi.
-You can't reach enimidi and tommidi from Tamil by regular sound-change the way you can reṇḍu from iraṇṭu: tommidi is a different word entirely, and enimidi — though it shares the ancient eṇ- root behind eṭṭu — has drifted too far to derive. So unlike 2–7, learn these two fresh.
+You can't reach enimidi and tommidi from Tamil by regular sound-change the way you can reṇḍu from iraṇṭu. Enimidi shares the ancient eṇ- root behind eṭṭu (DEDR 784) but has drifted too far to derive; tommidi matches not oṉpatu but old Tamil toṇṭu, "nine" (DEDR 3532). So unlike 2–7, learn these two fresh.
 Ten comes partly back into the fold — Telugu padi is a worn-down relative of the pat‑ in Tamil pattu (and the ‑patu hiding inside tommidi and Tamil oṉpatu, "one-to-ten").
 
 Guided Practice.

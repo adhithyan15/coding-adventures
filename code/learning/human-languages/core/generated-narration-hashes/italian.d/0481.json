@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:44d66c44a5a1a5e0",
+  "lessonIds": [
+    "IT-C481-fianco",
+    "IT-C481-coscia",
+    "IT-C481-polpaccio",
+    "IT-C481-tallone",
+    "IT-C481-alluce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch481.txt",
+  "json": "italian/narration/ch481.json",
+  "textHash": "fnv1a64:182f96f4dc626de0",
+  "jsonHash": "fnv1a64:deb613e3a990b952",
+  "findings": []
+}

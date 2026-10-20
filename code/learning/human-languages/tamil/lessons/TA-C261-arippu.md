@@ -14,7 +14,8 @@ romanization: "arippu"
 concept_tag: TA-NALAM261-ARIPPU
 prerequisites: [TA-C261-utarpayirci, TA-C261-yoka]
 sounds: []
-roots: []
+roots: [dravidian-ari-itch]
+etymology_hook: "அரிப்பு — native Dravidian (DEDR 214); Malayalam arikka 'to itch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C261-yoka]
 <!-- hl-knowledge: introduces=[TA-LEX-C261-NALAM261-04]; assesses=[] -->
 
 **அரிப்பு** — *arippu* — "an itch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அரிப்பு** (*arippu*) is native Dravidian. DEDR 214 lists Malayalam *arikka*, "to itch". It is the noun of *ari*, "to itch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to fight"
 concept_tag: GE-VERB-KAEMPFEN
 prerequisites: [GE-C181-gruessen, GE-C181-informieren]
 sounds: []
-roots: []
+roots: [campus-latin]
+etymology_hook: "kämpfen ← Old High German kempfan, from Kampf 'fight' ← Latin campus 'field of battle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C181-informieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C182-VERB182-01]; assesses=[] -->
 
 **kämpfen** — "to fight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**kämpfen** ← Old High German *kempfan*, the verb of the word for "fight", Old High German *kampf* ← Latin *campus*, "field, the field of battle" (EtymDB 2.1) — an early loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

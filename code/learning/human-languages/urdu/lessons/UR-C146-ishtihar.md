@@ -14,7 +14,8 @@ romanization: "ishtihār"
 concept_tag: UR-PARH146-ISHTIHAR
 prerequisites: [UR-C146-notis, UR-C146-kiraya]
 sounds: []
-roots: []
+roots: [arabic-ishtihar]
+etymology_hook: "ishtihār ← Arabic ishtihār 'making known, publication', through Persian (Lane, root sh-h-r)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [UR-C146-kiraya]
 
 The advert says **کمرہ کرائے کے لیے خالی ہے۔** — *kamrā kirāe ke liye khālī hai*
 — "Room to let." A room is available to rent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اشتہار** (*ishtihār*) is a loan from Arabic *ishtihār*, "making known, publication", which reached Urdu through Persian. Its Arabic root is *sh-h-r* (Lane). It is built on the same root as *mashhūr*, "well known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

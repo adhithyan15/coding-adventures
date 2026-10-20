@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Una serie da vedere",
+  "label": "ch:it-una-serie-da-vedere",
+  "canDo": "I can talk about watching TV series.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C528-telecomando",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about watching TV series.",
+    "assesses": [
+      "IT-LEX-C528-SERIE-03",
+      "IT-LEX-C528-SERIE-04",
+      "IT-LEX-C528-SERIE-05"
+    ]
+  }
+}

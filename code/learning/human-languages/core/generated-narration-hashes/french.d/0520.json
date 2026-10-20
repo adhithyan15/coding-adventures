@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:4adf4038f18a5195",
+  "lessonIds": [
+    "FR-C520-libraire",
+    "FR-C520-rayon",
+    "FR-C520-feuilleter",
+    "FR-C520-livre-de-poche",
+    "FR-C520-devorer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch520.txt",
+  "json": "french/narration/ch520.json",
+  "textHash": "fnv1a64:4aa5f2e3d75bc096",
+  "jsonHash": "fnv1a64:bff971d0b772f035",
+  "findings": []
+}

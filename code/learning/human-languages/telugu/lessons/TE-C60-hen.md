@@ -11,7 +11,8 @@ romanization: "kōḍi"
 concept_tag: TE-NOUN-HEN
 prerequisites: [TE-C60-goat]
 sounds: []
-roots: []
+roots: [dravidian-kozhi-fowl]
+etymology_hook: "kōḍi: native Dravidian, one word with Tamil kōḻi and Kannada kōḻi (DEDR 2248)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C60-goat]
 It is inherited and it is everywhere in the family, close in shape to the Tamil, Kannada and Malayalam words for the same bird — one of those words that travelled with the animal and has not moved since.
 
 The కోడి is also the village clock. It wakes a house before ఉదయం is properly under way, which is why nobody there has ever needed a గంట.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోడి** (*kōḍi*) is native Dravidian, one word with Tamil *kōḻi*, Kannada *kōḻi* and Malayalam *kōḻi* (DEDR 2248).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

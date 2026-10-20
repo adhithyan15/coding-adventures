@@ -14,7 +14,8 @@ romanization: "vyāyāmaṁ cēyu"
 concept_tag: TE-VERB-VYAYAMAM-CEYU
 prerequisites: [TE-C204-polcu, TE-C204-ralu]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama, sey-do-dravidian]
+etymology_hook: "vyāyāmaṁ cēyu: Sanskrit vyāyāma 'exertion' (CDIAL 12209) + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C204-ralu]
 <!-- hl-knowledge: introduces=[TE-LEX-C204-KRIYA204-03]; assesses=[] -->
 
 **వ్యాయామం చేయు** — *vyāyāmaṁ cēyu* — "to exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వ్యాయామం చేయు** (*vyāyāmaṁ cēyu*) pairs Sanskrit *vyāyāma*, "exertion" (CDIAL 12209), with the Telugu ending *-ṁ*, and native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

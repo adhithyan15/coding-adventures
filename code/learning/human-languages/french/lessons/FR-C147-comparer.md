@@ -13,7 +13,8 @@ gloss: "to compare"
 concept_tag: FR-VERB-COMPARER
 prerequisites: [FR-C146-inquieter, FR-C146-fumer]
 sounds: []
-roots: []
+roots: [latin-comparare]
+etymology_hook: "comparer ← Latin comparare 'to pair together' — English compare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C146-fumer]
 <!-- hl-knowledge: introduces=[FR-LEX-C147-VERBES147-01]; assesses=[] -->
 
 **comparer** — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comparer** ← Latin *comparare*, "to pair together", from *par*, "equal" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

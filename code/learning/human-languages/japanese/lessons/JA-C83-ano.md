@@ -14,7 +14,8 @@ romanization: "ano"
 concept_tag: JA-DEF83-ANO
 prerequisites: [JA-C82-kawakami, JA-C83-kono]
 sounds: []
-roots: []
+roots: [japanese-a-that, japanese-no]
+etymology_hook: "ano: native a- 'over there' + no 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C83-kono]
 <!-- hl-knowledge: introduces=[JA-LEX-C83-DEF83-02]; assesses=[] -->
 
 **あの** — *ano* — "that (over there)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あの** (*ano*) is native: *a-*, the root that points away from both speakers, with *no*, "of" (JMdict). It is inherited rather than borrowed, and is usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

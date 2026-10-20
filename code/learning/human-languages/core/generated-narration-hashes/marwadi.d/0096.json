@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 96,
-  "sourceHash": "fnv1a64:09f761ba48e8275b",
+  "sourceHash": "fnv1a64:e3f9c619bd697fce",
   "lessonIds": [
     "MW-C96-kathai",
     "MW-C96-uthai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch96.txt",
   "json": "marwadi/narration/ch96.json",
-  "textHash": "fnv1a64:e4b67055feac48ee",
-  "jsonHash": "fnv1a64:2ce0bdfca99eceb2",
+  "textHash": "fnv1a64:a5747a20f3b187e9",
+  "jsonHash": "fnv1a64:507b9e3f946c0594",
   "findings": []
 }

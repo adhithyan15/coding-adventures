@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-286-EDIZIONE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-286-EDIZIONE"
+  ],
+  "after": []
+}

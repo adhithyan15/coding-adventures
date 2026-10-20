@@ -23,7 +23,7 @@ and, from the close cousin salvus ("safe"), save, salvation, safe.
 Spanish note: its casual "hi" is hola — an uncertain, rootless interjection. French salut is the opposite: a transparent Latin word meaning "health." Two Romance languages, two totally different casual "hi"s.
 
 Why it's said this way.
-Salut is strictly informal — friends, family, peers — and it doubles as "bye." For anyone you'd show respect to, or a first meeting, you reach past it for bonjour (coming in a few lessons), exactly as Spanish reaches past hola for buenos días.
+Salut is strictly informal — friends, family, peers — and it doubles as "bye." For anyone you'd show respect to, or a first meeting, you reach past it for the formal greeting (a few lessons on), exactly as Spanish reaches past hola for buenos días.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — trace the silent t.
@@ -142,23 +142,21 @@ The word, taken apart.
 bien — "well." Root: Latin bene ("well"). The English bene- family is yours already:
 benefit ("do well"), benevolent ("wish well"), benediction ("speak well"), benign.
 A cross-language aside: Spanish, another daughter of Latin, has the very same word — bien, also from bene, also "well." French and Spanish each inherited the Latin adverb independently and it barely changed in either; when two Romance languages agree this exactly, you're looking straight at the shared Latin parent.
-Using it alone: "Comment ça va?" (how's it going?) becomes "Bien." ("Well / good.") Intensified: "très bien" ("very well").
+Using it alone: asked "how's it going?", you can answer with one word: "Bien." ("Well / good.")
 
 Grammar Lens: the "good" it pairs with.
-bien is the adverb ("well" — how something is done). The adjective "good" (describing a thing) is a different word, bon — the next lesson. This is the same well vs. good split as English, and the same bien vs. bueno split as Spanish; French's adjective is bon, from Latin bonus.
+bien is the adverb ("well" — how something is done). The adjective "good" (describing a thing) is a different word — the next lesson. This is the same well vs. good split as English, and the same bien vs. bueno split as Spanish; French's adjective comes from Latin bonus.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bien" — nasal byan]
-[pause 8 seconds for the answer]
-[your turn — say: "très bien"]
 [pause 8 seconds for the answer]
 [your turn — say: "bien" then English "benefit", "benevolent"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-French bien and Spanish bien come from the same Latin word — which one? (bene, "well.") Adverb or adjective? (Adverb — "good" the adjective is bon, next.)
+French bien and Spanish bien come from the same Latin word — which one? (bene, "well.") Adverb or adjective? (Adverb — "good" the adjective is a different word, next.)
 
 
 Lesson 7 of 15.
@@ -166,7 +164,7 @@ bon / bonne — "good," the block you build greetings from.
 
 Warm-up.
 [pause 2 seconds]
-This is the word that starts bonjour and bonsoir. Learn it alone first — including the trick that its two forms sound completely different even though they look nearly the same.
+This is the word that starts French's "good day" and "good evening." Learn it alone first — including the trick that its two forms sound completely different even though they look nearly the same.
 
 Sounds you'll need.
 nasal-on — bon is a nasal bõ: the n is silent, the vowel goes through the nose. see reference.
@@ -178,7 +176,7 @@ bonus (borrowed straight from Latin bonus), bonanza, and — via Old French bont
 Spanish cousin: from the same bonus / bona, Spanish made bueno / buena. Notice French kept it shorter (bon) while Spanish broke the o into a diphthong (bue-). Same Latin word, two accents of wear.
 
 Grammar Lens: adjectives agree with their noun.
-Like every Romance adjective, bon agrees with its noun's gender and number — bon (masc.), bonne (fem.), bons (masc. pl.), bonnes (fem. pl.). This is Latin's legacy: adjectives change their ending to match the noun (Spanish runs the same machine on bueno / buena). You'll watch it in the next few lessons: bon jour (masc.) but bonne nuit (fem.).
+Like every Romance adjective, bon agrees with its noun's gender and number — bon (masc.), bonne (fem.), bons (masc. pl.), bonnes (fem. pl.). This is Latin's legacy: adjectives change their ending to match the noun (Spanish runs the same machine on bueno / buena). You'll watch it in the next few lessons: the day greeting takes bon, the night one bonne.
 
 Guided Practice.
 [pause 1 second]
@@ -214,7 +212,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "le", "la", "les"]
 [pause 8 seconds for the answer]
-[your turn — say: "le jour" (masc.), "la nuit" (fem.) — the nouns are coming]
+[your turn — say: "le" (masc.), "la" (fem.), "les" (plural) — the nouns that wear them are coming]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -234,7 +232,7 @@ le / la / les — gender and the articles; jour is masculine, le jour.
 
 Sounds you'll need.
 j-zh — j is the soft zh of measure: jour starts zh-.
-vowel-ou — ou = oo. So jour = zhoor. see reference.
+vowel-ou — the letters o-u say oo. So jour = zhoor. see reference.
 
 The word, taken apart.
 le jour — "the day" (masculine). Root: Latin diurnum ("daytime, daily") — itself from dies ("day"). That extra step through diurnum is why jour looks so unlike Spanish día:
@@ -274,11 +272,11 @@ You'll want to know first.
 bon / bonne, jour.
 
 The word, taken apart — by assembling it.
-bonjour = bon ("good") + jour ("day") = "good day." One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work.
+bonjour = bon ("good") + jour ("day") = "good day." One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work. Both are inherited: bon from Latin bonus, jour from Latin diurnum, "daytime" (EtymDB 2.1).
 
 Why it's said this way.
 Here's the contrast worth banking. Spanish says buenos días — plural, "good days," the fossil of a blessing ("may God give you good days"). French says bonjour — singular, just "good day." French didn't fossilize the plural; it kept the plain, single wish. Same two building blocks (good + day), same Latin roots, but Spanish pluralized the blessing and French didn't. Two neighbours, two instincts.
-Culturally, bonjour carries weight far beyond "hello": in France, opening almost any interaction — a shop, a bus, a desk — without a bonjour reads as rude. It's the formal, all-purpose daytime greeting (switch to bonsoir in the evening), and the polite default where salut would be too casual.
+Culturally, bonjour carries weight far beyond "hello": in France, opening almost any interaction — a shop, a bus, a desk — without a bonjour reads as rude. It's the formal, all-purpose daytime greeting (the evening has its own, two lessons on), and the polite default where salut would be too casual.
 
 Guided Practice.
 [pause 1 second]
@@ -339,7 +337,7 @@ You'll want to know first.
 bon / bonne, soir, bonjour.
 
 The word, taken apart — by assembling it.
-bonsoir = bon ("good") + soir ("evening") = "good evening." bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr.
+bonsoir = bon ("good") + soir ("evening") = "good evening." bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr. Soir from Latin sērō, "late", from sērus (EtymDB 2.1).
 
 Why it's said this way.
 bonsoir is the evening swap for bonjour: as the day turns to evening (roughly late afternoon on), French speakers switch from bonjour to bonsoir. Both are the polite, all-purpose greeting for their time of day. And like Spanish buenas noches, bonsoir works both arriving and leaving in the evening — "good evening" on the way in, "goodnight-ish" on the way out. (For actually sending someone to bed, French has a separate phrase — the next two lessons.)
@@ -457,7 +455,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: bonjour, bonsoir, bonne nuit — and say why each takes bon or bonne]
 [pause 8 seconds for the answer]
-[your turn — say: answer "how are you" in one word — bien, then très bien]
+[your turn — say: answer "how are you" in one word — bien]
 [pause 8 seconds for the answer]
 [repeat that twice]
 Run bonjour becomes bonsoir becomes bonne nuit without hesitating on bon/bonne.
@@ -468,4 +466,4 @@ Cover the word salut elsewhere in this chapter. Write the casual greeting once f
 
 Wrap-up Recall.
 [pause 3 seconds]
-French bonjour is singular; the Spanish morning greeting is plural — name it. (Buenos días.) Next chapter: introducing yourself — je m'appelle… — and French's own formal/informal "you," tu vs vous.
+French bonjour is singular; the Spanish morning greeting is plural — name it. (Buenos días.) Next chapter: introducing yourself — "my name is…" — and French's own two words for "you," one familiar and one formal.

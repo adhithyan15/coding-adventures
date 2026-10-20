@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C398-guadagnare",
+    "language": "italian",
+    "chapter": 398,
+    "sequence": 22620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0e08ef3ace855b0"
+  },
+  "findings": []
+}

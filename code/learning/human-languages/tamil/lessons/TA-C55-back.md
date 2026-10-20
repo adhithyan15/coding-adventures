@@ -11,7 +11,8 @@ romanization: "mutuku"
 concept_tag: TA-NOUN-BACK
 prerequisites: [TA-C55-neck, TA-C53-hill, TA-C54-basket]
 sounds: []
-roots: []
+roots: [dravidian-mutuku-back]
+etymology_hook: "முதுகு — native Dravidian (DEDR 4955); Malayalam mutuku"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C55-neck]
 Malayalam has മുതുക് (*mutukŭ*), letter for letter until the last one. Telugu takes వీపు (*vīpu*) and shares nothing with either.
 
 To show somebody your முதுகு is to turn away from them, in Tamil much as in English — and the phrase is meant as unkindly in one language as in the other.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முதுகு** (*mutuku*) is native Dravidian. DEDR 4955 lists Malayalam *mutuku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

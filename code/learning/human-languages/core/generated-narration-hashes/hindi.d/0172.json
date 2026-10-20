@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 172,
-  "sourceHash": "fnv1a64:508ae5f1fc212251",
+  "sourceHash": "fnv1a64:5aae45de7cf6df35",
   "lessonIds": [
     "HI-C172-rokna",
     "HI-C172-bhagna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch172.txt",
   "json": "hindi/narration/ch172.json",
-  "textHash": "fnv1a64:11ae2de43b5681f8",
-  "jsonHash": "fnv1a64:05a77d7d56966166",
+  "textHash": "fnv1a64:9864b96630b64bcc",
+  "jsonHash": "fnv1a64:dbed37a172c6dfc0",
   "findings": []
 }

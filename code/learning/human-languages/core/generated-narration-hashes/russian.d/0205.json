@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 205,
-  "sourceHash": "fnv1a64:8b2cdae25ac0b57a",
+  "sourceHash": "fnv1a64:723a0514ed4f8457",
   "lessonIds": [
     "RU-C205-zabyvat",
     "RU-C205-uchitsya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch205.txt",
   "json": "russian/narration/ch205.json",
-  "textHash": "fnv1a64:0a7d5b3bd3ad0ebb",
-  "jsonHash": "fnv1a64:ca36163195c31169",
+  "textHash": "fnv1a64:25478afcb5523f55",
+  "jsonHash": "fnv1a64:1a35fc1ed1c63acc",
   "findings": []
 }

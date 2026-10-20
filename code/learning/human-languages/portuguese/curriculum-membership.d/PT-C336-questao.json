@@ -1,0 +1,11 @@
+{
+  "id": "PT-C336-questao",
+  "pathSegment": "PT-PATH-336-DEBATE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-336-DEBATE",
+      "order": 1
+    }
+  ]
+}

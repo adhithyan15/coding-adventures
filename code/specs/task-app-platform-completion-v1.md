@@ -148,6 +148,18 @@ rather than letting them read as silent gaps.
 
 ### Product quality ratchet
 
+**Completed bounded visual fix — #17502: SwiftUI milestone rotations.** TaskApp's
+timeline and calendar milestones both author a centered `rotate(45deg)` to
+make diamonds. Lower a single finite degree rotation after sizing and surface
+paint but before elevation shadows. Keep native layout footprint unchanged,
+preserve state precedence, and report malformed, non-finite, multi-transform,
+and other-unit forms. Verify authored output before retiring the two transform
+allowances. Translation, scaling, and transform-origin remain outside scope.
+
+Fresh package-expanded source generation measures 57 SwiftUI style drops and
+zero transform drops, down from 59. Both authored themes emit two centered
+45-degree rotations. Runtime generation and Swift compilation require macOS CI.
+
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
     are now wired. The initial `native-complete` generation recorded 77 XAML,
@@ -179,6 +191,26 @@ rather than letting them read as silent gaps.
     preserves that event surface's supported inherited color/font size and its
     complete hidden/ellipsis/nowrap contract, retiring those five omissions
     and reducing Qt's fresh inventory to 108.
+    #17338 then lowers the 15 exact `width: 100%` declarations on Qt inputs and
+    buttons to `Layout.fillWidth: true`, reducing Qt's fresh inventory from 108
+    to 93. The three remaining Qt width drops are `Text` geometry; unsupported
+    percentages and mixed fixed/fill states remain reported.
+    #17386 then reconciles Qt's ten non-inset CSS shadows with the supported
+    `elevation` tokens that already emit equivalent native `MultiEffect`
+    depth, reducing its fresh inventory from 93 to 83. The inset theme-toggle
+    moon and raw shadows without elevation remain drawing-effect debt.
+    #17356 reconciles Compose's ten non-inset CSS shadows with the supported
+    `elevation` tokens that already emit equivalent native depth, reducing its
+    fresh inventory from 50 to 40. The inset theme-toggle moon and raw shadows
+    without elevation remain reported drawing-effect debt.
+    #17365 lowers SwiftUI's supported elevation tokens to native `.shadow`
+    modifiers and reconciles only their ten non-inset CSS companions, reducing
+    its fresh inventory from 83 to 63. Standalone, inset, and unsupported
+    shadows or elevation values remain reported drawing-effect debt.
+    #17394 lowers TaskApp's complete seven-way XAML
+    weekday percentages to proportional Grid stars and its wrapping repeated
+    day cells to `UniformGridLayout`, reducing XAML from 38 to 29. Partial,
+    mixed, invalid, and unsupported wrapping shapes remain explicit debt.
     #17224 then preserves all 15 supported fixed Flutter `border-radius`
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
@@ -189,8 +221,27 @@ rather than letting them read as silent gaps.
     #17251 preserves all 16 TaskApp `width: 100%` declarations on Flutter leaf
     widgets when their parent supplies a finite horizontal constraint, reducing
     that backend's fresh inventory from 107 to 91. The seven calendar weekday
-    `14.2857%` widths remain reported until fractional row sizing has a safe
-    native lowering.
+    `14.2857%` widths remained reported until #17289 lowered valid direct-row
+    percentages to proportional flex shares and wrapping rows to native `Wrap`
+    children with fractional sizing. That preserves the seven-column calendar
+    header and day grid, retires the seven remaining `width` omissions plus the
+    grid's `flex-wrap`, and reduces Flutter's fresh inventory from 91 to 83.
+    Invalid percentages and percentages without a finite parent remain reported.
+    #17301 then applies authored `gap` to evaluated Flutter drag-and-drop child
+    lists, retiring the four remaining gap omissions and reducing that
+    backend's fresh inventory from 83 to 79 without changing its native drag,
+    keyboard, or drop semantics.
+    #17308 reconciles Flutter's existing native elevation output with its
+    reporter, retiring ten non-inset `box-shadow` false positives and reducing
+    that backend's fresh inventory from 79 to 69. The inset theme-toggle moon
+    shadow remains explicit drawing-effect debt rather than being mistaken for
+    native elevation.
+    #17313 then aligns Flutter's drag-body helper detection with the decorated
+    and lightweight lowering paths. A leading `If`/`Else` list now receives the
+    helper definition it calls, and a decorated conditional followed by an
+    ordinary child keeps that child in the evaluated vertical list. This is a
+    generated-Dart correctness repair and does not change the 69-style-drop
+    inventory.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
@@ -198,25 +249,90 @@ rather than letting them read as silent gaps.
 
 ### Native fidelity release checkpoint
 
+**Completed in #17483 — #17481: SwiftUI drag-body spacing reports.** Both
+`HostDraggable` and `HostDropTarget` already construct a vertical stack with
+authored spacing. Recognize those constructors in the gap reporter, requiring
+every occurrence of a shared part to consume the property. Unsupported values
+and reuse on non-spacing primitives must remain reported. Verify generated
+TaskApp before retiring its four gap allowances. Fresh package-expanded
+generation measures 59 style drops and no gap drops, down from 63; native
+runtime generation and Swift compilation passed in the macOS release CI lane.
+Drag callbacks and native
+behavior are unchanged; this is reporting reconciliation.
+
 11. **P1 [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
     — publish `task-app-v0.5.2`.** Roll the compatible native-fidelity fixes
     accumulated after v0.5.1 into an immutable patch release. Keep the verified
     web/native downloadable artifact matrix unchanged; Static HTML, Web
     Components, and Paint remain CI-only, while signing and notarization remain
-    tracked by #13977.
+    tracked by #13977. **Published and independently audited.**
+12. **P1 [#17328](https://github.com/adhithyan15/coding-adventures/issues/17328)
+    — publish `task-app-v0.5.3`.** Roll the compatible Flutter calendar,
+    drag/drop spacing, conditional-body correctness, and elevation-reporting
+    fixes into an immutable patch release, together with the matching
+    style-ratchet correction. Keep the verified downloadable artifact matrix
+    unchanged: Static HTML, Web Components, and Paint remain CI-only, while
+    signing, notarization, and installers remain tracked by #13977.
+13. **P1 [#17375](https://github.com/adhithyan15/coding-adventures/issues/17375)
+    — publish `task-app-v0.5.4`.** Roll the compatible Qt fill-width and
+    Compose/SwiftUI elevation-shadow fixes into an immutable patch release.
+    Keep the verified downloadable artifact matrix unchanged: Static HTML, Web
+    Components, and Paint remain CI-only, while signing, notarization, and
+    installers remain tracked by #13977.
+
+**Published checkpoint — [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
+`task-app-v0.5.5`.** Published from #17470 and audited: immutable tag and
+manifest match the source commit, all twelve checksum entries match GitHub
+asset digests, and the existing artifact coverage and limitations are retained.
+
+**Published checkpoint — [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
+`task-app-v0.5.6`.** Published from #17492 and audited: immutable tag and
+manifest match the source commit, and all twelve checksums match asset digests.
+
+**Published and audited release checkpoint — P1 [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610):
+publish `task-app-v0.5.7`.** Roll forward the compatible SwiftUI milestone
+rotation fix (#17503): timeline and calendar markers retain their 45-degree
+diamond shape, reducing the measured SwiftUI style inventory from 59 to 57.
+Published from `93206f2a5b2cb3c02f30bb7dd23c7573898d2334` after every payload lane
+passed in run 38971558648. The immutable tag and manifest match that source;
+all 13 assets and twelve checksum entries were audited against GitHub digests.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977.
+
+### Completed bounded fidelity item — #17675: Qt milestone rotations
+
+After the P0 native lifecycle gates and v0.5.7 publication, preserve the two
+authored timeline milestone and legend-swatch `rotate(45deg)` declarations in
+Qt. Use native centered Item rotation without changing layout dimensions.
+Accept only a single finite degree rotation; preserve ordered state precedence
+with a zero-degree fallback, and keep rejected values in degradation reports.
+Translation, scaling, transform chains, and transform-origin are excluded.
+Assert exact emitted bindings, negative inputs, and both authored themes before
+retiring the two Qt transform allowances (83 to 81 measured drops). Validate
+native Qt payload generation/build in CI; do not claim local Qt runtime proof.
+
+### Next release checkpoint — #17682: TaskApp v0.5.8
+
+Roll forward the compatible Qt milestone rotation fix merged in #17676 as
+`task-app-v0.5.8`. Both themes preserve the two centered 45-degree diamonds;
+the Qt style inventory falls from 83 to 81. Validate every existing payload on
+the selected source commit, publish from main after preparation merges, then
+audit the immutable tag, manifest source, thirteen assets and twelve checksums.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977. Preparation is not publication.
 
 ### Tier C — reach, stated honestly
 
-12. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
+14. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,
     #16041, and #16144.** The generated app carries the real runtime, launches
     on iPhone and iPad simulators, restores state from its sandbox, and
     quarantines corrupt state. Signing, device execution, and a downloadable
     iOS artifact remain outside that claim.
-13. **Android has no backend.** `compose` is Compose Desktop. An Android target
+15. **Android has no backend.** `compose` is Compose Desktop. An Android target
     is a new Mosaic backend, not a TaskApp task, and belongs to
     [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
     here. Recorded so its absence is a decision rather than an oversight.
-14. **Signing, notarization, and installers**
+16. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

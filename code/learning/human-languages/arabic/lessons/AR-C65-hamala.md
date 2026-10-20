@@ -14,7 +14,8 @@ romanization: "ḥamala"
 concept_tag: AR-VERB-HAMALA
 prerequisites: [AR-C64-rajaa, AR-C65-takallama]
 sounds: []
-roots: []
+roots: [ḥ-m-l]
+etymology_hook: "ḥamala: built on the root ḥ-m-l, 'to carry, to bear' (Lane); ḥamala is the plain verb, 'he carried'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C65-takallama]
 <!-- hl-knowledge: introduces=[AR-LEX-C65-VERBS65-02]; assesses=[] -->
 
 **حمل** — *ḥamala* — "to carry (he carried)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حمل** (*ḥamala*) is built on the native Arabic root *ḥ-m-l*, "to carry, to bear" (Lane). *Ḥamala* is the plain verb, "he carried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

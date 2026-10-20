@@ -14,7 +14,8 @@ romanization: "seb"
 concept_tag: PA-FOOD64-SEB
 prerequisites: [PA-C64-dal, PA-C64-phal]
 sounds: []
-roots: []
+roots: [persian-seb]
+etymology_hook: "seb: usually traced to Persian sēb 'apple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C64-phal]
 <!-- hl-knowledge: introduces=[PA-LEX-C64-FOOD64-03]; assesses=[] -->
 
 **ਸੇਬ** — *seb* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੇਬ** (*seb*) is a loan, usually traced to Persian *sēb*, "apple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

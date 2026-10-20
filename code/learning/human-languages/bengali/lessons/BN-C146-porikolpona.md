@@ -14,7 +14,8 @@ romanization: "pôrikôlpônā"
 concept_tag: BN-AGAMI146-PORIKOLPONA
 prerequisites: [BN-C146-agami, BN-C146-erpor]
 sounds: []
-roots: []
+roots: [sanskrit-parikalpana]
+etymology_hook: "pôrikôlpônā ← Sanskrit parikalpanā 'contrivance, plan', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C146-erpor]
 <!-- hl-knowledge: introduces=[BN-LEX-C146-AGAMI146-03]; assesses=[] -->
 
 **পরিকল্পনা** — *pôrikôlpônā* — "a plan". **আমাদের একটা পরিকল্পনা আছে** — *āmāder ekṭā pôrikôlpônā āchhe* — "We have a plan."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরিকল্পনা** (*pôrikôlpônā*) is Sanskrit *parikalpanā*, "contrivance, plan", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

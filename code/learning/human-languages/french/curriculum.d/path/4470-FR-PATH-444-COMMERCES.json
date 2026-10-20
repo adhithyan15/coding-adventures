@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-444-COMMERCES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-444-COMMERCES"
+  ],
+  "after": []
+}

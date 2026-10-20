@@ -14,7 +14,8 @@ romanization: "sampradāya"
 concept_tag: KA-KARANA215-SAMPRADAYA
 prerequisites: [KA-C215-prakara, KA-C215-bagge]
 sounds: []
-roots: []
+roots: [sanskrit-sampradaya]
+etymology_hook: "sampradāya ← Sanskrit sampradāya 'tradition, what is handed down', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C215-bagge]
 <!-- hl-knowledge: introduces=[KA-LEX-C215-KARANA215-04]; assesses=[] -->
 
 **ಸಂಪ್ರದಾಯ** — *sampradāya* — "a tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಪ್ರದಾಯ** (*sampradāya*) is Sanskrit *sampradāya*, "a handing down, tradition", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

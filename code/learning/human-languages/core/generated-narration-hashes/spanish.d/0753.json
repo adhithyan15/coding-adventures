@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 753,
+  "sourceHash": "fnv1a64:a145ef8fab032f53",
+  "lessonIds": [
+    "ES-C753-musico",
+    "ES-C753-tararear",
+    "ES-C753-cancion",
+    "ES-C753-ritmo",
+    "ES-C753-componer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch753.txt",
+  "json": "spanish/narration/ch753.json",
+  "textHash": "fnv1a64:c50bc17a30d471f6",
+  "jsonHash": "fnv1a64:34edf04dad7a5776",
+  "findings": []
+}

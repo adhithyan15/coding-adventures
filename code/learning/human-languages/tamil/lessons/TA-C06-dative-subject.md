@@ -12,7 +12,7 @@ concept_tag: TA-DATIVE-SUBJECT
 prerequisites: [TA-C06-dative-stacking, TA-C05-naan-tamizh-pesugiren]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
-etymology_hook: "Dravidian puts the EXPERIENCER in the dative: knowing, liking, wanting and being cold all happen TO you rather than being done BY you — so 'I know Tamil' has no nominative 'I' at all, the person sitting in the dative instead (a 'dative subject'), and the same construction runs through Telugu, Kannada and Malayalam"
+etymology_hook: "எனக்குத் தமிழ் தெரியும் — native: the dative of 'I' (DEDR 5160) and teri 'become clear' (DEDR 3419)"
 duration:
   max_seconds: 297
 requires:
@@ -53,10 +53,12 @@ Word by word:
 | **தமிழ்** *tamiḻ* | Tamil (Ch. 5) |
 | **தெரியும்** *teriyum* | "is known / is apparent" |
 
+*Enakku* and *teriyum* are Dravidian (DEDR 5160, 3419).
+
 That extra **த்** on *enakku* is **sandhi** — a joining consonant Tamil inserts
 between certain words to smooth the seam. It belongs to neither word on its own;
-it exists only because they are next to each other. Nothing to learn yet, but
-worth noticing, because you will see it constantly.
+it exists only because they are next to each other. Nothing to learn yet; you
+will see it constantly.
 
 **You are not the subject.** *Nāṉ* is gone — the person has been moved into the
 dative. What's left in the plain, unmarked form is *tamiḻ*: the sentence is now

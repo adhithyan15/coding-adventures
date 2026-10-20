@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-636-VERDAD",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-636-VERDAD"
+  ],
+  "after": []
+}

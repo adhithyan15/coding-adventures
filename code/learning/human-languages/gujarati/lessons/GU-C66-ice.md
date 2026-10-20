@@ -14,7 +14,8 @@ romanization: "baraph"
 concept_tag: GU-WEATHER-ICE
 prerequisites: [GU-C66-cloud, GU-C66-heat]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "baraph: usually traced to Persian barf 'snow, ice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C66-heat]
 <!-- hl-knowledge: introduces=[GU-LEX-C66-WEATHER-04]; assesses=[] -->
 
 **બરફ** (*baraph*) — "ice, snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બરફ** (*baraph*) is a loan, usually traced to Persian *barf*, "snow, ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

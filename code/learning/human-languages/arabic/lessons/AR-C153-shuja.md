@@ -14,7 +14,8 @@ romanization: "shujāʿ"
 concept_tag: AR-QUAL153-SHUJA
 prerequisites: [AR-C152-dhaki, AR-C153-kasul]
 sounds: []
-roots: []
+roots: [sh-j-ʿ]
+etymology_hook: "shujāʿ: built on the root sh-j-ʿ, 'to be brave' (Lane); shujāʿ is the adjective, 'brave'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C153-kasul]
 <!-- hl-knowledge: introduces=[AR-LEX-C153-QUAL153-02]; assesses=[] -->
 
 **شجاع** — *shujāʿ* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شجاع** (*shujāʿ*) is built on the native Arabic root *sh-j-ʿ*, "to be brave" (Lane). *Shujāʿ* is the adjective, "brave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

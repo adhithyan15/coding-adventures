@@ -14,7 +14,8 @@ romanization: "agi"
 concept_tag: KA-VERB-AGI
 prerequisites: [KA-C159-badisu, KA-C159-ruci-nodu]
 sounds: []
-roots: []
+roots: [dravidian-agi-chew]
+etymology_hook: "agi: native Dravidian (DEDR 2265)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C159-ruci-nodu]
 <!-- hl-knowledge: introduces=[KA-LEX-C159-KRIYE159-05]; assesses=[] -->
 
 **ಅಗಿ** — *agi* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಗಿ** (*agi*) is native Dravidian (DEDR 2265). DEDR lists *agi*, "to champ, bite, chew", beside *jagi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

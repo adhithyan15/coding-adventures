@@ -13,7 +13,8 @@ gloss: "a husband"
 concept_tag: FR-FAMILLE9-MARI
 prerequisites: [FR-C56-grand-pere, FR-C56-grand-mere]
 sounds: []
-roots: []
+roots: [maritus-latin]
+etymology_hook: "mari ← Latin maritus 'husband' — English marital shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C56-grand-mere]
 <!-- hl-knowledge: introduces=[FR-LEX-C57-FAMILLE9-01]; assesses=[] -->
 
 **le mari** — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mari** ← Latin *maritus*, "husband" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "právda"
 concept_tag: RU-VESHCH169-PRAVDA
 prerequisites: [RU-C169-pomoshch, RU-C169-mneniye]
 sounds: []
-roots: []
+roots: [slavic-pravu]
+etymology_hook: "правда is from правый 'right, straight': what is right"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C169-mneniye]
 <!-- hl-knowledge: introduces=[RU-LEX-C169-VESHCH169-04]; assesses=[] -->
 
 **правда** (*právda*) — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**правда** — Old Russian *правьда*, "justice, truth, law"; it is built on *правый*, "right, straight": the truth is what is right.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

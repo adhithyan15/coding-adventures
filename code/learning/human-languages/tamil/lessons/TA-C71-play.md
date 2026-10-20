@@ -11,7 +11,8 @@ romanization: "viḷaiyāḍu"
 concept_tag: TA-VERB-VILAIYADU
 prerequisites: [TA-C71-wash, TA-C69-station, TA-C70-roof]
 sounds: []
-roots: []
+roots: [dravidian-vilaiyadu-play]
+etymology_hook: "விளையாடு — native Dravidian (DEDR 5438); Malayalam viḷay-āṭuka"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ two unrelated words — Tamil lets them share the spelling and lets the sentence
 
 That is the last thing this chapter teaches, and it is bigger than the word: a long Tamil word
 usually has a short one you already own hiding at one end of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விளையாடு** (*viḷaiyāḍu*) is native Dravidian. DEDR 5438 lists Malayalam *viḷay-āṭuka*. The second half is *āṭu*, "to move, to dance". DEDR compares, with a query, Sanskrit *vilāsa*, "play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

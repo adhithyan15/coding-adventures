@@ -159,10 +159,11 @@ The letters in this word.
 That н=n is the last of the big four false friends (н=n; the other three say v, r and s). Learn those four and Cyrillic stops disguising itself as Latin.
 
 The word, taken apart.
-нет (nyet) is a compression of a whole clause. It comes from не + (ye)st' — "not is", i.e. "there is not."
+нет (nyet) is a compression of a whole clause. Vasmer traces it to older ne je tu, "not is here."
 не (nye) — the negator, "not."
-yest' — "is / there is" (its ancestor is the same verb as English is).
-So Russian's "no" is really "not-is" — a denial of existence, worn down to a single syllable. (Its longer form nyétu, "there isn't any," still shows the seam.)
+je — an old "is", the verb of English is.
+tu — "here", as in tut.
+So Russian's "no" is "not-is-here", worn down to one syllable. (Its longer form nyétu, "there isn't any," still shows the seam.)
 And that little не is one of the deepest words in the whole Indo-European family — the ancient negation ne. You already own a dozen of its English children:
 не corresponds to English no, not, none, never, nay, neither corresponds to Latin nōn corresponds to Sanskrit na corresponds to French non.
 When you say нет (nyet), you are pronouncing a cousin of no that has meant "not" for six thousand years.
@@ -183,7 +184,7 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 [once you have stopped driving — read: нет (nyet)]
-What clause is it worn down from? (не + yest', "not is.") What does н sound like — and what does it look like? (Says n, looks like Latin H.) Name two English cousins of не. (no, not, never, none, nay…)
+What clause is it worn down from? (Older ne je tu, "not is here.") What does н sound like — and what does it look like? (Says n, looks like Latin H.) Name two English cousins of не. (no, not, never, none, nay…)
 
 
 Lesson 5 of 17.
@@ -262,9 +263,9 @@ A big pronunciation mercy: nobody says all four middle syllables. The written п
 пожалуйста = pozhálusta, said "pa-ZHAL-sta".
 
 The word, taken apart.
-пожалуйста (pozhálusta) is пожалуй + a softening tag -ста. пожалуй is the command form of the old verb zhálovat', "to grant, to bestow a favour" — from the root жал-, the same root as zhal' ("a pity") and zhalet' ("to feel for someone").
+пожалуйста (pozhálusta) is пожалуй + a softening tag -ста. пожалуй is either the command form of the old verb zhálovat', "to grant, to bestow a favour", or a worn-down pozhálu(yu), "I grant" (Vasmer gives both) — on the root жал-, often linked to zhal', "a pity".
 So under the politeness sits "grant [me this], do me the kindness." English please is the same idea worn down — short for if it please you.
-It also does a job English splits off: the reply to thanks. Where English needs a separate "you're welcome," Russian answers spasíbo with пожалуйста (pozhálusta) — "[it was] a favour freely given."
+It also does a job English splits off: the reply to thanks. Where English needs a separate "you're welcome," Russian answers spasíbo with пожалуйста (pozhálusta).
 
 The word, taken apart — across the family: "please" is a favour, everywhere.
 Russian пожалуйста (pozhálusta) — "grant [me] a favour."
@@ -290,7 +291,7 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 [once you have stopped driving — read: пожалуйста (pozhálusta)]
-What favour-root hides inside it? (zhálovat', "to grant a favour" — cousin of zhal', "pity.") What two English phrases does this one word cover? ("please" and "you're welcome.") What sound does ж make? (zh, as in measure.)
+What favour-root hides inside it? (zhálovat', "to grant a favour" — linked to zhal', "pity.") What two English phrases does this one word cover? ("please" and "you're welcome.") What sound does ж make? (zh, as in measure.)
 
 
 Lesson 7 of 17.

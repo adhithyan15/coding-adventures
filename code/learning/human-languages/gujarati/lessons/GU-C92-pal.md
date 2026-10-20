@@ -14,7 +14,8 @@ romanization: "paḷ"
 concept_tag: GU-TIME92-PAL
 prerequisites: [GU-C92-paramdivas, GU-C92-varas]
 sounds: []
-roots: []
+roots: [sanskrit-pala]
+etymology_hook: "paḷ ← Sanskrit pala 'a weight; a measure of time', a tadbhava (CDIAL 7952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C92-varas]
 <!-- hl-knowledge: introduces=[GU-LEX-C92-TIME92-05]; assesses=[] -->
 
 **પળ** (*paḷ*) — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પળ** (*paḷ*) is a tadbhava of Sanskrit *pala*, "a particular weight", which also named "a measure of time" (CDIAL 7952).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

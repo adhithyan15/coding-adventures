@@ -14,7 +14,8 @@ romanization: "kaḍū"
 concept_tag: MR-QUAL149-KADU
 prerequisites: [MR-C149-kharat, MR-C149-ambat]
 sounds: []
-roots: []
+roots: [sanskrit-katu]
+etymology_hook: "kaḍū ← Sanskrit kaṭu 'pungent, bitter', a tadbhava (CDIAL 2641)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C149-ambat]
 <!-- hl-knowledge: introduces=[MR-LEX-C149-QUAL149-03]; assesses=[] -->
 
 **कडू** — *kaḍū* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कडू** (*kaḍū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭu*, "pungent, bitter" (CDIAL 2641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

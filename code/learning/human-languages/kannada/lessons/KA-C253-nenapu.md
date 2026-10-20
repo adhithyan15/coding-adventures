@@ -14,7 +14,8 @@ romanization: "nenapu"
 concept_tag: KA-KARANA253-NENAPU
 prerequisites: [KA-C253-udaharane, KA-C253-ghatane]
 sounds: []
-roots: []
+roots: [dravidian-ninai-think]
+etymology_hook: "nenapu: native Dravidian; DEDR 3683 lists nenapu 'remembrance'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C253-ghatane]
 <!-- hl-knowledge: introduces=[KA-LEX-C253-KARANA253-03]; assesses=[] -->
 
 **ನೆನಪು** — *nenapu* — "a memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆನಪು** (*nenapu*) is native Dravidian, from *nene*, "to think of, remember", and DEDR 3683 lists *nenapu*, "remembrance", itself; the entry also has Tamil *niṉai* and Telugu *neppu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

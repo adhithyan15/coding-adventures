@@ -1,0 +1,11 @@
+{
+  "id": "RU-W259-with-a-clock",
+  "pathSegment": "RU-PATH-258-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-258-WRITING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:e807d95a88fc77ab",
+  "lessonIds": [
+    "ES-C543-reanudar",
+    "ES-C543-retrasar",
+    "ES-C543-aplazar",
+    "ES-C543-adelantar",
+    "ES-C543-permanecer",
+    "ES-R543-repaso-536-543"
+  ],
+  "tex": "spanish/book/chapters/ch543-mas-tarde-de-lo-previsto.tex"
+}

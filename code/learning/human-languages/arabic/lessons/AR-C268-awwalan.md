@@ -14,7 +14,8 @@ romanization: "awwalan"
 concept_tag: AR-SABAB268-AWWALAN
 prerequisites: [AR-C268-bidun, AR-C268-mathalan]
 sounds: []
-roots: []
+roots: [ʾ-w-l]
+etymology_hook: "awwalan: built on the root ʾ-w-l, 'first' (Lane); awwalan is awwal, 'first', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C268-mathalan]
 <!-- hl-knowledge: introduces=[AR-LEX-C268-SABAB268-05]; assesses=[] -->
 
 **أولا** — *awwalan* — "first, firstly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أولا** (*awwalan*) is built on the native Arabic root *ʾ-w-l*, "first; to return" (Lane). *Awwalan* is *awwal*, "first", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

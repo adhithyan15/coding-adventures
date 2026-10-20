@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "To stray, Off the road, Without roads, Roundabout way, To wander about",
+  "label": "ch:la-to-stray-off-the-road-without-roads-roundabout-way-to-wander-about",
+  "canDo": "I can talk about getting lost: straying from the road, going off the road, roadless country, a roundabout way, and wandering about.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C452-vagor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can talk about getting lost: straying from the road, going off the road, roadless country, a roundabout way, and wandering about.",
+    "assesses": [
+      "LA-LEX-C452-ABERRO-03",
+      "LA-LEX-C452-ABERRO-04",
+      "LA-LEX-C452-ABERRO-05"
+    ]
+  }
+}

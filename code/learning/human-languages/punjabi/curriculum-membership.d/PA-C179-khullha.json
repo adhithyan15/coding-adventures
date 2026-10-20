@@ -1,0 +1,11 @@
+{
+  "id": "PA-C179-khullha",
+  "pathSegment": "PA-PATH-179-A2-SCHEDULE-STATUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-179-A2-SCHEDULE-STATUS",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "dhūmayānam"
 concept_tag: SA-THINGS123-DHUMAYANAM
 prerequisites: [SA-C123-yanam, SA-C123-nauyanam]
 sounds: []
-roots: []
+roots: [sanskrit-dhuma, sanskrit-yana]
+etymology_hook: "dhūmayāna ← dhūma 'smoke' (cf. Latin fumus, MW) + yāna 'vehicle': 'smoke-carriage'; a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C123-nauyanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **धूमयानम्** — *dhūmayānam* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhūmayāna* is built from *dhūma* "smoke" and *yāna* "vehicle": "the smoke-carriage", a modern coinage from the days of the steam engine. MW sets *dhūma* beside Latin *fumus* "smoke", the source of English *fume*, and it lives on as Hindi *dhuāṁ* "smoke" (CDIAL 6849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

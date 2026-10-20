@@ -14,7 +14,8 @@ romanization: "iḍli"
 concept_tag: KA-THINGS125-IDLI
 prerequisites: [KA-C124-bellulli, KA-C124-jenu]
 sounds: []
-roots: []
+roots: [dravidian-ittali-idli]
+etymology_hook: "iḍli: native Dravidian, one word with Tamil iṭṭali and Malayalam iṭṭali (DEDR 455)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C124-jenu]
 <!-- hl-knowledge: introduces=[KA-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **ಇಡ್ಲಿ** — *iḍli* — "an idli".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಡ್ಲಿ** (*iḍli*) is native Dravidian, one word with Tamil *iṭṭali* and Malayalam *iṭṭali* (DEDR 455). DEDR lists *iḍḍali*, *iḍḍalige*, a steamed cake of rice flour and black gram. DEDR 455 compares Sanskrit *iṇḍarī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

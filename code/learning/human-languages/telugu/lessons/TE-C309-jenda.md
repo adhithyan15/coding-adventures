@@ -14,7 +14,8 @@ romanization: "jeṇḍā"
 concept_tag: TE-VASTUVU309-JENDA
 prerequisites: [TE-C309-stambham, TE-C309-kulayi]
 sounds: []
-roots: []
+roots: [hindustani-jhanda]
+etymology_hook: "jeṇḍā: like Hindustani jhaṇḍā 'flag' (CDIAL 6898)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C309-kulayi]
 <!-- hl-knowledge: introduces=[TE-LEX-C309-VASTUVU309-05]; assesses=[] -->
 
 **జెండా** — *jeṇḍā* — "a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జెండా** (*jeṇḍā*) matches Hindustani *jhaṇḍā*, "flagstaff, flag", which CDIAL 6898 sets under a reconstructed \*dhvajadaṇḍa, "flagstaff".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

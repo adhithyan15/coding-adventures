@@ -14,7 +14,8 @@ romanization: "ghaṇṭā"
 concept_tag: MR-VASTU178-GHANTA
 prerequisites: [MR-C178-jevanghar, MR-C178-sajja]
 sounds: []
-roots: []
+roots: [sanskrit-ghanta]
+etymology_hook: "ghaṇṭā: Sanskrit ghaṇṭā 'bell', a tatsama; CDIAL lists the inherited Marathi ghāṁṭ (CDIAL 4421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C178-sajja]
 <!-- hl-knowledge: introduces=[MR-LEX-C178-VASTU178-04]; assesses=[] -->
 
 **घंटा** — *ghaṇṭā* — "a bell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घंटा** (*ghaṇṭā*) is Sanskrit *ghaṇṭā*, "bell", a tatsama; CDIAL lists the inherited Marathi form as *ghāṁṭ*, "bell" (CDIAL 4421). EWA derives it from *granthi*, "bell", but CDIAL takes that *granthi* as probably a Sanskrit rendering of Prakrit *ghaṁṭiā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

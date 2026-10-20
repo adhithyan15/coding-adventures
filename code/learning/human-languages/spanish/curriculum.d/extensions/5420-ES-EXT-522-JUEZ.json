@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-522-JUEZ",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that there was a trial, that the judge judged and sentenced someone, and that they went to prison.",
+  "prerequisites": []
+}

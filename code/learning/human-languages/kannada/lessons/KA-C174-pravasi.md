@@ -14,7 +14,8 @@ romanization: "pravāsi"
 concept_tag: KA-STHALA174-PRAVASI
 prerequisites: [KA-C173-kone, KA-C173-angala]
 sounds: []
-roots: []
+roots: [sanskrit-pravasa]
+etymology_hook: "pravāsi ← Sanskrit pravāsin 'one who is abroad, a traveller'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C173-angala]
 <!-- hl-knowledge: introduces=[KA-LEX-C174-STHALA174-01]; assesses=[] -->
 
 **ಪ್ರವಾಸಿ** — *pravāsi* — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರವಾಸಿ** (*pravāsi*) is Sanskrit *pravāsin*, "one who is away from home, a traveller", from *pravāsa*, "a stay abroad". Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

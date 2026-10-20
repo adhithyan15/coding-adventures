@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C418-remar",
+    "language": "portuguese",
+    "chapter": 418,
+    "sequence": 23490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12a9e1f878b4422a"
+  },
+  "findings": []
+}

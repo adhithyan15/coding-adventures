@@ -14,7 +14,8 @@ romanization: "muthallajāt"
 concept_tag: AR-SHAY182-MUTHALLAJAT
 prerequisites: [AR-C182-salsa, AR-C182-shatira]
 sounds: []
-roots: []
+roots: [th-l-j]
+etymology_hook: "muthallajāt: built on the root th-l-j, 'snow' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C182-shatira]
 <!-- hl-knowledge: introduces=[AR-LEX-C182-SHAY182-03]; assesses=[] -->
 
 **مثلجات** — *muthallajāt* — "ice cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مثلجات** (*muthallajāt*) is built on the native Arabic root *th-l-j*, "snow" (Lane). *Muthallajāt* is the plural of the Form II passive participle, "things chilled with snow, iced".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

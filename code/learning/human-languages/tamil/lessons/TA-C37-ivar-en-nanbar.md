@@ -6,15 +6,15 @@ sequence: 1130
 chapter: 37
 type: phrase
 headword: இவர் என் நண்பர்
-gloss: "this is my friend" — three words, no verb, and a choice of ending that says how you regard them
+gloss: '"this is my friend" — three words, no verb, and a choice of ending that says how you regard them'
 romanization: ivar eṉ naṇbar
 concept_tag: TA-INTRODUCE-A-THIRD-PERSON
 prerequisites: [TA-C37-ivar]
 sounds: [pulli-virama, tamil-retroflex-nna]
-roots: [dravidian-i-proximal-deictic, dravidian-nannu-draw-near]
-etymology_hook: "இவர் என் நண்பர் needs no word for 'is' — Tamil links two nouns by putting them side by side"
+roots: [dravidian-i-proximal-deictic, dravidian-nannu-draw-near, naan-dravidian]
+etymology_hook: "இவர் என் நண்பர் — three native words (DEDR 410, 5160, 3588); Kannada naṇṭu 'friendship'"
 duration:
-  max_seconds: 250
+  max_seconds: 299
 requires:
   knowledge: [TA-LEX-IVAR-01, TA-GRAMMAR-IVAR-02, TA-LEX-NANBAN-01, TA-ETYMON-NANBAN-02, TA-LEX-UUR-01, TA-LEX-KUDUMBAM-02, TA-ETYMON-KUDUMBAM-01, TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-MA-RETROFLEX-NA-02, TA-SCRIPT-ABUGIDA-VA-KA-02]
 introduces:
@@ -43,7 +43,7 @@ order.
 
 > **இவர் என் நண்பர்.** — *ivar eṉ naṇbar* — **This is my friend.**
 
-Three words, and **not one of them is a verb**. Tamil links two nouns by setting
+Three words, all inherited from Dravidian, and **not one of them is a verb**. Tamil links two nouns by setting
 them beside each other, as in **என் பெயர் …** and **என் தவறு**.
 
 The pieces in order: **இவர்**, the person here; **என்**, my; **நண்பர்**,
@@ -54,8 +54,6 @@ The whole meeting:
 > — **வணக்கம். இவர் என் நண்பர்.**
 >
 > — **வணக்கம். உங்கள் ஊர் என்ன.**
-
-Every word in it is yours.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-MA-RETROFLEX-NA-02] -->

@@ -11,7 +11,8 @@ romanization: "anumati"
 concept_tag: KA-NOUN-PERMISSION
 prerequisites: [KA-C65-request, KA-C63-sleep]
 sounds: []
-roots: []
+roots: [sanskrit-anumati]
+etymology_hook: "anumati ← Sanskrit anumati 'assent', anu 'after, along with' + mati 'mind', a tatsama"
 duration:
   max_seconds: 210
 requires:

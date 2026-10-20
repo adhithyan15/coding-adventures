@@ -1,0 +1,11 @@
+{
+  "id": "FR-C307-degat",
+  "pathSegment": "FR-PATH-307-DEGATS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-307-DEGATS",
+      "order": 0
+    }
+  ]
+}

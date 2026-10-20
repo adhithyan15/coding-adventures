@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [MW-W05-o-matra]
 sounds: [aspirated-mh, long-aa, tapped-r, long-o]
 roots: []
+etymology_hook: "mhāro 'my': CDIAL has no Marwari entry; its nearest row is Old Gujarati māharaü 'my' (CDIAL 9691)"
 duration:
   max_seconds: 180
 requires:
@@ -46,6 +47,11 @@ does. [YOU WRITE: **पाणी** from the heard cue *pāṇī*; then the vowel
 
 Every piece is known. The virāma removes the vowel from **म** so **म्ह** begins
 *mh*, not *maha*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**म्हारो** (*mhāro*) is the Marwari "my". CDIAL lists no Marwari *mhāro*; its nearest row is Old Gujarati *māharaü*, "my", under the first-person stem *ma-* (CDIAL 9691), beside Old Marwari *meraü*. How the word took its *mh-* is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->

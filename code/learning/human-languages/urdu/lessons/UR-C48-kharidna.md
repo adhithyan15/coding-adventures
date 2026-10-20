@@ -14,7 +14,8 @@ romanization: "kharīdnā"
 concept_tag: UR-VERB-KHARIDNA
 prerequisites: [UR-C47-daurna, UR-C48-khelna]
 sounds: []
-roots: []
+roots: [persian-kharidan]
+etymology_hook: "kharīdnā: usually traced to Persian kharīdan 'to buy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C48-khelna]
 <!-- hl-knowledge: introduces=[UR-LEX-C48-VERBS48-02]; assesses=[] -->
 
 **خریدنا** — *kharīdnā* — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خریدنا** (*kharīdnā*) is a loan, usually traced to Persian *kharīdan*, "to buy". Urdu took its stem *kharīd-* and added the verb ending *-nā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

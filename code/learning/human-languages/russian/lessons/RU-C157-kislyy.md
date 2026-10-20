@@ -14,7 +14,8 @@ romanization: "kíslyy"
 concept_tag: RU-KACH157-KISLYY
 prerequisites: [RU-C157-goluboy, RU-C157-sladkiy]
 sounds: []
-roots: []
+roots: [slavic-kysu]
+etymology_hook: "кислый ← Proto-Slavic *kyslŭ; Latvian kūsât 'to boil, ferment' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C157-sladkiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C157-KACH157-03]; assesses=[] -->
 
 **кислый** (*kíslyy*) — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кислый** ← Proto-Slavic *\*kyslŭ* — inherited, with *кисель*, "a fruit jelly". Vasmer relates it to Latvian *kûsât*, "to boil, to bubble": sour as fermented.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C483-digerer",
+  "pathSegment": "FR-PATH-483-NAUSEE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-483-NAUSEE",
+      "order": 4
+    }
+  ]
+}

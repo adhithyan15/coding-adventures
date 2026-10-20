@@ -6,7 +6,7 @@ sequence: 990
 chapter: 55
 type: grammar
 headword: estamos
-gloss: "we are" — the other one, and the plural where estar behaves and ser does not
+gloss: '"we are" — the other one, and the plural where estar behaves and ser does not'
 concept_tag: ES-GRAMMAR-ESTAR-PRESENT-PLURAL
 prerequisites: [ES-C09-repaso-ser, ES-C07-hablamos]
 sounds: []

@@ -14,7 +14,8 @@ romanization: "gailo"
 concept_tag: MW-QUAL149-GAILO
 prerequisites: [MW-C149-darpok, MW-C149-bahadur]
 sounds: []
-roots: []
+roots: [sanskrit-grahila]
+etymology_hook: "gailo ← Sanskrit grahila 'possessed by an evil spirit', a tadbhava (CDIAL 4366, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C149-bahadur]
 <!-- hl-knowledge: introduces=[MW-LEX-C149-QUAL149-05]; assesses=[] -->
 
 **गैलो** — *gailo* — "crazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गैलो** (*gailo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *grahila*, "possessed by an evil spirit". CDIAL lists Marwari *gahalo* under it (CDIAL 4366). The Marwari row means "foolish"; **गैलो** (*gailo*) has lost its *h*. CDIAL thinks the Sanskrit word was made from Middle Indo-Aryan *gahila*, built on *graha*, "seizing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

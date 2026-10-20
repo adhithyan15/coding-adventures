@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C517-presenciar",
+    "language": "spanish",
+    "chapter": 517,
+    "sequence": 15440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1947d5baa021d80a"
+  },
+  "findings": []
+}

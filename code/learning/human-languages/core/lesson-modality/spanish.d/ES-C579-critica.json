@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C579-critica",
+    "language": "spanish",
+    "chapter": 579,
+    "sequence": 18660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e586fd19c27442ff"
+  },
+  "findings": []
+}

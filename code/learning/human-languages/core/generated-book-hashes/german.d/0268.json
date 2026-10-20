@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:f4237657d450726f",
+  "lessonIds": [
+    "GE-C268-augenblick",
+    "GE-C268-zeitpunkt",
+    "GE-C268-zeitraum",
+    "GE-C268-dauer",
+    "GE-C268-frist"
+  ],
+  "tex": "german/book/chapters/ch268-der-augenblick.tex"
+}

@@ -14,7 +14,8 @@ romanization: "pūyu"
 concept_tag: TE-VERB-PUYU
 prerequisites: [TE-C203-potladu, TE-C203-edugu]
 sounds: []
-roots: []
+roots: [dravidian-pu-flower]
+etymology_hook: "pūyu: native Dravidian; DEDR 4345 lists pūcu 'to blossom' beside pū 'flower'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C203-edugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C203-KRIYA203-04]; assesses=[] -->
 
 **పూయు** — *pūyu* — "to bloom, to flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పూయు** (*pūyu*) is native Dravidian. DEDR 4345 lists *pūcu*, "to blossom", beside *pū*, "flower". DEDR compares, with a query, Sanskrit *puṣpa*, "flower" (CDIAL 8303). DEDR 4352 *pūyu*, "to smear", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

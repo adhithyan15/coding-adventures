@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to wilt, then the Telugu for to bark.
 You'll want to know: సేకరించు.
 సేకరించు — sēkariñcu — "to collect".
 
+The word, taken apart.
+DEDR 2801 lists సేకరించు (sēkariñcu), "to save, collect", with Tamil cēkaram, "acquisition, collection", and notes that the Malayalam forms look Sanskrit though Sanskrit has no such word in this sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to bark, then the Telugu for to collect.
 
 You'll want to know: ప్రసారం చేయు.
 ప్రసారం చేయు — prasāraṁ cēyu — "to broadcast".
+
+The word, taken apart.
+ప్రసారం చేయు (prasāraṁ cēyu) pairs Sanskrit prasāra, "extension, spreading" (CDIAL 8835), with the Telugu ending -ṁ, and native cēyu, "to do" (DEDR 1957).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for to collect, then the Telugu for to broadc
 You'll want to know: ముద్రించు.
 ముద్రించు — mudriñcu — "to print".
 
+The word, taken apart.
+ముద్రించు (mudriñcu) is Sanskrit mudrā, "seal, signet-ring" (CDIAL 10203), made into a verb with the Telugu ending -iñcu: "to stamp, print". CDIAL thinks mudrā probably came from Iranian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for to broadcast, then the Telugu for to prin
 You'll want to know: డౌన్లోడ్ చేయు.
 డౌన్లోడ్ చేయు — ḍaunlōḍ cēyu — "to download".
 
+The word, taken apart.
+డౌన్లోడ్ చేయు (ḍaunlōḍ cēyu) pairs ḍaunlōḍ, a loan from English download, with native cēyu, "to do" (DEDR 1957).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for to print, then the Telugu for to download
 
 You'll want to know: టైప్ చేయు.
 టైప్ చేయు — ṭaip cēyu — "to type".
+
+The word, taken apart.
+టైప్ చేయు (ṭaip cēyu) pairs ṭaip, a loan from English type, with native cēyu, "to do" (DEDR 1957).
 
 What you've built.
 One more word for this chapter.

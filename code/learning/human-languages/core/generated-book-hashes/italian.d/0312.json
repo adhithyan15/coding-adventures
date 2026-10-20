@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:d010aca70fc59482",
+  "lessonIds": [
+    "IT-C312-antenato",
+    "IT-C312-posteri",
+    "IT-C312-discendenza",
+    "IT-C312-stirpe",
+    "IT-C312-albero-genealogico",
+    "IT-R312-ripasso-305-312"
+  ],
+  "tex": "italian/book/chapters/ch312-le-radici.tex"
+}

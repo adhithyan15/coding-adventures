@@ -14,7 +14,8 @@ romanization: "puḷiyuḷḷa"
 concept_tag: ML-QUAL165-PULIYULLA
 prerequisites: [ML-C165-kaypulla, ML-C165-erivulla, ML-C109-neither-so]
 sounds: []
-roots: []
+roots: [dravidian-puli-sour, dravidian-ul-be]
+etymology_hook: "puḷiyuḷḷa: native Dravidian, 'having sourness': puḷi (DEDR 4322) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C165-erivulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C165-QUAL165-05]; assesses=[] -->
 
 **പുളിയുള്ള** — *puḷiyuḷḷa* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുളിയുള്ള** (*puḷiyuḷḷa*) is native Dravidian, "having sourness": *puḷi*, "sourness, tamarind" (DEDR 4322, with Tamil *puḷi*), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

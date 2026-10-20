@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a benefit, then the Marathi for a loss.
 You'll want to know: शेजार.
 शेजार — śejār — "the neighbourhood".
 
+The word, taken apart.
+शेजार (śejār) is a tadbhava, a word inherited and reshaped by sound change. It comes from sagṛhya, "neighbouring", a form CDIAL reconstructs from its descendants (CDIAL 13077). CDIAL glosses the Marathi word "neighbourhood, neighbours".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a loss, then the Marathi for the neighbo
 
 You'll want to know: वाहतूक.
 वाहतूक — vāhtūk — "traffic, transport".
+
+The word, taken apart.
+वाहतूक (vāhtūk) is built on the stem vāh-, "carry", of Marathi vāhṇẽ, "to carry", which CDIAL lists under Sanskrit vāhayati, "drives" (CDIAL 11612).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for the neighbourhood, then the Marathi for 
 You'll want to know: प्रवासी.
 प्रवासी — pravāsī — "a passenger, a traveller".
 
+The word, taken apart.
+प्रवासी (pravāsī) is Sanskrit pravāsin, "one away from home, a traveller", a tatsama built on pravāsa, "dwelling abroad" (CDIAL 8802).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for traffic, then the Marathi for a passenge
 You'll want to know: रांग.
 रांग — rāṅg — "a queue, a line".
 
+The word, taken apart.
+The origin of रांग (rāṅg) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a passenger, then the Marathi for a queu
 
 You'll want to know: गर्दी.
 गर्दी — gardī — "a crowd".
+
+The word, taken apart.
+The origin of गर्दी (gardī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

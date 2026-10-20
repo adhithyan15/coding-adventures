@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:367d33c949f32a9e",
+  "lessonIds": [
+    "PT-C348-efeito",
+    "PT-C348-provocar",
+    "PT-C348-causar",
+    "PT-C348-fator",
+    "PT-C348-consequencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch348.txt",
+  "json": "portuguese/narration/ch348.json",
+  "textHash": "fnv1a64:35dfcca083aac27c",
+  "jsonHash": "fnv1a64:9a307cc7f620c0b5",
+  "findings": []
+}

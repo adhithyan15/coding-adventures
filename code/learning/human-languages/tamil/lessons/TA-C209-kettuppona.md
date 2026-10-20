@@ -14,7 +14,8 @@ romanization: "keṭṭuppōṉa"
 concept_tag: TA-GUNAM209-KETTUPPONA
 prerequisites: [TA-C208-takaval, TA-C208-rakaciyam]
 sounds: []
-roots: []
+roots: [dravidian-kedu-spoil, po-go-dravidian]
+etymology_hook: "கெட்டுப்போன — native: keṭu 'to go bad' (DEDR 1942) + pōṉa 'gone' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C208-rakaciyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C209-GUNAM209-01]; assesses=[] -->
 
 **கெட்டுப்போன** — *keṭṭuppōṉa* — "spoiled, gone off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கெட்டுப்போன** (*keṭṭuppōṉa*) is native: *keṭṭu*, "having spoiled", from *keṭu*, "to perish, to go bad" (DEDR 1942), and *pōṉa*, "gone", from *pō* (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

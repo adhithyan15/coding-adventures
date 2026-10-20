@@ -14,6 +14,7 @@ concept_tag: FR-REPAS72-MELON
 prerequisites: [FR-C120-fraise, FR-C120-cerise]
 sounds: []
 roots: []
+etymology_hook: "melon ← Late Latin melo, from Greek melopepon 'apple-gourd'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C120-cerise]
 <!-- hl-knowledge: introduces=[FR-LEX-C120-REPAS72-03]; assesses=[] -->
 
 **le melon** — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**melon** ← Late Latin *melo*, *melonis*, short for *melopepo*, from Greek *melopepon*, "apple-gourd" — taken from Latin. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

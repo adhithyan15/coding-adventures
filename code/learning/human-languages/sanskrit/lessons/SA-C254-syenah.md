@@ -14,7 +14,8 @@ romanization: "śyenaḥ"
 concept_tag: SA-THG254-SYENAH
 prerequisites: [SA-C253-nakrah, SA-C254-cakravakah]
 sounds: []
-roots: []
+roots: [sanskrit-shyena]
+etymology_hook: "śyena 'hawk, eagle', a Rigvedic bird of prey; MW gives no derivation, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C254-cakravakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C254-THG254-02]; assesses=[] -->
 
 **श्येनः** — *śyenaḥ* — "a hawk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śyena* is a hawk or eagle, the bird that brings the Soma down in the Rigveda (MW). MW gives it no derivation, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

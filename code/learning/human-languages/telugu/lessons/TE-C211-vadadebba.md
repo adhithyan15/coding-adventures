@@ -14,7 +14,8 @@ romanization: "vaḍadebba"
 concept_tag: TE-AROGYAM211-VADADEBBA
 prerequisites: [TE-C211-ekkillu, TE-C211-guraka]
 sounds: []
-roots: []
+roots: [dravidian-vadi-heat, dravidian-debbe-blow]
+etymology_hook: "vaḍadebba: native vaḍa 'heat' (DEDR 5225) + debba 'blow' (DEDR 3075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C211-guraka]
 <!-- hl-knowledge: introduces=[TE-LEX-C211-AROGYAM211-04]; assesses=[] -->
 
 **వడదెబ్బ** — *vaḍadebba* — "sunstroke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వడదెబ్బ** (*vaḍadebba*) is native Dravidian: *vaḍa*, "hot wind, heat", one word with Kannada *vaḍi*, "heat" (DEDR 5225), and *debba*, "blow", one word with Kannada *debbe* (DEDR 3075).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

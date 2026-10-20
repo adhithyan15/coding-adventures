@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 94,
-  "sourceHash": "fnv1a64:a9fecf2845d23d5e",
+  "sourceHash": "fnv1a64:3542a1dd02c1e09c",
   "lessonIds": [
     "PT-C94-duche",
     "PT-C94-banheira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch94.txt",
   "json": "portuguese/narration/ch94.json",
-  "textHash": "fnv1a64:dd73a6683a1fdbcd",
-  "jsonHash": "fnv1a64:b03071a1de4c5b9f",
+  "textHash": "fnv1a64:96548ef53b7f33b6",
+  "jsonHash": "fnv1a64:f3186dad5e84964c",
   "findings": []
 }

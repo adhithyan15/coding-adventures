@@ -12,6 +12,9 @@ Before the new one: say the Tamil for land, then the Tamil for a valley.
 You'll want to know: மாவட்டம்.
 மாவட்டம் — māvaṭṭam — "a district".
 
+The word, taken apart.
+மாவட்டம் (māvaṭṭam) is mā, "great", and vaṭṭam, "circle", usually traced to Sanskrit vṛtta, "rounded" (CDIAL 12069): "the great circle".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a valley, then the Tamil for a district.
 
 You'll want to know: குடிசை.
 குடிசை — kuṭicai — "a hut".
+
+The word, taken apart.
+குடிசை (kuṭicai) is native Dravidian. DEDR 1655 lists Malayalam kuṭi, "house, hut" and Telugu guḍise. It is built on kuṭi, "dwelling". The entry compares Sanskrit kuṭi, "hut" (CDIAL 3232).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a district, then the Tamil for a hut.
 You'll want to know: கோபுரம்.
 கோபுரம் — kōpuram — "a tower, a temple gateway tower".
 
+The word, taken apart.
+கோபுரம் (kōpuram) is a well-established loan from Sanskrit gopura, "town gate".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a hut, then the Tamil for a tower.
 You'll want to know: சிறை.
 சிறை — ciṟai — "a prison".
 
+The word, taken apart.
+சிறை (ciṟai) is native Dravidian. DEDR 1980 lists Telugu ceṟa, "prison". The entry glosses the Tamil verb as "to restrain, to imprison".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a tower, then the Tamil for a prison.
 
 You'll want to know: உலகம்.
 உலகம் — ulakam — "the world".
+
+The word, taken apart.
+உலகம் (ulakam) is a loan from Sanskrit loka, "free space, the world" (CDIAL 11119).
 
 What you've built.
 One more word for this chapter.

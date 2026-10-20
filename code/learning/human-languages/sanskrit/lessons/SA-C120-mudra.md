@@ -14,7 +14,8 @@ romanization: "mudrā"
 concept_tag: SA-THINGS120-MUDRA
 prerequisites: [SA-C119-kupi, SA-C119-chatrika]
 sounds: []
-roots: []
+roots: [sanskrit-mudra]
+etymology_hook: "mudrā 'seal, signet-ring' is probably borrowed from Iranian (CDIAL 10203, after EWA); Punjabi mundī 'ring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C119-chatrika]
 <!-- hl-knowledge: introduces=[SA-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **मुद्रा** — *mudrā* — "a coin, a seal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mudrā* "a seal, a signet-ring", and later a coin, is probably borrowed from Iranian (CDIAL 10203, after EWA). It lives on as Punjabi *mundī* "ring" (CDIAL 10203).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ehsān"
 concept_tag: HI-NOUN-FAVOUR
 prerequisites: [HI-C50-gratitude, HI-C48-enough, HI-C49-day-after]
 sounds: []
-roots: []
+roots: [arabic-ihsan]
+etymology_hook: "ehsān ← Arabic iḥsān 'doing good', through Persian (Lane, root ḥ-s-n)"
 duration:
   max_seconds: 210
 requires:

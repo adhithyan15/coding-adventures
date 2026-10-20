@@ -14,7 +14,8 @@ romanization: "derakht"
 concept_tag: FA-SCHOOL51-DERAKHT
 prerequisites: [FA-C51-name, FA-C51-ruzname]
 sounds: []
-roots: []
+roots: [persian-derakht]
+etymology_hook: "derakht ← Middle Persian draxt (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C51-ruzname]
 <!-- hl-knowledge: introduces=[FA-LEX-C51-SCHOOL51-03]; assesses=[] -->
 
 **درخت** — *derakht* — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*derakht* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *draxt*, "tree" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

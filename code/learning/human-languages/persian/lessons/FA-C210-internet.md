@@ -14,7 +14,8 @@ romanization: "internet"
 concept_tag: FA-CHIZ210-INTERNET
 prerequisites: [FA-C210-rasane, FA-C210-mosahebe]
 sounds: []
-roots: []
+roots: [english-internet]
+etymology_hook: "internet: a loan, usually traced to English internet 'internet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C210-mosahebe]
 <!-- hl-knowledge: introduces=[FA-LEX-C210-CHIZ210-04]; assesses=[] -->
 
 **اینترنت** — *internet* — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*internet* is a loan, usually traced to English *internet*, "internet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

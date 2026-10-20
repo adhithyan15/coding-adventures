@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to smile, then the Urdu for to panic.
 You'll want to know: چننا.
 چننا — chunnā — "to choose, to pick".
 
+The word, taken apart.
+چننا (chunnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cinoti, "heaps up, collects" (CDIAL 4814). CDIAL explains the u as taken from other verbs.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to panic, then the Urdu for to choose.
 
 You'll want to know: بدلنا.
 بدلنا — badalnā — "to change".
+
+The word, taken apart.
+بدلنا (badalnā) is a loan from Arabic badal, "a substitute, an exchange", which reached Urdu through Persian. Its Arabic root is b-d-l (Lane). Urdu made a verb of it with -nā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to choose, then the Urdu for to change.
 You'll want to know: ادھار لینا.
 ادھار لینا — udhār lenā — "to borrow".
 
+The phrase, taken apart.
+ادھار لینا (udhār lenā) joins udhār, "a debt, credit", and lenā, "to take". udhār comes from Sanskrit uddhāra, "a raising; a loan" (CDIAL 2018), and lenā from Sanskrit labhate, "catches, takes" (CDIAL 10948).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to change, then the Urdu for to borrow.
 You'll want to know: قرض دینا.
 قرض دینا — qarz denā — "to lend (money)".
 
+The phrase, taken apart.
+قرض دینا (qarz denā) joins qarz, "a loan", and denā, "to give". qarz is Arabic qarḍ, "a loan", which reached Urdu through Persian (Lane, root q-r-ḍ); denā comes from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to borrow, then the Urdu for to lend.
 
 You'll want to know: بچانا.
 بچانا — bachānā — "to save, to rescue".
+
+The word, taken apart.
+بچانا (bachānā) is the causing form of bachnā, "to escape": to save is to make someone escape. CDIAL lists bachnā under Sanskrit vañcati, "moves; escapes from" (CDIAL 11208).
 
 What you've built.
 One more word for this chapter.

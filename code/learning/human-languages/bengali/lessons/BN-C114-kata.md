@@ -14,7 +14,8 @@ romanization: "kā̃ṭā"
 concept_tag: BN-THINGS114-KATA
 prerequisites: [BN-C114-shikor, BN-C114-bij]
 sounds: []
-roots: []
+roots: [sanskrit-kantaka]
+etymology_hook: "kāṁṭā ← Sanskrit kaṇṭaka 'thorn', a tadbhava (CDIAL 2668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C114-bij]
 <!-- hl-knowledge: introduces=[BN-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **কাঁটা** — *kā̃ṭā* — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁটা** (*kāṁṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṇṭaka*, "thorn" (CDIAL 2668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

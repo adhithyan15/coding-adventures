@@ -14,7 +14,8 @@ romanization: "kāraṇ"
 concept_tag: HI-THG222-KARAN
 prerequisites: [HI-C221-vasant, HI-C222-patjhar]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "kāraṇ ← Sanskrit kāraṇa 'cause', a tatsama (CDIAL 3057)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C222-patjhar]
 <!-- hl-knowledge: introduces=[HI-LEX-C222-THG222-02]; assesses=[] -->
 
 **कारण** — *kāraṇ* — "a reason, a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कारण** (*kāraṇ*) is Sanskrit *kāraṇa*, "cause", taken over whole as a learned loan, a tatsama (CDIAL 3057). CDIAL lists the inherited form as *kāran*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "raghsidan"
 concept_tag: FA-VERB-RAGHSIDAN
 prerequisites: [FA-C37-shostan, FA-C37-khandidan]
 sounds: []
-roots: []
+roots: [arabic-raqs]
+etymology_hook: "raghsidan: raghs ← Arabic raqṣ 'dancing', root r-q-ṣ (Lane), + Persian -idan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C37-khandidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C38-VERBS38-01]; assesses=[] -->
 
 **رقصیدن** — *raghsidan* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*raghsidan* is built on *raghs*, "dance", borrowed from Arabic *raqṣ*, "dancing" (root *r-q-ṣ*, Lane), with the Persian verb ending *-idan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Des papiers en règle",
+  "label": "ch:fr-des-papiers-en-regle",
+  "canDo": "I can keep my papers in order: say when something expires, whether it is still valid, and renew it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C384-renouvellement",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can keep my papers in order: say when something expires, whether it is still valid, and renew it.",
+    "assesses": [
+      "FR-LEX-C384-VALABLE-03",
+      "FR-LEX-C384-VALABLE-04",
+      "FR-LEX-C384-VALABLE-05"
+    ]
+  }
+}

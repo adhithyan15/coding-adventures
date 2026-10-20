@@ -14,7 +14,8 @@ romanization: "anannās"
 concept_tag: UR-CHIZ252-ANANNAS
 prerequisites: [UR-C252-papita, UR-C252-khubani]
 sounds: []
-roots: []
+roots: [portuguese-ananas]
+etymology_hook: "anannās: usually traced to Portuguese ananás, from a South American (Tupi) word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C252-khubani]
 <!-- hl-knowledge: introduces=[UR-LEX-C252-CHIZ252-03]; assesses=[] -->
 
 **اناناس** — *anannās* — "a pineapple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اناناس** (*anannās*) is usually traced to Portuguese *ananás*, "pineapple", which the Portuguese took from a South American (Tupi) word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

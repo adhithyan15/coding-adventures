@@ -14,7 +14,8 @@ romanization: "phaḷā"
 concept_tag: MR-THINGS134-PHALA
 prerequisites: [MR-C134-vati, MR-C134-patele]
 sounds: []
-roots: []
+roots: [sanskrit-phalaka]
+etymology_hook: "phaḷā ← Sanskrit phalaka 'board, lath, bench', a tadbhava (CDIAL 9053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C134-patele]
 <!-- hl-knowledge: introduces=[MR-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **फळा** — *phaḷā* — "a blackboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फळा** (*phaḷā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phalaka*, "board, lath, bench" (CDIAL 9053). CDIAL glosses the Marathi word "plank".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

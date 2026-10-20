@@ -14,7 +14,8 @@ romanization: "yasai"
 concept_tag: JA-FOOD32-YASAI
 prerequisites: [JA-C32-niku, JA-C32-tamago]
 sounds: []
-roots: []
+roots: [middle-chinese-yaex, middle-chinese-tshojh]
+etymology_hook: "yasai: Sino-Japanese 野 'field' + 菜 'vegetables', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C32-tamago]
 <!-- hl-knowledge: introduces=[JA-LEX-C32-FOOD32-04]; assesses=[] -->
 
 **やさい** — *yasai* — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やさい** (*yasai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ya*, "field" (Middle Chinese *yaeX*) and *sai*, "vegetables" (*tshojH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

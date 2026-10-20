@@ -14,7 +14,8 @@ romanization: "rishe"
 concept_tag: FA-THINGS103-RISHE
 prerequisites: [FA-C103-abshar, FA-C103-mowj]
 sounds: []
-roots: []
+roots: [persian-rishe]
+etymology_hook: "rishe: inherited, usually traced to Middle Persian rēšag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C103-mowj]
 <!-- hl-knowledge: introduces=[FA-LEX-C103-THINGS103-05]; assesses=[] -->
 
 **ریشه** — *rishe* — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rishe* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rēšag*, "root". EtymDB takes it back to the Indo-European word for "root" behind Latin *radix* and English *wort*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

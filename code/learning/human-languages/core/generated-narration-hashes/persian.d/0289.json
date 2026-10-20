@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:0792c482add37e2c",
+  "lessonIds": [
+    "FA-W289-chahar-khat"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch289.txt",
+  "json": "persian/narration/ch289.json",
+  "textHash": "fnv1a64:e43975bd4df92cf3",
+  "jsonHash": "fnv1a64:be444e72cb2c0e0c",
+  "findings": []
+}

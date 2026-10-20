@@ -13,7 +13,8 @@ gloss: "a ham"
 concept_tag: LA-RES195-PERNA
 prerequisites: [LA-C195-acetum, LA-C195-garum]
 sounds: []
-roots: []
+roots: [perna-latin]
+etymology_hook: "perna 'ham' — usually traced to PIE *persneh2 'heel'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C195-garum]
 <!-- hl-knowledge: introduces=[LA-LEX-C195-RES195-04]; assesses=[] -->
 
 **perna, pernae** — "a ham".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perna** is inherited, usually traced to Proto-Indo-European *\*persneh2*, "heel" (EtymDB 2.1): first the leg of meat with the heel, then the ham. Gothic *fairzna*, "heel", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 251,
-  "sourceHash": "fnv1a64:00498b61b72ef073",
+  "sourceHash": "fnv1a64:13277f295480a7f3",
   "lessonIds": [
     "GE-C251-uebrigens",
     "GE-C251-sowieso",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch251.txt",
   "json": "german/narration/ch251.json",
-  "textHash": "fnv1a64:9e5206d87136dfed",
-  "jsonHash": "fnv1a64:6270feb11e0c321c",
+  "textHash": "fnv1a64:ae9f71bcbfe5f85c",
+  "jsonHash": "fnv1a64:ffac774491d616b3",
   "findings": []
 }

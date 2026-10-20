@@ -1,0 +1,11 @@
+{
+  "id": "IT-C438-lamentela",
+  "pathSegment": "IT-PATH-438-RECLAMO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-438-RECLAMO",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "pogaḍu"
 concept_tag: TE-VERB-POGADU
 prerequisites: [TE-C162-kaugilincu, TE-C162-atapattincu]
 sounds: []
-roots: []
+roots: [dravidian-pukazh-praise]
+etymology_hook: "pogaḍu: native Dravidian, one word with Tamil pukaḻ and Kannada pogaḻ (DEDR 4235)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C162-atapattincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C162-KRIYA162-04]; assesses=[] -->
 
 **పొగడు** — *pogaḍu* — "to praise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొగడు** (*pogaḍu*) is native Dravidian, one word with Tamil *pukaḻ* and Kannada *pogaḻ* (DEDR 4235). DEDR lists Telugu *pogaḍu*, "to praise, applaud".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ You'll want to know: शिक्षक.
 Sanskrit, and it comes apart cleanly in the hand: the root śikṣ-, 'to learn, to be taught', with the agent ending -aka — the one who brings the learning about. The same root gives śikṣā, education, and śikṣit, educated.
 Everyday speech reaches for ustād or guru depending on what is being taught and by whom, but शिक्षक (śikṣak) is the word on the school form, and the feminine śikṣikā is built from it by the ending alone.
 
+The word, taken apart.
+शिक्षक (śikṣak) is Sanskrit śikṣaka, "one who teaches", taken over whole as a learned loan, a tatsama. It is built on śikṣā, "learning, study", which also came down into everyday Hindi as sīkh, "advice" (CDIAL 12432).
+
 What you've built.
 The first of five words for who someone is.
 
@@ -77,6 +80,9 @@ You'll want to know: किसान.
 From kṛṣāṇa, on the Sanskrit root kṛṣ-, 'to plough, to drag through the ground' — the same root behind kṛṣi, agriculture. A farmer, in this word, is simply the one who drags the plough.
 Latin reached for the same picture and got there with different material: sulcus, a furrow, is not related to kṛṣ- at all. Two families, no shared word, and the identical image — which is worth noticing precisely because it proves nothing about descent.
 
+The word, taken apart.
+किसान (kisān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṛṣāṇa, "ploughing" (CDIAL 3447). It is the present participle of kṛṣati, "ploughs": a farmer is "the one ploughing".
+
 What you've built.
 Three, and each one names work rather than family.
 
@@ -138,8 +144,8 @@ Before the new one: what did mehmān mean?
 
 You'll want to know: पड़ोसी.
 पड़ोसी (paṛosī) — "a neighbour".
-Built on paṛos, the neighbourhood, with the -ī that turns a place into a person — the very ending that makes आदमी out of Adam.
-Behind paṛos is Sanskrit prati-veśa, 'the dwelling opposite', on veś-, 'to enter, to settle'. So a neighbour here is not merely the one who is near you. It is the one whose door faces yours.
+It sits beside paṛos, the neighbourhood, and its -ī sounds like the ending that makes आदमी out of Adam. The history is a little different. CDIAL derives paṛosī from prativeśiya, a by-form it reconstructs beside Sanskrit prativeśya, "neighbour" (CDIAL 8599), so the -ī continues that old -iya. The place-word paṛos comes separately from Sanskrit prativeśa, "neighbouring" (CDIAL 8598).
+Both are built on prati-, "towards, facing", and the verb viś-, "to enter, to settle". CDIAL prefers that verb to the older idea of a compound with veśa, "dwelling".
 
 What you've built.
 Five, and the run is closed: a teacher, a student, a farmer, a guest, a neighbour.

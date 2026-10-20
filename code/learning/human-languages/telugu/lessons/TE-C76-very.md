@@ -11,7 +11,8 @@ romanization: "cālā manci"
 concept_tag: TE-DEGREE-VERY
 prerequisites: [TE-C75-year, TE-C28-madhyahnam-widened]
 sounds: []
-roots: []
+roots: [dravidian-caal-suffice, telugu-manci-good]
+etymology_hook: "cālā manci: native cāla 'abundantly' (DEDR 2470) + manci 'good', whose origin is uncertain"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C75-year]
 Until now every adjective you had was flat: పెద్ద was big and there was no bigger. చాలా is the dial.
 
 It stands in front of what it strengthens: **చాలా పెద్ద** "very big", **చాలా కొత్త** "very new". It also works on its own for "a lot", where కొంచెం was "a little".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చాలా మంచి** (*cālā manci*) is *cālā*, "very", which DEDR 2470 lists as *cāla*, "abundant, abundantly", under *cālu*, "to be enough", with Tamil *cāl*; and *manci*, "good", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

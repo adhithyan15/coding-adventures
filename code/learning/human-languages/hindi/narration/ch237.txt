@@ -12,6 +12,9 @@ Before the new one: say the Hindi for separate, then the Hindi for round.
 You'll want to know: चौकोर.
 चौकोर — caukor — "square".
 
+The word, taken apart.
+चौकोर (caukor) is "four-edged": cau-, "four", and kor, "edge, side", which CDIAL lists under a reconstructed korā, "edge" (CDIAL 3531).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for round, then the Hindi for square.
 
 You'll want to know: तिकोना.
 तिकोना — tikoṇā — "triangular".
+
+The word, taken apart.
+तिकोना (tikoṇā) is "three-cornered": ti-, "three", and koṇ, "corner", from Sanskrit koṇa, which CDIAL takes from Dravidian (CDIAL 3504).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for square, then the Hindi for triangular.
 You'll want to know: संकरा.
 संकरा — saṅkarā — "narrow".
 
+The word, taken apart.
+संकरा (saṅkarā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁkaṭa, "contracted, narrow" (CDIAL 12817).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for triangular, then the Hindi for narrow.
 You'll want to know: उथला.
 उथला — uthlā — "shallow".
 
+The word, taken apart.
+उथला (uthlā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthala, "shallow", a form CDIAL reconstructs from its descendants (CDIAL 1899). It is built on sthala, "dry land".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for narrow, then the Hindi for shallow.
 
 You'll want to know: बासी.
 बासी — bāsī — "stale".
+
+The word, taken apart.
+बासी (bāsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāsita, "infused, scented" (CDIAL 11604). The sense turned from "scented" to "smelling, stale".
 
 What you've built.
 One more word for this chapter.

@@ -14,6 +14,7 @@ concept_tag: FR-MAISON66-POUBELLE
 prerequisites: [FR-C114-shampooing, FR-C114-peigne]
 sounds: []
 roots: []
+etymology_hook: "poubelle — named after Eugène Poubelle, who made Paris use lidded bins in 1884"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C114-peigne]
 <!-- hl-knowledge: introduces=[FR-LEX-C114-MAISON66-04]; assesses=[] -->
 
 **la poubelle** — "a bin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poubelle** comes from the name of Eugène Poubelle, the prefect of Paris who made lidded bins compulsory in 1884.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

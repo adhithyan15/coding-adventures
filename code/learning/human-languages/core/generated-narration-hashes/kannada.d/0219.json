@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 219,
-  "sourceHash": "fnv1a64:1315bf924b11a0d4",
+  "sourceHash": "fnv1a64:7037367cc3d43e4e",
   "lessonIds": [
     "KA-C219-samanya",
     "KA-C219-mondu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch219.txt",
   "json": "kannada/narration/ch219.json",
-  "textHash": "fnv1a64:a3b7ff2e202f056c",
-  "jsonHash": "fnv1a64:9315c153958f6dcf",
+  "textHash": "fnv1a64:6d55b90e5a4b92e0",
+  "jsonHash": "fnv1a64:395f4cc73cc69ced",
   "findings": []
 }

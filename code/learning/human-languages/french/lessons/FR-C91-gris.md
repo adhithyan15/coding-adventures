@@ -14,6 +14,7 @@ concept_tag: FR-ADJ43-GRIS
 prerequisites: [FR-C91-riche, FR-C91-pauvre]
 sounds: []
 roots: []
+etymology_hook: "gris ← Frankish *gris 'grey' — English grizzled is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C91-pauvre]
 <!-- hl-knowledge: introduces=[FR-LEX-C91-ADJ43-05]; assesses=[] -->
 
 **gris** — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gris** ← Old French *gris*, which EtymDB 2.1 traces to Vulgar Latin *\*grisus*; behind it is Frankish *\*gris*, "grey" — borrowed from the Franks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

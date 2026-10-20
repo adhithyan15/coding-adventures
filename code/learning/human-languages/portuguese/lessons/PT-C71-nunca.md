@@ -13,7 +13,8 @@ gloss: "never"
 concept_tag: PT-QUANDO2-NUNCA
 prerequisites: [PT-C70-minuto, PT-C70-sempre]
 sounds: []
-roots: []
+roots: [numquam-latin]
+etymology_hook: "nunca ← Latin numquam 'never', from ne 'not' + umquam 'ever'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C70-sempre]
 <!-- hl-knowledge: introduces=[PT-LEX-C71-QUANDO2-01]; assesses=[] -->
 
 **nunca** — "never".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nunca** ← Latin *numquam*, "never" (EtymDB 2.1), from *ne*, "not", and *umquam*, "ever" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

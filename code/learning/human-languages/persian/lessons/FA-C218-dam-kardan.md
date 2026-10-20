@@ -14,7 +14,8 @@ romanization: "dam kardan"
 concept_tag: FA-VERB-DAM-KARDAN
 prerequisites: [FA-C217-rah-raftan, FA-C217-savar-shodan]
 sounds: []
-roots: []
+roots: [persian-dam, pie-kwer]
+etymology_hook: "dam kardan: Persian dam 'breath, steam' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C217-savar-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C218-KONESH218-01]; assesses=[] -->
 
 **دم کردن** — *dam kardan* — "to brew (tea); to steam (rice)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dam kardan* pairs *dam*, "breath, steam", a native word, with *kardan*: to let it steam. (EtymDB also lists Arabic *dam*, "blood", a different word that looks alike.) *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

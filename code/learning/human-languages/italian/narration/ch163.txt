@@ -12,6 +12,9 @@ Before the new one: say the Italian for a battery, then the Italian for a charge
 You'll want to know: il meccanico.
 il meccanico — "a mechanic".
 
+The word, taken apart.
+meccanico from Latin mechanicus, "of machines", from Greek mechanikos, from mechane, "a machine" — a learned borrowing. EtymDB 2.1 has no row for meccanico; it derives Spanish mecánico from mechanicus.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a charger, then the Italian for a mechan
 
 You'll want to know: l'elettricista.
 l'elettricista — "an electrician".
+
+The word, taken apart.
+elettricista — built from the word for "electric" with -ista. That word goes back to Latin electrum, "amber", from Greek elektron: rubbed amber gives a spark. (EtymDB 2.1 records the Latin and Greek words.)
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a mechanic, then the Italian for an elec
 You'll want to know: l'idraulico.
 l'idraulico — "a plumber".
 
+The word, taken apart.
+idraulico from Latin hydraulicus, "of the water organ", from Greek hydraulikos — a learned borrowing. EtymDB 2.1 has no row for idraulico; it derives French hydraulique from hydraulicus.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for an electrician, then the Italian for a p
 You'll want to know: l'operaio.
 l'operaio — "a worker".
 
+The word, taken apart.
+operaio from Latin operarius, "a labourer", from opera, "work" — inherited: Latin -arius passed down by speech became -aio. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a plumber, then the Italian for a worker
 
 You'll want to know: l'impiegato.
 l'impiegato — "an office worker".
+
+The word, taken apart.
+impiegato is the past participle of impiegare, "to employ", which from Latin implicare, "to enfold, to involve". (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

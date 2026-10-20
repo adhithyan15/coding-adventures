@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:59817ab4afb054d5",
+  "sourceHash": "fnv1a64:411a389ecbf91e8b",
   "lessons": [
     {
       "id": "GE-C02-ich",
@@ -410,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07f4e84dc2e32999",
+      "sourceHash": "fnv1a64:6767098c016f2b66",
       "notice": null,
       "blocks": [
         {
@@ -432,6 +432,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "heißen from Old High German heizzan, \"to call, to command\" from Proto-Germanic haitaną — inherited. (EtymDB 2.1) The old English word hight, \"called\", comes from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "grammar",
           "title": "Grammar Lens: one verb, changing its ending",
           "segments": [
@@ -458,7 +469,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -498,7 +509,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -792,7 +803,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a10b23a822c8f90",
+      "sourceHash": "fnv1a64:3101b427ee59511e",
       "notice": null,
       "blocks": [
         {
@@ -829,6 +840,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wie heißen Sie is built from wie, \"how\", heißen, \"to be called\", and Sie. heißen from Old High German heizzan from Proto-Germanic haitaną, \"to call, to command\" (EtymDB 2.1). The polite Sie is the word for \"they\", capitalised."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: verb in second place",
           "segments": [
@@ -855,7 +877,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -895,7 +917,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1044,7 +1066,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8ed916ba4b31eff",
+      "sourceHash": "fnv1a64:9d106514e88756ed",
       "notice": null,
       "blocks": [
         {
@@ -1101,7 +1123,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "German literally says \"[it] gladdens me\" — the meeting is what does the gladdening, and you (mich) are on the receiving end. Two common variants: sehr erfreut (\"much pleased\") and the plain angenehm (\"pleasant / agreeable\"), both usable as \"pleased to meet you.\""
+              "text": "German literally says \"[it] gladdens me\" — the meeting is what does the gladdening, and you (mich) are on the receiving end. A common variant is the plain angenehm (\"pleasant / agreeable\"), also usable as \"pleased to meet you.\""
             }
           ]
         },
@@ -1137,11 +1159,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a variant — \"sehr erfreut\" or \"angenehm\"",
+              "instruction": "the variant — \"angenehm\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a variant — \"sehr erfreut\" or \"angenehm\"]"
+              "source": "[YOU SAY: the variant — \"angenehm\"]"
             }
           ]
         },

@@ -13,7 +13,8 @@ gloss: "an elbow"
 concept_tag: IT-CORPO122-GOMITO
 prerequisites: [IT-C121-balena, IT-C121-delfino]
 sounds: []
-roots: []
+roots: [cubitum-latin]
+etymology_hook: "gomito ← Latin cubitum 'elbow' — English cubit, an arm's length, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C121-delfino]
 <!-- hl-knowledge: introduces=[IT-LEX-C122-CORPO122-01]; assesses=[] -->
 
 **il gomito** — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gomito** ← Latin *cubitum*, "elbow" — inherited. EtymDB 2.1 has no row for *gomito*; it derives Old French *coute* and the older Italian form *gombito* from *cubitum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

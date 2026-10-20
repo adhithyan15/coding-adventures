@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:462fc9f8e2710dd4",
+  "sourceHash": "fnv1a64:2c90e20f6f2651df",
   "lessons": [
     {
       "id": "LA-C12-medius-dies-nox",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43ea00f1f2c7cfec",
+      "sourceHash": "fnv1a64:89923b29a7c30644",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "English didn't inherit this phrase for \"noon\" at all. Instead, English's noon comes from an entirely different Latin phrase: nōna hōra, \"the ninth hour\" — originally meaning roughly 3 p.m. (counting from a sunrise start), it drifted steadily earlier over the centuries until it settled on midday."
+              "text": "English didn't inherit this phrase for \"noon\" at all. Instead, English's noon comes from an entirely different Latin phrase, \"the ninth hour\" (the next lesson meets its second word) — originally meaning roughly 3 p.m. (counting from a sunrise start), it drifted steadily earlier over the centuries until it settled on midday."
             },
             {
               "kind": "speech",
@@ -79,6 +79,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "medius diēs joins two inherited words: diēs \"day\", met with the weekday names, and medius \"middle\", usually traced to Proto-Indo-European medhyos, \"middle\" (EtymDB 2.1), a cousin of English mid."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,16 +120,16 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nōna hōra\" — the ninth hour — English's real ancestor for \"noon\"",
+              "instruction": "what English's real ancestor for \"noon\" meant — \"the ninth hour\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nōna hōra\" — the ninth hour — English's real ancestor for \"noon\"]"
+              "source": "[YOU SAY: what English's real ancestor for \"noon\" meant — \"the ninth hour\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do medius diēs and media nox literally mean? (\"The middle day\" = noon; \"the middle night\" = midnight.) Which language kept both halves of both phrases fully transparent? (Spanish — mediodía, medianoche.) Which language kept \"night\" but not \"day\"? (French — nuit stayed alive, -di became a fossil.) Does English's noon come from this same phrase? (No — from nōna hōra, \"the ninth hour,\" which drifted from afternoon to midday.)"
+              "text": "What do medius diēs and media nox literally mean? (\"The middle day\" = noon; \"the middle night\" = midnight.) Which language kept both halves of both phrases fully transparent? (Spanish — mediodía, medianoche.) Which language kept \"night\" but not \"day\"? (French — nuit stayed alive, -di became a fossil.) Does English's noon come from this same phrase? (No — from a Latin phrase meaning \"the ninth hour,\" which drifted from afternoon to midday.)"
             }
           ]
         }

@@ -14,7 +14,8 @@ romanization: "paḻuppu"
 concept_tag: TA-GUNAM211-PALUPPU
 prerequisites: [TA-C211-muttal, TA-C211-ilancivappu]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "பழுப்பு — native Dravidian (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C211-ilancivappu]
 <!-- hl-knowledge: introduces=[TA-LEX-C211-GUNAM211-05]; assesses=[] -->
 
 **பழுப்பு** — *paḻuppu* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழுப்பு** (*paḻuppu*) is native Dravidian (DEDR 4004). The entry gives *paḻuppu*, "ripeness, the yellowness of ripe fruit": brown is the colour of ripening. The entry compares Sanskrit *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

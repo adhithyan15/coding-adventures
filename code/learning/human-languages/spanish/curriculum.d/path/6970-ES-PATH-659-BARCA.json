@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-659-BARCA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-659-BARCA"
+  ],
+  "after": []
+}

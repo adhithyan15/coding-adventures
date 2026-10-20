@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 404,
-  "sourceHash": "fnv1a64:e3830a569263a0d9",
+  "sourceHash": "fnv1a64:43ec0f25c74ffe78",
   "lessonIds": [
     "ES-C404-apagar",
     "ES-C404-wifi",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch404.txt",
   "json": "spanish/narration/ch404.json",
-  "textHash": "fnv1a64:d625e44c3279ebda",
-  "jsonHash": "fnv1a64:ec4134f8b9e30e6c",
+  "textHash": "fnv1a64:b337b713c614fde3",
+  "jsonHash": "fnv1a64:be2ab5e6b0a2fdff",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a teacher, then the Marwadi for to eat.
 You'll want to know: पीणो.
 पीणो — pīṇo — "to drink".
 
+The word, taken apart.
+पीणो (pīṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pibati, "drinks". CDIAL gives no Marwari form in this entry (CDIAL 8209); the match is through Hindi pīnā and Gujarati pīvũ. It is built on the root pā, "to drink", as pāṇī is.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to eat, then the Marwadi for to drink.
 
 You'll want to know: जाणो.
 जाणो — jāṇo — "to go".
+
+The word, taken apart.
+जाणो (jāṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yāti, "goes, approaches". CDIAL lists Old Marwari jāvaï under it (CDIAL 10452).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to drink, then the Marwadi for to go.
 You'll want to know: आवणो.
 आवणो — āvṇo — "to come".
 
+The word, taken apart.
+आवणो (āvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āpayati, "causes to reach". CDIAL lists Old Marwari āvaï under it (CDIAL 1200).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to go, then the Marwadi for to come.
 You'll want to know: देखणो.
 देखणो — dekhṇo — "to see".
 
+The word, taken apart.
+देखणो (dekhṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dekṣati, "sees", a variant CDIAL reconstructs from its descendants beside dṛkṣati. CDIAL lists Marwari dekhṇo under it (CDIAL 6507).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to come, then the Marwadi for to see.
 
 You'll want to know: सुणणो.
 सुणणो — suṇṇo — "to hear, to listen".
+
+The word, taken apart.
+सुणणो (suṇṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛṇoti, "hears". CDIAL lists Marwari suṇṇo under it (CDIAL 12598).
 
 What you've built.
 One more word for this chapter.

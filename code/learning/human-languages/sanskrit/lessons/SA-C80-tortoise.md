@@ -14,7 +14,8 @@ romanization: "kūrmaḥ"
 concept_tag: SA-ANIMAL-TORTOISE
 prerequisites: [SA-C80-parrot, SA-C80-peacock]
 sounds: []
-roots: []
+roots: [sanskrit-kurma]
+etymology_hook: "kūrma 'tortoise' is in the Vājasaneyi Saṃhitā; its origin is not settled (CDIAL 3414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C80-peacock]
 <!-- hl-knowledge: introduces=[SA-LEX-C80-BIRDS-04]; assesses=[] -->
 
 **कूर्मः** (*kūrmaḥ*) — "a tortoise", slow, with its house on its **पृष्ठम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kūrma* is an old word, already in the Vājasaneyi Saṃhitā (CDIAL 3414), but its
+origin is not settled: neither MW nor CDIAL gives it a root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

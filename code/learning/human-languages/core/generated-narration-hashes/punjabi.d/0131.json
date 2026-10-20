@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 131,
-  "sourceHash": "fnv1a64:533ca5f1507619d1",
+  "sourceHash": "fnv1a64:0ca1764731a5159c",
   "lessonIds": [
     "PA-C131-battakh",
     "PA-C131-kirli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch131.txt",
   "json": "punjabi/narration/ch131.json",
-  "textHash": "fnv1a64:9ecac5850684582b",
-  "jsonHash": "fnv1a64:a90babae222e2512",
+  "textHash": "fnv1a64:417c49446718ed1e",
+  "jsonHash": "fnv1a64:e7ff49b240a2025a",
   "findings": []
 }

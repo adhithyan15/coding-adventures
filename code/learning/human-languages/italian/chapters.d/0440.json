@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Chiedere la strada",
+  "label": "ch:it-chiedere-la-strada",
+  "canDo": "I can ask for and follow directions: the satnav, directions, turning, carrying on and taking a road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C440-imboccare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can ask for and follow directions: the satnav, directions, turning, carrying on and taking a road.",
+    "assesses": [
+      "IT-LEX-C440-INDICAZIONI-03",
+      "IT-LEX-C440-INDICAZIONI-04",
+      "IT-LEX-C440-INDICAZIONI-05"
+    ]
+  }
+}

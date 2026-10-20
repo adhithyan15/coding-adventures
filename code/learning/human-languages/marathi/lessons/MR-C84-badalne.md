@@ -14,7 +14,8 @@ romanization: "badalṇe"
 concept_tag: MR-VERB-BADALNE
 prerequisites: [MR-C83-jinkne, MR-C84-bharne]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalṇe ← Arabic badal 'a substitute, an exchange', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C84-bharne]
 <!-- hl-knowledge: introduces=[MR-LEX-C84-VERBS84-02]; assesses=[] -->
 
 **बदलणे** — *badalṇe* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बदलणे** (*badalṇe*) is a loan from Arabic *badal*, "a substitute, an exchange", which reached Marathi through Persian. Its Arabic root is *b-d-l* (Lane). Marathi made a verb of it with *-ṇe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

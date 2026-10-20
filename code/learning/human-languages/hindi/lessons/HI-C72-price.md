@@ -14,7 +14,8 @@ romanization: "dām"
 concept_tag: HI-NOUN-PRICE
 prerequisites: [HI-C72-rupee, HI-C02-kya, HI-C70-cricket, HI-C71-today]
 sounds: []
-roots: []
+roots: [sanskrit-dramma]
+etymology_hook: "dām ← Sanskrit dramma 'a coin', itself from Greek drachmē via Middle Persian (CDIAL 6622)"
 duration:
   max_seconds: 240
 requires:
@@ -56,9 +57,13 @@ Now put it with a word you have had since the second chapter. **क्या** i
 is a whole question, built from one new word and two you already own. This is
 the sentence a market runs on, and you can now say it.
 
-You have also seen दाम before, standing in a row of look-alikes beside **नाम**
-and **काम** when you were learning to pick a name out of a line. Now it means
-something.
+Set it beside **नाम** and **शाम**, two words you own: only the first letter
+changes, and the word changes with it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दाम** (*dām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dramma*, "a coin" (CDIAL 6622). CDIAL traces the Sanskrit word itself to Greek *drachmē*, through Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

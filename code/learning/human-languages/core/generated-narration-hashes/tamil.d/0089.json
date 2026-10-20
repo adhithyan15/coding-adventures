@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 89,
-  "sourceHash": "fnv1a64:47a576fea352a860",
+  "sourceHash": "fnv1a64:e56f59f76185aedb",
   "lessonIds": [
     "TA-C89-sadness",
     "TA-C89-worry",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch89.txt",
   "json": "tamil/narration/ch89.json",
-  "textHash": "fnv1a64:e84355f7a997ce09",
-  "jsonHash": "fnv1a64:c3161360ac9f67a3",
+  "textHash": "fnv1a64:b44c956aaf9062b9",
+  "jsonHash": "fnv1a64:2ac0d9fb736bbbc3",
   "findings": []
 }

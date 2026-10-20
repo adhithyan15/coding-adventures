@@ -10,7 +10,8 @@ gloss: "to save (money or time)"
 concept_tag: ES-VERB-AHORRAR
 prerequisites: [ES-C484-apoyar, ES-C484-agradecer]
 sounds: []
-roots: []
+roots: [hurr-arabic]
+etymology_hook: "ahorrar — built on horro 'freed', from Arabic ḥurr 'free': first to set free, then to spare"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C484-agradecer]
 > *I save a little every month.*
 
 The verb behind *el ahorro*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ahorrar** is built on *horro*, "freed", said of a slave set free, from Arabic *ḥurr*, "free" (EtymDB 2.1). To save was first to set free, then to spare.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

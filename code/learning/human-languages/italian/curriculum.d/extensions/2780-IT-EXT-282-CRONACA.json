@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-282-CRONACA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the papers: the news pages, the dailies, the weeklies, a headline and an article.",
+  "prerequisites": []
+}

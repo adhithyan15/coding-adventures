@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 81,
-  "sourceHash": "fnv1a64:e201e67edc0b5b65",
+  "sourceHash": "fnv1a64:3598e37d026366b4",
   "lessonIds": [
     "MW-C81-dur",
     "MW-C81-najik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch81.txt",
   "json": "marwadi/narration/ch81.json",
-  "textHash": "fnv1a64:f7537145100b6270",
-  "jsonHash": "fnv1a64:e582c92ec9a5304a",
+  "textHash": "fnv1a64:46aa647149027af3",
+  "jsonHash": "fnv1a64:c02759f52079f352",
   "findings": []
 }

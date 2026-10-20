@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 157,
-  "sourceHash": "fnv1a64:2417ec481b3c2bf9",
+  "sourceHash": "fnv1a64:297d09642f41425c",
   "lessonIds": [
     "FR-C157-au-dessus",
     "FR-C157-au-dessous",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch157.txt",
   "json": "french/narration/ch157.json",
-  "textHash": "fnv1a64:bee025906abfd1a0",
-  "jsonHash": "fnv1a64:f670f11703062fbd",
+  "textHash": "fnv1a64:880c40e441fe11c4",
+  "jsonHash": "fnv1a64:7a649d0cd43320d7",
   "findings": []
 }

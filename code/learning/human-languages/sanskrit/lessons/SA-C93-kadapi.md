@@ -14,7 +14,8 @@ romanization: "kadāpi"
 concept_tag: SA-TIME93-KADAPI
 prerequisites: [SA-C92-adhuna, SA-C92-sarvada]
 sounds: []
-roots: []
+roots: [sanskrit-kadapi]
+etymology_hook: "kadāpi ← kadā 'when' + api 'even, also' (MW); after na it means 'never'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C92-sarvada]
 <!-- hl-knowledge: introduces=[SA-LEX-C93-TIME93-01]; assesses=[] -->
 
 **कदापि** — *kadāpi* — "ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kadāpi* is built from *kadā* "when", which MW derives from the question stem *ka-*, and the particle *api* "even, also": "at any time at all". After *na* it turns into "never".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

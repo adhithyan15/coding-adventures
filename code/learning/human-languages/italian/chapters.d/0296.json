@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Chi è stato",
+  "label": "ch:it-chi-e-stato",
+  "canDo": "I can follow a whodunnit: the suspect, the motive, the alibi, the questioning and the confession.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R296-ripasso-289-296",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can follow a whodunnit: the suspect, the motive, the alibi, the questioning and the confession.",
+    "assesses": [
+      "IT-LEX-C296-MOVENTE-03",
+      "IT-LEX-C296-MOVENTE-04",
+      "IT-LEX-C296-MOVENTE-05"
+    ]
+  }
+}

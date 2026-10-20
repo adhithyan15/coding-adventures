@@ -14,7 +14,8 @@ romanization: "itsuka"
 concept_tag: JA-TIME77-ITSUKA
 prerequisites: [JA-C77-mikka, JA-C77-yokka]
 sounds: []
-roots: []
+roots: [japanese-itsu-five, japanese-ka-day, japanese-itsu-when]
+etymology_hook: "itsuka: native itsu 'five' + ka 'day'; 'some day' is itsu 'when' + ka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C77-yokka]
 <!-- hl-knowledge: introduces=[JA-LEX-C77-TIME77-04]; assesses=[] -->
 
 **いつか** — *itsuka* — "the fifth of the month; some day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いつか** (*itsuka*) is two native phrases that sound alike. "The fifth" is *itsu*, "five", with *ka*, "day" (KANJIDIC2); "some day" is *itsu*, "when", with the question word *ka*: "some time or other". Both are inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

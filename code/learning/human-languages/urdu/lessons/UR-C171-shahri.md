@@ -14,7 +14,8 @@ romanization: "shahrī"
 concept_tag: UR-CHIZ171-SHAHRI
 prerequisites: [UR-C170-chacha, UR-C170-chachi]
 sounds: []
-roots: []
+roots: [persian-shahr]
+etymology_hook: "shahrī: shahr 'city', usually traced to Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C170-chachi]
 <!-- hl-knowledge: introduces=[UR-LEX-C171-CHIZ171-01]; assesses=[] -->
 
 **شہری** — *shahrī* — "a citizen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شہری** (*shahrī*) is *shahr*, "city", usually traced to Persian *shahr*, with the ending *-ī*, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

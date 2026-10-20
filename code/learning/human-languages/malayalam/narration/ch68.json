@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ec182a5a04bc3edd",
+  "sourceHash": "fnv1a64:ad28ebdb912fe276",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abd2e74df2f47031",
+      "sourceHash": "fnv1a64:8b28a13d4974d466",
       "notice": null,
       "blocks": [
         {
@@ -96,6 +96,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആറാം (āṟāṁ) is native Dravidian: \"six\" (DEDR 2485, with Tamil āṟu and Kannada āṟu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,7 +146,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -166,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46a68a102e3b2c35",
+      "sourceHash": "fnv1a64:4217d7fa74db4663",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +267,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏഴാം (ēḻāṁ) is native Dravidian: \"seven\" (DEDR 910, with Tamil ēḻu and Kannada ēḻu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -295,7 +317,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -326,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf682e4a2a2f082f",
+      "sourceHash": "fnv1a64:83f1a099205e8ce2",
       "notice": null,
       "blocks": [
         {
@@ -399,6 +421,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എട്ടാം (eṭṭāṁ) is native Dravidian: \"eight\" (DEDR 784, with Tamil eṭṭu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -438,7 +471,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -459,9 +492,9 @@
     {
       "id": "ML-C68-ninth",
       "sequence": 2320,
-      "title": "ഒമ്പതാം (ompathāṁ) — ninth",
+      "title": "ഒമ്പതാം (ompatāṁ) — ninth",
       "headword": "ഒമ്പതാം",
-      "romanization": "ompathāṁ",
+      "romanization": "ompatāṁ",
       "gloss": "ninth — an already-built number takes the ending like any other",
       "script": "malayalam",
       "modality": "voice",
@@ -469,7 +502,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccb2e182b2b51001",
+      "sourceHash": "fnv1a64:62adc6d32b2e541d",
       "notice": null,
       "blocks": [
         {
@@ -528,20 +561,31 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒമ്പതാം (ompathāṁ) — \"ninth\"."
+              "text": "ഒമ്പതാം (ompatāṁ) — \"ninth\"."
             },
             {
               "kind": "speech",
-              "text": "ഒമ്പത് was already a built word when you learned it: an old word for one plus pathŭ, ten — one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
+              "text": "ഒമ്പത് was already a built word when you learned it: an old word for one plus pattŭ, ten — usually read as one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
             },
             {
               "kind": "speech",
-              "text": "ഒമ്പതാം ദിവസം (ompathāṁ divasaṁ), the ninth day."
+              "text": "ഒമ്പതാം ദിവസം (ompatāṁ divasaṁ), the ninth day."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒമ്പതാം (ompatāṁ) is native Dravidian: \"nine\" (DEDR 1025, with Tamil oṉpatu, ompatu and Kannada ombattu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -554,34 +598,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ompathŭ, then ompathāṁ",
+              "instruction": "ompatŭ, then ompatāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ompathŭ*, then *ompathāṁ*]"
+              "source": "[YOU SAY: *ompatŭ*, then *ompatāṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "eṭṭāṁ, ompathāṁ",
+              "instruction": "eṭṭāṁ, ompatāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *eṭṭāṁ, ompathāṁ*]"
+              "source": "[YOU SAY: *eṭṭāṁ, ompatāṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "on-pathŭ slowly, then let it settle into ompathāṁ",
+              "instruction": "on-patŭ slowly, then let it settle into ompatāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *on-pathŭ* slowly, then let it settle into *ompathāṁ*]"
+              "source": "[YOU SAY: *on-patŭ* slowly, then let it settle into *ompatāṁ*]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -593,7 +637,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the ninth day\". (ഒമ്പതാം (ompathāṁ) ദിവസം.) What two words are inside ഒമ്പത്? (An old one, and pathŭ, ten.)"
+              "text": "Say \"the ninth day\". (ഒമ്പതാം (ompatāṁ) ദിവസം.) What two words are inside ഒമ്പത്? (An old one, and pattŭ, ten.)"
             }
           ]
         }
@@ -602,9 +646,9 @@
     {
       "id": "ML-C68-tenth",
       "sequence": 2330,
-      "title": "പത്താം (pathāṁ) — tenth",
+      "title": "പത്താം (pattāṁ) — tenth",
       "headword": "പത്താം",
-      "romanization": "pathāṁ",
+      "romanization": "pattāṁ",
       "gloss": "tenth",
       "script": "malayalam",
       "modality": "voice",
@@ -612,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c26bed9a89c28b41",
+      "sourceHash": "fnv1a64:efcad8b9cff78a10",
       "notice": null,
       "blocks": [
         {
@@ -629,11 +673,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ompathāṁ — R1",
+              "instruction": "say ompatāṁ — R1",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ompathāṁ* — **R1**]"
+              "source": "[YOU RECALL: say *ompatāṁ* — **R1**]"
             },
             {
               "kind": "prompt",
@@ -671,16 +715,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പത്താം (pathāṁ) — \"tenth\". പത്ത് loses its ŭ and takes ആം, and the ten are done."
+              "text": "പത്താം (pattāṁ) — \"tenth\". പത്ത് loses its ŭ and takes ആം, and the ten are done."
             },
             {
               "kind": "speech",
-              "text": "പത്താം ദിവസം (pathāṁ divasaṁ), the tenth day."
+              "text": "പത്താം ദിവസം (pattāṁ divasaṁ), the tenth day."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പത്താം (pattāṁ) is native Dravidian: \"ten\" (DEDR 3918, with Tamil pattu and Kannada pattu) with the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -693,20 +748,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pathŭ, then pathāṁ",
+              "instruction": "pattŭ, then pattāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pathŭ*, then *pathāṁ*]"
+              "source": "[YOU SAY: *pattŭ*, then *pattāṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ompathāṁ, pathāṁ",
+              "instruction": "ompatāṁ, pattāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ompathāṁ, pathāṁ*]"
+              "source": "[YOU SAY: *ompatāṁ, pattāṁ*]"
             },
             {
               "kind": "prompt",
@@ -720,7 +775,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -732,7 +787,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the tenth day\". (പത്താം (pathāṁ) ദിവസം.) Count the ordinals from one to ten. How many of the ten were words you had to learn? (None.)"
+              "text": "Say \"the tenth day\". (പത്താം (pattāṁ) ദിവസം.) Count the ordinals from one to ten. How many of the ten were words you had to learn? (None.)"
             }
           ]
         }
@@ -751,7 +806,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96c06f186f97109b",
+      "sourceHash": "fnv1a64:9f762b69c13890be",
       "notice": null,
       "blocks": [
         {
@@ -768,11 +823,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pathāṁ — R1",
+              "instruction": "say pattāṁ — R1",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pathāṁ* — **R1**]"
+              "source": "[YOU RECALL: say *pattāṁ* — **R1**]"
             },
             {
               "kind": "prompt",
@@ -814,7 +869,7 @@
             },
             {
               "kind": "speech",
-              "text": "പതിനൊന്ന് was itself a built word: pathin-, the joining shape of ten, with onnŭ welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, not one of which had to be learned as a whole."
+              "text": "പതിനൊന്ന് was itself a built word: patin-, the joining shape of ten, with onnŭ welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, not one of which had to be learned as a whole."
             },
             {
               "kind": "speech",
@@ -824,12 +879,23 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പതിനൊന്നാം (patinonnāṁ) is native Dravidian throughout: the joining shape of \"ten\" (DEDR 3918, with Tamil patiṉ-), \"one\" (DEDR 990), and the ordinal ending -āṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ending is a fact about numbers, not about ten",
           "segments": [
             {
               "kind": "speech",
-              "text": "Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Malayalam there is no set. ആം attaches to a number, so every number you learn from here on arrives with its ordinal already made: ഇരുപത് gives ഇരുപതാം (irupathāṁ), twentieth, without a lesson."
+              "text": "Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Malayalam there is no set. ആം attaches to a number, so every number you learn from here on arrives with its ordinal already made: ഇരുപത് gives ഇരുപതാം (irupatāṁ), twentieth, without a lesson."
             },
             {
               "kind": "speech",
@@ -838,7 +904,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -860,11 +926,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pathāṁ, patinonnāṁ",
+              "instruction": "pattāṁ, patinonnāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pathāṁ, patinonnāṁ*]"
+              "source": "[YOU SAY: *pattāṁ, patinonnāṁ*]"
             },
             {
               "kind": "prompt",
@@ -878,7 +944,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -909,7 +975,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59acc194d2c5509c",
+      "sourceHash": "fnv1a64:6ee085c35f28e019",
       "notice": null,
       "blocks": [
         {
@@ -926,11 +992,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say patinonnāṁ, and say why irupathāṁ needs no lesson — R1",
+              "instruction": "say patinonnāṁ, and say why irupatāṁ needs no lesson — R1",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *patinonnāṁ*, and say why *irupathāṁ* needs no lesson — **R1**]"
+              "source": "[YOU RECALL: say *patinonnāṁ*, and say why *irupatāṁ* needs no lesson — **R1**]"
             },
             {
               "kind": "prompt",
@@ -982,6 +1048,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആദ്യം (ādyaṁ) from Sanskrit ādya, \"first, earliest\", built on ādi, \"beginning\" (CDIAL 1152), with Malayalam's noun ending -ṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way — the one word Malayalam borrowed here",
           "segments": [
@@ -996,7 +1073,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -1020,7 +1097,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1060,7 +1137,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "meṇḍhī"
 concept_tag: MR-ANIMALS100-MENDHI
 prerequisites: [MR-C100-gay, MR-C100-sheli]
 sounds: []
-roots: []
+roots: [sanskrit-mendha]
+etymology_hook: "meṇḍhī: feminine of meṇḍhā 'ram' ← Sanskrit meṇḍha, probably Austroasiatic (CDIAL 10310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C100-sheli]
 <!-- hl-knowledge: introduces=[MR-LEX-C100-ANIMALS100-04]; assesses=[] -->
 
 **मेंढी** — *meṇḍhī* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेंढी** (*meṇḍhī*) is the feminine of Marathi *meṇḍhā*, "ram", which CDIAL lists under Sanskrit *meṇḍha*, "ram", a word from the old word-lists (CDIAL 10310). CDIAL takes it as a loan-word, probably of Austroasiatic origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

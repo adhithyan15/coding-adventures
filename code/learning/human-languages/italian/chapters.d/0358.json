@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Il primo impiego",
+  "label": "ch:it-il-primo-impiego",
+  "canDo": "I can talk about a first job: an internship, a trainee, an apprentice, the employer and the employee.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C358-dipendente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about a first job: an internship, a trainee, an apprentice, the employer and the employee.",
+    "assesses": [
+      "IT-LEX-C358-DIPENDENTE-03",
+      "IT-LEX-C358-DIPENDENTE-04",
+      "IT-LEX-C358-DIPENDENTE-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "paḻutta"
 concept_tag: ML-QUAL168-PALUTTA
 prerequisites: [ML-C168-itunniya, ML-C168-talnna]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "paḻutta: native Dravidian, 'ripened'; Tamil paḻu (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C168-talnna]
 <!-- hl-knowledge: introduces=[ML-LEX-C168-QUAL168-04]; assesses=[] -->
 
 **പഴുത്ത** — *paḻutta* — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഴുത്ത** (*paḻutta*) is native Dravidian, a past form of the verb "to ripen"; DEDR 4004 lists the root with Tamil *paḻu*, Kannada *paṇ* and Telugu *paṇḍu*. DEDR 4004 compares Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

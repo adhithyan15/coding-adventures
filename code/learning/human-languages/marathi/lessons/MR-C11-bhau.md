@@ -12,7 +12,7 @@ concept_tag: MR-PEOPLE-BROTHER
 prerequisites: [MR-R11-kutumb-r1]
 sounds: [independent-oo]
 roots: [sanskrit-bhratr, pie-bhreh2ter]
-etymology_hook: "भाऊ continues Sanskrit भ्रातृ bhrātṛ through the regular Prakrit sound changes, from Indo-European *bʰréh₂tēr — the same word as English brother, Latin frater, and Sanskrit's own bhrātṛ, one of the most secure cognate sets in the whole family"
+etymology_hook: "भाऊ ← Sanskrit bhrātṛ, PIE *bʰréh₂tēr: the same word as English brother and Latin frāter"
 duration:
   max_seconds: 250
 requires:

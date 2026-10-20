@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-344-JUIZO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-344-JUIZO"
+  ],
+  "after": []
+}

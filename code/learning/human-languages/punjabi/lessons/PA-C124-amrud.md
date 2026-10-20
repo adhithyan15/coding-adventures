@@ -14,7 +14,8 @@ romanization: "amrūd"
 concept_tag: PA-THINGS124-AMRUD
 prerequisites: [PA-C123-tarbuz, PA-C123-papita]
 sounds: []
-roots: []
+roots: [persian-amrud]
+etymology_hook: "amrūd: usually traced to Persian amrūd 'pear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C123-papita]
 <!-- hl-knowledge: introduces=[PA-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **ਅਮਰੂਦ** — *amrūd* — "a guava".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਮਰੂਦ** (*amrūd*) is a loan, usually traced to Persian *amrūd*, "pear". Punjabi uses it for the guava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

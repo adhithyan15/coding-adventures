@@ -14,7 +14,8 @@ gloss: "a girl"
 concept_tag: ML-ANCHOR-PENKUTTI
 prerequisites: [ML-S07-vowel-sign-u]
 sounds: []
-roots: []
+roots: [dravidian-pen-female, dravidian-kutti-young]
+etymology_hook: "peṇkuṭṭi: native Dravidian, 'female' + 'young one'; Tamil peṇ and kuṭṭi (DEDR 4395, 1670)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *peṇkuṭṭi*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ൺ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പെൺകുട്ടി** (*peṇkuṭṭi*) is native Dravidian, a compound of two old words: the word for "female" (DEDR 4395, with Tamil *peṇ* and Kannada *peṇ*) and the word for "the young of any creature, a child" (DEDR 1670, with Tamil *kuṭṭi*). DEDR 4395 compares Sanskrit *paṇḍa*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-PENKUTTI] -->

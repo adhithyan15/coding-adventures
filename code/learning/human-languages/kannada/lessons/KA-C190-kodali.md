@@ -14,7 +14,8 @@ romanization: "koḍali"
 concept_tag: KA-VASTU190-KODALI
 prerequisites: [KA-C190-stulu, KA-C190-hasige]
 sounds: []
-roots: []
+roots: [dravidian-app-32-kodali]
+etymology_hook: "koḍali: an Indo-Aryan loan; DEDR App. 32 lists Kannada koḍali 'axe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C190-hasige]
 <!-- hl-knowledge: introduces=[KA-LEX-C190-VASTU190-05]; assesses=[] -->
 
 **ಕೊಡಲಿ** — *koḍali* — "an axe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊಡಲಿ** (*koḍali*) is a loan from Indo-Aryan. DEDR lists Kannada *koḍali*, "axe", with Tamil *kōṭāli*, in its appendix of such loans (DEDR App. 32).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

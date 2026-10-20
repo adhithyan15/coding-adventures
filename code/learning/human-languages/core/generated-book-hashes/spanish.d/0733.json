@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 733,
+  "sourceHash": "fnv1a64:e5bbb300926118be",
+  "lessonIds": [
+    "ES-C733-gripe",
+    "ES-C733-resfriado",
+    "ES-C733-constipado",
+    "ES-C733-contagiar",
+    "ES-C733-estornudar"
+  ],
+  "tex": "spanish/book/chapters/ch733-gripe-y-resfriado.tex"
+}

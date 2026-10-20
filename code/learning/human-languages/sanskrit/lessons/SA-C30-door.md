@@ -14,7 +14,8 @@ romanization: "dvāram"
 concept_tag: SA-WELCOME-DOOR
 prerequisites: [SA-C29-fortunate, SA-C28-now, SA-C29-please]
 sounds: []
-roots: []
+roots: [sanskrit-dvara]
+etymology_hook: "dvāra 'door' is inherited: EtymDB links it to Latin forum, and it is a cousin of English door (CDIAL 6663)"
 duration:
   max_seconds: 210
 requires:

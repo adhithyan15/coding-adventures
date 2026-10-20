@@ -13,7 +13,8 @@ gloss: "a flea"
 concept_tag: LA-RES276-PULEX
 prerequisites: [LA-C276-vespa, LA-C276-culex]
 sounds: []
-roots: []
+roots: [pulex-latin]
+etymology_hook: "pūlex 'flea' — inherited, usually traced to PIE *plusis 'flea'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C276-culex]
 <!-- hl-knowledge: introduces=[LA-LEX-C276-RES276-03]; assesses=[] -->
 
 **pūlex, pūlicis** — "a flea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pūlex** is inherited, usually traced to Proto-Indo-European *\*plusis*, "flea" (EtymDB 2.1), with its sounds rearranged; Greek *psylla*, "flea", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

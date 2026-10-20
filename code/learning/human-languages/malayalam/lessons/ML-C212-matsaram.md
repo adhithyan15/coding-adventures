@@ -14,7 +14,8 @@ romanization: "matsaraṁ"
 concept_tag: ML-VASTU212-MATSARAM
 prerequisites: [ML-C212-kala, ML-C212-samgitam]
 sounds: []
-roots: []
+roots: [sanskrit-matsara]
+etymology_hook: "matsaraṁ ← Sanskrit matsara 'jealous, rivalrous', a tatsama (CDIAL 9756)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C212-samgitam]
 <!-- hl-knowledge: introduces=[ML-LEX-C212-VASTU212-03]; assesses=[] -->
 
 **മത്സരം** — *matsaraṁ* — "a competition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മത്സരം** (*matsaraṁ*) ← Sanskrit *matsara*, "jealous, rivalrous", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 9756). Rivalry became a contest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

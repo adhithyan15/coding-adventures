@@ -14,7 +14,8 @@ romanization: "har"
 concept_tag: PA-DEF106-HAR2
 prerequisites: [PA-C106-harek, PA-C106-ajiha]
 sounds: []
-roots: []
+roots: [persian-har]
+etymology_hook: "har: usually traced to Persian har 'every'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C106-ajiha]
 <!-- hl-knowledge: introduces=[PA-LEX-C106-DEF106-05]; assesses=[] -->
 
 **ਹਰ** — *har* — "every".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਰ** (*har*) is a loan, usually traced to Persian *har*, "every".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

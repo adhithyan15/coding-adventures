@@ -14,7 +14,8 @@ romanization: "kaypuḷḷa"
 concept_tag: ML-QUAL165-KAYPULLA
 prerequisites: [ML-C165-vrttiyulla, ML-C165-madhuramulla, ML-C97-alla-sundaram]
 sounds: []
-roots: []
+roots: [dravidian-kai-bitter, dravidian-ul-be]
+etymology_hook: "kaypuḷḷa: native Dravidian, 'having bitterness' (DEDR 1249, 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C165-madhuramulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C165-QUAL165-03]; assesses=[] -->
 
 **കയ്പുള്ള** — *kaypuḷḷa* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കയ്പുള്ള** (*kaypuḷḷa*) is native Dravidian, "having bitterness": the noun for bitterness (DEDR 1249, with Tamil *kaya*, "to be bitter"), with *-uḷḷa*, "that has" (DEDR 697). DEDR 1249 compares Sanskrit *kaṣāya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

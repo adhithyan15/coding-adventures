@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "La policía actúa",
+  "label": "ch:es-la-policia-actua",
+  "canDo": "I can say that a patrol came, and that an officer chased, stopped and arrested someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R519-repaso-512-519",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can say that a patrol came, and that an officer chased, stopped and arrested someone.",
+    "assesses": [
+      "ES-LEX-C519-POLICIA-03",
+      "ES-LEX-C519-POLICIA-04",
+      "ES-LEX-C519-POLICIA-05"
+    ]
+  }
+}

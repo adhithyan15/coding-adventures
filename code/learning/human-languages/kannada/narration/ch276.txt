@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to apply, then the Kannada for to compar
 You'll want to know: ಬೈ.
 ಬೈ — bai — "to scold".
 
+The word, taken apart.
+ಬೈ (bai) is native Dravidian, one word with Tamil vai (DEDR 5550). DEDR lists bay(i), bayyu, "to abuse, revile".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to compare, then the Kannada for to scol
 
 You'll want to know: ರೇಗಿಸು.
 ರೇಗಿಸು — rēgisu — "to tease".
+
+The word, taken apart.
+ರೇಗಿಸು (rēgisu) is native Dravidian, from rēgu, "to rise, be roused, be angry", which DEDR 916 lists under ēṟu, "to rise": to tease is "to make someone rise"; the entry also has Tamil ēṟu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to scold, then the Kannada for to tease.
 You'll want to know: ಜಗಳವಾಡು.
 ಜಗಳವಾಡು — jagaḷavāḍu — "to quarrel".
 
+The word, taken apart.
+ಜಗಳವಾಡು (jagaḷavāḍu) is jagaḷa, "quarrel", with native āḍu, "to play, act" (DEDR 347). Jagaḷa probably belongs with Prakrit jhagaḍa, "quarrel", from a reconstructed jhagaḍ, "quarrel" (CDIAL 5321), though CDIAL does not list the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to tease, then the Kannada for to quarre
 You'll want to know: ಸಮಾಧಾನ ಮಾಡು.
 ಸಮಾಧಾನ ಮಾಡು — samādhāna māḍu — "to console, to calm (someone) down".
 
+The word, taken apart.
+ಸಮಾಧಾನ ಮಾಡು (samādhāna māḍu) is Sanskrit samādhāna, "putting together, reconciliation" (CDIAL 13210), with native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to quarrel, then the Kannada for to cons
 
 You'll want to know: ಹೆಮ್ಮೆಪಡು.
 ಹೆಮ್ಮೆಪಡು — hemmepaḍu — "to be proud".
+
+The word, taken apart.
+ಹೆಮ್ಮೆಪಡು (hemmepaḍu) is native Dravidian: hemme, "pride", which DEDR 4411 lists as older perme, "greatness, honour, pride", from the root for "great", and paḍu, "to undergo, feel" (DEDR 3853).
 
 What you've built.
 One more word for this chapter.

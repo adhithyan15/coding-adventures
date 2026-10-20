@@ -13,7 +13,8 @@ gloss: "to cry"
 concept_tag: GE-VERB-WEINEN
 prerequisites: [GE-C65-kochen, GE-C65-lachen]
 sounds: []
-roots: []
+roots: [germanic-wainona]
+etymology_hook: "weinen ← Old High German weinōn ← Proto-Germanic *wainōną, built on the cry wai 'woe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C65-lachen]
 <!-- hl-knowledge: introduces=[GE-LEX-C65-VERBEN2-05]; assesses=[] -->
 
 **weinen** — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**weinen** ← Old High German *weinōn* ← Proto-Germanic *\*wainōną*, built on the cry *wai*, "woe" — inherited, and unrelated to *Wein*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

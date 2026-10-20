@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 213,
-  "sourceHash": "fnv1a64:3f317e2b052d3690",
+  "sourceHash": "fnv1a64:5348a697d3014b1c",
   "lessonIds": [
     "FR-C213-soulever",
     "FR-C213-surprendre",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch213.txt",
   "json": "french/narration/ch213.json",
-  "textHash": "fnv1a64:24f6dc176ee846ff",
-  "jsonHash": "fnv1a64:c4995a0a03124038",
+  "textHash": "fnv1a64:7a644700dfc598d9",
+  "jsonHash": "fnv1a64:98a018dcc7c5d3d2",
   "findings": []
 }

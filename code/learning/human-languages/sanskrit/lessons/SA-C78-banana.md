@@ -14,7 +14,8 @@ romanization: "kadalīphalam"
 concept_tag: SA-FOOD-BANANA
 prerequisites: [SA-C77-key, SA-C78-mango]
 sounds: []
-roots: []
+roots: [sanskrit-kadala, sanskrit-phala]
+etymology_hook: "kadalīphala ← kadalī 'banana plant', which CDIAL 2712 takes as borrowed from Austroasiatic, + phala 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C78-mango]
 
 **कदलीफलम्** (*kadalīphalam*) — "a banana": **कदली**, "the banana plant", with
 **फलम्**, "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kadalīphala* is a compound of *kadalī*, "the banana plant", and *phala*, "fruit".
+CDIAL 2712 takes *kadalī* as borrowed from an Austroasiatic language; it lives on
+as Hindi *kelā*, "banana".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

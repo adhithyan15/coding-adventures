@@ -14,7 +14,8 @@ romanization: "vādā"
 concept_tag: HI-THG206-VADA
 prerequisites: [HI-C206-vicar, HI-C206-jhuth]
 sounds: []
-roots: []
+roots: [arabic-wada]
+etymology_hook: "vādā ← Arabic waʿda 'a promise', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C206-jhuth]
 <!-- hl-knowledge: introduces=[HI-LEX-C206-THG206-05]; assesses=[] -->
 
 **वादा** — *vādā* — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वादा** (*vādā*) is a loan from Arabic *waʿda*, "a promise", which reached Hindi through Persian. Its Arabic root is *w-ʿ-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

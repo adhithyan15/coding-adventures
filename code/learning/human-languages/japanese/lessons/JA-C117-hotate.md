@@ -14,7 +14,8 @@ romanization: "hotate"
 concept_tag: JA-THINGS117-HOTATE
 prerequisites: [JA-C116-sanma, JA-C116-asari]
 sounds: []
-roots: []
+roots: [japanese-ho-sail, japanese-tatsu]
+etymology_hook: "hotate: native ho 'sail' + tate 'raising' (tatsu)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C116-asari]
 <!-- hl-knowledge: introduces=[JA-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **ほたて** — *hotate* — "a scallop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほたて** (*hotate*) is native: *ho*, "sail", and *tate*, "raising", from *tatsu*: the shell lifted like a sail. JMdict marks it as a shortened word. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

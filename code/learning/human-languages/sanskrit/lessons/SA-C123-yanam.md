@@ -14,7 +14,8 @@ romanization: "yānam"
 concept_tag: SA-THINGS123-YANAM
 prerequisites: [SA-C123-pitham, SA-C123-dvicakrika]
 sounds: []
-roots: []
+roots: [sanskrit-yana]
+etymology_hook: "yāna 'going', then 'vehicle' ← √yā 'go' (CDIAL 10459), an inherited Indo-European root (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C123-dvicakrika]
 <!-- hl-knowledge: introduces=[SA-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **यानम्** — *yānam* — "a vehicle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yāna* comes from the root √yā "go" (CDIAL 10459): first "a journey, going", then "a vehicle of any kind", as in *mahāyāna* "the great vehicle" (MW). The root is inherited from Indo-European (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

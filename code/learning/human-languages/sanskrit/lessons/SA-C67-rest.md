@@ -14,7 +14,8 @@ romanization: "viśrāmaḥ"
 concept_tag: SA-NEEDS-REST
 prerequisites: [SA-C67-hunger, SA-C67-thirst]
 sounds: []
-roots: []
+roots: [sanskrit-vishrama]
+etymology_hook: "viśrāma 'rest' ← vi + the root √śram 'be weary' (MW; CDIAL 11956)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C67-thirst]
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-04]; assesses=[] -->
 
 **विश्रामः** (*viśrāmaḥ*) — "rest", a pause from work or from a **यात्रा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Viśrāma* is built from *vi* and the root √śram, "to toil, be weary": rest is the
+release from weariness (MW, CDIAL 11956).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kharcṇā"
 concept_tag: PA-VERB-KHARCNA
 prerequisites: [PA-C151-kahina, PA-C151-jiuna]
 sounds: []
-roots: []
+roots: [arabic-kharj]
+etymology_hook: "kharcṇā: on kharc 'expense', usually traced through Persian kharch to Arabic kharj 'expenditure' (Lane, root kh-r-j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C151-jiuna]
 <!-- hl-knowledge: introduces=[PA-LEX-C151-ACT151-03]; assesses=[] -->
 
 **ਖ਼ਰਚਣਾ** — *kharcṇā* — "to spend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖ਼ਰਚਣਾ** (*kharcṇā*) is built on *kharc*, "expense", usually traced through Persian *kharch* to Arabic *kharj*, "expenditure"; its Arabic root is *kh-r-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C327-sponsalia",
+  "pathSegment": "LA-PATH-327-SPONSA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-327-SPONSA",
+      "order": 1
+    }
+  ]
+}

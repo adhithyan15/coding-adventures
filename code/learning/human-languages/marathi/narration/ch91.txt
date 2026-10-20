@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a cupboard, then the Marathi for the gro
 You'll want to know: जिना.
 जिना — jinā — "stairs".
 
+The word, taken apart.
+जिना (jinā) is a loan, usually traced to Persian zīna, "ladder, stairs". Marathi writes the z as ज.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the ground, then the Marathi for stairs.
 
 You'll want to know: आरसा.
 आरसा — ārsā — "a mirror".
+
+The word, taken apart.
+आरसा (ārsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ādarśa, "mirror" (CDIAL 1143). It is built on dṛś, "to see".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for stairs, then the Marathi for a mirror.
 You'll want to know: दिवा.
 दिवा — divā — "a lamp".
 
+The word, taken apart.
+दिवा (divā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dīpa, "lamp" (CDIAL 6348).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a mirror, then the Marathi for a lamp.
 You'll want to know: पंखा.
 पंखा — paṅkhā — "a fan".
 
+The word, taken apart.
+पंखा (paṅkhā) is a tadbhava of Sanskrit pakṣa, "wing, feather", whose form pakṣaka also meant "fan" (CDIAL 7627). CDIAL lists Marathi pākh, "wing", and suggests, with a query, that the nasal comes from a crossing with Sanskrit puṅkha, "the feathered end of an arrow".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a lamp, then the Marathi for a fan.
 
 You'll want to know: किल्ली.
 किल्ली — killī — "a key".
+
+The word, taken apart.
+किल्ली (killī) comes from kīlla, a form CDIAL reconstructs beside Sanskrit kīla, "stake, peg" (CDIAL 3202). CDIAL notes an Indo-European origin proposed for kīla, but thinks its variant shapes support a non-Aryan one.
 
 What you've built.
 One more word for this chapter.

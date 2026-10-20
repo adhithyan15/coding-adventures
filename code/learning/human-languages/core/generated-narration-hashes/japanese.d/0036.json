@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 36,
-  "sourceHash": "fnv1a64:6cf4f2a52e0971e6",
+  "sourceHash": "fnv1a64:2a9067f2ec71beda",
   "lessonIds": [
     "JA-C36-nori",
     "JA-C36-ume",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch36.txt",
   "json": "japanese/narration/ch36.json",
-  "textHash": "fnv1a64:9243ef1c25a3b151",
-  "jsonHash": "fnv1a64:9df6a90fb0d5d3e9",
+  "textHash": "fnv1a64:e41d4db6604dae83",
+  "jsonHash": "fnv1a64:c1cb90631a7938d1",
   "findings": []
 }

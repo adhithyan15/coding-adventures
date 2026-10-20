@@ -13,7 +13,8 @@ gloss: "almost"
 concept_tag: PT-PORQUE184-QUASE
 prerequisites: [PT-C184-certamente, PT-C184-realmente]
 sounds: []
-roots: []
+roots: [quasi-latin]
+etymology_hook: "quase ← Latin quasi 'as if', from qua 'as' + si 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C184-realmente]
 <!-- hl-knowledge: introduces=[PT-LEX-C184-PORQUE184-04]; assesses=[] -->
 
 **quase** — "almost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quase** ← Latin *quasi*, "as if" (EtymDB 2.1), from *qua*, "as", and *si*, "if" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

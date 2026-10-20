@@ -14,7 +14,8 @@ romanization: "vāmaḥ"
 concept_tag: SA-TIME93-VAMAH
 prerequisites: [SA-C93-kadapi, SA-C93-vilambah]
 sounds: []
-roots: []
+roots: [sanskrit-vama]
+etymology_hook: "vāma 'left', perhaps once vāma 'lovely' (√van) as a kind name for the left (MW); Hindi bāyāṁ (CDIAL 11533)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C93-vilambah]
 <!-- hl-knowledge: introduces=[SA-LEX-C93-TIME93-03]; assesses=[] -->
 
 **वामः** — *vāmaḥ* — "left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW thinks *vāma* "left" was perhaps once the same word as *vāma* "lovely, pleasant", from the root √van "love, desire", which would make "the lovely side" a polite name for the left; CDIAL keeps the two apart (11533, 11534), so the link is not settled. *vāma* lives on as Hindi *bāyāṁ* "left" (CDIAL 11533).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

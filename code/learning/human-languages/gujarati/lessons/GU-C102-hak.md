@@ -14,7 +14,8 @@ romanization: "hak"
 concept_tag: GU-CAN102-HAK
 prerequisites: [GU-C102-takat, GU-C102-sakti]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hak ← Arabic ḥaqq 'truth, a right', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C102-sakti]
 <!-- hl-knowledge: introduces=[GU-LEX-C102-CAN102-05]; assesses=[] -->
 
 **હક** (*hak*) — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હક** (*hak*) is a loan from Arabic *ḥaqq*, "truth, a right", which reached Gujarati through Persian. Its Arabic root is *ḥ-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

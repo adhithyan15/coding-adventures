@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C303-sarg",
+    "language": "german",
+    "chapter": 303,
+    "sequence": 16630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c994caf1c1d01ac"
+  },
+  "findings": []
+}

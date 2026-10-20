@@ -14,7 +14,8 @@ romanization: "guṇḍi"
 concept_tag: KA-VASTU259-GUNDI
 prerequisites: [KA-C258-biskattu, KA-C258-bred]
 sounds: []
-roots: []
+roots: [kannada-gundi-button]
+etymology_hook: "guṇḍi: origin uncertain; compare Hindi ghuṇḍī 'button', from ghuṇṭa 'knot' (CDIAL 4483)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C258-bred]
 <!-- hl-knowledge: introduces=[KA-LEX-C259-VASTU259-01]; assesses=[] -->
 
 **ಗುಂಡಿ** — *guṇḍi* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಗುಂಡಿ** (*guṇḍi*) comes from is uncertain. It looks like the northern word for "button", Hindi *ghuṇḍī*, which CDIAL 4483 traces to a reconstructed *\*ghuṇṭa*, "knot, button", but no source records the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "patati"
 concept_tag: SA-VERB-FALL
 prerequisites: [SA-C71-sits, SA-C71-standsup]
 sounds: []
-roots: []
+roots: [sanskrit-patati]
+etymology_hook: "patati 'flies, falls' ← the root √pat; MW compares Greek petomai 'fly'; Hindi paṛnā (CDIAL 7722)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C71-standsup]
 <!-- hl-knowledge: introduces=[SA-LEX-C71-MOVE-05]; assesses=[] -->
 
 **पतति** (*patati*) — "(he, she, it) falls". A leaf, a **पत्रम्**, **पतति**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Patati* is the present of the root √pat, which first meant "to fly" and then "to
+fall" (CDIAL 7722). It is inherited: MW compares Greek *petomai*, "I fly". It
+lives on as Hindi *paṛnā*, "to fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

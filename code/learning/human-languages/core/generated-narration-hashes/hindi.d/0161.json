@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 161,
-  "sourceHash": "fnv1a64:05d068b1d031e53e",
+  "sourceHash": "fnv1a64:293648b620f25b52",
   "lessonIds": [
     "HI-C161-pakana",
     "HI-C161-katna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch161.txt",
   "json": "hindi/narration/ch161.json",
-  "textHash": "fnv1a64:fbd76ccb635c54d4",
-  "jsonHash": "fnv1a64:7b1620491dad8554",
+  "textHash": "fnv1a64:baebf22b656d3d02",
+  "jsonHash": "fnv1a64:69cfab9b68f1307d",
   "findings": []
 }

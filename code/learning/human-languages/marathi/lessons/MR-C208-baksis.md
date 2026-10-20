@@ -14,7 +14,8 @@ romanization: "bakṣīs"
 concept_tag: MR-VASTU208-BAKSIS
 prerequisites: [MR-C208-batan, MR-C208-khau]
 sounds: []
-roots: []
+roots: [persian-bakhshish]
+etymology_hook: "bakṣīs: usually traced to Persian bakhshish 'a gift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C208-khau]
 <!-- hl-knowledge: introduces=[MR-LEX-C208-VASTU208-04]; assesses=[] -->
 
 **बक्षीस** — *bakṣīs* — "a tip; a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बक्षीस** (*bakṣīs*) is a loan, usually traced to Persian *bakhshish*, "a gift", from *bakhshīdan*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

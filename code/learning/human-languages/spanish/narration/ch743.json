@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 743,
+  "title": "Salud emocional",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3fd35f67447ab4f8",
+  "lessons": [
+    {
+      "id": "ES-C743-terapeuta",
+      "sequence": 27090,
+      "title": "el terapeuta — the therapist",
+      "headword": "el terapeuta",
+      "romanization": "el terapeuta",
+      "gloss": "the therapist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49ec9115dc478231",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for exercise, then the Spanish for to chew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el terapeuta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el terapeuta — \"the therapist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi terapeuta me escucha mucho. My therapist really listens to me."
+            },
+            {
+              "kind": "speech",
+              "text": "Same form for men and women."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terapeuta comes from Greek therapeutḗs \"attendant\" (EtymDB), from therapeúein \"to serve, to treat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el terapeuta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el terapeuta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el terapeuta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el terapeuta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el terapeuta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el terapeuta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for exercise, then the Spanish for to chew, then say el terapeuta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for exercise, then the Spanish for to chew, then say *el terapeuta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el terapeuta mean? (\"The therapist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C743-terapia",
+      "sequence": 27100,
+      "title": "la terapia — therapy",
+      "headword": "la terapia",
+      "romanization": "la terapia",
+      "gloss": "therapy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91c924706036c8bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to chew, then the Spanish for the therapist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la terapia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la terapia — \"therapy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Voy a terapia una vez por semana. I go to therapy once a week."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terapia comes from Greek therapeía \"service, medical treatment\" (EtymDB), from therapeúein \"to serve, to treat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la terapia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la terapia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la terapia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la terapia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la terapia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la terapia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to chew, then the Spanish for the therapist, then say la terapia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to chew, then the Spanish for the therapist, then say *la terapia* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la terapia mean? (\"Therapy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C743-psicologo",
+      "sequence": 27110,
+      "title": "el psicólogo — the psychologist",
+      "headword": "el psicólogo",
+      "romanization": "el psicólogo",
+      "gloss": "the psychologist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a80007cd6e6621d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the therapist, then the Spanish for therapy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el psicólogo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el psicólogo — \"the psychologist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi hermana es psicóloga. My sister is a psychologist."
+            },
+            {
+              "kind": "speech",
+              "text": "The p is often silent in speech; sicólogo is also accepted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "psicólogo is built on Greek psykhḗ \"breath, soul, mind\" and lógos \"word, study\": one who studies the mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el psicólogo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el psicólogo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el psicólogo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el psicólogo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el psicólogo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el psicólogo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the therapist, then the Spanish for therapy, then say el psicólogo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the therapist, then the Spanish for therapy, then say *el psicólogo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el psicólogo mean? (\"The psychologist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C743-bienestar",
+      "sequence": 27120,
+      "title": "el bienestar — well-being",
+      "headword": "el bienestar",
+      "romanization": "el bienestar",
+      "gloss": "well-being",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8911e9067356165",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for therapy, then the Spanish for the psychologist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el bienestar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el bienestar — \"well-being\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El deporte mejora el bienestar. Sport improves well-being."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bienestar is built on bien \"well\", from Latin bene, and estar \"to be\", from Latin stāre \"to stand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el bienestar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el bienestar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el bienestar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el bienestar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el bienestar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el bienestar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for therapy, then the Spanish for the psychologist, then say el bienestar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for therapy, then the Spanish for the psychologist, then say *el bienestar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el bienestar mean? (\"Well-being\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C743-autoestima",
+      "sequence": 27130,
+      "title": "la autoestima — self-esteem",
+      "headword": "la autoestima",
+      "romanization": "la autoestima",
+      "gloss": "self-esteem",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0ad0c40f0506505",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the psychologist, then the Spanish for well-being."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la autoestima",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la autoestima — \"self-esteem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tiene la autoestima muy baja. He has very low self-esteem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "autoestima is built on Greek autós \"self\" and estima \"esteem\", from estimar, a learned borrowing from Latin aestimāre \"to value\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la autoestima",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la autoestima*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la autoestima, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la autoestima*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la autoestima",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la autoestima*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the psychologist, then the Spanish for well-being, then say la autoestima again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the psychologist, then the Spanish for well-being, then say *la autoestima* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la autoestima mean? (\"Self-esteem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R743-repaso-736-743",
+      "sequence": 27140,
+      "title": "Repaso de los capítulos 736–743",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 736-743",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff4e6f07c9ad1fea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the forehead and the cheek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the forehead, the cheek, the chin, the beard, the ear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the forehead, the cheek, the chin, the beard, the ear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the elbow, the wrist, the waist, the hip, the rib",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the elbow, the wrist, the waist, the hip, the rib]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the diagnosis, to diagnose, the symptom, the treatment, to suffer from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the diagnosis, to diagnose, the symptom, the treatment, to suffer from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cure, to get better, recovery, to operate, surgery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cure, to get better, recovery, to operate, surgery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nausea, to relieve, to vomit, to faint, the allergy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nausea, to relieve, to vomit, to faint, the allergy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiredness, exhausted, to fall asleep, insomnia, the nap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tiredness, exhausted, to fall asleep, insomnia, the nap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the diet, excess weight, appetite, exercise, to chew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the diet, excess weight, appetite, exercise, to chew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the therapist, therapy, the psychologist, well-being, self-esteem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the therapist, therapy, the psychologist, well-being, self-esteem]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The forehead? (la frente.) The cheek? (la mejilla.) The chin? (la barbilla.) The beard? (la barba.) The ear? (la oreja.) The elbow? (el codo.) The wrist? (la muñeca.) The waist? (la cintura.) The hip? (la cadera.) The rib? (la costilla.) The diagnosis? (el diagnóstico.) To diagnose? (diagnosticar.) The symptom? (el síntoma.) The treatment? (el tratamiento.) To suffer from? (padecer.) To cure? (curar.) To get better? (mejorarse.) Recovery? (la recuperación.) To operate? (operar.) Surgery? (la cirugía.) Nausea? (las náuseas.) To relieve? (aliviar.) To vomit? (vomitar.) To faint? (desmayarse.) The allergy? (la alergia.) Tiredness? (el cansancio.) Exhausted? (agotado.) To fall asleep? (dormirse.) Insomnia? (el insomnio.) The nap? (la siesta.) The diet? (la dieta.) Excess weight? (el sobrepeso.) Appetite? (el apetito.) Exercise? (el ejercicio.) To chew? (masticar.) The therapist? (el terapeuta.) Therapy? (la terapia.) The psychologist? (el psicólogo.) Well-being? (el bienestar.) Self-esteem? (la autoestima.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

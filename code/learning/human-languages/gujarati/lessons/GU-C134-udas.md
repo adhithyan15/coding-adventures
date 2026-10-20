@@ -14,7 +14,8 @@ romanization: "udās"
 concept_tag: GU-QUAL134-UDAS
 prerequisites: [GU-C134-sant, GU-C134-khus]
 sounds: []
-roots: []
+roots: [sanskrit-udasa]
+etymology_hook: "udās: usually traced to Sanskrit udāsa 'indifference'; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C134-khus]
 <!-- hl-knowledge: introduces=[GU-LEX-C134-QUAL134-04]; assesses=[] -->
 
 **ઉદાસ** (*udās*) — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઉદાસ** (*udās*) is usually traced to Sanskrit *udāsa*, "indifference". CDIAL, searched by form and by meaning, does not list the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "jealousy"
 concept_tag: PT-SAUDE181-CIUME
 prerequisites: [PT-C181-coragem, PT-C181-vergonha]
 sounds: []
-roots: []
+roots: [zelus-latin]
+etymology_hook: "ciúme ← Vulgar Latin *zelumen, from Greek zelos 'zeal, jealousy' — English zeal and jealous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C181-vergonha]
 <!-- hl-knowledge: introduces=[PT-LEX-C181-SAUDE181-04]; assesses=[] -->
 
 **o ciúme** — "jealousy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ciúme** ← Vulgar Latin *\*zelumen* (EtymDB 2.1), from Late Latin *zelus*, from Greek *zēlos*, "zeal, jealousy" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

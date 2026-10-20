@@ -14,7 +14,8 @@ romanization: "maṇḍūkaḥ"
 concept_tag: SA-ANIMAL-FROG
 prerequisites: [SA-C80-peacock, SA-C80-tortoise]
 sounds: []
-roots: []
+roots: [sanskrit-manduka]
+etymology_hook: "maṇḍūka 'frog' is Rigvedic; origin not settled; its many odd modern forms are due to taboo (CDIAL 9746)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C80-tortoise]
 <!-- hl-knowledge: introduces=[SA-LEX-C80-BIRDS-05]; assesses=[] -->
 
 **मण्डूकः** (*maṇḍūkaḥ*) — "a frog", loudest in **वर्षा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Maṇḍūka* is already in the Rigveda, but its origin is not settled. CDIAL 9746
+notes that its modern forms are unusually irregular, bent by taboo and by
+imitation of the frog's sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

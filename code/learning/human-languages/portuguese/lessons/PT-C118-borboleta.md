@@ -14,6 +14,7 @@ concept_tag: PT-ANIMAIS118-BORBOLETA
 prerequisites: [PT-C118-coelho, PT-C118-tigre]
 sounds: []
 roots: []
+etymology_hook: "borboleta — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C118-tigre]
 <!-- hl-knowledge: introduces=[PT-LEX-C118-ANIMAIS118-03]; assesses=[] -->
 
 **a borboleta** — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**borboleta** — its origin is uncertain. EtymDB 2.1 has a row for it but no ancestor.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

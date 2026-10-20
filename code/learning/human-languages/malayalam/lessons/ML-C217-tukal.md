@@ -14,7 +14,8 @@ romanization: "tukal"
 concept_tag: ML-VASTU217-TUKAL
 prerequisites: [ML-C217-parutti, ML-C217-pattu]
 sounds: []
-roots: []
+roots: [dravidian-tol-skin]
+etymology_hook: "tukal: native Dravidian; DEDR 3559 lists Malayalam tukal 'skin as of fruit' beside Tamil tōl 'skin, hide'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C217-pattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C217-VASTU217-03]; assesses=[] -->
 
 **തുകൽ** — *tukal* — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുകൽ** (*tukal*) is native Dravidian: DEDR 3559 lists it, "skin as of fruit", in the same entry as Tamil *tōl*, "skin, hide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

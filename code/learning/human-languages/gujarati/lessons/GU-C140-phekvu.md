@@ -14,7 +14,8 @@ romanization: "phẽkvũ"
 concept_tag: GU-VERB-PHEKVU
 prerequisites: [GU-C140-bharvu, GU-C140-khecvu]
 sounds: []
-roots: []
+roots: [indo-aryan-phekk]
+etymology_hook: "phẽkvũ ← *pheṅk, a form CDIAL reconstructs under *phekk 'throw' (CDIAL 9106)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C140-khecvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C140-ACT140-05]; assesses=[] -->
 
 **ફેંકવું** (*phẽkvũ*) — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફેંકવું** (*phẽkvũ*) is a tadbhava. CDIAL lists it under *\*pheṅk-*, one of the forms it reconstructs under *\*phekk*, "throw" (CDIAL 9106).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

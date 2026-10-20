@@ -13,7 +13,8 @@ gloss: "the others, the remaining"
 concept_tag: LA-QUAL242-CETERI
 prerequisites: [LA-C242-omnis, LA-C242-totus]
 sounds: []
-roots: []
+roots: [ceteri-latin]
+etymology_hook: "cēterī 'the others' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C242-totus]
 <!-- hl-knowledge: introduces=[LA-LEX-C242-QUAL242-04]; assesses=[] -->
 
 **cēterī, cēterae, cētera** — "the others, the remaining".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cēterī** has no sure origin; it is often explained as a pointing element *ce-*, "here", with a word like Greek *heteros*, "the other", but this is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

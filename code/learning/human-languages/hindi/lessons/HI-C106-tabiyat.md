@@ -14,7 +14,8 @@ romanization: "tabīyat"
 concept_tag: HI-UNWELL-TABIYAT
 prerequisites: [HI-C106-khansi, HI-C106-bimar]
 sounds: []
-roots: []
+roots: [arabic-tabia]
+etymology_hook: "tabīyat ← Arabic ṭabīʿa 'nature, temperament', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C106-bimar]
 
 **आपकी तबीयत कैसी है?** — "how are you feeling?", the question to ask someone who has been ill.
 **तबीयत ठीक नहीं है** — "I am not well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तबीयत** (*tabīyat*) is a loan from Arabic *ṭabīʿa*, "nature, temperament", which reached Hindi through Persian. Its Arabic root is *ṭ-b-ʿ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

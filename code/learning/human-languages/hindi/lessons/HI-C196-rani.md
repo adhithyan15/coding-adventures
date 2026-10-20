@@ -14,7 +14,8 @@ romanization: "rānī"
 concept_tag: HI-THG196-RANI
 prerequisites: [HI-C196-mantri, HI-C196-raja]
 sounds: []
-roots: []
+roots: [sanskrit-rajni]
+etymology_hook: "rānī ← Sanskrit rājñī 'queen', a tadbhava (CDIAL 10692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C196-raja]
 <!-- hl-knowledge: introduces=[HI-LEX-C196-THG196-03]; assesses=[] -->
 
 **रानी** — *rānī* — "a queen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रानी** (*rānī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rājñī*, "queen" (CDIAL 10692).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

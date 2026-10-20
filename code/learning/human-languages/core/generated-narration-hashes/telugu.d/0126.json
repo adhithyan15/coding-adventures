@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 126,
-  "sourceHash": "fnv1a64:584ee54d29870d2a",
+  "sourceHash": "fnv1a64:f5955310e7f14ab1",
   "lessonIds": [
     "TE-C126-batu",
     "TE-C126-pandi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch126.txt",
   "json": "telugu/narration/ch126.json",
-  "textHash": "fnv1a64:fec73639167f95ec",
-  "jsonHash": "fnv1a64:8f5eed22973a70d7",
+  "textHash": "fnv1a64:af057ad25e3b78d5",
+  "jsonHash": "fnv1a64:c353db5d2733d61c",
   "findings": []
 }

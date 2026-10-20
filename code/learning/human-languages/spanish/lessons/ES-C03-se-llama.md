@@ -11,6 +11,7 @@ concept_tag: ES-SE-LLAMA
 prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-usted-origin]
 sounds: [vowel-e, ll-y]
 roots: [se-latin, clamare]
+etymology_hook: "se llama — se ← Latin se 'oneself' + llama 'calls': he calls himself"
 duration:
   max_seconds: 240
 requires:

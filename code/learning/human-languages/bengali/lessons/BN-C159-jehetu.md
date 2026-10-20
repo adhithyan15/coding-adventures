@@ -14,7 +14,8 @@ romanization: "jehetu"
 concept_tag: BN-KARON159-JEHETU
 prerequisites: [BN-C158-siling, BN-C159-tai]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative, sanskrit-hetu]
+etymology_hook: "jehetu: je 'which' ← ya- (CDIAL 10391) + hetu 'cause', Sanskrit hetu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C159-tai]
 <!-- hl-knowledge: introduces=[BN-LEX-C159-KARON159-02]; assesses=[] -->
 
 **যেহেতু** — *jehetu* — "since, as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যেহেতু** (*jehetu*) is *je*, "which", from the Sanskrit pronoun *ya-*, "who, which" (CDIAL 10391), + *hetu*, "cause", Sanskrit *hetu* taken over whole: "for which cause".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

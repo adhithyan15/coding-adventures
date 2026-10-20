@@ -14,7 +14,8 @@ romanization: "ḥalwā"
 concept_tag: AR-SHAY273-HALWA
 prerequisites: [AR-C272-maqul, AR-C273-shukulata]
 sounds: []
-roots: []
+roots: [ḥ-l-w]
+etymology_hook: "ḥalwā: built on the root ḥ-l-w, 'to be sweet' (Lane); ḥalwā is a sweetmeat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C273-shukulata]
 <!-- hl-knowledge: introduces=[AR-LEX-C273-SHAY273-02]; assesses=[] -->
 
 **حلوى** — *ḥalwā* — "sweets".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حلوى** (*ḥalwā*) is built on the native Arabic root *ḥ-l-w*, "to be sweet" (Lane). *Ḥalwā* is a sweetmeat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

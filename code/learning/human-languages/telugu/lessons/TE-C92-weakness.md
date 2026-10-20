@@ -11,7 +11,8 @@ romanization: "nīrasaṁ"
 concept_tag: TE-DOCTOR-WEAKNESS
 prerequisites: [TE-C92-hospital, TE-C92-wound]
 sounds: []
-roots: []
+roots: [sanskrit-nirasa]
+etymology_hook: "nīrasaṁ ← Sanskrit nīrasa 'sapless, tasteless', a tatsama (CDIAL 7556)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C92-wound]
 **నీరసం** (*nīrasaṁ*) — "weakness, lethargy", the drained feeling after a fever.
 
 **నాకు నీరసంగా ఉంది** — "I feel weak", in the frame of **అలసటగా** and **దాహంగా**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నీరసం** (*nīrasaṁ*) is Sanskrit *nīrasa*, "sapless, tasteless", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7556). The sense "weakness" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

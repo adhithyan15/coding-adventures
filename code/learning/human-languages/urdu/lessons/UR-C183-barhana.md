@@ -14,7 +14,8 @@ romanization: "baṛhānā"
 concept_tag: UR-VERB-BARHANA
 prerequisites: [UR-C183-jina, UR-C183-marna]
 sounds: []
-roots: []
+roots: [sanskrit-vardhate]
+etymology_hook: "baṛhānā: the causing form of baṛhnā 'to increase', from Sanskrit vardhate 'grows' (CDIAL 11376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C183-marna]
 <!-- hl-knowledge: introduces=[UR-LEX-C183-ACT183-05]; assesses=[] -->
 
 **بڑھانا** — *baṛhānā* — "to increase, to raise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بڑھانا** (*baṛhānā*) is the causing form of *baṛhnā*, "to increase, to grow", which CDIAL lists under Sanskrit *vardhate*, "grows, increases" (CDIAL 11376).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

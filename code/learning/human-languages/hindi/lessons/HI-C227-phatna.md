@@ -14,7 +14,8 @@ romanization: "phaṭnā"
 concept_tag: HI-VERB-PHATNA
 prerequisites: [HI-C226-banna, HI-C226-tutna]
 sounds: []
-roots: []
+roots: [sanskrit-sphatayati]
+etymology_hook: "phaṭnā ← Sanskrit sphāṭayati 'causes to split', a tadbhava (CDIAL 13825)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C226-tutna]
 <!-- hl-knowledge: introduces=[HI-LEX-C227-ACT227-01]; assesses=[] -->
 
 **फटना** — *phaṭnā* — "to tear, to burst".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फटना** (*phaṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sphāṭayati*, "causes to split" (CDIAL 13825). *phaṭnā* is the self-acting form, with the short vowel such verbs take.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

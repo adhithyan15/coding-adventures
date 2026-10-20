@@ -13,7 +13,8 @@ gloss: "a snake"
 concept_tag: PT-ANIMAIS3-COBRA
 prerequisites: [PT-C61-urso, PT-C61-raposa]
 sounds: []
-roots: []
+roots: [colubra-latin]
+etymology_hook: "cobra ← Latin colubra 'snake' — English cobra came from Portuguese"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C61-raposa]
 <!-- hl-knowledge: introduces=[PT-LEX-C62-ANIMAIS3-01]; assesses=[] -->
 
 **a cobra** — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cobra** ← Latin *colubra*, "snake" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out. English *cobra* came from Portuguese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

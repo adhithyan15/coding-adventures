@@ -13,7 +13,8 @@ gloss: "cheese"
 concept_tag: GE-ESSEN5-KAESE
 prerequisites: [GE-C73-traube, GE-C73-marmelade]
 sounds: []
-roots: []
+roots: [caseus-latin]
+etymology_hook: "Käse ← Old High German chāsi ← Latin cāseus — an early loan, like English cheese"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C73-marmelade]
 <!-- hl-knowledge: introduces=[GE-LEX-C73-ESSEN5-03]; assesses=[] -->
 
 **der Käse** — "cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Käse** ← Old High German *chāsi* ← Latin *cāseus*, "cheese" (EtymDB 2.1) — an early loan, as English *cheese* was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

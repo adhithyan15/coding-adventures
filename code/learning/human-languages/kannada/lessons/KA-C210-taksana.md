@@ -14,7 +14,8 @@ romanization: "takṣaṇa"
 concept_tag: KA-KALA210-TAKSANA
 prerequisites: [KA-C210-konege, KA-C210-samanyavagi]
 sounds: []
-roots: []
+roots: [sanskrit-tatkshana]
+etymology_hook: "takṣaṇa ← Sanskrit tatkṣaṇa 'the same moment', reshaped as a tadbhava (CDIAL 5640)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C210-samanyavagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C210-KALA210-03]; assesses=[] -->
 
 **ತಕ್ಷಣ** — *takṣaṇa* — "immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಕ್ಷಣ** (*takṣaṇa*) comes from Sanskrit *tatkṣaṇa*, "the same moment", reshaped to Kannada sounds: a tadbhava (CDIAL 5640). Kannada simplified the cluster, as Prakrit *takkhaṇa* did.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

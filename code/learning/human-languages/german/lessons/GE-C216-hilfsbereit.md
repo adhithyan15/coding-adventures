@@ -13,7 +13,8 @@ gloss: "helpful"
 concept_tag: GE-QUAL216-HILFSBEREIT
 prerequisites: [GE-C216-haeufig, GE-C216-herrlich]
 sounds: []
-roots: []
+roots: [germanic-helpana]
+etymology_hook: "hilfsbereit — the word for 'help', English help, + -s- + bereit 'ready': ready to help"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C216-herrlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C216-QUAL216-04]; assesses=[] -->
 
 **hilfsbereit** — "helpful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hilfsbereit** is the word for "help", Old High German *helfa*, English *help*, + *-s-* + *bereit*, "ready" (EtymDB 2.1): ready to help.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C594-motivar",
+  "pathSegment": "ES-PATH-594-EQUIPO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-594-EQUIPO",
+      "order": 1
+    }
+  ]
+}

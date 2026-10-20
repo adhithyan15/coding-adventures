@@ -14,7 +14,8 @@ romanization: "purikaṁ"
 concept_tag: ML-THINGS163-PURIKAM
 prerequisites: [ML-C162-taravu, ML-C162-munna]
 sounds: []
-roots: []
+roots: [sanskrit-bhru]
+etymology_hook: "purikaṁ: perhaps from Sanskrit bhrū 'eyebrow' (CDIAL 9688), reshaped; the path is not certain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C162-munna]
 <!-- hl-knowledge: introduces=[ML-LEX-C163-THINGS163-01]; assesses=[] -->
 
 **പുരികം** — *purikaṁ* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുരികം** (*purikaṁ*) may come from Sanskrit *bhrū*, "eyebrow" (CDIAL 9688), reshaped in the mouth, but the path is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

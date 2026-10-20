@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 140,
-  "sourceHash": "fnv1a64:5f49d5a0be0d9960",
+  "sourceHash": "fnv1a64:e27c58ce727ba867",
   "lessonIds": [
     "FA-C140-baz-kardan",
     "FA-C140-pak-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch140.txt",
   "json": "persian/narration/ch140.json",
-  "textHash": "fnv1a64:df5cd72d76f3d22e",
-  "jsonHash": "fnv1a64:9d86dddfe9728101",
+  "textHash": "fnv1a64:13766106f29c02bd",
+  "jsonHash": "fnv1a64:090d7d865c646b35",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "prasthānam"
 concept_tag: SA-TRV257-PRASTHANAM
 prerequisites: [SA-C257-karayanam, SA-C257-agamanam]
 sounds: []
-roots: []
+roots: [sanskrit-prasthana, sanskrit-sthana]
+etymology_hook: "prasthāna ← pra 'forth' + √sthā 'stand': 'setting out' (MW; CDIAL 8872)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C257-agamanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C257-TRV257-05]; assesses=[] -->
 
 **प्रस्थानम्** — *prasthānam* — "departure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prasthāna* is built on *pra*, "forth", and the root √sthā, "to stand" (MW): to stand forth is to set out, so "departure" (CDIAL 8872). It is the opposite of *āgamana*, "arrival".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

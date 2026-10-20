@@ -13,7 +13,8 @@ gloss: "a workplace"
 concept_tag: GE-THING154-ARBEITSPLATZ
 prerequisites: [GE-C153-wiederholen, GE-C153-ziehen]
 sounds: []
-roots: []
+roots: [germanic-arbaidiz, platea-latin]
+etymology_hook: "Arbeitsplatz — Arbeit 'work' + -s- + Platz 'place': a place of work"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C153-ziehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C154-THING154-01]; assesses=[] -->
 
 **der Arbeitsplatz** — "a workplace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Arbeitsplatz** is *Arbeit* + the linking *-s-* + *Platz*, "place" (EtymDB 2.1): a place of work.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

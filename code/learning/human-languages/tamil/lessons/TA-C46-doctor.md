@@ -11,7 +11,8 @@ romanization: "maruttuvar"
 concept_tag: TA-ROLE-DOCTOR
 prerequisites: [TA-C46-student, TA-C44-lamp, TA-C45-nose]
 sounds: []
-roots: []
+roots: [dravidian-marundu-medicine]
+etymology_hook: "மருத்துவர் — native, from maruntu 'medicine' (DEDR 4719); Malayalam maruttan, Kannada maddu"
 duration:
   max_seconds: 210
 requires:

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Depends on `mosaic-std-foundation` 0.2.0 (`Surface`'s `items` slot).
+
+- Fixed two stale acceptance pins that kept main's shard 15 red: the Flutter
+  Slider readout is now matched open-ended (`Text(displayValue` — it gained a
+  themed `style:`), and Compose is exempt from the number-field placeholder
+  check, because its `BasicTextField` text is never empty and the emitter
+  deliberately stopped writing a placeholder in #15995.
+
 ## [0.3.0] - Unreleased
 
 - Added a labelled `Slider` facade over the all-five-native `HostSlider`

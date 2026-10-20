@@ -14,7 +14,8 @@ romanization: "tārā"
 concept_tag: HI-NOUN-STAR
 prerequisites: [HI-C55-moon, HI-C53-forehead, HI-C54-fish]
 sounds: []
-roots: []
+roots: [sanskrit-tara]
+etymology_hook: "tārā: CDIAL 5798 files it under tāraka 'belonging to the stars', a form beside Sanskrit tārā 'fixed star'"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,7 @@ reviews_of: [HI-C55-moon]
 
 **तारा** (*tārā*) — "a star".
 
-From Sanskrit तारा (*tārā*), 'star', from the reconstructed *h₂stḗr* — the same root as Latin *stella*, Greek *astḗr*, and English *star*.
+CDIAL files it under Sanskrit *tāraka*, 'belonging to the stars', a form beside *tārā*, 'fixed star' (CDIAL 5798). That family is usually traced to the reconstructed *h₂stḗr* — the same root as Latin *stella*, Greek *astḗr*, and English *star*. CDIAL itself compares Vedic *stṛ-*, 'star'.
 
 So the three biggest things in the sky are, in Hindi, three separate PIE inheritances: सूरज with *sun*, चाँद with *candle*, तारा with *star*. Three for three, all genuine, which is rarer than it sounds.
 

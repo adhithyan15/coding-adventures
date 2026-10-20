@@ -11,7 +11,8 @@ gloss: to work (kām karṇe)
 concept_tag: MR-VERB-KARNE
 prerequisites: [MR-C05-rahne, MR-C01-namaskar]
 sounds: [matra-aa, retroflex-na]
-roots: [kr-do]
+roots: [kr-do, sanskrit-karman, sanskrit-karoti]
+etymology_hook: "kām ← Sanskrit karman 'act, work' (CDIAL 2892); karṇe ← karoti 'does' (CDIAL 2814), both on kṛ 'to do'"
 reviews_of: [MR-C05-bolne, MR-C01-namaskar]
 duration:
   max_seconds: 240

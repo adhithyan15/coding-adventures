@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:f774e15a2e4eab12",
+  "lessonIds": [
+    "IT-C423-crociera",
+    "IT-C423-cabina",
+    "IT-C423-marinaio",
+    "IT-C423-prua",
+    "IT-C423-poppa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch423.txt",
+  "json": "italian/narration/ch423.json",
+  "textHash": "fnv1a64:5393f02a83011747",
+  "jsonHash": "fnv1a64:74f2a011aa9d60ce",
+  "findings": []
+}

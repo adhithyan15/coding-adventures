@@ -14,7 +14,8 @@ romanization: "kātal"
 concept_tag: TA-PORUL186-KATAL
 prerequisites: [TA-C186-katalan, TA-C186-katali]
 sounds: []
-roots: []
+roots: [dravidian-kaadal-love]
+etymology_hook: "காதல் — native Dravidian (DEDR 1445); Malayalam kātal 'attachment', Kannada kādal 'affection, love'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C186-katali]
 <!-- hl-knowledge: introduces=[TA-LEX-C186-PORUL186-04]; assesses=[] -->
 
 **காதல்** — *kātal* — "romantic love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காதல்** (*kātal*) is native Dravidian. DEDR 1445 lists Malayalam *kātal*, "attachment" and Kannada *kādal*, "affection, love".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

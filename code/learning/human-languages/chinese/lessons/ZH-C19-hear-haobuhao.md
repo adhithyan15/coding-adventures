@@ -10,8 +10,8 @@ romanization: hǎo bu hǎo
 gloss: is it good, heard as the second way Mandarin asks a yes-or-no question
 prerequisites: [ZH-C19-shima]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: Mandarin's other yes-or-no question offers you both answers and asks you to pick one.
+roots: [middle-chinese-xawx, middle-chinese-pjut]
+etymology_hook: "hǎo bu hǎo: a Chinese pattern on two inherited words, Middle Chinese xawX 'good' and pjut 'not'"
 duration:
   max_seconds: 125
 requires:
@@ -54,6 +54,9 @@ and the middle syllable almost swallowed.
 Both questions ask the same thing. *ma* is the neutral one; this one presses a
 little harder for a decision, which is why it is the one you hear at the end of
 a suggestion.
+
+*Hǎo bu hǎo* is built from two words inherited from Middle Chinese: *xawX*,
+"good", and *pjut*, "not".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAOBUHAO-01, ZH-LEX-BU] -->

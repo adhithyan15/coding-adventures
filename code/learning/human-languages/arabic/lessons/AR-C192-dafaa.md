@@ -14,7 +14,8 @@ romanization: "dafaʿa"
 concept_tag: AR-VERB-DAFAA
 prerequisites: [AR-C191-tawqi, AR-C192-rakiba]
 sounds: []
-roots: []
+roots: [d-f-ʿ]
+etymology_hook: "dafaʿa: built on the root d-f-ʿ, 'to push away' (Lane); dafaʿa is 'to push', hence 'to pay out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C192-rakiba]
 <!-- hl-knowledge: introduces=[AR-LEX-C192-ACT192-02]; assesses=[] -->
 
 **دفع** — *dafaʿa* — "to pay; to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دفع** (*dafaʿa*) is built on the native Arabic root *d-f-ʿ*, "to push away" (Lane). *Dafaʿa* is "to push", hence "to pay out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kiṇar"
 concept_tag: ML-WATER-WELL
 prerequisites: [ML-C136-beach, ML-C136-pond]
 sounds: []
-roots: []
+roots: [dravidian-kinaru-well]
+etymology_hook: "kiṇar: native Dravidian, one word with Tamil kiṇaṟu, kēṇi and Kannada kēṇi (DEDR 1998)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C136-pond]
 <!-- hl-knowledge: introduces=[ML-LEX-C136-WATER-04]; assesses=[] -->
 
 **കിണർ** (*kiṇar*) — "a well", where the house's **വെള്ളം** comes from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിണർ** (*kiṇar*) is native Dravidian, one word with Tamil *kiṇaṟu*, *kēṇi* and Kannada *kēṇi* (DEDR 1998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

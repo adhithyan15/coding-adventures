@@ -1,0 +1,17 @@
+{
+  "chapter": 273,
+  "title": "One reflexive relation, held as a whole",
+  "label": "ch:sa-bounded-reflexive",
+  "canDo": "I can say one attested sentence in which the object points back to the first-person subject.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C273-reflexive-final-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 273 by independently retrieving the bounded reflexive sentence a second time.",
+    "assesses": [
+      "SA-PATTERN-C273-REFLEXIVE-01"
+    ]
+  }
+}

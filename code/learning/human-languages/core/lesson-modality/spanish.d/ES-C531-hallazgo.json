@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C531-hallazgo",
+    "language": "spanish",
+    "chapter": 531,
+    "sequence": 16190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63d0cd879831fca8"
+  },
+  "findings": []
+}

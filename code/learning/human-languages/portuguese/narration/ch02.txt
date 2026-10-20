@@ -32,7 +32,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did nada originally mean in Latin? (A born thing — nāta.) Which language shares de nada exactly, and which uses de rien instead? (Spanish; French.) Next: como, "how."
+What did nada originally mean in Latin? (A born thing — nāta.) Which language shares de nada exactly, and which uses de rien instead? (Spanish; French.) Next: the Portuguese for "how."
 
 
 Lesson 2 of 8.
@@ -53,9 +53,9 @@ Notice Portuguese and Spanish look almost identical here — como vs cómo — t
 
 Grammar Lens: the two Portuguese "how are you"s.
 Portuguese asks after you two ways, and you'll assemble both next lesson:
-Como vai? — "how do you go?" (verb ir, "to go" — like French/German).
-Como está? — "how do you stand/are?" (verb estar — like Spanish).
-Plus a third, verb-free favourite — Tudo bem? — coming up.
+Como vai? — "how do you go?" (the verb "to go" — like French/German).
+Como está? — "how do you stand/are?" (the verb "to stand, to be" — like Spanish).
+Plus a third, verb-free favourite — "all good?" — coming up.
 
 Guided Practice.
 [pause 1 second]
@@ -68,7 +68,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word gives como, and name two siblings. (quōmodo becomes cómo, come, comment.) What's the only written difference between Portuguese como and Spanish cómo? (The Spanish accent that marks a question.) Next: the word behind Portuguese's favourite greeting — tudo.
+What Latin word gives como, and name two siblings. (quōmodo becomes cómo, come, comment.) What's the only written difference between Portuguese como and Spanish cómo? (The Spanish accent that marks a question.) Next: the word behind Portuguese's favourite greeting — "everything."
 
 
 Lesson 3 of 8.
@@ -118,6 +118,9 @@ The friendly answer can be identical:
 Tudo bem. — “Everything’s well.”
 Because the question contains no “you” and no verb, it avoids choosing a social register. That simplicity is exactly why it is everywhere.
 
+The phrase, taken apart.
+Tudo bem? is built from tudo, "everything" from Latin totus, "all, whole" (EtymDB 2.1), and bem, "well" from Latin bene, "well" (EtymDB 2.1).
+
 Grammar Lens: Add the listener only when useful.
 To bounce the question back, say:
 Tudo bem, e você? — “All well, and you?”
@@ -147,9 +150,9 @@ Warm-up.
 [pause 2 seconds]
 Tudo bem? needs no verb. Como (“how”) also builds two familiar metaphors.
 [a table of 2 rows, read aloud]
-question: Como vai? literally: “How does it go?” verb: ir, to go.
-question: Como está? literally: “How do you stand?” verb: estar, to be / stand.
-Vai comes from ir, whose Latin ancestor īre also sits inside English exit and transit. Está comes from Latin stāre, “to stand.”
+question: Como vai? literally: “How does it go?” verb: “to go”.
+question: Como está? literally: “How do you stand?” verb: “to be / to stand”.
+Vai comes from Latin vādere, “to advance” (English invade, evade); the same verb’s infinitive comes from a different Latin verb, īre (English exit, transit). Está comes from Latin stāre, “to stand.”
 Portuguese therefore keeps both pictures:
 the “go” family, like French and German;
 the “stand” family, like Spanish and Italian.
@@ -169,7 +172,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which question has no verb? (Tudo bem?) Which uses “go”? (Como vai?, from ir.) Which uses “stand”? (Como está?, from estar.) Portuguese keeps how many metaphors? (Both.) Next: the “more or less” answer.
+Which question has no verb? (Tudo bem?) Which uses “go”? (Como vai?, from vādere.) Which uses “stand”? (Como está?, from stāre.) Portuguese keeps how many metaphors? (Both.) Next: the “more or less” answer.
 
 
 Lesson 6 of 8.

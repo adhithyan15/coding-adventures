@@ -14,7 +14,8 @@ romanization: "sāmānyô"
 concept_tag: BN-GUN162-SAMANYO
 prerequisites: [BN-C162-adha, BN-C162-puro]
 sounds: []
-roots: []
+roots: [sanskrit-samanya]
+etymology_hook: "sāmānyô ← Sanskrit sāmānya 'equal, alike', a tatsama (CDIAL 13351)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C162-puro]
 <!-- hl-knowledge: introduces=[BN-LEX-C162-GUN162-05]; assesses=[] -->
 
 **সামান্য** — *sāmānyô* — "slight, a little".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সামান্য** (*sāmānyô*) is Sanskrit *sāmānya*, "equal, alike", taken over whole as a learned loan, a tatsama (CDIAL 13351).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hameshā"
 concept_tag: UR-TIME77-HAMESHA
 prerequisites: [UR-C76-abhi, UR-C76-phir]
 sounds: []
-roots: []
+roots: [persian-hamesha]
+etymology_hook: "hameshā: usually traced to Persian hamēsha 'always'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C76-phir]
 <!-- hl-knowledge: introduces=[UR-LEX-C77-TIME77-01]; assesses=[] -->
 
 **ہمیشہ** — *hameshā* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہمیشہ** (*hameshā*) is a loan, usually traced to Persian *hamēsha*, "always".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

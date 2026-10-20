@@ -14,6 +14,7 @@ concept_tag: IT-COSE160-MANCIA
 prerequisites: [IT-C159-parete, IT-C160-conto]
 sounds: []
 roots: []
+etymology_hook: "mancia — usually traced to Old French manche 'a sleeve', a lady's gift to a knight"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C160-conto]
 <!-- hl-knowledge: introduces=[IT-LEX-C160-COSE160-02]; assesses=[] -->
 
 **la mancia** — "a tip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mancia** is usually traced to Old French *manche*, "a sleeve": a lady's sleeve was a gift to a knight. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

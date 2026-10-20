@@ -14,7 +14,8 @@ romanization: "mistri"
 concept_tag: BN-KAJ261-MISTRI
 prerequisites: [BN-C260-protijogita, BN-C260-joy]
 sounds: []
-roots: []
+roots: [portuguese-mestre]
+etymology_hook: "mistri: usually traced to Portuguese mestre 'master'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C260-joy]
 <!-- hl-knowledge: introduces=[BN-LEX-C261-KAJ261-01]; assesses=[] -->
 
 **মিস্ত্রি** — *mistri* — "a mechanic, a tradesman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিস্ত্রি** (*mistri*) is usually traced to Portuguese *mestre*, "master".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

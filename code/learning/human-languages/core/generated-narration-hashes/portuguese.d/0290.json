@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:990dced856c6ba38",
+  "lessonIds": [
+    "PT-C290-arma",
+    "PT-C290-pistola",
+    "PT-C290-ameacar",
+    "PT-C290-ameaca",
+    "PT-C290-assassino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch290.txt",
+  "json": "portuguese/narration/ch290.json",
+  "textHash": "fnv1a64:66695a0ec9d44e6f",
+  "jsonHash": "fnv1a64:c6ec0cc704380c60",
+  "findings": []
+}

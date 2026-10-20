@@ -10,7 +10,8 @@ gloss: "to solve, to sort out"
 concept_tag: ES-VERB-RESOLVER
 prerequisites: [ES-C480-prometer, ES-C480-quejarse]
 sounds: []
-roots: []
+roots: [solvere-latin]
+etymology_hook: "resolver ← Latin resolvere 'to untie': re- + solvere 'to loosen' — English resolve, solve"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C480-quejarse]
 > *We are going to sort out the problem today.*
 
 The o breaks into ue under stress: *resuelvo*, *resuelve*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**resolver** ← Latin *resolvere*, "to untie, to loosen" (EtymDB 2.1): *re-* and *solvere*, "to loosen". To solve a problem is to undo its knot. It bends like *volver*, "to return": *resuelvo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

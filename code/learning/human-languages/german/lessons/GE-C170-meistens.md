@@ -13,7 +13,8 @@ gloss: "mostly, usually"
 concept_tag: GE-TIME170-MEISTENS
 prerequisites: [GE-C169-wuetend, GE-C170-selten]
 sounds: []
-roots: []
+roots: [germanic-maistaz]
+etymology_hook: "meistens — meist 'most' + the adverb ending -ens; meist is the same word as English most"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C170-selten]
 <!-- hl-knowledge: introduces=[GE-LEX-C170-TIME170-02]; assesses=[] -->
 
 **meistens** — "mostly, usually".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**meistens** is the word for "most", Old High German *meist* ← Proto-Germanic *\*maistaz*, + the adverb ending *-ens* (EtymDB 2.1). It is the same word as English *most*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

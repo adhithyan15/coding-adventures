@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-543-RETRASO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-543-RETRASO"
+  ],
+  "after": []
+}

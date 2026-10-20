@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C460-cespuglio",
+    "language": "italian",
+    "chapter": 460,
+    "sequence": 25940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e88fd072b04e0df"
+  },
+  "findings": []
+}

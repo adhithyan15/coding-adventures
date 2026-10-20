@@ -13,7 +13,8 @@ gloss: "a sack, a bag"
 concept_tag: LA-THINGS120-SACCUS
 prerequisites: [LA-C119-iuxta, LA-C119-contra]
 sounds: []
-roots: []
+roots: [saccus-latin]
+etymology_hook: "saccus 'sack' — borrowed from Greek sakkos 'bag', itself from a Semitic language; English sack"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C119-contra]
 <!-- hl-knowledge: introduces=[LA-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **saccus, saccī** — "a sack, a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saccus** was borrowed from Greek *sakkos*, "a bag of coarse cloth" (Lewis & Short), which Greek took from a Semitic language. English *sack* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

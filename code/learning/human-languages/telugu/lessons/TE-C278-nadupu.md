@@ -14,7 +14,8 @@ romanization: "naḍupu"
 concept_tag: TE-VERB-NADUPU
 prerequisites: [TE-C278-tayaru-ceyu, TE-C278-datu]
 sounds: []
-roots: []
+roots: [dravidian-nada-walk]
+etymology_hook: "naḍupu: native Dravidian; DEDR 3582 lists naḍupu 'to drive' under naḍucu 'to walk'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C278-datu]
 <!-- hl-knowledge: introduces=[TE-LEX-C278-KRIYA278-05]; assesses=[] -->
 
 **నడుపు** — *naḍupu* — "to drive, to ride (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నడుపు** (*naḍupu*) is native Dravidian. DEDR 3582 lists *naḍupu*, "to make go, drive", under *naḍucu*, "to walk", one word with Tamil *naṭa*, "to walk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

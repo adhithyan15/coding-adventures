@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 261,
+  "title": "Us two and you two as objects",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:a69bdffc1df55c76",
+  "lessons": [
+    {
+      "id": "SA-C261-avam",
+      "sequence": 15540,
+      "title": "आवाम् (āvām) — us two, as the object",
+      "headword": "आवाम्",
+      "romanization": "āvām",
+      "gloss": "us two, as the object",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:837a9ab87488ee57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say माम्, “me”. Then recall the Sanskrit number reserved for exactly two: the dual. Now make the object be the speaker and one other person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आवाम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आवाम् (āvām) means “us two” as the object."
+            },
+            {
+              "kind": "speech",
+              "text": "सः आवाम् पश्यति। saḥ āvām paśyati. He sees us two."
+            },
+            {
+              "kind": "speech",
+              "text": "Whitney §491 lists आवाम् (āvām) as the independent dual form used for both subject and object. Here its position in the known frame makes the object job clear. Hold the first vowel long: ā-vām."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "Taken Apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As a grammatical form, आवाम् (āvām) comes from the first-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent dual used for both subject and object. This lesson makes no deeper historical derivation claim."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Whitney, Sanskrit Grammar (1889), §491."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one speaker as object — mām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one speaker as object — *mām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the speaker plus one other as object — āvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the speaker plus one other as object — *āvām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees us two” — saḥ āvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees us two” — *saḥ āvām paśyati*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The speaker and exactly one companion are seen. Which object form means “us two”? (आवाम्, āvām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C261-yuvam",
+      "sequence": 15550,
+      "title": "युवाम् (yuvām) — you two, as the object",
+      "headword": "युवाम्",
+      "romanization": "yuvām",
+      "gloss": "you two, as the object",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcf03abd0e53c7ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One familiar addressee as object is त्वाम् (tvām). The speaker plus one other is आवाम् (āvām). Turn the dual toward two addressees."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: युवाम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युवाम् (yuvām) means “you two” as the object."
+            },
+            {
+              "kind": "speech",
+              "text": "सः युवाम् पश्यति। saḥ yuvām paśyati. He sees you two."
+            },
+            {
+              "kind": "speech",
+              "text": "Whitney §491 lists युवाम् (yuvām) beside आवाम् (āvām). Both are independent dual forms; the opening tells you whether the pair includes the speaker or consists of the two people addressed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "Taken Apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As a grammatical form, युवाम् (yuvām) comes from the second-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent dual used for both subject and object. This lesson makes no deeper historical derivation claim."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Whitney, Sanskrit Grammar (1889), §491."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees us two” — saḥ āvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees us two” — *saḥ āvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees you two” — saḥ yuvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees you two” — *saḥ yuvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "our pair — āvām; your pair — yuvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: our pair — *āvām*; your pair — *yuvām*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Exactly two familiar addressees are seen. Which object form do you use? (युवाम्, yuvām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C261-dual-object-practice",
+      "sequence": 15560,
+      "title": "Does the pair include the speaker?",
+      "headword": "(dual object contrast)",
+      "romanization": "",
+      "gloss": "us two or you two",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b3631d6206e8d7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give “us two”, then “you two”. (Āvām; yuvām.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: choose the pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both forms point to exactly two people. Choose by whether the speaker belongs to the pair:"
+            },
+            {
+              "kind": "speech",
+              "text": "speaker plus one other: आवाम् (āvām), “us two”;"
+            },
+            {
+              "kind": "speech",
+              "text": "two familiar addressees: युवाम् (yuvām), “you two”."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the dual contrast. Count two first; then ask whether the speaker is inside the pair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees us two” — saḥ āvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees us two” — *saḥ āvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees you two” — saḥ yuvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees you two” — *saḥ yuvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "“me” then “us two” — mām; āvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: “me” then “us two” — *mām; āvām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "“you one” then “you two” — tvām; yuvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: “you one” then “you two” — *tvām; yuvām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pair includes the speaker — āvām; pair is addressed — yuvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pair includes the speaker — *āvām*; pair is addressed — *yuvām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "āvām; yuvām; āvām; yuvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *āvām; yuvām; āvām; yuvām*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both dual sentences, then say the deciding question. (Saḥ āvām paśyati; saḥ yuvām paśyati; does the pair include the speaker?)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

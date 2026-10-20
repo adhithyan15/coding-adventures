@@ -255,8 +255,12 @@ class IrProgram:
     entry_label: str
 ```
 
-Every `IrInstruction` has a unique `id` field — a monotonically increasing
-integer assigned at creation time. This ID is the key that the source map
+Ordinary instructions receive unique integer IDs assigned monotonically at
+creation time. Final transformed instruction order need not be ID-sorted.
+The named [core text/data profile](BF03-core-profile.md) explicitly reserves
+`-1` for LABEL and COMMENT records, which do not carry ordinary identity.
+Other typed/native domains require their own losslessness contract. An ID
+is the key that the source map
 uses to connect an IR instruction to its origin (AST node, source position)
 and its destiny (optimised IR instruction, machine code offset).
 
@@ -265,7 +269,8 @@ and its destiny (optimised IR instruction, machine code offset).
 The IR has a **canonical text format** that serves three purposes:
 1. **Debugging** — humans can read the IR to understand what the compiler did
 2. **Golden-file tests** — expected IR output is committed as `.ir` text files
-3. **Roundtrip property** — `parse(print(program)) == program` is a testable invariant
+3. **Roundtrip property** — `parse(print(program)) == program` within the
+   explicitly admitted domain of [the core profile](BF03-core-profile.md).
 
 ```
 ; Example IR text format
@@ -295,7 +300,11 @@ silently misinterpreting opcodes. Version history:
 | 1 | Core set (see table above) | Brainfuck |
 | 2 | MUL, DIV, MOD, float ops, string ops, etc. | BASIC (planned) |
 
-The `; #N` comments show the instruction IDs (informational, not parsed).
+In the core profile, `; #N` is required parsed identity metadata on ordinary
+instructions, including NOP. LABEL and COMMENT reconstruct their explicit
+`-1` sentinel. This resolves the former contradiction between informational,
+unparsed IDs and structural round trips. The illustrative spacing above is
+not a canonical golden; the profile defines exact bytes and bounded domains.
 
 ---
 

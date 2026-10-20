@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C299-contusion",
+    "language": "french",
+    "chapter": 299,
+    "sequence": 17100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fb2947653461600"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "ótdykh"
 concept_tag: RU-HEALTH2-REST
 prerequisites: [RU-C33-temperature, RU-C33-cough]
 sounds: []
-roots: []
+roots: [slavic-dykh]
+etymology_hook: "отдых is от- 'back' + дых 'breath', from дышать 'to breathe': rest is getting your breath back"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C33-cough]
 <!-- hl-knowledge: introduces=[RU-LEX-C33-HEALTH2-03]; assesses=[] -->
 
 **отдых** (*ótdykh*) — "rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**отдых** is *от-*, "back, away", with *дых*, "breath", from the verb *дышать*, "to breathe": rest is getting your breath back. For the root, Vasmer compares Lithuanian *dūsėti*, "to pant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

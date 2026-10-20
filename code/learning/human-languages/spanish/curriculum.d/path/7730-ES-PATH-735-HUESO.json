@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-735-HUESO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-735-HUESO"
+  ],
+  "after": []
+}

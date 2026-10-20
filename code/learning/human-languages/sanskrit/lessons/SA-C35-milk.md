@@ -14,7 +14,8 @@ romanization: "dugdham"
 concept_tag: SA-HOUSE-DUGDHA
 prerequisites: [SA-C34-body, SA-C33-river, SA-C34-arm]
 sounds: []
-roots: []
+roots: [sanskrit-dugdha]
+etymology_hook: "dugdha 'milked, milk' ← the root √duh 'milk'; it lives on as Hindi dūdh (CDIAL 6391)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C34-body]
 Sanskrit has two words for milk. You met *kṣīram* early on; **दुग्धम्** is the other one, and it is the one the modern languages kept.
 
 It comes from *duh*, "to milk", so **दुग्धम्** is "the milked thing" — the action first, the drink second. Hindi and Gujarati say *dūdh*, Punjabi *duddh*, and you can hear the whole word still inside them. Neuter **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dugdha* is the past participle of the root √duh, "to milk": "the milked thing"
+(MW). It lives on as Hindi and Gujarati *dūdh* (CDIAL 6391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

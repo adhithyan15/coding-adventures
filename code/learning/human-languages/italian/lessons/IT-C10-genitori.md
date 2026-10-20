@@ -79,4 +79,4 @@ Grimm's law, English *father/mother*.
 What single sound did Latin *pater/māter* soften to? (The *-t-* became **-d-**.)
 What does **genitori** literally mean, and name an English cousin. ("The
 **begetters**"; genesis/gene/progenitor.) What does the false friend *parenti*
-mean? (**Relatives**, not parents.) Next: **fratello** and **sorella**.
+mean? (**Relatives**, not parents.) Next: brother and sister.

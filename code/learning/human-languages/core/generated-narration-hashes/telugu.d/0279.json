@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 279,
-  "sourceHash": "fnv1a64:d82d3bb014fbc588",
+  "sourceHash": "fnv1a64:abac04502b7268b9",
   "lessonIds": [
     "TE-C279-koluko",
     "TE-C279-ubbu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch279.txt",
   "json": "telugu/narration/ch279.json",
-  "textHash": "fnv1a64:17d023da2714f7d9",
-  "jsonHash": "fnv1a64:cba6fc059ccef395",
+  "textHash": "fnv1a64:2e4d117fc846d4a5",
+  "jsonHash": "fnv1a64:930fad912ba61a3b",
   "findings": []
 }

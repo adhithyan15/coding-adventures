@@ -13,7 +13,8 @@ gloss: "a writer"
 concept_tag: FR-CHOSES249-ECRIVAIN
 prerequisites: [FR-C249-actrice, FR-C249-poeme]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "écrivain ← Latin scriba 'a clerk', from scribere — the Latin of écrire; English scribe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C249-poeme]
 <!-- hl-knowledge: introduces=[FR-LEX-C249-CHOSES249-04]; assesses=[] -->
 
 **l'écrivain** — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**écrivain** ← Old French *escrivain* ← Vulgar Latin *\*scribanem*, from Latin *scriba*, "a clerk", from *scribere*, the Latin of *écrire* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

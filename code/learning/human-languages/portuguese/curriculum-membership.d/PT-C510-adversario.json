@@ -1,0 +1,11 @@
+{
+  "id": "PT-C510-adversario",
+  "pathSegment": "PT-PATH-510-RESULTADO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-510-RESULTADO",
+      "order": 2
+    }
+  ]
+}

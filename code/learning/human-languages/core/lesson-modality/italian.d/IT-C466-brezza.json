@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C466-brezza",
+    "language": "italian",
+    "chapter": 466,
+    "sequence": 26260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9af76c891e8415c8"
+  },
+  "findings": []
+}

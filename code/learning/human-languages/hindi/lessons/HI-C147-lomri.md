@@ -14,7 +14,8 @@ romanization: "lomṛī"
 concept_tag: HI-THINGS147-LOMRI
 prerequisites: [HI-C147-khargos, HI-C147-hiran]
 sounds: []
-roots: []
+roots: [sanskrit-lomataka]
+etymology_hook: "lomṛī ← *lompaṭa, a form CDIAL reconstructs beside Sanskrit lomaṭaka 'fox' (CDIAL 11153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C147-hiran]
 <!-- hl-knowledge: introduces=[HI-LEX-C147-THINGS147-03]; assesses=[] -->
 
 **लोमड़ी** — *lomṛī* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लोमड़ी** (*lomṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *\*lompaṭa*, the third of the fox-words in CDIAL's entry for Sanskrit *lomaṭaka*, "fox", a form CDIAL reconstructs from its descendants (CDIAL 11153). CDIAL adds that these words are possibly blends of an older *\*lopi-* with *loman*, "body hair", and *lūma*, "tail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

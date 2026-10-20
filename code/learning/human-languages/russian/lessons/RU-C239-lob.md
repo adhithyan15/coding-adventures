@@ -14,7 +14,8 @@ romanization: "lob"
 concept_tag: RU-ZDOROV239-LOB
 prerequisites: [RU-C239-brov, RU-C239-resnitsa]
 sounds: []
-roots: []
+roots: [slavic-lobu]
+etymology_hook: "лоб ← Proto-Slavic *lobŭ; Greek lophos 'crest' is compared, a link some reject"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C239-resnitsa]
 <!-- hl-knowledge: introduces=[RU-LEX-C239-ZDOROV239-05]; assesses=[] -->
 
 **лоб** (*lob*) — "a forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лоб** ← Proto-Slavic *\*lobŭ* — inherited. It has been compared with Greek *lóphos*, "the back of the neck, a crest", and Tocharian *lap*, "skull" (Vasmer); Berneker rejected the Greek link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

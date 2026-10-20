@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 674,
+  "sourceHash": "fnv1a64:d9678981aa17e587",
+  "lessonIds": [
+    "ES-C674-pasear",
+    "ES-C674-paseo",
+    "ES-C674-callejear",
+    "ES-C674-recorrer",
+    "ES-C674-recorrido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch674.txt",
+  "json": "spanish/narration/ch674.json",
+  "textHash": "fnv1a64:d94533e387984ab3",
+  "jsonHash": "fnv1a64:a44c6f7d0b339d36",
+  "findings": []
+}

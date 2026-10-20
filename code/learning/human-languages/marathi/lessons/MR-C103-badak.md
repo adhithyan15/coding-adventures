@@ -15,6 +15,7 @@ concept_tag: MR-ANIMALS103-BADAK
 prerequisites: [MR-C102-phulpakhru, MR-C103-mungi]
 sounds: []
 roots: []
+etymology_hook: "badak 'duck': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C103-mungi]
 <!-- hl-knowledge: introduces=[MR-LEX-C103-ANIMALS103-02]; assesses=[] -->
 
 **बदक** — *badak* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बदक** (*badak*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 609,
+  "sourceHash": "fnv1a64:17110a0cf3ffd132",
+  "lessonIds": [
+    "ES-C609-progreso",
+    "ES-C609-perfeccionar",
+    "ES-C609-desafio",
+    "ES-C609-afrontar",
+    "ES-C609-perseverar"
+  ],
+  "tex": "spanish/book/chapters/ch609-progresar.tex"
+}

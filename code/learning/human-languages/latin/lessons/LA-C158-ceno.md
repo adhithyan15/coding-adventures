@@ -13,7 +13,8 @@ gloss: "to dine"
 concept_tag: LA-VERB-CENO
 prerequisites: [LA-C158-festino, LA-C158-vigilo]
 sounds: []
-roots: []
+roots: [cenare-latin, cena-latin]
+etymology_hook: "cēnō 'to dine' — the verb made from cēna 'dinner'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C158-vigilo]
 <!-- hl-knowledge: introduces=[LA-LEX-C158-ACT158-04]; assesses=[] -->
 
 **cēnō, cēnāre** — "to dine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cēnō** is the verb made from *cēna*, "dinner" (EtymDB 2.1), which is usually traced to Proto-Indo-European *\*(s)ker-*, "to cut": the meal as one's portion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

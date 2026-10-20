@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaskar, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:535f1ef37005464b",
+  "sourceHash": "fnv1a64:5a24e34b1dca11c1",
   "lessons": [
     {
       "id": "MR-C01-namaskar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:faf0a8e2ed3b2472",
+      "sourceHash": "fnv1a64:286ec770411a703c",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -299,7 +299,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:d942360bec2833a9",
+      "sourceHash": "fnv1a64:c299c63646c65b3f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -359,7 +359,7 @@
             },
             {
               "kind": "speech",
-              "text": "ho. That is a word: it is yes, and you have been saying it since your first lesson in Marathi."
+              "text": "ho. That is a word: it is yes, and its own word lesson comes once the first letters are in your hand."
             },
             {
               "kind": "speech",

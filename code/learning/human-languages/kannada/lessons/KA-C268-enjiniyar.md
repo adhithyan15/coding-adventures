@@ -14,7 +14,8 @@ romanization: "eñjiniyar"
 concept_tag: KA-KELASA268-ENJINIYAR
 prerequisites: [KA-C267-getu, KA-C268-vakila]
 sounds: []
-roots: []
+roots: [english-engineer]
+etymology_hook: "eñjiniyar ← English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C268-vakila]
 <!-- hl-knowledge: introduces=[KA-LEX-C268-KELASA268-02]; assesses=[] -->
 
 **ಎಂಜಿನಿಯರ್** — *eñjiniyar* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಂಜಿನಿಯರ್** (*eñjiniyar*) is a loan from English *engineer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

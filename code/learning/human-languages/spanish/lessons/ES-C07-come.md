@@ -6,7 +6,7 @@ sequence: 629
 chapter: 34
 type: grammar
 headword: come
-gloss: "he eats," "she eats," and the polite "you eat" — the third slot
+gloss: '"he eats," "she eats," and the polite "you eat" — the third slot'
 concept_tag: ES-GRAMMAR-ER-PRESENT
 prerequisites: [ES-C07-comes]
 sounds: []

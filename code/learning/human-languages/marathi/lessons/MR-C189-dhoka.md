@@ -14,7 +14,8 @@ romanization: "dhokā"
 concept_tag: MR-VASTU189-DHOKA
 prerequisites: [MR-C188-kokila, MR-C188-madhmasi]
 sounds: []
-roots: []
+roots: [indo-aryan-dhroksha]
+etymology_hook: "dhokā ← *dhrokṣa 'deceit', a reconstructed form; a tadbhava (CDIAL 6894)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C188-madhmasi]
 <!-- hl-knowledge: introduces=[MR-LEX-C189-VASTU189-01]; assesses=[] -->
 
 **धोका** — *dhokā* — "danger, a risk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धोका** (*dhokā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhrokṣa*, "deceit", a form CDIAL reconstructs from its descendants (CDIAL 6894). CDIAL glosses the Marathi word "fear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

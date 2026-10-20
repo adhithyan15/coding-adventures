@@ -1,0 +1,11 @@
+{
+  "id": "IT-C285-portavoce",
+  "pathSegment": "IT-PATH-285-COMUNICATO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-285-COMUNICATO",
+      "order": 1
+    }
+  ]
+}

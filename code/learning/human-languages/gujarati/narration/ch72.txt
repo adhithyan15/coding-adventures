@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for beautiful, then the Gujarati for bad.
 You'll want to know: મોટું.
 મોટું (moṭũ) — "big".
 
+The word, taken apart.
+CDIAL lists મોટું (moṭũ) under mōṭṭa, one member of a large group of reconstructed forms it heads muṭṭa, "defective" (CDIAL 10187).
+
 What you've built.
 One more word for big and small, long and short.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for bad, then the Gujarati for big.
 
 You'll want to know: નાનું.
 નાનું (nānũ) — "small".
+
+The word, taken apart.
+નાનું (nānũ) is a tadbhava. CDIAL lists it under Sanskrit ślakṣṇa, "slippery, smooth, soft, tender", which the old word-lists also gloss "thin, small" (CDIAL 12732).
 
 What you've built.
 One more word for big and small, long and short.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for big, then the Gujarati for small.
 You'll want to know: લાંબું.
 લાંબું (lā̃bũ) — "long, tall".
 
+The word, taken apart.
+લાંબું (lā̃bũ) (lāṁbũ) is a tadbhava of Sanskrit lamba, "pendent", which already meant "long" in compounds (CDIAL 10951).
+
 What you've built.
 One more word for big and small, long and short.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for small, then the Gujarati for long.
 You'll want to know: ટૂંકું.
 ટૂંકું (ṭū̃kũ) — "short".
 
+The word, taken apart.
+CDIAL lists ટૂંકું (ṭū̃kũ) (ṭūṁkũ) under ṭukka, "piece", a form it reconstructs beside ṭukk, "cut, break" (CDIAL 5466). It thinks a link with Sanskrit truṭ, "to break", very doubtful.
+
 What you've built.
 One more word for big and small, long and short.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for long, then the Gujarati for short.
 
 You'll want to know: ભારે.
 ભારે (bhāre) — "heavy".
+
+The word, taken apart.
+ભારે (bhāre) is built on Gujarati bhār, "load, weight", which CDIAL lists under Sanskrit bhāra, "burden, weight" (CDIAL 9459). It lists Gujarati bhārī, "heavy", under bhārika, "forming a load, heavy" (CDIAL 9465).
 
 What you've built.
 One more word for big and small, long and short.

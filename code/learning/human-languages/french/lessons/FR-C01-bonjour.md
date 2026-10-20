@@ -50,7 +50,8 @@ Spanish hiding in it.
 
 **bonjour** = **bon** ("good") + **jour** ("day") = "good day." One written
 word, said *bõ- zhoor*. *bon* is masculine because *jour* is masculine — the
-agreement from the *bon* lesson, quietly at work.
+agreement from the *bon* lesson, quietly at work. Both are inherited: *bon* ← Latin
+*bonus*, *jour* ← Latin *diurnum*, "daytime" (EtymDB 2.1).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -64,8 +65,8 @@ didn't. Two neighbours, two instincts.
 
 Culturally, *bonjour* carries weight far beyond "hello": in France, opening
 almost any interaction — a shop, a bus, a desk — *without* a *bonjour* reads
-as rude. It's the formal, all-purpose daytime greeting (switch to *bonsoir*
-in the evening), and the polite default where *salut* would be too casual.
+as rude. It's the formal, all-purpose daytime greeting (the evening has its
+own, two lessons on), and the polite default where *salut* would be too casual.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-BONJOUR-07, FR-LEX-SALUT-01] -->

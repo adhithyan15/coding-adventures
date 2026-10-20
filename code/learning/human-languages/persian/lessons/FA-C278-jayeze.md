@@ -14,7 +14,8 @@ romanization: "jâyeze"
 concept_tag: FA-CHIZ278-JAYEZE
 prerequisites: [FA-C278-raz, FA-C278-tim]
 sounds: []
-roots: []
+roots: [arabic-jaiza]
+etymology_hook: "jâyeze ← Arabic jāʾiza 'gift, reward', root j-w-z (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C278-tim]
 <!-- hl-knowledge: introduces=[FA-LEX-C278-CHIZ278-04]; assesses=[] -->
 
 **جایزه** — *jâyeze* — "a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâyeze* is borrowed from Arabic *jāʾiza*, "gift, reward". Its Arabic root is *j-w-z* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

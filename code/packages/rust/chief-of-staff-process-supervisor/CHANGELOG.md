@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+- A host's broker is held as the launcher's `BrokerChild` (D18S P2.8b-2).
+  Ending it, seeing its exit and reporting its id are therefore the same
+  code on every OS, and on Windows the broker is the applier's
+  `ConfinedChild`. Nothing else changes.
+
+- The host is spawned through `chief_of_staff_spawn_isolation::spawn`,
+  under the process-wide spawn lock (D18S P2.8b-1), so on Windows it is
+  never created inside the applier's inheritable span.
+- `a_host_that_never_becomes_ready_is_ended` expects the exit code a kill
+  leaves on each platform: none on Unix (a signal), 1 on Windows
+  (`Child::kill` is `TerminateProcess(handle, 1)`). It failed the first
+  time this crate's tests ran on windows-2025.
+- **Breaking:** `ChannelBrokers::new` takes an `Arc<BrokerProgram>` (D18S
+  P2.7b). That is the broker, plus the Seatbelt shim on macOS, in place of
+  the broker's `Arc<VerifiedExecutable>` alone.
+- **`refusing_unbrokered_channels()`** (D18S P2.6d-2c). With it set, a host
+  whose launch bindings name any channel fails to launch, with the new
+  `ChannelsNeedBroker`, unless channel brokers are configured, so it never
+  runs only to fail each channel request. The orchestrator always sets it;
+  this crate's own tests, which answer channel requests through the manual
+  adapter API, do not.
+- **Non-channel requests are served off the supervisor's thread** (D18S
+  P2.6d-4; #13980). With a dispatcher set, each host gets one dispatch
+  worker. A completion or tool call is handed to it, and the supervisor
+  goes straight back to every other host's requests and heartbeats.
+  - The worker answers through the shared host link, as a broker's relay
+    does, so frames still reach the host in sequence order.
+  - A response it cannot deliver is recorded on the link, and the next
+    refresh ends the host with that error, as the synchronous path did.
+  - A request with the worker is hidden from `pending_data_plane_request`
+    and refused by `respond_data_plane`.
+  - Tests: one host's held dispatch does not hold another's seven
+    answers; a misdirected response ends its host with `Control`.
+  - Review round 1:
+    - a dispatcher that panics ends its host (`Control`) instead of
+      leaving it waiting forever;
+    - the worker's fault stays latched until the host has exited, so a
+      failed kill is retried;
+    - a restart waits for the previous incarnation's dispatch to finish
+      (`DispatchBusy`), so one host never has two workers;
+    - a request queued just before its host ended is not dispatched;
+    - `data_plane_request_in_flight`, for the audit record and tests.
 - **Each agent can have its own channel broker** (D18S P2.6d-2b; #13980).
   `with_channel_brokers(ChannelBrokers)` is opt-in; without it nothing
   changes.

@@ -14,7 +14,8 @@ romanization: "pratīkṣa"
 concept_tag: ML-WANT145-PRATIKSA
 prerequisites: [ML-C145-agraham, ML-C145-svapnam, ML-C25-shubha-rathri]
 sounds: []
-roots: []
+roots: [sanskrit-pratiksha]
+etymology_hook: "pratīkṣa ← Sanskrit pratīkṣā 'expectation, looking forward', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C145-svapnam]
 <!-- hl-knowledge: introduces=[ML-LEX-C145-WANT145-03]; assesses=[] -->
 
 **പ്രതീക്ഷ** — *pratīkṣa* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രതീക്ഷ** (*pratīkṣa*) ← Sanskrit *pratīkṣā*, "expectation, looking forward", taken over whole as a tatsama. Its parts are *prati*, "toward", and *īkṣ*, "to look".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

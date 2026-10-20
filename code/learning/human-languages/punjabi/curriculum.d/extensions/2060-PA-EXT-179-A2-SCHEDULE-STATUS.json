@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-179-A2-SCHEDULE-STATUS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read and give one simple public-hours note with morning and afternoon times and open and closed statuses.",
+  "prerequisites": [
+    "PA-EXT-178-A2-SCHEDULE-SEQUENCE"
+  ]
+}

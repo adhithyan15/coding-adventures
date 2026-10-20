@@ -14,7 +14,8 @@ romanization: "pāsporṭ"
 concept_tag: BN-JINIS248-PASPORT
 prerequisites: [BN-C247-chokchoke, BN-C248-charjar]
 sounds: []
-roots: []
+roots: [english-passport]
+etymology_hook: "pāsporṭ ← English passport"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C248-charjar]
 <!-- hl-knowledge: introduces=[BN-LEX-C248-JINIS248-02]; assesses=[] -->
 
 **পাসপোর্ট** — *pāsporṭ* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাসপোর্ট** (*pāsporṭ*) is a loan from English *passport*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sefârat"
 concept_tag: FA-MAKAN155-SEFARAT
 prerequisites: [FA-C155-kalantari, FA-C155-shahrdari]
 sounds: []
-roots: []
+roots: [arabic-sifara]
+etymology_hook: "sefârat ← Arabic sifāra 'embassy, mission', root s-f-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C155-shahrdari]
 <!-- hl-knowledge: introduces=[FA-LEX-C155-MAKAN155-04]; assesses=[] -->
 
 **سفارت** — *sefârat* — "an embassy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sefârat* is borrowed from Arabic *sifāra*, "embassy, mission". Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bāṭlī"
 concept_tag: MR-HOME92-BATLI
 prerequisites: [MR-C92-chamcha, MR-C92-suri]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "bāṭlī: usually traced to English bottle, or to Portuguese botelha; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C92-suri]
 <!-- hl-knowledge: introduces=[MR-LEX-C92-HOME92-05]; assesses=[] -->
 
 **बाटली** — *bāṭlī* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाटली** (*bāṭlī*) is a loan, usually traced to English *bottle*, or to Portuguese *botelha*. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

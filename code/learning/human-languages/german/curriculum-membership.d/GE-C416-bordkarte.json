@@ -1,0 +1,11 @@
+{
+  "id": "GE-C416-bordkarte",
+  "pathSegment": "GE-PATH-416-FLUGSTEIG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-416-FLUGSTEIG",
+      "order": 1
+    }
+  ]
+}

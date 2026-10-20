@@ -13,7 +13,8 @@ gloss: "to paint"
 concept_tag: LA-VERB-PINGO
 prerequisites: [LA-C154-visito, LA-C154-canto]
 sounds: []
-roots: []
+roots: [pingere-latin]
+etymology_hook: "pingō 'to paint' — inherited, usually traced to PIE *peyk- 'to mark, to colour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C154-canto]
 <!-- hl-knowledge: introduces=[LA-LEX-C154-ACT154-04]; assesses=[] -->
 
 **pingō, pingere** — "to paint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pingō** is inherited, usually traced to Proto-Indo-European *\*peyk-*, "to mark, to colour" (EtymDB 2.1); the n inside the present stem is missing from its participle *pictus*, "painted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

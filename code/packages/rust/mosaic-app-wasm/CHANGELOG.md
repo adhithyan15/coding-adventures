@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### Removed — the `file.open` / `file.save` aliases (UI87 §3.2, #16927)
+
+- The browser executor answers only `files.open` and `files.save`. The
+  original `file.*` kinds now fail as unsupported, like any unknown kind;
+  nothing in the repo sends them since VisiCalc and SpiceWorkbench moved.
+- A payload that carries the retired `mimeType` + `extension` pair is
+  refused with a message naming `accept`, rather than ignored. Ignoring it
+  would quietly widen the picker to every file.
+- `files.open` always returns `{name, mimeType, bytes}`; the alias-only
+  result without `mimeType` is gone, as is the alias's download refusal.
+- The download fallback now checks `saving` explicitly instead of relying on
+  the kind, so an open can never become a download. A test pins it.
+- Tests use `files.*` throughout. A new test pins both refusals.
+
+### Added — the VisiCalc workbook type (#16927)
+
+- The browser executor maps `application/vnd.coding-adventures.visicalc+json`
+  to `.visicalc`, matching every native platform library. VisiCalc and
+  SpiceWorkbench now send `files.*`. The `file.*` aliases stay until a
+  follow-up retires them; nothing in the repo sends them any more.
+
 ### Changed — the executable-list parity test reads the shared Compose file (UI89 §3.8)
 
 - The Compose platform library's rules moved into `MosaicFileEffects.kt`,

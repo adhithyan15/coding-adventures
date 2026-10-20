@@ -14,7 +14,8 @@ romanization: "zazhigát"
 concept_tag: RU-VERB-ZAZHIGAT
 prerequisites: [RU-C175-vklyuchat, RU-C175-vyklyuchat]
 sounds: []
-roots: []
+roots: [slavic-zheg]
+etymology_hook: "зажигать is за- + жигать, from жечь 'to burn': to set burning"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C175-vyklyuchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C175-ACT175-05]; assesses=[] -->
 
 **зажигать** (*zazhigát*) — "to light, to set alight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зажигать** is *за-*, "start", with *-жигать*, from *жечь*, "to burn" (Vasmer gives *жечь* under *жгу*, "I burn"): to set something burning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

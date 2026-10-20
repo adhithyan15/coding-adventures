@@ -14,6 +14,7 @@ concept_tag: PT-VIAGEM92-MOTA
 prerequisites: [PT-C91-ferias, PT-C91-bicicleta]
 sounds: []
 roots: []
+etymology_hook: "mota — clipped from the motorcycle word, borrowed from French motocyclette"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C91-bicicleta]
 <!-- hl-knowledge: introduces=[PT-LEX-C92-VIAGEM92-01]; assesses=[] -->
 
 **a mota** — "a motorbike". In Brazil, **a moto**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mota** is cut down from the word for a motorcycle, which was borrowed from French *motocyclette*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

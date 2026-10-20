@@ -14,7 +14,8 @@ romanization: "hāthī"
 concept_tag: MW-ANIMALS71-HATHI
 prerequisites: [MW-C71-chiri, MW-C71-nahar]
 sounds: []
-roots: []
+roots: [sanskrit-hastin]
+etymology_hook: "hāthī ← Sanskrit hastin 'having hands; elephant', a tadbhava (CDIAL 14039, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C71-nahar]
 <!-- hl-knowledge: introduces=[MW-LEX-C71-ANIMALS71-05]; assesses=[] -->
 
 **हाथी** — *hāthī* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हाथी** (*hāthī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hastin*, "having hands; elephant". CDIAL lists Marwari *hāthī* under it (CDIAL 14039). CDIAL asks whether the Sanskrit word reshaped an older *karin*, perhaps of non-Aryan origin, tied to *hasta*, "hand", by popular etymology.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

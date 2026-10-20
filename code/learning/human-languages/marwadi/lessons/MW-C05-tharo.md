@@ -11,7 +11,8 @@ gloss: your, assembled from one new and three known signs
 concept_tag: MW-GRAMMAR-THARO-POSSESSIVE
 prerequisites: [MW-W05-tha]
 sounds: [aspirated-th, long-aa, tapped-r, long-o]
-roots: []
+roots: [sanskrit-yushmad]
+etymology_hook: "thāro 'your': listed by CDIAL among the possessives under Sanskrit yuṣmad- 'you (plural)' (CDIAL 10511)"
 duration:
   max_seconds: 150
 requires:
@@ -45,6 +46,11 @@ reviews_of: [MW-C05-hear-tharo, MW-W05-tha, MW-C05-mharo]
 > **थ** + **ा** + **रो** → **थारो** — *thāro* — your
 
 Only **थ** was new. The rest comes from **राम** and **म्हारो**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marwari **थारो** (*thāro*), "your", among the possessive forms built on Sanskrit *yuṣmad-*, the plural "you" (CDIAL 10511). It is an inherited word, a tadbhava, whose plural "your" now serves for one person too.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THARO-01, MW-LEX-THARO-01] -->

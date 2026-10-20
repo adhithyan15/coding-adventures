@@ -14,7 +14,8 @@ romanization: "iṭaiyil"
 concept_tag: TA-IDAM264-ITAIYIL
 prerequisites: [TA-C263-kappal, TA-C264-etire]
 sounds: []
-roots: []
+roots: [dravidian-idai-middle]
+etymology_hook: "இடையில் — native Dravidian (DEDR 448); Malayalam iṭa 'interval, middle', Kannada eḍe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C264-etire]
 <!-- hl-knowledge: introduces=[TA-LEX-C264-IDAM264-02]; assesses=[] -->
 
 **இடையில்** — *iṭaiyil* — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இடையில்** (*iṭaiyil*) is native Dravidian. DEDR 448 lists Malayalam *iṭa*, "interval, middle" and Kannada *eḍe*. It is *iṭai*, "middle, interval", with *-il*, "in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

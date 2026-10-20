@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-511-RISULTATI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-511-RISULTATI"
+  ],
+  "after": []
+}

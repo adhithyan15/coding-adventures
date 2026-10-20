@@ -13,7 +13,8 @@ gloss: "to have to, must"
 concept_tag: IT-VERB-DOVERE
 prerequisites: [IT-C84-biblioteca, IT-C85-potere]
 sounds: []
-roots: []
+roots: [debere-latin]
+etymology_hook: "dovere ← Latin debere 'to owe' — English debt shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C85-potere]
 <!-- hl-knowledge: introduces=[IT-LEX-C85-POTERE85-02]; assesses=[] -->
 
 **dovere** — "to have to, must".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dovere** ← Latin *debere*, "to owe, must" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

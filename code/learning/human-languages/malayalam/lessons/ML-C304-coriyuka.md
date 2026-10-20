@@ -14,7 +14,8 @@ romanization: "coṟiyuka"
 concept_tag: ML-VERB-CORIYUKA
 prerequisites: [ML-C304-viraykkuka, ML-C304-virkkuka]
 sounds: []
-roots: []
+roots: [dravidian-cori-itch]
+etymology_hook: "coṟiyuka: native Dravidian, one word with Tamil coṟi (DEDR 2865)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C304-virkkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C304-KRIYA304-05]; assesses=[] -->
 
 **ചൊറിയുക** — *coṟiyuka* — "to itch, to scratch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചൊറിയുക** (*coṟiyuka*) is native Dravidian, one word with Tamil *coṟi* (DEDR 2865).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 274,
-  "sourceHash": "fnv1a64:222086cab99d1dc6",
+  "sourceHash": "fnv1a64:dd3e8cb1e87c69c9",
   "lessonIds": [
     "MR-C274-subheccha",
     "MR-C274-amantran",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch274.txt",
   "json": "marathi/narration/ch274.json",
-  "textHash": "fnv1a64:ad48d04be0b4817f",
-  "jsonHash": "fnv1a64:d3fc48c291ead6b2",
+  "textHash": "fnv1a64:f6e2d6e5117a2ed7",
+  "jsonHash": "fnv1a64:7e4ad74d8516daf6",
   "findings": []
 }

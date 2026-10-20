@@ -10,7 +10,8 @@ gloss: "to replace, to stand in for"
 concept_tag: ES-VERB-SUSTITUIR
 prerequisites: [ES-C479-obligatorio, ES-C479-adelantado]
 sounds: []
-roots: []
+roots: [statuere-latin]
+etymology_hook: "sustituir ← Latin substituere 'to put in place of': sub- + statuere 'to set' — English substitute"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C479-adelantado]
 > *A colleague is standing in for the teacher.*
 
 It takes a *y* in some forms: *sustituyo*, *sustituye*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sustituir** ← Latin *substituere*, "to put in place of" (Lewis & Short): *sub-*, "under", and *statuere*, "to set up" — a learned word, with the *b* dropped from the spelling.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

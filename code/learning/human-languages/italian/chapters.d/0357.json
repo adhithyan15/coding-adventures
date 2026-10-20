@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Lasciare il lavoro",
+  "label": "ch:it-lasciare-il-lavoro",
+  "canDo": "I can talk about leaving a job: resigning, a dismissal, the notice period and being out of work.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C357-preavviso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about leaving a job: resigning, a dismissal, the notice period and being out of work.",
+    "assesses": [
+      "IT-LEX-C357-DIMISSIONI-03",
+      "IT-LEX-C357-DIMISSIONI-04",
+      "IT-LEX-C357-DIMISSIONI-05"
+    ]
+  }
+}

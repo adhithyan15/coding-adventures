@@ -14,7 +14,8 @@ romanization: "buzurg"
 concept_tag: UR-CHIZ170-BUZURG
 prerequisites: [UR-C169-jashn, UR-C170-insan]
 sounds: []
-roots: []
+roots: [persian-buzurg]
+etymology_hook: "buzurg: usually traced to Persian buzurg 'great; an elder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C170-insan]
 <!-- hl-knowledge: introduces=[UR-LEX-C170-CHIZ170-02]; assesses=[] -->
 
 **بزرگ** — *buzurg* — "an elder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بزرگ** (*buzurg*) is a loan, usually traced to Persian *buzurg*, "great; an elder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

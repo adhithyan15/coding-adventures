@@ -11,7 +11,7 @@ romanization: "tale kai"
 concept_tag: KA-BODY-BASIC
 prerequisites: [KA-C12-kutumba, KA-C10-vaara]
 sounds: [kannada-vowel-sign-ai]
-roots: [dravidian-tale-kai]
+roots: [dravidian-tale-kai, dravidian-talai-head, dravidian-kai-hand]
 etymology_hook: "ತಲೆ tale (head) and ಕೈ kai (hand) are native Dravidian, matching Tamil talai/kai and Malayalam thala/kai closely — a shared core across three of the four languages"
 reviews_of: [KA-C12-kutumba]
 duration:
@@ -44,6 +44,11 @@ parts line up with Tamil and Malayalam almost perfectly.
   and Malayalam *thala*.
 - **ಕೈ** (*kai*) = "**hand**" — native Dravidian, matching Tamil and
   Malayalam's *kai* almost exactly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಲೆ** (*tale*) is native Dravidian, one word with Tamil *talai* and Telugu *tala* (DEDR 3103). **ಕೈ** (*kai*) is native too, one word with Tamil *kai* (DEDR 2023), where the entry spells the Kannada word *kay*, *kayi*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01] -->

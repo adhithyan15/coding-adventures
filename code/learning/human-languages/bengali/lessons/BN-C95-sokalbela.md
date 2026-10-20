@@ -14,7 +14,8 @@ romanization: "sôkālbelā"
 concept_tag: BN-TIME95-SOKALBELA
 prerequisites: [BN-C95-sararat, BN-C95-dupurbela]
 sounds: []
-roots: []
+roots: [sanskrit-sakala-early, sanskrit-vela]
+etymology_hook: "sôkālbelā: sôkāl 'morning', matching Sanskrit sakāla (CDIAL 13067), + belā 'time' ← velā (CDIAL 12115)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C95-dupurbela]
 <!-- hl-knowledge: introduces=[BN-LEX-C95-TIME95-05]; assesses=[] -->
 
 **সকালবেলা** — *sôkālbelā* — "the morning hours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সকালবেলা** (*sôkālbelā*) is *sôkāl*, "morning", which matches Sanskrit *sakāla*, "seasonable" (CDIAL 13067), + *belā*, "time", from Sanskrit *velā*, "limit, time", a word CDIAL thinks probably Dravidian (CDIAL 12115).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

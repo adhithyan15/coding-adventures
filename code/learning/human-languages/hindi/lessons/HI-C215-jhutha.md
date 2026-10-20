@@ -14,7 +14,8 @@ romanization: "jhūṭhā"
 concept_tag: HI-QUAL215-JHUTHA
 prerequisites: [HI-C214-imandar, HI-C214-sacca]
 sounds: []
-roots: []
+roots: [indo-aryan-jhuttha]
+etymology_hook: "jhūṭhā ← *jhūṭṭha 'false', a reconstructed form; a tadbhava (CDIAL 5407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C214-sacca]
 <!-- hl-knowledge: introduces=[HI-LEX-C215-QUAL215-01]; assesses=[] -->
 
 **झूठा** — *jhūṭhā* — "false, lying".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झूठा** (*jhūṭhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhūṭṭha*, "false", a form CDIAL reconstructs from its descendants (CDIAL 5407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

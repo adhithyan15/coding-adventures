@@ -11,8 +11,8 @@ gloss: key, heard and said before it is ever shown
 concept_tag: GU-HOUSE-KEY-HEARD
 prerequisites: [GU-C28-hear-khurshi]
 sounds: [ca, long-aa, long-ii]
-roots: []
-etymology_hook: The key belongs to the door two lessons back, so the chapter's fourth word is also its first pair.
+roots: [portuguese-chave]
+etymology_hook: "chāvī: usually traced to Portuguese chave 'key'"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C28-hear-khurshi]
 
 [PAUSE 3s] Say the word for door. Now listen twice: **chāvī**. It means
 **key** — the thing the *bārṇũ* is opened with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચાવી** (*chāvī*) is a loan, usually traced to Portuguese *chave*, "key".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-CHAAVI-01, GU-LEX-KHURSHI-01] -->

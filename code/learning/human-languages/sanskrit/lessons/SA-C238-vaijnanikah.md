@@ -14,7 +14,8 @@ romanization: "vaijñānikaḥ"
 concept_tag: SA-PPL238-VAIJNANIKAH
 prerequisites: [SA-C238-paricarika, SA-C238-abhiyanta]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana, sanskrit-jna]
+etymology_hook: "vaijñānika ← vijñāna 'knowledge, science' + -ika (MW); the 'scientist' sense is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C238-abhiyanta]
 <!-- hl-knowledge: introduces=[SA-LEX-C238-PPL238-03]; assesses=[] -->
 
 **वैज्ञानिकः** — *vaijñānikaḥ* — "a scientist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vaijñānika* is built on *vijñāna*, "knowledge, science", which you have already met, with the suffix *-ika* and the lengthened first vowel it brings (MW). MW glosses it "rich in knowledge"; the sense "scientist" is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

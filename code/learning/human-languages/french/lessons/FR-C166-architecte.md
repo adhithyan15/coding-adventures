@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES166-ARCHITECTE
 prerequisites: [FR-C166-photographe, FR-C166-journaliste]
 sounds: []
 roots: []
+etymology_hook: "architecte ← Latin architectus, from Greek architekton 'chief builder'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C166-journaliste]
 <!-- hl-knowledge: introduces=[FR-LEX-C166-CHOSES166-03]; assesses=[] -->
 
 **l'architecte** — "an architect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**architecte** ← Latin *architectus*, from Greek *architekton*, "chief builder" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

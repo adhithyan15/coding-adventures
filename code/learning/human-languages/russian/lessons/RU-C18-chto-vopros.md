@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-LEX-CHTO-01, RU-ETYMON-CHTO-KWID, RU-PUNCT-VOPROS-01, RU-PUNCT-TOCHKA-01, RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-POKA, RU-ETYMON-POKA-KAKOI, RU-ETYMON-NOS-NOSE, RU-LEX-NOS, RU-ETYMON-ROT-DIG, RU-LEX-ROT]
+  knowledge: [RU-LEX-CHTO-01, RU-ETYMON-CHTO-KWID, RU-PUNCT-VOPROS-01, RU-PUNCT-TOCHKA-01, RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-POKA, RU-ETYMON-POKA-KAKOI, RU-ETYMON-NOS-NOSE, RU-LEX-NOS, RU-ETYMON-ROT-DIG, RU-LEX-ROT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,15 +35,15 @@ reviews_of: [RU-W08-tochka, RU-C17-no, RU-C09-nos, RU-C09-rot]
 # что — "what," spelled with a ч and said with a sh
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[RU-PUNCT-VOPROS-01, RU-PUNCT-TOCHKA-01, RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-ROT, RU-ETYMON-ROT-DIG] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-PUNCT-VOPROS-01, RU-PUNCT-TOCHKA-01, RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-ROT, RU-ETYMON-ROT-DIG] -->
 
 [PAUSE 2s] Two parts of the face, and the mark that closes a question.
 
 - [YOU RECALL: *нос*, inherited straight from the root behind English *nose*]
 - [YOU RECALL: *рот*, probably from a verb meaning **to dig** — a snout rooting
   the ground]
-- [YOU RECALL: the one question mark at the **end**, and *но*, the *but* with no
-  cousin]
+- [YOU RECALL: the one question mark at the **end**, and *но*, *but*, likely kin
+  to *now*]
 
 ## You'll want to know first — что
 <!-- hl-knowledge: introduces=[RU-LEX-CHTO-01]; assesses=[RU-LEX-NOS, RU-PUNCT-VOPROS-01] -->

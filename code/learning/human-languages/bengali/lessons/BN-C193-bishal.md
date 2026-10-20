@@ -14,7 +14,8 @@ romanization: "bishāl"
 concept_tag: BN-GUN193-BISHAL
 prerequisites: [BN-C192-alada, BN-C192-eki]
 sounds: []
-roots: []
+roots: [sanskrit-vishala]
+etymology_hook: "bishāl ← Sanskrit viśāla 'broad, great', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C192-eki]
 <!-- hl-knowledge: introduces=[BN-LEX-C193-GUN193-01]; assesses=[] -->
 
 **বিশাল** — *bishāl* — "huge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিশাল** (*bishāl*) is Sanskrit *viśāla*, "broad, great", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

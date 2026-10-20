@@ -14,7 +14,8 @@ romanization: "bæbôhār"
 concept_tag: BN-JINIS234-BBOHAR
 prerequisites: [BN-C234-chinta, BN-C234-chehara]
 sounds: []
-roots: []
+roots: [sanskrit-vyavahara]
+etymology_hook: "bæbôhār ← Sanskrit vyavahāra 'conduct, practice', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C234-chehara]
 <!-- hl-knowledge: introduces=[BN-LEX-C234-JINIS234-05]; assesses=[] -->
 
 **ব্যবহার** — *bæbôhār* — "behaviour; use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যবহার** (*bæbôhār*) is Sanskrit *vyavahāra*, "conduct, practice", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

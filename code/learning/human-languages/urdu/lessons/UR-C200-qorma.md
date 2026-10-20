@@ -14,7 +14,8 @@ romanization: "qormā"
 concept_tag: UR-CHIZ200-QORMA
 prerequisites: [UR-C199-zira, UR-C200-pakora]
 sounds: []
-roots: []
+roots: [turkish-qavurma]
+etymology_hook: "qormā: usually traced, through Persian, to Turkic qavurma 'roasted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C200-pakora]
 <!-- hl-knowledge: introduces=[UR-LEX-C200-CHIZ200-02]; assesses=[] -->
 
 **قورمہ** — *qormā* — "korma".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قورمہ** (*qormā*) is usually traced, through Persian, to a Turkic word, *qavurma*, "roasted, braised".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

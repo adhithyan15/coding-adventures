@@ -11,7 +11,8 @@ romanization: "taṉiyāka"
 concept_tag: TA-MOOD-ALONE
 prerequisites: [TA-C90-crying, TA-C90-tears]
 sounds: []
-roots: []
+roots: [dravidian-taan-self]
+etymology_hook: "தனியாக — native Dravidian (DEDR 3196)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C90-tears]
 **தனியாக** (*taṉiyāka*) — "alone".
 
 **நான் தனியாக இருக்கிறேன்** — "I am alone". **தனி** is "single, separate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தனியாக** (*taṉiyāka*) is native Dravidian (DEDR 3196). The entry lists *taṉi*, "singleness, solitude", beside *tāṉ*, "oneself"; *-āka* makes it "alone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

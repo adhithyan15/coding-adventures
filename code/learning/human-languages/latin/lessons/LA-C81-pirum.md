@@ -13,7 +13,8 @@ gloss: "a pear"
 concept_tag: LA-CIBUS3-PIRUM
 prerequisites: [LA-C81-frumentum, LA-C81-farina]
 sounds: []
-roots: []
+roots: [pirum-latin]
+etymology_hook: "pirum 'pear' — origin unknown, perhaps a Mediterranean loan; English pear was borrowed from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C81-farina]
 <!-- hl-knowledge: introduces=[LA-LEX-C81-CIBUS3-03]; assesses=[] -->
 
 **pirum, pirī** — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pirum**, "pear", has no sure origin; it is often thought to be a loan from a lost Mediterranean language. English *pear* was borrowed from it early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 313,
-  "sourceHash": "fnv1a64:c8c4361724e289d0",
+  "sourceHash": "fnv1a64:9e544eb8717c40d9",
   "lessonIds": [
     "TE-C313-suddamukka",
     "TE-C313-palaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch313.txt",
   "json": "telugu/narration/ch313.json",
-  "textHash": "fnv1a64:6b6f01c3c4fb0079",
-  "jsonHash": "fnv1a64:eb10f146222f5c2c",
+  "textHash": "fnv1a64:ef0ebb53f1e69ea3",
+  "jsonHash": "fnv1a64:3c46e6a19466db38",
   "findings": []
 }

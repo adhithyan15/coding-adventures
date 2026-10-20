@@ -11,7 +11,8 @@ romanization: "udyōga"
 concept_tag: KA-WORK-JOB
 prerequisites: [KA-C92-college, KA-C92-office]
 sounds: []
-roots: []
+roots: [sanskrit-udyoga]
+etymology_hook: "udyōga ← Sanskrit udyoga 'exertion, active work' (CDIAL 2055)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C92-office]
 **ಉದ್ಯೋಗ** (*udyōga*) — "job, occupation".
 
 **ನಿಮ್ಮ ಉದ್ಯೋಗ ಏನು?** (*nimma udyōga ēnu?*) — "what is your job?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದ್ಯೋಗ** (*udyōga*) is Sanskrit *udyoga*, "active preparation, exertion" (CDIAL 2055), taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

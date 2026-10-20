@@ -14,7 +14,8 @@ romanization: "karśanamāya"
 concept_tag: ML-GUNAM319-KARSANAMAYA
 prerequisites: [ML-C319-svabhavam, ML-C319-ahankaram]
 sounds: []
-roots: []
+roots: [malayalam-karshanam, aaka-dravidian]
+etymology_hook: "karśanamāya: karśanam 'strictness', of Sanskrit shape but uncertain source, + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C319-ahankaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C319-GUNAM319-05]; assesses=[] -->
 
 **കർശനമായ** — *karśanamāya* — "strict".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കർശനമായ** (*karśanamāya*) is *karśanaṁ*, "strictness", a word of Sanskrit shape whose exact source is uncertain, with native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

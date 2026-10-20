@@ -13,7 +13,8 @@ gloss: "a decade"
 concept_tag: IT-TEMPO187-DECENNIO
 prerequisites: [IT-C187-durante, IT-C187-mentre]
 sounds: []
-roots: []
+roots: [decennium-latin]
+etymology_hook: "decennio ← Latin decennium 'ten years', from decem 'ten' — a learned word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C187-mentre]
 <!-- hl-knowledge: introduces=[IT-LEX-C187-TEMPO187-05]; assesses=[] -->
 
 **il decennio** — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**decennio** ← Latin *decennium*, "a period of ten years" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

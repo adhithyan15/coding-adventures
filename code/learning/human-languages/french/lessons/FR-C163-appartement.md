@@ -13,7 +13,8 @@ gloss: "a flat"
 concept_tag: FR-CHOSES163-APPARTEMENT
 prerequisites: [FR-C162-marie-mariee, FR-C162-divorce-divorcee]
 sounds: []
-roots: []
+roots: [pars-latin]
+etymology_hook: "appartement ← Italian appartamento, built on Latin pars 'a part' — English apartment"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C162-divorce-divorcee]
 <!-- hl-knowledge: introduces=[FR-LEX-C163-CHOSES163-01]; assesses=[] -->
 
 **l'appartement** — "a flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**appartement** ← Italian *appartamento* (EtymDB 2.1) — borrowed; built on Latin *ad* and *pars*, "a part": a set of rooms apart.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

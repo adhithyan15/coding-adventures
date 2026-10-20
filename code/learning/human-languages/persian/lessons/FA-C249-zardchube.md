@@ -14,7 +14,8 @@ romanization: "zardchube"
 concept_tag: FA-CHIZ249-ZARDCHUBE
 prerequisites: [FA-C248-gach, FA-C249-tekke]
 sounds: []
-roots: []
+roots: [persian-zard, persian-chob]
+etymology_hook: "zardchube: Persian zard 'yellow' + chub 'wood' + -e; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C249-tekke]
 <!-- hl-knowledge: introduces=[FA-LEX-C249-CHIZ249-02]; assesses=[] -->
 
 **زردچوبه** — *zardchube* — "turmeric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zardchube* is built from *zard*, "yellow", *chub*, "wood", and *-e*: the yellow wood, from the colour of the dried root. Both words are inherited, usually traced to Middle Persian *zard* and *čōb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

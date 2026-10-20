@@ -1,0 +1,11 @@
+{
+  "id": "LA-C483-mano",
+  "pathSegment": "LA-PATH-483-STAGNUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-483-STAGNUM",
+      "order": 3
+    }
+  ]
+}

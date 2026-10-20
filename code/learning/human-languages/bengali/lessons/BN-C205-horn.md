@@ -14,7 +14,8 @@ romanization: "hôrn"
 concept_tag: BN-JINIS205-HORN
 prerequisites: [BN-C204-khejur, BN-C204-badam]
 sounds: []
-roots: []
+roots: [english-horn]
+etymology_hook: "hôrn ← English horn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C204-badam]
 <!-- hl-knowledge: introduces=[BN-LEX-C205-JINIS205-01]; assesses=[] -->
 
 **হর্ন** — *hôrn* — "a horn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হর্ন** (*hôrn*) is a loan from English *horn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

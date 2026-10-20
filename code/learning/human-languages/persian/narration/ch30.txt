@@ -12,6 +12,9 @@ Before the new one: say the Persian for the belly, then the Persian for a lip.
 You'll want to know: قلب.
 قلب — ghalb — "the heart".
 
+The word, taken apart.
+ghalb is borrowed from Arabic qalb, "heart". Its Arabic root is q-l-b (Lane). The root is about turning: Lane gives "he turned it upside-down" for the verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a lip, then the Persian for the heart.
 
 You'll want to know: بازو.
 بازو — bâzu — "an arm".
+
+The word, taken apart.
+bâzu is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian bāzūg, "arm". Old Persian had bāzu-, "arm" (EtymDB), and EtymDB takes it back to Indo-European bʰeh₂ǵʰús, "arm"; English bough, which once meant "shoulder", is usually traced to the same word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for the heart, then the Persian for an arm.
 You'll want to know: تب.
 تب — tab — "a fever".
 
+The word, taken apart.
+tab is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian tab, "fever". It belongs with the old verb root tap-, "to be hot".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for an arm, then the Persian for a fever.
 You'll want to know: بیمارستان.
 بیمارستان — bimârestân — "a hospital".
 
+The word, taken apart.
+bimârestân is built from bimâr, "sick", and the place suffix -estân: "the place of the sick". Both pieces are inherited: bimâr continues Middle Persian wēmār (EtymDB), and -estân is the Persian suffix of place names that Pakistan also uses.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a fever, then the Persian for a hospital
 
 You'll want to know: بیمار.
 بیمار — bimâr — "ill, sick".
+
+The word, taken apart.
+bimâr is a native Persian word, inherited rather than borrowed: it continues Middle Persian wēmār, "sick, ill" (EtymDB).
 
 What you've built.
 One more word for this chapter.

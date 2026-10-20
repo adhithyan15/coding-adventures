@@ -14,7 +14,8 @@ romanization: "jækeṭ"
 concept_tag: BN-JINIS195-JKET
 prerequisites: [BN-C194-ketli, BN-C194-jhuri]
 sounds: []
-roots: []
+roots: [english-jacket]
+etymology_hook: "jækeṭ ← English jacket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C194-jhuri]
 <!-- hl-knowledge: introduces=[BN-LEX-C195-JINIS195-01]; assesses=[] -->
 
 **জ্যাকেট** — *jækeṭ* — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জ্যাকেট** (*jækeṭ*) is a loan from English *jacket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

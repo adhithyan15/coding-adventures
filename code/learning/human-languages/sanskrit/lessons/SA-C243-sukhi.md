@@ -14,7 +14,8 @@ romanization: "sukhī"
 concept_tag: SA-QUAL243-SUKHI
 prerequisites: [SA-C243-rugnah, SA-C243-svasthah]
 sounds: []
-roots: []
+roots: [sanskrit-sukhin, sukha-sanskrit]
+etymology_hook: "sukhin ← sukha 'pleasant', said to be su + kha 'good axle-hole' (MW; CDIAL 13451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C243-svasthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C243-QUAL243-04]; assesses=[] -->
 
 **सुखी** — *sukhī* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sukhī* is the nominative of *sukhin*, "having happiness", built on *sukha*, "pleasant, happiness" (MW). The usual account, which MW reports, takes *sukha* from *su* "good" and *kha* "axle-hole": a chariot that runs easily (CDIAL 13451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

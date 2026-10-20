@@ -14,7 +14,8 @@ romanization: "jebrā"
 concept_tag: BN-JINIS250-JEBRA
 prerequisites: [BN-C250-kumir, BN-C250-jiraph]
 sounds: []
-roots: []
+roots: [english-zebra]
+etymology_hook: "jebrā ← English zebra"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C250-jiraph]
 <!-- hl-knowledge: introduces=[BN-LEX-C250-JINIS250-03]; assesses=[] -->
 
 **জেব্রা** — *jebrā* — "a zebra".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জেব্রা** (*jebrā*) is a loan from English *zebra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

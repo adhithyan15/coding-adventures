@@ -14,6 +14,7 @@ concept_tag: IT-FAMIGLIA2-CUGINA
 prerequisites: [IT-C45-zia, IT-C45-cugino]
 sounds: []
 roots: []
+etymology_hook: "cugina, feminine of cugino ← Old French cosin 'cousin' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C45-cugino]
 <!-- hl-knowledge: introduces=[IT-LEX-C45-FAMIGLIA2-04]; assesses=[] -->
 
 **la cugina** — "a cousin (female)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cugina** is the feminine of *cugino*, which ← Old French *cosin*, "cousin" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

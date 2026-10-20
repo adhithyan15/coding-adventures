@@ -14,7 +14,8 @@ romanization: "ceṟuppakkāran"
 concept_tag: ML-VASTU325-CERUPPAKKARAN
 prerequisites: [ML-C325-stri, ML-C325-purusan]
 sounds: []
-roots: []
+roots: [dravidian-ciru-small]
+etymology_hook: "ceṟuppakkāran: native Dravidian, ceṟuppam 'youth' (DEDR 1594) + -kkāran 'one who has'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C325-purusan]
 <!-- hl-knowledge: introduces=[ML-LEX-C325-VASTU325-05]; assesses=[] -->
 
 **ചെറുപ്പക്കാരൻ** — *ceṟuppakkāran* — "a young man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെറുപ്പക്കാരൻ** (*ceṟuppakkāran*) is native Dravidian: *ceṟuppam*, "youth", which DEDR 1594 lists under *ceṟu*, "small, young", with *-kkāran*, the ending for a person.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

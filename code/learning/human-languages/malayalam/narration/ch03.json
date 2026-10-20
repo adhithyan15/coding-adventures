@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7d26e3938dd4e217",
+  "sourceHash": "fnv1a64:706f0bc93f6bc3bd",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:08057a857b9a9e90",
+      "sourceHash": "fnv1a64:81214883725b09e9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -67,6 +67,10 @@
             {
               "kind": "speech",
               "text": "എങ്ങനെ (eṅṅane, \"how\") is native Dravidian, on the interrogative base e- you met in entŭ. Malayalam gathers its questions here: entŭ (what), eṅṅane (how), ārŭ (who), eviṭe (where), eppōḷ (when), entinŭ (why). It is the same Dravidian question-root heading Tamil's eppaḍi — the deepest, most native layer of a language otherwise rich in Sanskrit."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5151 lists Malayalam eṅṅanē, \"how\", under that question stem, beside Tamil yāṅku, \"how\"."
             }
           ]
         },
@@ -142,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f83f50ffe3c8908f",
+      "sourceHash": "fnv1a64:a5f454510f890b28",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓല (ōla) is native Dravidian, one word with Tamil ōlai, Kannada ōle and Tulu ōle (DEDR 1070). The palm leaf was the page: Kerala's old books were written on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -222,7 +237,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -414,7 +429,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:71b9120d517b2d76",
+      "sourceHash": "fnv1a64:5558821e2a49344b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -462,6 +477,10 @@
             {
               "kind": "speech",
               "text": "സുഖമാണോ? (sukhamāṇō?) literally means \"is [it] well?\" — where English says \"how are you?\", Malayalam more often says \"are you well?\" The word സുഖം (sukhaṁ, \"well-being, comfort, ease\") is a Sanskrit loan — sukha itself, borrowed whole (the su- \"good\" that is Greek eu-). Onto it, Malayalam adds its own native copula āṇŭ (\"is,\" from Chapter 2) and the question particle -ō — a whole yes/no question made by one small sound at the end. This mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Sanskrit sukha, \"comfort, happiness\", is CDIAL 13451; the copula's verb is DEDR 333. DEDR 333 compares Sanskrit ām."
             }
           ]
         },
@@ -550,7 +569,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c59f88312712345d",
+      "sourceHash": "fnv1a64:1fef41f99f89405f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -610,7 +629,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ athe — yes."
+              "text": "അതെ ate — yes."
             },
             {
               "kind": "speech",
@@ -713,7 +732,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0a25b2997073b549",
+      "sourceHash": "fnv1a64:d20cd716eac7de32",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -762,6 +781,10 @@
             {
               "kind": "speech",
               "text": "ഞാൻ (ñān, \"I\") from Proto-Dravidian yāṉ / ñāṉ — native, and (unlike Hindi's maiṁ, cousin of English me) not related to the European \"I/me\" family. Its possessive is the എന്റെ (enṟe, \"my\") you already met: ñān \"I,\" enṟe \"my.\" Malayalam layered a great deal of Sanskrit over its vocabulary, but the pronoun for \"I\" is bedrock Dravidian."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 5160 lists Malayalam ñān with Tamil yāṉ, nāṉ, Kannada ān and Telugu nēnu."
             }
           ]
         },
@@ -857,7 +880,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d43da1fd988bcad4",
+      "sourceHash": "fnv1a64:a88f27d8712c4616",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -905,6 +928,10 @@
             {
               "kind": "speech",
               "text": "സുഖം (sukhaṁ, \"well-being, comfort, ease, happiness\") is a Sanskrit loan — sukha = su- (\"good, well\") + kha (\"space, feeling\") — the same su- that is Greek eu- (as in euphoria). Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukhaṁ is a perfect case: for \"well,\" where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukhaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit sukha, \"comfort, happiness\", is CDIAL 13451."
             }
           ]
         },
@@ -1160,7 +1187,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8f291b865e444403",
+      "sourceHash": "fnv1a64:18f23dcf6a81d118",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1208,6 +1235,10 @@
             {
               "kind": "speech",
               "text": "സാരമില്ല (sāramilla) means \"there's no matter to it / it doesn't matter\" — used for \"never mind / no worries / you're welcome.\" It is a perfect little emblem of Malayalam: സാരം (sāraṁ, \"substance, essence\") is a Sanskrit loan, while ഇല്ല (illa, \"is not\") is the native Dravidian negative from Chapter 1. Sanskrit noun, Dravidian verb, welded into one everyday word. That illa is the same \"is-not\" shared across Malayalam, Tamil, and Kannada — one of the deep bonds of the south (Telugu alone diverges, to lēdu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Sanskrit sāra, \"the best part, the core\", is CDIAL 13355; illa is DEDR 2559."
             }
           ]
         },

@@ -15,6 +15,7 @@ concept_tag: TA-PORUL244-POTTALAM
 prerequisites: [TA-C243-vellarikkay, TA-C244-ancal-talai]
 sounds: []
 roots: []
+etymology_hook: "பொட்டலம் — probably from Prakrit poṭṭala 'bundle' (CDIAL 8396); DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C244-ancal-talai]
 <!-- hl-knowledge: introduces=[TA-LEX-C244-PORUL244-02]; assesses=[] -->
 
 **பொட்டலம்** — *poṭṭalam* — "a parcel, a packet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொட்டலம்** (*poṭṭalam*) probably comes from Prakrit *poṭṭala*, "bundle" (CDIAL 8396), also in late Sanskrit. DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

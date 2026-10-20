@@ -14,7 +14,8 @@ romanization: "maṇṇŭ"
 concept_tag: ML-THINGS161-MANNU
 prerequisites: [ML-C160-vellaccattam, ML-C160-kallu, ML-C17-paathira]
 sounds: []
-roots: []
+roots: [dravidian-man-earth]
+etymology_hook: "maṇṇŭ: native Dravidian, one word with Tamil maṇ and Kannada maṇ (DEDR 4666)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C160-kallu]
 <!-- hl-knowledge: introduces=[ML-LEX-C161-THINGS161-01]; assesses=[] -->
 
 **മണ്ണ്** — *maṇṇŭ* — "soil, earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മണ്ണ്** (*maṇṇŭ*) is native Dravidian, one word with Tamil *maṇ* and Kannada *maṇ* (DEDR 4666).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

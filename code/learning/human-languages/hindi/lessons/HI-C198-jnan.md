@@ -14,7 +14,8 @@ romanization: "jñān"
 concept_tag: HI-THG198-JNAN
 prerequisites: [HI-C198-vakya, HI-C198-arth]
 sounds: []
-roots: []
+roots: [sanskrit-jnana]
+etymology_hook: "jñān ← Sanskrit jñāna 'knowledge', a tatsama (CDIAL 5281)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C198-arth]
 <!-- hl-knowledge: introduces=[HI-LEX-C198-THG198-04]; assesses=[] -->
 
 **ज्ञान** — *jñān* — "knowledge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ज्ञान** (*jñān*) is Sanskrit *jñāna*, "knowledge", taken over whole as a learned loan, a tatsama (CDIAL 5281). CDIAL lists the inherited form as *jān*, "knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

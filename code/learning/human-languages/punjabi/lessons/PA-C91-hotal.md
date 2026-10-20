@@ -14,7 +14,8 @@ romanization: "hoṭal"
 concept_tag: PA-TOWN91-HOTAL
 prerequisites: [PA-C91-gurduara, PA-C91-mandar]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hoṭal ← English hotel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C91-mandar]
 <!-- hl-knowledge: introduces=[PA-LEX-C91-TOWN91-05]; assesses=[] -->
 
 **ਹੋਟਲ** — *hoṭal* — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੋਟਲ** (*hoṭal*) is a loan from English *hotel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

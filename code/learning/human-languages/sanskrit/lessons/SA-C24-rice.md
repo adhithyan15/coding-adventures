@@ -14,7 +14,8 @@ romanization: "odanaḥ"
 concept_tag: SA-NOUN-RICE
 prerequisites: [SA-C24-water, SA-C22-lead, SA-C23-mother]
 sounds: []
-roots: []
+roots: [sanskrit-odana]
+etymology_hook: "odana 'boiled rice, porridge' ← probably the root √ud 'to wet' (MW; CDIAL 2552 marks it doubtful)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C24-water]
 **अन्नम्** (*annam*) was food in general — "the eaten thing". **ओदनः** is narrower and warmer: the grain after it has met the water. Cooked rice, on a plate, now.
 
 The traditional derivation takes it from a root meaning "to wet", which reads the word as *grain that has been moistened* — a description of cooking rather than of rice. Its ending **-अः** puts it in the masculine family beside मार्गः and ग्रामः, so ओदनः and अन्नम् sit in different families while naming the same meal.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Odana* is a Rigvedic word for grain cooked with milk (MW). MW traces it to the
+root √ud, "to wet", and CDIAL 2552 repeats that link with a question mark, so it
+is likely but not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

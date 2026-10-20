@@ -14,7 +14,8 @@ romanization: "miṉviciṟi"
 concept_tag: TA-THINGS135-MINVICIRI
 prerequisites: [TA-C134-kaippeci, TA-C134-kanini]
 sounds: []
-roots: []
+roots: [dravidian-min-flash, dravidian-viisu-fan]
+etymology_hook: "மின்விசிறி — a coinage: miṉ 'lightning, electricity' (DEDR 4876) + viciṟi 'fan' (DEDR 5450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C134-kanini]
 <!-- hl-knowledge: introduces=[TA-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **மின்விசிறி** — *miṉviciṟi* — "an electric fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மின்விசிறி** (*miṉviciṟi*) is a modern coinage from native parts: *miṉ*, "lightning, electricity" (DEDR 4876), and *viciṟi*, "fan" (DEDR 5450, which compares Sanskrit *vīj-*, "to fan").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

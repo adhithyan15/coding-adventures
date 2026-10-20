@@ -1,0 +1,11 @@
+{
+  "id": "IT-C392-sentenza",
+  "pathSegment": "IT-PATH-392-DIFESA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-392-DIFESA",
+      "order": 2
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 27,
-  "sourceHash": "fnv1a64:86fe1533bb491001",
+  "sourceHash": "fnv1a64:4bd9db8881b29f2f",
   "lessonIds": [
     "JA-C27-yomu",
     "JA-C27-kaku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch27.txt",
   "json": "japanese/narration/ch27.json",
-  "textHash": "fnv1a64:5cdbde314550082a",
-  "jsonHash": "fnv1a64:d6178298679dc6d5",
+  "textHash": "fnv1a64:ff066d96a8b63bfb",
+  "jsonHash": "fnv1a64:f1a4cb904964e3fe",
   "findings": []
 }

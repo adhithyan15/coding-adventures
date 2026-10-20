@@ -14,7 +14,8 @@ romanization: "mālik"
 concept_tag: UR-KAM261-MALIK
 prerequisites: [UR-C261-miting, UR-C261-afsar]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālik ← Arabic mālik 'owner', through Persian (Lane, root m-l-k)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C261-afsar]
 <!-- hl-knowledge: introduces=[UR-LEX-C261-KAM261-05]; assesses=[] -->
 
 **مالک** — *mālik* — "an owner, a boss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مالک** (*mālik*) is a loan from Arabic *mālik*, "owner", which reached Urdu through Persian. Its Arabic root is *m-l-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

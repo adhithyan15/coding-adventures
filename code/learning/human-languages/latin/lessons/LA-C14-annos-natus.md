@@ -6,7 +6,7 @@ sequence: 340
 chapter: 14
 type: phrase
 headword: vīgintī annōs nātus sum
-gloss: "I am twenty years old" — literally "I am, having been born, twenty years [so far]"; NEITHER Romance's "have" NOR Germanic's "be my years" — Latin used a THIRD construction, later abandoned
+gloss: '"I am twenty years old" — literally "I am, having been born, twenty years [so far]"; NEITHER Romance''s "have" NOR Germanic''s "be my years" — Latin used a THIRD construction, later abandoned'
 concept_tag: LA-AGE
 prerequisites: [LA-C13-hora]
 sounds: [macron-long-vowel, accusative-duration]
@@ -55,10 +55,10 @@ apart:
 - **sum** — "I am."
 
 So the whole phrase reads: "I am — having been born [and living] twenty years [so
-far]." Cicero uses exactly this pattern in *Cato Maior de Senectute* (§14), in
-Cato's own voice: **quīnque et sexāgintā annōs nātus**, "having been born
-sixty-**five** years," i.e., "at sixty-five years old" — the same section also
-gives Ennius's age as **annōs septuāgintā nātus**, "seventy."
+far]." Cicero uses exactly this pattern in *Cato Maior de Senectute* (§14): it gives
+Ennius's age as **annōs septuāgintā nātus**, "having been born seventy
+years," i.e., "at seventy years old" — and in the same section Cato gives his
+own age, sixty-five, in the very same shape.
 
 ## Why it's said this way: Be honest: this is neither the Romance nor the Germanic pattern
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-ANNOS-NATUS-02]; assesses=[] -->
@@ -69,7 +69,7 @@ their years (*ich bin*, *I am*). Here's the twist: **Latin itself used neither
 construction.** Classical Latin's *nātus* + accusative-of-duration pattern is a
 **third**, distinct grammatical shape — not "having" years, not simply "being" a
 number, but "being **born-for-that-long**." The Romance "have your years" pattern
-(*habēre* + years) that Spanish, French, and Italian all inherited is a
+("have" + years) that Spanish, French, and Italian all inherited is a
 **Vulgar Latin innovation** that arose **after** Classical Latin, replacing the
 older *nātus* construction — so Spanish's *tengo veinte años* is NOT a direct
 continuation of how Cicero would have said it.

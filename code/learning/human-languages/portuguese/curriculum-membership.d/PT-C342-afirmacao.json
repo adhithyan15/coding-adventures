@@ -1,0 +1,11 @@
+{
+  "id": "PT-C342-afirmacao",
+  "pathSegment": "PT-PATH-342-AFIRMAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-342-AFIRMAR",
+      "order": 1
+    }
+  ]
+}

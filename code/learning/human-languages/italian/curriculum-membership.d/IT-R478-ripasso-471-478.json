@@ -1,0 +1,11 @@
+{
+  "id": "IT-R478-ripasso-471-478",
+  "pathSegment": "IT-PATH-478-VERGOGNA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-478-VERGOGNA",
+      "order": 5
+    }
+  ]
+}

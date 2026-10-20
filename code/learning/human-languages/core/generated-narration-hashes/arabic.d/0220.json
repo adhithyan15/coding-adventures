@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 220,
-  "sourceHash": "fnv1a64:f19741068eb72b87",
+  "sourceHash": "fnv1a64:3c1d49ea72a92876",
   "lessonIds": [
     "AR-C220-bitaqa",
     "AR-C220-qard",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch220.txt",
   "json": "arabic/narration/ch220.json",
-  "textHash": "fnv1a64:befe5972cf04892a",
-  "jsonHash": "fnv1a64:8c22f88ff96fc0d1",
+  "textHash": "fnv1a64:a8f7718435cd4ad4",
+  "jsonHash": "fnv1a64:472336aa577f3686",
   "findings": []
 }

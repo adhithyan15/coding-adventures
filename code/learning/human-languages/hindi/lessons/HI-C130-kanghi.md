@@ -14,7 +14,8 @@ romanization: "kaṅghī"
 concept_tag: HI-THINGS130-KANGHI
 prerequisites: [HI-C130-kaici, HI-C130-dhaga]
 sounds: []
-roots: []
+roots: [sanskrit-kankata]
+etymology_hook: "kaṅghī ← Sanskrit kaṅkata 'comb'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 2598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C130-dhaga]
 <!-- hl-knowledge: introduces=[HI-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **कंघी** — *kaṅghī* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंघी** (*kaṅghī*) goes back to Sanskrit *kaṅkata*, "comb" (CDIAL 2598). CDIAL marks the Hindi forms as taken over from Punjabi, and calls the Sanskrit word's Indo-European origin doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

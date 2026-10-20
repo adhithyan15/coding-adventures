@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Television, Computer, Machine, Fan, Box",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a79f6fc1a43bf79f",
+  "sourceHash": "fnv1a64:c456e1cebdb8e613",
   "lessons": [
     {
       "id": "SA-C105-duradarsanam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6db32182d7041f00",
+      "sourceHash": "fnv1a64:46860688ac73d454",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dūradarśana is built from dūra \"far\" and darśana \"seeing\", from the root √dṛś \"see\" (MW): \"far-seeing\". It is a modern coinage, made the way English television was made from Greek tele \"far\" + Latin visio \"seeing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3f40d165cd58248",
+      "sourceHash": "fnv1a64:ea9ba376c31cddbc",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saṅgaṇaka is built from sam \"together\" and the root √gaṇ \"count, reckon\" (MW), with the agent suffix -aka: \"the one that reckons it all up\". It is a modern coinage for the computer, made the way English made computer from compute."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e022d687720ef799",
+      "sourceHash": "fnv1a64:f5284ff183e0dc00",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yantra comes from the root √yam \"hold, restrain\" with the tool suffix -tra (CDIAL 10412): in the Rigveda it is a controlling device, a prop or a fetter, and later any contrivance or machine (MW). Punjabi jandrā \"padlock\" comes from it (CDIAL 10412)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60e467ebad29260d",
+      "sourceHash": "fnv1a64:cf4fbe74928e677a",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vyajana \"a fan\" comes from the root √vīj, also written vyaj, \"to fan, to cool by fanning\" (MW; CDIAL 12043). Its twin vījana lives on as Hindi bījnā \"fan\" (CDIAL 12043)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62ed8844eb7e10b9",
+      "sourceHash": "fnv1a64:be9026b23ebaf648",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "peṭikā is peṭaka \"a little basket, a box\" with the feminine suffix -ikā, and MW takes peṭaka from piṭaka \"basket\". CDIAL 8164 calls the family non-Aryan, and DEDR 4388 sets it beside Dravidian words for a box; Marathi peṭī \"box\" belongs to it (CDIAL 8164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

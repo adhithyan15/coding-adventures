@@ -14,7 +14,8 @@ romanization: "khoshk"
 concept_tag: FA-QUAL124-KHOSHK
 prerequisites: [FA-C124-gowd, FA-C124-khis]
 sounds: []
-roots: []
+roots: [persian-khushk]
+etymology_hook: "khoshk: inherited, usually traced to Middle Persian xušk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C124-khis]
 <!-- hl-knowledge: introduces=[FA-LEX-C124-QUAL124-04]; assesses=[] -->
 
 **خشک** — *khoshk* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshk* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xušk*, "dry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

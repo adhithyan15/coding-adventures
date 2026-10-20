@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 4,
-  "sourceHash": "fnv1a64:b79c287a941309dc",
+  "sourceHash": "fnv1a64:f9bcec5e2df7e067",
   "lessonIds": [
     "KA-C04-hoogu",
     "KA-S04-vowel-sign-i",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch04.txt",
   "json": "kannada/narration/ch04.json",
-  "textHash": "fnv1a64:5e10b9a9c2f32d2a",
-  "jsonHash": "fnv1a64:e287781a02f3624e",
+  "textHash": "fnv1a64:c0151338684fa47e",
+  "jsonHash": "fnv1a64:f03b029667525e82",
   "findings": []
 }

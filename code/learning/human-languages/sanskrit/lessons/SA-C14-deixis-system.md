@@ -42,7 +42,8 @@ they begin.
 ## Grammar lens: one slot changes
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-C14-DEIXIS-SYSTEM]; assesses=[] -->
 
-You did not learn six words. You learned **three beginnings** and reused them.
+You did not learn six unrelated words. Five of them hang on **three beginnings**;
+the sixth, *etat*, is *tat* with an **e-** in front.
 
 | meaning | word |
 |---|---|
@@ -55,8 +56,9 @@ Sanskrit is where Hindi's k- comes from: अत्र, तत्र, कुत�
 Change the front, and the meaning walks from **near** to **far** to **a
 question**. Nothing else in the word moves.
 
-The same three beginnings run the thing-words too: **एतत्** *etat* and
-**तत्** *tat* start exactly like the first two rows. This chapter did
+The thing-words share one of these beginnings, not both: **तत्** *tat* starts
+with the far **t-** of *tatra*, but **एतत्** *etat* does not start with *a-*.
+It is *tat* with an **e-** in front: "that one", brought near. This chapter did
 not teach you the matching question word for things — that one arrives later,
 and when it does you will already know what it has to start with.
 
@@ -75,5 +77,5 @@ one and work out the others.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C14-DEIXIS-SYSTEM] -->
 
-[PAUSE 3s] Which beginning means near? (**a-**) Far? (**t-**)
+[PAUSE 3s] For places, which beginning means near? (**a-**, *atra*) Far? (**t-**)
 And which one turns the word into a question? (**k-**)

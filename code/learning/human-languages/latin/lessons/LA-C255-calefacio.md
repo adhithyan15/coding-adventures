@@ -13,7 +13,8 @@ gloss: "to warm, to heat"
 concept_tag: LA-VERB-CALEFACIO
 prerequisites: [LA-C255-teneo, LA-C255-rumpo]
 sounds: []
-roots: []
+roots: [calefacere-latin, calere-latin, facere-latin]
+etymology_hook: "calefaciō 'to warm' — caleō 'to be warm' + faciō 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C255-rumpo]
 <!-- hl-knowledge: introduces=[LA-LEX-C255-ACT255-03]; assesses=[] -->
 
 **calefaciō, calefacere** — "to warm, to heat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calefaciō** is built from *faciō*, "to make" (EtymDB 2.1), with the stem of *caleō*, "to be warm": to make warm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

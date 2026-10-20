@@ -12,6 +12,7 @@ concept_tag: BN-VERB-BOLA
 prerequisites: [BN-C03-ami]
 sounds: [o-inherent, long-aa]
 roots: [bol-speak]
+etymology_hook: "bôlā ← *bōll 'speak', a form CDIAL reconstructs; its source beyond that is uncertain (CDIAL 9321)"
 duration:
   max_seconds: 240
 requires:

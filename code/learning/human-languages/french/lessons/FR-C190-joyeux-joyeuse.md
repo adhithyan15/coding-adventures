@@ -13,7 +13,8 @@ gloss: "cheerful"
 concept_tag: FR-QUAL190-JOYEUX-JOYEUSE
 prerequisites: [FR-C189-certainement, FR-C189-vraiment]
 sounds: []
-roots: []
+roots: [gaudere-latin]
+etymology_hook: "joyeux — joie + -eux 'full of' — English joyous"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C189-vraiment]
 <!-- hl-knowledge: introduces=[FR-LEX-C190-QUAL190-01]; assesses=[] -->
 
 **joyeux / joyeuse** — "cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**joyeux** — *joie*, "joy", with *-eux*, "full of". *Joie* ← Latin *gaudia*, "joys", and *-eux* ← Latin *-ōsus* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

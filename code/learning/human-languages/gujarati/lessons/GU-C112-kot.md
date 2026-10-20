@@ -14,7 +14,8 @@ romanization: "koṭ"
 concept_tag: GU-THINGS112-KOT
 prerequisites: [GU-C112-rumal, GU-C112-svetar]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "koṭ ← English coat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C112-svetar]
 <!-- hl-knowledge: introduces=[GU-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **કોટ** (*koṭ*) — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કોટ** (*koṭ*) is a loan from English *coat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

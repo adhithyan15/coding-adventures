@@ -14,7 +14,8 @@ romanization: "masjid"
 concept_tag: AR-TOWN92-MASJID
 prerequisites: [AR-C92-qitar, AR-C92-jisr]
 sounds: []
-roots: []
+roots: [s-j-d]
+etymology_hook: "masjid: built on the root s-j-d, 'to bow down, to prostrate oneself' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C92-jisr]
 <!-- hl-knowledge: introduces=[AR-LEX-C92-TOWN92-03]; assesses=[] -->
 
 **مسجد** — *masjid* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسجد** (*masjid*) is built on the native Arabic root *s-j-d*, "to bow down, to prostrate oneself" (Lane). *Masjid* is the *ma-* place noun, "a place of prostration"; English *mosque* comes from it by way of Spanish and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

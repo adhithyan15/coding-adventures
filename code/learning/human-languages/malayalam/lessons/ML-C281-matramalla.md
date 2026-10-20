@@ -14,7 +14,8 @@ romanization: "mātramalla"
 concept_tag: ML-KARANAM281-MATRAMALLA
 prerequisites: [ML-C280-kavu, ML-C280-itavali]
 sounds: []
-roots: []
+roots: [sanskrit-matra, illa-not-dravidian-alla]
+etymology_hook: "mātramalla: Sanskrit mātra 'only' (CDIAL 10023) + native alla 'is not' (DEDR 234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C280-itavali]
 <!-- hl-knowledge: introduces=[ML-LEX-C281-KARANAM281-01]; assesses=[] -->
 
 **മാത്രമല്ല** — *mātramalla* — "moreover, not only that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാത്രമല്ല** (*mātramalla*) joins *mātram*, "only", from Sanskrit (CDIAL 10023), to native *alla*, "is not" (DEDR 234): "not only".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

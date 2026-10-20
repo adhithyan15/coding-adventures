@@ -12,6 +12,9 @@ Before the new one: say the Urdu for strong, then the Urdu for weak.
 You'll want to know: جوان.
 جوان — javān — "young".
 
+The word, taken apart.
+جوان (javān) is usually traced to Persian javān, "young". CDIAL also lists a Hindi juwān, "a youth", under yuvāna, "young", the Indo-Aryan form of the same ancient word (CDIAL 10510).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for weak, then the Urdu for young.
 
 You'll want to know: بوڑھا.
 بوڑھا — būṛhā — "old (of people)".
+
+The word, taken apart.
+بوڑھا (būṛhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from buḍḍha, "old", a form CDIAL reconstructs from its descendants (CDIAL 9271). CDIAL notes that the initial b- rules out direct descent from Sanskrit vṛddha, "grown old", though that word may have influenced it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for young, then the Urdu for old.
 You'll want to know: پیارا.
 پیارا — pyārā — "lovely, dear".
 
+The word, taken apart.
+پیارا (pyārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from priyakāra, "doing a kindness" (CDIAL 8975). It is built from priya, "dear", and kāra, "doing".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for old, then the Urdu for lovely.
 You'll want to know: نرم.
 نرم — narm — "soft".
 
+The word, taken apart.
+نرم (narm) is a loan, usually traced to Persian narm, "soft".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for lovely, then the Urdu for soft.
 
 You'll want to know: سخت.
 سخت — sakht — "hard".
+
+The word, taken apart.
+سخت (sakht) is a loan, usually traced to Persian sakht, "hard, firm".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "aḥḍara"
 concept_tag: AR-VERB-AHDARA
 prerequisites: [AR-C225-aslaha, AR-C225-istamala]
 sounds: []
-roots: []
+roots: [ḥ-ḍ-r]
+etymology_hook: "aḥḍara: built on the root ḥ-ḍ-r, 'to be present' (Lane); aḥḍara is Form IV, 'to make present', to bring"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C225-istamala]
 <!-- hl-knowledge: introduces=[AR-LEX-C225-ACT225-05]; assesses=[] -->
 
 **أحضر** — *aḥḍara* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أحضر** (*aḥḍara*) is built on the native Arabic root *ḥ-ḍ-r*, "to be present" (Lane). *Aḥḍara* is Form IV, "to make present", to bring.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

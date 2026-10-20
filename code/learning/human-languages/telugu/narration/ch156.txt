@@ -14,6 +14,9 @@ You'll want to know: కాలపట్టిక.
 [once you have stopped driving — read: the board]
 The board says బస్సు: ఉదయం ఎనిమిది గంటలు — bassu: udayaṁ enimidi gaṇṭalu — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
 
+The word, taken apart.
+కాలపట్టిక (kālapaṭṭika) is Sanskrit: kāla, "time" (CDIAL 3084), and paṭṭikā, "a slab, tablet" (CDIAL 7699), with the final -ā shortened.
+
 What you've built.
 One more word for this chapter.
 
@@ -45,6 +48,9 @@ You'll want to know: సూచన.
 [once you have stopped driving — read: the notice]
 The notice says ఇవాళ దుకాణం మూసి ఉంది — ivāḷa dukāṇaṁ mūsi undi — "The shop is closed today." Come back on another day.
 
+The word, taken apart.
+సూచన (sūcana) is Sanskrit sūcanā, "pointing out, indication", taken over as a learned loan, a tatsama, with the final -ā shortened. CDIAL 13551a lists the related sūcyatē, "is indicated".
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Telugu for a timetable, then the Telugu for an instr
 
 You'll want to know: అద్దె.
 అద్దె — adde — "rent". The money you pay to live in a house: ఇంటి అద్దె — iṇṭi adde — "the rent for the house".
+
+The word, taken apart.
+The origin of అద్దె (adde) is uncertain. DEDR and CDIAL list no word of this shape meaning "rent".
 
 What you've built.
 One more word for this chapter.
@@ -105,6 +114,9 @@ You'll want to know: ప్రకటన.
 [once you have stopped driving — read: the advert]
 The advert says ఇల్లు అద్దెకు ఉంది — illu addeku undi — "House for rent."
 
+The word, taken apart.
+ప్రకటన (prakaṭana) is Sanskrit prakaṭana, "bringing to light", taken over whole as a learned loan, a tatsama (CDIAL 8429). The sense "announcement" grows out of it.
+
 What you've built.
 One more word for this chapter.
 
@@ -134,6 +146,9 @@ Before the new one: say the Telugu for rent, then the Telugu for an advertisemen
 You'll want to know: రసీదు.
 రసీదు — rasīdu — "a receipt". Ask for it when you pay: రసీదు ఇస్తారా? — rasīdu istārā? — "Could you give me the receipt?"
 [once you have stopped driving — read: two words again — ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ]
+
+The word, taken apart.
+రసీదు (rasīdu) comes from Persian rasīd, "received; a receipt", which reached Telugu through Hindustani and took the Telugu ending -u.
 
 What you've built.
 One more word for this chapter.

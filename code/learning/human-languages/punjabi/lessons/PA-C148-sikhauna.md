@@ -14,7 +14,8 @@ romanization: "sikhāuṇā"
 concept_tag: PA-VERB-SIKHAUNA
 prerequisites: [PA-C148-lukna, PA-C148-diggna]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "sikhāuṇā: the causing form of sikkhṇā 'to learn', from Sanskrit śikṣate 'learns' (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C148-diggna]
 <!-- hl-knowledge: introduces=[PA-LEX-C148-ACT148-03]; assesses=[] -->
 
 **ਸਿਖਾਉਣਾ** — *sikhāuṇā* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਿਖਾਉਣਾ** (*sikhāuṇā*) is the causing form of *sikkhṇā*, "to learn": teaching is "making learn". CDIAL lists both, the second as *sakhāuṇā*, under Sanskrit *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

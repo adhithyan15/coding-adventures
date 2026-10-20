@@ -14,7 +14,8 @@ romanization: "forushgâh"
 concept_tag: FA-MAKAN154-FORUSHGAH
 prerequisites: [FA-C153-balakhare, FA-C153-haftegi]
 sounds: []
-roots: []
+roots: [persian-forukhtan, persian-gah]
+etymology_hook: "forushgâh: Persian forush 'selling' + gâh 'place'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C153-haftegi]
 <!-- hl-knowledge: introduces=[FA-LEX-C154-MAKAN154-01]; assesses=[] -->
 
 **فروشگاه** — *forushgâh* — "a store, a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*forushgâh* is built from *forush*, "selling" (from *forukhtan*, "to sell"), and *gâh*, "place": the selling place. Both are inherited; *forukhtan* is usually traced to Middle Persian *frōxtan*, and *gâh* to *gāh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

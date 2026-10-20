@@ -14,7 +14,8 @@ romanization: "ṭūb"
 concept_tag: AR-SHAY250-TUB
 prerequisites: [AR-C249-tanjara, AR-C250-kartun]
 sounds: []
-roots: []
+roots: [coptic-tobe]
+etymology_hook: "ṭūb: probably of Coptic origin, Lane thinks; EtymDB gives Coptic tōbe 'brick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C250-kartun]
 <!-- hl-knowledge: introduces=[AR-LEX-C250-SHAY250-02]; assesses=[] -->
 
 **طوب** — *ṭūb* — "bricks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طوب** (*ṭūb*) is a brick. Lane's sources call it a word of Syria or of Egypt, and Lane thinks it probably of Coptic origin; EtymDB gives Coptic *tōbe*, "brick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

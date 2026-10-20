@@ -82,14 +82,16 @@ void main() {
         isNotNull,
         reason: 'the direct Flutter gate requires the shared Rust bridge',
       );
-      // Big enough for the whole generated chrome with every panel open. The
-      // chrome is a plain Column: toolbars, then the bookmark, history,
-      // page-info and source panels as the test opens them, then the fixed
-      // 1024x640 content surface, so its height grows with each panel. At
-      // 1400 px wide the toolbar row overflowed by 173 px; at 960 and 1200 px
-      // tall the column overflowed by 107 and 203 px. A RenderFlex overflow
-      // fails the test on its own.
-      await tester.binding.setSurfaceSize(const Size(1800, 2400));
+      // A small laptop window, deliberately: a RenderFlex overflow fails the
+      // test on its own, so this is also the layout's regression guard. The
+      // chrome fits because the address field and the content surface grow
+      // (`flex-grow`, lowered to `Expanded`) and the button rows wrap
+      // (`flex-wrap`, lowered to `Wrap`) instead of taking fixed widths. It
+      // used to overflow: the toolbar by 173 px at 1400 wide, the page-actions
+      // row by 159 px at 1024, the column as panels opened. The surface had
+      // been enlarged to 1800x2400 to get past that, which also hid any new
+      // overflow. Do not enlarge it again: fix the layout.
+      await tester.binding.setSurfaceSize(const Size(1024, 700));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       DynamicLibrary.open(libraryPath!);
       final setup = await tester.runAsync(() async {

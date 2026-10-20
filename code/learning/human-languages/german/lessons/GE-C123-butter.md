@@ -13,7 +13,8 @@ gloss: "butter"
 concept_tag: GE-ESSEN123-BUTTER
 prerequisites: [GE-C122-keks, GE-C122-broetchen]
 sounds: []
-roots: []
+roots: [butyrum-latin]
+etymology_hook: "Butter ← Old High German butira ← Latin būtyrum ← Greek boútyron 'cow cheese' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C122-broetchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C123-ESSEN123-01]; assesses=[] -->
 
 **die Butter** — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Butter** ← Old High German *butira* ← Latin *būtyrum* ← Greek *boútyron*, "cow cheese" (EtymDB 2.1) — borrowed, like English *butter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "danger"
 concept_tag: LA-RES248-PERICULUM
 prerequisites: [LA-C247-nurus, LA-C248-occasio]
 sounds: []
-roots: []
+roots: [periculum-latin, experiri-latin]
+etymology_hook: "perīculum 'danger' — on the root of experior 'to try': first a trial; English peril"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C248-occasio]
 <!-- hl-knowledge: introduces=[LA-LEX-C248-RES248-02]; assesses=[] -->
 
 **perīculum, perīculī** — "danger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**perīculum** is built on the root of *experior*, "to try, to test" (Lewis & Short), with *-culum*, an ending for a means: a trial, then a danger. English *peril* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

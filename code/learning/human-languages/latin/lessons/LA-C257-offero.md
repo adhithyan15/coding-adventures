@@ -13,7 +13,8 @@ gloss: "to offer"
 concept_tag: LA-VERB-OFFERO
 prerequisites: [LA-C257-mereor, LA-C257-emendo]
 sounds: []
-roots: []
+roots: [offerre-latin, ferre-latin]
+etymology_hook: "offerō 'to offer' — ob 'towards' + ferō 'to bring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C257-emendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C257-ACT257-03]; assesses=[] -->
 
 **offerō, offerre** — "to offer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**offerō** is *ob*, "towards", with *ferō*, "to carry, to bring" (Lewis & Short): to bring before someone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

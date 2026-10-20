@@ -14,7 +14,8 @@ romanization: "pas az"
 concept_tag: FA-ZAMAN152-PAS-AZ
 prerequisites: [FA-C152-mahane, FA-C152-akhar]
 sounds: []
-roots: []
+roots: [persian-pas]
+etymology_hook: "pas az: Persian pas 'after' + az 'from', both inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C152-akhar]
 <!-- hl-knowledge: introduces=[FA-LEX-C152-ZAMAN152-05]; assesses=[] -->
 
 **پس از** — *pas az* — "after".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pas az* is *pas*, "after, behind", with *az*, "from". Both are native: EtymDB traces *pas* to Middle Persian *pas*, and *az* to Old Persian *hacā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

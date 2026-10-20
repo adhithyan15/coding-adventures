@@ -1,0 +1,11 @@
+{
+  "id": "LA-C325-crepundia",
+  "pathSegment": "LA-PATH-325-BULLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-325-BULLA",
+      "order": 1
+    }
+  ]
+}

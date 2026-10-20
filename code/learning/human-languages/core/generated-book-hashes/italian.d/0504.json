@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:7d619435577ef847",
+  "lessonIds": [
+    "IT-C504-mazzo",
+    "IT-C504-bluffare",
+    "IT-C504-scommettere",
+    "IT-C504-scommessa",
+    "IT-C504-cruciverba"
+  ],
+  "tex": "italian/book/chapters/ch504-carte-e-scommesse.tex"
+}

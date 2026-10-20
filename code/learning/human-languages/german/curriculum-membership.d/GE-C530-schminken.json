@@ -1,0 +1,11 @@
+{
+  "id": "GE-C530-schminken",
+  "pathSegment": "GE-PATH-530-BAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-530-BAD",
+      "order": 2
+    }
+  ]
+}

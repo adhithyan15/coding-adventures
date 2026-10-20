@@ -14,6 +14,7 @@ You'll want to know: కాలు.
 Proto-Dravidian kāl, and every sister kept it nearly whole: Tamil கால், Kannada ಕಾಲು, Malayalam കാൽ.
 Set that beside చెయ్యి, the hand-word, which wore down so far that its family resemblance is hard to see at all. Two body-words of the same age; one held its shape and one did not, and nothing about the meaning predicts which.
 కాలు (kālu) covers the whole limb, foot and leg together. When precision is wanted, Sanskrit's పాదం names the foot alone.
+DEDR 1479 lists Telugu kālu, "leg, foot", with Tamil kāl and Kannada kāl.
 
 What you've built.
 The first of five more body words.
@@ -41,7 +42,7 @@ Before the new one: what did kālu mean?
 
 You'll want to know: పన్ను.
 పన్ను (pannu) — "a tooth".
-Proto-Dravidian pal. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that p- to h- law working again exactly where the last chapter said to watch for it. Telugu took a third road, the -l- coming out as -n- and doubling.
+Proto-Dravidian pal. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that p- to h- law working again exactly where the last chapter said to watch for it. Telugu took a third road: DEDR 3986 lists palu, pallu, with the plural paṇḍlu, and explains pannu as built back from that plural.
 An honest warning: పన్ను (pannu) is also the word for a tax. Nothing joins the tooth to the tax but an accident of sound. Telugu has a fair number of these pairs, and context is the only fix — which is what context is for.
 
 What you've built.
@@ -73,6 +74,9 @@ You'll want to know: జుట్టు.
 జుట్టు (juṭṭu) is the hair on a head taken as one thing — the mass, not the strand. For a single hair Telugu reaches for a different noun, వెంట్రుక.
 English leans on number for the same distinction --- "a hair" against "hair" --- while Telugu simply reaches for a different noun. జుట్టు (juṭṭu) also names the knot or tuft tied at the back of the head, which is most likely where the word started.
 
+The word, taken apart.
+DEDR 2655 lists జుట్టు (juṭṭu) as Dravidian, one word with Tamil cuṭṭi, "tuft of hair", and Kannada juṭṭu. DEDR compares Sanskrit jūṭa, "twisted hair" (CDIAL 5258), and notes that some words in the entry may be loans from Indo-Aryan.
+
 What you've built.
 Three: a leg, a tooth, hair.
 
@@ -101,6 +105,7 @@ You'll want to know: వేలు.
 వేలు (vēlu) — "a finger".
 Proto-Dravidian viral. Tamil kept விரல் entire; Kannada has ಬೆರಳು; Telugu dropped the -r- and came out with వేలు (vēlu). On the page the three look barely related, and they are the same word.
 It is still working inside compounds: బొటనవేలు, the thumb, is the stubby one of the set.
+DEDR 5409 lists Telugu vēlu and vrēlu, "finger, toe", with Tamil viral and Kannada beraḷ.
 
 What you've built.
 Four. Note that చెయ్యి and వేలు (vēlu) are separate roots — Telugu does not build the finger out of the hand.
@@ -130,6 +135,9 @@ You'll want to know: కడుపు.
 కడుపు (kaḍupu) — "the stomach, the belly".
 కడుపు is the unfussy everyday word, and it carries the commonest way of saying you have eaten enough: kaḍupu niṇḍindi, "the stomach has filled".
 It also says, gently and without ever being explicit, that a woman is expecting. Sanskrit's ఉదరం exists in Telugu and stays where the clinical register lives.
+
+The word, taken apart.
+The origin of కడుపు (kaḍupu) is uncertain. Neither DEDR nor CDIAL records it.
 
 What you've built.
 Five more body words: a leg, a tooth, hair, a finger, a belly. With తల, చెయ్యి, కన్ను, ముక్కు, నోరు and చెవి behind them, you can point at most of a person.

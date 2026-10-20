@@ -14,7 +14,8 @@ romanization: "isliye"
 concept_tag: HI-THG247-ISLIYE
 prerequisites: [HI-C247-resam, HI-C247-camra]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "isliye: is 'this' + liye 'for', usually explained as a form of lenā 'to take' (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C247-camra]
 <!-- hl-knowledge: introduces=[HI-LEX-C247-THG247-03]; assesses=[] -->
 
 **इसलिए** — *isliye* — "so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इसलिए** (*isliye*) is *is*, "this", with *liye*, "for": "for this". *liye* is usually explained as a form of *lenā*, "to take", from Sanskrit *labhate* (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

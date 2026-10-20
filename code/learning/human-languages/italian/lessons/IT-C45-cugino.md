@@ -14,6 +14,7 @@ concept_tag: IT-FAMIGLIA2-CUGINO
 prerequisites: [IT-C45-moglie, IT-C45-zia]
 sounds: []
 roots: []
+etymology_hook: "cugino ← Old French cosin — borrowed; English cousin is the same French word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C45-zia]
 <!-- hl-knowledge: introduces=[IT-LEX-C45-FAMIGLIA2-03]; assesses=[] -->
 
 **il cugino** — "a cousin (male)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cugino** ← Old French *cosin*, "cousin" — borrowed; the French word goes back to Latin *consobrinus*, "cousin". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

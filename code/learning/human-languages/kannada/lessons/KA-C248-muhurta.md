@@ -14,7 +14,8 @@ romanization: "muhūrta"
 concept_tag: KA-KALA248-MUHURTA
 prerequisites: [KA-C248-varsikotsava, KA-C248-gaduvu]
 sounds: []
-roots: []
+roots: [sanskrit-muhurta]
+etymology_hook: "muhūrta ← Sanskrit muhūrta 'moment', a tatsama (CDIAL 10229)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C248-gaduvu]
 <!-- hl-knowledge: introduces=[KA-LEX-C248-KALA248-04]; assesses=[] -->
 
 **ಮುಹೂರ್ತ** — *muhūrta* — "an auspicious time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಹೂರ್ತ** (*muhūrta*) is Sanskrit *muhūrta*, "moment", taken over whole as a learned loan, a tatsama (CDIAL 10229). The moment came to mean the auspicious moment.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

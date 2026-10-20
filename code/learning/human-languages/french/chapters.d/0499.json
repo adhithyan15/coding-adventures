@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Jeux de société",
+  "label": "ch:fr-jeux-de-societe",
+  "canDo": "I can talk about board games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C499-tricher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about board games.",
+    "assesses": [
+      "FR-LEX-C499-JEUX-03",
+      "FR-LEX-C499-JEUX-04",
+      "FR-LEX-C499-JEUX-05"
+    ]
+  }
+}

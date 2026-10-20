@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 619,
+  "sourceHash": "fnv1a64:8523aafbd0b97d7f",
+  "lessonIds": [
+    "ES-C619-a-lo-mejor",
+    "ES-C619-previsible",
+    "ES-C619-oportunidad",
+    "ES-C619-perspectiva",
+    "ES-C619-predecir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch619.txt",
+  "json": "spanish/narration/ch619.json",
+  "textHash": "fnv1a64:d5bfe10f31b34d4d",
+  "jsonHash": "fnv1a64:ad2ce746b5bfd34b",
+  "findings": []
+}

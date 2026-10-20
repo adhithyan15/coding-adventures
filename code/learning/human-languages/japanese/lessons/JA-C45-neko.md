@@ -14,7 +14,8 @@ romanization: "neko"
 concept_tag: JA-ANIMALS45-NEKO
 prerequisites: [JA-C44-tane, JA-C44-ame]
 sounds: []
-roots: []
+roots: [japanese-neko]
+etymology_hook: "neko: native Japanese, inherited, not borrowed; kanji 猫 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C44-ame]
 <!-- hl-knowledge: introduces=[JA-LEX-C45-ANIMALS45-01]; assesses=[] -->
 
 **ねこ** — *neko* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ねこ** (*neko*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

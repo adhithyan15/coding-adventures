@@ -11,7 +11,8 @@ romanization: "innale"
 concept_tag: ML-TIME-YESTERDAY
 prerequisites: [ML-C94-innu]
 sounds: []
-roots: []
+roots: [dravidian-nerunal-yesterday]
+etymology_hook: "innale: native Dravidian; DEDR 3758 lists innalē 'yesterday' with Tamil nerunal"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +62,8 @@ You do not have to take it apart to use it, and you should not force a story
 onto the tail. **What is worth seeing is the shared front**, because it is what
 will make the pair easy to keep apart from *tomorrow*, which begins somewhere
 else entirely.
+
+**Where the word comes from.** It is native Dravidian: DEDR 3758 lists Malayalam *innalē*, "yesterday", in the same entry as Tamil *nerunal*, "yesterday".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C94-YESTERDAY-01, ML-LEX-C94-TODAY-01, ML-CONCEPT-C32-POKUKA-02] -->

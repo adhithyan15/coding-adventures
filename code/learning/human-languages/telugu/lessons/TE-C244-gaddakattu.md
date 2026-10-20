@@ -14,7 +14,8 @@ romanization: "gaḍḍakaṭṭu"
 concept_tag: TE-VERB-GADDAKATTU
 prerequisites: [TE-C244-vicu, TE-C244-prakasincu]
 sounds: []
-roots: []
+roots: [dravidian-katti-hard, dravidian-kattu-bind]
+etymology_hook: "gaḍḍakaṭṭu: native gaḍḍa 'lump, clot' (DEDR 1148) + kaṭṭu 'to bind, form'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C244-prakasincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C244-KRIYA244-03]; assesses=[] -->
 
 **గడ్డకట్టు** — *gaḍḍakaṭṭu* — "to freeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడ్డకట్టు** (*gaḍḍakaṭṭu*) is native Dravidian: *gaḍḍa*, "lump, clod, clot" (DEDR 1148), with *kaṭṭu*, "to bind, form": "to form a lump". DEDR compares Sanskrit *kaṭhina*, "hard" (CDIAL 2650), with the first; CDIAL reports the view that *kaṭhina* came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

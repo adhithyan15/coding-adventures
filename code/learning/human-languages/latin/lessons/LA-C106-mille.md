@@ -13,7 +13,8 @@ gloss: "a thousand"
 concept_tag: LA-NUMERI-MILLE
 prerequisites: [LA-C106-quinquaginta, LA-C106-centum]
 sounds: []
-roots: []
+roots: [mille-latin]
+etymology_hook: "mīlle 'thousand' — probably from PIE *sm-gheslo- 'one thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C106-centum]
 <!-- hl-knowledge: introduces=[LA-LEX-C106-NUMERI-05]; assesses=[] -->
 
 **mīlle** — "a thousand". English *mile*: a thousand paces.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mīlle** is probably inherited, from a Proto-Indo-European *\*sm-gheslo-*, "one thousand" (EtymDB 2.1), whose first part meant "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

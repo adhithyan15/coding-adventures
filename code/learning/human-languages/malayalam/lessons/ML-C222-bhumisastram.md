@@ -14,7 +14,8 @@ romanization: "bhūmiśāstraṁ"
 concept_tag: ML-JOLI222-BHUMISASTRAM
 prerequisites: [ML-C221-sahapathi, ML-C221-vidyabhyasam]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-shastra]
+etymology_hook: "bhūmiśāstraṁ: Sanskrit bhūmi 'earth' (CDIAL 9557) + śāstra 'a body of teaching'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C221-vidyabhyasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C222-JOLI222-01]; assesses=[] -->
 
 **ഭൂമിശാസ്ത്രം** — *bhūmiśāstraṁ* — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭൂമിശാസ്ത്രം** (*bhūmiśāstraṁ*) is a modern compound of Sanskrit *bhūmi*, "the earth" (CDIAL 9557), and *śāstra*, "a body of teaching, a science".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

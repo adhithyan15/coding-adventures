@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-338-DESACORDO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-338-DESACORDO"
+  ],
+  "after": []
+}

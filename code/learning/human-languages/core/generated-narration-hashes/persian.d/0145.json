@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 145,
-  "sourceHash": "fnv1a64:8ac07cb9b485cbc4",
+  "sourceHash": "fnv1a64:de1849a977f356dd",
   "lessonIds": [
     "FA-C145-puzesh-khastan",
     "FA-C145-negahdari-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch145.txt",
   "json": "persian/narration/ch145.json",
-  "textHash": "fnv1a64:aab999df7df08756",
-  "jsonHash": "fnv1a64:222af05bf34da04a",
+  "textHash": "fnv1a64:df817c8542f371cc",
+  "jsonHash": "fnv1a64:0c86a91ca4e59445",
   "findings": []
 }

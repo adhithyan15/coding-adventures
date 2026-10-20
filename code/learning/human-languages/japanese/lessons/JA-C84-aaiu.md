@@ -14,7 +14,8 @@ romanization: "aaiu"
 concept_tag: JA-DEF84-AAIU
 prerequisites: [JA-C84-minna, JA-C84-kouiu]
 sounds: []
-roots: []
+roots: [japanese-a-that, japanese-iu-say]
+etymology_hook: "āiu: native ā 'like that' + iu 'to say'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C84-kouiu]
 <!-- hl-knowledge: introduces=[JA-LEX-C84-DEF84-05]; assesses=[] -->
 
 **ああいう** — *aaiu* — "that sort of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ああいう** (*āiu*) is native: *ā*, "like that", built on *a-*, with *iu*, "to say" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a player"
 concept_tag: IT-COSE231-GIOCATORE
 prerequisites: [IT-C231-sconfitta, IT-C231-campionato]
 sounds: []
-roots: []
+roots: [iocus-latin]
+etymology_hook: "giocatore — one who plays, from giocare ← Latin iocari 'to joke' — English joke"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C231-campionato]
 <!-- hl-knowledge: introduces=[IT-LEX-C231-COSE231-04]; assesses=[] -->
 
 **il giocatore** — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giocatore** — built from *giocare*, "to play", with *-tore*, "one who". *giocare* ← Vulgar Latin *iocare*, from Latin *iocari*, "to joke". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

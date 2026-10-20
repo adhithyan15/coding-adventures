@@ -14,7 +14,8 @@ romanization: "nirṇayiñcu"
 concept_tag: TE-VERB-NIRNAYINCU
 prerequisites: [TE-C107-pranalika, TE-C108-koru]
 sounds: []
-roots: []
+roots: [sanskrit-nirnaya]
+etymology_hook: "nirṇayiñcu: Sanskrit nirṇaya 'decision' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C108-koru]
 <!-- hl-knowledge: introduces=[TE-LEX-C108-WANT108-02]; assesses=[] -->
 
 **నిర్ణయించు** — *nirṇayiñcu* — "to decide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిర్ణయించు** (*nirṇayiñcu*) is Sanskrit *nirṇaya*, "decision", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

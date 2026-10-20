@@ -1,0 +1,11 @@
+{
+  "id": "FR-C277-a-l-issue-de",
+  "pathSegment": "FR-PATH-277-ETAPE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-277-ETAPE",
+      "order": 4
+    }
+  ]
+}

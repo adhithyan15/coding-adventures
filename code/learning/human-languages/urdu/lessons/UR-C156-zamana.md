@@ -14,7 +14,8 @@ romanization: "zamānā"
 concept_tag: UR-VAQT156-ZAMANA
 prerequisites: [UR-C156-tahvar, UR-C156-naya-sal]
 sounds: []
-roots: []
+roots: [arabic-zaman]
+etymology_hook: "zamānā ← Arabic zamān 'time, a period', through Persian (Lane, root z-m-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C156-naya-sal]
 <!-- hl-knowledge: introduces=[UR-LEX-C156-VAQT156-03]; assesses=[] -->
 
 **زمانہ** — *zamānā* — "an era, the times".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زمانہ** (*zamānā*) is a loan from Arabic *zamān*, "time, a period", which reached Urdu through Persian. Its Arabic root is *z-m-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

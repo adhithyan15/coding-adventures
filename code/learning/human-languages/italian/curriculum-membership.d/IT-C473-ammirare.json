@@ -1,0 +1,11 @@
+{
+  "id": "IT-C473-ammirare",
+  "pathSegment": "IT-PATH-473-SINCERITA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-473-SINCERITA",
+      "order": 4
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 131,
-  "sourceHash": "fnv1a64:57124ccfbfc260ef",
+  "sourceHash": "fnv1a64:6835a34ae9e7fedd",
   "lessonIds": [
     "GU-C131-nicu",
     "GU-C131-paholu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch131.txt",
   "json": "gujarati/narration/ch131.json",
-  "textHash": "fnv1a64:fcb7207eadf61f82",
-  "jsonHash": "fnv1a64:045b9cf28e11083c",
+  "textHash": "fnv1a64:6fae9442c72fa1b7",
+  "jsonHash": "fnv1a64:6a25f7db1b22ba01",
   "findings": []
 }

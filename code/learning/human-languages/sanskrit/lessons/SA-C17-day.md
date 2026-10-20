@@ -14,7 +14,8 @@ romanization: "dinam"
 concept_tag: SA-NOUN-DAY
 prerequisites: [SA-C16-noun-families]
 sounds: []
-roots: []
+roots: [sanskrit-dina]
+etymology_hook: "dina 'day' is inherited: MW compares Lithuanian diena 'day'; it lives on as Hindi din (CDIAL 6328)"
 duration:
   max_seconds: 210
 requires:

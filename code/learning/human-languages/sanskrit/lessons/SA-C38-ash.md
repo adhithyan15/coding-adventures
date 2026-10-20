@@ -14,7 +14,8 @@ romanization: "bhasma"
 concept_tag: SA-EARTH-BHASMA
 prerequisites: [SA-C38-fire, SA-C36-all, SA-C37-respectfully]
 sounds: []
-roots: []
+roots: [sanskrit-bhasman]
+etymology_hook: "bhasma ← bhasman 'ashes', filed by MW under the root √bhas 'chew, devour': what fire has eaten"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C38-fire]
 It stands on *bhas*, "to chew, to grind small", so ash is the ground-down thing: what is left when fire has finished eating.
 
 Hindi and Marathi keep *bhasm* with the meaning untouched.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bhasma* is the combining form of *bhasman*, "ashes", built on the root √bhas, "to
+chew, devour" (MW): what the fire has consumed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

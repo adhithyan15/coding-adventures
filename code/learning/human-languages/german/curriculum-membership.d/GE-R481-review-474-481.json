@@ -1,0 +1,11 @@
+{
+  "id": "GE-R481-review-474-481",
+  "pathSegment": "GE-PATH-481-ALLERGIE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-481-ALLERGIE",
+      "order": 5
+    }
+  ]
+}

@@ -11,7 +11,8 @@ romanization: "onnumilla"
 concept_tag: ML-RESP-NOTHING
 prerequisites: [ML-C121-map, ML-C122-really]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, illa-not-dravidian]
+etymology_hook: "onnumilla: native Dravidian, 'not even one': onnŭ (DEDR 990) + -um + illa (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C122-really]
 
 **ഒന്നുമില്ല** (*onnumilla*) — "nothing", literally "not even one": **ഒന്ന്**, "one",
 **‑ഉം**, "even", **ഇല്ല**, "not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒന്നുമില്ല** (*onnumilla*) is native Dravidian: *onnŭ*, "one" (DEDR 990), *-um*, "even", and *illa*, "not" (DEDR 2559): "not even one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

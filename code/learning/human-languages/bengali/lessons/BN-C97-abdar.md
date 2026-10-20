@@ -15,6 +15,7 @@ concept_tag: BN-WANT97-ABDAR
 prerequisites: [BN-C97-pochhondo, BN-C97-shokh]
 sounds: []
 roots: []
+etymology_hook: "ābdār: origin not settled; CDIAL and DEDR have no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C97-shokh]
 <!-- hl-knowledge: introduces=[BN-LEX-C97-WANT97-04]; assesses=[] -->
 
 **আবদার** — *ābdār* — "a pleading request".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **আবদার** (*ābdār*) is not settled: neither CDIAL nor DEDR has an entry for it, and a search of their word lists by form and by gloss finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

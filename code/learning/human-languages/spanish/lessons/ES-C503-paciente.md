@@ -10,7 +10,8 @@ gloss: "patient"
 concept_tag: ES-REF-PACIENTE
 prerequisites: [ES-C503-esfuerzo, ES-C503-presion]
 sounds: []
-roots: []
+roots: [pati-latin]
+etymology_hook: "paciente ← Latin patiens 'enduring', from pati 'to suffer' — English patient"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C503-presion]
 > *You have to be patient with children.*
 
 As a noun, *el paciente* or *la paciente* is a patient at a clinic.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**paciente** ← Latin *patiens*, *patientem*, "enduring" (EtymDB 2.1), from *pati*, "to suffer" — a learned word. A patient person bears things.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

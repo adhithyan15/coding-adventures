@@ -14,7 +14,8 @@ romanization: "dādā"
 concept_tag: UR-FAMILY43-DADA
 prerequisites: [UR-C43-beta, UR-C43-beti]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādā ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C43-beti]
 <!-- hl-knowledge: introduces=[UR-LEX-C43-FAMILY43-04]; assesses=[] -->
 
 **دادا** — *dādā* — "a grandfather (father's father)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دادا** (*dādā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

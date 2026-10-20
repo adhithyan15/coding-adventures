@@ -14,7 +14,8 @@ romanization: "davā"
 concept_tag: UR-HEALTH41-DAVA
 prerequisites: [UR-C41-bimar, UR-C41-dard]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "davā ← Arabic dawāʾ 'remedy, medicine', through Persian (Lane, root d-w-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C41-dard]
 <!-- hl-knowledge: introduces=[UR-LEX-C41-HEALTH41-04]; assesses=[] -->
 
 **دوا** — *davā* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوا** (*davā*) is a loan from Arabic *dawāʾ*, "remedy, medicine", which reached Urdu through Persian. Its Arabic root is *d-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prēraṇa"
 concept_tag: TE-KARANAM219-PRERANA
 prerequisites: [TE-C219-rujuvu, TE-C219-parinamam]
 sounds: []
-roots: []
+roots: [sanskrit-prerana]
+etymology_hook: "prēraṇa ← Sanskrit prēraṇa 'driving on', a tatsama (CDIAL 9000)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C219-parinamam]
 <!-- hl-knowledge: introduces=[TE-LEX-C219-KARANAM219-05]; assesses=[] -->
 
 **ప్రేరణ** — *prēraṇa* — "motivation, inspiration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రేరణ** (*prēraṇa*) is Sanskrit *prēraṇa*, "driving on", taken over whole as a learned loan, a tatsama (CDIAL 9000).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

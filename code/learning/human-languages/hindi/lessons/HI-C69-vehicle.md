@@ -14,7 +14,8 @@ romanization: "gāṛī"
 concept_tag: HI-NOUN-VEHICLE
 prerequisites: [HI-C68-english, HI-C68-language]
 sounds: []
-roots: []
+roots: [indo-aryan-gadda]
+etymology_hook: "gāṛī ← *gāḍḍa 'cart', which CDIAL tentatively links to Sanskrit garta 'chariot seat' (CDIAL 4116)"
 duration:
   max_seconds: 240
 requires:
@@ -44,7 +45,7 @@ what is **अंग्रेज़ी**? The next five words are how you leave t
 
 **गाड़ी** (*gāṛī*) — "a vehicle".
 
-From Sanskrit गर्त (*garta*), a cart, through the Prakrits. It began as the thing
+From a reconstructed *\*gāḍḍa*, 'cart', which CDIAL tentatively links to words for a seat, such as Sanskrit *garta*, a chariot seat (CDIAL 4116). It began as the thing
 oxen pulled and it has taken in everything since: a car is a गाड़ी, a train is a
 गाड़ी, a bullock cart is a गाड़ी.
 

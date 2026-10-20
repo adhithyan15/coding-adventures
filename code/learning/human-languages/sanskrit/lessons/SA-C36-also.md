@@ -14,7 +14,8 @@ romanization: "api"
 concept_tag: SA-REPLY-API
 prerequisites: [SA-C35-bed, SA-C34-arm, SA-C35-milk]
 sounds: []
-roots: []
+roots: [sanskrit-api]
+etymology_hook: "api 'also, even' is inherited: MW compares Greek epi; Hindi bhī is traced to it (CDIAL 485)"
 duration:
   max_seconds: 210
 requires:

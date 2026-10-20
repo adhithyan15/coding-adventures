@@ -14,7 +14,8 @@ romanization: "muzykánt"
 concept_tag: RU-RABOTA256-MUZYKANT
 prerequisites: [RU-C256-zhurnalist, RU-C256-khudozhnik]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "музыкант ← German Musikant, from Latin musicus 'a musician'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C256-khudozhnik]
 <!-- hl-knowledge: introduces=[RU-LEX-C256-RABOTA256-04]; assesses=[] -->
 
 **музыкант** (*muzykánt*) — "a musician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**музыкант** — from Peter the Great's time; it comes from German *Musikant*, from Latin *mūsicus*, "a musician" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

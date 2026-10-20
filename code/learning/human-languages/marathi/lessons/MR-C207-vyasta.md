@@ -14,7 +14,8 @@ romanization: "vyasta"
 concept_tag: MR-GUN207-VYASTA
 prerequisites: [MR-C207-savadh, MR-C207-niskalji]
 sounds: []
-roots: []
+roots: [sanskrit-vyasta]
+etymology_hook: "vyasta: Sanskrit vyasta 'scattered, distracted', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C207-niskalji]
 <!-- hl-knowledge: introduces=[MR-LEX-C207-GUN207-04]; assesses=[] -->
 
 **व्यस्त** — *vyasta* — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्यस्त** (*vyasta*) is Sanskrit *vyasta*, "scattered, distracted", a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vāḍipōvu"
 concept_tag: TE-VERB-VADIPOVU
 prerequisites: [TE-C244-prakasincu, TE-C244-gaddakattu]
 sounds: []
-roots: []
+roots: [dravidian-vaadu-wither, proto-dravidian-poo-go]
+etymology_hook: "vāḍipōvu: native vāḍu 'to wither' (DEDR 5342) + pōvu 'to go' (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C244-gaddakattu]
 <!-- hl-knowledge: introduces=[TE-LEX-C244-KRIYA244-04]; assesses=[] -->
 
 **వాడిపోవు** — *vāḍipōvu* — "to wilt, to fade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వాడిపోవు** (*vāḍipōvu*) is native Dravidian: *vāḍu*, "to fade, wither", one word with Tamil *vāṭu* (DEDR 5342), and *pōvu*, "to go" (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

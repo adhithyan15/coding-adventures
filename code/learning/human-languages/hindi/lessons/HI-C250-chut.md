@@ -14,7 +14,8 @@ romanization: "chūṭ"
 concept_tag: HI-THG250-CHUT
 prerequisites: [HI-C250-tijori, HI-C250-mohar]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chūṭ ← *kṣuṭyate 'is released', a reconstructed form; a tadbhava (CDIAL 3707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C250-mohar]
 <!-- hl-knowledge: introduces=[HI-LEX-C250-THG250-04]; assesses=[] -->
 
 **छूट** — *chūṭ* — "a discount".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छूट** (*chūṭ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kṣuṭyate*, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707). *chūṭ*, "a let-off", is the noun of *chūṭnā*, "to be released".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

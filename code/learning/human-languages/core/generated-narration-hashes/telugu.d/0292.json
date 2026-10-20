@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 292,
-  "sourceHash": "fnv1a64:37af6d140abea9d0",
+  "sourceHash": "fnv1a64:4eabc6fd5180ae2a",
   "lessonIds": [
     "TE-C292-gudise",
     "TE-C292-kaluva",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch292.txt",
   "json": "telugu/narration/ch292.json",
-  "textHash": "fnv1a64:2ebc9bdf78840fce",
-  "jsonHash": "fnv1a64:b7707b3c604bd77e",
+  "textHash": "fnv1a64:80c5e26bd05e6397",
+  "jsonHash": "fnv1a64:e58d06cb0d76b7ac",
   "findings": []
 }

@@ -10,7 +10,8 @@ gloss: "gelb"
 concept_tag: GE-C23-GRUEN-GELB-MORE
 prerequisites: [GE-C23-gruen-gelb]
 sounds: []
-roots: []
+roots: [germanic-gelwaz]
+etymology_hook: "gelb ← Proto-Germanic *gelwaz, the same word as English yellow"
 duration:
   max_seconds: 150
 requires:

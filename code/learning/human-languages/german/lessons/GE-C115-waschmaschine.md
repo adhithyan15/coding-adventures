@@ -13,7 +13,8 @@ gloss: "a washing machine"
 concept_tag: GE-HAUS115-WASCHMASCHINE
 prerequisites: [GE-C115-muelleimer, GE-C115-besen]
 sounds: []
-roots: []
+roots: [germanic-waskana, machina-latin]
+etymology_hook: "Waschmaschine — the verb 'to wash', English wash, + the word for 'machine' ← Latin machina"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C115-besen]
 <!-- hl-knowledge: introduces=[GE-LEX-C115-HAUS115-04]; assesses=[] -->
 
 **die Waschmaschine** — "a washing machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Waschmaschine** is the verb "to wash", Old High German *wascan*, English *wash*, + the word for "machine" ← French *machine* ← Latin *māchina* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "up there"
 concept_tag: FR-LIEU216-LA-HAUT
 prerequisites: [FR-C216-partout, FR-C216-ailleurs]
 sounds: []
-roots: []
+roots: [altus-latin]
+etymology_hook: "là-haut — là 'there' + haut 'high'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C216-ailleurs]
 <!-- hl-knowledge: introduces=[FR-LEX-C216-LIEU216-04]; assesses=[] -->
 
 **là-haut** — "up there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**là-haut** — *là*, "there", and *haut*, "high". *Haut* ← Latin *altus*, "high", with an *h* from Frankish (EtymDB 2.1 records the Frankish *hauh*); *là* ← Latin *illāc*, "there".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

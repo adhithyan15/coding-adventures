@@ -83,6 +83,7 @@ function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "l
     // "assessment is not the variable under test", not that the real corpus has
     // paid this debt.
     assessmentContracts: input.levelGate.tracks.map((track) => track.language),
+    assessmentPrerequisites: [],
     taskShapes,
     ...input,
   });
@@ -93,6 +94,7 @@ describe("completion plan", () => {
     const built = plan({
       levelGate: gate([{ language: "alpha", inProgressAt: "pre-A1", blockers: vocabularyBlocker(250) }]),
       assessmentContracts: [],
+      assessmentPrerequisites: [{ language: "alpha", missing: [] }],
     });
     expect(built.head[0]).toMatchObject({
       id: "assessment-contract/alpha",
@@ -100,6 +102,35 @@ describe("completion plan", () => {
       language: "alpha",
     });
     expect(built.head[0]?.goal).toContain("independent reading, listening, writing and speaking passes");
+  });
+
+  it("keeps an artifact-blocked contract in the projection but queues its concrete prerequisite", () => {
+    const built = plan({
+      levelGate: gate([{ language: "italian", inProgressAt: "pre-A1" }]),
+      assessmentContracts: [],
+      assessmentPrerequisites: [{
+        language: "italian",
+        missing: ["task-shapes/a2.json", "mocks/a1/rubric.md", "mocks/a1/mock-1-answer-key.md"],
+      }],
+      taskShapes: [{ language: "italian", level: "pre-A1" }],
+    });
+    expect(built.head[0]).toMatchObject({ id: "task-shape/italian/A1" });
+    expect(built.head.some((item) => item.kind === "assessment-contract")).toBe(false);
+    expect(built.blocked).toEqual([expect.objectContaining({
+      id: "assessment-contract/italian",
+      blockedBy: ["task-shapes/a2.json", "mocks/a1/rubric.md", "mocks/a1/mock-1-answer-key.md"],
+    })]);
+    expect(built.projection.find((entry) => entry.kind === "assessment-contract")?.items).toBe(1);
+    expect(built.summary.itemsOutstanding).toBeGreaterThan(built.summary.itemsInHead);
+  });
+
+  it("fails closed when a caller omits a track's prerequisite measurement", () => {
+    const built = plan({
+      levelGate: gate([{ language: "italian", inProgressAt: "pre-A1" }]),
+      assessmentContracts: [],
+    });
+    expect(built.head.some((item) => item.id === "assessment-contract/italian")).toBe(false);
+    expect(built.blocked[0]?.blockedBy).toContain("assessment artifact prerequisites not measured");
   });
 
   it("suppresses the assessment item only for a validated contracted track", () => {
@@ -212,6 +243,37 @@ describe("completion plan", () => {
     const complete = plan({ levelGate, humanValidation });
     expect(complete.head.some((item) => item.kind === "human-validation")).toBe(false);
     expect(complete.projection.find((entry) => entry.kind === "human-validation")?.items).toBe(0);
+  });
+
+  it("keeps missing full-mock evidence and its task-shape prerequisite on the queue", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
+    const mockAssessments = [
+      { language: "alpha", level: "pre-A1" as const, requiredMocks: 2, completeMocks: 0,
+        missingMocks: ["mock-1", "mock-2"], blockedBy: ["task-shape/alpha/pre-A1"] },
+      { language: "alpha", level: "A1" as const, requiredMocks: 2, completeMocks: 1,
+        missingMocks: ["mock-2"], blockedBy: [] },
+    ];
+    const missing = plan({ levelGate, mockAssessments });
+    expect(missing.blocked.find((item) => item.id === "mock-assessment/alpha/pre-A1")).toMatchObject({
+      id: "mock-assessment/alpha/pre-A1", outstanding: 2,
+      blockedBy: ["task-shape/alpha/pre-A1"],
+    });
+    expect(missing.projection.find((entry) => entry.kind === "mock-assessment")?.items).toBe(2);
+
+    mockAssessments[0] = { ...mockAssessments[0]!, completeMocks: 2, missingMocks: [], blockedBy: [] };
+    const partial = plan({ levelGate, mockAssessments });
+    expect(partial.head.some((item) => item.id === "mock-assessment/alpha/pre-A1")).toBe(false);
+    expect(partial.head.some((item) => item.id === "mock-assessment/alpha/A1")).toBe(true);
+
+    const advancedGate = gate([{ language: "alpha", inProgressAt: "A2" }]);
+    expect(plan({ levelGate: advancedGate, mockAssessments }).head).toContainEqual(
+      expect.objectContaining({ id: "mock-assessment/alpha/A1" }),
+    );
+
+    const finishedGate = gate([{ language: "alpha", inProgressAt: null }]);
+    expect(plan({ levelGate: finishedGate, mockAssessments }).head).toContainEqual(
+      expect.objectContaining({ id: "mock-assessment/alpha/A1" }),
+    );
   });
 
   it("measures pre-A1 task shapes without inventing a pre-A1 exam inventory", () => {

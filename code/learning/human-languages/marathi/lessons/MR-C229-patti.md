@@ -14,7 +14,8 @@ romanization: "paṭṭī"
 concept_tag: MR-AAROGYA229-PATTI
 prerequisites: [MR-C229-goli, MR-C229-malam]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "paṭṭī: as Hindi paṭṭī 'strip of cloth', under paṭṭa 'cloth; bandage', prob. non-Aryan (CDIAL 7700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C229-malam]
 <!-- hl-knowledge: introduces=[MR-LEX-C229-AAROGYA229-03]; assesses=[] -->
 
 **पट्टी** — *paṭṭī* — "a bandage; a strip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पट्टी** (*paṭṭī*) matches Hindi *paṭṭī*, "strip of cloth", which CDIAL lists under Sanskrit *paṭṭa*, "cloth; bandage" (CDIAL 7700). CDIAL thinks the Sanskrit word probably comes from a non-Aryan source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

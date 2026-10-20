@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES196-MECANICIEN
 prerequisites: [FR-C195-clavier, FR-C196-boucher]
 sounds: []
 roots: []
+etymology_hook: "mécanicien — from Latin mechanicus, Greek mekhanikos 'of machines' — English mechanic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C196-boucher]
 <!-- hl-knowledge: introduces=[FR-LEX-C196-CHOSES196-02]; assesses=[] -->
 
 **le mécanicien** — "a mechanic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mécanicien** — built from the word for "mechanics", ← Latin *mechanicus*, from Greek *mekhanikos*, "of machines" (Lewis & Short), with *-ien*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

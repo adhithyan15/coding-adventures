@@ -43,6 +43,9 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     ["SA-W10-asti-dictation", "dictation-transcription"],
     ["SA-W65-connected-text-guided-copy", "guided-copy"],
     ["SA-W65-connected-text-delayed-copy", "delayed-copy"],
+    ["SA-W65-kutra-controlled-question", "controlled-composition"],
+    ["SA-W65-a1-timed-production", "timed-assessment-production"],
+    ["SA-W258-a2-connected-composition", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

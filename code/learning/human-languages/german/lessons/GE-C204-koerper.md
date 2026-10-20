@@ -13,7 +13,8 @@ gloss: "the body"
 concept_tag: GE-THING204-KOERPER
 prerequisites: [GE-C204-metall, GE-C204-kunststoff]
 sounds: []
-roots: []
+roots: [corpus-latin]
+etymology_hook: "Körper ← Middle High German korper, from Latin corpus 'body' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C204-kunststoff]
 <!-- hl-knowledge: introduces=[GE-LEX-C204-THING204-05]; assesses=[] -->
 
 **der Körper** — "the body".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Körper** ← Middle High German *korper*, from Latin *corpus*, "body" (EtymDB 2.1 has the Latin word) — borrowed. English *corpse* and *corps* share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "koṭṭu"
 concept_tag: TE-VERB-KOTTU
 prerequisites: [TE-C206-veladu, TE-C206-tokku]
 sounds: []
-roots: []
+roots: [dravidian-kottu-beat]
+etymology_hook: "koṭṭu: native Dravidian, one word with Tamil koṭṭu and Malayalam koṭṭuka (DEDR 2063)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C206-tokku]
 <!-- hl-knowledge: introduces=[TE-LEX-C206-KRIYA206-05]; assesses=[] -->
 
 **కొట్టు** — *koṭṭu* — "to hit, to beat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొట్టు** (*koṭṭu*) is native Dravidian, one word with Tamil *koṭṭu* and Malayalam *koṭṭuka* (DEDR 2063). DEDR lists Telugu *koṭṭu*, "to beat, strike". DEDR compares Pali *koṭṭeti*, "beats" (CDIAL 3241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

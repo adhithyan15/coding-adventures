@@ -12,6 +12,9 @@ Before the new one: say the Persian for an ambulance, then the Persian for heigh
 You'll want to know: ماسک.
 ماسک — mâsk — "a face mask".
 
+The word, taken apart.
+mâsk is a loan, usually traced to French masque, "mask".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for height, then the Persian for a face mask
 
 You'll want to know: تب سنج.
 تب سنج — tabsanj — "a thermometer".
+
+The word, taken apart.
+tabsanj is built from tab, "fever", and -sanj, "measuring" (from sanjidan, "to weigh, to measure"): the fever-measurer. tab is inherited, usually traced to Middle Persian tab.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a face mask, then the Persian for a ther
 You'll want to know: بهداشت.
 بهداشت — behdâsht — "hygiene".
 
+The word, taken apart.
+behdâsht is built from beh, "good, well", and dâsht, "keeping" (from dâshtan): keeping well, a modern Persian coinage. beh is inherited, usually traced to Middle Persian weh.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a thermometer, then the Persian for hygi
 You'll want to know: فشار خون.
 فشار خون — feshâr-e khun — "blood pressure".
 
+The word, taken apart.
+feshâr-e khun is "the pressure of the blood". feshâr is built on feshordan, "to press" (EtymDB), and khun is inherited, from Middle Persian xōn (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for hygiene, then the Persian for blood pres
 
 You'll want to know: بیحال.
 بیحال — bihâl — "listless, run-down".
+
+The word, taken apart.
+bihâl is bi-, "without", with hâl, "state, health": out of sorts. bi- is native Persian; hâl is borrowed from Arabic ḥāl (root ḥ-w-l, Lane).
 
 What you've built.
 One more word for this chapter.

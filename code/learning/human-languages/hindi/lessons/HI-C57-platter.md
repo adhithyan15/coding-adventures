@@ -14,7 +14,8 @@ romanization: "thālī"
 concept_tag: HI-NOUN-PLATTER
 prerequisites: [HI-C57-feast, HI-C55-star, HI-C56-market]
 sounds: []
-roots: []
+roots: [sanskrit-sthali]
+etymology_hook: "thālī ← Sanskrit sthālī 'earthen dish', a tadbhava (CDIAL 13766)"
 duration:
   max_seconds: 210
 requires:

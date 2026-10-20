@@ -11,7 +11,8 @@ romanization: "yār"
 concept_tag: TA-DEIXIS-WHO
 prerequisites: [TA-C40-there, TA-C38-vidai, TA-C39-oru]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "யார் — native, on the question base yā- (DEDR 5151); Malayalam yār and ār, Kannada yār"
 duration:
   max_seconds: 210
 requires:
@@ -40,18 +41,23 @@ reviews_of: [TA-C40-there]
 
 **யார்** — *yār* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **எங்கே** *eṅgē*, which you will meet in a moment. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+*yār* opens with **yā-**, not with the **i-** of near or the **a-** of far
+that the four words before it share. It is the one word in this chapter outside
+that pattern, so learn it as itself: the asking word for people.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**யார்** (*yār*) is native Dravidian, on the question base *yā-* (DEDR 5151). Malayalam has *yār* and *ār*, and Kannada *yār*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05, TA-LEX-VIDAI-01, TA-ETYMON-VIDAI-02, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "யார்" three times, picturing something different each time]
+- [YOU SAY: "யார்" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *viḍai*]
 - [YOU READ: **ஒரு**]
@@ -59,5 +65,5 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05] -->
 
-[PAUSE 3s] What is *yār*? (who? — asking about a person.) What sound does it start with, and does
-that sound mean near, far, or a question? (**e-** — ask.)
+[PAUSE 3s] What is *yār*? (who? — asking about a person.) What sound does it start with: the i- of
+near, the a- of far, or neither? (**Neither** — **yā-**; it asks about a person.)

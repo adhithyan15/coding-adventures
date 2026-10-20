@@ -13,7 +13,8 @@ gloss: "a root"
 concept_tag: PT-COISAS250-RAIZ
 prerequisites: [PT-C249-capacete, PT-C250-semente]
 sounds: []
-roots: []
+roots: [radix-latin]
+etymology_hook: "raiz ← Latin radix 'root': the -d- fell out — English radical and radish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C250-semente]
 <!-- hl-knowledge: introduces=[PT-LEX-C250-COISAS250-02]; assesses=[] -->
 
 **a raiz** — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raiz** ← Latin *radix, radicis*, "root" (EtymDB 2.1) — inherited. The *-d-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

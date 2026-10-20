@@ -14,7 +14,8 @@ romanization: "ḍāḷimb"
 concept_tag: MR-THINGS138-DALIMB
 prerequisites: [MR-C137-ale, MR-C138-matar]
 sounds: []
-roots: []
+roots: [sanskrit-dadimba]
+etymology_hook: "ḍāḷimb ← Sanskrit dāḍimba 'pomegranate', a tadbhava (CDIAL 6254)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C138-matar]
 <!-- hl-knowledge: introduces=[MR-LEX-C138-THINGS138-02]; assesses=[] -->
 
 **डाळिंब** — *ḍāḷimb* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाळिंब** (*ḍāḷimb*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dāḍimba*, "pomegranate" (CDIAL 6254). CDIAL gives *dāḍimba* as a variant of Sanskrit *dāḍima*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

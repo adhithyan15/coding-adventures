@@ -14,7 +14,8 @@ romanization: "āgāmī"
 concept_tag: BN-AGAMI146-AGAMI
 prerequisites: [BN-C145-ekshomoy, BN-C145-katano]
 sounds: []
-roots: []
+roots: [sanskrit-agamin]
+etymology_hook: "āgāmī ← Sanskrit āgāmin 'coming, future', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C145-katano]
 <!-- hl-knowledge: introduces=[BN-LEX-C146-AGAMI146-01]; assesses=[] -->
 
 **আগামী** — *āgāmī* — "next, coming". Bengali's future adds **-ব** for "I": **আমি আগামী সপ্তাহে যাব** — *āmi āgāmī sôptāhe jābô* — "I will go next week."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আগামী** (*āgāmī*) is Sanskrit *āgāmin*, "coming, future", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

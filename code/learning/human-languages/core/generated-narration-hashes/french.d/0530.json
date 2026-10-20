@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:349afd48f6c8c36d",
+  "lessonIds": [
+    "FR-C530-vaisselle",
+    "FR-C530-evier",
+    "FR-C530-rincer",
+    "FR-C530-essuyer",
+    "FR-C530-torchon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch530.txt",
+  "json": "french/narration/ch530.json",
+  "textHash": "fnv1a64:4cc68f8b63b89c10",
+  "jsonHash": "fnv1a64:626cce873930eea5",
+  "findings": []
+}

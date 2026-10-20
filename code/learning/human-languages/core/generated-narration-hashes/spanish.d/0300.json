@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 300,
-  "sourceHash": "fnv1a64:5584ae95d93a6b7e",
+  "sourceHash": "fnv1a64:722c1d6a31ad9b88",
   "lessonIds": [
     "ES-C300-sed",
     "ES-C300-sueno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch300.txt",
   "json": "spanish/narration/ch300.json",
-  "textHash": "fnv1a64:73a75a0f3207f2dc",
-  "jsonHash": "fnv1a64:b3ba27ccaf402bd6",
+  "textHash": "fnv1a64:9f5a0da2913ae78c",
+  "jsonHash": "fnv1a64:e0d0e37899876ae1",
   "findings": []
 }

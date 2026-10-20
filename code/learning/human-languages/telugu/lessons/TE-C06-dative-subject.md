@@ -81,9 +81,9 @@ seems **to me**." Telugu made it the rule.
 | Kannada | *nanage kannaḍa gottu* | **-ge** |
 | Malayalam | *enikku malayāḷam aṟiyām* | **-ikku** |
 
-One construction across four languages, with four suffixes that are visibly the
-**same suffix** — *-ku / -ukku / -ge / -ikku*. The Dravidian family showing its
-bones, just as *blanc/bianco/branco* did for Romance.
+One construction across four languages, with four suffixes that are the
+**same suffix** — *-ku / -ukku / -ge / -ikku*. Native Dravidian bones, like
+*vaccu*, "comes" (DEDR 5270) — as *blanc/bianco/branco* were for Romance.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02, TE-LEX-C06-DATIVE-SUBJECT-01, TE-GRAMMAR-C06-DATIVE-SUBJECT-02, TE-ETYMON-C06-DATIVE-SUBJECT-03] -->

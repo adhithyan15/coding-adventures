@@ -14,7 +14,8 @@ romanization: "sunnā"
 concept_tag: UR-VERB-SUNNA
 prerequisites: [UR-C46-pina, UR-C46-dekhna]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "sunnā ← Sanskrit śṛṇoti 'hears', a tadbhava (CDIAL 12598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C46-dekhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C46-FAMILY46-05]; assesses=[] -->
 
 **سننا** — *sunnā* — "to hear, to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سننا** (*sunnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛṇoti*, "hears" (CDIAL 12598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

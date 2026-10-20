@@ -1,0 +1,11 @@
+{
+  "id": "IT-C321-tombola",
+  "pathSegment": "IT-PATH-321-PRESEPE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-321-PRESEPE",
+      "order": 4
+    }
+  ]
+}

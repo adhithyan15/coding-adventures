@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:3ab480d11c22f7ec",
+  "lessonIds": [
+    "PT-C519-ensaio",
+    "PT-C519-ensaiar",
+    "PT-C519-palco",
+    "PT-C519-plateia",
+    "PT-C519-aplauso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch519.txt",
+  "json": "portuguese/narration/ch519.json",
+  "textHash": "fnv1a64:80bd5a9c5dc78df5",
+  "jsonHash": "fnv1a64:5d181c9c68818d5a",
+  "findings": []
+}

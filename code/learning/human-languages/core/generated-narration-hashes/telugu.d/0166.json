@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 166,
-  "sourceHash": "fnv1a64:2b92a5edf5337363",
+  "sourceHash": "fnv1a64:75dbc526068a77b2",
   "lessonIds": [
     "TE-C166-konasagu",
     "TE-C166-patincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch166.txt",
   "json": "telugu/narration/ch166.json",
-  "textHash": "fnv1a64:5eb993cdc76077f9",
-  "jsonHash": "fnv1a64:00155f3d8dbc7e3b",
+  "textHash": "fnv1a64:9f13a47409e1657a",
+  "jsonHash": "fnv1a64:a38e9dd023a096c1",
   "findings": []
 }

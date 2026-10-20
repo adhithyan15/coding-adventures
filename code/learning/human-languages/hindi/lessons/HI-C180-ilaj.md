@@ -14,7 +14,8 @@ romanization: "ilāj"
 concept_tag: HI-THG180-ILAJ
 prerequisites: [HI-C180-dava, HI-C180-mariz]
 sounds: []
-roots: []
+roots: [arabic-ilaj]
+etymology_hook: "ilāj ← Arabic ʿilāj 'treatment, remedy', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C180-mariz]
 <!-- hl-knowledge: introduces=[HI-LEX-C180-THG180-03]; assesses=[] -->
 
 **इलाज** — *ilāj* — "treatment, a cure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इलाज** (*ilāj*) is a loan from Arabic *ʿilāj*, "treatment, remedy", which reached Hindi through Persian. Its Arabic root is *ʿ-l-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

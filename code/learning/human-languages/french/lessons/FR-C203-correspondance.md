@@ -13,7 +13,8 @@ gloss: "a connection"
 concept_tag: FR-CHOSES203-CORRESPONDANCE
 prerequisites: [FR-C203-joueur, FR-C203-entraineur]
 sounds: []
-roots: []
+roots: [latin-respondere]
+etymology_hook: "correspondance — from Medieval Latin correspondere 'to answer together'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C203-entraineur]
 <!-- hl-knowledge: introduces=[FR-LEX-C203-CHOSES203-05]; assesses=[] -->
 
 **la correspondance** — "a connection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**correspondance** — built from the verb for "to correspond", ← Medieval Latin *correspondere*, from *com-* and *respondere*, "to answer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kārīgar"
 concept_tag: UR-KAM238-KARIGAR
 prerequisites: [UR-C238-mahir, UR-C238-fankar]
 sounds: []
-roots: []
+roots: [persian-karigar]
+etymology_hook: "kārīgar: usually traced to Persian kārīgar 'craftsman'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C238-fankar]
 <!-- hl-knowledge: introduces=[UR-LEX-C238-KAM238-03]; assesses=[] -->
 
 **کاریگر** — *kārīgar* — "a craftsman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کاریگر** (*kārīgar*) is a loan, usually traced to Persian *kārīgar*, "craftsman". It is built on *kār*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

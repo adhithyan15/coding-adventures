@@ -14,7 +14,8 @@ romanization: "sunnā / sun / suntā / suntī / sunte"
 concept_tag: HI-VERB-LISTEN
 prerequisites: [HI-C43-look, HI-C41-good]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "sunnā ← Sanskrit śṛṇoti 'hears', a tadbhava (CDIAL 12598)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ Remove infinitive **-ना** to find the stem **सुन-**. Add the present e
 already know: **सुनता** (*suntā*, masculine), **सुनती** (*suntī*, feminine),
 and **सुनते** (*sunte*, respectful or plural). Later you will say **आप सुनते
 हैं** — "you listen."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुनना** (*sunnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛṇoti*, "hears" (CDIAL 12598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LISTEN] -->

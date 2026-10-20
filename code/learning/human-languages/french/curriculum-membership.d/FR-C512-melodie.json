@@ -1,0 +1,11 @@
+{
+  "id": "FR-C512-melodie",
+  "pathSegment": "FR-PATH-512-CHANT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-512-CHANT",
+      "order": 4
+    }
+  ]
+}

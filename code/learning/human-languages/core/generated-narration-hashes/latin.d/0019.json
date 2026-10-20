@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 19,
-  "sourceHash": "fnv1a64:165cc5db5e3bb702",
+  "sourceHash": "fnv1a64:a0bb2ad0eed9dc9a",
   "lessonIds": [
     "LA-C19-quid-agis",
     "LA-C19-ut-vales",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "latin/narration/ch19.txt",
   "json": "latin/narration/ch19.json",
-  "textHash": "fnv1a64:a0a6c29c5dbcff1e",
-  "jsonHash": "fnv1a64:d02de3b932555286",
+  "textHash": "fnv1a64:12702ffc87b1f3bf",
+  "jsonHash": "fnv1a64:00bd3060d36a5286",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "usne gheṇe"
 concept_tag: MR-VERB-USNE-GHENE
 prerequisites: [MR-C255-prarthana-karne, MR-C255-sipharas-karne]
 sounds: []
-roots: []
+roots: [sanskrit-grbhayati]
+etymology_hook: "usne: origin not settled; gheṇe ← gṛbhāyati 'takes' (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C255-sipharas-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C256-ACT256-01]; assesses=[] -->
 
 **उसने घेणे** — *usne gheṇe* — "to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **उसने**, "on loan", is not settled: neither CDIAL nor DEDR has an entry for it. **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Der Wetterbericht",
+  "label": "ch:ge-der-wetterbericht",
+  "canDo": "I can follow a weather report: the weather report, the weather situation, a cloudless sky, an overcast sky and a sudden change.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C460-umschlagen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can follow a weather report: the weather report, the weather situation, a cloudless sky, an overcast sky and a sudden change.",
+    "assesses": [
+      "GE-LEX-C460-WETTERBERICHT-03",
+      "GE-LEX-C460-WETTERBERICHT-04",
+      "GE-LEX-C460-WETTERBERICHT-05"
+    ]
+  }
+}

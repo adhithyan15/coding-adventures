@@ -14,7 +14,8 @@ romanization: "kalima"
 concept_tag: AR-SCHOOL75-KALIMA
 prerequisites: [AR-C74-dars, AR-C74-jawab]
 sounds: []
-roots: []
+roots: [k-l-m]
+etymology_hook: "kalima: built on the root k-l-m, 'a word' (Lane); kalima is a single word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C74-jawab]
 <!-- hl-knowledge: introduces=[AR-LEX-C75-SCHOOL75-01]; assesses=[] -->
 
 **كلمة** — *kalima* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كلمة** (*kalima*) is built on the native Arabic root *k-l-m*, "a word; speech" (Lane). *Kalima* is a single word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

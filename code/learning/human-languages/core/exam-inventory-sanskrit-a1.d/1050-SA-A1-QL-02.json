@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-QL-02",
+  "category": "Qualitative notions",
+  "label": "colour",
+  "probe": [
+    "SA-LEX-C44-COLOUR-01",
+    "SA-LEX-C44-COLOUR-02",
+    "SA-LEX-C44-COLOUR-03",
+    "SA-LEX-C44-COLOUR-04",
+    "SA-LEX-C44-COLOUR-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG5-03"
+  ],
+  "note": "śvetaḥ, śyāmaḥ, pītaḥ, haritaḥ, nīlaḥ — chapter 44 is exactly this point and closes it."
+}

@@ -13,7 +13,8 @@ gloss: "left (not right)"
 concept_tag: LA-WHY114-SINISTER
 prerequisites: [LA-C114-locus, LA-C114-dexter]
 sounds: []
-roots: []
+roots: [sinister-latin]
+etymology_hook: "sinister 'left' — origin unknown; its -ter ending pairs it with dexter 'right'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C114-dexter]
 <!-- hl-knowledge: introduces=[LA-LEX-C114-WHY114-05]; assesses=[] -->
 
 **sinister, sinistra, sinistrum** — "left (not right)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sinister** has no sure origin; Lewis & Short call it doubtful. It ends in *-ter*, an ending that sets one of two sides against the other, as in *dexter*, "right".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

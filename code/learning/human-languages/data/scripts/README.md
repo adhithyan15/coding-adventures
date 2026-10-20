@@ -7,6 +7,33 @@ writing it by hand. The schema is deliberately general (spec:
 model teaches an alphabet, an abugida, or an abjad — and so **adding a new script
 is data, not code.**
 
+## Python shard mutation boundary
+
+`sharded_ledger.py` keeps the older Python authoring scripts on canonical JSON
+shards. The caller must supply a trusted ledger root. On Windows, mutation
+opens each descendant relative to a validated directory handle and refuses
+junctions and other reparse points; rename and deletion stay attached to that
+opened directory even if its pathname is concurrently replaced. Replacement
+also carries forward a shard's file-specific DACL. On Unix, mutation opens
+every descendant through its pinned parent descriptor with no-follow and
+directory-kind checks. Temporary creation, replacement, and deletion stay
+relative to that final descriptor, so an ancestor swapped to a symlink after
+pathname prevalidation cannot redirect an outside write or removal. Run
+`python test_sharded_ledger.py -v` to exercise both platform boundaries; the
+books gate runs the Windows junction fixtures as well as the Unix symlink
+fixtures. Read-side enumeration also queries the opened directory handle on
+Windows, validates each returned record, and reopens each selected owner
+relative to that handle without following reparse points. A junction swapped
+in after pathname prevalidation cannot supply an outside owner list. This
+does not promise a snapshot of an actively edited in-root directory: native
+enumeration may observe either side of a concurrent in-root change. On Unix,
+the read path opens each descendant directory relative to a pinned parent
+descriptor, lists through that descriptor, and opens JSON shards relative to
+the pinned leaf directory with a no-follow regular-file check. This closes
+read-side ancestor symlink swaps, but does not make concurrent in-root edits a
+snapshot. The Unix mutation fixtures also swap an ancestor after
+prevalidation and preserve an outside sentinel for both write and remove.
+
 ## Safe regeneration of the Dravidian syllabaries
 
 `generate_syllabary.py` rebuilds the Telugu, Kannada, and Malayalam Unicode

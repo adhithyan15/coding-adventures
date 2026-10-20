@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES86-BOMBA-DE-GASOLINA
 prerequisites: [PT-C85-camara-municipal, PT-C86-supermercado]
 sounds: []
 roots: []
+etymology_hook: "bomba de gasolina: gasolina ← English gasoline, through French; bomba 'pump' is of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C86-supermercado]
 <!-- hl-knowledge: introduces=[PT-LEX-C86-LUGARES86-02]; assesses=[] -->
 
 **a bomba de gasolina** — "a petrol station". In Brazil, **o posto de gasolina**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bomba de gasolina** is "petrol pump". *gasolina* came through French *gazoline* from English *gasoline* (EtymDB 2.1), built on *gas*. The pump word *bomba* is of uncertain, probably imitative, origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

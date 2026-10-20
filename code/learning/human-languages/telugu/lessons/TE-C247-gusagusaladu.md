@@ -14,7 +14,8 @@ romanization: "gusagusalāḍu"
 concept_tag: TE-VERB-GUSAGUSALADU
 prerequisites: [TE-C247-gillu, TE-C247-goku]
 sounds: []
-roots: []
+roots: [dravidian-kucukucu-whisper, dravidian-aadu-move]
+etymology_hook: "gusagusalāḍu: native gusagusa 'whisper' (DEDR 1638) + āḍu 'to do, play' (DEDR 347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C247-goku]
 <!-- hl-knowledge: introduces=[TE-LEX-C247-KRIYA247-03]; assesses=[] -->
 
 **గుసగుసలాడు** — *gusagusalāḍu* — "to whisper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుసగుసలాడు** (*gusagusalāḍu*) is native Dravidian: *gusagusa*, "whisper", which DEDR 1638 lists with Tamil *kucukucu*, "to whisper", and *āḍu*, "to play, act" (DEDR 347). DEDR notes related whisper-words in Prakrit and Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

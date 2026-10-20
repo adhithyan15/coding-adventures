@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Keeping Well, and Leaving",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:095ab5ecf8193caf",
+  "sourceHash": "fnv1a64:6986f5c44e6d03ff",
   "lessons": [
     {
       "id": "TA-C38-udambu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fb6e418ebdb8be6c",
+      "sourceHash": "fnv1a64:f245b029fa481166",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -104,7 +104,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil has another word for the body, உடல் (uḍal), and the Dravidian dictionary does not treat them as rivals: உடல், உடம்பு (uḍambu) and உடலம் sit in the same entry, with Kannada's ಒಡಲು beside them. Usage has divided them: உடல் leans literary, உடம்பு (uḍambu) is what you say aloud about someone unwell."
+              "text": "Tamil has another word for the body, உடல் (uḍal), and DEDR 586 does not treat them as rivals: உடல், உடம்பு (uḍambu) and உடலம் sit in the same entry, with Kannada's ಒಡಲು beside them. Usage has divided them: உடல் leans literary, உடம்பு (uḍambu) is what you say aloud about someone unwell."
             }
           ]
         },

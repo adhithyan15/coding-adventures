@@ -1,0 +1,11 @@
+{
+  "id": "PT-C303-afogamento",
+  "pathSegment": "PT-PATH-303-CHEIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-303-CHEIA",
+      "order": 2
+    }
+  ]
+}

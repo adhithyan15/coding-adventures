@@ -14,7 +14,8 @@ romanization: "kattikkuka"
 concept_tag: ML-VERB-KATTIKKUKA
 prerequisites: [ML-C264-matakkuka, ML-C265-potiyuka]
 sounds: []
-roots: []
+roots: [dravidian-kattu-burn]
+etymology_hook: "kattikkuka: native Dravidian, 'make burn'; Kannada kattu (DEDR 1207)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C265-potiyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C265-KRIYA265-02]; assesses=[] -->
 
 **കത്തിക്കുക** — *kattikkuka* — "to light, to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കത്തിക്കുക** (*kattikkuka*) is native Dravidian, the causative of the verb "to kindle, burn"; DEDR 1207 lists the root with Kannada *kattu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhariñcu"
 concept_tag: TE-VERB-BHARINCU
 prerequisites: [TE-C248-docuko, TE-C248-appagincu]
 sounds: []
-roots: []
+roots: [sanskrit-bhara-carrying]
+etymology_hook: "bhariñcu: Sanskrit bhara 'carrying; weight' (CDIAL 9393) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C248-appagincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C249-KRIYA249-01]; assesses=[] -->
 
 **భరించు** — *bhariñcu* — "to endure, to put up with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భరించు** (*bhariñcu*) is Sanskrit *bhara*, "carrying; weight" (CDIAL 9393), made into a verb with the Telugu ending *-iñcu*: "to bear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

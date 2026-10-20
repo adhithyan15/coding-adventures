@@ -14,7 +14,8 @@ romanization: "meḷo"
 concept_tag: MW-LOC100-MELO
 prerequisites: [MW-C100-pol, MW-C100-haveli]
 sounds: []
-roots: []
+roots: [sanskrit-mela]
+etymology_hook: "meḷo ← Sanskrit mela 'meeting', a tadbhava (CDIAL 10331, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C100-haveli]
 <!-- hl-knowledge: introduces=[MW-LEX-C100-LOC100-04]; assesses=[] -->
 
 **मेळो** — *meḷo* — "a fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेळो** (*meḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mela*, "meeting". CDIAL lists Marwari *meḷo* under it, though in the sense "embrace"; the sense "fair" matches Hindi *melā* and Gujarati *meḷo* there (CDIAL 10331). It is built on the root *mil*, "to meet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

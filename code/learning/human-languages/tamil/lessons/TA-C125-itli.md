@@ -14,7 +14,8 @@ romanization: "iṭli"
 concept_tag: TA-THINGS125-ITLI
 prerequisites: [TA-C124-puntu, TA-C124-ten]
 sounds: []
-roots: []
+roots: [tamil-idli]
+etymology_hook: "இட்லி — origin uncertain; usually connected with iḍḍalige, named in a 10th-century Kannada text"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C124-ten]
 <!-- hl-knowledge: introduces=[TA-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **இட்லி** — *iṭli* — "an idli, a steamed rice cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **இட்லி** (*iṭli*) is uncertain, and DEDR has no entry for it. Food historians usually connect it with *iḍḍalige*, a food named in a Kannada text of the tenth century.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

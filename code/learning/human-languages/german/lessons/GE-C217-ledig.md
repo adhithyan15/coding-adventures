@@ -13,7 +13,8 @@ gloss: "single (unmarried)"
 concept_tag: GE-QUAL217-LEDIG
 prerequisites: [GE-C217-kostenlos, GE-C217-kraeftig]
 sounds: []
-roots: []
+roots: [germanic-lithugaz]
+etymology_hook: "ledig ← Old High German lidig 'free' ← Proto-Germanic *liþugaz 'free, unoccupied'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C217-kraeftig]
 <!-- hl-knowledge: introduces=[GE-LEX-C217-QUAL217-05]; assesses=[] -->
 
 **ledig** — "single (unmarried)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ledig** ← Old High German *lidig*, "free" ← Proto-Germanic *\*liþugaz*, "flexible, free, unoccupied" — inherited. (EtymDB 2.1) Single is free of ties.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

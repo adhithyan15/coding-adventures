@@ -13,7 +13,8 @@ gloss: "to avoid"
 concept_tag: PT-VERB-EVITAR
 prerequisites: [PT-C141-aparecer, PT-C141-aplaudir]
 sounds: []
-roots: []
+roots: [evitare-latin]
+etymology_hook: "evitar ← Latin evitare 'to shun' — English inevitable shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C141-aplaudir]
 <!-- hl-knowledge: introduces=[PT-LEX-C142-VERBOS142-01]; assesses=[] -->
 
 **evitar** — "to avoid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**evitar** ← Latin *evitare*, "to shun" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

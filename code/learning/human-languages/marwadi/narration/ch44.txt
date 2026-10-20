@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for nineteen, then the Marwadi for no.
 You'll want to know: पग.
 पग — pag — "a foot".
 
+The word, taken apart.
+पग (pag) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from padga, "afoot; footsoldier". CDIAL lists Old Marwari paga under it (CDIAL 7766). It is built on pad, "foot", the same ancient word as English foot.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for no, then the Marwadi for a foot.
 
 You'll want to know: माथो.
 माथो — mātho — "the head".
+
+The word, taken apart.
+माथो (mātho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from masta, "head". CDIAL lists Marwari mātho under it (CDIAL 9926). Sanskrit also had mastaka, "head, skull".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a foot, then the Marwadi for the head.
 You'll want to know: बाळ.
 बाळ — bāḷ — "hair".
 
+The word, taken apart.
+बाळ (bāḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāla, "hair of tail, tail, hair". CDIAL gives no Marwari form in this entry (CDIAL 11572); the match is through Hindi bāl and Gujarati vāḷ. Marwadi, like Gujarati, says the l curled back.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for the head, then the Marwadi for hair.
 You'll want to know: दांत.
 दांत — dānt — "a tooth".
 
+The word, taken apart.
+दांत (dānt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, "tooth". CDIAL lists Marwari dā̃t under it (CDIAL 6152). English tooth and Latin dens are the same ancient word.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for hair, then the Marwadi for a tooth.
 
 You'll want to know: गळो.
 गळो — gaḷo — "the throat".
+
+The word, taken apart.
+गळो (gaḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, "throat, neck". CDIAL lists Marwari gaḷo under it (CDIAL 4070).
 
 What you've built.
 One more word for this chapter.

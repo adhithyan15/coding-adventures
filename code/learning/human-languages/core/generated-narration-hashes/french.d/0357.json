@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:5ae3707ffdb5b3b3",
+  "lessonIds": [
+    "FR-C357-stage",
+    "FR-C357-stagiaire",
+    "FR-C357-apprenti",
+    "FR-C357-apprentissage",
+    "FR-C357-employeur",
+    "FR-R357-revision-350-357"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch357.txt",
+  "json": "french/narration/ch357.json",
+  "textHash": "fnv1a64:7f7500854f189a72",
+  "jsonHash": "fnv1a64:ea2e2408d7ca46cc",
+  "findings": []
+}

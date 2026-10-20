@@ -14,7 +14,8 @@ romanization: "āmantraṇ"
 concept_tag: MR-VASTU274-AMANTRAN
 prerequisites: [MR-C273-daya, MR-C274-subheccha]
 sounds: []
-roots: []
+roots: [sanskrit-amantrana]
+etymology_hook: "āmantraṇ ← Sanskrit āmantraṇa 'calling to; invitation', a tatsama (CDIAL 1242)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C274-subheccha]
 <!-- hl-knowledge: introduces=[MR-LEX-C274-VASTU274-02]; assesses=[] -->
 
 **आमंत्रण** — *āmantraṇ* — "an invitation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आमंत्रण** (*āmantraṇ*) is Sanskrit *āmantraṇa*, "calling to; invitation", taken over whole as a learned loan, a tatsama (CDIAL 1242). CDIAL lists the inherited Marathi verb as *āvãtṇẽ*, "invites".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Flug gestrichen",
+  "label": "ch:ge-flug-gestrichen",
+  "canDo": "I can deal with a cancelled booking: cancelling, the cancellation, rebooking, refunding and the refund.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C420-erstattung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can deal with a cancelled booking: cancelling, the cancellation, rebooking, refunding and the refund.",
+    "assesses": [
+      "GE-LEX-C420-STORNO-03",
+      "GE-LEX-C420-STORNO-04",
+      "GE-LEX-C420-STORNO-05"
+    ]
+  }
+}

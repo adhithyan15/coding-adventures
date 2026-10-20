@@ -12,6 +12,9 @@ Before the new one: say the Kannada for time, then the Kannada for sometimes.
 You'll want to know: ಮುಕ್ಕಾಲು.
 ಮುಕ್ಕಾಲು — mukkālu — "three quarters".
 
+The word, taken apart.
+ಮುಕ್ಕಾಲು (mukkālu) is native Dravidian: muk-, the form of "three" before a consonant (DEDR 5052), and kālu, "leg, quarter" (DEDR 1479): "three quarters".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for sometimes, then the Kannada for three qu
 
 You'll want to know: ಮರುದಿನ.
 ಮರುದಿನ — marudina — "the next day, the following day".
+
+The word, taken apart.
+ಮರುದಿನ (marudina) joins native maru, "other, next", which DEDR 4766 lists as maṟu, to Sanskrit dina, "day" (CDIAL 6328): "the next day".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for three quarters, then the Kannada for the
 You'll want to know: ಬಾಲ್ಯ.
 ಬಾಲ್ಯ — bālya — "childhood".
 
+The word, taken apart.
+ಬಾಲ್ಯ (bālya) is Sanskrit bālya, "childhood", built on bāla, "young; a boy" (CDIAL 9216).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for the next day, then the Kannada for child
 You'll want to know: ಅಮಾವಾಸ್ಯೆ.
 ಅಮಾವಾಸ್ಯೆ — amāvāsye — "the new moon day".
 
+The word, taken apart.
+ಅಮಾವಾಸ್ಯೆ (amāvāsye) is Sanskrit amāvāsyā, the new-moon night, built from amā, "at home, together", and vāsa, "dwelling" (CDIAL 563): the night the sun and moon dwell together. Kannada has -e for final -ā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for childhood, then the Kannada for the new 
 
 You'll want to know: ಮಧ್ಯಂತರ.
 ಮಧ್ಯಂತರ — madhyantara — "an interval (in a film, a match)".
+
+The word, taken apart.
+ಮಧ್ಯಂತರ (madhyantara) is Sanskrit madhya, "middle" (CDIAL 9804), and antara, "the inside, an interval" (CDIAL 357): "a break in the middle".
 
 What you've built.
 One more word for this chapter.

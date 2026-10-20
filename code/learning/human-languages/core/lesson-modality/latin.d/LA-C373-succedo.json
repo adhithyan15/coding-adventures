@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C373-succedo",
+    "language": "latin",
+    "chapter": 373,
+    "sequence": 20050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0982a38209df886f"
+  },
+  "findings": []
+}

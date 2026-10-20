@@ -13,7 +13,8 @@ gloss: "wise"
 concept_tag: LA-FACILIS-SAPIENS
 prerequisites: [LA-C97-carus, LA-C97-fortis]
 sounds: []
-roots: []
+roots: [sapiens-latin, sapere-latin]
+etymology_hook: "sapiēns 'wise' — the participle of sapiō 'to have taste, to be wise'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C97-fortis]
 <!-- hl-knowledge: introduces=[LA-LEX-C97-FACILIS-05]; assesses=[] -->
 
 **sapiēns, sapientis** — "wise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sapiēns** is the present participle of *sapiō*, "to have taste, to be wise" (Lewis & Short): first "tasting", then "discerning". *Homo sapiens*, "the wise human", uses it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

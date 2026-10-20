@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 173,
-  "sourceHash": "fnv1a64:3fb446382112568b",
+  "sourceHash": "fnv1a64:ecd427a9bea9463e",
   "lessonIds": [
     "FR-C173-ballon",
     "FR-C173-raquette",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch173.txt",
   "json": "french/narration/ch173.json",
-  "textHash": "fnv1a64:3882ccd9b6a2f636",
-  "jsonHash": "fnv1a64:71be608950259a18",
+  "textHash": "fnv1a64:b5bbc48e173d14cb",
+  "jsonHash": "fnv1a64:4150abfba5456a58",
   "findings": []
 }

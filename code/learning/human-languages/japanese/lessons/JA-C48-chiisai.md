@@ -14,7 +14,8 @@ romanization: "chiisai"
 concept_tag: JA-ANIMALS48-CHIISAI
 prerequisites: [JA-C47-ookami, JA-C48-niwatori]
 sounds: []
-roots: []
+roots: [japanese-chiisai]
+etymology_hook: "chiisai: native Japanese, inherited, not borrowed; kanji 小さい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C48-niwatori]
 <!-- hl-knowledge: introduces=[JA-LEX-C48-ANIMALS48-02]; assesses=[] -->
 
 **ちいさい** — *chiisai* — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちいさい** (*chiisai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

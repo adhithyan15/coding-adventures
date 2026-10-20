@@ -14,7 +14,8 @@ romanization: "lābhaṁ"
 concept_tag: TE-PANI235-LABHAM
 prerequisites: [TE-C235-cillara, TE-C235-jitam]
 sounds: []
-roots: []
+roots: [sanskrit-labha]
+etymology_hook: "lābhaṁ ← Sanskrit lābha 'finding, profit', a tatsama (CDIAL 11018)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C235-jitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C235-PANI235-04]; assesses=[] -->
 
 **లాభం** — *lābhaṁ* — "a profit, a gain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లాభం** (*lābhaṁ*) is Sanskrit *lābha*, "finding, profit", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 11018).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

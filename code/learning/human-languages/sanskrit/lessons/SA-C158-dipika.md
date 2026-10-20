@@ -14,7 +14,8 @@ romanization: "dīpikā"
 concept_tag: SA-THG158-DIPIKA
 prerequisites: [SA-C158-masi, SA-C158-pattika]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "dīpikā ← dīpa 'lamp' (√dīp 'shine', MW) + -ikā 'small'; Hindi dīyā 'lamp' (CDIAL 6348)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C158-pattika]
 <!-- hl-knowledge: introduces=[SA-LEX-C158-THG158-04]; assesses=[] -->
 
 **दीपिका** — *dīpikā* — "a small lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dīpikā* is *dīpa* "a lamp", from the root √dīp "blaze, shine" (MW), with the small-thing suffix *-ikā*: "a little lamp". *dīpa* lives on as Hindi *dīyā* "lamp" (CDIAL 6348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

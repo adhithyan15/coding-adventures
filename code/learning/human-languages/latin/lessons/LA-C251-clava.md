@@ -13,7 +13,8 @@ gloss: "a club"
 concept_tag: LA-RES251-CLAVA
 prerequisites: [LA-C251-catulus, LA-C251-tigris]
 sounds: []
-roots: []
+roots: [clava-latin]
+etymology_hook: "clāva 'club' — perhaps from PIE *kelh2- 'to beat'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C251-tigris]
 <!-- hl-knowledge: introduces=[LA-LEX-C251-RES251-03]; assesses=[] -->
 
 **clāva, clāvae** — "a club".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clāva** is often traced to Proto-Indo-European *\*kelh2-*, "to beat, to break" (EtymDB 2.1), with *percellō*, "to strike down", in the same family (Lewis & Short); the link is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

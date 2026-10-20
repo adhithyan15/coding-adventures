@@ -14,7 +14,8 @@ romanization: "navvad"
 concept_tag: MR-NUMBERS118-NAVVAD
 prerequisites: [MR-C118-sath, MR-C118-sattar]
 sounds: []
-roots: []
+roots: [sanskrit-navati]
+etymology_hook: "navvad: CDIAL lists it under Sanskrit navati 'ninety' and marks the Marathi form as borrowed (CDIAL 6995)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C118-sattar]
 <!-- hl-knowledge: introduces=[MR-LEX-C118-NUMBERS118-05]; assesses=[] -->
 
 **नव्वद** — *navvad* — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **नव्वद** (*navvad*) under Sanskrit *navati*, "ninety", and marks the Marathi form as a borrowing (CDIAL 6995).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

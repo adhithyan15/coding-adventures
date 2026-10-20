@@ -13,7 +13,8 @@ gloss: "the post office"
 concept_tag: FR-VILLE53-POSTE
 prerequisites: [FR-C101-pharmacie, FR-C101-village]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "poste ← Italian posta 'a relay station', from Latin posita 'placed' — English post"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C101-village]
 <!-- hl-knowledge: introduces=[FR-LEX-C101-VILLE53-05]; assesses=[] -->
 
 **la poste** — "the post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poste** ← Italian *posta*, "a relay station", from Latin *posita*, "placed", the past participle of *ponere*, "to put" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

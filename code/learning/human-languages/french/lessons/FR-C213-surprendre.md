@@ -13,7 +13,8 @@ gloss: "to surprise"
 concept_tag: FR-VERB-SURPRENDRE
 prerequisites: [FR-C212-poursuivre, FR-C213-soulever]
 sounds: []
-roots: []
+roots: [prehendere-latin]
+etymology_hook: "surprendre — sur- 'over' + prendre 'to take': to overtake — English surprise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C213-soulever]
 <!-- hl-knowledge: introduces=[FR-LEX-C213-VERBES213-02]; assesses=[] -->
 
 **surprendre** — "to surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**surprendre** ← Old French *sorprendre*, "to overtake": *sur-*, "over", and *prendre*, "to take". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

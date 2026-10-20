@@ -11,8 +11,8 @@ gloss: we — আমি carrying the very plural ending taught two chapters ago,
 concept_tag: BN-LEX-AMRA
 prerequisites: [BN-R23-somebody-else, BN-C03-ami, BN-C22-ra, BN-C11-poribar]
 sounds: []
-roots: []
-etymology_hook: "The plural ending on a pronoun is the same ending that goes on a brother, and that is the point: Bengali treats its pronouns as living nouns and gives them no separate machinery. English had to invent we, a word with no visible connection to I."
+roots: [asmad-first-person]
+etymology_hook: "āmrā: āmi, from asmad 'we' (CDIAL 986), + the plural -rā, whose origin is not settled"
 duration:
   max_seconds: 230
 requires:
@@ -51,6 +51,11 @@ living noun's ending.
 English cannot show you this. *I* becomes *we*, two words with no letter in
 common, and a learner has to memorise the pair. Bengali charges you nothing,
 because you paid two chapters ago.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আমি** goes back to Sanskrit *asmad*, the stem of "we" (CDIAL 986); where the plural **-রা** comes from is not settled.
 
 ## Grammar Lens: exclusive or inclusive? Bengali does not say
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C24-AMRA-01, BN-LEX-C11-PORIBAR-01, BN-CONCEPT-C03-BHALO-01] -->

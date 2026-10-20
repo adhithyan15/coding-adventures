@@ -14,7 +14,8 @@ romanization: "bastī"
 concept_tag: UR-JAGAH158-BASTI
 prerequisites: [UR-C157-nahar, UR-C158-qaum]
 sounds: []
-roots: []
+roots: [sanskrit-vasati]
+etymology_hook: "bastī: built on basnā 'to dwell' ← Sanskrit vasati 'stays, dwells' (CDIAL 11435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C158-qaum]
 <!-- hl-knowledge: introduces=[UR-LEX-C158-JAGAH158-02]; assesses=[] -->
 
 **بستی** — *bastī* — "a settlement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بستی** (*bastī*) belongs with *basnā*, "to dwell, to settle", which CDIAL lists under Sanskrit *vasati*, "stays, dwells" (CDIAL 11435).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

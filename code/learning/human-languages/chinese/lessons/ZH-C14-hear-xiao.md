@@ -11,8 +11,8 @@ gloss: small; little
 concept_tag: ZH-SCHOOL-SMALL
 prerequisites: [ZH-C13-practice]
 sounds: [tone-3]
-roots: []
-etymology_hook: Small arrives as one dipping syllable before its three-stroke character.
+roots: [middle-chinese-sjewx]
+etymology_hook: "xiǎo 'small': inherited, from Middle Chinese sjewX"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,8 @@ reviews_of: [ZH-C13-practice]
 
 Keep the voice low through the third tone: *xiǎo*. Work only with sound and
 meaning. Its three-stroke character comes next.
+
+*Xiǎo* is inherited from Middle Chinese *sjewX*, "small".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01] -->

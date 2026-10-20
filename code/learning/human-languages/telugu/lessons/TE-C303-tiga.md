@@ -14,7 +14,8 @@ romanization: "tīga"
 concept_tag: TE-VASTUVU303-TIGA
 prerequisites: [TE-C302-mosali, TE-C303-mullu]
 sounds: []
-roots: []
+roots: [dravidian-tiige-creeper]
+etymology_hook: "tīga: native Dravidian; DEDR 3269 lists tīga 'creeper, wire' with Kannada tīge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C303-mullu]
 <!-- hl-knowledge: introduces=[TE-LEX-C303-VASTUVU303-02]; assesses=[] -->
 
 **తీగ** — *tīga* — "a creeper, a vine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తీగ** (*tīga*) is native Dravidian. DEDR 3269 lists a nasalised *tīga*, "creeper, vine; wire", with Kannada *tīge*, "creeping plant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

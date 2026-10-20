@@ -13,7 +13,8 @@ gloss: "society"
 concept_tag: PT-COISAS158-SOCIEDADE
 prerequisites: [PT-C157-campainha, PT-C158-mosquito]
 sounds: []
-roots: []
+roots: [socius-latin]
+etymology_hook: "sociedade ← Latin societas 'fellowship', from socius 'companion'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C158-mosquito]
 <!-- hl-knowledge: introduces=[PT-LEX-C158-COISAS158-02]; assesses=[] -->
 
 **a sociedade** — "society".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sociedade** ← Latin *societas, societatis*, "fellowship" (EtymDB 2.1), from *socius*, "companion" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naram"
 concept_tag: GU-QUAL132-NARAM
 prerequisites: [GU-C132-khatu, GU-C132-tikhu]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "naram: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C132-tikhu]
 <!-- hl-knowledge: introduces=[GU-LEX-C132-QUAL132-05]; assesses=[] -->
 
 **નરમ** (*naram*) — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નરમ** (*naram*) is a loan, usually traced to Persian *narm*, "soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

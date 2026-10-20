@@ -14,7 +14,8 @@ romanization: "kabūtar"
 concept_tag: UR-THINGS128-KABUTAR
 prerequisites: [UR-C127-khargosh, UR-C128-hiran]
 sounds: []
-roots: []
+roots: [persian-kabutar]
+etymology_hook: "kabūtar: usually traced to Persian kabūtar 'pigeon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C128-hiran]
 <!-- hl-knowledge: introduces=[UR-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **کبوتر** — *kabūtar* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کبوتر** (*kabūtar*) is a loan, usually traced to Persian *kabūtar*, "pigeon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Da dove nasce",
+  "label": "ch:it-da-dove-nasce",
+  "canDo": "I can say where a problem comes from and what it involves, determines or influences.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C351-influire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say where a problem comes from and what it involves, determines or influences.",
+    "assesses": [
+      "IT-LEX-C351-ORIGINE-03",
+      "IT-LEX-C351-ORIGINE-04",
+      "IT-LEX-C351-ORIGINE-05"
+    ]
+  }
+}

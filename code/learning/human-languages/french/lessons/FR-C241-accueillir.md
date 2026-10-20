@@ -13,7 +13,8 @@ gloss: "to welcome"
 concept_tag: FR-VERB-ACCUEILLIR
 prerequisites: [FR-C241-hurler, FR-C241-voter]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "accueillir ← Vulgar Latin *accolligere — cueillir with ac-, 'to gather in'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C241-voter]
 <!-- hl-knowledge: introduces=[FR-LEX-C241-VERBES241-05]; assesses=[] -->
 
 **accueillir** — "to welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accueillir** ← Old French *acoillir* ← Vulgar Latin *\*accolligere* (EtymDB 2.1) — inherited: *cueillir* with *ac-*, "to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

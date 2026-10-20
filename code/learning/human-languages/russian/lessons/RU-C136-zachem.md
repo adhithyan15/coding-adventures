@@ -14,7 +14,8 @@ romanization: "zachém"
 concept_tag: RU-NEG136-ZACHEM
 prerequisites: [RU-C136-nigde, RU-C136-nikuda]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "зачем is за 'for' + чем, a form of что 'what': 'for what'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C136-nikuda]
 <!-- hl-knowledge: introduces=[RU-LEX-C136-NEG136-05]; assesses=[] -->
 
 **зачем** (*zachém*) — "what for". It asks about the purpose; **почему** asks about the cause. **Зачем?** — "What for?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зачем** is *за*, "for, after", with *чем*, a form of *что*, "what": "for what". Vasmer traces *что* to Proto-Slavic *\*čĭ*, "what", with a pointing *to* on the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

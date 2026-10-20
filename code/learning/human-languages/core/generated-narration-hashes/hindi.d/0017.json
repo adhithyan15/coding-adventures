@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 17,
-  "sourceHash": "fnv1a64:e82f01fe7e48a93f",
+  "sourceHash": "fnv1a64:e65e19cbbb6ffb03",
   "lessonIds": [
     "HI-C17-dopahar-aadhi-raat",
     "HI-S121-letter-la",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch17.txt",
   "json": "hindi/narration/ch17.json",
-  "textHash": "fnv1a64:8234a3002c5a2704",
-  "jsonHash": "fnv1a64:5c6efc4030824096",
+  "textHash": "fnv1a64:475f57cdf07a82ca",
+  "jsonHash": "fnv1a64:d77bfa66f7383697",
   "findings": []
 }

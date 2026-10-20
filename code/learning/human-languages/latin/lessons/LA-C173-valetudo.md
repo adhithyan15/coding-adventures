@@ -13,7 +13,8 @@ gloss: "health"
 concept_tag: LA-VALE173-VALETUDO
 prerequisites: [LA-C172-piscor, LA-C172-nego]
 sounds: []
-roots: []
+roots: [valetudo-latin, valere-latin]
+etymology_hook: "valētūdō 'health' — built on valeō 'to be well': one's state of health"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C172-nego]
 <!-- hl-knowledge: introduces=[LA-LEX-C173-VALE173-01]; assesses=[] -->
 
 **valētūdō, valētūdinis** — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valētūdō** is built on *valeō*, "to be strong, to be well" (Lewis & Short), with *-tūdō*, an ending for a state: one's state of health, good or bad.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

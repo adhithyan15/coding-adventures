@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C321-fable",
+    "language": "french",
+    "chapter": 321,
+    "sequence": 18250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e63d5146b2279ba"
+  },
+  "findings": []
+}

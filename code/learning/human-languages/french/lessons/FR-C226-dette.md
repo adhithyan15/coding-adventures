@@ -13,7 +13,8 @@ gloss: "a debt"
 concept_tag: FR-CHOSES226-DETTE
 prerequisites: [FR-C226-compte-bancaire, FR-C226-pret]
 sounds: []
-roots: []
+roots: [debere-latin]
+etymology_hook: "dette ← Latin debita 'things owed', from debere — the Latin of devoir; English debt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C226-pret]
 <!-- hl-knowledge: introduces=[FR-LEX-C226-CHOSES226-05]; assesses=[] -->
 
 **la dette** — "a debt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dette** ← Latin *debita*, "things owed", from *debere*, the Latin of *devoir* (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: HI-THG250-TIJORI
 prerequisites: [HI-C249-dastavez, HI-C250-fail]
 sounds: []
 roots: []
+etymology_hook: "tijorī: origin uncertain; sometimes traced to Portuguese tesouro 'treasury'; not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C250-fail]
 <!-- hl-knowledge: introduces=[HI-LEX-C250-THG250-02]; assesses=[] -->
 
 **तिजोरी** — *tijorī* — "a safe, a strongbox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **तिजोरी** (*tijorī*) is uncertain. It is sometimes traced to Portuguese *tesouro*, "treasure, treasury", but no source settles it, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cemparatti"
 concept_tag: ML-VASTU253-CEMPARATTI
 prerequisites: [ML-C253-plavu, ML-C253-rosappu]
 sounds: []
-roots: []
+roots: [dravidian-cem-red]
+etymology_hook: "cemparatti: native cem- 'red' (DEDR 1931) + a second part of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C253-rosappu]
 <!-- hl-knowledge: introduces=[ML-LEX-C253-VASTU253-04]; assesses=[] -->
 
 **ചെമ്പരത്തി** — *cemparatti* — "a hibiscus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെമ്പരത്തി** (*cemparatti*) begins with native *cem-*, "red" (DEDR 1931, with Tamil *ce-*); the origin of the rest is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

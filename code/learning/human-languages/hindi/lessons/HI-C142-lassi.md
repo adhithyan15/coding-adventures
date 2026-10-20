@@ -15,6 +15,7 @@ concept_tag: HI-THINGS142-LASSI
 prerequisites: [HI-C141-ata, HI-C142-samosa]
 sounds: []
 roots: []
+etymology_hook: "lassī ← *lassī 'buttermilk', reconstructed by CDIAL from Punjabi and Sindhi forms; no Hindi form listed (CDIAL 10998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C142-samosa]
 <!-- hl-knowledge: introduces=[HI-LEX-C142-THINGS142-02]; assesses=[] -->
 
 **लस्सी** — *lassī* — "lassi, a yoghurt drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लस्सी** (*lassī*) goes back to a reconstructed *\*lassī*, "buttermilk", which CDIAL builds from Punjabi and Lahnda *lassī* and Sindhi *lasī* (CDIAL 10998). It lists no Hindi form, and it gives no older source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

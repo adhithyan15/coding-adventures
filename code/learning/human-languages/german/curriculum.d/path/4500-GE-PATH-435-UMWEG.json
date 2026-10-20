@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-435-UMWEG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-435-UMWEG"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "noqte"
 concept_tag: FA-CHIZ213-NOQTE
 prerequisites: [FA-C213-taqche, FA-C213-dayere]
 sounds: []
-roots: []
+roots: [arabic-nuqta]
+etymology_hook: "noqte ← Arabic nuqṭa 'dot, point', root n-q-ṭ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C213-dayere]
 <!-- hl-knowledge: introduces=[FA-LEX-C213-CHIZ213-05]; assesses=[] -->
 
 **نقطه** — *noqte* — "a dot, a point".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*noqte* is borrowed from Arabic *nuqṭa*, "dot, point". Its Arabic root is *n-q-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

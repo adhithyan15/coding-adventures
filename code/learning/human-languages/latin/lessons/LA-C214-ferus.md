@@ -13,7 +13,8 @@ gloss: "wild"
 concept_tag: LA-QUAL214-FERUS
 prerequisites: [LA-C213-ignavus, LA-C214-saevus]
 sounds: []
-roots: []
+roots: [ferus-latin]
+etymology_hook: "ferus 'wild' — inherited, usually traced to PIE *ghwer- 'wild animal'; English fierce"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C214-saevus]
 <!-- hl-knowledge: introduces=[LA-LEX-C214-QUAL214-02]; assesses=[] -->
 
 **ferus, fera, ferum** — "wild".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferus** is inherited, usually traced to Proto-Indo-European *\*ghwer-*, "wild animal" (EtymDB 2.1); Greek *thēr*, "wild beast", is a cousin (Lewis & Short). English *fierce* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

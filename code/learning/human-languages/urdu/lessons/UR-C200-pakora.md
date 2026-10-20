@@ -14,7 +14,8 @@ romanization: "pakoṛā"
 concept_tag: UR-CHIZ200-PAKORA
 prerequisites: [UR-C199-haldi, UR-C199-zira]
 sounds: []
-roots: []
+roots: [indo-aryan-pakvavata]
+etymology_hook: "pakoṛā ← *pakvavaṭa 'cooked ball', a reconstructed form; a tadbhava (CDIAL 7625)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C199-zira]
 <!-- hl-knowledge: introduces=[UR-LEX-C200-CHIZ200-01]; assesses=[] -->
 
 **پکوڑا** — *pakoṛā* — "a pakora".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پکوڑا** (*pakoṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pakvavaṭa*, "cooked ball", a form CDIAL reconstructs from its descendants (CDIAL 7625). It is built from *pakva*, "cooked", and *vaṭa*, "a round cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

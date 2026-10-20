@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 17,
-  "sourceHash": "fnv1a64:566b5bdb639cee44",
+  "sourceHash": "fnv1a64:edc747333fee28fc",
   "lessonIds": [
     "FR-C14-jai",
     "FR-C14-as",
@@ -22,7 +22,7 @@
   "drivablePrefix": 14,
   "text": "french/narration/ch17.txt",
   "json": "french/narration/ch17.json",
-  "textHash": "fnv1a64:cc8a69896e778e93",
-  "jsonHash": "fnv1a64:fa5f8dea45d89000",
+  "textHash": "fnv1a64:6f1fe98c00ac6dfb",
+  "jsonHash": "fnv1a64:326a1a6bd1ae8c9d",
   "findings": []
 }

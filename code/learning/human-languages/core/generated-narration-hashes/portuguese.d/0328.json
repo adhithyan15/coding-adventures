@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:2f4a975a96c244de",
+  "lessonIds": [
+    "PT-C328-navegador",
+    "PT-C328-caravela",
+    "PT-C328-naufragar",
+    "PT-C328-naufragio",
+    "PT-C328-tesouro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch328.txt",
+  "json": "portuguese/narration/ch328.json",
+  "textHash": "fnv1a64:f2756b7f945d1fa3",
+  "jsonHash": "fnv1a64:1654fca78c63ea41",
+  "findings": []
+}

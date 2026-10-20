@@ -14,7 +14,8 @@ romanization: "viḷaiyāṭṭu"
 concept_tag: TA-PORUL249-VILAIYATTU
 prerequisites: [TA-C248-parai, TA-C248-neruppu]
 sounds: []
-roots: []
+roots: [dravidian-vilaiyadu-play]
+etymology_hook: "விளையாட்டு — native Dravidian (DEDR 5438); Malayalam viḷay-āṭṭu 'play, sport'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C248-neruppu]
 <!-- hl-knowledge: introduces=[TA-LEX-C249-PORUL249-01]; assesses=[] -->
 
 **விளையாட்டு** — *viḷaiyāṭṭu* — "a game, a sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விளையாட்டு** (*viḷaiyāṭṭu*) is native Dravidian. DEDR 5438 lists Malayalam *viḷay-āṭṭu*, "play, sport". It is the noun of *viḷaiyāṭu*, "to play". DEDR compares, with a query, Sanskrit *vilāsa*, "play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

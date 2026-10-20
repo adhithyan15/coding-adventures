@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 22,
-  "sourceHash": "fnv1a64:74b57227c530aa08",
+  "sourceHash": "fnv1a64:7d10505706828e32",
   "lessonIds": [
     "LA-C22-tu-vos"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch22.txt",
   "json": "latin/narration/ch22.json",
-  "textHash": "fnv1a64:5575dfbdba0b3aba",
-  "jsonHash": "fnv1a64:e8a74fb52549f3ba",
+  "textHash": "fnv1a64:447c8b8f6385679d",
+  "jsonHash": "fnv1a64:54d423eff2b19165",
   "findings": []
 }

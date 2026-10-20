@@ -14,7 +14,8 @@ romanization: "chholā"
 concept_tag: BN-JINIS232-CHHOLA
 prerequisites: [BN-C232-mashrum, BN-C232-bhutta]
 sounds: []
-roots: []
+roots: [indo-aryan-choll]
+etymology_hook: "chholā: probably from *chōll 'peel, skin' (CDIAL 5073), where Oriya cholā is 'gram'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C232-bhutta]
 <!-- hl-knowledge: introduces=[BN-LEX-C232-JINIS232-04]; assesses=[] -->
 
 **ছোলা** — *chholā* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছোলা** (*chholā*) probably belongs with *\*chōll*, "to peel, skin", a form CDIAL reconstructs and reports Burrow as taking from Dravidian (CDIAL 5073). Under it CDIAL lists Bengali *cholā*, "to skin", and Oriya *cholā*, "gram", which it explains, with a query, as "husked". It has no Bengali row for the pulse itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

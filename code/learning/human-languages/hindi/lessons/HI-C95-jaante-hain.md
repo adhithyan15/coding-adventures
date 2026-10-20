@@ -14,7 +14,8 @@ romanization: "kyā āp jānte haiṁ?"
 concept_tag: HI-VERB-KNOW-QUESTION
 prerequisites: [HI-C95-jaanta-hun, HI-C02-kya, HI-C02-aap-tum]
 sounds: []
-roots: []
+roots: [sanskrit-janati]
+etymology_hook: "jānnā ← Sanskrit jānāti 'knows' (CDIAL 5193)"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +61,8 @@ Every piece is old and the assembly is regular:
 their plural endings even when you are speaking to one person. That is not a
 new rule — it is the same respect-as-plural the track has used since the
 second chapter, turning up on a new verb.
+
+**जानना** comes from Sanskrit *jānāti*, "knows" (CDIAL 5193).
 
 ## Grammar Lens: where क्या sits
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C95-KNOW-02, HI-CONCEPT-C02-KYA-01] -->

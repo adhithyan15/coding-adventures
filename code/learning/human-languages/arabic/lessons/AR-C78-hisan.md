@@ -14,7 +14,8 @@ romanization: "ḥiṣān"
 concept_tag: AR-NATURE78-HISAN
 prerequisites: [AR-C78-rih, AR-C78-sama]
 sounds: []
-roots: []
+roots: [ḥ-ṣ-n]
+etymology_hook: "ḥiṣān: built on the root ḥ-ṣ-n, 'to be guarded' (Lane); Lane's ḥiṣān is a stallion of good breed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C78-sama]
 <!-- hl-knowledge: introduces=[AR-LEX-C78-NATURE78-05]; assesses=[] -->
 
 **حصان** — *ḥiṣān* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حصان** (*ḥiṣān*) is built on the native Arabic root *ḥ-ṣ-n*, "to be guarded; to be chaste" (Lane). Lane's *ḥiṣān* is a stallion of good breed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to solve"
 concept_tag: FR-VERB-RESOUDRE
 prerequisites: [FR-C238-refuser, FR-C238-risquer]
 sounds: []
-roots: []
+roots: [solvere-latin]
+etymology_hook: "résoudre ← Latin resolvere 'to untie' — English resolve and solve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C238-risquer]
 <!-- hl-knowledge: introduces=[FR-LEX-C238-VERBES238-04]; assesses=[] -->
 
 **résoudre** — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**résoudre** ← Latin *resolvere*, "to loosen, to untie" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

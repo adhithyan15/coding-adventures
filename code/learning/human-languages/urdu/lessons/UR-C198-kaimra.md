@@ -14,7 +14,8 @@ romanization: "kaimrā"
 concept_tag: UR-CHIZ198-KAIMRA
 prerequisites: [UR-C198-tar, UR-C198-skrin]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "kaimrā ← English camera"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C198-skrin]
 <!-- hl-knowledge: introduces=[UR-LEX-C198-CHIZ198-03]; assesses=[] -->
 
 **کیمرہ** — *kaimrā* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیمرہ** (*kaimrā*) is a loan from English *camera*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

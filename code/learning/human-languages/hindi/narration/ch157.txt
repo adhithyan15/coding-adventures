@@ -12,6 +12,9 @@ Before the new one: say the Hindi for salty, then the Hindi for spicy.
 You'll want to know: ताज़ा.
 ताज़ा — tāzā — "fresh".
 
+The word, taken apart.
+ताज़ा (tāzā) is a loan, usually traced to Persian tāza, "fresh".
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Hindi for spicy, then the Hindi for fresh.
 You'll want to know: अमीर.
 अमीर — amīr — "rich".
 
+The word, taken apart.
+अमीर (amīr) is a loan from Arabic amīr, "commander, prince", which reached Hindi through Persian. Its Arabic root is ʾ-m-r (Lane). Hindi uses it for someone rich.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Hindi for fresh, then the Hindi for rich.
 
 You'll want to know: ग़रीब.
 ग़रीब — ġarīb — "poor".
+
+The word, taken apart.
+ग़रीब (ġarīb) is a loan from Arabic gharīb, "a stranger", which reached Hindi through Persian. Its Arabic root is gh-r-b (Lane). Hindi uses it for "poor".
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Describe with words that never bend: आसान, मुश्किल, सु
 You'll want to know: जवान.
 जवान — javān — "young".
 
+The word, taken apart.
+जवान (javān) is usually taken as a loan from Persian javān, "young". That may not be the whole story: CDIAL lists a Hindi juwān, "a youth", under yuvāna, "young", a form it builds on the Sanskrit yuvan, "young" (CDIAL 10510). So Hindi may have this word by an inherited road as well as a borrowed one.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for poor, then the Hindi for young.
 
 You'll want to know: बूढ़ा.
 बूढ़ा — būṛhā — "old (of people)".
+
+The word, taken apart.
+बूढ़ा (būṛhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from buḍḍha, "old", a form CDIAL reconstructs from its descendants (CDIAL 9271). CDIAL notes that the initial b- rules out direct descent from Sanskrit vṛddha, "grown old", though that word may have influenced it.
 
 What you've built.
 One more word for this chapter.

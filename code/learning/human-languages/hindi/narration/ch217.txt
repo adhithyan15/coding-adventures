@@ -12,6 +12,9 @@ Before the new one: say the Hindi for okra, then the Hindi for a papaya.
 You'll want to know: अनार.
 अनार — anār — "a pomegranate".
 
+The word, taken apart.
+अनार (anār) is a loan, usually traced to Persian anār, "pomegranate".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a papaya, then the Hindi for a pomegranate
 
 You'll want to know: अमरूद.
 अमरूद — amrūd — "a guava".
+
+The word, taken apart.
+अमरूद (amrūd) is a loan, usually traced to Persian amrūd, "pear". In Hindi it names the guava.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a pomegranate, then the Hindi for a guava.
 You'll want to know: त्योहार.
 त्योहार — tyohār — "a festival".
 
+The word, taken apart.
+त्योहार (tyohār) is a tadbhava, a word inherited and reshaped by sound change. It comes from tithivāra, "a festival", a form CDIAL reconstructs from its descendants (CDIAL 5811). It is built from tithi, "lunar day", and vāra, "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a guava, then the Hindi for a festival.
 You'll want to know: पूजा.
 पूजा — pūjā — "worship".
 
+The word, taken apart.
+पूजा (pūjā) is Sanskrit pūjā, "honour, worship", taken over whole as a learned loan, a tatsama (CDIAL 8317).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a festival, then the Hindi for worship.
 
 You'll want to know: धर्म.
 धर्म — dharm — "religion, duty".
+
+The word, taken apart.
+धर्म (dharm) is Sanskrit dharma, "what is established; law, duty, right", taken over whole as a learned loan, a tatsama (CDIAL 6753).
 
 What you've built.
 One more word for this chapter.

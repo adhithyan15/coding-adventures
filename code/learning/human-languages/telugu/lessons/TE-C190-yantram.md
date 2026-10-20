@@ -14,7 +14,8 @@ romanization: "yantraṁ"
 concept_tag: TE-VASTUVU190-YANTRAM
 prerequisites: [TE-C189-navala, TE-C190-karentu]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "yantraṁ ← Sanskrit yantra 'controlling device; any implement', a tatsama (CDIAL 10412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C190-karentu]
 <!-- hl-knowledge: introduces=[TE-LEX-C190-VASTUVU190-02]; assesses=[] -->
 
 **యంత్రం** — *yantraṁ* — "a machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**యంత్రం** (*yantraṁ*) is Sanskrit *yantra*, "controlling device; any implement", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

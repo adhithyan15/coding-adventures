@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C257-zug-verpasst",
+    "language": "german",
+    "chapter": 257,
+    "sequence": 14290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83037b308f1008b7"
+  },
+  "findings": []
+}

@@ -19,6 +19,9 @@ word: எப்போது, eppōdu, when? — which time.
 The shared piece is போது, a word meaning a time, an occasion. Change only the front and you have walked from a statement to a question, exactly as இங்கே walked to எங்கே.
 எப்போது (eppōdu) வேண்டும்? — "When do you want it?"
 
+The word, taken apart.
+எப்போது (eppōdu) is native: the question base e- (DEDR 5151) and pōtu, "time" (DEDR 4559). DEDR 5151 lists eppōtu itself.
+
 What you've built.
 The question word for time, and the small word போது that sits inside it.
 
@@ -59,6 +62,9 @@ The third seat was empty and now it is filled:
 Near, far, question — the same three fronts you first met on இங்கே, அங்கே, எங்கே.
 Then in Tamil means a time somebody has already named. It looks backwards, the way அதனால் does, and for the same reason: both begin on the a- that means that one, over there.
 நாளை. அப்போது (appōdu) சொல்லுங்கள். — "Tomorrow. Tell me then."
+
+The word, taken apart.
+அப்போது (appōdu) is native: the far base a- (DEDR 1) and pōtu, "time" (DEDR 4559): "that time".
 
 What you've built.
 A complete set of three, from a pattern you were given nearly forty chapters ago.

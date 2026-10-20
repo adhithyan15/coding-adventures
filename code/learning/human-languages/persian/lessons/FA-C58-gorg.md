@@ -14,7 +14,8 @@ romanization: "gorg"
 concept_tag: FA-ANIMALS58-GORG
 prerequisites: [FA-C57-parvane, FA-C57-murche]
 sounds: []
-roots: []
+roots: [persian-gorg]
+etymology_hook: "gorg ← Middle Persian gurg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C57-murche]
 <!-- hl-knowledge: introduces=[FA-LEX-C58-ANIMALS58-01]; assesses=[] -->
 
 **گرگ** — *gorg* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gorg* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gurg*, "wolf" (EtymDB). EtymDB takes it back to the Indo-European word behind English *wolf*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

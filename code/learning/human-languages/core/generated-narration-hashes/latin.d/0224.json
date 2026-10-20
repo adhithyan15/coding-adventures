@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 224,
-  "sourceHash": "fnv1a64:78cd5d8b56090cca",
+  "sourceHash": "fnv1a64:7cca92bfbecc9f1c",
   "lessonIds": [
     "LA-C224-lacerta",
     "LA-C224-aper",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch224.txt",
   "json": "latin/narration/ch224.json",
-  "textHash": "fnv1a64:8e3ed9780055ca6c",
-  "jsonHash": "fnv1a64:e7972880e30007d2",
+  "textHash": "fnv1a64:af2d2451f7241019",
+  "jsonHash": "fnv1a64:49347c510d714a8d",
   "findings": []
 }

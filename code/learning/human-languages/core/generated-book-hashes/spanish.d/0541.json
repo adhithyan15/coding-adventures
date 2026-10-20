@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:ad91950d59a0a5d4",
+  "lessonIds": [
+    "ES-C541-fase",
+    "ES-C541-transcurso",
+    "ES-C541-duracion",
+    "ES-C541-prolongarse",
+    "ES-C541-transcurrir"
+  ],
+  "tex": "spanish/book/chapters/ch541-cuanto-duro.tex"
+}

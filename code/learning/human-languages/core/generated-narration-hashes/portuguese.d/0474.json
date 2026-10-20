@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:bd5d9e2f4538ed19",
+  "lessonIds": [
+    "PT-C474-rabugento",
+    "PT-C474-resmungao",
+    "PT-C474-amuar",
+    "PT-C474-birra",
+    "PT-C474-choramingar",
+    "PT-R474-revisao-467-474"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch474.txt",
+  "json": "portuguese/narration/ch474.json",
+  "textHash": "fnv1a64:08b86113bf58ae0d",
+  "jsonHash": "fnv1a64:fbc06331ef3918af",
+  "findings": []
+}

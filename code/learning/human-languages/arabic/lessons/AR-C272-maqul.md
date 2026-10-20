@@ -14,7 +14,8 @@ romanization: "maʿqūl"
 concept_tag: AR-SIFA272-MAQUL
 prerequisites: [AR-C272-muthir, AR-C272-muaqqad]
 sounds: []
-roots: []
+roots: [ʿ-q-l]
+etymology_hook: "maʿqūl: built on the root ʿ-q-l, 'to tie' (Lane); maʿqūl is the passive participle, 'understood', hence 'reasonable'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C272-muaqqad]
 <!-- hl-knowledge: introduces=[AR-LEX-C272-SIFA272-05]; assesses=[] -->
 
 **معقول** — *maʿqūl* — "reasonable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معقول** (*maʿqūl*) is built on the native Arabic root *ʿ-q-l*, "to tie; to understand" (Lane). *Maʿqūl* is the passive participle, "understood", hence "reasonable".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

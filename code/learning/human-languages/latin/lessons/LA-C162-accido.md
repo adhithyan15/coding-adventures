@@ -13,7 +13,8 @@ gloss: "to happen"
 concept_tag: LA-VERB-ACCIDO
 prerequisites: [LA-C162-olim, LA-C162-antea]
 sounds: []
-roots: []
+roots: [accidere-latin, cadere-latin]
+etymology_hook: "accidō 'to happen' — ad 'towards' + cadō 'to fall': to befall"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C162-antea]
 <!-- hl-knowledge: introduces=[LA-LEX-C162-PAS162-05]; assesses=[] -->
 
 **accidō, accidere** — "to happen". **Quid accidit?** — "What happened?" Its perfect is spelled like its present in this form: **accidit**. It is **ad** + **cadō**, "to fall towards", the source of English *accident*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**accidō** is *ad*, "towards", with *cadō*, "to fall" (Lewis & Short), its a weakened to i: to fall towards, to befall. It is a different word from *accīdō*, "to cut into", built on *caedō*, "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:6a344be1b2e32ebe",
+  "lessonIds": [
+    "IT-C326-drago",
+    "IT-C326-strega",
+    "IT-C326-fata",
+    "IT-C326-mago",
+    "IT-C326-tesoro"
+  ],
+  "tex": "italian/book/chapters/ch326-draghi-e-streghe.tex"
+}

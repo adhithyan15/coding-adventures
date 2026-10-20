@@ -26,7 +26,7 @@ maiṅ letā hūṅ — I take (man speaking) maiṅ letī hūṅ — I take (wo
 No stem is too small for the machine. le- plus -tā/-tī plus hūṅ.
 
 The word, taken apart — a verb that lost a consonant.
-lenā goes back to Sanskrit labh-, “to gain, to obtain.” Prakrit softened it to lahaï, then the -h- went too and the vowels fused into a single le. A three-consonant root worn down to one syllable — the erosion that makes a language's commonest words its shortest.
+lenā goes back to Sanskrit labh-, “to gain, to obtain”: CDIAL lists it under labhate, “catches, takes” (CDIAL 10948). Prakrit softened it to lahaï, then the -h- went too and the vowels fused into a single le. A three-consonant root worn down to one syllable — the erosion that makes a language's commonest words its shortest.
 Prakrit then did something tidy: it levelled le- “take” against de- “give” so the pair matched. That is why لینا lenā and denā still rhyme. They are not related; they were made to sound like partners.
 On the standard comparison, labh- matches Greek lambánein, “to take, to seize” — which English borrowed repeatedly without noticing. Syllable is syn- plus lambánein, “letters taken together”; epilepsy is “a seizing upon”; a lemma is something taken as given, which is why an argument with two of them is a dilemma.
 
@@ -111,14 +111,14 @@ Strip the -nā and the stem is pūchh-. It covers both asking a question and ask
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
 From the right edge: پ p, then و (vāʾo) carrying long ū, then چ ch, then ھ, then ن n, then ا long ā.
-Every shape is already earned, and two are the dot-counting pair: پ has three dots below a low scoop, چ three below the taller jīm body. Then ھ aspirates the چ into چھ chh — its job in samajhnā and paṛhnā too.
+Every shape is already earned, and two are the dot-counting pair: پ has three dots below a low scoop, چ three below the taller jīm body. Then the ھ aspirates it, چ + ھ becomes چھ chh — its job in samajhnā and paṛhnā too.
 A written question still ends in the mirrored ؟, closing آپ کا نام کیا ہے؟ at the left-hand end of the line.
 
 Grammar Lens: into the frame.
 maiṅ pūchhtā hūṅ — I ask (man speaking) maiṅ pūchhtī hūṅ — I ask (woman speaking).
 
 The word, taken apart — one root, two roads into Urdu.
-pūchhnā is Sanskrit pṛcchati, “asks,” on the Indo-European root prek-, “to ask.” Latin took it as precārī, “to beg, to pray” — hence English pray, prayer, and precarious, a thing held only as long as someone is willing to be asked. German still asks with it: fragen. English's own inherited cousin, Old English friġnan, died out, so English prays with the related word and asks with an unrelated one.
+pūchhnā is Sanskrit pṛcchati, “asks” (CDIAL 8352), on the Indo-European root prek-, “to ask.” Latin took it as precārī, “to beg, to pray” — hence English pray, prayer, and precarious, a thing held only as long as someone is willing to be asked. German still asks with it: fragen. English's own inherited cousin, Old English friġnan, died out, so English prays with the related word and asks with an unrelated one.
 Here is the part that is Urdu's alone. Persian asks with porsīdan, and porsīdan is the same root, carried west into Iran rather than east into India. Urdu borrowed it back: پرسش pursish is “inquiry, asking after someone's health,” and pursān-e-ḥāl is “one who asks how you are.”
 So pūchhnā came down the inherited road, pursish came in sideways off a Persian ship, and they are cousins. Urdu is the room where the two roads meet, and the wellbeing question آپ کیسے ہیں؟ is what either of them names.
 
@@ -157,7 +157,7 @@ Madad never changes. It is not a verb and never becomes one; karnā carries ever
 You have met karnā's stem before without being told. āp se mil kar khushī huī — the line that closed a first introduction — holds کر kar in the middle doing a different job: “having met.” One little word, two pieces of machinery.
 
 The word, taken apart — a hand held out.
-مدد is Arabic, on the three-consonant root م-د-د (m-d-d), whose verb madda means “to stretch out, to extend.” Help, in Arabic, is something extended toward you — the picture English reaches for when it extends a hand, though English inherited nothing from m-d-d and its own help is unrelated Germanic. Better said plainly than dressed up as a cousin.
+مدد is Arabic, on the three-consonant root م-د-د (m-d-d, Lane), whose verb madda means “to stretch out, to extend.” Help, in Arabic, is something extended toward you — the picture English reaches for when it extends a hand, though English inherited nothing from m-d-d and its own help is unrelated Germanic. Better said plainly than dressed up as a cousin.
 The root pattern is not new. hāfiz sits on ḥ-f-ẓ, “to guard, to preserve.” Three consonants carrying a meaning, vowels poured in around them: that is how Arabic builds words, and now you have two. Madad travelled the same road as khudā — into Persian first, then into Urdu.
 Here is why the join matters more than the word. A borrowed noun cannot be conjugated. With karnā it never has to: the loan stays a frozen noun and native grammar does the work. That is how Urdu took in centuries of Persian and Arabic vocabulary without changing its verb system by one letter.
 

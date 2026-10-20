@@ -4,7 +4,7 @@
   "chapter": 457,
   "title": "La farmacia de guardia",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:33763c0eab2b2e50",
+  "sourceHash": "fnv1a64:f3e4d896efebe2c2",
   "lessons": [
     {
       "id": "ES-C457-medicamento",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c4a31cf889174fb",
+      "sourceHash": "fnv1a64:e3e690eb0bda3be4",
       "notice": null,
       "blocks": [
         {
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5311fb8d70a225df",
+      "sourceHash": "fnv1a64:b98ae649cb6764c2",
       "notice": null,
       "blocks": [
         {
@@ -251,7 +251,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "en- plus cargar, and cargar is the carricare from the lesson on el cargo — to load a cart."
+              "text": "en- plus cargar, and cargar is Latin carricare, met in the lesson on el cargo — to load a cart."
             },
             {
               "kind": "speech",
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9381363e92781765",
+      "sourceHash": "fnv1a64:8634b3b4c2143789",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
               "utterances": [
                 "guardar means ward.",
                 "guerra means war.",
-                "guante means (glove, from the same Frankish want)."
+                "guante means (glove, from Frankish want)."
               ]
             },
             {

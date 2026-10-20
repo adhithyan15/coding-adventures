@@ -44,5 +44,12 @@ binaries. `broker-e2e-host` is a host scripted by markers in its package:
 cargo test -p chief-of-staff-broker-e2e
 ```
 
-The tests are Linux-only: the verified launch (`execveat` on the hashed
-descriptor) exists only there so far.
+The tests run on Linux, macOS and Windows, the platforms with a verified,
+confined broker launch. On macOS they also pin `broker-e2e-seatbelt-shim`
+(D18S P2.7b), a shim fixture whose body is the production shim's.
+
+On Windows (D18S P2.8b-2) the broker runs in its own AppContainer, with its
+keys as handles. The test copies it into a scratch directory under the
+user's temp directory, so it is at its final path and no one else can
+change it, and writes the key files owner-only. Each test has an agent of
+its own, because a broker's container allows one instance at a time.

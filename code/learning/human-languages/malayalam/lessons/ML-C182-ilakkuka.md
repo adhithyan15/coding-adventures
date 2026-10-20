@@ -14,7 +14,8 @@ romanization: "iḷakkuka"
 concept_tag: ML-VERB-ILAKKUKA
 prerequisites: [ML-C181-valikkuka, ML-C181-talluka]
 sounds: []
-roots: []
+roots: [dravidian-ilaku-move]
+etymology_hook: "iḷakkuka: native Dravidian, one word with Tamil iḷaku and Kannada eḷadu (DEDR 509)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C181-talluka]
 <!-- hl-knowledge: introduces=[ML-LEX-C182-KRIYA182-01]; assesses=[] -->
 
 **ഇളക്കുക** — *iḷakkuka* — "to stir".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇളക്കുക** (*iḷakkuka*) is native Dravidian, one word with Tamil *iḷaku* and Kannada *eḷadu* (DEDR 509). Its first sense is "to move, to shake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

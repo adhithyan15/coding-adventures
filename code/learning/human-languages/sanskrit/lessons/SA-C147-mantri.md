@@ -14,7 +14,8 @@ romanization: "mantrī"
 concept_tag: SA-PPL147-MANTRI
 prerequisites: [SA-C147-sevakah, SA-C147-rajni]
 sounds: []
-roots: []
+roots: [sanskrit-mantrin]
+etymology_hook: "mantrin 'counsellor' ← mantra 'counsel' (CDIAL 9838) ← √man 'think', cf. English mean (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C147-rajni]
 <!-- hl-knowledge: introduces=[SA-LEX-C147-PPL147-04]; assesses=[] -->
 
 **मन्त्री** — *mantrī* — "a minister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mantrī* is the nominative of *mantrin* "wise; a counsellor", built on *mantra* "counsel, sacred text" (CDIAL 9838). *mantra* comes from the root √man "think", which MW sets beside Latin *monere* "warn" and English *mean*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

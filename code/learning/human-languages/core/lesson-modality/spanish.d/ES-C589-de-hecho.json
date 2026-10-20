@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C589-de-hecho",
+    "language": "spanish",
+    "chapter": 589,
+    "sequence": 19160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e56f9d81621eb9a9"
+  },
+  "findings": []
+}

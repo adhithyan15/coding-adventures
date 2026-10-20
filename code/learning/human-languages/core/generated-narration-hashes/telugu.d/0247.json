@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 247,
-  "sourceHash": "fnv1a64:f95dacf445b9a72c",
+  "sourceHash": "fnv1a64:b072af1055c0e082",
   "lessonIds": [
     "TE-C247-gillu",
     "TE-C247-goku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch247.txt",
   "json": "telugu/narration/ch247.json",
-  "textHash": "fnv1a64:94916ee290d3dd9c",
-  "jsonHash": "fnv1a64:dd195af47bfe3240",
+  "textHash": "fnv1a64:e007a068b2720969",
+  "jsonHash": "fnv1a64:dd39e6d8a879a12e",
   "findings": []
 }

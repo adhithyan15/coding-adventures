@@ -1,0 +1,19 @@
+{
+  "chapter": 587,
+  "title": "Está claro",
+  "label": "ch:es-esta-claro",
+  "canDo": "I can say that something is obvious, check it and say how sure I am.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C587-aparentemente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 587: I can say that something is obvious, check it and say how sure I am.",
+    "assesses": [
+      "ES-LEX-C587-EVIDENTE-03",
+      "ES-LEX-C587-EVIDENTE-04",
+      "ES-LEX-C587-EVIDENTE-05"
+    ]
+  }
+}

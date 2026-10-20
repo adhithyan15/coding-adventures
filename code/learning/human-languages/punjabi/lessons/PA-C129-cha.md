@@ -14,7 +14,8 @@ romanization: "chā̃"
 concept_tag: PA-THINGS129-CHA
 prerequisites: [PA-C129-hanera, PA-C129-canan]
 sounds: []
-roots: []
+roots: [sanskrit-chaya]
+etymology_hook: "chāṁ ← Sanskrit chāyā 'shade, shadow, reflection', a tadbhava (CDIAL 5027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C129-canan]
 <!-- hl-knowledge: introduces=[PA-LEX-C129-THINGS129-03]; assesses=[] -->
 
 **ਛਾਂ** — *chā̃* — "shade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛਾਂ** (*chāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chāyā*, "shade, shadow, reflection" (CDIAL 5027).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

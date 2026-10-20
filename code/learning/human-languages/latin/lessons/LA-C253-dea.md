@@ -13,7 +13,8 @@ gloss: "a goddess"
 concept_tag: LA-RES253-DEA
 prerequisites: [LA-C253-sacrificium, LA-C253-ara]
 sounds: []
-roots: []
+roots: [dea-latin, deus-latin]
+etymology_hook: "dea 'goddess' — the feminine of deus 'god'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C253-ara]
 <!-- hl-knowledge: introduces=[LA-LEX-C253-RES253-05]; assesses=[] -->
 
 **dea, deae** — "a goddess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dea** is the feminine of *deus*, "a god" (Lewis & Short); Old Latin wrote it *deiva* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

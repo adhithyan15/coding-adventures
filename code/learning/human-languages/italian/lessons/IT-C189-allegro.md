@@ -13,7 +13,8 @@ gloss: "cheerful"
 concept_tag: IT-QUAL189-ALLEGRO
 prerequisites: [IT-C188-sebbene, IT-C188-nonostante]
 sounds: []
-roots: []
+roots: [alacer-latin]
+etymology_hook: "allegro ← Latin alacer 'lively, brisk' — the music marking is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C188-nonostante]
 <!-- hl-knowledge: introduces=[IT-LEX-C189-QUAL189-01]; assesses=[] -->
 
 **allegro** — "cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allegro** goes back to Latin *alacer*, "lively, brisk" (Lewis & Short), through a Vulgar Latin form *alecrus*. EtymDB 2.1 calls it borrowed from French *allègre*, which this book could not confirm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

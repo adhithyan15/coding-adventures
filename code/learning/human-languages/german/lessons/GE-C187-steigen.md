@@ -13,7 +13,8 @@ gloss: "to climb, to rise"
 concept_tag: GE-VERB-STEIGEN
 prerequisites: [GE-C187-stecken, GE-C187-stehlen]
 sounds: []
-roots: []
+roots: [germanic-stigana]
+etymology_hook: "steigen ← Old High German stīgan 'to climb' — English stile and stirrup share the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C187-stehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C187-VERB187-05]; assesses=[] -->
 
 **steigen** — "to climb, to rise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**steigen** ← Middle High German *stīgen* ← Old High German *stīgan*, "to climb" — inherited. (EtymDB 2.1) English *stile* and *stirrup*, a climbing rope, share the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

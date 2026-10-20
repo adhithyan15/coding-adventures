@@ -14,7 +14,8 @@ romanization: "milānā"
 concept_tag: UR-VERB-MILANA
 prerequisites: [UR-C180-jhagarna, UR-C180-manana]
 sounds: []
-roots: []
+roots: [sanskrit-milati]
+etymology_hook: "milānā: the causing form of milnā 'to meet', from Sanskrit milati 'meets' (CDIAL 10133)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C180-manana]
 <!-- hl-knowledge: introduces=[UR-LEX-C180-ACT180-04]; assesses=[] -->
 
 **ملانا** — *milānā* — "to mix; to introduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملانا** (*milānā*) is the causing form of *milnā*, "to meet": to mix or introduce is to make things meet. CDIAL lists *milnā* under Sanskrit *milati*, "meets" (CDIAL 10133).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 208,
-  "sourceHash": "fnv1a64:14276c6272a02dc7",
+  "sourceHash": "fnv1a64:fb3312b7612af92f",
   "lessonIds": [
     "PT-C208-desistir",
     "PT-C208-trocar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch208.txt",
   "json": "portuguese/narration/ch208.json",
-  "textHash": "fnv1a64:3deeccf0ae74eab3",
-  "jsonHash": "fnv1a64:c2dcbf0105b17e60",
+  "textHash": "fnv1a64:babb0fadad0582c7",
+  "jsonHash": "fnv1a64:9c74fb91d1a4bd11",
   "findings": []
 }

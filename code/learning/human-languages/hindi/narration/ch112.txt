@@ -11,7 +11,10 @@ Before the new one: say the Hindi for I could not hear it, then the Hindi for pl
 
 You'll want to know: सही.
 सही (sahī) — "right, correct".
-सही (sahī) जवाब — "the right answer". Said alone, सही (sahī)! agrees: "right!".
+सही (sahī) दाम — "the right price". Said alone, सही (sahī)! agrees: "right!".
+
+The word, taken apart.
+सही (sahī) is a loan from Arabic ṣaḥīḥ, "sound, correct", which reached Hindi through Persian. Its Arabic root is ṣ-ḥ-ḥ (Lane).
 
 What you've built.
 A word for getting it right.
@@ -43,6 +46,9 @@ You'll want to know: ग़लत.
 ग़लत (ġalat) — "wrong".
 The opposite of सही (sahī). यह ग़लत (ġalat) है — "this is wrong".
 
+The word, taken apart.
+ग़लत (ġalat) is a loan from Arabic ghalaṭ, "an error", which reached Hindi through Persian. Its Arabic root is gh-l-ṭ (Lane).
+
 What you've built.
 Right and wrong, as a pair.
 
@@ -72,6 +78,9 @@ Before the new one: say the Hindi for right, then the Hindi for wrong.
 You'll want to know: पक्का.
 पक्का (pakkā) — "sure, certain", and of a thing, "firm, ripe".
 पक्का (pakkā)? — "for sure?". पक्का (pakkā)! — "definitely!".
+
+The word, taken apart.
+पक्का (pakkā) goes back to Sanskrit pakva, "cooked, ripe" (CDIAL 7621). CDIAL marks the Hindi form as taken over from Punjabi; "firm, sure" grew out of "ripe, mature".
 
 What you've built.
 A question and an answer in one word.
@@ -103,6 +112,9 @@ You'll want to know: सच में?
 सच में? (sac meṁ?) — "really?", literally "in truth?".
 सच is the "true" you know, with में, "in".
 
+The word, taken apart.
+सच में? (sac meṁ?) is sac, "truth", with meṁ, "in". sac comes from Sanskrit satya, "true" (CDIAL 13112), and meṁ from madhye, "in, among" (CDIAL 9804).
+
 What you've built.
 A way to show surprise.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for sure, then the Hindi for really.
 You'll want to know: अरे.
 अरे (are) — "oh!", "hey!", a cry of surprise.
 अरे (are), सच में? (sac meṁ?) — "oh, really?". It is informal: use it with friends.
+
+The word, taken apart.
+अरे (are) is inherited from Sanskrit are, "a call to someone", and has come down with almost no change (CDIAL 621). Sanskrit already had it in its oldest prose.
 
 What you've built.
 Right, wrong, sure, really, oh: five reactions.

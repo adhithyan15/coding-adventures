@@ -14,7 +14,8 @@ romanization: "puruṣaḥ"
 concept_tag: SA-PPL236-PURUSAH
 prerequisites: [SA-C236-kumari, SA-C236-yuvatih]
 sounds: []
-roots: []
+roots: [sanskrit-purusha]
+etymology_hook: "puruṣa 'man', probably from √pṝ 'fill' and connected with puru 'much' (MW; CDIAL 8289)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C236-yuvatih]
 <!-- hl-knowledge: introduces=[SA-LEX-C236-PPL236-05]; assesses=[] -->
 
 **पुरुषः** — *puruṣaḥ* — "a person, a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*puruṣa* is a Rigvedic word for "man, male" (CDIAL 8289). MW derives it, probably, from √pṝ, "to fill", and connects it with *puru*, "much"; the derivation is not settled. In philosophy it names the conscious self.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

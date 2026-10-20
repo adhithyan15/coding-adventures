@@ -14,7 +14,8 @@ romanization: "akṣaraṁ"
 concept_tag: ML-JOLI335-AKSARAM
 prerequisites: [ML-C335-kanakku, ML-C335-grhapatham]
 sounds: []
-roots: []
+roots: [sanskrit-akshara]
+etymology_hook: "akṣaraṁ ← Sanskrit akṣara 'indestructible; syllable', a tatsama (CDIAL 38)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C335-grhapatham]
 <!-- hl-knowledge: introduces=[ML-LEX-C335-JOLI335-05]; assesses=[] -->
 
 **അക്ഷരം** — *akṣaraṁ* — "a letter (of the alphabet)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അക്ഷരം** (*akṣaraṁ*) ← Sanskrit *akṣara*, "indestructible; syllable", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 38). A syllable was "the imperishable", and became a letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

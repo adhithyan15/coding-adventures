@@ -11,7 +11,8 @@ romanization: "ennāl"
 concept_tag: ML-WORD-BUT
 prerequisites: [ML-C64-only, ML-C62-winnowing-tray]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "ennāl: native Dravidian, a form of the verb 'to say': 'if one says so' (DEDR 868)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Built out of the saying-piece *enn-*, the one behind reported speech, and a tail
 English arrives at almost the same phrase from the other end with *that said*, which is a small comfort — the shape is already familiar even though the pieces are not.
 
 So the word grants the previous sentence before it turns on it, which is a gentler move than a flat contradiction.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എന്നാൽ** (*ennāl*) is native Dravidian, a conditional form of the verb "to say, to sound" (DEDR 868, with Tamil *eṉ*): roughly "if one says that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

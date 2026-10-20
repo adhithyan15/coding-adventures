@@ -14,7 +14,8 @@ romanization: "pāmpu"
 concept_tag: TA-THINGS130-PAMPU
 prerequisites: [TA-C129-man2, TA-C130-nari]
 sounds: []
-roots: []
+roots: [dravidian-paambu-snake]
+etymology_hook: "பாம்பு — native Dravidian (DEDR 4085); Malayalam pāmpu, Kannada pāvu, Telugu pāmu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C130-nari]
 <!-- hl-knowledge: introduces=[TA-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **பாம்பு** — *pāmpu* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாம்பு** (*pāmpu*) is native Dravidian. DEDR 4085 lists Malayalam *pāmpu*, Kannada *pāvu* and Telugu *pāmu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

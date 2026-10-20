@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 624,
+  "sourceHash": "fnv1a64:1661e1ad19d25978",
+  "lessonIds": [
+    "ES-C624-autorizar",
+    "ES-C624-autorizacion",
+    "ES-C624-tramitar",
+    "ES-C624-certificado",
+    "ES-C624-oficial"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch624.txt",
+  "json": "spanish/narration/ch624.json",
+  "textHash": "fnv1a64:db25c88731a5dfe9",
+  "jsonHash": "fnv1a64:b6f2ee93d11a3dc2",
+  "findings": []
+}

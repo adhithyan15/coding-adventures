@@ -14,7 +14,8 @@ romanization: "chul"
 concept_tag: BN-BODY42-CHUL
 prerequisites: [BN-C27-ponchom, BN-C42-hat]
 sounds: []
-roots: []
+roots: [sanskrit-cuda-hair]
+etymology_hook: "chul ← Sanskrit cūḍa 'topknot', which CDIAL takes from Dravidian, or perhaps Munda (CDIAL 4883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C42-hat]
 <!-- hl-knowledge: introduces=[BN-LEX-C42-BODY42-02]; assesses=[] -->
 
 **চুল** — *chul* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুল** (*chul*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cūḍa*, "topknot on the head" (CDIAL 4883). CDIAL takes *cūḍa* from Dravidian, while noting that it may instead belong with a group of words for "hair" traced to Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

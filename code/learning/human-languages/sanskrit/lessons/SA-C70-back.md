@@ -14,7 +14,8 @@ romanization: "pṛṣṭham"
 concept_tag: SA-BODY-BACK
 prerequisites: [SA-C70-nail, SA-C70-knee]
 sounds: []
-roots: []
+roots: [sanskrit-prshtha]
+etymology_hook: "pṛṣṭha 'back', probably pra-stha 'standing forth', the prominent part (MW; CDIAL 8371)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C70-knee]
 <!-- hl-knowledge: introduces=[SA-LEX-C70-BODY2-03]; assesses=[] -->
 
 **पृष्ठम्** (*pṛṣṭham*) — "the back". The same word names the back of a page.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *pṛṣṭha* as probably *pra-stha*, "standing forth": the back is the
+prominent part of an animal (CDIAL 8371).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prasāda"
 concept_tag: KA-VASTU262-PRASADA
 prerequisites: [KA-C262-kunkuma, KA-C262-holige]
 sounds: []
-roots: []
+roots: [sanskrit-prasada]
+etymology_hook: "prasāda ← Sanskrit prasāda 'kindness, favour', a tatsama (CDIAL 8831)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C262-holige]
 <!-- hl-knowledge: introduces=[KA-LEX-C262-VASTU262-04]; assesses=[] -->
 
 **ಪ್ರಸಾದ** — *prasāda* — "food offered to a god and then shared".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಸಾದ** (*prasāda*) is Sanskrit *prasāda*, "kindness, favour", taken over whole as a learned loan, a tatsama (CDIAL 8831).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

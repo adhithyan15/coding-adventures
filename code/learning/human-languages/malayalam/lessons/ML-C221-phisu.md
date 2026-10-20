@@ -14,7 +14,8 @@ romanization: "phīsŭ"
 concept_tag: ML-JOLI221-PHISU
 prerequisites: [ML-C221-vakku, ML-C221-vakyam]
 sounds: []
-roots: []
+roots: [english-fees]
+etymology_hook: "phīsŭ ← English fees"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C221-vakyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C221-JOLI221-03]; assesses=[] -->
 
 **ഫീസ്** — *phīsŭ* — "fees".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫീസ്** (*phīsŭ*) ← English *fees*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

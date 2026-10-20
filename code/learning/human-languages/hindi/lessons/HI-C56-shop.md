@@ -14,7 +14,8 @@ romanization: "dukān"
 concept_tag: HI-NOUN-SHOP
 prerequisites: [HI-C56-market, HI-C54-bird, HI-C55-cloud]
 sounds: []
-roots: []
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian (Lane, root d-k-n)"
 duration:
   max_seconds: 210
 requires:

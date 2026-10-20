@@ -13,7 +13,8 @@ gloss: "to invite"
 concept_tag: FR-VERB-INVITER
 prerequisites: [FR-C175-saluer, FR-C175-remercier]
 sounds: []
-roots: []
+roots: [invitare-latin]
+etymology_hook: "inviter ← Latin invitare 'to invite' — English invite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C175-remercier]
 <!-- hl-knowledge: introduces=[FR-LEX-C175-VERBES175-04]; assesses=[] -->
 
 **inviter** — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inviter** ← Latin *invitare*, "to invite" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

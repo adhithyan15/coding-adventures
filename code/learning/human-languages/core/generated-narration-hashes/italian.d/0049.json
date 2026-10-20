@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 49,
-  "sourceHash": "fnv1a64:77c55c3691b62306",
+  "sourceHash": "fnv1a64:7ab906757402bfae",
   "lessonIds": [
     "IT-C49-correre",
     "IT-C49-sentire",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch49.txt",
   "json": "italian/narration/ch49.json",
-  "textHash": "fnv1a64:2fedac26ea6ddab1",
-  "jsonHash": "fnv1a64:44559bbaf8a7e1a1",
+  "textHash": "fnv1a64:c4cdf350be60293a",
+  "jsonHash": "fnv1a64:dd74fa53f3d2068f",
   "findings": []
 }

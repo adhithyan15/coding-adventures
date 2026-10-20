@@ -13,7 +13,8 @@ gloss: "sweet"
 concept_tag: GE-ADJ3-SUESS
 prerequisites: [GE-C91-reich, GE-C91-haesslich]
 sounds: []
-roots: []
+roots: [germanic-swotuz]
+etymology_hook: "süß ← Old High German suozi ← Proto-Germanic *swōtuz — the same word as English sweet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C91-haesslich]
 <!-- hl-knowledge: introduces=[GE-LEX-C91-ADJ3-05]; assesses=[] -->
 
 **süß** — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**süß** ← Old High German *suozi* — inherited. EtymDB 2.1 traces *suozi* and English *sweet* to Proto-Germanic *\*swōtuz*: one word, with German *ß* where English kept *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:3fb147fcfce5d544",
+  "lessonIds": [
+    "IT-C331-ingredienti",
+    "IT-C331-dose",
+    "IT-C331-pizzico",
+    "IT-C331-cucchiaino",
+    "IT-C331-ciotola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch331.txt",
+  "json": "italian/narration/ch331.json",
+  "textHash": "fnv1a64:8cab21a4bcc392fb",
+  "jsonHash": "fnv1a64:b9fcefdf42b903fa",
+  "findings": []
+}

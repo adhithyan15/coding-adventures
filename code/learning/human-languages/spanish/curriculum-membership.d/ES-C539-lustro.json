@@ -1,0 +1,11 @@
+{
+  "id": "ES-C539-lustro",
+  "pathSegment": "ES-PATH-539-ANYO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-539-ANYO",
+      "order": 2
+    }
+  ]
+}

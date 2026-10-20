@@ -13,7 +13,8 @@ gloss: "to push"
 concept_tag: IT-VERB-SPINGERE
 prerequisites: [IT-C239-restituire, IT-C239-riconoscere]
 sounds: []
-roots: []
+roots: [pangere-latin]
+etymology_hook: "spingere ← Vulgar Latin expingere, ex- + pangere 'to drive in'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C239-riconoscere]
 <!-- hl-knowledge: introduces=[IT-LEX-C240-VERBI240-01]; assesses=[] -->
 
 **spingere** — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spingere** ← Vulgar Latin *expingere*, from *ex-* and *pangere*, "to fix, to drive in" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

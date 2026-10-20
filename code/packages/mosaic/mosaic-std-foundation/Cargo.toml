@@ -2,7 +2,7 @@
 
 [package]
 name = "mosaic-std-foundation-smoke"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Acceptance harness for the Mosaic standard foundation package"
 publish = false

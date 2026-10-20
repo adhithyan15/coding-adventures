@@ -14,7 +14,8 @@ romanization: "fil"
 concept_tag: FA-ANIMALS56-FIL
 prerequisites: [FA-C56-mush, FA-C56-bebar]
 sounds: []
-roots: []
+roots: [persian-pil]
+etymology_hook: "fil ← Arabic fīl (root f-y-l, Lane) ← Middle Persian pīl (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C56-bebar]
 <!-- hl-knowledge: introduces=[FA-LEX-C56-ANIMALS56-03]; assesses=[] -->
 
 **فیل** — *fil* — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fil* has made a round trip. Middle Persian had *pīl*, "elephant" (EtymDB), usually traced to Akkadian *pīru*. Arabic, with no *p*, took it as *fīl* (root *f-y-l*, Lane), and Persian took the Arabic form back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

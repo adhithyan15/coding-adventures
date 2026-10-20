@@ -13,7 +13,8 @@ gloss: "private"
 concept_tag: LA-QUAL182-PRIVATUS
 prerequisites: [LA-C181-longinquus, LA-C182-publicus]
 sounds: []
-roots: []
+roots: [privatus-latin, privus-latin]
+etymology_hook: "prīvātus 'private' — the participle of prīvō 'to set apart', from prīvus 'one's own'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C182-publicus]
 <!-- hl-knowledge: introduces=[LA-LEX-C182-QUAL182-02]; assesses=[] -->
 
 **prīvātus, prīvāta, prīvātum** — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prīvātus** is the past participle of *prīvō*, "to set apart, to deprive" (Lewis & Short), from *prīvus*, "single, one's own": set apart from the public.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

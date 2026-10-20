@@ -14,7 +14,8 @@ romanization: "jawda"
 concept_tag: AR-SHAY249-JAWDA
 prerequisites: [AR-C248-musalsal, AR-C249-kammiyya]
 sounds: []
-roots: []
+roots: [j-w-d]
+etymology_hook: "jawda: built on the root j-w-d, 'to be good, to be excellent' (Lane); jawda is goodness, quality"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C249-kammiyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C249-SHAY249-02]; assesses=[] -->
 
 **جودة** — *jawda* — "quality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جودة** (*jawda*) is built on the native Arabic root *j-w-d*, "to be good, to be excellent" (Lane). *Jawda* is goodness, quality.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Cambio di programma",
+  "label": "ch:it-cambio-di-programma",
+  "canDo": "I can change a plan: cancel it, put it off, say it is provisional or final and fix a date.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C375-stabilire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can change a plan: cancel it, put it off, say it is provisional or final and fix a date.",
+    "assesses": [
+      "IT-LEX-C375-PROGRAMMA-03",
+      "IT-LEX-C375-PROGRAMMA-04",
+      "IT-LEX-C375-PROGRAMMA-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "pājāmā"
 concept_tag: UR-THINGS121-PAJAMA
 prerequisites: [UR-C121-svetar, UR-C121-jaiket]
 sounds: []
-roots: []
+roots: [persian-payjama]
+etymology_hook: "pājāmā: usually traced to Persian pāy-jāma 'leg garment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C121-jaiket]
 <!-- hl-knowledge: introduces=[UR-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **پاجامہ** — *pājāmā* — "pyjamas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پاجامہ** (*pājāmā*) is a loan, usually traced to Persian *pāy-jāma*, "leg garment". It is built from *pāy*, "leg", and *jāma*, "garment". English took the word back as *pyjamas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

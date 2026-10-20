@@ -17,6 +17,7 @@ The letters in this word.
 
 The word, taken apart.
 പേര് (pēr, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Telugu pēru, a cousin of Kannada hesaru (p becomes h). Being Tamil's closest sister, Malayalam keeps the native word, not Sanskrit nāma (Hindi nām, English name).
+DEDR 4410 lists Malayalam pēr with Tamil peyar, Kannada pesar(u) and Telugu pēru.
 
 Guided Practice.
 [pause 1 second]
@@ -117,6 +118,7 @@ The letters in this word.
 
 The word, taken apart.
 എന്റെ (enṟe) means "my." It belongs to Malayalam's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for "I" in its own lesson; today you only need enṟe.
+Its en- is the oblique stem that DEDR 5160 gives for the first person, as in Tamil eṉ-.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -220,6 +222,7 @@ The letters in this word.
 The word, taken apart.
 ആണ് (āṇŭ, "is") is Malayalam's copula — a real "to be" word, grown from the verb ആക (āka, "to be, to become").
 Here's the point: Tamil, Kannada, and Telugu all use the zero copula — no word for "is." Yet Malayalam, though it is Tamil's closest sister, grammaticalised a "to be" verb. So where Tamil says only eṉ peyar Arun, Malayalam adds āṇŭ: enṟe pēr Arun āṇŭ.
+DEDR 333 lists that verb with Tamil ā, Kannada āgu and Telugu agu. DEDR 333 compares Sanskrit ām.
 
 Grammar Lens: the verb comes last.
 Like Hindi's hai (and unlike Tamil), āṇŭ closes the sentence — Malayalam is subject–object–verb: "my name Arun is." (Malayalis sometimes drop āṇŭ in fast speech, but the full form keeps it.)
@@ -231,7 +234,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the contrast — Tamil eṉ peyar Arun (no verb) vs. Malayalam enṟe pēr Arun āṇŭ]
 [pause 8 seconds for the answer]
-[your turn — recall: say athe, then say illa]
+[your turn — recall: say ate, then say illa]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: ശരി]
 
@@ -323,6 +326,7 @@ The phrase, taken apart.
 enṟe (my) + pēr (name) + your name + āṇŭ (is).
 എന്റെ പേര് … ആണ് (enṟe pēr … āṇŭ) = "my name … is" = "my name is…"
 Enṟe pēr Arun āṇŭ. becomes "My name is Arun."
+All three words are native Dravidian: enṟe (DEDR 5160), pēr (DEDR 4410) and āṇŭ (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 Grammar Lens: verb last.
 Malayalam is subject–object–verb, so āṇŭ ("is") sits at the end — "my name Arun is," like Hindi hai and unlike Tamil's verbless eṉ peyar Arun.
@@ -354,6 +358,7 @@ The letters in this word.
 
 The word, taken apart.
 നീ (nī, familiar "you") from Proto-Dravidian nīn — the same native root as Tamil nī, Kannada nīnu, Telugu nuvvu. നിങ്ങൾ (niṅṅaḷ) is the respectful/plural "you" — nī + a plural ending, the exact cousin of Tamil nīṅgaḷ.
+DEDR 3684 lists Tamil nī, Kannada nīn(u) and Telugu nīvu; DEDR 3688 gives the plural, Malayalam niṅṅaḷ with Tamil nīṅkaḷ.
 
 Grammar Lens: respect by the plural.
 nī (familiar) vs. niṅṅaḷ (respectful, literally plural) — the family's shared politeness-by-plural, same idea as French vous. For a first meeting, niṅṅaḷ.
@@ -457,6 +462,7 @@ The letters in this word.
 
 The word, taken apart.
 എന്ത് (entŭ, "what") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Telugu ēmiṭi, heading Malayalam's question family: entŭ (what), ār (who), eviṭe (where).
+DEDR 5151 gathers that question stem: Malayalam ētu, e, Tamil yā, ētu.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -486,6 +492,7 @@ The phrase, taken apart.
 എന്താണ് (entāṇŭ) = entŭ (what) + āṇŭ (is), fused into one.
 നിന്റെ പേര് എന്താണ്? (ninṟe pēr entāṇŭ?) = literally "your name what is?"
 Unlike the Tamil question (which had no verb), Malayalam carries its copula āṇŭ right inside the question-word entāṇŭ.
+Every part is native Dravidian: nī (DEDR 3684), pēr (DEDR 4410), entŭ (DEDR 5151) and āṇŭ (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 Grammar Lens: answer, and the respectful version.
 Answer with the sentence you built: Enṟe pēr Arun āṇŭ. The respectful "your" is niṅṅaḷuṭe: niṅṅaḷuṭe pēr entāṇŭ?
@@ -523,6 +530,7 @@ Look, point, and say the whole word once. The next two-minute lesson will let yo
 
 The word, taken apart.
 സന്തോഷം (santōṣaṁ, "joy") is Sanskrit — the same loan Kannada and Telugu use. So even Malayalam, the great keeper of native words (recall nandi for "thanks" in Chapter 1), reaches for Sanskrit here. The loanwords spread selectively, word by word — which is exactly what these cognate notes trace: native for "name" and "thanks," Sanskrit for "pleased."
+Sanskrit saṁtōṣa, "satisfaction", is CDIAL 12895.
 
 Guided Practice.
 [pause 1 second]
@@ -548,6 +556,9 @@ You'll want to know: പുലി.
 Say it: puli.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ു (u), and writes it on its own.
+
+The word, taken apart.
+പുലി (puli) is native Dravidian, one word with Tamil puli, Kannada puli and Telugu puli (DEDR 4307).
 
 Guided Practice.
 [pause 1 second]
@@ -609,6 +620,9 @@ You'll want to know: പെൺകുട്ടി.
 Say it: peṇkuṭṭi.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ൺ (ṇ), and writes it on its own.
+
+The word, taken apart.
+പെൺകുട്ടി (peṇkuṭṭi) is native Dravidian, a compound of two old words: the word for "female" (DEDR 4395, with Tamil peṇ and Kannada peṇ) and the word for "the young of any creature, a child" (DEDR 1670, with Tamil kuṭṭi). DEDR 4395 compares Sanskrit paṇḍa.
 
 Guided Practice.
 [pause 1 second]

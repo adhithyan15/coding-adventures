@@ -11,7 +11,8 @@ romanization: "cāppiṭuṅkaḷ"
 concept_tag: TA-WELCOME-EAT
 prerequisites: [TA-C98-gift, TA-C98-comein]
 sounds: []
-roots: []
+roots: [dravidian-idu-put]
+etymology_hook: "சாப்பிடுங்கள் — sāppu 'food' + iḍu 'to put' (DEDR 442) + the polite ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C98-comein]
 **சாப்பிடுங்கள்** (*cāppiṭuṅkaḷ*) — "please eat".
 
 A host says it, and says it again. **சாப்பிடு** is Tamil's everyday verb for eating.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சாப்பிடுங்கள்** (*cāppiṭuṅkaḷ*) is *sāppiḍu*, "to eat", with the polite ending. As an earlier lesson showed, *sāppiḍu* is *sāppu*, "food", with *iḍu*, "to put" (DEDR 442).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

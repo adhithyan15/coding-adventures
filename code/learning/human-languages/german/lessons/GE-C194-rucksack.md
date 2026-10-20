@@ -13,7 +13,8 @@ gloss: "a rucksack"
 concept_tag: GE-THING194-RUCKSACK
 prerequisites: [GE-C193-jugendherberge, GE-C193-gepaeck]
 sounds: []
-roots: []
+roots: [germanic-sakkuz]
+etymology_hook: "Rucksack — a dialect word for 'back' + Sack 'bag': English borrowed the German word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C193-gepaeck]
 <!-- hl-knowledge: introduces=[GE-LEX-C194-THING194-01]; assesses=[] -->
 
 **der Rucksack** — "a rucksack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rucksack** is an Alpine dialect form of the word for "back" + the word for "sack", Old High German *sac* (EtymDB 2.1). English borrowed *rucksack* from German.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

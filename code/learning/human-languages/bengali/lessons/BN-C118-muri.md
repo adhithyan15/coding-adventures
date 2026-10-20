@@ -15,6 +15,7 @@ concept_tag: BN-THINGS118-MURI
 prerequisites: [BN-C118-payes, BN-C118-luchi]
 sounds: []
 roots: []
+etymology_hook: "muṛi: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C118-luchi]
 <!-- hl-knowledge: introduces=[BN-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **মুড়ি** — *muṛi* — "puffed rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **মুড়ি** (*muṛi*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "parched" and "puffed" finds nothing of this shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

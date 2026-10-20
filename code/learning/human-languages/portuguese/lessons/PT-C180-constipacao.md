@@ -13,7 +13,8 @@ gloss: "a cold"
 concept_tag: PT-SAUDE180-CONSTIPACAO
 prerequisites: [PT-C180-ferida, PT-C180-cicatriz]
 sounds: []
-roots: []
+roots: [stipare-latin]
+etymology_hook: "constipação ← Latin constipatio 'a crowding together': a blocked-up head"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C180-cicatriz]
 <!-- hl-knowledge: introduces=[PT-LEX-C180-SAUDE180-05]; assesses=[] -->
 
 **a constipação** — "a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**constipação** ← Latin *constipatio, constipationis*, "a crowding together" (EtymDB 2.1) — a learned borrowing from Latin. A cold is a head crowded and blocked.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-JEVHA
 prerequisites: [MR-R35-inside]
 sounds: [ja-dza, halant-conjunct, matra-aa]
 roots: []
-etymology_hook: "जेव्हा and तेव्हा are built on the ancient relative stem ज- (ya-) and the demonstrative stem त- (ta-) — the same pair that English shows in when/then and Latin in cum/tum; Marathi keeps the two halves visible, so the shape of the sentence tells you which is which"
+etymology_hook: "जेव्हा and तेव्हा rest on the relative stem ज- (Sanskrit ya-) and the demonstrative त- (ta-)"
 duration:
   max_seconds: 220
 requires:
@@ -54,7 +54,7 @@ with **तेव्हा** in the second half, and the second word is not optio
 
 You have met this machinery before without being told its name. **जेव्हा** is
 built on the relative stem **ज-**, **तेव्हा** on the demonstrative **त-**, and
-the same two stems sit under **जो/तो**. English keeps the pair in *when … then*
+the same two stems sit under Marathi's relative and pointing pronouns. English keeps the pair in *when … then*
 and drops the *then*; Latin kept both in *cum … tum*. Marathi keeps both, always.
 
 Because the frame is spoken in the order the events happen, it is also the

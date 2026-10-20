@@ -13,7 +13,8 @@ gloss: "war"
 concept_tag: LA-RES271-BELLUM
 prerequisites: [LA-C271-patria, LA-C271-hostis]
 sounds: []
-roots: []
+roots: [bellum-latin]
+etymology_hook: "bellum 'war' — from older duellum; deeper origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C271-hostis]
 <!-- hl-knowledge: introduces=[LA-LEX-C271-RES271-05]; assesses=[] -->
 
 **bellum, bellī** — "war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bellum** comes from older *duellum* (Lewis & Short); Latin turned an initial dw into b, as in *bis*, "two times", from older *duis*. The deeper origin of *duellum* is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

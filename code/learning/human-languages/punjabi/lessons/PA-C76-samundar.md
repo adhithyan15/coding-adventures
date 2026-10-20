@@ -14,7 +14,8 @@ romanization: "samundar"
 concept_tag: PA-NATURE76-SAMUNDAR
 prerequisites: [PA-C75-suraj, PA-C75-chann]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "samundar ← Sanskrit samudra 'sea', a semi-tatsama (CDIAL 13236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C75-chann]
 <!-- hl-knowledge: introduces=[PA-LEX-C76-NATURE76-01]; assesses=[] -->
 
 **ਸਮੁੰਦਰ** — *samundar* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਮੁੰਦਰ** (*samundar*) is a semi-tatsama: Sanskrit *samudra*, "sea", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 13236). Punjabi adds an *n* and breaks up the *dr*; CDIAL lists no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

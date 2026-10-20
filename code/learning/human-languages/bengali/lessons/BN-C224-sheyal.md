@@ -14,7 +14,8 @@ romanization: "sheyāl"
 concept_tag: BN-JINIS224-SHEYAL
 prerequisites: [BN-C224-jontu, BN-C224-chita]
 sounds: []
-roots: []
+roots: [sanskrit-shrgala]
+etymology_hook: "sheyāl ← Sanskrit śṛgāla 'jackal', a tadbhava (CDIAL 12578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C224-chita]
 <!-- hl-knowledge: introduces=[BN-LEX-C224-JINIS224-04]; assesses=[] -->
 
 **শেয়াল** — *sheyāl* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শেয়াল** (*sheyāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛgāla*, "jackal" (CDIAL 12578). CDIAL lists Bengali *seyāl*, "jackal"; in Bengali it is the word for "fox" as well.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

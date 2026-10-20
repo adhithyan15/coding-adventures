@@ -11,7 +11,8 @@ romanization: "eḻu"
 concept_tag: TA-VERB-EZHU
 prerequisites: [TA-C70-roof, TA-C69-vehicle, TA-C70-table]
 sounds: []
-roots: []
+roots: [dravidian-ezhu-rise]
+etymology_hook: "எழு — native Dravidian (DEDR 851); Malayalam eḻuka, Kannada eḻ"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ Be careful with it, because you have met these two letters before with one more 
 connect them: it files them as two separate entries. What
 matters is that they are two different verbs, they are one letter apart, and swapping them
 changes what you said.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எழு** (*eḻu*) is native Dravidian. DEDR 851 lists Malayalam *eḻuka* and Kannada *eḻ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

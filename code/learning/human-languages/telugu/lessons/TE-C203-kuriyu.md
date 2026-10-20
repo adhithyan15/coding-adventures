@@ -14,7 +14,8 @@ romanization: "kuriyu"
 concept_tag: TE-VERB-KURIYU
 prerequisites: [TE-C203-edugu, TE-C203-puyu]
 sounds: []
-roots: []
+roots: [dravidian-kuulu-fall]
+etymology_hook: "kuriyu: DEDR 1907 adds kuriyu 'to rain', with a query, to kūlu 'to fall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C203-puyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C203-KRIYA203-05]; assesses=[] -->
 
 **కురియు** — *kuriyu* — "to rain down, to pour (of rain)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 1907 adds **కురియు** (*kuriyu*), "to rain, shower, fall", with a query, to the family of *kūlu*, "to fall down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

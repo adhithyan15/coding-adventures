@@ -11,7 +11,8 @@ romanization: "kāvālā?"
 concept_tag: TE-POLITE-OFFER
 prerequisites: [TE-C94-pardon, TE-C94-apology]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "kāvālā: native kāvāli 'is wanted', from kā- 'become' (DEDR 333), + the question ending -ā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C94-apology]
 
 It is **కావాలి**, "is wanted", with the question **-ఆ**. **టీ కావాలా?** — "would you like tea?".
 The answer is **కావాలి** or **వద్దు**, both yours already.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కావాలా?** (*kāvālā?*) is native Dravidian: *kāvāli*, "is wanted", from *kā-*, "to become" (DEDR 333), and the question *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

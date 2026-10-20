@@ -14,7 +14,8 @@ romanization: "skūl"
 concept_tag: HI-NOUN-SCHOOL
 prerequisites: [HI-C47-teacher, HI-C47-student]
 sounds: []
-roots: []
+roots: [english-school]
+etymology_hook: "skūl ← English school, from Greek skholē 'leisure'"
 duration:
   max_seconds: 240
 requires:

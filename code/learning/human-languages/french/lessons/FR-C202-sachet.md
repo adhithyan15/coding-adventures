@@ -13,7 +13,8 @@ gloss: "a small bag"
 concept_tag: FR-CHOSES202-SACHET
 prerequisites: [FR-C202-metal, FR-C202-brique]
 sounds: []
-roots: []
+roots: [saccus-latin]
+etymology_hook: "sachet — sac + -et 'little'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C202-brique]
 <!-- hl-knowledge: introduces=[FR-LEX-C202-CHOSES202-04]; assesses=[] -->
 
 **le sachet** — "a small bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sachet** — *sac*, "bag", with *-et*, "little". *Sac* ← Latin *saccus*, from Greek *sakkos* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

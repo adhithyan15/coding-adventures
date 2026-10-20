@@ -14,7 +14,8 @@ romanization: "lāibreri"
 concept_tag: BN-JAYGA245-LAIBRERI
 prerequisites: [BN-C245-selun, BN-C245-bekari]
 sounds: []
-roots: []
+roots: [english-library]
+etymology_hook: "lāibreri ← English library"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C245-bekari]
 <!-- hl-knowledge: introduces=[BN-LEX-C245-JAYGA245-05]; assesses=[] -->
 
 **লাইব্রেরি** — *lāibreri* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাইব্রেরি** (*lāibreri*) is a loan from English *library*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

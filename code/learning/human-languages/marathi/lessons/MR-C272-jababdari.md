@@ -14,7 +14,8 @@ romanization: "jabābdārī"
 concept_tag: MR-VASTU272-JABABDARI
 prerequisites: [MR-C272-hakka, MR-C272-kartavya]
 sounds: []
-roots: []
+roots: [arabic-jawab, persian-dar-holder]
+etymology_hook: "jabābdārī: Arabic jawāb 'answer', through Persian, + -dār 'holder' + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C272-kartavya]
 <!-- hl-knowledge: introduces=[MR-LEX-C272-VASTU272-04]; assesses=[] -->
 
 **जबाबदारी** — *jabābdārī* — "responsibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जबाबदारी** (*jabābdārī*) is *jabāb*, "answer", from Arabic *jawāb*, through Persian (Lane, root *j-w-b*), with Persian *-dār*, "holder", and *-ī*: "answer-holding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

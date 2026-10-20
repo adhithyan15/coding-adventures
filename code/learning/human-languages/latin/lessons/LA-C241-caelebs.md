@@ -13,7 +13,8 @@ gloss: "unmarried"
 concept_tag: LA-QUAL241-CAELEBS
 prerequisites: [LA-C241-loquax, LA-C241-sollicitus]
 sounds: []
-roots: []
+roots: [caelebs-latin]
+etymology_hook: "caelebs 'unmarried' — origin unknown; English celibate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C241-sollicitus]
 <!-- hl-knowledge: introduces=[LA-LEX-C241-QUAL241-04]; assesses=[] -->
 
 **caelebs, caelibis** — "unmarried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caelebs** has no sure origin; Lewis & Short call it doubtful. English *celibate* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

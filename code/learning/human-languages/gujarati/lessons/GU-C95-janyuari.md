@@ -14,7 +14,8 @@ romanization: "jānyuārī"
 concept_tag: GU-TIME95-JANYUARI
 prerequisites: [GU-C95-haji, GU-C95-tarat]
 sounds: []
-roots: []
+roots: [english-january]
+etymology_hook: "jānyuārī ← English January"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C95-tarat]
 <!-- hl-knowledge: introduces=[GU-LEX-C95-TIME95-03]; assesses=[] -->
 
 **જાન્યુઆરી** (*jānyuārī*) — "January".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જાન્યુઆરી** (*jānyuārī*) is a loan from English *January*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

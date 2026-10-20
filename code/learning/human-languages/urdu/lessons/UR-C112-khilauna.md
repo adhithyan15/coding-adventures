@@ -14,7 +14,8 @@ romanization: "khilaunā"
 concept_tag: UR-THINGS112-KHILAUNA
 prerequisites: [UR-C111-mombatti, UR-C112-machis]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khilaunā: khel- 'play' (CDIAL 3918) + -aunā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C112-machis]
 <!-- hl-knowledge: introduces=[UR-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **کھلونا** — *khilaunā* — "a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھلونا** (*khilaunā*) is built on *khel-*, "play", with the ending *-aunā*: a thing to play with. CDIAL lists the verb under a reconstructed *\*khel-*, "play" (CDIAL 3918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

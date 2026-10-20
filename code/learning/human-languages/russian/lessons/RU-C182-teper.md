@@ -14,7 +14,8 @@ romanization: "tepér"
 concept_tag: RU-VREMYA182-TEPER
 prerequisites: [RU-C181-aprel, RU-C181-may]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "теперь ← older топерво, from тот 'that' + первый 'first'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C181-may]
 <!-- hl-knowledge: introduces=[RU-LEX-C182-VREMYA182-01]; assesses=[] -->
 
 **теперь** (*tepér*) — "nowadays, now (after a change)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**теперь** ← older *топерво*, "only now": Vasmer explains it from *тот*, "that", with *первый*, "first".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

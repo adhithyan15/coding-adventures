@@ -13,7 +13,8 @@ gloss: "to get dressed"
 concept_tag: GE-VERB-SICH-ANZIEHEN
 prerequisites: [GE-C139-stellen, GE-C140-liegen]
 sounds: []
-roots: []
+roots: [germanic-teuhana]
+etymology_hook: "sich anziehen — an 'on' + the verb 'to pull': to pull your clothes on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C140-liegen]
 <!-- hl-knowledge: introduces=[GE-LEX-C140-VERB140-02]; assesses=[] -->
 
 **sich anziehen** — "to get dressed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anziehen** is *an-*, "on", + the verb "to pull", Old High German *ziohan* ← Proto-Germanic *\*teuhaną* (EtymDB 2.1): to pull your clothes on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

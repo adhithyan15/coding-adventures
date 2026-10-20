@@ -14,7 +14,8 @@ romanization: "mashhūr"
 concept_tag: UR-QUAL135-MASHHUR
 prerequisites: [UR-C134-tang, UR-C134-gahra]
 sounds: []
-roots: []
+roots: [arabic-mashhur]
+etymology_hook: "mashhūr ← Arabic mashhūr 'well known', through Persian (Lane, root sh-h-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C134-gahra]
 <!-- hl-knowledge: introduces=[UR-LEX-C135-QUAL135-01]; assesses=[] -->
 
 **مشہور** — *mashhūr* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشہور** (*mashhūr*) is a loan from Arabic *mashhūr*, "well known", which reached Urdu through Persian. Its Arabic root is *sh-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

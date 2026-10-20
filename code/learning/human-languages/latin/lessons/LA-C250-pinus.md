@@ -13,7 +13,8 @@ gloss: "a pine"
 concept_tag: LA-RES250-PINUS
 prerequisites: [LA-C250-vitis, LA-C250-quercus]
 sounds: []
-roots: []
+roots: [pinus-latin]
+etymology_hook: "pīnus 'pine' — inherited, usually traced to PIE *piHnu-; Greek pitys is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C250-quercus]
 <!-- hl-knowledge: introduces=[LA-LEX-C250-RES250-03]; assesses=[] -->
 
 **pīnus, pīnūs** — "a pine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pīnus** is inherited, usually traced to Proto-Indo-European *\*piHnu-*, "pine", from *\*peyH-*, "sap, resin" (EtymDB 2.1); Greek *pitys*, "pine", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

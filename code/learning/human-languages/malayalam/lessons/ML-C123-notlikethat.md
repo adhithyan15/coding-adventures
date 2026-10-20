@@ -11,7 +11,8 @@ romanization: "aṅṅaneyalla"
 concept_tag: ML-RESP-NOT-LIKE-THAT
 prerequisites: [ML-C122-ohisee, ML-C123-notpossible]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, illa-not-dravidian-alla]
+etymology_hook: "aṅṅaneyalla: native Dravidian, aṅṅane 'that way' (DEDR 1) + alla 'is not' (DEDR 234)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C123-notpossible]
 
 **അങ്ങനെയല്ല** (*aṅṅaneyalla*) — "it's not like that": **അങ്ങനെ** (*aṅṅane*), "like that",
 with **അല്ല** (*alla*), "is not".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അങ്ങനെയല്ല** (*aṅṅaneyalla*) is native Dravidian: *aṅṅane*, "that way" (DEDR 1), with *alla*, "is not" (DEDR 234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 561,
+  "title": "La partida",
+  "label": "ch:es-la-partida",
+  "canDo": "I can say that someone left, a ship set sail, someone was away and came back.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C561-ausencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 561: I can say that someone left, a ship set sail, someone was away and came back.",
+    "assesses": [
+      "ES-LEX-C561-PARTIDA-03",
+      "ES-LEX-C561-PARTIDA-04",
+      "ES-LEX-C561-PARTIDA-05"
+    ]
+  }
+}

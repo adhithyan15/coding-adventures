@@ -14,7 +14,8 @@ romanization: "negarân budan"
 concept_tag: FA-VERB-NEGARAN-BUDAN
 prerequisites: [FA-C146-tarjih-dadan, FA-C146-be-nazar-residan]
 sounds: []
-roots: []
+roots: [persian-negah]
+etymology_hook: "negarân budan: Persian negarân 'watchful, anxious' + budan 'to be'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C146-be-nazar-residan]
 <!-- hl-knowledge: introduces=[FA-LEX-C146-KONESH146-05]; assesses=[] -->
 
 **نگران بودن** — *negarân budan* — "to be worried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*negarân budan* pairs *negarân*, "anxious, watchful", with *budan*, "to be". *negarân* is native, usually explained as built on *negar-*, "to look". *budan*, "to be", is an inherited verb; it is usually traced to Middle Persian *būdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

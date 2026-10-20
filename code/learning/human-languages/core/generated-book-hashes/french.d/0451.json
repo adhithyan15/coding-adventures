@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:7b15b3a959b01aba",
+  "lessonIds": [
+    "FR-C451-retrait",
+    "FR-C451-crediter",
+    "FR-C451-regler",
+    "FR-C451-decouvert",
+    "FR-C451-releve"
+  ],
+  "tex": "french/book/chapters/ch451-a-la-banque.tex"
+}

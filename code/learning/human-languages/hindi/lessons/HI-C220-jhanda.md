@@ -14,7 +14,8 @@ romanization: "jhaṇḍā"
 concept_tag: HI-THG220-JHANDA
 prerequisites: [HI-C219-yuddh, HI-C219-sena]
 sounds: []
-roots: []
+roots: [indo-aryan-dhvajadanda]
+etymology_hook: "jhaṇḍā ← *dhvajadaṇḍa 'flagstaff', a reconstructed form; a tadbhava (CDIAL 6898)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C219-sena]
 <!-- hl-knowledge: introduces=[HI-LEX-C220-THG220-01]; assesses=[] -->
 
 **झंडा** — *jhaṇḍā* — "a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झंडा** (*jhaṇḍā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhvajadaṇḍa*, "flagstaff", a form CDIAL reconstructs from its descendants (CDIAL 6898). It is built from *dhvaja*, "flag", and *daṇḍa*, "staff".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

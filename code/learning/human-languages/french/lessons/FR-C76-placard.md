@@ -14,6 +14,7 @@ concept_tag: FR-MAISON28-PLACARD
 prerequisites: [FR-C75-salon, FR-C75-canape]
 sounds: []
 roots: []
+etymology_hook: "placard — from the verb 'to stick on', from Middle Dutch placken — English placard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C75-canape]
 <!-- hl-knowledge: introduces=[FR-LEX-C76-MAISON28-01]; assesses=[] -->
 
 **le placard** — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**placard** — built from the verb for "to stick on, to plate", with *-ard*; the verb comes from Middle Dutch *placken*, "to patch". A placard was first a notice stuck on a wall, then a cupboard set into one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

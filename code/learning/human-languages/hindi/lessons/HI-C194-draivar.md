@@ -14,7 +14,8 @@ romanization: "ḍrāivar"
 concept_tag: HI-THG194-DRAIVAR
 prerequisites: [HI-C194-dhobi, HI-C194-bavarci]
 sounds: []
-roots: []
+roots: [english-driver]
+etymology_hook: "ḍrāivar ← English driver"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C194-bavarci]
 <!-- hl-knowledge: introduces=[HI-LEX-C194-THG194-03]; assesses=[] -->
 
 **ड्राइवर** — *ḍrāivar* — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ड्राइवर** (*ḍrāivar*) is a loan from English *driver*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

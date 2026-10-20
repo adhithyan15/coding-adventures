@@ -14,7 +14,8 @@ romanization: "hargez"
 concept_tag: FA-TIME82-HARGEZ
 prerequisites: [FA-C81-panjshanbe, FA-C82-aknun]
 sounds: []
-roots: []
+roots: [persian-hargez]
+etymology_hook: "hargez ← Middle Persian hagriz (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C82-aknun]
 <!-- hl-knowledge: introduces=[FA-LEX-C82-TIME82-02]; assesses=[] -->
 
 **هرگز** — *hargez* — "never".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hargez* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *hagriz*, "ever; never" (EtymDB). Old Persian had *hakaram-čiy*, "once" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to marry"
 concept_tag: FR-VERB-EPOUSER
 prerequisites: [FR-C207-mourir, FR-C207-vieillir]
 sounds: []
-roots: []
+roots: [spondere-latin]
+etymology_hook: "épouser ← Latin sponsare 'to betroth' — English espouse and spouse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C207-vieillir]
 <!-- hl-knowledge: introduces=[FR-LEX-C207-VERBES207-04]; assesses=[] -->
 
 **épouser** — "to marry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**épouser** ← Old French *espouser* ← Latin *sponsare*, "to betroth" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

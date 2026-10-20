@@ -11,7 +11,8 @@ gloss: what's your name? (tumchaṁ nāv kāy āhe?)
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [MR-C02-tu-tumhi, MR-C02-kaay, MR-C02-aahe, MR-C02-naav]
 sounds: []
-roots: [tvam, ka-interrogative, naaman, asti]
+roots: [tvam, ka-interrogative, naaman, asti, sanskrit-yushmad, sanskrit-kidrk]
+etymology_hook: "tumcaṁ ← yuṣmad- 'you' (CDIAL 10511); nāv ← nāman 'name'; kāy ← *kādṛk 'of what sort' (CDIAL 3196)"
 reviews_of: [MR-C02-tu-tumhi, MR-C02-kaay, MR-C02-majhe-naav-aahe]
 duration:
   max_seconds: 200
@@ -52,6 +53,11 @@ The "your" mirrors the "my" set you learned:
 
 All three are shown here in the neuter, agreeing with the neuter **नाव**
 (*nāv*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All inherited: **तुमचं**, like **तुम्ही**, from Sanskrit *yuṣmad-*, "you" (CDIAL 10511); **नाव** from *nāman*, "name" (CDIAL 7067); **काय** from *\*kādṛk*, "of what sort" (CDIAL 3196).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-POSSESSIVE-RESPECT, MR-GRAMMAR-RESPECT-BY-PLURAL] -->

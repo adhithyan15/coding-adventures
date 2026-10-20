@@ -1,0 +1,11 @@
+{
+  "id": "IT-C458-mittente",
+  "pathSegment": "IT-PATH-458-POSTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-458-POSTA",
+      "order": 2
+    }
+  ]
+}

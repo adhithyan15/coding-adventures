@@ -14,7 +14,8 @@ romanization: "ugānā"
 concept_tag: UR-VERB-UGANA
 prerequisites: [UR-C241-palna, UR-C241-bona]
 sounds: []
-roots: []
+roots: [indo-aryan-udgati]
+etymology_hook: "ugānā ← *udgāti 'rises, comes forth', a reconstructed form; a tadbhava (CDIAL 1954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C241-bona]
 <!-- hl-knowledge: introduces=[UR-LEX-C241-ACT241-03]; assesses=[] -->
 
 **اگانا** — *ugānā* — "to cultivate, to grow (plants)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اگانا** (*ugānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*udgāti*, "rises, comes forth", a form CDIAL reconstructs from its descendants (CDIAL 1954). *ugānā* is its causing form, "to make spring up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

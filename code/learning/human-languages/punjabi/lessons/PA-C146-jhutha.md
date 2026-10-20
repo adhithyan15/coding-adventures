@@ -14,7 +14,8 @@ romanization: "jhūṭhā"
 concept_tag: PA-QUAL146-JHUTHA
 prerequisites: [PA-C146-kacca, PA-C146-sacca]
 sounds: []
-roots: []
+roots: [indo-aryan-jhuttha]
+etymology_hook: "jhūṭhā ← *jhūṭṭha 'false', a reconstructed form; a tadbhava (CDIAL 5407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C146-sacca]
 <!-- hl-knowledge: introduces=[PA-LEX-C146-QUAL146-05]; assesses=[] -->
 
 **ਝੂਠਾ** — *jhūṭhā* — "false, lying".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਝੂਠਾ** (*jhūṭhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhūṭṭha*, "false", a form CDIAL reconstructs from its descendants (CDIAL 5407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

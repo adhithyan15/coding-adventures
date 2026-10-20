@@ -14,7 +14,8 @@ romanization: "kōppa"
 concept_tag: ML-THINGS156-KOPPA
 prerequisites: [ML-C156-vala, ML-C156-motiram]
 sounds: []
-roots: []
+roots: [portuguese-copo]
+etymology_hook: "kōppa ← Portuguese copo 'cup, glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C156-motiram]
 <!-- hl-knowledge: introduces=[ML-LEX-C156-THINGS156-05]; assesses=[] -->
 
 **കോപ്പ** — *kōppa* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോപ്പ** (*kōppa*) ← Portuguese *copo*, "a cup, a drinking glass", from the coast's Portuguese century.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

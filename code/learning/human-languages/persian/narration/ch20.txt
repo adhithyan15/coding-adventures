@@ -43,6 +43,9 @@ You'll want to know first — two words and a rule.
 The rule is one ending: ـم, -om, on the cardinal. do + -om becomes dovvom; se + -om becomes sevvom. The consonant doubles at the join, which is the only thing you have to hear.
 سوم is written س، و، م — three letters, all yours from the script chapter. That makes it the fourth word in this book you can write unaided, after se, noh and avval, whose written forms the script chapter already gave.
 
+The word, taken apart.
+dovvom and sevvom are built from the inherited numbers do and se with the ordinal ending -om (EtymDB); do continues Middle Persian dō (EtymDB).
+
 Guided Practice.
 [your turn — say: dovvom — second; sevvom — third]
 [pause 8 seconds for the answer]
@@ -68,6 +71,9 @@ You'll want to know first — one word.
 chahâr + -om, and nothing happens at the join. panjom, "fifth," is the same: the cardinal ends in a consonant, so the ending simply follows it.
 dovvom and sevvom doubled a consonant only because their cardinals end in a vowel. Two and three are the exception; four onwards is the rule, all the way up. dahom is "tenth", bistom is "twentieth", sadom is "hundredth."
 So a reader who has twelve cardinals and one ending has twelve ordinals, minus the borrowed first.
+
+The word, taken apart.
+chahârom is built from chahâr, "four", with the ordinal ending -om (EtymDB); chahâr is inherited, from Middle Persian čahār (EtymDB).
 
 Guided Practice.
 [your turn — say: chahârom — fourth]

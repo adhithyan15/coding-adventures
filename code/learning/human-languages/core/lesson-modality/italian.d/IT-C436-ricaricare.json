@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C436-ricaricare",
+    "language": "italian",
+    "chapter": 436,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b06ec07063ab5d6"
+  },
+  "findings": []
+}

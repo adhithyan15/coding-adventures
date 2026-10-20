@@ -13,7 +13,8 @@ gloss: "to doubt, to hesitate"
 concept_tag: LA-VERB-DUBITO
 prerequisites: [LA-C202-ago, LA-C202-procedo]
 sounds: []
-roots: []
+roots: [dubitare-latin, dubius-latin, duo-latin]
+etymology_hook: "dubitō 'to doubt' — built on dubius 'doubtful', from duo 'two': of two minds"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C202-procedo]
 <!-- hl-knowledge: introduces=[LA-LEX-C203-ACT203-01]; assesses=[] -->
 
 **dubitō, dubitāre** — "to doubt, to hesitate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dubitō** is built on *dubius*, "doubtful" (Lewis & Short), whose first part is *duo*, "two": to be of two minds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

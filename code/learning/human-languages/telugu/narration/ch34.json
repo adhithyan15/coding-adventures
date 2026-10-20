@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2849330214cf237b",
+  "sourceHash": "fnv1a64:be9568c324079587",
   "lessons": [
     {
       "id": "TE-C34-tiisuko",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2dbdab84ef82da99",
+      "sourceHash": "fnv1a64:958d530ebc4a2ad9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -282,7 +282,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the clue to something worth naming outright. Telugu is not in the same branch as Tamil, Kannada and Malayalam. Those three are South Dravidian; Telugu heads South-Central Dravidian, with Gondi, Konda, Kui, Kuvi, Pengo and Manda. So the pattern was no run of accidents: lēdu against the sisters' il-, uṇḍu against their iru, enimidi and tommidi where eṭṭu and oṉpatu will not reach."
+              "text": "That is the clue to something worth naming outright. Telugu is not in the same branch as Tamil, Kannada and Malayalam. Those three are South Dravidian; Telugu heads South-Central Dravidian, with Gondi, Konda, Kui, Kuvi, Pengo and Manda. That is why so many everyday Telugu words look unlike the sisters' — lēdu, uṇḍu, enimidi, tommidi — even when DEDR files them with Tamil il-, uṇṭu, eṭṭu and old toṇṭu."
             }
           ]
         },
@@ -347,11 +347,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what it explains — \"lēdu … uṇḍu … enimidi, tommidi\"",
+              "instruction": "words it explains — \"lēdu … uṇḍu … enimidi, tommidi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what it explains — \"lēdu … uṇḍu … enimidi, tommidi\"]"
+              "source": "[YOU SAY: words it explains — \"lēdu … uṇḍu … enimidi, tommidi\"]"
             },
             {
               "kind": "prompt",
@@ -377,7 +377,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I ask,\" \"I asked,\" \"please ask,\" and name the other verb that wanders its middle vowel. (Aḍugutānu, aḍigānu, aḍagaṇḍi; చదువు.) Do the four literary sisters share an ask-verb? (No — aḍugu, kēḷ, kēḷu, cōdikkuka.) Which branch is Telugu on, who is on it, and name two things that explains. (South-Central Dravidian, with Gondi, Konda and Kui; lēdu against il-, uṇḍu against iru, enimidi and tommidi.) Where is praśna from? (Sanskrit, from the root behind English pray.)"
+              "text": "Say \"I ask,\" \"I asked,\" \"please ask,\" and name the other verb that wanders its middle vowel. (Aḍugutānu, aḍigānu, aḍagaṇḍi; చదువు.) Do the four literary sisters share an ask-verb? (No — aḍugu, kēḷ, kēḷu, cōdikkuka.) Which branch is Telugu on, who is on it, and name two things that explains. (South-Central Dravidian, with Gondi, Konda and Kui; why lēdu, uṇḍu, enimidi and tommidi look unlike their Tamil cousins.) Where is praśna from? (Sanskrit, from the root behind English pray.)"
             }
           ]
         }
@@ -584,7 +584,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8b12a37d475b8c1e",
+      "sourceHash": "fnv1a64:8da8b694940e12ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -650,7 +650,7 @@
             },
             {
               "kind": "speech",
-              "text": "A native verb does it too — నచ్చు (naccu), \"to be pleasing\": నాకు ఇది నచ్చింది (nāku idi naccindi). Tamil நச்சு and Kannada ನಚ್ಚು are the same verb: iṣṭaṁ displaced nothing."
+              "text": "A native verb does it too — నచ్చు (naccu), \"to be pleasing\": నాకు తెలుగు నచ్చింది (nāku telugu naccindi). Tamil நச்சு and Kannada ನಚ್ಚು are the same verb: iṣṭaṁ displaced nothing."
             },
             {
               "kind": "speech",

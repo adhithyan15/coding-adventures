@@ -13,7 +13,8 @@ gloss: "a salad; lettuce"
 concept_tag: FR-CUISINE24-SALADE
 prerequisites: [FR-C71-yaourt, FR-C71-jambon]
 sounds: []
-roots: []
+roots: [sal-latin]
+etymology_hook: "salade ← Italian salata 'salted (greens)', from Latin sal 'salt' — English salad"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C71-jambon]
 <!-- hl-knowledge: introduces=[FR-LEX-C72-CUISINE24-01]; assesses=[] -->
 
 **la salade** — "a salad; lettuce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salade** ← Italian *salata*, "salted", that is, salted greens (EtymDB 2.1) — borrowed; behind it is Latin *sal*, "salt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

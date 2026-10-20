@@ -14,7 +14,8 @@ romanization: "sāth"
 concept_tag: HI-THG249-SATH
 prerequisites: [HI-C248-jaldhi, HI-C248-acanak]
 sounds: []
-roots: []
+roots: [sanskrit-sartha]
+etymology_hook: "sāth 'with' ← Sanskrit sārthena 'in company with', the instrumental of sārtha 'caravan' (CDIAL 13364)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C248-acanak]
 <!-- hl-knowledge: introduces=[HI-LEX-C249-THG249-01]; assesses=[] -->
 
 **साथ** — *sāth* — "with, together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साथ** (*sāth*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sārthena*, "in company with", the instrumental case of *sārtha*, "caravan, company". CDIAL lists Hindi *sāth*, "with", under *sārthena*, and the noun *sāth*, "company, train", under *sārtha* itself (CDIAL 13364).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

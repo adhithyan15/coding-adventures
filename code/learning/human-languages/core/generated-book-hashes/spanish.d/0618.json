@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 618,
+  "sourceHash": "fnv1a64:799ca515f6070d34",
+  "lessonIds": [
+    "ES-C618-imaginar",
+    "ES-C618-hipotesis",
+    "ES-C618-en-teoria",
+    "ES-C618-posiblemente",
+    "ES-C618-seguramente"
+  ],
+  "tex": "spanish/book/chapters/ch618-supongamos-que.tex"
+}

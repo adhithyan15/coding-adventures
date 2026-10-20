@@ -14,7 +14,8 @@ romanization: "mīṭ"
 concept_tag: PA-VERBS63-MIT
 prerequisites: [PA-C63-labbhna, PA-C63-suttna]
 sounds: []
-roots: []
+roots: [english-meat]
+etymology_hook: "mīṭ ← English meat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C63-suttna]
 <!-- hl-knowledge: introduces=[PA-LEX-C63-VERBS63-03]; assesses=[] -->
 
 **ਮੀਟ** — *mīṭ* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੀਟ** (*mīṭ*) is a loan from English *meat*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

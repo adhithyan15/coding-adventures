@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a wedding, then the Sanskrit for a gift
 You'll want to know: प्रांगणम्.
 प्रांगणम् — prāṅgaṇam — "a courtyard".
 
+The word, taken apart.
+prāṅgaṇa is built from pra "forth, before" and aṅgaṇa "a yard, a court" (MW), which CDIAL 118 sets under the root √aṅg "go". aṅgaṇa lives on as Hindi āṁgan "courtyard" (CDIAL 118).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a gift, then the Sanskrit for a courtya
 
 You'll want to know: वाटिका.
 वाटिका — vāṭikā — "a small garden".
+
+The word, taken apart.
+vāṭikā is vāṭa "an enclosure, a fenced plot" with the small-thing suffix -ikā: "a little enclosure, a garden". It lives on as Hindi bāṛī "enclosure" and Bengali bāṛi (CDIAL 11480).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a courtyard, then the Sanskrit for a sm
 You'll want to know: उपवनम्.
 उपवनम् — upavanam — "a park, a grove".
 
+The word, taken apart.
+upavana is built from upa "near, lesser" and vana "forest" (MW): "a small forest, a grove, a garden". vana lives on as Hindi and Bengali ban "forest" (CDIAL 11258).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a small garden, then the Sanskrit for a
 You'll want to know: क्रीडांगणम्.
 क्रीडांगणम् — krīḍāṅgaṇam — "a playground".
 
+The word, taken apart.
+krīḍāṅgaṇa is built from krīḍā "play, sport" and aṅgaṇa "a yard, a court" (CDIAL 118): "the play-yard". MW does not list the pair, so it is a modern coinage.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a park, then the Sanskrit for a playgro
 
 You'll want to know: विमानपत्तनम्.
 विमानपत्तनम् — vimānapattanam — "an airport".
+
+The word, taken apart.
+vimānapattana is built from vimāna "a car of the gods, an aerial chariot", from vi-√mā "measure out, traverse" (CDIAL 11823), and pattana "town, city" (MW). Using the pair for an airport is modern.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "tālāb"
 concept_tag: HI-THG201-TALAB
 prerequisites: [HI-C201-ghati, HI-C201-jharna]
 sounds: []
-roots: []
+roots: [sanskrit-talla, aab-persian]
+etymology_hook: "tālāb: usually explained as tāl 'pond' (CDIAL 5742) + Persian āb 'water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C201-jharna]
 <!-- hl-knowledge: introduces=[HI-LEX-C201-THG201-04]; assesses=[] -->
 
 **तालाब** — *tālāb* — "a pond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तालाब** (*tālāb*) is usually explained as *tāl*, "pond", which CDIAL lists under Sanskrit *talla*, "pond", a village word that may come from Munda (CDIAL 5742), with Persian *āb*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

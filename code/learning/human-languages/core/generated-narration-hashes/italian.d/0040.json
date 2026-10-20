@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 40,
-  "sourceHash": "fnv1a64:cd1dfef0de264832",
+  "sourceHash": "fnv1a64:6047d165b0a7ce48",
   "lessonIds": [
     "IT-C40-mento",
     "IT-C40-fronte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch40.txt",
   "json": "italian/narration/ch40.json",
-  "textHash": "fnv1a64:d475a6d26bb6cc2f",
-  "jsonHash": "fnv1a64:e13c6393ac78b571",
+  "textHash": "fnv1a64:52d01791b49a3447",
+  "jsonHash": "fnv1a64:10f78e6df5a722a6",
   "findings": []
 }

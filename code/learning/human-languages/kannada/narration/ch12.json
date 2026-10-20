@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a6055a12c857987c",
+  "sourceHash": "fnv1a64:7cbed957dddfc06e",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cc1e515410bbd86",
+      "sourceHash": "fnv1a64:59f7dba93b59befe",
       "notice": null,
       "blocks": [
         {
@@ -51,6 +51,10 @@
             {
               "kind": "speech",
               "text": "ಅಮ್ಮ (amma) = \"mother\" — matches Tamil ammā closely."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are native Dravidian words (DEDR 156, 183)."
             }
           ]
         },
@@ -74,6 +78,10 @@
                 "Kannada: ಅಕ್ಕ (akka). meaning: older sister. compare Tamil: akkā — near match.",
                 "Kannada: ತಂಗಿ (tangi). meaning: younger sister. compare Tamil: tangai — near match."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "All four are native Dravidian, each with its own entry (DEDR 131, 3085, 23, 3015)."
             },
             {
               "kind": "speech",

@@ -14,7 +14,8 @@ romanization: "namla"
 concept_tag: AR-SHAY185-NAMLA
 prerequisites: [AR-C185-dulfin, AR-C185-babbagha]
 sounds: []
-roots: []
+roots: [n-m-l]
+etymology_hook: "namla: one ant of naml 'ants', an old native noun that Lane files under the root n-m-l"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C185-babbagha]
 <!-- hl-knowledge: introduces=[AR-LEX-C185-SHAY185-03]; assesses=[] -->
 
 **نملة** — *namla* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نملة** (*namla*) is one ant of *naml*, "ants", an old native noun, filed under the root *n-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

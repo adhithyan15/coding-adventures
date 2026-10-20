@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 85,
-  "sourceHash": "fnv1a64:ee256bda5b72bce7",
+  "sourceHash": "fnv1a64:18e8e17c8ea081a7",
   "lessonIds": [
     "KA-C85-slowly",
     "KA-C85-oncemore",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch85.txt",
   "json": "kannada/narration/ch85.json",
-  "textHash": "fnv1a64:4c616d20aa3c71fc",
-  "jsonHash": "fnv1a64:87cd2fa2e9759d85",
+  "textHash": "fnv1a64:26942c3a9f8dc90d",
+  "jsonHash": "fnv1a64:2e5885185cd53f83",
   "findings": []
 }

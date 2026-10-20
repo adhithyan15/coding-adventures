@@ -14,7 +14,8 @@ romanization: "hāṛ"
 concept_tag: BN-THINGS124-HAR2
 prerequisites: [BN-C124-kopal, BN-C124-bhuru]
 sounds: []
-roots: []
+roots: [sanskrit-hadda]
+etymology_hook: "hāṛ ← Sanskrit haḍḍa 'bone', a tadbhava (CDIAL 13952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C124-bhuru]
 <!-- hl-knowledge: introduces=[BN-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **হাড়** — *hāṛ* — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাড়** (*hāṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haḍḍa*, "bone" (CDIAL 13952). CDIAL doubts a link with Sanskrit *asthi*, "bone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

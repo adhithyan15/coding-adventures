@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a book, then the Sanskrit for a picture
 You'll want to know: वाद्यम्.
 वाद्यम् — vādyam — "a musical instrument".
 
+The word, taken apart.
+vādya comes from the root √vad "speak, sound": first "to be said", then "to be played", and so "a musical instrument" (CDIAL 11511). It lives on as Hindi bājā "musical instrument" (CDIAL 11511).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a picture, then the Sanskrit for a musi
 
 You'll want to know: वीणा.
 वीणा — vīṇā — "a veena".
+
+The word, taken apart.
+MW calls vīṇā "the Indian lute" of doubtful derivation; EtymDB traces it to an Indo-Iranian word that Middle Persian also kept, so its source is not settled. It lives on as Hindi bīn "lute" (CDIAL 12048).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a musical instrument, then the Sanskrit
 You'll want to know: पट्टः.
 पट्टः — paṭṭaḥ — "a cloth, a strip".
 
+The word, taken apart.
+paṭṭa "cloth, woven silk, a strip or bandage" is probably from a non-Aryan source, says CDIAL 7700, which rejects a link with pattra "leaf". It lives on as Hindi paṭṭī "strip of cloth" (CDIAL 7700).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a veena, then the Sanskrit for a cloth.
 You'll want to know: रत्नम्.
 रत्नम् — ratnam — "a jewel".
 
+The word, taken apart.
+ratna first meant "a gift, wealth" in the Rigveda and later "a jewel" (MW). MW derives it from the root √rā "give", while CDIAL 10600 refers it to √raṇ "rejoice", so its root is not settled. Pali kept it as ratana "jewel" (CDIAL 10600).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a cloth, then the Sanskrit for a jewel.
 
 You'll want to know: सुवर्णम्.
 सुवर्णम् — suvarṇam — "gold".
+
+The word, taken apart.
+suvarṇa is built from su "good" and varṇa "colour" (CDIAL 13519): "of a good, bright colour", and so "gold". It wore down into Hindi, Punjabi and Bengali sonā "gold" (CDIAL 13519).
 
 What you've built.
 One more word for this chapter.

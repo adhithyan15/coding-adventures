@@ -13,7 +13,8 @@ gloss: "an elephant"
 concept_tag: IT-ANIMALI4-ELEFANTE
 prerequisites: [IT-C71-ape, IT-C71-formica]
 sounds: []
-roots: []
+roots: [elephas-latin]
+etymology_hook: "elefante ← Latin elephas, from Greek elephas — English elephant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C71-formica]
 <!-- hl-knowledge: introduces=[IT-LEX-C71-ANIMALI4-05]; assesses=[] -->
 
 **l'elefante** — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elefante** ← Latin *elephas*, "elephant" — inherited; Latin took it from Greek *elephas*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

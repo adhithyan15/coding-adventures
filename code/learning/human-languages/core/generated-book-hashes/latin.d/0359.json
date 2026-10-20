@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:5bdff4f54d772657",
+  "lessonIds": [
+    "LA-C359-pondero",
+    "LA-C359-delibero",
+    "LA-C359-dubitatio",
+    "LA-C359-probabilis",
+    "LA-C359-verisimilis"
+  ],
+  "tex": "latin/book/chapters/ch359-weighing-a-question.tex"
+}

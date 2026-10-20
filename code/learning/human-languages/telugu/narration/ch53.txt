@@ -14,6 +14,7 @@ You'll want to know: ఆకాశం.
 ఆకాశం (ākāśaṁ) came from Sanskrit ākāśa, built on a piece meaning "to shine, to be seen". So the sky is named for being the open, lit place where a thing can be visible at all, rather than for being a lid over the world.
 Telugu also holds an inherited word for the same overhead space, నింగి, which owes Sanskrit nothing. The two sit side by side: ఆకాశం (ākāśaṁ) does the ordinary work and turns up in newspapers and weather talk, while నింగి keeps to songs and poetry. A borrowed word taking the daily shift and leaving the old one the ceremony is an arrangement you have watched before, with the door.
 ākāśa travelled, too. Traders carried it east, and Malay and Indonesian still say angkasa for the sky.
+CDIAL 1008 lists Sanskrit ākāśa, "sky".
 
 What you've built.
 The space that the rest of this chapter hangs in.
@@ -47,6 +48,7 @@ You'll want to know: సూర్యుడు.
 Sanskrit sūrya is the sun. Telugu took the word and hung -డు on the end, the ending it puts on a man's name and on the words for men doing work — the same -డు that stands at the end of రైతు's formal cousin and of వైద్యుడు.
 That ending is doing something real here. సూర్యుడు (sūryuḍu) is the sun as a person: the one who drives, who is greeted, who is asked for things. Telugu has a plainer inherited word for the thing in the sky, పొద్దు, which you already have, and పొద్దు is what you use to say the sun came up.
 So one language keeps two suns: పొద్దు for the light, సూర్యుడు (sūryuḍu) for the god.
+CDIAL 13574 lists Sanskrit sūrya, "sun".
 
 What you've built.
 Two: the sky, and the brightest thing in it.
@@ -80,6 +82,7 @@ You'll want to know: చంద్రుడు.
 Sanskrit candra means "shining, bright", and it carries the same -డు that సూర్యుడు (sūryuḍu) carries. Two borrowed lights, and Telugu made people of both.
 The inherited word here is నెల, which you already have as the word for a month. One shape for the moon and for the stretch of time it measures — the moon is the oldest calendar there is, and Telugu keeps that fact inside a single word.
 candra went a long way west as well. It shares an ancestor with the Latin piece that gives English candle and incandescent: a very old root for burning white.
+CDIAL 4661 lists Sanskrit candra, "shining; moon".
 
 What you've built.
 Three, and two of them named as people.
@@ -114,6 +117,9 @@ You'll want to know: చుక్క.
 That is why it matters for the ముగ్గు. The design at the doorstep is laid out first as a grid of చుక్కలు, dots of rice flour set at even spacing, and the lines are then drawn around and between them. A woman who says she is putting down చుక్కలు in the morning is not talking about the sky.
 The borrowed word for a star is నక్షత్రం, and it is what an astrologer uses. చుక్క (cukka) is what a child points at.
 
+The word, taken apart.
+చుక్క (cukka) is native Dravidian, one word with Kannada cukke, "small mark, dot" (DEDR 2646). DEDR notes that Tamil cukkai, "star", is a loan from Telugu.
+
 What you've built.
 Four.
 
@@ -146,6 +152,9 @@ You'll want to know: మబ్బు.
 మబ్బు (mabbu) is inherited and quite plain: the grey thing between you and the సూర్యుడు (sūryuḍu).
 It stretched, the way weather words do. మబ్బు (mabbu) also describes a dull, heavy, half-asleep feeling, and a person who is slow to catch on. English went the same way with cloudy and foggy, from opposite ends of the earth and with no contact at all. When two unrelated languages reach for the same picture, the picture is doing the work rather than the borrowing.
 With that, the sky is furnished.
+
+The word, taken apart.
+మబ్బు (mabbu) is native Dravidian, one word with Tamil mappu and Kannada mabbu (DEDR 4728). DEDR also lists Telugu mrabbu, "cloud".
 
 What you've built.
 Five: ఆకాశం (ākāśaṁ), సూర్యుడు (sūryuḍu), చంద్రుడు (candruḍu), చుక్క (cukka), మబ్బు (mabbu). You can now say what is overhead.

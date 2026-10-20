@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 10,
-  "sourceHash": "fnv1a64:8111735e81aedb1f",
+  "sourceHash": "fnv1a64:d026df52f27a87b7",
   "lessonIds": [
     "PT-C10-pais",
     "PT-C10-irmaos"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch10.txt",
   "json": "portuguese/narration/ch10.json",
-  "textHash": "fnv1a64:e6d87e8401a414ab",
-  "jsonHash": "fnv1a64:70dfb045c59f8bf0",
+  "textHash": "fnv1a64:8c5e1d31706293eb",
+  "jsonHash": "fnv1a64:2a4565f98cfd477e",
   "findings": []
 }

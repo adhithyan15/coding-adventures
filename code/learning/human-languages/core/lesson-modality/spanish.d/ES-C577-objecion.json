@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C577-objecion",
+    "language": "spanish",
+    "chapter": 577,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5cb6766fd6e78ff"
+  },
+  "findings": []
+}

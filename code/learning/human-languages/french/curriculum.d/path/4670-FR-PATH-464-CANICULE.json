@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-464-CANICULE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-464-CANICULE"
+  ],
+  "after": []
+}

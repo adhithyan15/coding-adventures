@@ -1,0 +1,11 @@
+{
+  "id": "JA-W144-with-a-clock",
+  "pathSegment": "JA-PATH-143-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-143-WRITING",
+      "order": 1
+    }
+  ]
+}

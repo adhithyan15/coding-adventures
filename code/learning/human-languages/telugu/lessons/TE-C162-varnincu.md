@@ -14,7 +14,8 @@ romanization: "varṇiñcu"
 concept_tag: TE-VERB-VARNINCU
 prerequisites: [TE-C162-atapattincu, TE-C162-pogadu]
 sounds: []
-roots: []
+roots: [sanskrit-varnana]
+etymology_hook: "varṇiñcu: Sanskrit varṇana 'description' (CDIAL 11340) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C162-pogadu]
 <!-- hl-knowledge: introduces=[TE-LEX-C162-KRIYA162-05]; assesses=[] -->
 
 **వర్ణించు** — *varṇiñcu* — "to describe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వర్ణించు** (*varṇiñcu*) is Sanskrit *varṇana*, "description" (CDIAL 11340), made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhīvaraḥ"
 concept_tag: SA-PPL148-DHIVARAH
 prerequisites: [SA-C148-pacakah, SA-C148-malakarah]
 sounds: []
-roots: []
+roots: [sanskrit-dhivara]
+etymology_hook: "dhīvara 'fisherman' (MBh); MW and CDIAL 6819 give no derivation; origin uncertain; Hindi dhīmar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C148-malakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C148-PPL148-04]; assesses=[] -->
 
 **धीवरः** — *dhīvaraḥ* — "a fisherman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhīvara* "a fisherman" appears from the Mahābhārata on, also as the name of a caste (CDIAL 6819). Neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi *dhīmar* and Punjabi *jhīwar* "fisherman" (CDIAL 6819).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

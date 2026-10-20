@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 132,
-  "sourceHash": "fnv1a64:699a90d7d435d4a9",
+  "sourceHash": "fnv1a64:31b4070794249a44",
   "lessonIds": [
     "KA-C132-navilu",
     "KA-C132-citte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch132.txt",
   "json": "kannada/narration/ch132.json",
-  "textHash": "fnv1a64:5597b9fd6aa7105e",
-  "jsonHash": "fnv1a64:f1fed60e9fb0503d",
+  "textHash": "fnv1a64:3ed1231f324cbf6f",
+  "jsonHash": "fnv1a64:32a1961e21b00004",
   "findings": []
 }

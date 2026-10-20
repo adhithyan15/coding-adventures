@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 290,
-  "sourceHash": "fnv1a64:72665e206900d08e",
+  "sourceHash": "fnv1a64:4eb1bc68dfc35f44",
   "lessonIds": [
     "KA-C290-ardha",
     "KA-C290-purti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch290.txt",
   "json": "kannada/narration/ch290.json",
-  "textHash": "fnv1a64:15435cab058e2d62",
-  "jsonHash": "fnv1a64:54d569e5f0addb62",
+  "textHash": "fnv1a64:223c297c5e0ab1a9",
+  "jsonHash": "fnv1a64:b3f5342e7597bf1d",
   "findings": []
 }

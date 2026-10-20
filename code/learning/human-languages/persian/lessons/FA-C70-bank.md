@@ -14,7 +14,8 @@ romanization: "bânk"
 concept_tag: FA-TOWN70-BANK
 prerequisites: [FA-C69-chap, FA-C69-khiyaban]
 sounds: []
-roots: []
+roots: [french-banque]
+etymology_hook: "bânk ← French banque 'bank'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C69-khiyaban]
 <!-- hl-knowledge: introduces=[FA-LEX-C70-TOWN70-01]; assesses=[] -->
 
 **بانک** — *bânk* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bânk* is borrowed from French *banque*, "bank" (EtymDB). The French word goes back to Italian *banco*, "bench" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

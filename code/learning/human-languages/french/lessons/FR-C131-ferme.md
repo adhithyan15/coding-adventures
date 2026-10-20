@@ -13,7 +13,8 @@ gloss: "closed"
 concept_tag: FR-QUALITES83-FERME
 prerequisites: [FR-C131-libre, FR-C131-ouvert, FR-C27-fermer]
 sounds: []
-roots: []
+roots: [latin-firmare]
+etymology_hook: "fermé — 'closed', from fermer; Latin firmare 'to make firm' — English firm"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [FR-C131-ouvert]
 <!-- hl-knowledge: introduces=[FR-LEX-C131-QUALITES83-04]; assesses=[] -->
 
 **fermé** — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fermé** is the past participle of *fermer*, "to close": closed. The verb ← Latin *firmare*, "to make firm, to fasten" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

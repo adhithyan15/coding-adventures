@@ -14,7 +14,8 @@ romanization: "sharmānā"
 concept_tag: UR-VERB-SHARMANA
 prerequisites: [UR-C179-vazir, UR-C179-badshah]
 sounds: []
-roots: []
+roots: [persian-sharm]
+etymology_hook: "sharmānā: a verb made from sharm 'shame', usually traced to Persian sharm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C179-badshah]
 <!-- hl-knowledge: introduces=[UR-LEX-C180-ACT180-01]; assesses=[] -->
 
 **شرمانا** — *sharmānā* — "to be shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرمانا** (*sharmānā*) is a verb made from *sharm*, "shame", usually traced to Persian *sharm*, with the verb ending *-ānā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

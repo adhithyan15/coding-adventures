@@ -14,7 +14,8 @@ romanization: "senā"
 concept_tag: HI-THG219-SENA
 prerequisites: [HI-C219-santi, HI-C219-yuddh]
 sounds: []
-roots: []
+roots: [sanskrit-sena]
+etymology_hook: "senā ← Sanskrit senā 'army', a tatsama (CDIAL 13587)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C219-yuddh]
 <!-- hl-knowledge: introduces=[HI-LEX-C219-THG219-05]; assesses=[] -->
 
 **सेना** — *senā* — "an army".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सेना** (*senā*) is Sanskrit *senā*, "army", taken over whole as a learned loan, a tatsama (CDIAL 13587). CDIAL lists the inherited form as *sen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

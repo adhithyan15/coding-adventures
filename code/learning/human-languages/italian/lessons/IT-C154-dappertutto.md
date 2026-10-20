@@ -13,7 +13,8 @@ gloss: "everywhere"
 concept_tag: IT-LUOGO154-DAPPERTUTTO
 prerequisites: [IT-C153-ormai, IT-C154-intorno]
 sounds: []
-roots: []
+roots: [totus-latin]
+etymology_hook: "dappertutto — 'from through all': per + tutto 'all' ← Latin totus 'whole' — English total"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C154-intorno]
 <!-- hl-knowledge: introduces=[IT-LEX-C154-LUOGO154-02]; assesses=[] -->
 
 **dappertutto** — "everywhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dappertutto** is "from through all": the word for "from", plus *per* ← Latin *per*, and *tutto*, "all" ← Latin *totus*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khekḍā"
 concept_tag: MR-VASTU188-KHEKDA
 prerequisites: [MR-C187-bangdi, MR-C188-dindarsika]
 sounds: []
-roots: []
+roots: [sanskrit-karkata]
+etymology_hook: "khekḍā ← Sanskrit karkaṭa 'crab', which CDIAL thinks non-Aryan (CDIAL 2816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C188-dindarsika]
 <!-- hl-knowledge: introduces=[MR-LEX-C188-VASTU188-02]; assesses=[] -->
 
 **खेकडा** — *khekḍā* — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेकडा** (*khekḍā*) is a tadbhava of Sanskrit *karkaṭa*, "crab" (CDIAL 2816). CDIAL thinks the word non-Aryan, comparing Santali *kaṭkom*, "crab".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

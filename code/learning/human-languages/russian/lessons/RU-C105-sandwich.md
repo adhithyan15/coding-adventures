@@ -14,7 +14,8 @@ romanization: "buterbród"
 concept_tag: RU-THINGS105-SANDWICH
 prerequisites: [RU-C105-chocolate, RU-C105-biscuits]
 sounds: []
-roots: []
+roots: [german-butterbrot]
+etymology_hook: "бутерброд ← German Butterbrot 'bread and butter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C105-biscuits]
 <!-- hl-knowledge: introduces=[RU-LEX-C105-THINGS105-04]; assesses=[] -->
 
 **бутерброд** (*buterbród*) — "a sandwich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бутерброд** comes from German *Butterbrot*, "buttered bread" (Vasmer): *Butter*, "butter", with *Brot*, "bread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

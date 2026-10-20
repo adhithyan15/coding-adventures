@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-532-PULIZIE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about cleaning the house.",
+  "prerequisites": []
+}

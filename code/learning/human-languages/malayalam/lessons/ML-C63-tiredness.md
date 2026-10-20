@@ -11,7 +11,8 @@ romanization: "kṣīṇaṁ"
 concept_tag: ML-NOUN-TIREDNESS
 prerequisites: [ML-C63-hunger, ML-C61-oil]
 sounds: []
-roots: []
+roots: [sanskrit-kshina]
+etymology_hook: "kṣīṇaṁ ← Sanskrit kṣīṇa 'worn away, feeble', a tatsama (CDIAL 3690)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *kṣīṇa*, meaning worn away or diminished, from a root about wastin
 In Malayalam the heavier sense has itself worn away, and the word has settled into ordinary speech for the plain tiredness of a long day.
 
 It opens on the ക്ഷ pair that opens *kṣamikkaṇaṁ*, the sorry-word — one letter riding on another, and the second one you have met wearing it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ക്ഷീണം** (*kṣīṇaṁ*) ← Sanskrit *kṣīṇa*, "worn away, feeble", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 3690).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

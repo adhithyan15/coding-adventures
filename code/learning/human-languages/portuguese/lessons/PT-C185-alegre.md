@@ -13,7 +13,8 @@ gloss: "cheerful"
 concept_tag: PT-QUAL185-ALEGRE
 prerequisites: [PT-C184-quase, PT-C184-cerca-de]
 sounds: []
-roots: []
+roots: [alacer-latin]
+etymology_hook: "alegre ← Latin alacer 'brisk, eager', through Vulgar Latin *alecrem — English alacrity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C184-cerca-de]
 <!-- hl-knowledge: introduces=[PT-LEX-C185-QUAL185-01]; assesses=[] -->
 
 **alegre** — "cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alegre** ← Latin *alacer*, "brisk, eager" (EtymDB 2.1), through Vulgar Latin *\*alecrem* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bird"
 concept_tag: FR-ANIMAUX37-OISEAU
 prerequisites: [FR-C85-vache, FR-C85-cochon]
 sounds: []
-roots: []
+roots: [avis-latin]
+etymology_hook: "oiseau ← Vulgar Latin *aucellus 'little bird', from avis 'bird' — English aviation"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C85-cochon]
 <!-- hl-knowledge: introduces=[FR-LEX-C85-ANIMAUX37-03]; assesses=[] -->
 
 **l'oiseau** — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oiseau** ← Old French *oisel* ← Vulgar Latin *\*aucellus*, "a little bird", from Latin *avis*, "bird" — inherited. (EtymDB 2.1 records the Latin words.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

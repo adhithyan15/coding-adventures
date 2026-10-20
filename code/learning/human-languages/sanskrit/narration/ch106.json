@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Rope, Wheat, Rice, Mung beans, Dal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b1a879fac98472a8",
+  "sourceHash": "fnv1a64:dc7164e226bb13a3",
   "lessons": [
     {
       "id": "SA-C106-rajjuh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5227389426e20d5c",
+      "sourceHash": "fnv1a64:dda6ac64d7a03ded",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rajju \"rope\" is inherited from PIE résgus (EtymDB), and MW compares Lithuanian rezgù \"I plait\"; Latin restis \"rope\" is a cousin. It lives on as Hindi lej \"rope\" (CDIAL 10582)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:887c540fbc7943b5",
+      "sourceHash": "fnv1a64:fa8aee5f5a5710b3",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW reads godhūma \"wheat\" as go \"earth, cow\" + dhūma \"smoke\", \"earth-smoke\", but the word has no sure origin. It is old, in the Vājasaneyi Saṃhitā, and lives on as Hindi gehūṁ and Gujarati ghaũ \"wheat\" (CDIAL 4287)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dcbced97395770d",
+      "sourceHash": "fnv1a64:f262e40b6665a740",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "taṇḍula \"grain after threshing, rice\" is old, in the Atharvaveda (MW), and its origin is uncertain: CDIAL 5637 thinks it perhaps non-Aryan, after Bloch from Dravidian or, less probably, after Chatterji from Austroasiatic. Pali kept it as taṇḍula (CDIAL 5637)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a94f9aca076d3cd2",
+      "sourceHash": "fnv1a64:d370d867bafdafab",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mudga \"the mung bean\" is old, in the Vājasaneyi Saṃhitā; the grammarians quoted by MW derive it from √mud \"be glad\", a learned guess, so its origin is uncertain. It lives on as Hindi mūg and Gujarati mag (CDIAL 10198)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0eb8cde594b402dd",
+      "sourceHash": "fnv1a64:8a8b4b0efeb8ae13",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW calls sūpa \"sauce, soup, broth\" of doubtful derivation; the grammarians tie it to √su \"distil\", so its origin is uncertain. Pali kept it as sūpa \"broth, curry\" (CDIAL 13571)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "ḥaqība"
 concept_tag: AR-SCHOOL74-HAQIBA
 prerequisites: [AR-C73-waraqa, AR-C73-madrasa]
 sounds: []
-roots: []
+roots: [ḥ-q-b]
+etymology_hook: "ḥaqība: an old noun listed by Lane under ḥ-q-b: the bag in which a traveller carries provisions"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C73-madrasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C74-SCHOOL74-01]; assesses=[] -->
 
 **حقيبة** — *ḥaqība* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حقيبة** (*ḥaqība*) is an old native noun, filed under the root *ḥ-q-b* (Lane). Lane's *ḥaqība* is the bag in which a traveller carries provisions.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

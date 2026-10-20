@@ -14,7 +14,8 @@ romanization: "vāṭkī"
 concept_tag: GU-TABLE-BOWL
 prerequisites: [GU-C60-puri, GU-C61-plate]
 sounds: []
-roots: []
+roots: [indo-aryan-vartu]
+etymology_hook: "vāṭkī ← *vartu 'something round', a reconstructed form (CDIAL 11364)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C61-plate]
 <!-- hl-knowledge: introduces=[GU-LEX-C61-TABLE-02]; assesses=[] -->
 
 **વાટકી** (*vāṭkī*) — "a small bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાટકી** (*vāṭkī*) is a tadbhava. CDIAL lists Gujarati *vāṭukī*, "cup", under a reconstructed *\*vartu*, "something round", built on *vṛt*, "to turn" (CDIAL 11364).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

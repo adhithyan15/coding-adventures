@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-682-CALLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about what is in the street: lamp posts, bins, kerbs and pedestrian streets.",
+  "prerequisites": []
+}

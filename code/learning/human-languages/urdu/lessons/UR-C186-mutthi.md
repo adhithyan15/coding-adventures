@@ -14,7 +14,8 @@ romanization: "muṭṭhī"
 concept_tag: UR-SEHAT186-MUTTHI
 prerequisites: [UR-C185-chot, UR-C186-eri]
 sounds: []
-roots: []
+roots: [sanskrit-mushti]
+etymology_hook: "muṭṭhī ← Sanskrit muṣṭi 'clenched hand, fist', a tadbhava (CDIAL 10221)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C186-eri]
 <!-- hl-knowledge: introduces=[UR-LEX-C186-SEHAT186-02]; assesses=[] -->
 
 **مٹھی** — *muṭṭhī* — "a fist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مٹھی** (*muṭṭhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *muṣṭi*, "clenched hand, fist" (CDIAL 10221).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

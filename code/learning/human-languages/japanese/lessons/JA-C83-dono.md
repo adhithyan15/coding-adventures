@@ -14,7 +14,8 @@ romanization: "dono"
 concept_tag: JA-DEF83-DONO
 prerequisites: [JA-C83-kono, JA-C83-ano]
 sounds: []
-roots: []
+roots: [japanese-do-which, japanese-no]
+etymology_hook: "dono: native do- 'which' + no 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C83-ano]
 <!-- hl-knowledge: introduces=[JA-LEX-C83-DEF83-03]; assesses=[] -->
 
 **どの** — *dono* — "which".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どの** (*dono*) is native: *do-*, the root of "which", with *no*, "of" (JMdict). It is inherited rather than borrowed, and is usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to tidy up"
 concept_tag: GE-VERB-AUFRAEUMEN
 prerequisites: [GE-C174-ankommen, GE-C174-ausziehen]
 sounds: []
-roots: []
+roots: [germanic-ruma]
+etymology_hook: "aufräumen — auf + räumen 'to make room': English room shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C174-ausziehen]
 <!-- hl-knowledge: introduces=[GE-LEX-C174-VERB174-05]; assesses=[] -->
 
 **aufräumen** — "to tidy up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aufräumen** is *auf* + the verb "to make room", Old High German *rūmen* ← Proto-Germanic *\*rūmijaną*, built on *\*rūmaz*, "roomy" (EtymDB 2.1). English *room* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

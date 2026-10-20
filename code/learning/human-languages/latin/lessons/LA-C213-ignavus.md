@@ -13,7 +13,8 @@ gloss: "idle, cowardly"
 concept_tag: LA-QUAL213-IGNAVUS
 prerequisites: [LA-C213-patiens, LA-C213-liberalis]
 sounds: []
-roots: []
+roots: [ignavus-latin, navus-latin]
+etymology_hook: "ignāvus 'idle' — in- 'not' + gnāvus 'busy'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C213-liberalis]
 <!-- hl-knowledge: introduces=[LA-LEX-C213-QUAL213-05]; assesses=[] -->
 
 **ignāvus, ignāva, ignāvum** — "idle, cowardly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ignāvus** is *in-*, "not", with *gnāvus*, "busy, active" (Lewis & Short), the older form of nāvus: not active.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

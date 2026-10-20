@@ -15,6 +15,7 @@ concept_tag: UR-THINGS126-CHYUNTI
 prerequisites: [UR-C126-mor2, UR-C126-titli]
 sounds: []
 roots: []
+etymology_hook: "chyūṅṭī: not settled; CDIAL has no entry, but lists a close Hindi cyū̃ṭā under *cimb 'pinch' (4822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C126-titli]
 <!-- hl-knowledge: introduces=[UR-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **چیونٹی** — *chyūṅṭī* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چیونٹی** (*chyūṅṭī*) is not settled, and CDIAL has no entry for it. CDIAL does list a Hindi *cyū̃ṭā*, a form close to this word, among pinching words under a reconstructed *\*cimb*, "pinch" (CDIAL 4822). If the two belong together, the ant is named for its nip.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

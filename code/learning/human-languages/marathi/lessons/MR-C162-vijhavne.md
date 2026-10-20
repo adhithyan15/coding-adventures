@@ -14,7 +14,8 @@ romanization: "vijhavṇe"
 concept_tag: MR-VERB-VIJHAVNE
 prerequisites: [MR-C161-pavti, MR-C162-petavne]
 sounds: []
-roots: []
+roots: [indo-aryan-vijjhayati]
+etymology_hook: "vijhavṇe ← *vijjhāpayati 'extinguishes', a reconstructed form (CDIAL 11703)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C162-petavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C162-ACT162-02]; assesses=[] -->
 
 **विझवणे** — *vijhavṇe* — "to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विझवणे** (*vijhavṇe*) comes from a reconstructed *\*vijjhāpayati*, "extinguishes", the "make" form of *\*vijjhāyati*, "is extinguished", under which CDIAL lists Marathi *vijhṇẽ* (CDIAL 11703). Bloch derived *vijhṇẽ* from *vi-kṣi* instead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

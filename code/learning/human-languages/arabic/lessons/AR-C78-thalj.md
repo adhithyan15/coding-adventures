@@ -14,7 +14,8 @@ romanization: "thalj"
 concept_tag: AR-NATURE78-THALJ
 prerequisites: [AR-C77-bahr, AR-C78-nar]
 sounds: []
-roots: []
+roots: [th-l-j]
+etymology_hook: "thalj: built on the root th-l-j, 'snow' (Lane); Hebrew sheleg, 'snow', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C78-nar]
 <!-- hl-knowledge: introduces=[AR-LEX-C78-NATURE78-02]; assesses=[] -->
 
 **ثلج** — *thalj* — "snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثلج** (*thalj*) is built on the native Arabic root *th-l-j*, "snow" (Lane). Hebrew *sheleg*, "snow", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

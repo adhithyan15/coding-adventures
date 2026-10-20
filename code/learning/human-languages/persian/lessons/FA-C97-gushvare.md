@@ -14,7 +14,8 @@ romanization: "gushvâre"
 concept_tag: FA-THINGS97-GUSHVARE
 prerequisites: [FA-C97-shal, FA-C97-dastkesh]
 sounds: []
-roots: []
+roots: [persian-gush]
+etymology_hook: "gushvâre: Persian gush 'ear' (Middle Persian gōš, EtymDB) + -vâre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C97-dastkesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C97-THINGS97-03]; assesses=[] -->
 
 **گوشواره** — *gushvâre* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gushvâre* is *gush*, "ear", with the ending *-vâre*, "belonging to": the ear's ornament. *gush* is inherited, from Middle Persian *gōš* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

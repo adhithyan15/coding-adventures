@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 138,
-  "sourceHash": "fnv1a64:4796b162830146dc",
+  "sourceHash": "fnv1a64:9652fa878d00a937",
   "lessonIds": [
     "PA-C138-caunk",
     "PA-C138-bag",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch138.txt",
   "json": "punjabi/narration/ch138.json",
-  "textHash": "fnv1a64:df730544eb08aadd",
-  "jsonHash": "fnv1a64:9afce5f61b921da9",
+  "textHash": "fnv1a64:5698fc4149e4d679",
+  "jsonHash": "fnv1a64:06630d6ed25c8ea1",
   "findings": []
 }

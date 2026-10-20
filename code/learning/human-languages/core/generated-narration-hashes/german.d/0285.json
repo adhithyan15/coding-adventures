@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:bc536b6de3af3069",
+  "lessonIds": [
+    "GE-C285-betruegen",
+    "GE-C285-betrug",
+    "GE-C285-betrueger",
+    "GE-C285-faelschen",
+    "GE-C285-erpressen",
+    "GE-R285-review-278-285"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch285.txt",
+  "json": "german/narration/ch285.json",
+  "textHash": "fnv1a64:25746d47f49040ca",
+  "jsonHash": "fnv1a64:222d795314fe1e91",
+  "findings": []
+}

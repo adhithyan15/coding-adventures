@@ -1,0 +1,19 @@
+{
+  "chapter": 677,
+  "title": "Monumentos",
+  "label": "ch:es-monumentos",
+  "canDo": "I can talk about the sights of an old town: monuments, the cathedral, the castle, the palace and the walls.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C677-muralla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 677: I can talk about the sights of an old town: monuments, the cathedral, the castle, the palace and the walls.",
+    "assesses": [
+      "ES-LEX-C677-MONUMENTO-03",
+      "ES-LEX-C677-MONUMENTO-04",
+      "ES-LEX-C677-MONUMENTO-05"
+    ]
+  }
+}

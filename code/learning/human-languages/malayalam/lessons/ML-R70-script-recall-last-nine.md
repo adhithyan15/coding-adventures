@@ -7,7 +7,7 @@ chapter: 70
 type: review
 headword: "(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ)"
 gloss: cold retrieval of the nine pieces that arrived late and thinly, including the two that only ever appear in borrowed words
-romanization: "randaam onpath"
+romanization: "raṇṭāṁ ompatŭ"
 concept_tag: ML-SCRIPT-RECALL-LAST-NINE
 prerequisites: [ML-R69-script-recall-first-nine, ML-S119-vowel-sign-oo, ML-S120-sign-anusvara, ML-S121-letter-ssa, ML-S123-letter-da, ML-S124-letter-sa, ML-S129-letter-bha, ML-S128-vowel-sign-r, ML-S130-letter-tha, ML-S132-letter-ga]
 sounds: []

@@ -14,7 +14,8 @@ romanization: "ōṇlain"
 concept_tag: ML-GUNAM319-ONLAIN
 prerequisites: [ML-C318-ormma, ML-C318-nirddesam]
 sounds: []
-roots: []
+roots: [english-online]
+etymology_hook: "ōṇlain ← English online"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C318-nirddesam]
 <!-- hl-knowledge: introduces=[ML-LEX-C319-GUNAM319-01]; assesses=[] -->
 
 **ഓൺലൈൻ** — *ōṇlain* — "online".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓൺലൈൻ** (*ōṇlain*) ← English *online*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

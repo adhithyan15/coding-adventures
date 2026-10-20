@@ -14,7 +14,8 @@ romanization: "thūm"
 concept_tag: AR-THINGS129-THUM
 prerequisites: [AR-C128-hummus, AR-C129-ful]
 sounds: []
-roots: []
+roots: [th-w-m]
+etymology_hook: "thūm: built on the root th-w-m, 'garlic' (Lane); Hebrew shum, 'garlic', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C129-ful]
 <!-- hl-knowledge: introduces=[AR-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **ثوم** — *thūm* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثوم** (*thūm*) is built on the native Arabic root *th-w-m*, "garlic" (Lane). Hebrew *shum*, "garlic", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

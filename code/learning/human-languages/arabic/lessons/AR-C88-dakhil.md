@@ -14,7 +14,8 @@ romanization: "dākhil"
 concept_tag: AR-TIME88-DAKHIL
 prerequisites: [AR-C88-baid, AR-C88-qarib]
 sounds: []
-roots: []
+roots: [d-kh-l]
+etymology_hook: "dākhil: built on the root d-kh-l, 'to enter' (Lane); dākhil is the active participle, 'entering', hence 'inside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C88-qarib]
 <!-- hl-knowledge: introduces=[AR-LEX-C88-TIME88-05]; assesses=[] -->
 
 **داخل** — *dākhil* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**داخل** (*dākhil*) is built on the native Arabic root *d-kh-l*, "to enter" (Lane). *Dākhil* is the active participle, "entering", hence "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

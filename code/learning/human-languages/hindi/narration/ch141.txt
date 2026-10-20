@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a coconut, then the Hindi for yoghurt.
 You'll want to know: मक्खन.
 मक्खन — makkhan — "butter".
 
+The word, taken apart.
+मक्खन (makkhan) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mrakṣaṇa, "rubbing in; ointment, oil" (CDIAL 10378). Butter was first "the thing rubbed in".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for yoghurt, then the Hindi for butter.
 
 You'll want to know: पनीर.
 पनीर — panīr — "paneer, cottage cheese".
+
+The word, taken apart.
+पनीर (panīr) is a loan, usually traced to Persian panīr, "cheese".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for butter, then the Hindi for paneer.
 You'll want to know: शहद.
 शहद — śahad — "honey".
 
+The word, taken apart.
+शहद (śahad) is a loan from Arabic shahd, "honey", which reached Hindi through Persian. Its Arabic root is sh-h-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for paneer, then the Hindi for honey.
 You'll want to know: मिर्च.
 मिर्च — mirc — "a chilli".
 
+The word, taken apart.
+मिर्च (mirc) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maricca, a by-form CDIAL reconstructs beside Sanskrit marīca, "peppercorn" (CDIAL 9875). The plain marīca gave Hindi a different word, mirī, "black pepper". CDIAL takes the Sanskrit word from an Austroasiatic language. When the chilli came to India, it took the name of black pepper.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for honey, then the Hindi for a chilli.
 
 You'll want to know: आटा.
 आटा — āṭā — "flour".
+
+The word, taken apart.
+आटा (āṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ārta, "flour", a form CDIAL reconstructs from its descendants (CDIAL 1338). CDIAL compares Persian ārd, "flour".
 
 What you've built.
 One more word for this chapter.

@@ -11,7 +11,8 @@ romanization: "aḻukai"
 concept_tag: TA-MOOD-CRY
 prerequisites: [TA-C89-shivering, TA-C90-laughter]
 sounds: []
-roots: []
+roots: [dravidian-azhu-weep]
+etymology_hook: "அழுகை — native Dravidian (DEDR 282)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C90-laughter]
 **அழுகை** (*aḻukai*) — "crying".
 
 **அழுகை வருகிறது** — "I feel like crying", on the same frame as laughter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அழுகை** (*aḻukai*) is native Dravidian (DEDR 282). It is the noun of *aḻu*, "to cry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

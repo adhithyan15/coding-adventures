@@ -14,7 +14,8 @@ romanization: "apūrvamāyi"
 concept_tag: ML-SAMAYAM276-APURVAMAYI
 prerequisites: [ML-C276-palappolum, ML-C276-mikkappolum]
 sounds: []
-roots: []
+roots: [sanskrit-apurva, aaka-dravidian]
+etymology_hook: "apūrvamāyi: Sanskrit apūrva 'unprecedented' (CDIAL 494) + native āyi 'as' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C276-mikkappolum]
 <!-- hl-knowledge: introduces=[ML-LEX-C276-SAMAYAM276-05]; assesses=[] -->
 
 **അപൂർവമായി** — *apūrvamāyi* — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപൂർവമായി** (*apūrvamāyi*) joins Sanskrit *apūrva*, "unprecedented, rare" (CDIAL 494), to native *āyi*, "as" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bar of soap"
 concept_tag: PT-CASA95-SABONETE
 prerequisites: [PT-C94-cobertor, PT-C95-toalha]
 sounds: []
-roots: []
+roots: [sapo-latin]
+etymology_hook: "sabonete — a small form of the soap word, which ← Latin sapo 'soap' — English soap is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C95-toalha]
 <!-- hl-knowledge: introduces=[PT-LEX-C95-CASA95-02]; assesses=[] -->
 
 **o sabonete** — "a bar of soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sabonete** is a small form of the word for soap, which ← Latin *sapo*, "soap" (EtymDB 2.1), itself from Germanic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

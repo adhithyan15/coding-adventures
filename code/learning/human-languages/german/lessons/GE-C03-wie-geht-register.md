@@ -13,7 +13,7 @@ sounds: [w-as-v, ie-long-ee]
 roots: [gehen-german]
 etymology_hook: "the formal question keeps every word and swaps only the listener, which is where German has put politeness all along"
 duration:
-  max_seconds: 180
+  max_seconds: 287
 requires:
   knowledge: [GE-LEX-WIE-GEHT-ES-DIR-01, GE-LEX-DIR-01, GE-LEX-IHNEN-01, GE-LEX-DU-SIE-02, GE-LEX-WIE-GEHTS-02]
 introduces:
@@ -50,6 +50,11 @@ word. Putting them together needs no new grammar at all — just a swap.
 | stranger, elder | *Wie geht es Ihnen?* |
 
 Three of the four words never move. Only the last one changes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ihnen** is the "to them" form of *sie*, "they": German's polite "you" is the inherited word for "they", capitalised.
 
 ## Grammar Lens: politeness lives in the pronoun
 <!-- hl-knowledge: introduces=[GE-PRAGMATICS-WELLBEING-REGISTER-02]; assesses=[GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-DU-SIE-02, GE-LEX-WIE-GEHTS-02] -->

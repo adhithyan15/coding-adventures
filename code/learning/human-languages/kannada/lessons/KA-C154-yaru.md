@@ -14,7 +14,8 @@ romanization: "yārū"
 concept_tag: KA-ILLA154-YARU
 prerequisites: [KA-C153-ele, KA-C153-alu]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "yārū: native yāru 'who' (DEDR 5151) + -ū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C153-alu]
 <!-- hl-knowledge: introduces=[KA-LEX-C154-ILLA154-01]; assesses=[] -->
 
 **ಯಾರೂ** — *yārū* — "nobody (with a negative verb)". Kannada negates a verb by joining **ಇಲ್ಲ** (*illa*) onto it: **ಯಾರೂ ಬರಲಿಲ್ಲ** — *yārū baralilla* — "Nobody came." **ಇಲ್ಲ** also means "is not there"; to say something is not a thing, it uses **ಅಲ್ಲ** (*alla*): **ಇದು ನನ್ನ ಮನೆ ಅಲ್ಲ** — *idu nanna mane alla* — "This is not my house."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾರೂ** (*yārū*) is native Dravidian: *yāru*, "who" (DEDR 5151), with *-ū*, "even": with a "not" verb, "not even anyone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

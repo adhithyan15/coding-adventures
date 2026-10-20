@@ -14,7 +14,8 @@ romanization: "chīnī"
 concept_tag: HI-NOUN-SUGAR
 prerequisites: [HI-C52-oil, HI-C50-blessing, HI-C51-table]
 sounds: []
-roots: []
+roots: [sanskrit-cina]
+etymology_hook: "cīnī: 'Chinese', from Sanskrit cīna 'Chinese' (CDIAL 4841): sugar named after China"
 duration:
   max_seconds: 210
 requires:

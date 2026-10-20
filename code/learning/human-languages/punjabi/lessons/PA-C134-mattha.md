@@ -14,7 +14,8 @@ romanization: "matthā"
 concept_tag: PA-THINGS134-MATTHA
 prerequisites: [PA-C133-ka, PA-C134-gallh]
 sounds: []
-roots: []
+roots: [sanskrit-mastaka]
+etymology_hook: "matthā ← Sanskrit mastaka 'head, skull', a tadbhava (CDIAL 9926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C134-gallh]
 <!-- hl-knowledge: introduces=[PA-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **ਮੱਥਾ** — *matthā* — "a forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਥਾ** (*matthā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mastaka*, "head, skull" (CDIAL 9926).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

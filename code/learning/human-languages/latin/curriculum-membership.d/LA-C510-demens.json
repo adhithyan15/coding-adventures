@@ -1,0 +1,11 @@
+{
+  "id": "LA-C510-demens",
+  "pathSegment": "LA-PATH-510-INSA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-510-INSA",
+      "order": 3
+    }
+  ]
+}

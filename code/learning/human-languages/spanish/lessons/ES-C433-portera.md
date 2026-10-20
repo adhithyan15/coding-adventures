@@ -11,6 +11,7 @@ concept_tag: ES-REF-PORTERA
 prerequisites: [ES-C433-portal, ES-C285-vecino]
 sounds: []
 roots: []
+etymology_hook: "portera ← Latin portarius 'a door-keeper', from porta 'a gate': -arius became -ero"
 duration:
   max_seconds: 235
 requires:
@@ -61,6 +62,9 @@ questions, and all of them turn nouns you have into words you have not met.
 
 **el portero** also means the goalkeeper. The one who guards the gate, in both
 cases.
+
+*Portero* is an old word: Latin *portarius*, "a door-keeper" (Lewis & Short),
+from *porta*, "a gate", with the *-arius* that became *-ero*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-02, ES-LEX-C433-EDIF-01] -->

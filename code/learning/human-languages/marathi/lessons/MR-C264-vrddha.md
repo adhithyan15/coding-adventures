@@ -14,7 +14,8 @@ romanization: "vṛddha"
 concept_tag: MR-VASTU264-VRDDHA
 prerequisites: [MR-C263-abhinetri, MR-C263-kavita]
 sounds: []
-roots: []
+roots: [sanskrit-vrddha]
+etymology_hook: "vṛddha ← Sanskrit vṛddha 'grown, large; grown-up, old', a tatsama (CDIAL 12073)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C263-kavita]
 <!-- hl-knowledge: introduces=[MR-LEX-C264-VASTU264-01]; assesses=[] -->
 
 **वृद्ध** — *vṛddha* — "an elderly person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वृद्ध** (*vṛddha*) is Sanskrit *vṛddha*, "grown, large; grown-up, old", taken over whole as a learned loan, a tatsama (CDIAL 12073).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

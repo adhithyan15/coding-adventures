@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Abbracci e coccole",
+  "label": "ch:it-abbracci-e-coccole",
+  "canDo": "I can talk about affection: hugs, cuddles and growing fond of someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C492-affettuoso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about affection: hugs, cuddles and growing fond of someone.",
+    "assesses": [
+      "IT-LEX-C492-ABBRACCI-03",
+      "IT-LEX-C492-ABBRACCI-04",
+      "IT-LEX-C492-ABBRACCI-05"
+    ]
+  }
+}

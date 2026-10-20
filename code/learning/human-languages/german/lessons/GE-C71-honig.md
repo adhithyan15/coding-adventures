@@ -13,7 +13,8 @@ gloss: "honey"
 concept_tag: GE-ESSEN3-HONIG
 prerequisites: [GE-C71-kuchen, GE-C71-suppe]
 sounds: []
-roots: []
+roots: [germanic-hunaga]
+etymology_hook: "Honig ← Old High German honag ← Proto-Germanic *hunagą — the same word as English honey"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C71-suppe]
 <!-- hl-knowledge: introduces=[GE-LEX-C71-ESSEN3-03]; assesses=[] -->
 
 **der Honig** — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Honig** ← Old High German *honag* — inherited. EtymDB 2.1 traces *honag* and English *honey* to Proto-Germanic *\*hunagą*: one word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

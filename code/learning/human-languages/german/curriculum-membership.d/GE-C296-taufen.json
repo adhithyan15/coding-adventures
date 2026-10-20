@@ -1,0 +1,11 @@
+{
+  "id": "GE-C296-taufen",
+  "pathSegment": "GE-PATH-296-GEBURT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-296-GEBURT",
+      "order": 3
+    }
+  ]
+}

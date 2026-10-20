@@ -14,7 +14,8 @@ romanization: "abhī"
 concept_tag: UR-TIME76-ABHI
 prerequisites: [UR-C76-aj, UR-C76-kal]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "abhī: ab 'now' + emphatic -hī; CDIAL lists ab, abhī under evam eva 'exactly so', crossed with a- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C76-kal]
 <!-- hl-knowledge: introduces=[UR-LEX-C76-TIME76-04]; assesses=[] -->
 
 **ابھی** — *abhī* — "right now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ابھی** (*abhī*) is *ab*, "now", with the emphatic *-hī*. CDIAL lists *ab* and *abhī* under Sanskrit *evam eva*, "exactly so", crossed with a pointing *a-* (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

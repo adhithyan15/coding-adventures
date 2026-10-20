@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 213,
-  "sourceHash": "fnv1a64:387ec3c2d5646aa6",
+  "sourceHash": "fnv1a64:b60cd7dc201bd14a",
   "lessonIds": [
     "FA-C213-nakhongir",
     "FA-C213-chaharpaye",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch213.txt",
   "json": "persian/narration/ch213.json",
-  "textHash": "fnv1a64:62b203c1474d5059",
-  "jsonHash": "fnv1a64:abdf9e28b784108f",
+  "textHash": "fnv1a64:e2311cc53739f6b2",
+  "jsonHash": "fnv1a64:69f66dc6b60f38e8",
   "findings": []
 }

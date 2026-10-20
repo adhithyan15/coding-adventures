@@ -14,7 +14,8 @@ romanization: "khoruji"
 concept_tag: FA-MAKAN266-KHORUJI
 prerequisites: [FA-C266-sakhteman, FA-C266-vorudi]
 sounds: []
-roots: []
+roots: [arabic-khuruj]
+etymology_hook: "khoruji: khoruj ← Arabic ḫurūj 'going out', root ḫ-r-j (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C266-vorudi]
 <!-- hl-knowledge: introduces=[FA-LEX-C266-MAKAN266-05]; assesses=[] -->
 
 **خروجی** — *khoruji* — "an exit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoruji* is *khoruj*, "going out", with the ending *-i*. *khoruj* is borrowed from Arabic *ḫurūj*, "going out" (root *ḫ-r-j*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

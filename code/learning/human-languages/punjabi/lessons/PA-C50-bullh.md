@@ -15,6 +15,7 @@ concept_tag: PA-BODY50-BULLH
 prerequisites: [PA-C49-gala, PA-C50-ungal]
 sounds: []
 roots: []
+etymology_hook: "bullh: its origin is not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C50-ungal]
 <!-- hl-knowledge: introduces=[PA-LEX-C50-BODY50-02]; assesses=[] -->
 
 **ਬੁੱਲ੍ਹ** — *bullh* — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਬੁੱਲ੍ਹ** (*bullh*) comes from is not settled: neither CDIAL nor DEDR has an entry for it. Hindi says *hoṇṭh*, which is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

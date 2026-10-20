@@ -14,7 +14,8 @@ romanization: "poétomu"
 concept_tag: RU-PRICH154-POETOMU
 prerequisites: [RU-C153-pamyatnik, RU-C153-fontan]
 sounds: []
-roots: []
+roots: [pie-to]
+etymology_hook: "поэтому is по 'after, by' + этому, a form of этот 'this': for this reason"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C153-fontan]
 <!-- hl-knowledge: introduces=[RU-LEX-C154-PRICH154-01]; assesses=[] -->
 
 **поэтому** (*poétomu*) — "so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поэтому** is *по*, "by, after", with *этому*, a form of *этот*, "this": "for this reason". Vasmer builds *этот* from a pointing *э* and the old *\*tŭ* of *тот*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

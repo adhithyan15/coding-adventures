@@ -14,7 +14,8 @@ romanization: "maśakaḥ"
 concept_tag: SA-THINGS115-MASAKAH
 prerequisites: [SA-C114-bhramarah, SA-C115-maksika]
 sounds: []
-roots: []
+roots: [sanskrit-mashaka]
+etymology_hook: "maśaka 'mosquito' (AV) is inherited from Indo-European (EtymDB); Hindi masā 'mosquito' (CDIAL 9917)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C115-maksika]
 <!-- hl-knowledge: introduces=[SA-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **मशकः** — *maśakaḥ* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*maśaka* "a mosquito, a gnat" is old, in the Atharvaveda, and is inherited from Indo-European (EtymDB). It lives on as Hindi *masā* and Bengali *maśā* "mosquito" (CDIAL 9917).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "idi"
 concept_tag: TE-DEIXIS-THIS
 prerequisites: [TE-C40-second-pass-meal]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "idi: native Dravidian, one word with Tamil itu and Kannada idu (DEDR 410)"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: []
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **అది** *adi*, which you will meet in a moment. The two of them
+Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇది** (*idi*) is native Dravidian, one word with Tamil *itu* and Kannada *idu* (DEDR 410). It is built on the near-pointing base *i-*, "this".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-01] -->

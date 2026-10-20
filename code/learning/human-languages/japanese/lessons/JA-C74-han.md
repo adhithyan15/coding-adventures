@@ -14,7 +14,8 @@ romanization: "han"
 concept_tag: JA-TIME74-HAN
 prerequisites: [JA-C74-owari, JA-C74-tochuu]
 sounds: []
-roots: []
+roots: [middle-chinese-panh]
+etymology_hook: "han: Sino-Japanese, the on'yomi of 半 'half', from Middle Chinese panH"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C74-tochuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C74-TIME74-05]; assesses=[] -->
 
 **はん** — *han* — "half past".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はん** (*han*) is Sino-Japanese (kango): the on'yomi of a character meaning "half", a reading borrowed from Chinese (Middle Chinese *panH* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

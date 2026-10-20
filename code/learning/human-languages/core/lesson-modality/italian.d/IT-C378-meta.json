@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C378-meta",
+    "language": "italian",
+    "chapter": 378,
+    "sequence": 21630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d53f3828385e2e12"
+  },
+  "findings": []
+}

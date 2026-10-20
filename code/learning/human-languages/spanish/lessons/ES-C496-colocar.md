@@ -10,7 +10,8 @@ gloss: "to put, to place"
 concept_tag: ES-VERB-COLOCAR
 prerequisites: [ES-C496-hogar, ES-C496-cerradura]
 sounds: []
-roots: []
+roots: [collocare-latin]
+etymology_hook: "colocar ← Latin collocare 'to place' — learned; worn down, the same verb became colgar 'to hang'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C496-cerradura]
 > *Put the books on the shelf.*
 
 It takes *qu* before *e*: *coloqué*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colocar** ← Latin *collocare*, "to place, to set in order" (EtymDB 2.1): *con-* and *locare*, "to put" — a learned borrowing. Worn down in speech, the same verb became *colgar*, "to hang".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

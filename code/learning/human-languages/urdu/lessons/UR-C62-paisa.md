@@ -14,7 +14,8 @@ romanization: "paisā"
 concept_tag: UR-SCHOOL62-PAISA
 prerequisites: [UR-C61-iskul, UR-C62-basta]
 sounds: []
-roots: []
+roots: [indo-aryan-padamsha]
+etymology_hook: "paisā ← *padāṃśa 'quarter part', a reconstructed form; a tadbhava (CDIAL 7761)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C62-basta]
 <!-- hl-knowledge: introduces=[UR-LEX-C62-SCHOOL62-02]; assesses=[] -->
 
 **پیسہ** — *paisā* — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیسہ** (*paisā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*padāṃśa*, "quarter part", a form CDIAL reconstructs from its descendants (CDIAL 7761). CDIAL glosses the Hindi word "quarter anna", a small coin; from there it came to mean money.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

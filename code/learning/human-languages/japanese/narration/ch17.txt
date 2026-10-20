@@ -55,6 +55,9 @@ You'll Want to Know — hear and say.
 む (mu) from last lesson, then the small っ and つ.
 Last chapter said of ろく: six has one everyday reading; no native word stands beside it. That was true of the borrowed count and it is worth putting straight now. The native word for six exists — it is む (mu), and you are holding it. What it does not do is stand inside the borrowed count the way よん does.
 
+The word, taken apart.
+むっつ (muttsu) is native: mu, the inherited word for "six", with the counter -tsu (KANJIDIC2).
+
 Guided Practice.
 [once you have stopped driving — write: むっつ (muttsu)]
 Say roku and muttsu: same number, two words, no shared sound. Then run the count so far: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu.
@@ -89,6 +92,9 @@ the reading: borrowed reading. four: shi. seven: shichi.
 the reading: native word, used instead. four: よん. seven: なな.
 the reading: native count. four: よっつ. seven: ななつ (nanatsu).
 Two places in ten where the native word walked into the borrowed count and stayed, and both of them are places where the borrowed reading collides with another word. This is the seam, and you have now seen both ends of it.
+
+The word, taken apart.
+ななつ (nanatsu) is native: nana, the inherited word for "seven", with the counter -tsu (KANJIDIC2).
 
 Guided Practice.
 [once you have stopped driving — write: ななつ (nanatsu)]
@@ -152,6 +158,9 @@ You'll Want to Know — hear and say.
 や (ya) from last lesson, the small っ, and つ.
 Eight is the plain case. はち is the borrowed word, やっつ (yattsu) is the native one, neither has walked into the other's count, and there is nothing to disentangle. The last chapter used はち for exactly the same job — to show what the ordinary case looks like once the odd ones have been seen.
 Say the run: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu, nanatsu, yattsu. Eight of ten, and two signs left to buy.
+
+The word, taken apart.
+やっつ (yattsu) is native: ya, the inherited word for "eight", with the counter -tsu (KANJIDIC2).
 
 Guided Practice.
 [once you have stopped driving — write: やっつ (yattsu)]
@@ -219,6 +228,9 @@ The first two signs of ここのつ (kokonotsu) spell ここ, the word for here 
 They are the same two signs, and it means nothing. kokono- is simply the native word for nine; it is not built on here and there is no story joining them. Say so and move on — an accident that gets explained is worse than one that gets named.
 What it does mean is that you can write this four-beat word straight away, which no other word in the chapter has managed.
 
+The word, taken apart.
+ここのつ (kokonotsu) is native: kokono, the inherited word for "nine", with the counter -tsu. It is not built from koko, "here"; the likeness is chance (KANJIDIC2).
+
 Guided Practice.
 [once you have stopped driving — write: ここのつ (kokonotsu)]
 Say hachi, ku, then yattsu, kokonotsu — both counts, two numbers each. Then say ku and kokonotsu again. Then say koko and kokonotsu and remind yourself that the second is not made of the first.
@@ -248,6 +260,9 @@ You'll Want to Know — hear and say.
 Two signs, both old, and no つ at all.
 Nine words in this count carry the つ that does the counting. The tenth drops it, and that is not a spelling quirk — it is the edge of the count. とお (tō) is where the native series ends. There is no eleven things in it.
 Above ten, Japanese has only the borrowed count and a counter word, which is exactly the machinery the next chapter is for. じゅう goes on to ninety-nine; とお (tō) goes nowhere.
+
+The word, taken apart.
+とお (tō) is native: the inherited word for "ten", the kun'yomi of the character for ten, with no -tsu on the end (KANJIDIC2). Its older origin is not settled.
 
 Guided Practice.
 [once you have stopped driving — write: とお (tō)]

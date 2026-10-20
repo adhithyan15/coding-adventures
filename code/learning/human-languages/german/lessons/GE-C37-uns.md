@@ -55,7 +55,7 @@ insisting.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-UNS-01, GE-LEX-WIR-01, GE-LEX-MICH-01] -->
 
-**uns** and English **us** are the same word, worn to the same length in both
+**uns** is the same word as English **us**, worn to the same length in both
 languages. English *us* also does both jobs — *he sees us*, *he gives us coffee*
 — so this is one row where the two languages agree completely and nothing has to
 be learned twice.

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:ac02ba2cfdec35dd",
+  "lessonIds": [
+    "IT-C401-file",
+    "IT-C401-cancellare",
+    "IT-C401-copiare",
+    "IT-C401-incollare",
+    "IT-C401-backup"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch401.txt",
+  "json": "italian/narration/ch401.json",
+  "textHash": "fnv1a64:e6a764286cfdab83",
+  "jsonHash": "fnv1a64:a0f0a756f26392e4",
+  "findings": []
+}

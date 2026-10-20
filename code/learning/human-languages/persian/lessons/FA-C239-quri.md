@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ239-QURI
 prerequisites: [FA-C238-zahmatkesh, FA-C239-ketri]
 sounds: []
 roots: []
+etymology_hook: "quri: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C239-ketri]
 <!-- hl-knowledge: introduces=[FA-LEX-C239-CHIZ239-02]; assesses=[] -->
 
 **قوری** — *quri* — "a teapot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*quri* is the word for a teapot, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

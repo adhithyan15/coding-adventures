@@ -1,0 +1,11 @@
+{
+  "id": "ES-C753-ritmo",
+  "pathSegment": "ES-PATH-753-MUSICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-753-MUSICA",
+      "order": 3
+    }
+  ]
+}

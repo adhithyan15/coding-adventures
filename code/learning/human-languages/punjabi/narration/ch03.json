@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8ce3305b2d914d55",
+  "sourceHash": "fnv1a64:4108b3c07c0714fc",
   "lessons": [
     {
       "id": "PA-S03-nanna-bihari-dulava",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06ada0710b8400a4",
+      "sourceHash": "fnv1a64:57273fc1528bb321",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bc1779f82634f4f",
+      "sourceHash": "fnv1a64:e39c7dfc86c23762",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +362,10 @@
             {
               "kind": "speech",
               "text": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) = ਤੁਸੀਂ (tusī̃, respectful \"you\") + ਕਿਵੇਂ (kivēṁ, \"how\") + ਹੋ (ho, \"are\") — literally \"you how are?\" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful \"are\" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful)."
+            },
+            {
+              "kind": "speech",
+              "text": "The words are inherited: tusīṁ from Sanskrit yuṣmad-, \"you (plural)\" (CDIAL 10511); kivēṁ on the old question stem ka-; and ho from hoṇā, \"to be\", which CDIAL lists under bhavati, \"becomes, is\" (CDIAL 9416)."
             }
           ]
         },
@@ -587,7 +591,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20f5e660f14e8cfb",
+      "sourceHash": "fnv1a64:bc506ac7ab7dc586",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -736,7 +740,7 @@
       "title": "ਟ, ਠ, ਡ — three pieces met inside a word you already say",
       "headword": "ਟ · ਠ · ਡ",
       "romanization": "ṭa · ṭha · ḍa",
-      "gloss": "three pieces of Gurmukhi, met inside a word you already say",
+      "gloss": "three pieces of Gurmukhi, met inside the word the next lesson teaches",
       "script": "gurmukhi",
       "modality": "pen",
       "derivedModality": "pen",
@@ -745,7 +749,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a384a4c059288265",
+      "sourceHash": "fnv1a64:cfed7bd14b681668",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -820,11 +824,11 @@
             },
             {
               "kind": "speech",
-              "text": "Now put them where you have already heard them:"
+              "text": "Now see one of them inside the word the next lesson teaches:"
             },
             {
               "kind": "speech",
-              "text": "ਟ ਠ ਡ — one row, one tongue position, three degrees of breath and voice ਠ + ੀ + ਕ becomes ਠੀਕ (ṭhīk) ਠੀਕ — ṭhīk — fine, all right."
+              "text": "ਟ ਠ ਡ — one row, one tongue position, three degrees of breath and voice ਠ + ੀ + ਕ becomes ਠੀਕ (ṭhīk)."
             },
             {
               "kind": "speech",
@@ -861,20 +865,20 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ਠੀਕ (ṭhīk) and point to each of today's pieces in turn",
+              "instruction": "at the word built above and point to the one of today's pieces it holds",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **ਠੀਕ** and point to each of today's pieces in turn]"
+              "source": "[YOU LOOK: at the word built above and point to the one of today's pieces it holds]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ṭa, ṭha, ḍa, then the whole word — ṭhīk",
+              "instruction": "ṭa, ṭha, ḍa — then which one carries the puff of breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ṭa*, *ṭha*, *ḍa*, then the whole word — *ṭhīk*]"
+              "source": "[YOU SAY: *ṭa*, *ṭha*, *ḍa* — then which one carries the puff of breath]"
             },
             {
               "kind": "prompt",
@@ -900,7 +904,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name today's pieces: ṭaiṅkā, ṭhaṭṭhā, ḍaḍḍā. Which of them is a mātrā or a mark rather than a letter, and what does ਠੀਕ say? (ṭhīk, “fine, all right”.)"
+              "text": "Name today's pieces: ṭaiṅkā, ṭhaṭṭhā, ḍaḍḍā. Which of them is a mātrā or a mark rather than a letter? (None — all three are letters.) Which one carries a puff of breath? (ṭhaṭṭhā, ਠ.)"
             },
             {
               "kind": "speech",
@@ -923,7 +927,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f358e9168b6d2fe",
+      "sourceHash": "fnv1a64:4c0fbc5edad57b19",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -971,6 +975,10 @@
             {
               "kind": "speech",
               "text": "ਠੀਕ (ṭhīk) means \"correct, right, fine, OK\" — a native Indian word (shared with Hindi and Urdu), one of the most useful in the language: ṭhīk hai (\"OK / agreed\"), sab ṭhīk? (\"all well?\"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists it under a reconstructed ṭhīkka, \"firm, right\", which it derives, probably, from Sanskrit sthita, \"standing\" (CDIAL 5503)."
             }
           ]
         },
@@ -1082,7 +1090,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:df7c0c7261bf2653",
+      "sourceHash": "fnv1a64:63b5a56d953a8627",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -13,7 +13,8 @@ gloss: "on the right"
 concept_tag: FR-LIEU188-A-DROITE
 prerequisites: [FR-C188-loin-de, FR-C188-au-fond]
 sounds: []
-roots: []
+roots: [directus-latin]
+etymology_hook: "à droite — à + droite: on the right"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C188-au-fond]
 <!-- hl-knowledge: introduces=[FR-LEX-C188-LIEU188-04]; assesses=[] -->
 
 **à droite** — "on the right".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**à droite** — *à*, "on", and *droite*, "the right". *Droite* ← Latin *dīrēctus*, "straight" (Lewis & Short), through Old French *dreit*; *à* ← Latin *ad*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

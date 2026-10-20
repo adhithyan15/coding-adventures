@@ -11,8 +11,8 @@ gloss: person
 concept_tag: ZH-PERSON-PERSON
 prerequisites: [ZH-C11-practice]
 sounds: [tone-2]
-roots: []
-etymology_hook: The two-stroke figure you learned to write now becomes a word you can hear, say, read, and write.
+roots: [middle-chinese-nyin]
+etymology_hook: "rén 'person': inherited, from Middle Chinese nyin, whose ny- became Mandarin r"
 duration:
   max_seconds: 170
 requires:
@@ -48,6 +48,12 @@ Hear the rising tone first. Say *rén*.
 
 The meaning is singular here: one person. Number comes from context or another
 word; the character itself does not grow a plural ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**人** *rén* is inherited from Middle Chinese *nyin*, "person" (Guangyun, in
+Baxter's transcription). Its *ny* became the Mandarin *r*, as in *rì*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01, ZH-SCRIPT-REN-01] -->

@@ -14,7 +14,8 @@ romanization: "kampani"
 concept_tag: ML-JOLI334-KAMPANI
 prerequisites: [ML-C334-mutalali, ML-C334-manejar]
 sounds: []
-roots: []
+roots: [english-company]
+etymology_hook: "kampani ← English company"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C334-manejar]
 <!-- hl-knowledge: introduces=[ML-LEX-C334-JOLI334-04]; assesses=[] -->
 
 **കമ്പനി** — *kampani* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കമ്പനി** (*kampani*) ← English *company*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

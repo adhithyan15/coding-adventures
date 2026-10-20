@@ -4,7 +4,7 @@
   "chapter": 146,
   "title": "To remember, To guess, To prefer, To seem, To be worried",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea26a312a144cbcb",
+  "sourceHash": "fnv1a64:d85ff25d8454276b",
   "lessons": [
     {
       "id": "FA-C146-be-yad-avardan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2311401c181c8ab",
+      "sourceHash": "fnv1a64:167898f728f327ff",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "be yâd âvardan is \"to bring to memory\": be, \"to\", yâd, \"memory\" (usually traced to Middle Persian ayād), and âvardan, \"to bring\". All are native Persian. âvardan, \"to bring\", is an inherited verb; it is usually traced to Middle Persian āwurdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9475b2a1387844ac",
+      "sourceHash": "fnv1a64:0ae9b3d2f1fb6627",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hads zadan pairs hads, borrowed from Arabic ḥads, \"guessing, conjecture\" (root ḥ-d-s, Lane), with the Persian verb zadan, \"to strike\". zadan, \"to strike\", is an inherited verb; it is usually traced to Middle Persian zadan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d268ac3b7fc55bcd",
+      "sourceHash": "fnv1a64:5285e0c9f4ecf1af",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tarjih dâdan pairs tarjih, borrowed from Arabic tarjīḥ, \"giving more weight, preferring\" (root r-j-ḥ, Lane), with the Persian verb dâdan, \"to give\". dâdan, \"to give\", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99d3e40b8837acd2",
+      "sourceHash": "fnv1a64:3478dcf6f479ed66",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "be nazar residan is \"to reach the view\": be, \"to\", nazar, \"look, view\", and residan, \"to reach\". nazar is borrowed from Arabic naẓar, \"look, sight\" (root n-ẓ-r, Lane); be and residan are native. residan, \"to reach\", is an inherited verb; it is usually traced to Middle Persian rasīdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d680ac2ea20ef60",
+      "sourceHash": "fnv1a64:22a5df27cede0c32",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "negarân budan pairs negarân, \"anxious, watchful\", with budan, \"to be\". negarân is native, usually explained as built on negar-, \"to look\". budan, \"to be\", is an inherited verb; it is usually traced to Middle Persian būdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

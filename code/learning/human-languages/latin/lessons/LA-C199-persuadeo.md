@@ -13,7 +13,8 @@ gloss: "to persuade"
 concept_tag: LA-VERB-PERSUADEO
 prerequisites: [LA-C198-quiesco, LA-C199-comparo]
 sounds: []
-roots: []
+roots: [persuadere-latin, suadere-latin]
+etymology_hook: "persuādeō 'to persuade' — per 'thoroughly' + suādeō 'to urge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C199-comparo]
 <!-- hl-knowledge: introduces=[LA-LEX-C199-ACT199-02]; assesses=[] -->
 
 **persuādeō, persuādēre** — "to persuade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**persuādeō** is *per*, "thoroughly", with *suādeō*, "to advise, to urge": to urge someone all the way. *suādeō* belongs with *suāvis*, "sweet", and is inherited from Proto-Italic *\*swādēō*, "to advise" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C367-quominus",
+    "language": "latin",
+    "chapter": 367,
+    "sequence": 19740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6cb778c6a186e2e"
+  },
+  "findings": []
+}

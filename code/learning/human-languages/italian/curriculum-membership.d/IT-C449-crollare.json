@@ -1,0 +1,11 @@
+{
+  "id": "IT-C449-crollare",
+  "pathSegment": "IT-PATH-449-LAVORI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-449-LAVORI",
+      "order": 3
+    }
+  ]
+}

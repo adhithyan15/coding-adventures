@@ -14,7 +14,8 @@ romanization: "shekhā"
 concept_tag: BN-VERB-SHEKHA
 prerequisites: [BN-C50-gaowa, BN-C50-nacha]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "shekhā ← Sanskrit śikṣate 'learns', a tadbhava (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C50-nacha]
 <!-- hl-knowledge: introduces=[BN-LEX-C51-VERBS51-01]; assesses=[] -->
 
 **শেখা** — *shekhā* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শেখা** (*shekhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

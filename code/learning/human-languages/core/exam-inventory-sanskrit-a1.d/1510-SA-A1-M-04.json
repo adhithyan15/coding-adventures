@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-M-04",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "work: the workplace, the activity, looking for work, rights at work",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE07-02",
+    "A1-NE07-03",
+    "A1-NE07-04",
+    "A1-NE07-05",
+    "A1-NE07-06"
+  ],
+  "note": "UNCOVERED. kāryaṁ karomi ('I work') is taught inside SA-LEX-KAROMI in chapter 5 and nothing else in this field exists. Five proxy points ride on one absent lexical set."
+}

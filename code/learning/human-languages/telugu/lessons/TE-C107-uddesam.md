@@ -14,7 +14,8 @@ romanization: "uddēśaṁ"
 concept_tag: TE-WANT107-UDDESAM
 prerequisites: [TE-C107-asa, TE-C107-kala]
 sounds: []
-roots: []
+roots: [sanskrit-uddesha]
+etymology_hook: "uddēśaṁ ← Sanskrit uddeśa 'pointing out', a tatsama (CDIAL 1998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C107-kala]
 <!-- hl-knowledge: introduces=[TE-LEX-C107-WANT107-04]; assesses=[] -->
 
 **ఉద్దేశం** — *uddēśaṁ* — "an intention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉద్దేశం** (*uddēśaṁ*) is Sanskrit *uddeśa*, "pointing out", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1998). Telugu uses it for "intention".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

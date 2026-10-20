@@ -13,7 +13,8 @@ gloss: "a workshop"
 concept_tag: LA-LOC118-OFFICINA
 prerequisites: [LA-C118-puteus, LA-C118-pistrinum]
 sounds: []
-roots: []
+roots: [officina-latin, opus-latin, facere-latin]
+etymology_hook: "officīna 'workshop' — contracted from opificīna, from opifex 'workman': opus + faciō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C118-pistrinum]
 <!-- hl-knowledge: introduces=[LA-LEX-C118-LOC118-04]; assesses=[] -->
 
 **officīna, officīnae** — "a workshop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**officīna** is contracted from *opificīna*, "a workshop" (Lewis & Short), built on *opifex*, "a workman", from *opus*, "work", and *faciō*, "to make".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

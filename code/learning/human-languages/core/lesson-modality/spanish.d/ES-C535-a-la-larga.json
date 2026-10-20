@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C535-a-la-larga",
+    "language": "spanish",
+    "chapter": 535,
+    "sequence": 16360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d387f15fcadfbec"
+  },
+  "findings": []
+}

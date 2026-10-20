@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 78,
-  "sourceHash": "fnv1a64:9bed3b8f3f9d4ea6",
+  "sourceHash": "fnv1a64:5e16baf5687bf058",
   "lessonIds": [
     "AR-C78-nar",
     "AR-C78-thalj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch78.txt",
   "json": "arabic/narration/ch78.json",
-  "textHash": "fnv1a64:c41be93bf95f0b1a",
-  "jsonHash": "fnv1a64:efc720c60dc892ba",
+  "textHash": "fnv1a64:7a5f6fb91c63b611",
+  "jsonHash": "fnv1a64:9c614eda83746b9e",
   "findings": []
 }

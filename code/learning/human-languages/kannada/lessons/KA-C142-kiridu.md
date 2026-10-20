@@ -14,7 +14,8 @@ romanization: "kiridu"
 concept_tag: KA-QUAL142-KIRIDU
 prerequisites: [KA-C142-ala, KA-C142-agala]
 sounds: []
-roots: []
+roots: [dravidian-kiru-small]
+etymology_hook: "kiridu: native Dravidian, one word with Tamil ciṟu and Telugu ciṟu (DEDR 1594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C142-agala]
 <!-- hl-knowledge: introduces=[KA-LEX-C142-QUAL142-04]; assesses=[] -->
 
 **ಕಿರಿದು** — *kiridu* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಿರಿದು** (*kiridu*) is native Dravidian, one word with Tamil *ciṟu*, Telugu *ciṟu* and Malayalam *ciṟṟu* (DEDR 1594). DEDR lists *kiṟidu*, "that which is small".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

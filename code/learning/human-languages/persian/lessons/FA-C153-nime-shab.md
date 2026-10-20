@@ -14,7 +14,8 @@ romanization: "nime-shab"
 concept_tag: FA-ZAMAN153-NIME-SHAB
 prerequisites: [FA-C152-akhar, FA-C152-pas-az]
 sounds: []
-roots: []
+roots: [persian-nim, persian-shab]
+etymology_hook: "nime-shab: Persian nime 'half' (Middle Persian nēmag) + shab 'night'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C152-pas-az]
 <!-- hl-knowledge: introduces=[FA-LEX-C153-ZAMAN153-01]; assesses=[] -->
 
 **نیمه شب** — *nime-shab* — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nime-shab* is *nime*, "half", with *shab*, "night": the half of the night. Both are native; *nime* is usually traced to Middle Persian *nēmag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

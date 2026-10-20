@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [TE-C02-emiti]
 sounds: [independent-e, long-aa]
 roots: [e-interrogative-dravidian]
+etymology_hook: "elā: native Dravidian, on the question base e- (DEDR 5151), which lists ēlāgu 'how'"
 duration:
   max_seconds: 120
 requires:
@@ -45,7 +46,7 @@ the long-*ā* sign) → **ఎలా** (*elā*).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C03-ELAA-02]; assesses=[] -->
 
-**ఎలా** (*elā*, "how") is native Dravidian, on the interrogative base **ఎ-**
+**ఎలా** (*elā*, "how") is native Dravidian (DEDR 5151), on the interrogative base **ఎ-**
 (*e-*) you already met in *ēmiṭi*. Telugu gathers nearly all its questions under
 this **e-**: *ēmiṭi* (what), *elā* (how), *evaru* (who), *ekkaḍa* (where),
 *eppuḍu* (when), *enduku* (why). It is the same Dravidian question-root that heads

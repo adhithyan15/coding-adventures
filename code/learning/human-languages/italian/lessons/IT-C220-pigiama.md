@@ -14,6 +14,7 @@ concept_tag: IT-COSE220-PIGIAMA
 prerequisites: [IT-C220-calze, IT-C220-cintura]
 sounds: []
 roots: []
+etymology_hook: "pigiama ← English pyjamas, from Hindi pajama 'leg garment' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C220-cintura]
 <!-- hl-knowledge: introduces=[IT-LEX-C220-COSE220-04]; assesses=[] -->
 
 **il pigiama** — "pyjamas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pigiama** ← English *pyjamas* — borrowed; English took it from Hindi *pajama*, "a garment for the legs". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

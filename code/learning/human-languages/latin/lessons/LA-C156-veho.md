@@ -13,7 +13,8 @@ gloss: "to carry (by cart or ship)"
 concept_tag: LA-VERB-VEHO
 prerequisites: [LA-C156-frango, LA-C156-iacio]
 sounds: []
-roots: []
+roots: [vehere-latin]
+etymology_hook: "vehō 'to carry' — inherited, usually traced to PIE *wegh- 'to convey'; English wagon is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C156-iacio]
 <!-- hl-knowledge: introduces=[LA-LEX-C156-ACT156-03]; assesses=[] -->
 
 **vehō, vehere** — "to carry (by cart or ship)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vehō** is inherited, usually traced to Proto-Indo-European *\*wegh-*, "to carry, to convey" (EtymDB 2.1); English *wagon* is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pahcān"
 concept_tag: HI-FORM-IDENTITY
 prerequisites: [HI-C119-janmdin, HI-C120-hastakshar]
 sounds: []
-roots: []
+roots: [sanskrit-pratyabhijanati]
+etymology_hook: "pahcān ← Sanskrit pratyabhijānāti 'recognizes', a tadbhava (CDIAL 8637)"
 duration:
   max_seconds: 200
 requires:
@@ -43,7 +44,14 @@ reviews_of: [HI-C120-hastakshar]
 
 **पहचान** (*pahcān*) — "identity", and "recognition".
 
-**पहचान पत्र** — "an identity card". The same word is the knowing-again of a familiar face.
+**पहचान** + **पत्र** (*patra*, "a paper, a document") → **पहचान पत्र**, "an identity card".
+
+The same word is the knowing-again of a familiar face.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पहचान** (*pahcān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pratyabhijānāti*, "recognizes" (CDIAL 8637). *pahcān* is the noun of the verb *pahcānnā*, "to recognize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

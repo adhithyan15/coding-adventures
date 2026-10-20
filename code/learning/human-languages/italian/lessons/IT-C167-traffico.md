@@ -14,6 +14,7 @@ concept_tag: IT-COSE167-TRAFFICO
 prerequisites: [IT-C167-pedaggio, IT-C167-autostrada]
 sounds: []
 roots: []
+etymology_hook: "traffico — origin uncertain; EtymDB proposes Vulgar Latin transfricare 'to rub across'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C167-autostrada]
 <!-- hl-knowledge: introduces=[IT-LEX-C167-COSE167-03]; assesses=[] -->
 
 **il traffico** — "traffic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**traffico** — its origin is uncertain. EtymDB 2.1 derives it from a Vulgar Latin *transfricare*, "to rub across", one proposal among several.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: a little; a small amount
 concept_tag: JA-QUANTITY-SUKOSHI
 prerequisites: [JA-W10-ne]
 sounds: [mora]
-roots: []
-etymology_hook: Sukoshi descends from an older small-quantity form; in the repair line it softens the requested change to a little.
+roots: [japanese-sukoshi]
+etymology_hook: "sukoshi: native Japanese, inherited, not borrowed; kanji 少 attached later as kun'yomi"
 duration:
   max_seconds: 165
 requires:
@@ -45,6 +45,11 @@ reviews_of: [JA-C09-mou-ichido-onegaishimasu, JA-W03-su, JA-W01-ko]
 Three morae. This word makes a request smaller and gentler: not a completely
 different explanation, only **a little** adjustment. The last sign is exposure
 for one lesson; its own writing step comes next.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すこし** (*sukoshi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUKOSHI] -->

@@ -11,7 +11,8 @@ gloss: I (mī)
 concept_tag: PRONOUN-I
 prerequisites: [MR-C03-tumhi-kase-aahat, MR-C01-baram]
 sounds: [matra-i]
-roots: [aham]
+roots: [ma]
+etymology_hook: "mī ← Sanskrit mayā 'by me', the first-person base ma- standing in for the old aham (CDIAL 9691)"
 reviews_of: [MR-C02-majhe, MR-C01-baram]
 duration:
   max_seconds: 220
@@ -48,9 +49,7 @@ single bright syllable: **मी** (*mī*).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-MI, MR-ETYMON-MI-AHAM-EGO]; assesses=[MR-LEX-MAJHE] -->
 
-**मी** (*mī*, "I") descends from Sanskrit **अहम्** (*aham*, "I"), which wore down
-over centuries to the short *mī*. That *aham* comes from PIE
-**\*h₁eǵ(H)om** — the ancestor of Latin **ego** and English **I**. And notice its
+**मी** (*mī*, "I") does not come from Sanskrit **अहम्** (*aham*, "I"), the cousin of Latin **ego** and English **I**. CDIAL lists it under the first-person base *ma-* of *mayā*, "by me": the "by me" form took the place of *aham* (CDIAL 9691). Notice its
 family tie to last chapter's **माझं** (*mājhaṁ*, "my"): the same first-person
 **m-** thread runs through "I" and "my," just as English pairs **I** with
 **me/my**.
@@ -59,16 +58,15 @@ family tie to last chapter's **माझं** (*mājhaṁ*, "my"): the same firs
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-AAHE-COPULA, MR-LEX-BARAM-01] -->
 
 Pair **मी** with the copula **आहे**: **मी आहे** (*mī āhe*, "I am"). To answer
-that you are well, reach back to Chapter 4's **बरं** (*baraṁ*, "fine") in its
-gendered form: **मी बरा आहे** (*mī barā āhe*, a man) / **मी बरी आहे** (*mī barī
-āhe*, a woman) — "I am fine."
+that you are well, reach back to Chapter 4's **बरं** (*baraṁ*, "fine"): the
+next lesson gives it the gendered form that sits between **मी** and **आहे**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MI, MR-LEX-AAHE-COPULA, MR-LEX-BARAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mī" — I; then "mī āhe" — I am]
-- [YOU SAY: "I am fine" for yourself (*mī barā/barī āhe*)]
+- [YOU SAY: "baraṁ" — fine — then "mī āhe" once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MI, MR-ETYMON-MI-AHAM-EGO, MR-LEX-MAJHE] -->

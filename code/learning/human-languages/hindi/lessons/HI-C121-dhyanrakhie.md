@@ -14,7 +14,8 @@ romanization: "dhyān rakhie"
 concept_tag: HI-CARE-TAKE-CARE
 prerequisites: [HI-C120-insan, HI-C120-milkar]
 sounds: []
-roots: []
+roots: [sanskrit-dhyana, sanskrit-rakshati]
+etymology_hook: "dhyān ← Sanskrit dhyāna 'meditation', a tatsama (CDIAL 6889); rakhnā ← rakṣati 'guards' (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C120-milkar]
 **ध्यान रखिए** (*dhyān rakhie*) — "take care", literally "keep attention".
 
 **अपना ध्यान रखिए** — "take care of yourself", the kindest goodbye.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ध्यान रखिए** (*dhyān rakhie*) is "keep attention". *dhyān* is Sanskrit *dhyāna*, "meditation", a tatsama (CDIAL 6889), and *rakhnā*, "to keep", comes from *rakṣati*, "guards" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

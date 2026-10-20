@@ -14,7 +14,8 @@ romanization: "cīrnā"
 concept_tag: HI-VERB-CIRNA
 prerequisites: [HI-C227-pharna, HI-C227-palna]
 sounds: []
-roots: []
+roots: [indo-aryan-cirayati]
+etymology_hook: "cīrnā ← *cīrayati 'splits', a reconstructed form; a tadbhava (CDIAL 4844)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C227-palna]
 <!-- hl-knowledge: introduces=[HI-LEX-C227-ACT227-04]; assesses=[] -->
 
 **चीरना** — *cīrnā* — "to split, to cut open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चीरना** (*cīrnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cīrayati*, "splits", a form CDIAL reconstructs from its descendants (CDIAL 4844). It is built on *cīra*, "strip of cloth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

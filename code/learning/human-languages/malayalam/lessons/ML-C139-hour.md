@@ -11,7 +11,8 @@ romanization: "maṇikkūr"
 concept_tag: ML-SPAN-HOUR
 prerequisites: [ML-C139-time, ML-C139-minute]
 sounds: []
-roots: []
+roots: [dravidian-mani-bell, dravidian-kuru-part]
+etymology_hook: "maṇikkūr: maṇi 'bell, hour' (DEDR 4672, perhaps Sanskrit maṇi) + native kūr 'part, share' (DEDR 1924)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C139-minute]
 
 **മണിക്കൂർ** (*maṇikkūr*) — "an hour". It begins with **മണി**, the word in
 **ഒരു മണി**, "one o'clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മണിക്കൂർ** (*maṇikkūr*) joins *maṇi*, "hour, bell" (DEDR 4672, with Tamil *maṇi*; DEDR asks whether it is Sanskrit *maṇi*, "jewel", CDIAL 9731), to native *kūr*, "part, share, a division of time" (DEDR 1924, with Tamil *kūṟu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

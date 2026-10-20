@@ -14,7 +14,8 @@ romanization: "khoróshiy"
 concept_tag: RU-COLOUR2-GOOD
 prerequisites: [RU-C64-yellow, RU-C64-beautiful]
 sounds: []
-roots: []
+roots: [slavic-khoroshi]
+etymology_hook: "хороший: Vasmer thinks it most likely a short form of хоробрый 'brave'; others prefer other sources"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C64-beautiful]
 <!-- hl-knowledge: introduces=[RU-LEX-C64-COLOUR2-03]; assesses=[] -->
 
 **хороший** (*khoróshiy*) — "good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**хороший** — recorded from the 1200s. Vasmer thinks it most likely a short form of *хоробрый*, "brave"; a link with *хоронить*, "to guard", he finds less likely, one with the sun god Khors he rejects, and a loan from Ossetian *xorz*, "good", which Abaev later supported, he doubts.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

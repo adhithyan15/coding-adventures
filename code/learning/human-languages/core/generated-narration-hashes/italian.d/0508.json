@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:7673e79803a1caaa",
+  "lessonIds": [
+    "IT-C508-allenarsi",
+    "IT-C508-allenamento",
+    "IT-C508-flessione",
+    "IT-C508-addominali",
+    "IT-C508-sudare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch508.txt",
+  "json": "italian/narration/ch508.json",
+  "textHash": "fnv1a64:875dd9d897a3c91c",
+  "jsonHash": "fnv1a64:e16c3cf3b0ecb9f2",
+  "findings": []
+}

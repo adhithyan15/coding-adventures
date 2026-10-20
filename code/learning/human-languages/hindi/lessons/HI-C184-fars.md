@@ -14,7 +14,8 @@ romanization: "farś"
 concept_tag: HI-THG184-FARS
 prerequisites: [HI-C183-baithak, HI-C183-rasoi]
 sounds: []
-roots: []
+roots: [arabic-farsh]
+etymology_hook: "farś ← Arabic farsh 'anything spread, a carpet', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C183-rasoi]
 <!-- hl-knowledge: introduces=[HI-LEX-C184-THG184-01]; assesses=[] -->
 
 **फ़र्श** — *farś* — "a floor (surface)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फ़र्श** (*farś*) is a loan from Arabic *farsh*, "anything spread, a carpet", which reached Hindi through Persian. Its Arabic root is *f-r-sh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

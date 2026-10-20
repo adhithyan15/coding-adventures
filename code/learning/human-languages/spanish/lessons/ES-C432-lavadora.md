@@ -11,6 +11,7 @@ concept_tag: ES-REF-LAVADORA
 prerequisites: [ES-C431-proveedor, ES-C381-lavar, ES-C43-casa]
 sounds: []
 roots: []
+etymology_hook: "lavadora — lavar 'to wash' + -dora: the machine that washes"
 teaches_cells: []
 duration:
   max_seconds: 230
@@ -61,6 +62,8 @@ Spanish names most household machines this way, so **-dora** is worth more to
 you than any single appliance. A machine that does something is usually that
 something plus this ending, and you can often reach the word without having met
 it.
+
+*Lavar* is Latin *lavare*, "to wash".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-01, ES-LEX-LAVAR] -->

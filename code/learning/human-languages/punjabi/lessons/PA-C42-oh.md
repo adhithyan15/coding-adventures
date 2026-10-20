@@ -11,8 +11,8 @@ gloss: he, she, it - the pronoun for anyone who is not here
 concept_tag: PA-PRON-OH
 prerequisites: [PA-C41-lai, PA-C03-main]
 sounds: [aunkar-u]
-roots: []
-etymology_hook: One word covers he, she and it, and the same word points at something over there.
+roots: [sanskrit-asau]
+etymology_hook: "oh ← Sanskrit asau 'that', whose stem amu- gave the later words for 'that'; CDIAL lists Punjabi o (CDIAL 972)"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +61,8 @@ already seen, where **ਤਾਂ** at the head of a result was a demonstrative do
 joining job.
 
 With this the pronoun set is complete: **ਮੈਂ**, **ਤੂੰ** / **ਤੁਸੀਂ**, **ਉਹ**.
+
+*Oh* is inherited. CDIAL lists Punjabi *o*, "that", under Sanskrit *asau*, "that", whose other forms, on a stem *amu-*, gave the later words for "that" (CDIAL 972).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PRON-OH-01, PA-LEX-MAIN-03] -->

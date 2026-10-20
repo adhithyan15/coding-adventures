@@ -14,7 +14,8 @@ romanization: "baynamā"
 concept_tag: AR-SABAB176-BAYNAMA
 prerequisites: [AR-C175-aydan, AR-C176-thumma]
 sounds: []
-roots: []
+roots: [b-y-n]
+etymology_hook: "baynamā: built from bayna 'between' (root b-y-n, Lane) + mā: 'in the interval that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C176-thumma]
 <!-- hl-knowledge: introduces=[AR-LEX-C176-SABAB176-02]; assesses=[] -->
 
 **بينما** — *baynamā* — "while, whereas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بينما** (*baynamā*) is built from *bayna*, "between", from the root *b-y-n* (Lane), and *mā*, "what": "in the interval in which", hence "while".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

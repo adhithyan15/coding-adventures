@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:3fd77203d53d9239",
+  "lessonIds": [
+    "IT-C535-trapano",
+    "IT-C535-vite",
+    "IT-C535-cacciavite",
+    "IT-C535-aggiustare",
+    "IT-C535-imbiancare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch535.txt",
+  "json": "italian/narration/ch535.json",
+  "textHash": "fnv1a64:5561ff99c717b424",
+  "jsonHash": "fnv1a64:af4b70f3f28b10db",
+  "findings": []
+}

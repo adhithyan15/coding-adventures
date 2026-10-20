@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 78,
-  "sourceHash": "fnv1a64:40b5d8f1c02a4d26",
+  "sourceHash": "fnv1a64:72c3d77242244714",
   "lessonIds": [
     "PT-C78-chapeu",
     "PT-C78-casaco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch78.txt",
   "json": "portuguese/narration/ch78.json",
-  "textHash": "fnv1a64:614e1b2ab6eefa8f",
-  "jsonHash": "fnv1a64:3c0e5d56de45423f",
+  "textHash": "fnv1a64:7b283b0d66966d9d",
+  "jsonHash": "fnv1a64:2de5aefc8bc29801",
   "findings": []
 }

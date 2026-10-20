@@ -14,7 +14,8 @@ romanization: "nichu"
 concept_tag: BN-ADJ74-NICHU
 prerequisites: [BN-C74-dami, BN-C74-sosta]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nichu ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C74-sosta]
 <!-- hl-knowledge: introduces=[BN-LEX-C74-ADJ74-03]; assesses=[] -->
 
 **নিচু** — *nichu* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিচু** (*nichu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low" (CDIAL 7540). CDIAL writes the Bengali form *nica*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

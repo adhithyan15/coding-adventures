@@ -11,7 +11,8 @@ gloss: "ninth — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-NINTH
 prerequisites: [TA-C83-eighth, TA-C82-fourth, TA-C78-for-the-sake-of, TA-W23-read-sattai]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, tamil-aaku-become]
+etymology_hook: "ஒன்பதாவது — native: oṉpatu 'nine' (DEDR 1025) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 195
 requires:
@@ -46,8 +47,13 @@ reviews_of: [TA-C83-eighth, TA-C82-fourth, TA-C78-for-the-sake-of, TA-W23-read-s
 and nothing else changes.
 
 **ஒன்பது** was already a built word when you learned it: an old **ஒன்**, one,
-in front of **பது**, ten — one short of ten. The ordinal ending goes on top of
+in front of **பது**, ten — usually read as one short of ten. The ordinal ending goes on top of
 that, and none of the machinery underneath reacts to it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒன்பதாவது** (*oṉpadāvadu*) is native: *oṉpatu*, "nine" (DEDR 1025; Malayalam *ompatu*), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-04, TA-LEX-C83-ORDINAL-03, TA-LEX-C82-ORDINAL-07] -->
@@ -60,7 +66,7 @@ that, and none of the machinery underneath reacts to it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-04, TA-LEX-C83-ORDINAL-03, TA-LEX-C82-ORDINAL-07] -->
 
-[PAUSE 3s] What two numbers are inside ஒன்பது? (**One** and **ten** — nine is one short of ten.)
+[PAUSE 3s] What two numbers are inside ஒன்பது? (**One** and **ten** — usually read as one short of ten.)
 
 
 Source: [learntamil.com, Ordinal Numbers / Dates](https://www.learntamil.com/part1/ch02/ordinal-numbers-dates/).

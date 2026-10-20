@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-531-KUECHE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about jobs in the kitchen.",
+  "prerequisites": []
+}

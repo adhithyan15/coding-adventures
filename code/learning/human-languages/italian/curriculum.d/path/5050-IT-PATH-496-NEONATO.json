@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-496-NEONATO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-496-NEONATO"
+  ],
+  "after": []
+}

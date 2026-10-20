@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C441-dachrinne",
+    "language": "german",
+    "chapter": 441,
+    "sequence": 23720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d6fa4ccc59ecaba"
+  },
+  "findings": []
+}

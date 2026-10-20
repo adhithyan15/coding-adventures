@@ -14,7 +14,8 @@ romanization: "kural"
 concept_tag: TA-PORUL245-KURAL
 prerequisites: [TA-C244-katavuccittu, TA-C245-cumai]
 sounds: []
-roots: []
+roots: [dravidian-kural-voice]
+etymology_hook: "குரல் — native Dravidian (DEDR 1774); Malayalam kural 'voice', Kannada koral"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C245-cumai]
 <!-- hl-knowledge: introduces=[TA-LEX-C245-PORUL245-02]; assesses=[] -->
 
 **குரல்** — *kural* — "a voice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குரல்** (*kural*) is native Dravidian. DEDR 1774 lists Malayalam *kural*, "voice" and Kannada *koral*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

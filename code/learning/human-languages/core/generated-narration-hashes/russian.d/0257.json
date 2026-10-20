@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 257,
-  "sourceHash": "fnv1a64:95a6279cc6b5e065",
+  "sourceHash": "fnv1a64:24db643c12074602",
   "lessonIds": [
     "RU-C257-kompaniya",
     "RU-C257-firma",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch257.txt",
   "json": "russian/narration/ch257.json",
-  "textHash": "fnv1a64:68d685dfe75fb6e1",
-  "jsonHash": "fnv1a64:4393a7e0063cc394",
+  "textHash": "fnv1a64:13baee99306c0182",
+  "jsonHash": "fnv1a64:63646926a7ed9463",
   "findings": []
 }

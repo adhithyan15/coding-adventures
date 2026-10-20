@@ -11,8 +11,8 @@ gloss: the counter for long thin things — and a kanji you have been writing si
 concept_tag: JA-COUNTER-HON
 prerequisites: [JA-W18-ho, JA-C12-kami, JA-C11-ashi, JA-W03-dakuten, JA-W11-te]
 sounds: [mora]
-roots: []
-etymology_hook: Wikipedia lists the long-thin counter's things -- rivers, roads, pencils, bottles -- and the kanji it is written with is the one inside 日本語.
+roots: [middle-chinese-pwonx]
+etymology_hook: "-hon: Sino-Japanese, the on'yomi of 本 'root, origin', from Middle Chinese pwonX"
 duration:
   max_seconds: 215
 requires:
@@ -78,6 +78,11 @@ and at **one, six, eight and ten** it goes further still — further than the
 dakuten can take it. Both of those need a mark on the sign, and the second mark
 is one this book has never taught. The next two lessons buy it and then spend
 it; until then, say the four plain ones.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほん** (*-hon*) is Sino-Japanese: the on'yomi of **本**, a character for "root, origin", borrowed from Chinese (Middle Chinese *pwonX*; Unihan).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HON, JA-LEX-KAMI-HAIR, JA-LEX-ASHI, JA-LEX-YON, JA-LEX-NANA] -->

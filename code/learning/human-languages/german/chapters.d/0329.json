@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Guten Appetit",
+  "label": "ch:ge-guten-appetit",
+  "canDo": "I can describe serving a meal: to arrange on the plate, to garnish, to serve, to cool and crispy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R329-review-final-329",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can describe serving a meal: to arrange on the plate, to garnish, to serve, to cool and crispy.",
+    "assesses": [
+      "GE-LEX-C329-ANRICHTEN-03",
+      "GE-LEX-C329-ANRICHTEN-04",
+      "GE-LEX-C329-ANRICHTEN-05"
+    ]
+  }
+}

@@ -12,7 +12,7 @@ concept_tag: RESPONSE-YES
 prerequisites: [AR-C01-salam]
 sounds: [ayn-pharyngeal, arabic-rtl]
 roots: [naam]
-etymology_hook: "نعم naʿam 'yes' carries the ع ʿayn — a throat sound with no English match, the most Arabic thing in the word"
+etymology_hook: "naʿam: a particle of assent, listed by Lane under n-ʿ-m; its deeper origin is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +63,11 @@ you'll also hear:
 
 And a useful twist: said as a question, **naʿam?** also means **"pardon? / you
 were saying?"** — the same stretch English gives "yes?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نعم** (*naʿam*) is listed by Lane under *n-ʿ-m* as a particle meaning "even so, yes". It is not built from the root's verbs, and its deeper origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C05-NAAM-01, AR-CONCEPT-C05-NAAM-02] -->

@@ -13,7 +13,8 @@ gloss: "an outcome"
 concept_tag: LA-RES221-EVENTUS
 prerequisites: [LA-C221-regula, LA-C221-discrimen]
 sounds: []
-roots: []
+roots: [eventus-latin, evenire-latin, venire-latin]
+etymology_hook: "ēventus 'outcome' — built on ēveniō 'to come out'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C221-discrimen]
 <!-- hl-knowledge: introduces=[LA-LEX-C221-RES221-03]; assesses=[] -->
 
 **ēventus, ēventūs** — "an outcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ēventus** is built on *ēveniō*, "to come out, to happen" (Lewis & Short), from *ē*, "out", and *veniō*, "to come": how things come out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

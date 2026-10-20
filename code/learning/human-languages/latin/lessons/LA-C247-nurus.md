@@ -13,7 +13,8 @@ gloss: "a daughter-in-law"
 concept_tag: LA-RES247-NURUS
 prerequisites: [LA-C247-socrus, LA-C247-gener]
 sounds: []
-roots: []
+roots: [nurus-latin]
+etymology_hook: "nurus 'daughter-in-law' — inherited, usually traced to PIE *snusos"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C247-gener]
 <!-- hl-knowledge: introduces=[LA-LEX-C247-RES247-05]; assesses=[] -->
 
 **nurus, nurūs** — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nurus** is inherited, usually traced to Proto-Indo-European *\*snusos*, "daughter-in-law" (EtymDB 2.1); Latin lost the first s, and Old High German *snur*, "daughter-in-law", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-WANN-SOFORT
 prerequisites: [GE-C94-sekunde, GE-C94-immer]
 sounds: []
 roots: []
+etymology_hook: "sofort — so + fort, 'thus forth': straight on, without a pause"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C94-immer]
 <!-- hl-knowledge: introduces=[GE-LEX-C94-WANN-05]; assesses=[] -->
 
 **sofort** — "immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sofort** is *so* + an adverb meaning "forth": "so forth", straight on without a pause. The two grew together into one word. *So* ← Proto-Germanic *\*swa* (EtymDB 2.1), and *fort* is the same word as English *forth*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

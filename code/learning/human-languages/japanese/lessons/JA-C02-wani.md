@@ -14,7 +14,8 @@ gloss: "a crocodile"
 concept_tag: JA-ANCHOR-WANI
 prerequisites: [JA-W01-chi]
 sounds: []
-roots: []
+roots: [japanese-wani]
+etymology_hook: "wani: native Japanese, inherited, not borrowed; usually kana, kanji 鰐 as kun'yomi"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard-japanese-tokyo
 **わに** — *wani* — "a crocodile".
 
 Say it: *wani*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **わ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わに** (*wani*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). In older Japanese the same word also named the shark (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-WANI] -->

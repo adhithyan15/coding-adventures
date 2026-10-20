@@ -14,7 +14,8 @@ romanization: "dækhā kôrā"
 concept_tag: BN-VERB-DKHA-KORA
 prerequisites: [BN-C210-soi-kora, BN-C210-phon-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati, sanskrit-karoti]
+etymology_hook: "dækhā kôrā: dækhā 'seeing' (CDIAL 6507) + kôrā 'to do' ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C210-phon-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C210-ACT210-03]; assesses=[] -->
 
 **দেখা করা** — *dækhā kôrā* — "to meet".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেখা করা** (*dækhā kôrā*) is *dækhā*, "seeing", which CDIAL lists under *\*dṛkṣati*, "sees" (CDIAL 6507), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814): "to do a seeing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

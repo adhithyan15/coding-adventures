@@ -14,7 +14,8 @@ romanization: "poga"
 concept_tag: TE-STHALAM175-POGA
 prerequisites: [TE-C175-bhukampam, TE-C175-dummu]
 sounds: []
-roots: []
+roots: [dravidian-pukai-smoke]
+etymology_hook: "poga: native Dravidian, one word with Tamil pukai and Kannada poge (DEDR 4240)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C175-dummu]
 <!-- hl-knowledge: introduces=[TE-LEX-C175-STHALAM175-05]; assesses=[] -->
 
 **పొగ** — *poga* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొగ** (*poga*) is native Dravidian, one word with Tamil *pukai* and Kannada *poge* (DEDR 4240). DEDR lists Telugu *poga*, "smoke, fume".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for simple, then the Persian for calm.
 You'll want to know: خسته.
 خسته — khaste — "tired".
 
+The word, taken apart.
+khaste is the past participle of khastan, "to wound, to injure" (EtymDB): "wounded", then "worn out, tired". The verb is native Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for calm, then the Persian for tired.
 
 You'll want to know: ساکت.
 ساکت — sâkat — "silent".
+
+The word, taken apart.
+sâkat is borrowed from Arabic sākit, "silent". Its Arabic root is s-k-t (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for tired, then the Persian for silent.
 You'll want to know: شاد.
 شاد — shâd — "glad, cheerful".
 
+The word, taken apart.
+shâd is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian šād, "glad".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for silent, then the Persian for glad.
 You'll want to know: دانا.
 دانا — dânâ — "wise".
 
+The word, taken apart.
+dânâ is dân-, the present stem of dânestan, "to know", with the ending -â, "-ing": "knowing". The verb is inherited, from Middle Persian dānistan.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for glad, then the Persian for wise.
 
 You'll want to know: نادان.
 نادان — nâdân — "ignorant".
+
+The word, taken apart.
+nâdân is built from nâ-, "not", and dân, "knowing", from dânestan, "to know": "unknowing". dânestan is inherited, from Middle Persian dānistan, a cousin of English know.
 
 What you've built.
 One more word for this chapter.

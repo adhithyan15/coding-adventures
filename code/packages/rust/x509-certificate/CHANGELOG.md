@@ -1,0 +1,11 @@
+# Changelog
+
+## 0.1.0 — 2026-10-18
+
+- Added allocation-free decoding for complete RFC 5280 `Certificate` and
+  `TBSCertificate` structures.
+- Added exact signed-byte retention, signature-algorithm consistency checks,
+  a non-empty issuer requirement, canonical implicit unique identifiers,
+  optional extensions, and version constraints.
+- Added redacted local-offset errors and adversarial structure, ordering,
+  version, signature, framing, and shared-budget tests.

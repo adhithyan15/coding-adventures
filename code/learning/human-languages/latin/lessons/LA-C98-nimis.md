@@ -13,7 +13,8 @@ gloss: "too much"
 concept_tag: LA-DIVES-NIMIS
 prerequisites: [LA-C98-stultus, LA-C98-satis]
 sounds: []
-roots: []
+roots: [nimis-latin]
+etymology_hook: "nimis 'too much' — probably ne- 'not' + a disputed second part"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C98-satis]
 <!-- hl-knowledge: introduces=[LA-LEX-C98-DIVES-05]; assesses=[] -->
 
 **nimis** — "too much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nimis** probably begins with the negative *ne-*, "not", but the rest is disputed: some link it to the stem of *minus*, "less", while Lewis & Short tie it to a root for measuring.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

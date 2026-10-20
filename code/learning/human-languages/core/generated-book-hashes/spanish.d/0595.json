@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 595,
+  "sourceHash": "fnv1a64:cb586d75d64e99e5",
+  "lessonIds": [
+    "ES-C595-carrera",
+    "ES-C595-ascender",
+    "ES-C595-merito",
+    "ES-C595-ambicioso",
+    "ES-C595-triunfar"
+  ],
+  "tex": "spanish/book/chapters/ch595-mi-carrera.tex"
+}

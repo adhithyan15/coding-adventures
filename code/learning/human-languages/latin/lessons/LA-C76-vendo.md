@@ -13,7 +13,8 @@ gloss: "to sell"
 concept_tag: LA-VERB-VENDO
 prerequisites: [LA-C76-lavo, LA-C76-coquo]
 sounds: []
-roots: []
+roots: [vendere-latin, venum-latin, dare-latin]
+etymology_hook: "vendō 'to sell' — contracted from vēnum dō 'I put up for sale'; English vendor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C76-coquo]
 <!-- hl-knowledge: introduces=[LA-LEX-C76-VERBA2-03]; assesses=[] -->
 
 **vendō, vendere** — "to sell". English *vendor*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vendō** is a contraction of *vēnum dō*, "I put up for sale", from *vēnum*, "sale", and *dō*, "I give" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 205,
-  "sourceHash": "fnv1a64:b044898fe300ce9b",
+  "sourceHash": "fnv1a64:03c9583311f7cf6c",
   "lessonIds": [
     "TE-C205-rikardu-ceyu",
     "TE-C205-photo-tiyu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch205.txt",
   "json": "telugu/narration/ch205.json",
-  "textHash": "fnv1a64:99b78147f001d45a",
-  "jsonHash": "fnv1a64:19a25b6a9a11bf23",
+  "textHash": "fnv1a64:c5c134df383f20db",
+  "jsonHash": "fnv1a64:34c32469fa824e09",
   "findings": []
 }

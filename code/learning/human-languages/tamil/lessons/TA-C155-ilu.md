@@ -14,7 +14,8 @@ romanization: "iḻu"
 concept_tag: TA-VERB-ILU
 prerequisites: [TA-C154-kattu, TA-C155-tallu]
 sounds: []
-roots: []
+roots: [dravidian-izhu-pull]
+etymology_hook: "இழு — native Dravidian (DEDR 504); Malayalam iḻukka 'to draw'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C155-tallu]
 <!-- hl-knowledge: introduces=[TA-LEX-C155-ACT155-02]; assesses=[] -->
 
 **இழு** — *iḻu* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இழு** (*iḻu*) is native Dravidian. DEDR 504 lists Malayalam *iḻukka*, "to draw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

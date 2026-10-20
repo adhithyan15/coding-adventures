@@ -11,7 +11,8 @@ gloss: you (tū familiar / tumhī respectful)
 concept_tag: PRONOUN-YOU
 prerequisites: [MR-C02-majhe-naav-aahe]
 sounds: [matra-u, halant-conjunct]
-roots: [tvam]
+roots: [tvam, sanskrit-yushmad]
+etymology_hook: "tū ← Sanskrit tvam 'thou' (CDIAL 5889); tumhī ← yuṣmad- 'you (plural)', with t- from tvam (CDIAL 10511)"
 reviews_of: [MR-C02-aahe]
 duration:
   max_seconds: 240

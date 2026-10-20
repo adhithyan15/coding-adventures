@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES173-SALLE-DE-SPORT
 prerequisites: [FR-C173-ballon, FR-C173-raquette]
 sounds: []
 roots: []
+etymology_hook: "salle de sport — 'room of sport': salle + de + sport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C173-raquette]
 <!-- hl-knowledge: introduces=[FR-LEX-C173-CHOSES173-03]; assesses=[] -->
 
 **la salle de sport** — "a gym".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salle de sport** — "room of sport": *salle*, *de* and *sport*. *Salle* ← Frankish *sal*, "hall"; *sport* is borrowed from English (EtymDB 2.1), which took it from Old French *desport*, "a pastime".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "When It Happens, and What You Want",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b0a187e7cca670cc",
+  "sourceHash": "fnv1a64:bcee550b13b6d8ea",
   "lessons": [
     {
       "id": "KA-C72-when-clause",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e119e06fc292b0de",
+      "sourceHash": "fnv1a64:af5272e5ebfee4eb",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಂದಾಗ (bandāga) is native Dravidian: banda, \"who has come\", from baru, \"to come\" (DEDR 5270), and āga, \"time, then\" (DEDR 1). It is \"at the time of coming\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the when-clause comes first, and rides on the verb",
           "segments": [
@@ -78,7 +89,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -89,7 +100,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -183,7 +194,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -214,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d53b7e4894d43966",
+      "sourceHash": "fnv1a64:f36b66eba5059560",
       "notice": null,
       "blocks": [
         {
@@ -259,6 +270,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಚಹಾ ಬೇಕು (nanage cahā bēku) is nanage, \"to me\" (DEDR 5160), cahā, \"tea\", and bēku, \"it is wanted\" (DEDR 5528, with Tamil vēṇṭu). Bēku and nanage are native; cahā came through Hindustani chā, which goes back to Chinese chá."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the pair, and the missing half",
           "segments": [
@@ -273,7 +295,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -284,7 +306,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -360,7 +382,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -580,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bff6e8a67e8dbe6e",
+      "sourceHash": "fnv1a64:f36c1c5f90d26575",
       "notice": null,
       "blocks": [
         {
@@ -625,6 +647,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಮಗೆ ಕಾಫಿ ಇಷ್ಟವಾ (nimage kāphi iṣṭavā) is nimage, \"to you\" (DEDR 3688), kāphi, \"coffee\", a loan from English coffee, and iṣṭa, \"liked\", from Sanskrit iṣṭa, \"sought, beloved\" (CDIAL 1597), with the question ending -ā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -635,7 +668,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -729,7 +762,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -760,7 +793,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22ce5f19dafb45e1",
+      "sourceHash": "fnv1a64:ce8f4ab10223395c",
       "notice": null,
       "blocks": [
         {
@@ -805,6 +838,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಚಹಾ ಇಷ್ಟ, ಕಾಫಿ ಅಲ್ಲ (nanage cahā iṣṭa, kāphi alla) sets two loans against each other: cahā, through Hindustani, and kāphi, from English coffee. Iṣṭa, \"liked\", is Sanskrit iṣṭa, \"sought, beloved\" (CDIAL 1597); nanage, \"to me\" (DEDR 5160), and alla, \"is not\" (DEDR 234), are native."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -815,7 +859,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -900,7 +944,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

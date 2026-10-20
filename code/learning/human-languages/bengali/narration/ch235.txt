@@ -12,6 +12,9 @@ Before the new one: say the Bengali for looks, then the Bengali for behaviour; u
 You'll want to know: মিটিং.
 মিটিং — miṭing — "a meeting".
 
+The word, taken apart.
+মিটিং (miṭing) is a loan from English meeting.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for behaviour; use, then the Bengali for a m
 
 You'll want to know: কর্মচারী.
 কর্মচারী — kôrmôchārī — "an employee".
+
+The word, taken apart.
+কর্মচারী (kôrmôchārī) is built from Sanskrit karman, "work", and cārin, "moving, acting", both taken over whole: "one who acts in the work".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a meeting, then the Bengali for an emplo
 You'll want to know: সহকর্মী.
 সহকর্মী — sôhôkôrmī — "a colleague".
 
+The word, taken apart.
+সহকর্মী (sôhôkôrmī) is built from Sanskrit saha, "with", and karmin, "worker", both taken over whole: "fellow worker".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an employee, then the Bengali for a coll
 You'll want to know: মুচি.
 মুচি — muchi — "a cobbler".
 
+The word, taken apart.
+মুচি (muchi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mocika, "tanner and cobbler" (CDIAL 10349). CDIAL lists Bengali moci, "cobbler", and takes the word from Iranian, as in Pahlavi mōč, "shoe".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a colleague, then the Bengali for a cobb
 
 You'll want to know: ছুতোর.
 ছুতোর — chhutor — "a carpenter".
+
+The word, taken apart.
+ছুতোর (chhutor) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sūtradhāra, "carpenter" (CDIAL 13563). CDIAL lists Bengali chutār, "carpenter"; the Sanskrit word means "holder of the measuring line".
 
 What you've built.
 One more word for this chapter.

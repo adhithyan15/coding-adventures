@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:d7f20703e0f1382c",
+  "lessonIds": [
+    "FR-C429-ampoule",
+    "FR-C429-prise",
+    "FR-C429-minibar",
+    "FR-C429-moquette",
+    "FR-C429-tache-stain"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch429.txt",
+  "json": "french/narration/ch429.json",
+  "textHash": "fnv1a64:aac979f1f8859633",
+  "jsonHash": "fnv1a64:877d33053e4fc407",
+  "findings": []
+}

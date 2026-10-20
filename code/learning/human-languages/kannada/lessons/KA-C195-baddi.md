@@ -14,7 +14,8 @@ romanization: "baḍḍi"
 concept_tag: KA-KELASA195-BADDI
 prerequisites: [KA-C195-sulka, KA-C195-khate]
 sounds: []
-roots: []
+roots: [sanskrit-vrddhi]
+etymology_hook: "baḍḍi ← Sanskrit vṛddhi 'increase, prosperity', reshaped as a tadbhava (CDIAL 12076)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C195-khate]
 <!-- hl-knowledge: introduces=[KA-LEX-C195-KELASA195-03]; assesses=[] -->
 
 **ಬಡ್ಡಿ** — *baḍḍi* — "interest (on money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಡ್ಡಿ** (*baḍḍi*) comes from Sanskrit *vṛddhi*, "increase, prosperity", reshaped to Kannada sounds: a tadbhava (CDIAL 12076). Prakrit *vaḍḍhi* shows the step between: interest is the increase on money.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

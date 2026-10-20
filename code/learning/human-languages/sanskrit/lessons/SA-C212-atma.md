@@ -14,7 +14,8 @@ romanization: "ātmā"
 concept_tag: SA-WEL212-ATMA
 prerequisites: [SA-C212-buddhih, SA-C212-manah]
 sounds: []
-roots: []
+roots: [sanskrit-atman]
+etymology_hook: "ātman 'breath, self', variously derived (MW); MW compares German Atem 'breath'; Hindi āp (CDIAL 1135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C212-manah]
 <!-- hl-knowledge: introduces=[SA-LEX-C212-WEL212-03]; assesses=[] -->
 
 **आत्मा** — *ātmā* — "the self, the soul".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ātmā* is the nominative of *ātman*, which first meant "breath" and then "soul, self" (CDIAL 1135). MW notes it is variously derived, from roots meaning "to breathe", "to move" or "to blow", and compares German *Atem*, "breath". Hindi *āp*, the polite "you", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

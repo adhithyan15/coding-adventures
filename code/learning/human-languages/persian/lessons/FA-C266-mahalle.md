@@ -14,7 +14,8 @@ romanization: "mahalle"
 concept_tag: FA-MAKAN266-MAHALLE
 prerequisites: [FA-C265-term, FA-C266-chaharrah]
 sounds: []
-roots: []
+roots: [arabic-mahalla]
+etymology_hook: "mahalle ← Arabic maḥalla 'quarter, place of halting', root ḥ-l-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C266-chaharrah]
 <!-- hl-knowledge: introduces=[FA-LEX-C266-MAKAN266-02]; assesses=[] -->
 
 **محله** — *mahalle* — "a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mahalle* is borrowed from Arabic *maḥalla*, "quarter, place of halting". Its Arabic root is *ḥ-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

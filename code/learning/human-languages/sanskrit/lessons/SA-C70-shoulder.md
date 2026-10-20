@@ -14,7 +14,8 @@ romanization: "skandhaḥ"
 concept_tag: SA-BODY-SHOULDER
 prerequisites: [SA-C70-knee, SA-C70-back]
 sounds: []
-roots: []
+roots: [sanskrit-skandha]
+etymology_hook: "skandha 'shoulder', derived by the grammarians from √skand 'rise' (MW); Hindi kandhā (CDIAL 13627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C70-back]
 <!-- hl-knowledge: introduces=[SA-LEX-C70-BODY2-04]; assesses=[] -->
 
 **स्कन्धः** (*skandhaḥ*) — "the shoulder", where a load is carried.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The native grammarians derive *skandha* from the root √skand, "to rise", a reading
+MW marks with a question (CDIAL 13627). It lives on as Hindi *kandhā*, "shoulder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

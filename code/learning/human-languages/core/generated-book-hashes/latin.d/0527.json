@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:3a2ee3410fdc7757",
+  "lessonIds": [
+    "LA-C527-requiesco",
+    "LA-C527-requies",
+    "LA-C527-dormito",
+    "LA-C527-insomnia",
+    "LA-C527-recumbo"
+  ],
+  "tex": "latin/book/chapters/ch527-rest-and-sleep.tex"
+}

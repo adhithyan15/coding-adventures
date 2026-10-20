@@ -1,0 +1,11 @@
+{
+  "id": "GE-C529-tapete",
+  "pathSegment": "GE-PATH-529-RENOVIEREN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-529-RENOVIEREN",
+      "order": 1
+    }
+  ]
+}

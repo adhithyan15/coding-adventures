@@ -13,7 +13,8 @@ gloss: "a rabbit"
 concept_tag: IT-ANIMALI120-CONIGLIO
 prerequisites: [IT-C119-cascata, IT-C120-asino]
 sounds: []
-roots: []
+roots: [cuniculus-latin]
+etymology_hook: "coniglio ← Vulgar Latin cuniclus, Latin cuniculus 'a rabbit'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C120-asino]
 <!-- hl-knowledge: introduces=[IT-LEX-C120-ANIMALI120-02]; assesses=[] -->
 
 **il coniglio** — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coniglio** ← Vulgar Latin *cuniclus*, "a rabbit", from Latin *cuniculus* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maruntukkaṭai"
 concept_tag: TA-IDAM204-MARUNTUKKATAI
 prerequisites: [TA-C203-kulantaip-paruvam, TA-C204-patikkattu]
 sounds: []
-roots: []
+roots: [dravidian-marundu-medicine, dravidian-kadai-shop]
+etymology_hook: "மருந்துக்கடை — native: maruntu 'medicine' (DEDR 4719) + kaṭai 'shop' (DEDR 1142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C204-patikkattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C204-IDAM204-02]; assesses=[] -->
 
 **மருந்துக்கடை** — *maruntukkaṭai* — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மருந்துக்கடை** (*maruntukkaṭai*) is native: *maruntu*, "medicine" (DEDR 4719), and *kaṭai*, "shop" (DEDR 1142).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

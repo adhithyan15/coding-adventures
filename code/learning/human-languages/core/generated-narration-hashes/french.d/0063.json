@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 63,
-  "sourceHash": "fnv1a64:a1dfbb02289352e9",
+  "sourceHash": "fnv1a64:33ef0c58a4d11170",
   "lessonIds": [
     "FR-C63-nettoyer",
     "FR-C63-couper",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch63.txt",
   "json": "french/narration/ch63.json",
-  "textHash": "fnv1a64:3e5aa45e3c387e13",
-  "jsonHash": "fnv1a64:2833c305227e4f75",
+  "textHash": "fnv1a64:b50bc0ef0981c4fa",
+  "jsonHash": "fnv1a64:6d888a6e112da3a9",
   "findings": []
 }

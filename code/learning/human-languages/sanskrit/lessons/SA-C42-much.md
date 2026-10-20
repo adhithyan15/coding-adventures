@@ -14,7 +14,8 @@ romanization: "bahu"
 concept_tag: SA-REPLY-BAHU
 prerequisites: [SA-C42-a-little, SA-C40-sweet, SA-C41-parasol]
 sounds: []
-roots: []
+roots: [sanskrit-bahu]
+etymology_hook: "bahu 'much, many' ← the root √baṃh 'grow' (MW); EtymDB sets it beside Greek pakhus 'thick' (CDIAL 9187)"
 duration:
   max_seconds: 210
 requires:

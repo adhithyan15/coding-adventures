@@ -12,6 +12,9 @@ Before the new one: say the Latin for fortune, then the Latin for an accident.
 You'll want to know: aurum, aurī.
 aurum, aurī — "gold".
 
+The word, taken apart.
+aurum is inherited, usually traced to Proto-Indo-European h2eh2usom, "a glow", from h2ews-, "to dawn, to grow light" (EtymDB 2.1), the root of aurōra, "dawn". Festus records a Sabine ausum, "gold", which keeps the older s (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for an accident, then the Latin for gold.
 
 You'll want to know: argentum, argentī.
 argentum, argentī — "silver".
+
+The word, taken apart.
+argentum is inherited, usually traced to Proto-Indo-European h2rgntom, "silver", from h2erg-, "white, shining" (EtymDB 2.1); Greek argēs, "white, bright", is a cousin (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for gold, then the Latin for silver.
 You'll want to know: aes, aeris.
 aes, aeris — "bronze; money".
 
+The word, taken apart.
+aes is usually traced to Proto-Italic aos, "copper, bronze" (EtymDB 2.1); Gothic aiz, "bronze", and English ore are cousins (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for silver, then the Latin for bronze; money.
 You'll want to know: ferrum, ferrī.
 ferrum, ferrī — "iron".
 
+The word, taken apart.
+ferrum has no sure origin; it is often thought to be a loan from a language of the eastern Mediterranean, perhaps through Etruscan, but the source is unknown.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for bronze; money, then the Latin for iron.
 
 You'll want to know: plumbum, plumbī.
 plumbum, plumbī — "the metal lead".
+
+The word, taken apart.
+plumbum is related to Greek molybdos, "lead" (Lewis & Short), but neither came straight from the other; both are thought to be loans from an unknown language. English plumb and plumber come from it.
 
 What you've built.
 One more word for this chapter.

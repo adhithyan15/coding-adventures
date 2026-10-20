@@ -14,7 +14,8 @@ romanization: "godhūmaḥ"
 concept_tag: SA-THINGS106-GODHUMAH
 prerequisites: [SA-C105-petika, SA-C106-rajjuh]
 sounds: []
-roots: []
+roots: [sanskrit-godhuma]
+etymology_hook: "godhūma 'wheat', read by MW as go 'earth' + dhūma 'smoke'; no sure origin is known; Gujarati ghaũ (CDIAL 4287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C106-rajjuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C106-THINGS106-02]; assesses=[] -->
 
 **गोधूमः** — *godhūmaḥ* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW reads *godhūma* "wheat" as *go* "earth, cow" + *dhūma* "smoke", "earth-smoke", but the word has no sure origin. It is old, in the Vājasaneyi Saṃhitā, and lives on as Hindi *gehūṁ* and Gujarati *ghaũ* "wheat" (CDIAL 4287).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

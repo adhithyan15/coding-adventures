@@ -14,7 +14,8 @@ romanization: "kastryúlya"
 concept_tag: RU-THINGS97-SAUCEPAN
 prerequisites: [RU-C97-sofa, RU-C97-wardrobe]
 sounds: []
-roots: []
+roots: [french-casserole]
+etymology_hook: "кастрюля probably came through German Kastrol from French casserole 'a saucepan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C97-wardrobe]
 <!-- hl-knowledge: introduces=[RU-LEX-C97-THINGS97-05]; assesses=[] -->
 
 **кастрюля** (*kastryúlya*) — "a saucepan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кастрюля** — first recorded in 1720; it probably came through German *Kastrol*, *Kasserolle*, from French *casserole*, "a saucepan" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

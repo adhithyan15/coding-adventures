@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Things You Ask For",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:23cd8ccea0ab4e89",
+  "sourceHash": "fnv1a64:c5fe88857d77277f",
   "lessons": [
     {
       "id": "SA-C24-water",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0679a5f0dda23844",
+      "sourceHash": "fnv1a64:73dd825e9765b86c",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jala is an old word for water, but its origin is not settled: MW gives no root for it. It lives on as Hindi and Bengali jal (CDIAL 5155)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:606115019f80395d",
+      "sourceHash": "fnv1a64:d73b37b336f16d30",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Odana is a Rigvedic word for grain cooked with milk (MW). MW traces it to the root √ud, \"to wet\", and CDIAL 2552 repeats that link with a question mark, so it is likely but not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da7ada9421765de5",
+      "sourceHash": "fnv1a64:8e887338d3e626d1",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +362,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Phala is Rigvedic. MW files it under the root √phal, \"to burst, split\", while CDIAL 9051 and DEDR 4004 compare Tamil words for ripening, so its origin is not settled. It lives on as Hindi phal (CDIAL 9051)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +383,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +441,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -656,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8ea7e8bf6a7d478",
+      "sourceHash": "fnv1a64:08777db4628dd003",
       "notice": null,
       "blocks": [
         {
@@ -796,7 +829,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61b4674ea83c3f79",
+      "sourceHash": "fnv1a64:43b2153bee4bd32d",
       "notice": null,
       "blocks": [
         {
@@ -837,6 +870,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dīpa is built on the root √dīp, \"to blaze, shine\" (MW). It lives on as Hindi diyā, the small clay lamp of Diwali (CDIAL 6348)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -847,7 +891,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -887,7 +931,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

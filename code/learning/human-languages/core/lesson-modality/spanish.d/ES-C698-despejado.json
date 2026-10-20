@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C698-despejado",
+    "language": "spanish",
+    "chapter": 698,
+    "sequence": 24780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:179cb3e2a384da52"
+  },
+  "findings": []
+}

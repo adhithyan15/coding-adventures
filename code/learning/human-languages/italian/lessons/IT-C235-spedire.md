@@ -13,7 +13,8 @@ gloss: "to send (by post)"
 concept_tag: IT-VERB-SPEDIRE
 prerequisites: [IT-C235-firmare, IT-C235-compilare]
 sounds: []
-roots: []
+roots: [expedire-latin]
+etymology_hook: "spedire ← Latin expedire 'to free, to send off' — English expedite"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C235-compilare]
 <!-- hl-knowledge: introduces=[IT-LEX-C235-VERBI235-04]; assesses=[] -->
 
 **spedire** — "to send (by post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spedire** ← Latin *expedire*, "to free, to send off" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

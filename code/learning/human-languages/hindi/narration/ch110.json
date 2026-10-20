@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Once More, Please",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ee803071e5518977",
+  "sourceHash": "fnv1a64:9e3db9a443ef9f6e",
   "lessons": [
     {
       "id": "HI-C110-dobara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3295c9d5103e8fee",
+      "sourceHash": "fnv1a64:312a2f370d57a879",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोबारा (dobārā) is a loan, usually traced to Persian dobāra, \"twice, a second time\". It is built from do, \"two\", and bār, \"a time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd1e6bd200efba49",
+      "sourceHash": "fnv1a64:59187aa5e192441d",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़ोर से (zor se) is zor, \"force\", with se, \"with\". zor is usually traced to Persian zōr, \"strength\"; se is inherited (CDIAL 13310)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf0835ba5b350fac",
+      "sourceHash": "fnv1a64:a824a80e9ce1b9f3",
       "notice": null,
       "blocks": [
         {
@@ -310,6 +332,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एक मिनट (ek minaṭ) is ek, \"one\", from Sanskrit eka (CDIAL 2462), and minaṭ, English minute."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -320,7 +353,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,7 +402,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -400,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4efbcdf57dc875c7",
+      "sourceHash": "fnv1a64:60560acf72285b69",
       "notice": null,
       "blocks": [
         {
@@ -431,12 +464,23 @@
             },
             {
               "kind": "speech",
-              "text": "It is रुकना, \"to stop\", with the respectful ending of बोलिए. रुकिए (rukie), एक मिनट (ek minaṭ) — \"wait, one minute\"."
+              "text": "रुक (ruk, the stem of the verb \"to stop\") + -ie, the respectful ending of बोलिए becomes रुकिए (rukie). रुकिए (rukie), एक मिनट (ek minaṭ) — \"wait, one minute\"."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रुकिए (rukie) is the verb ruknā, \"to stop\", with the respectful ending -ie. CDIAL lists ruknā under a reconstructed rokk, \"stop\", whose link with Sanskrit rudh-, \"to obstruct\", it calls not clear (CDIAL 10827)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -447,7 +491,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -496,7 +540,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:054c7a8b2f49a289",
+      "sourceHash": "fnv1a64:f95f6275bce768eb",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मतलब (matlab) is a loan from Arabic maṭlab, \"something sought, an aim\", which reached Hindi through Persian. Its Arabic root is ṭ-l-b (Lane). Hindi uses it for what a word aims at: its meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

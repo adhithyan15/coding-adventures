@@ -14,7 +14,8 @@ romanization: "sūryōdayaṁ"
 concept_tag: TE-SAMAYAM289-SURYODAYAM
 prerequisites: [TE-C289-jatara, TE-C289-veduka]
 sounds: []
-roots: []
+roots: [sanskrit-surya, sanskrit-udaya]
+etymology_hook: "sūryōdayaṁ: Sanskrit sūrya 'sun' (CDIAL 13574) + udaya 'rising' (CDIAL 1931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C289-veduka]
 <!-- hl-knowledge: introduces=[TE-LEX-C289-SAMAYAM289-05]; assesses=[] -->
 
 **సూర్యోదయం** — *sūryōdayaṁ* — "sunrise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సూర్యోదయం** (*sūryōdayaṁ*) is Sanskrit: *sūrya*, "sun" (CDIAL 13574), and *udaya*, "rising of the sun" (CDIAL 1931), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

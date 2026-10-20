@@ -14,7 +14,8 @@ romanization: "piṇaṅṅuka"
 concept_tag: ML-VERB-PINANNUKA
 prerequisites: [ML-C186-kettippitikkuka, ML-C186-valakkituka]
 sounds: []
-roots: []
+roots: [dravidian-pinai-bind]
+etymology_hook: "piṇaṅṅuka: native Dravidian, one word with Tamil piṇai and Kannada peṇe (DEDR 4160)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C186-valakkituka]
 <!-- hl-knowledge: introduces=[ML-LEX-C186-KRIYA186-04]; assesses=[] -->
 
 **പിണങ്ങുക** — *piṇaṅṅuka* — "to sulk, to fall out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിണങ്ങുക** (*piṇaṅṅuka*) is native Dravidian, one word with Tamil *piṇai* and Kannada *peṇe* (DEDR 4160). Its root is about tying and entangling.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

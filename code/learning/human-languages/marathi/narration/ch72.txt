@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the neck, then the Marathi for the face.
 You'll want to know: रक्त.
 रक्त — rakta — "blood".
 
+The word, taken apart.
+रक्त (rakta) is Sanskrit rakta, "coloured, red; blood", taken over whole as a learned loan, a tatsama (CDIAL 10539). It is the past participle of rañj, "to colour".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the face, then the Marathi for blood.
 
 You'll want to know: गुडघा.
 गुडघा — guḍghā — "a knee".
+
+The word, taken apart.
+The origin of गुडघा (guḍghā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for blood, then the Marathi for a knee.
 You'll want to know: डोके.
 डोके — ḍoke — "the head".
 
+The word, taken apart.
+डोके (ḍoke) goes back to ḍōkka, "head", a form CDIAL reconstructs beside ḍōka (CDIAL 5566).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a knee, then the Marathi for the head.
 You'll want to know: ताप.
 ताप — tāp — "a fever".
 
+The word, taken apart.
+ताप (tāp) is Sanskrit tāpa, "heat, glow", also "pain", a tatsama (CDIAL 5767). CDIAL lists the inherited Marathi form as tāv, "heating to red heat".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the head, then the Marathi for a fever.
 
 You'll want to know: दवाखाना.
 दवाखाना — davākhānā — "a clinic".
+
+The word, taken apart.
+दवाखाना (davākhānā) is a Persian compound: davā, "medicine", from Arabic dawāʾ, "remedy", whose root is d-w-y (Lane), and Persian khāna, "house".
 
 What you've built.
 One more word for this chapter.

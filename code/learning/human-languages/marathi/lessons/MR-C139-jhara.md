@@ -14,7 +14,8 @@ romanization: "jharā"
 concept_tag: MR-THINGS139-JHARA
 prerequisites: [MR-C138-pith, MR-C139-tekdi]
 sounds: []
-roots: []
+roots: [sanskrit-jhara]
+etymology_hook: "jharā ← Sanskrit jhara 'waterfall', a tadbhava (CDIAL 5343)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C139-tekdi]
 <!-- hl-knowledge: introduces=[MR-LEX-C139-THINGS139-02]; assesses=[] -->
 
 **झरा** — *jharā* — "a spring, a stream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झरा** (*jharā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jhara*, "waterfall" (CDIAL 5343). CDIAL glosses the Marathi word "spring of water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

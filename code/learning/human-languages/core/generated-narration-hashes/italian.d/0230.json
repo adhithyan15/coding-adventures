@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 230,
-  "sourceHash": "fnv1a64:97ada2347a39a899",
+  "sourceHash": "fnv1a64:eb22741ec7ef0b9b",
   "lessonIds": [
     "IT-C230-plastica",
     "IT-C230-vetro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch230.txt",
   "json": "italian/narration/ch230.json",
-  "textHash": "fnv1a64:4c00308fe0795290",
-  "jsonHash": "fnv1a64:1d7009f11c9dac91",
+  "textHash": "fnv1a64:97464bc63717dff1",
+  "jsonHash": "fnv1a64:590b12ca97dc848f",
   "findings": []
 }

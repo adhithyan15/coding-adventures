@@ -14,7 +14,8 @@ romanization: "galī"
 concept_tag: HI-THG272-GALI
 prerequisites: [HI-C271-kirayedar, HI-C271-mohalla]
 sounds: []
-roots: []
+roots: [indo-aryan-gali]
+etymology_hook: "galī ← *galī 'defile, lane', a reconstructed form; a tadbhava (CDIAL 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C271-mohalla]
 <!-- hl-knowledge: introduces=[HI-LEX-C272-THG272-01]; assesses=[] -->
 
 **गली** — *galī* — "a lane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गली** (*galī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*galī*, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-334-GRATINAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-334-GRATINAR"
+  ],
+  "after": []
+}

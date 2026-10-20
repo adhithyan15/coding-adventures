@@ -14,7 +14,8 @@ romanization: "muṭiyum"
 concept_tag: TA-LOC116-MUTIYUM
 prerequisites: [TA-C116-mulai, TA-C116-tiruppam]
 sounds: []
-roots: []
+roots: [dravidian-mudi-be-possible]
+etymology_hook: "முடியும் — native Dravidian (DEDR 4923)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C116-tiruppam]
 <!-- hl-knowledge: introduces=[TA-LEX-C116-LOC116-04]; assesses=[] -->
 
 **முடியும்** — *muṭiyum* — "can, it is possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முடியும்** (*muṭiyum*) is native Dravidian (DEDR 4923). The entry gives the verb "to appear, to be possible, capable", and *-um* makes it "it can be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

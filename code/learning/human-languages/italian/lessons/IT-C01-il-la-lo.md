@@ -11,6 +11,7 @@ concept_tag: GRAMMAR-THE
 prerequisites: [IT-C01-buono]
 sounds: []
 roots: [ille, illa]
+etymology_hook: "il, lo, la ← Latin ille, illa 'that one' — a pointing word worn down to 'the'"
 reviews_of: [IT-C01-buono]
 duration:
   max_seconds: 121

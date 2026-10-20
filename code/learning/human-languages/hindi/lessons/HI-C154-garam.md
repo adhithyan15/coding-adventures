@@ -14,7 +14,8 @@ romanization: "garam"
 concept_tag: HI-QUAL154-GARAM
 prerequisites: [HI-C153-daftar, HI-C153-baink, HI-C17-dopahar-aadhi-raat]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "garam: usually traced to Persian garm 'warm, hot'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C153-baink]
 <!-- hl-knowledge: introduces=[HI-LEX-C154-QUAL154-01]; assesses=[] -->
 
 **गरम** — *garam* — "hot, warm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरम** (*garam*) is a loan, usually traced to Persian *garm*, "warm, hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Rickshaw and Horse: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b34586be593eafaa",
+  "sourceHash": "fnv1a64:e52d0af441ac3fb4",
   "lessons": [
     {
       "id": "MW-C17-hear-riksha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6a0c221f727c0b2",
+      "sourceHash": "fnv1a64:61bc99f87dbc9726",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rikśā is a loan from English rickshaw. English took the word from Japanese jinrikisha, \"man-powered vehicle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -217,7 +228,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5226ed1b4fc65f9e",
+      "sourceHash": "fnv1a64:a3dff75d5fc2f6a4",
       "notice": null,
       "blocks": [
         {
@@ -259,6 +270,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रिक्शा (rikśā) is a loan from English rickshaw. English took the word from Japanese jinrikisha, \"man-powered vehicle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -283,7 +305,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -329,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03f602c91f4ee8bb",
+      "sourceHash": "fnv1a64:2d71b0b75598295d",
       "notice": null,
       "blocks": [
         {
@@ -375,6 +397,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghoṛo is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghoṭa, \"horse\". CDIAL lists Marwari ghoṛo under it (CDIAL 4516). CDIAL calls the Sanskrit word non-Aryan, probably Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -418,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75fbebabe50c55f1",
+      "sourceHash": "fnv1a64:e761d83c75493247",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +493,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोड़ो (ghoṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghoṭa, \"horse\". CDIAL lists Marwari ghoṛo under it (CDIAL 4516). CDIAL calls the Sanskrit word non-Aryan, probably Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -484,7 +528,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

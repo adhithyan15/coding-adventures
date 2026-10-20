@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### Changed
+
+- `tests/launched.rs` ends its broker with `BrokerChild::end`, the
+  launcher's (D18S P2.8b-2).
+
+- **Windows key adoption** (D18S P2.8b-1). The broker no longer refuses to
+  run on Windows (exit 69): it adopts exactly the handles named in
+  `CHIEF_OF_STAFF_HANDLES`, one per slot in slot order, refusing (66) a
+  count, repeat or value that is not exact before any key is read, then
+  reads each through `read_owner_only_secret_from`. New native test
+  (`tests/broker_windows.rs`, windows-2025): the real broker binary,
+  confined by the applier in its own container, comes up from key handles,
+  and refuses a missing handle (66) or a short key (67).
+- `tests/launched.rs` launches a `BrokerProgram`, the launcher's new
+  program type (D18S P2.7b).
+- The process entry point moved from the binary into the library as
+  `process::run_inherited` (D18S P2.6d-2c). Every binary that runs a broker,
+  the production one and each test fixture, is now one call to it, instead
+  of each carrying its own copy of the descriptor checks. The library is
+  `deny(unsafe_code)`, with `process` its single exception, which a unit
+  test enforces. The test also requires the `deny` to stay in `lib.rs`, and
+  it recognises every way of lowering the lint, whatever the spacing:
+  `allow`, `warn` or `expect`, alone or in a list. `run_inherited` documents that it may only be the whole
+  of `main` in a process the broker launcher exec'd.
+
 ### Added
 
 - `tests/launched.rs` (P2.6d-3):

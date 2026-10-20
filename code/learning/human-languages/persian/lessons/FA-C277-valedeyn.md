@@ -14,7 +14,8 @@ romanization: "vâledeyn"
 concept_tag: FA-CHIZ277-VALEDEYN
 prerequisites: [FA-C276-payamak, FA-C276-imeyl]
 sounds: []
-roots: []
+roots: [arabic-walidayn]
+etymology_hook: "vâledeyn ← Arabic wālidayn 'the two parents', root w-l-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C276-imeyl]
 <!-- hl-knowledge: introduces=[FA-LEX-C277-CHIZ277-01]; assesses=[] -->
 
 **والدین** — *vâledeyn* — "parents".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vâledeyn* is borrowed from Arabic *wālidayn*, "the two parents". Its Arabic root is *w-l-d* (Lane). It is the Arabic dual form, "two parents".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

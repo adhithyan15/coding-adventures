@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 231,
-  "sourceHash": "fnv1a64:db3fc407675f1866",
+  "sourceHash": "fnv1a64:1d7d296352157a47",
   "lessonIds": [
     "GE-C231-hobby",
     "GE-C231-hoffnung",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch231.txt",
   "json": "german/narration/ch231.json",
-  "textHash": "fnv1a64:57facda915e30799",
-  "jsonHash": "fnv1a64:8d5921b16df8bee2",
+  "textHash": "fnv1a64:17486cdc7ac3d17f",
+  "jsonHash": "fnv1a64:25a0c352590d5834",
   "findings": []
 }

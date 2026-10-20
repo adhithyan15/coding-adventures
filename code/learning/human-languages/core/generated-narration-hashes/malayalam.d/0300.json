@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 300,
-  "sourceHash": "fnv1a64:c68ec0370a65f946",
+  "sourceHash": "fnv1a64:7b05a44ccd01bae5",
   "lessonIds": [
     "ML-C300-natan",
     "ML-C300-kavi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch300.txt",
   "json": "malayalam/narration/ch300.json",
-  "textHash": "fnv1a64:5e591889a095a086",
-  "jsonHash": "fnv1a64:fd8546641d66bb6b",
+  "textHash": "fnv1a64:11ceb494befdc671",
+  "jsonHash": "fnv1a64:9b70364289a20e03",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C572-desarrollar",
+  "pathSegment": "ES-PATH-572-CAMBIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-572-CAMBIO",
+      "order": 3
+    }
+  ]
+}

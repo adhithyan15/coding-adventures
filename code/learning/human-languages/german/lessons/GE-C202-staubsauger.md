@@ -13,7 +13,8 @@ gloss: "a vacuum cleaner"
 concept_tag: GE-THING202-STAUBSAUGER
 prerequisites: [GE-C201-ofen, GE-C201-spuelmaschine]
 sounds: []
-roots: []
+roots: [germanic-sugana]
+etymology_hook: "Staubsauger — Staub 'dust' + Sauger 'sucker': a dust sucker"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C201-spuelmaschine]
 <!-- hl-knowledge: introduces=[GE-LEX-C202-THING202-01]; assesses=[] -->
 
 **der Staubsauger** — "a vacuum cleaner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Staubsauger** is the word for "dust", Old High German *stoup*, + a noun from the verb "to suck", Old High German *sūgan* ← Proto-Germanic *\*sūganą*, English *suck* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

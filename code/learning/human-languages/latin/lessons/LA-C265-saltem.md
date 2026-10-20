@@ -13,7 +13,8 @@ gloss: "at least"
 concept_tag: LA-CAUSA265-SALTEM
 prerequisites: [LA-C265-utinam, LA-C265-immo]
 sounds: []
-roots: []
+roots: [saltem-latin]
+etymology_hook: "saltem 'at least' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C265-immo]
 <!-- hl-knowledge: introduces=[LA-LEX-C265-CAUSA265-05]; assesses=[] -->
 
 **saltem** — "at least".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saltem** has no sure origin; Lewis & Short tie it to *salvus*, "safe", but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

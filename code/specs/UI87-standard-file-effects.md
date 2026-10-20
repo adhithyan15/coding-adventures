@@ -124,6 +124,25 @@ The convention is UI59's `files.*`. The browser executor would answer
 migrates. It would also accept UI59's `accept` list alongside its current
 `mimeType` + `extension` pair.
 
+**Migrated (2026-10-13, #16927).** VisiCalc and SpiceWorkbench now send
+`files.open` / `files.save` with an `accept` list, so their Open and Save
+work on native hosts. VisiCalc needs an extension of its own, so the shared
+type table gains one vendor row on every host:
+`application/vnd.coding-adventures.visicalc+json` → `.visicalc`. Nothing in
+the repo sends `file.*` any more.
+
+**Aliases retired (2026-10-13).** The browser executor now answers only
+`files.*`. `file.open` / `file.save` fail as unsupported, like any unknown
+kind, and a payload that still carries the `mimeType` + `extension` pair is
+refused with a message naming `accept`. Ignoring the pair would quietly
+widen the picker to every file.
+
+A curated table row works for a type this repository owns, but not for a
+third-party app's own document type. The general mechanism, still to be
+specified, is the one the web platform's `showSaveFilePicker` already uses:
+the app supplies the extensions with each type, and every host validates
+them against the executable-extension rules in §3.1.
+
 ### 3.3 Where the handler code lives: the open question
 
 - **(A) Built into the templates.** Each generated host ships a
@@ -219,8 +238,8 @@ escape hatch, used deliberately and visibly.
 
 1. **(A), generalised** to per-OS host libraries (§7.1–7.2).
 2. **Naming:** `files.*` everywhere. The browser executor answers `files.*` and
-   keeps `file.*` as an alias until VisiCalc migrates. It also accepts UI59's
-   `accept` list alongside its `mimeType` + `extension` pair.
+   kept `file.*` as an alias until VisiCalc migrated. Both apps migrated and
+   the aliases were retired on 2026-10-13 (§3.2).
 3. **Export format:** Journal's own versioned JSON first, because it
    round-trips with Import. Markdown (readable, one-way) is a later option.
 4. **Order:** Compose and web first, with Journal export as the first consumer;

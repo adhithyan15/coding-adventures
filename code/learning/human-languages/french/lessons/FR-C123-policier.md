@@ -14,6 +14,7 @@ concept_tag: FR-METIERS75-POLICIER
 prerequisites: [FR-C123-infirmiere, FR-C123-cuisinier]
 sounds: []
 roots: []
+etymology_hook: "policier — police + -ier: one who works in the police"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C123-cuisinier]
 <!-- hl-knowledge: introduces=[FR-LEX-C123-METIERS75-03]; assesses=[] -->
 
 **le policier** — "a police officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**policier** — built from *police* with *-ier*, "one who works at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

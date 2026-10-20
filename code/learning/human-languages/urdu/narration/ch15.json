@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Rain, Sun, Wind, Heat, Cold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e67f4a290eb956e5",
+  "sourceHash": "fnv1a64:66d3d743ee673f2b",
   "lessons": [
     {
       "id": "UR-C15-barish",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82d553370ef466be",
+      "sourceHash": "fnv1a64:a066fe80346e8fd2",
       "notice": null,
       "blocks": [
         {
@@ -61,11 +61,11 @@
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — a load, given an ending",
+          "title": "The word, taken apart — a verb stem, given an ending",
           "segments": [
             {
               "kind": "speech",
-              "text": "بارش (bārish) is borrowed from Classical Persian bāriš, itself built from bār, \"load, downpour,\" plus the ending -eš that turns a verb or noun stem into an action noun. No further Proto-Indo-European root is documented behind that Persian base — an honest dead end, the same shape as لال's."
+              "text": "بارش (bārish) is borrowed from Classical Persian bāriš, itself built from bār-, the stem of bāridan, \"to rain,\" plus the ending -eš that turns a verb stem into an action noun. This book traces it no further back than Persian — an honest dead end, the same shape as لال's."
             }
           ]
         },
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2edadfeddcb6ac49",
+      "sourceHash": "fnv1a64:03811db76faa2e78",
       "notice": null,
       "blocks": [
         {
@@ -203,7 +203,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دھوپ (dhūp) is inherited from Ashokan Prakrit dhuppā, \"sunshine.\" No further root is documented behind that. bārish hit its dead end on the Persian side; دھوپ (dhūp) hits the same kind of honest wall on the inherited side — the same shape کان and roṭī already showed, not every inherited word traces back to a tidy Indo-European root."
+              "text": "دھوپ (dhūp) is inherited from a form CDIAL reconstructs as dhuppā, \"sunshine\" (CDIAL 6825). No further root is traced behind that. bārish hit its dead end on the Persian side; دھوپ (dhūp) hits the same kind of honest wall on the inherited side — the same shape کان and roṭī already showed, not every inherited word traces back to a tidy Indo-European root."
             }
           ]
         },
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cf99569e4e01ee9",
+      "sourceHash": "fnv1a64:d22dd11ed7acd0b7",
       "notice": null,
       "blocks": [
         {
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63f19ebcfcc84fe8",
+      "sourceHash": "fnv1a64:2811bb854db873ab",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -586,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78138d4d6394058d",
+      "sourceHash": "fnv1a64:527a1040219ac683",
       "notice": null,
       "blocks": [
         {
@@ -643,7 +643,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سردی is borrowed from Classical Persian sardī, from sard, \"cold.\" No further root is documented for that Persian base — a dead end, the same shape as لال's and bārish's, and the mirror image of garmī, whose root reaches all the way to Greek thermós."
+              "text": "سردی is borrowed from Classical Persian sardī, from sard, \"cold.\" This book traces that Persian base no further back — a dead end here, the same shape as لال's and bārish's, and the mirror image of garmī, whose root reaches all the way to Greek thermós."
             },
             {
               "kind": "speech",

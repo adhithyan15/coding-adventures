@@ -14,7 +14,8 @@ romanization: "rēṣme"
 concept_tag: KA-VASTU295-RESME
 prerequisites: [KA-C294-cillare, KA-C295-hatti]
 sounds: []
-roots: []
+roots: [persian-resham]
+etymology_hook: "rēṣme ← Persian rēsham 'silk', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C295-hatti]
 <!-- hl-knowledge: introduces=[KA-LEX-C295-VASTU295-02]; assesses=[] -->
 
 **ರೇಷ್ಮೆ** — *rēṣme* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರೇಷ್ಮೆ** (*rēṣme*) is Persian *rēsham*, "silk", which came into Kannada through Hindustani, with a final *-e* added.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

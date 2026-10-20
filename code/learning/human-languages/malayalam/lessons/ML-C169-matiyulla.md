@@ -14,7 +14,8 @@ romanization: "maṭiyuḷḷa"
 concept_tag: ML-QUAL169-MATIYULLA
 prerequisites: [ML-C168-dhairyamulla, ML-C169-buddhiyulla]
 sounds: []
-roots: []
+roots: [dravidian-mati-idle, dravidian-ul-be]
+etymology_hook: "maṭiyuḷḷa: native Dravidian, 'having idleness': maṭi (DEDR 4652) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C169-buddhiyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C169-QUAL169-02]; assesses=[] -->
 
 **മടിയുള്ള** — *maṭiyuḷḷa* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മടിയുള്ള** (*maṭiyuḷḷa*) is native Dravidian, "having idleness": *maṭi*, "laziness" (DEDR 4652, with Tamil *maṭi*, "to be indolent"), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

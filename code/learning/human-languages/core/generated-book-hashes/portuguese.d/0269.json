@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:9d03e0c7f651b32a",
+  "lessonIds": [
+    "PT-C269-primeiramente",
+    "PT-C269-inicialmente",
+    "PT-C269-seguidamente",
+    "PT-C269-posteriormente",
+    "PT-C269-por-fim"
+  ],
+  "tex": "portuguese/book/chapters/ch269-primeiro-de-tudo.tex"
+}

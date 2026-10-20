@@ -14,7 +14,8 @@ romanization: "dēvaru"
 concept_tag: KA-VASTU189-DEVARU
 prerequisites: [KA-C189-jatre, KA-C189-puje]
 sounds: []
-roots: []
+roots: [sanskrit-deva]
+etymology_hook: "dēvaru: Sanskrit deva 'god' (CDIAL 6523) + Kannada's respectful plural -ru"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C189-puje]
 <!-- hl-knowledge: introduces=[KA-LEX-C189-VASTU189-04]; assesses=[] -->
 
 **ದೇವರು** — *dēvaru* — "god".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೇವರು** (*dēvaru*) is Sanskrit *deva*, "god" (CDIAL 6523), with Kannada's respectful plural *-ru*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

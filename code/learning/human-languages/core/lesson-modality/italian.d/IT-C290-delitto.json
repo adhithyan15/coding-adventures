@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C290-delitto",
+    "language": "italian",
+    "chapter": 290,
+    "sequence": 16980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a2901ef94a92a33"
+  },
+  "findings": []
+}

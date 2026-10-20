@@ -14,7 +14,8 @@ romanization: "kotukŭ"
 concept_tag: ML-THINGS153-KOTUKU
 prerequisites: [ML-C153-pumparra, ML-C153-urumpu]
 sounds: []
-roots: []
+roots: [dravidian-kotuku-mosquito]
+etymology_hook: "kotukŭ: native Dravidian, one word with Tamil kotuku (DEDR 2086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C153-urumpu]
 <!-- hl-knowledge: introduces=[ML-LEX-C153-THINGS153-04]; assesses=[] -->
 
 **കൊതുക്** — *kotukŭ* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊതുക്** (*kotukŭ*) is native Dravidian, one word with Tamil *kotuku* (DEDR 2086).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

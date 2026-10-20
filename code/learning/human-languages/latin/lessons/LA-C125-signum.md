@@ -13,7 +13,8 @@ gloss: "a sign, a signal"
 concept_tag: LA-THINGS125-SIGNUM
 prerequisites: [LA-C124-pictura, LA-C125-statua]
 sounds: []
-roots: []
+roots: [signum-latin]
+etymology_hook: "signum 'sign' — often traced to PIE *sek- 'to cut': a notch or mark"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C125-statua]
 <!-- hl-knowledge: introduces=[LA-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **signum, signī** — "a sign, a signal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**signum** is often traced to Proto-Indo-European *\*sek-*, "to cut" (EtymDB 2.1), the root of *secō*, "to cut": a sign as a notch or mark. The link is likely but not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

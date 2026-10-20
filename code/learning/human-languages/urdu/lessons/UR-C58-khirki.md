@@ -14,7 +14,8 @@ romanization: "khiṛkī"
 concept_tag: UR-HOME58-KHIRKI
 prerequisites: [UR-C57-kafi, UR-C57-ghar]
 sounds: []
-roots: []
+roots: [sanskrit-khatakkika]
+etymology_hook: "khiṛkī ← Sanskrit khaṭakkikā 'side door', a tadbhava (CDIAL 3770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C57-ghar]
 <!-- hl-knowledge: introduces=[UR-LEX-C58-HOME58-01]; assesses=[] -->
 
 **کھڑکی** — *khiṛkī* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھڑکی** (*khiṛkī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭakkikā*, "side door" (CDIAL 3770). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

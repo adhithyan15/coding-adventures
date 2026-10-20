@@ -14,7 +14,8 @@ romanization: "dācu"
 concept_tag: TE-VERB-DACU
 prerequisites: [TE-C147-kuttu, TE-C147-gelucu]
 sounds: []
-roots: []
+roots: [dravidian-adangu-hide]
+etymology_hook: "dācu: native Dravidian; DEDR 63 lists dācu 'to hide' with Kannada aḍagu 'to hide'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C147-gelucu]
 <!-- hl-knowledge: introduces=[TE-LEX-C147-ACT147-05]; assesses=[] -->
 
 **దాచు** — *dācu* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దాచు** (*dācu*) is native Dravidian. DEDR 63 lists *ḍācu*, "to hide, conceal", and a nasalised form of *dācu*, with Kannada *aḍagu*, "to hide", and Tamil *aṭaṅku*, "to submit". DEDR compares the northern verbs for "to cover" in CDIAL 5574 and 5579.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

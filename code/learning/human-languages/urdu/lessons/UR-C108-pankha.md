@@ -14,7 +14,8 @@ romanization: "pankhā"
 concept_tag: UR-THINGS108-PANKHA
 prerequisites: [UR-C108-hathaura, UR-C108-tala]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pankhā ← Sanskrit pakṣa 'wing, feather; fan', a tadbhava (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C108-tala]
 <!-- hl-knowledge: introduces=[UR-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **پنکھا** — *pankhā* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پنکھا** (*pankhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakṣa*, "wing, feather; fan" (CDIAL 7627). CDIAL notes the nasal and asks whether *puṅkha*, "feathered end of an arrow", crossed with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

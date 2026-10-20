@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 170,
-  "sourceHash": "fnv1a64:cebb528e42c032f0",
+  "sourceHash": "fnv1a64:bef609147a8e8cf3",
   "lessonIds": [
     "IT-C170-chitarra",
     "IT-C170-pianoforte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch170.txt",
   "json": "italian/narration/ch170.json",
-  "textHash": "fnv1a64:e241fce3aa9bf34a",
-  "jsonHash": "fnv1a64:c5d0ee43232c368c",
+  "textHash": "fnv1a64:2197587825d53d6f",
+  "jsonHash": "fnv1a64:84c784ffb5930def",
   "findings": []
 }

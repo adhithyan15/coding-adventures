@@ -11,7 +11,8 @@ romanization: "toṇṇūṟŭ nūṟŭ"
 concept_tag: ML-NINETY-HUNDRED
 prerequisites: [ML-C88-tens]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "nūṟŭ: native Dravidian, Tamil nūṟu (DEDR 3729); the first part of toṇṇūṟŭ is old and disputed"
 duration:
   max_seconds: 260
 requires:
@@ -54,7 +55,7 @@ something, where the other tens are named from below as so many tens.
 
 | | built from |
 |---|---|
-| **എൺപത്** *eṇpathŭ* 80 | eight **tens** |
+| **എൺപത്** *eṇpatŭ* 80 | eight **tens** |
 | **തൊണ്ണൂറ്** 90 | a **hundred**, reduced |
 | **നൂറ്** 100 | itself |
 
@@ -64,6 +65,11 @@ it is noise.
 
 **A run of regular forms tends to hold one member built on a different idea**,
 and finding out which idea usually costs less than memorising the exception.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൊണ്ണൂറ് നൂറ്** (*toṇṇūṟŭ nūṟŭ*): *nūṟŭ*, "a hundred", is native Dravidian, one word with Tamil *nūṟu*, Kannada *nūṟu* and Telugu *nūṟu* (DEDR 3729). *toṇṇūṟŭ*, "ninety", ends in the same hundred-word; its first part is an old element whose meaning is disputed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C88-NINETY-01, ML-CONCEPT-C88-HUNDRED-01, ML-CONCEPT-C88-TENS-01] -->

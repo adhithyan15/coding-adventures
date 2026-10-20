@@ -14,7 +14,8 @@ gloss: "wet"
 concept_tag: MR-ANCHOR-OLA
 prerequisites: [MR-W65-ii-independent]
 sounds: []
-roots: []
+roots: [sanskrit-olla]
+etymology_hook: "olā ← Sanskrit olla 'wet', a tadbhava (CDIAL 2554)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *olā*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ओ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओला** (*olā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *olla*, "wet" (CDIAL 2554). CDIAL gives *ōlla* as a word-list form beside a reconstructed *\*ōdra*, "wet", from the root *ud*, "to wet".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-OLA] -->

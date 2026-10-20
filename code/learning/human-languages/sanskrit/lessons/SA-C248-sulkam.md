@@ -14,7 +14,8 @@ romanization: "śulkam"
 concept_tag: SA-THG248-SULKAM
 prerequisites: [SA-C248-rupyakam, SA-C248-panah]
 sounds: []
-roots: []
+roots: [sanskrit-shulka]
+etymology_hook: "śulka 'price', a Rigvedic word (CDIAL 12543); origin uncertain; Pali suṅka 'toll'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C248-panah]
 <!-- hl-knowledge: introduces=[SA-LEX-C248-THG248-05]; assesses=[] -->
 
 **शुल्कम्** — *śulkam* — "a fee, a tax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śulka* is a Rigvedic word for "price, value", and later "tax, toll" (CDIAL 12543). MW gives no derivation, so its origin is uncertain. A Middle Indo-Aryan form, *suṅka*, went into Tamil as *cuṅkam*, "customs duty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

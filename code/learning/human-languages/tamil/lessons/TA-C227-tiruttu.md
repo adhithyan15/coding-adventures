@@ -14,7 +14,8 @@ romanization: "tiruttu"
 concept_tag: TA-VERB-TIRUTTU
 prerequisites: [TA-C226-vilunku, TA-C226-mel]
 sounds: []
-roots: []
+roots: [dravidian-tiruntu-correct]
+etymology_hook: "திருத்து — native Dravidian (DEDR 3251); Malayalam tiruttuka, Kannada tiddu, Telugu diddu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C226-mel]
 <!-- hl-knowledge: introduces=[TA-LEX-C227-ACT227-01]; assesses=[] -->
 
 **திருத்து** — *tiruttu* — "to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திருத்து** (*tiruttu*) is native Dravidian. DEDR 3251 lists Malayalam *tiruttuka*, Kannada *tiddu* and Telugu *diddu*. It is the causative of *tiruntu*, "to be correct".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

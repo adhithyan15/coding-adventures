@@ -13,7 +13,8 @@ gloss: "a size (of clothes)"
 concept_tag: IT-COSE247-TAGLIA
 prerequisites: [IT-C246-cotto, IT-C247-bottone]
 sounds: []
-roots: []
+roots: [taliare-latin]
+etymology_hook: "taglia — the cut, from tagliare 'to cut' — French taille is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C247-bottone]
 <!-- hl-knowledge: introduces=[IT-LEX-C247-COSE247-02]; assesses=[] -->
 
 **la taglia** — "a size (of clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taglia** is the noun of *tagliare*, "to cut": the cut of a garment. *tagliare* ← Late Latin *taliare*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

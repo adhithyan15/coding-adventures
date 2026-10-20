@@ -43,7 +43,7 @@ worth seeing.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-ADEMAIN-05]; assesses=[] -->
 
-- `nasal-in` — **demain** = *duh-MAN*: the *-ain* is a nasal (like *pain*, *main*);
+- `nasal-in` — **demain** = *duh-MAN*: the *-ain* is the nasal you heard in *bien*;
   the final consonant is silent. *ah duh-MAN*.
 
 ## The phrase, taken apart
@@ -86,7 +86,7 @@ Your French soft-goodbye set, mapped to Spanish:
 
 [PAUSE 1s]
 - [YOU SAY: "à demain" — *ah duh-MAN*]
-- [YOU SAY: "demain" ← *de mane* "from morning"; Spanish "mañana" ← *maneana* —
+- [YOU SAY: "demain" ← *dē māne* "from morning"; Spanish "mañana" ← *maneana* —
   same *māne*]
 - [YOU SAY: the three "à …" goodbyes — à plus tard / à bientôt / à demain]
 

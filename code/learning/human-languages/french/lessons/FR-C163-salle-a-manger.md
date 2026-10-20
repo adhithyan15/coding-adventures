@@ -13,7 +13,8 @@ gloss: "a dining room"
 concept_tag: FR-CHOSES163-SALLE-A-MANGER
 prerequisites: [FR-C162-divorce-divorcee, FR-C163-appartement]
 sounds: []
-roots: []
+roots: [manducare-latin]
+etymology_hook: "salle à manger — 'room for eating': salle + à + manger"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C163-appartement]
 <!-- hl-knowledge: introduces=[FR-LEX-C163-CHOSES163-02]; assesses=[] -->
 
 **la salle à manger** — "a dining room".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**salle à manger** — "room for eating": *salle*, "a room", *à*, "for", and *manger*, "to eat". *Salle* ← Frankish *sal*, "hall", *à* ← Latin *ad*, and *manger* ← Latin *manducāre*, "to chew" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

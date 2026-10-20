@@ -14,6 +14,9 @@ You'll want to know.
 ഞാൻ വാതിൽ തുറക്കുന്നു. — ñān vātil tuṟakkunnu — "I open the door."
 Look at what the sentence asked of you. Nothing new but the verb. The doer in front, the thing in the middle, the verb at the end — and വാതിൽ takes no ending, because it is a thing and not a person.
 
+The word, taken apart.
+തുറക്കുക (tuṟakkuka) is native Dravidian, one word with Tamil tiṟa, Kannada teṟa and Telugu teṟa (DEDR 3259).
+
 What you've built.
 [a table of 3 rows, read aloud]
 തുറക്കുന്നു tuṟakkunnu, opens.
@@ -56,6 +59,7 @@ Now ask both of them as a request, using the ending you have had since the comma
 അടയ്ക്കൂ aṭaykkū, close it.
 That is the same ending as കേൾക്കൂ. One long ൂ on the end turns a verb into something you can ask for, and it did not care which verb you handed it.
 This is the form that goes on a sign, and it is the form you say at a door with your hands full.
+Where the word comes from. It is native Dravidian, one word with Tamil aṭai, "to shut", and Kannada aḍe (DEDR 83).
 
 Guided Practice.
 [pause 1 second]
@@ -89,6 +93,7 @@ Two words, and they are the two halves of the same line:
 The word, taken apart.
 Compare the ends and not the fronts. The two words end the same way as each other, and what differs is only the front — where the whole meaning sits. One opens onto a room, the other onto a street.
 The chapter before this had a pair the other way round: ഇന്ന് and ഇന്നലെ shared their opening and parted at the tail. Here the tail matches and the fronts part. Both pairs are easy for the same reason — one end holds still while you listen to the other.
+Where the words come from. Both are native Dravidian: akam, "inside, home" (DEDR 7, with Tamil akam), and puṟam, "the outside" (DEDR 4333, with Tamil puṟam), each with the place ending.
 
 Guided Practice.
 [pause 1 second]

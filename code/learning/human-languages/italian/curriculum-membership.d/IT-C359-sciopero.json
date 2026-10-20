@@ -1,0 +1,11 @@
+{
+  "id": "IT-C359-sciopero",
+  "pathSegment": "IT-PATH-359-SCIOPERO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-359-SCIOPERO",
+      "order": 1
+    }
+  ]
+}

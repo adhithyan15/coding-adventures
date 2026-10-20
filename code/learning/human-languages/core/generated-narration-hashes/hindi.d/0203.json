@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 203,
-  "sourceHash": "fnv1a64:a5bc4b014f125e68",
+  "sourceHash": "fnv1a64:3cfacd7f7cbe7818",
   "lessonIds": [
     "HI-C203-ciriyaghar",
     "HI-C203-sangrahalay",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch203.txt",
   "json": "hindi/narration/ch203.json",
-  "textHash": "fnv1a64:6a76ef8eb478d342",
-  "jsonHash": "fnv1a64:c8c38fbf3671add7",
+  "textHash": "fnv1a64:3f7c8f3077c5df45",
+  "jsonHash": "fnv1a64:92b7c739a77052f4",
   "findings": []
 }

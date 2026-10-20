@@ -14,7 +14,8 @@ romanization: "grómkiy"
 concept_tag: RU-KACH244-GROMKIY
 prerequisites: [RU-C243-nekrasivyy, RU-C244-drevniy]
 sounds: []
-roots: []
+roots: [slavic-gromu]
+etymology_hook: "громкий is from гром 'thunder': thundering"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C244-drevniy]
 <!-- hl-knowledge: introduces=[RU-LEX-C244-KACH244-02]; assesses=[] -->
 
 **громкий** (*grómkiy*) — "loud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**громкий** comes from *гром*, "thunder" (Vasmer): loud as thunder.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to lift"
 concept_tag: FR-VERB-SOULEVER
 prerequisites: [FR-C212-flotter, FR-C212-poursuivre]
 sounds: []
-roots: []
+roots: [levare-latin]
+etymology_hook: "soulever — sou- 'under' + lever 'to lift'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C212-poursuivre]
 <!-- hl-knowledge: introduces=[FR-LEX-C213-VERBES213-01]; assesses=[] -->
 
 **soulever** — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soulever** — *sou-*, "under", and *lever*, "to lift": to lift from beneath. *Lever* ← Latin *levāre*, "to raise" (EtymDB 2.1), and *sou-* ← Latin *sub*, "under".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

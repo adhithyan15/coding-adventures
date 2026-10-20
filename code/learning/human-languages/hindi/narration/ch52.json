@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:338948aa60e5c17b",
+  "sourceHash": "fnv1a64:06335e566f2df627",
   "lessons": [
     {
       "id": "HI-C52-rice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97167f15ded50337",
+      "sourceHash": "fnv1a64:e72ffafb6af95ca5",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चावल (chāval) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāvala, \"husked rice\", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL suggests, with a \"possibly\", that it shares a non-Aryan origin with Sanskrit taṇḍula, \"rice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4de586c6ece781e4",
+      "sourceHash": "fnv1a64:eff4f2c0311ecead",
       "notice": null,
       "blocks": [
         {
@@ -299,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a79a3d3aeed12322",
+      "sourceHash": "fnv1a64:edde4baccc1ba9c3",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cf2a29ceb3a32c5",
+      "sourceHash": "fnv1a64:bb2d118423c0faab",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2abcefba15bd76f",
+      "sourceHash": "fnv1a64:296fd39af7c7820e",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +631,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सब्ज़ी (sabzī) is a loan, usually traced to Persian sabzī, \"greenness, greens\". It is built on sabz, \"green\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +652,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +701,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "adde"
 concept_tag: TE-CADUVU156-ADDE
 prerequisites: [TE-C156-kalapattika, TE-C156-sucana]
 sounds: []
-roots: []
+roots: [telugu-adde-rent]
+etymology_hook: "adde: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'rent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C156-sucana]
 <!-- hl-knowledge: introduces=[TE-LEX-C156-CADUVU156-03]; assesses=[] -->
 
 **అద్దె** — *adde* — "rent". The money you pay to live in a house: **ఇంటి అద్దె** — *iṇṭi adde* — "the rent for the house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **అద్దె** (*adde*) is uncertain. DEDR and CDIAL list no word of this shape meaning "rent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

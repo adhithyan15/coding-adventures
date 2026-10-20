@@ -14,7 +14,8 @@ romanization: "kásha"
 concept_tag: RU-MEALS-PORRIDGE
 prerequisites: [RU-C46-lunch, RU-C46-dinner]
 sounds: []
-roots: []
+roots: [slavic-kasha]
+etymology_hook: "каша ← Proto-Slavic *kaša; Lithuanian košti 'to strain' is a cousin, Vasmer says"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C46-dinner]
 <!-- hl-knowledge: introduces=[RU-LEX-C46-MEALS-04]; assesses=[] -->
 
 **каша** (*kásha*) — "porridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**каша** ← Proto-Slavic *\*kaša* — inherited. Vasmer relates it to Lithuanian *kóšti*, "to strain, to filter"; Trubachev, in a note, explains it otherwise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "alarji"
 concept_tag: ML-AROGYAM233-ALARJI
 prerequisites: [ML-C233-svasam, ML-C233-vayarilakkam]
 sounds: []
-roots: []
+roots: [english-allergy]
+etymology_hook: "alarji ← English allergy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C233-vayarilakkam]
 <!-- hl-knowledge: introduces=[ML-LEX-C233-AROGYAM233-05]; assesses=[] -->
 
 **അലർജി** — *alarji* — "an allergy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അലർജി** (*alarji*) ← English *allergy*, from Greek *allos*, "other", and *ergon*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

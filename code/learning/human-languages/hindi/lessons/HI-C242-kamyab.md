@@ -14,7 +14,8 @@ romanization: "kāmyāb"
 concept_tag: HI-QUAL242-KAMYAB
 prerequisites: [HI-C242-mashur, HI-C242-bekar]
 sounds: []
-roots: []
+roots: [persian-kamyab]
+etymology_hook: "kāmyāb: usually traced to Persian kāmyāb 'successful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C242-bekar]
 <!-- hl-knowledge: introduces=[HI-LEX-C242-QUAL242-05]; assesses=[] -->
 
 **कामयाब** — *kāmyāb* — "successful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कामयाब** (*kāmyāb*) is a loan, usually traced to Persian *kāmyāb*, "successful". It is built from *kām*, "desire", and *yāb*, "finding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 153,
-  "sourceHash": "fnv1a64:7c997c6a0ff27fbb",
+  "sourceHash": "fnv1a64:8368ab67004a9f9e",
   "lessonIds": [
     "ML-C153-pravu",
     "ML-C153-pumparra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch153.txt",
   "json": "malayalam/narration/ch153.json",
-  "textHash": "fnv1a64:176e85a6c66cf21f",
-  "jsonHash": "fnv1a64:40b009064c6c07ae",
+  "textHash": "fnv1a64:ba0131a2da870293",
+  "jsonHash": "fnv1a64:0f03a5559cb85045",
   "findings": []
 }

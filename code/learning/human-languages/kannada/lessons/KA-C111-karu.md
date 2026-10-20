@@ -14,7 +14,8 @@ romanization: "kāru"
 concept_tag: KA-LOC111-KARU
 prerequisites: [KA-C111-railu, KA-C111-vimana]
 sounds: []
-roots: []
+roots: [english-car]
+etymology_hook: "kāru ← English car"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C111-vimana]
 <!-- hl-knowledge: introduces=[KA-LEX-C111-LOC111-04]; assesses=[] -->
 
 **ಕಾರು** — *kāru* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾರು** (*kāru*) is a loan from English *car*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

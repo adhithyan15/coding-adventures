@@ -14,7 +14,8 @@ gloss: "a story"
 concept_tag: KA-ANCHOR-KATHE
 prerequisites: [KA-S128-letter-jha]
 sounds: []
-roots: []
+roots: [sanskrit-katha]
+etymology_hook: "kathe ← Sanskrit kathā 'conversation; story', a tatsama (CDIAL 2704)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *kathe*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಥ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಥೆ** (*kathe*) is Sanskrit *kathā*, "conversation; story", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 2704).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-KATHE] -->

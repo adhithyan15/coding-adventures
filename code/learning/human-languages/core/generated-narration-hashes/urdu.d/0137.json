@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 137,
-  "sourceHash": "fnv1a64:03fc6dae87c48ab1",
+  "sourceHash": "fnv1a64:438971b678e62e9e",
   "lessonIds": [
     "UR-C137-jamni",
     "UR-C137-sunahra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch137.txt",
   "json": "urdu/narration/ch137.json",
-  "textHash": "fnv1a64:ae678baed4606d12",
-  "jsonHash": "fnv1a64:6593c5d6533b26af",
+  "textHash": "fnv1a64:81cb0a0bf7d6a186",
+  "jsonHash": "fnv1a64:fe89b60fc7a3e886",
   "findings": []
 }

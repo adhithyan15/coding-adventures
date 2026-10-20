@@ -14,7 +14,8 @@ romanization: "dāmād"
 concept_tag: HI-THG255-DAMAD
 prerequisites: [HI-C254-sasur, HI-C255-bahu]
 sounds: []
-roots: []
+roots: [persian-damad]
+etymology_hook: "dāmād: usually traced to Persian dāmād 'son-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C255-bahu]
 <!-- hl-knowledge: introduces=[HI-LEX-C255-THG255-02]; assesses=[] -->
 
 **दामाद** — *dāmād* — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दामाद** (*dāmād*) is a loan, usually traced to Persian *dāmād*, "son-in-law".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

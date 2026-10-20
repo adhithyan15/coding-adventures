@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 176,
-  "sourceHash": "fnv1a64:ad2cf8d857990b27",
+  "sourceHash": "fnv1a64:ac02782459837c36",
   "lessonIds": [
     "LA-C176-prius",
     "LA-C176-quotannis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch176.txt",
   "json": "latin/narration/ch176.json",
-  "textHash": "fnv1a64:8d221d6539b3aea3",
-  "jsonHash": "fnv1a64:ad06a6a3b687d134",
+  "textHash": "fnv1a64:472ebeba4b97cf03",
+  "jsonHash": "fnv1a64:60eca07a53f05500",
   "findings": []
 }

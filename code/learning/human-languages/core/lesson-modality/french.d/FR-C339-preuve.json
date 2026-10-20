@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C339-preuve",
+    "language": "french",
+    "chapter": 339,
+    "sequence": 19150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f227b31ac05a11a9"
+  },
+  "findings": []
+}

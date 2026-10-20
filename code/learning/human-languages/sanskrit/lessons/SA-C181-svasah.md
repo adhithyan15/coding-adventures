@@ -14,7 +14,8 @@ romanization: "śvāsaḥ"
 concept_tag: SA-WEL181-SVASAH
 prerequisites: [SA-C181-dantapida, SA-C181-pratisyayah]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa]
+etymology_hook: "śvāsa ← root √śvas 'breathe' (MW); it lives on as Hindi sās 'breath' (CDIAL 12769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C181-pratisyayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C181-WEL181-03]; assesses=[] -->
 
 **श्वासः** — *śvāsaḥ* — "breath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śvāsa* is built on the root √śvas, "to breathe, hiss, pant" (MW), the root inside *viśvasiti*, "trusts". It lives on as Hindi *sās*, "breath" (CDIAL 12769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

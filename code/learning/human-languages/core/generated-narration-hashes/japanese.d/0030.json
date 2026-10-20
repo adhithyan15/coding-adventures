@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 30,
-  "sourceHash": "fnv1a64:e3d047ef9edf3c93",
+  "sourceHash": "fnv1a64:adc5c1119c2184a6",
   "lessonIds": [
     "JA-C30-osu",
     "JA-C30-hiku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch30.txt",
   "json": "japanese/narration/ch30.json",
-  "textHash": "fnv1a64:0af80b43814efbf4",
-  "jsonHash": "fnv1a64:7cec193aa8ac80fd",
+  "textHash": "fnv1a64:247069942b7e76da",
+  "jsonHash": "fnv1a64:aab5c3e8c315eaec",
   "findings": []
 }

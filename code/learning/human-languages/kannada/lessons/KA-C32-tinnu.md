@@ -51,7 +51,7 @@ agrees: Telugu **తిను** (*tinu*), Malayalam **തിന്നുക** (*
 the root as **தின்** (*tiṉ*) — but narrowed it to chewing and snacking, handing
 everyday eating to **சாப்பிடு** (*sāppiḍu*).
 
-For a **full meal**, Kannada reaches instead for **ಊಟ ಮಾಡು** (*ūṭa māḍu*), "to
+For a **full meal**, Kannada reaches instead for a meal-noun plus *māḍu*, "to
 do a meal" — the same noun-plus-*māḍu* trick that built *kelasa māḍu*, "to
 work," in Chapter 5.
 

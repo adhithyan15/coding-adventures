@@ -14,7 +14,8 @@ romanization: "etire"
 concept_tag: ML-STHALAM198-ETIRE
 prerequisites: [ML-C198-kilakku, ML-C198-patinnaru]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite]
+etymology_hook: "etire: native Dravidian, one word with Tamil etir and Kannada idir (DEDR 795)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C198-patinnaru]
 <!-- hl-knowledge: introduces=[ML-LEX-C198-STHALAM198-04]; assesses=[] -->
 
 **എതിരെ** — *etire* — "against; opposite, facing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എതിരെ** (*etire*) is native Dravidian, one word with Tamil *etir*, Kannada *idir* and Telugu *eduru* (DEDR 795).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

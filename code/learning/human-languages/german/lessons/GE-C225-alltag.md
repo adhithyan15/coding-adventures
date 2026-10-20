@@ -13,7 +13,8 @@ gloss: "everyday life"
 concept_tag: GE-THING225-ALLTAG
 prerequisites: [GE-C225-abenteuer, GE-C225-ahnung]
 sounds: []
-roots: []
+roots: [dagaz]
+etymology_hook: "Alltag ← Middle High German altac: 'all' + Tag 'day' — every day"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C225-ahnung]
 <!-- hl-knowledge: introduces=[GE-LEX-C225-THING225-03]; assesses=[] -->
 
 **der Alltag** — "everyday life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Alltag** ← Middle High German *altac* (EtymDB 2.1): the word for "all" + *Tag*: the everyday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

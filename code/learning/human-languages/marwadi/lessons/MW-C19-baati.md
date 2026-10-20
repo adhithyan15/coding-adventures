@@ -12,7 +12,7 @@ concept_tag: MW-FOOD-BAATI-WRITTEN
 prerequisites: [MW-C19-hear-baati]
 sounds: [voiced-b, long-aa, retroflex-tt, long-ii]
 roots: []
-etymology_hook: Swapping one opening consonant turns the written bread word into the written roll word.
+etymology_hook: "bāṭī: origin not settled; CDIAL has no entry; vaṭikā 'small lump' (CDIAL 11213) is a lead, not a match"
 duration:
   max_seconds: 165
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C19-hear-baati, MW-C19-roti, MW-W17-sha]
 
 Compare **रोटी** and **बाटी** on one line: the last two units are identical and
 only the opening syllable differs.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बाटी** (*bāṭī*) is not settled. CDIAL has no entry for it. The nearest lead is Sanskrit *vaṭikā*, "small lump", whose regular descendants are Hindi *baṛā* and *baṛī*, fried cakes (CDIAL 11213); the *ṭ* of **बाटी** (*bāṭī*) does not fit that path.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAATI-01, MW-SCRIPT-ROTI-01] -->

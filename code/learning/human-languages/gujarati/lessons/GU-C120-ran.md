@@ -15,6 +15,7 @@ concept_tag: GU-THINGS120-RAN
 prerequisites: [GU-C119-khin, GU-C119-tekri]
 sounds: []
 roots: []
+etymology_hook: "raṇ 'desert': not settled; it matches Sindhi riñu 'desert', listed under Sanskrit iriṇya (CDIAL 600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C119-tekri]
 <!-- hl-knowledge: introduces=[GU-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **રણ** (*raṇ*) — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **રણ** (*raṇ*) is not settled. It matches Sindhi *riñu*, "wilderness, desert", which CDIAL lists under Sanskrit *iriṇya*, "relating to desert" (CDIAL 600). CDIAL lists Gujarati *rān*, "wild; forest, desert", under the first word of that entry, *araṇya*, but not **રણ** (*raṇ*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

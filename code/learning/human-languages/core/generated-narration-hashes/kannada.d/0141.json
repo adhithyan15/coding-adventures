@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 141,
-  "sourceHash": "fnv1a64:4135b675dcbcfec8",
+  "sourceHash": "fnv1a64:ce0f8045188d63de",
   "lessonIds": [
     "KA-C141-hagura",
     "KA-C141-mrdu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch141.txt",
   "json": "kannada/narration/ch141.json",
-  "textHash": "fnv1a64:91ac29d3638cc5bd",
-  "jsonHash": "fnv1a64:4743d11ddbd7e087",
+  "textHash": "fnv1a64:cc2468231cbb8435",
+  "jsonHash": "fnv1a64:ffde9bafd3cb00a9",
   "findings": []
 }

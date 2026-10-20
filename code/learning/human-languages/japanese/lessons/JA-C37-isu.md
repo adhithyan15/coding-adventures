@@ -14,7 +14,8 @@ romanization: "isu"
 concept_tag: JA-HOME37-ISU
 prerequisites: [JA-C37-uchi, JA-C37-mado]
 sounds: []
-roots: []
+roots: [middle-chinese-tsix]
+etymology_hook: "isu: Sino-Japanese 椅 'chair' + su, a later Chinese reading of the noun ending 子"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C37-mado]
 <!-- hl-knowledge: introduces=[JA-LEX-C37-HOME37-03]; assesses=[] -->
 
 **いす** — *isu* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いす** (*isu*) is Sino-Japanese: *i*, "chair", and *su*, a noun ending written with the character for "child". *Su* is a later Chinese reading of that character, borrowed after the usual *shi* (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

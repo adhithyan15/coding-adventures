@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 219,
-  "sourceHash": "fnv1a64:99f1d1991b3e327c",
+  "sourceHash": "fnv1a64:68c0b84d8c17ce12",
   "lessonIds": [
     "ES-C58-tambien"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch219.txt",
   "json": "spanish/narration/ch219.json",
-  "textHash": "fnv1a64:29377dee5a70c2c4",
-  "jsonHash": "fnv1a64:1991cff1290cb352",
+  "textHash": "fnv1a64:ed438d9bdb0a4ba3",
+  "jsonHash": "fnv1a64:0e517d2b6addd932",
   "findings": []
 }

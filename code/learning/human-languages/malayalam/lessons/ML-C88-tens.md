@@ -7,13 +7,14 @@ chapter: 88
 type: word
 headword: "മുപ്പത് — എൺപത്"
 gloss: thirty to eighty — six words that are all the same word, and the one that has worn down
-romanization: "muppatŭ — eṇpathŭ"
+romanization: "muppatŭ — eṇpatŭ"
 concept_tag: ML-TENS
 prerequisites: [ML-R87-object-recall, ML-C20-pathinonnu-irupathu, ML-C07-numbers-6-10]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "the tens are native Dravidian: a number + patŭ 'ten', as in Tamil muppatu (DEDR 3918)"
 duration:
-  max_seconds: 270
+  max_seconds: 279
 requires:
   knowledge: [ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C07-NUMBERS-6-10-01]
 introduces:
@@ -28,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [ML-C20-pathinonnu-irupathu, ML-C07-numbers-6-10]
 ---
 
-# മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) — the tens
+# മുപ്പത് — എൺപത് (muppatŭ — eṇpatŭ) — the tens
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C07-NUMBERS-6-10-01] -->
@@ -52,13 +53,18 @@ in front, **പത്ത്** behind.
 | **അമ്പത്** *ampatŭ* | 50 | five |
 | **അറുപത്** *aṟupatŭ* | 60 | six |
 | **എഴുപത്** *eḻupatŭ* | 70 | seven |
-| **എൺപത്** *eṇpathŭ* | 80 | eight |
+| **എൺപത്** *eṇpatŭ* | 80 | eight |
 
 Notice the middle of each word. **-പത്-** is in all of them, and it is the word
 for ten you have had since you learned to count.
 
 Eighty begins with **എൺ-**. Its final **ൺ** is the vowel-free retroflex nasal
 you met near the beginning of the book, so the whole word is now yours to read.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുപ്പത് — എൺപത്** (*muppatŭ — eṇpatŭ*) are native Dravidian, each a small number joined to *-patŭ*, the combining form of "ten": DEDR 3918 lists Tamil *muppatu*, "thirty", and *nāṟpatu*, "forty", built the same way, and DEDR 784 lists Tamil *eṇ-patu*, "eighty".
 
 ## Why it's said this way: the digits are worn, some more than others
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C88-TENS-02]; assesses=[] -->

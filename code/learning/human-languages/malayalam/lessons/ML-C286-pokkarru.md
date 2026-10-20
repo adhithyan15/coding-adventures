@@ -14,7 +14,8 @@ romanization: "pōkkaṟṟŭ"
 concept_tag: ML-VASTU286-POKKARRU
 prerequisites: [ML-C286-belrru, ML-C286-pelsu]
 sounds: []
-roots: []
+roots: [english-pocket]
+etymology_hook: "pōkkaṟṟŭ ← English pocket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C286-pelsu]
 <!-- hl-knowledge: introduces=[ML-LEX-C286-VASTU286-05]; assesses=[] -->
 
 **പോക്കറ്റ്** — *pōkkaṟṟŭ* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പോക്കറ്റ്** (*pōkkaṟṟŭ*) ← English *pocket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

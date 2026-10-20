@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Chegar a acordo",
+  "label": "ch:pt-chegar-a-acordo",
+  "canDo": "I can reach an agreement: agree with someone, admit they are right, find a consensus and give way.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C339-ceder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can reach an agreement: agree with someone, admit they are right, find a consensus and give way.",
+    "assesses": [
+      "PT-LEX-C339-ACORDO-03",
+      "PT-LEX-C339-ACORDO-04",
+      "PT-LEX-C339-ACORDO-05"
+    ]
+  }
+}

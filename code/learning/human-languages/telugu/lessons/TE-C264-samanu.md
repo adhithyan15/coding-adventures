@@ -14,7 +14,8 @@ romanization: "sāmānu"
 concept_tag: TE-VASTUVU264-SAMANU
 prerequisites: [TE-C264-cekku, TE-C264-visa]
 sounds: []
-roots: []
+roots: [persian-saman]
+etymology_hook: "sāmānu ← Persian sāmān 'goods, gear', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C264-visa]
 <!-- hl-knowledge: introduces=[TE-LEX-C264-VASTUVU264-03]; assesses=[] -->
 
 **సామాను** — *sāmānu* — "luggage, belongings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సామాను** (*sāmānu*) is a loan from Persian *sāmān*, "goods, gear, belongings", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

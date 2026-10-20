@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 217,
-  "sourceHash": "fnv1a64:2015dd4d9eb98936",
+  "sourceHash": "fnv1a64:9f9b3c95c2127b4f",
   "lessonIds": [
     "LA-C217-tegula",
     "LA-C217-fornax",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch217.txt",
   "json": "latin/narration/ch217.json",
-  "textHash": "fnv1a64:2ab970c9cd421fa3",
-  "jsonHash": "fnv1a64:b6ef05cd60a7c1e8",
+  "textHash": "fnv1a64:1bce9bdaff04f1d2",
+  "jsonHash": "fnv1a64:bb47e8a1f9160457",
   "findings": []
 }

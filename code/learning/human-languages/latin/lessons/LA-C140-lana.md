@@ -13,7 +13,8 @@ gloss: "wool"
 concept_tag: LA-THINGS140-LANA
 prerequisites: [LA-C140-acus, LA-C140-filum]
 sounds: []
-roots: []
+roots: [lana-latin]
+etymology_hook: "lāna 'wool' — inherited, usually traced to PIE *h2wlh1neh2 'wool'; English wool is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C140-filum]
 <!-- hl-knowledge: introduces=[LA-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **lāna, lānae** — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lāna** is inherited, usually traced to Proto-Indo-European *\*h2wlh1neh2*, "wool" (EtymDB 2.1); Latin lost the first w. English *wool* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

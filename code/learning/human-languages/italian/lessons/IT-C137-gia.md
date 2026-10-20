@@ -13,7 +13,8 @@ gloss: "already"
 concept_tag: IT-PAST137-GIA
 prerequisites: [IT-C136-cercare, IT-C137-scorso]
 sounds: []
-roots: []
+roots: [iam-latin]
+etymology_hook: "già ← Latin iam 'already' — Latin i- became Italian gi-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C137-scorso]
 <!-- hl-knowledge: introduces=[IT-LEX-C137-PAST137-02]; assesses=[] -->
 
 **già** — "already". It sits between **ho** and the participle: **Ho già capito.** — "I have already understood." **Sono già tornato.** — "I have already come back."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**già** ← Latin *iam*, "already, now" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

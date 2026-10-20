@@ -14,7 +14,8 @@ romanization: "eḷiya"
 concept_tag: TA-GUNAM269-ELIYA
 prerequisites: [TA-C269-vittiyacamana, TA-C269-calippana]
 sounds: []
-roots: []
+roots: [dravidian-eli-easy]
+etymology_hook: "எளிய — native Dravidian (DEDR 855); Malayalam eḷutu 'easy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C269-calippana]
 <!-- hl-knowledge: introduces=[TA-LEX-C269-GUNAM269-04]; assesses=[] -->
 
 **எளிய** — *eḷiya* — "simple, easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எளிய** (*eḷiya*) is native Dravidian. DEDR 855 lists Malayalam *eḷutu*, "easy". It comes from *eḷi*, "easy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

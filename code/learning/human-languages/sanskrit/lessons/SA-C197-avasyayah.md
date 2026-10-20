@@ -14,7 +14,8 @@ romanization: "avaśyāyaḥ"
 concept_tag: SA-THG197-AVASYAYAH
 prerequisites: [SA-C197-indradhanuh, SA-C197-karaka]
 sounds: []
-roots: []
+roots: [sanskrit-avashya]
+etymology_hook: "avaśyāya ← ava- + √śyai 'congeal': 'frost, dew' (MW); Hindi os 'dew' (CDIAL 855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C197-karaka]
 <!-- hl-knowledge: introduces=[SA-LEX-C197-THG197-04]; assesses=[] -->
 
 **अवश्यायः** — *avaśyāyaḥ* — "dew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*avaśyāya* is built on *ava-*, "down", and the root √śyai, "to congeal" (CDIAL 855): dew and hoar-frost settle and freeze. Its twin *avaśyā* lives on as Hindi *os*, "dew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

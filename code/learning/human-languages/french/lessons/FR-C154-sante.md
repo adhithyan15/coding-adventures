@@ -13,7 +13,8 @@ gloss: "health"
 concept_tag: FR-SANTE154-SANTE
 prerequisites: [FR-C153-rougir, FR-C153-saigner]
 sounds: []
-roots: []
+roots: [sanus-latin]
+etymology_hook: "santé ← Latin sanitas 'soundness of body', from sanus — English sanity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C153-saigner]
 <!-- hl-knowledge: introduces=[FR-LEX-C154-SANTE154-01]; assesses=[] -->
 
 **la santé** — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**santé** ← Old French *santé* (EtymDB 2.1) ← Latin *sanitas*, *sanitatis*, "soundness of body", from *sanus*, "healthy" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

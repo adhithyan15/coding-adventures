@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "A Sentence Inside a Sentence",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:be7da779dd1df240",
+  "sourceHash": "fnv1a64:7171ad8d1d440c40",
   "lessons": [
     {
       "id": "MR-C35-kii",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f641853c40036f4",
+      "sourceHash": "fnv1a64:1ee7f4760d238602",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
             },
             {
               "kind": "speech",
-              "text": "की (kī) comes from the same Sanskrit question stem क- that gave you का and काय. Persian does exactly the same thing with its own ke, and for the same reason: a question word is already a placeholder, so it is the natural thing to put where a whole sentence is about to arrive."
+              "text": "की (kī) looks like का and काय, but it is a loan. CDIAL, following Bloch, keeps it apart from the native kī̃, \"or\" (from Sanskrit kím), and takes it from Hindi ki, which Hindi had from Persian ke (CDIAL 3164). Persian uses ke for exactly this job, and the word travelled with the job."
             }
           ]
         },
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9de8f2b432e98693",
+      "sourceHash": "fnv1a64:0febf0141bce0fe5",
       "notice": null,
       "blocks": [
         {

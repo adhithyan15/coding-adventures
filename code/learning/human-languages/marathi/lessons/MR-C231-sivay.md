@@ -14,7 +14,8 @@ romanization: "śivāy"
 concept_tag: MR-KARAN231-SIVAY
 prerequisites: [MR-C231-ekatra, MR-C231-kadacit]
 sounds: []
-roots: []
+roots: [arabic-siwa]
+etymology_hook: "śivāy ← Arabic siwā 'besides, other than', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C231-kadacit]
 <!-- hl-knowledge: introduces=[MR-LEX-C231-KARAN231-03]; assesses=[] -->
 
 **शिवाय** — *śivāy* — "besides, apart from".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिवाय** (*śivāy*) is a loan from Arabic *siwā*, "besides, other than", which reached Marathi through Persian. Its Arabic root is *s-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

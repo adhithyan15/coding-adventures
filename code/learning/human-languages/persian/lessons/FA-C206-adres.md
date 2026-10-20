@@ -14,7 +14,8 @@ romanization: "âdres"
 concept_tag: FA-CHIZ206-ADRES
 prerequisites: [FA-C206-parvande, FA-C206-printer]
 sounds: []
-roots: []
+roots: [french-adresse]
+etymology_hook: "âdres ← French adresse 'address'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C206-printer]
 <!-- hl-knowledge: introduces=[FA-LEX-C206-CHIZ206-05]; assesses=[] -->
 
 **آدرس** — *âdres* — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âdres* is borrowed from French *adresse*, "address" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

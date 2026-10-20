@@ -39,7 +39,8 @@ they begin.
 ## Grammar lens: one slot changes
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C40-DEIXIS-SYSTEM]; assesses=[] -->
 
-You did not learn six words. You learned **three beginnings** and reused them.
+Five of these six words are **three beginnings**, reused; only the person
+question stands apart.
 
 | meaning | word |
 |---|---|
@@ -47,7 +48,7 @@ You did not learn six words. You learned **three beginnings** and reused them.
 | far | **அங்கே** *aṅgē* |
 | question | **எங்கே** *eṅgē* |
 
-Tamil shows the system at its cleanest: இது, அது, எது differ in one letter.
+Tamil shows the system at its cleanest: இங்கே, அங்கே, எங்கே differ in one letter.
 
 Change the front, and the meaning walks from **near** to **far** to **a
 question**. Nothing else in the word moves.

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 88,
-  "sourceHash": "fnv1a64:b784269874114c2e",
+  "sourceHash": "fnv1a64:f87e4badf001b660",
   "lessonIds": [
     "JA-C88-utsusu",
     "JA-C88-tamesu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch88.txt",
   "json": "japanese/narration/ch88.json",
-  "textHash": "fnv1a64:343c251df436b2d7",
-  "jsonHash": "fnv1a64:296037342f1db0d9",
+  "textHash": "fnv1a64:26e1815b9a12ceb0",
+  "jsonHash": "fnv1a64:cc91336450ed9140",
   "findings": []
 }

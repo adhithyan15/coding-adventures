@@ -11,7 +11,8 @@ gloss: house, home — the noun the whole place column is about to be built on, 
 concept_tag: MR-LEX-GHAR
 prerequisites: [MR-C40-ithe]
 sounds: [inherent-a]
-roots: [sanskrit-grah]
+roots: [grha-sanskrit]
+etymology_hook: "ghar: usually taken as a popular form of Sanskrit gṛha 'house', a link CDIAL calls phonetically difficult (CDIAL 4428)"
 duration:
   max_seconds: 210
 requires:
@@ -53,10 +54,7 @@ Two letters you have had since chapter six, and a word Marathi uses for both
 *house* and *home* — the building and the belonging, with no second word for
 the difference.
 
-It comes from Sanskrit **गृह** (*gṛha*), and **गृह** is built on the root
-**ग्रह्** (*grah-*), "**to grasp, to hold**." You already own that root: it is
-the one under **घेणे**, *to take*. A house, in Marathi's oldest layer, is the
-thing that holds you.
+It is usually taken as a popular form of Sanskrit **गृह** (*gṛha*), "house", though CDIAL calls the sound change difficult (CDIAL 4428).
 
 **घर** is **neuter**, like **कुटुंब**. That will matter the moment you put an
 adjective on it, and it matters now for **माझं** rather than *माझा*.
@@ -74,7 +72,6 @@ adjective on it, and it matters now for **माझं** rather than *माझ�
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-GHAR] -->
 
-[PAUSE 3s] Which taught verb shares a root with **घर**? (**घेणे** — both from
-*grah-*, "to hold".) What gender is **घर**? (**Neuter**.)
+[PAUSE 3s] Which Sanskrit word is **घर** usually taken from? (**गृह**, *gṛha*, "house".) What gender is **घर**? (**Neuter**.)
 
 Sources: [Wiktionary: घर](https://en.wiktionary.org/wiki/%E0%A4%98%E0%A4%B0).

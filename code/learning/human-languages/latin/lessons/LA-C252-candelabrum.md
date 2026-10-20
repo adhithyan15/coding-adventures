@@ -13,7 +13,8 @@ gloss: "a candlestick"
 concept_tag: LA-RES252-CANDELABRUM
 prerequisites: [LA-C252-sartago, LA-C252-furnus]
 sounds: []
-roots: []
+roots: [candelabrum-latin, candela-latin]
+etymology_hook: "candēlābrum 'candlestick' — built on candēla 'candle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C252-furnus]
 <!-- hl-knowledge: introduces=[LA-LEX-C252-RES252-04]; assesses=[] -->
 
 **candēlābrum, candēlābrī** — "a candlestick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**candēlābrum** is built on *candēla*, "a candle" (Lewis & Short), with *-brum*, an ending for a holder: a candle-holder.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

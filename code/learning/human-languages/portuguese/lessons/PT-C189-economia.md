@@ -13,7 +13,8 @@ gloss: "the economy"
 concept_tag: PT-COISAS189-ECONOMIA
 prerequisites: [PT-C189-voto, PT-C189-politica]
 sounds: []
-roots: []
+roots: [oeconomia-latin]
+etymology_hook: "economia ← Latin oeconomia, from Greek oikonomia 'household management'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C189-politica]
 <!-- hl-knowledge: introduces=[PT-LEX-C189-COISAS189-05]; assesses=[] -->
 
 **a economia** — "the economy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**economia** ← Latin *oeconomia*, "household management" (Lewis & Short) — a learned borrowing from Latin. Latin took it from Greek *oikonomia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

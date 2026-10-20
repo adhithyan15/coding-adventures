@@ -13,7 +13,8 @@ gloss: "different, various"
 concept_tag: GE-QUAL224-VERSCHIEDEN
 prerequisites: [GE-C223-verheiratet, GE-C224-verliebt]
 sounds: []
-roots: []
+roots: [germanic-skaithana]
+etymology_hook: "verschieden — ver- + a verb 'to separate': things set apart are different"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C224-verliebt]
 <!-- hl-knowledge: introduces=[GE-LEX-C224-QUAL224-02]; assesses=[] -->
 
 **verschieden** — "different, various".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verschieden** is the participle of *ver-* + the verb "to separate", Old High German *sceidan* (EtymDB 2.1): things set apart are different.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

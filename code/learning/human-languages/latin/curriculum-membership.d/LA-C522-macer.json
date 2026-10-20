@@ -1,0 +1,11 @@
+{
+  "id": "LA-C522-macer",
+  "pathSegment": "LA-PATH-522-PALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-522-PALL",
+      "order": 3
+    }
+  ]
+}

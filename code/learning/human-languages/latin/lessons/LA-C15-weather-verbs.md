@@ -49,8 +49,8 @@ Latin uses dedicated impersonal verbs with no subject at all:
 - **tonat** — it thunders
 
 **Pluit** is the ancestor of Spanish **llueve**. Its opening follows the
-same **pl- → ll-** path as *plovere → llover*, *clāmāre → llamar*, and
-*flamma → llama*.
+same **pl- → ll-** path as *plovere → llover* and *plēnus → lleno*; *fl-* went
+the same way, *flamma → llama*.
 
 This verb pattern resembles English "it rains" more closely than Spanish
 **hace calor**. Spanish kept the dedicated verb for rain but built a new
@@ -61,6 +61,11 @@ This verb pattern resembles English "it rains" more closely than Spanish
 
 Latin **calor** ("heat") and **sol** ("sun") are also Spanish **calor** and
 **sol**. These words needed no visible sound change at all.
+
+## The words, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pluit** is a form of *pluō* "I rain", usually traced to Proto-Indo-European *\*pleweti* (EtymDB 2.1), from a root *\*plew-*, "to flow, to float". *calor* "heat" was built inside Latin on *caleō* "I am warm" (Lewis & Short). *sōl* "sun" is inherited, usually traced to *\*soh2wl*, "sun" (EtymDB 2.1), a cousin of English sun.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-TEMPESTAS-PLUIT-01, LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02] -->

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:01b114823bb96f40",
+  "lessonIds": [
+    "FR-C318-feu-d-artifice",
+    "FR-C318-petard",
+    "FR-C318-bal",
+    "FR-C318-guirlande",
+    "FR-C318-decorer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch318.txt",
+  "json": "french/narration/ch318.json",
+  "textHash": "fnv1a64:b94fd27930d2f342",
+  "jsonHash": "fnv1a64:b7e5b7906f767991",
+  "findings": []
+}

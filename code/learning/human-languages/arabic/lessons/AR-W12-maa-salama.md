@@ -10,7 +10,7 @@ gloss: assembling the farewell maʿa s-salāma, "with safety" — built on the v
 romanization: "maʿa s-salāma"
 prerequisites: [AR-W11-ha-and-ta-marbuta]
 sounds: [arabic-ayn, arabic-ta-marbuta]
-roots: [semitic-s-l-m]
+roots: [s-l-m]
 duration:
   max_seconds: 240
 requires:
@@ -78,7 +78,7 @@ conversation with one idea.
 
 1. **م** then **ع** → **مع**
 2. lift; **ا** + **ل** (the *al-*), the *lām* joining into…
-3. **س · ل · ا** — and remember the **لا** ligature, and that *alif* **breaks**…
+3. **س · ل · ا** — and remember the ligature, **ل** + **ا** → **لا**, and that *alif* **breaks**…
 4. **م**, then **ة** to close.
 
 → **مع السلامة**

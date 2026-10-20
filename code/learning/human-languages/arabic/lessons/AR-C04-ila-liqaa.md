@@ -12,7 +12,7 @@ concept_tag: FAREWELL-LATER
 prerequisites: [AR-C04-maa-salama, AR-C01-al]
 sounds: [hamza, alif-maqsura]
 roots: [semitic-l-q-y]
-etymology_hook: "'until the meeting' is exactly the Spanish hasta luego / hasta mañana shape — and hasta ITSELF is an Arabic loan (ḥattā), so Spanish borrowed the very word that builds this kind of farewell; liqāʾ ← root l-q-y 'to meet'"
+etymology_hook: "ilā l-liqāʾ: ilā 'until' + liqāʾ 'meeting', root l-q-y 'to meet' (Lane); Spanish hasta is usually traced to ḥattā"
 duration:
   max_seconds: 240
 requires:

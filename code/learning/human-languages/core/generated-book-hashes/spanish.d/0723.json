@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 723,
+  "sourceHash": "fnv1a64:69a55f7799356fce",
+  "lessonIds": [
+    "ES-C723-generoso",
+    "ES-C723-egoista",
+    "ES-C723-amabilidad",
+    "ES-C723-tacano",
+    "ES-C723-cruel"
+  ],
+  "tex": "spanish/book/chapters/ch723-generosos-y-egoistas.tex"
+}

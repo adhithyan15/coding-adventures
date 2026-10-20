@@ -14,6 +14,7 @@ concept_tag: FR-QUAL159-INCONFORTABLE
 prerequisites: [FR-C158-bien-que, FR-C159-confortable]
 sounds: []
 roots: []
+etymology_hook: "inconfortable — in- 'not' + confortable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C159-confortable]
 <!-- hl-knowledge: introduces=[FR-LEX-C159-QUAL159-02]; assesses=[] -->
 
 **inconfortable** — "uncomfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inconfortable** — *in-*, "not", and *confortable*. *Confortable* is borrowed from English *comfortable*, built on Old French *conforter*, "to strengthen" (EtymDB 2.1); *in-* is Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

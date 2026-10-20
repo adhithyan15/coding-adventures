@@ -14,7 +14,8 @@ romanization: "baqara"
 concept_tag: AR-ANIMALS79-BAQARA
 prerequisites: [AR-C78-sama, AR-C78-hisan]
 sounds: []
-roots: []
+roots: [b-q-r]
+etymology_hook: "baqara: built on the root b-q-r, 'to slit, to split' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C78-hisan]
 <!-- hl-knowledge: introduces=[AR-LEX-C79-ANIMALS79-01]; assesses=[] -->
 
 **بقرة** — *baqara* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بقرة** (*baqara*) is built on the native Arabic root *b-q-r*, "to slit, to split" (Lane). *Baqara* is one head of *baqar*, "cattle", which Lane lists under this root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

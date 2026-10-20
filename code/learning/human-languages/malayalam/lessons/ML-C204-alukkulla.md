@@ -14,7 +14,8 @@ romanization: "aḻukkuḷḷa"
 concept_tag: ML-GUNAM204-ALUKKULLA
 prerequisites: [ML-C203-kaliyaya, ML-C204-pavam]
 sounds: []
-roots: []
+roots: [dravidian-azhukku-dirt, dravidian-ul-be]
+etymology_hook: "aḻukkuḷḷa: native Dravidian, 'having dirt': aḻukku (DEDR 283) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C204-pavam]
 <!-- hl-knowledge: introduces=[ML-LEX-C204-GUNAM204-02]; assesses=[] -->
 
 **അഴുക്കുള്ള** — *aḻukkuḷḷa* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഴുക്കുള്ള** (*aḻukkuḷḷa*) is native Dravidian, "having dirt": *aḻukku*, "dirt, filth" (DEDR 283, with Tamil *aḻukku*), with *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

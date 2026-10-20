@@ -165,6 +165,8 @@ change that moves them fails a test in a file you did not edit.
 | uncovered-point total in the plan report | `tests/plan-cli.test.ts` |
 | rule statements, lessons with findings | `tests/info-dump.test.ts` |
 | banned-word totals | `tests/banned-words.test.ts` |
+| word lessons without etymology, per track (§9) | `tests/root-ledger.test.ts` (`ETYMOLOGY_GAP_PINS`) |
+| word lessons with an empty etymology block, per track (§9.4) | `tests/root-ledger.test.ts` (`EMPTY_ETYMOLOGY_BLOCK_PINS`) |
 
 **Update the pin and say why in the comment beside it.** Every one of these files already carries
 prose explaining its previous movements; a bare number change is not in keeping and hides the
@@ -385,3 +387,121 @@ stub here; use `node node_modules/typescript/bin/tsc`.
 
 `language-ladder` reads the spine and is **not** rebuilt by a curriculum-only PR's change
 detection. Run its `BUILD` by hand when you touch `core/spine.json`.
+
+---
+
+## 9. Etymology coverage — every new word says where it comes from
+
+### 9.1 The rule
+
+**Every lesson that introduces a word states where that word comes from, from a cited source.**
+HL00 makes etymology the engine of the course — a new word arrives as a cousin of words the reader
+already owns — and that promise is made per word, so it is owed per word.
+
+- **"Unknown" is an allowed, explicit answer**, and so is "disputed" with the competing accounts
+  named. Saying so is the honest state of the record, and it is still an answer.
+- **Never invent one.** A false cognate is worse than none (HL00); a guessed etymology is a
+  fabricated fact with the confidence of a sourced one. The attribution boundaries in §7 apply: a
+  citation names where the fact was actually read.
+- **Both surfaces.** `etymology_hook` is read by the companion app's cards and by nothing that
+  prints — `book.ts` and `narration.ts` never render it. The book reader sees only the body. A word
+  lesson therefore owes a hook **and** an origin statement in its body (normally a
+  `## The word, taken apart` block).
+
+### 9.2 The measure
+
+`src/etymology-coverage.ts`, in the gap report (`npm run -s report`: the `etymology:` summary line
+and the per-track `Etymology coverage (HL24 §9)` section; `etymologyCoverage` and the `summary`
+fields `wordLessons`, `wordLessonsWithoutEtymologyHook`, `wordLessonsWithoutVisibleEtymology`,
+`wordLessonsWithEmptyEtymologyBlock` in JSON).
+
+| term | definition |
+|---|---|
+| word-introducing lesson | introduces a `<XX>-LEX-` atom (frontmatter `introduces.knowledge` or any block's `hl-knowledge introduces`), **or** has `type: word` / `phrase` (a missing `type` parses as `word`). A review or practice lesson that introduces no lexical atom is outside the count. |
+| without an etymology hook | `etymology_hook` absent, empty, or whitespace only |
+| without visible etymology | no block the parser types `etymology` ("… taken apart"), no heading naming an origin ("etymology", "origin", "where it comes from"), and no origin statement in the title or block prose: the arrow `←`; "from / via / through" + a source language; `Proto-…` or `PIE`; "cognate with" / "same word as" + a language; or a donor language naming the ancestor without a verb ("Latin *october*", "is Sanskrit **कदा**"), never the track's own language |
+
+The visible rule is a conservative pattern match and is documented as one. Known false positives:
+a "taken apart" block that takes apart syntax (HI-C87-par), a letter's origin read as the word's
+(RU-C03-govorit), a comparison or translation read as descent ("different from English"), a remark
+about script ("this letter is Arabic"). Known false negatives: an origin that names no language
+("grew out of *vuestra merced*", ES-C07-hablan), an origin stated only in a section heading. The hook count has its own false positive no pattern can catch — a
+non-empty hook that is not etymology (JA-C12-kami) — so both counts are floors on the debt. Neither
+measure judges whether an etymology is *true*; that needs a source and a reader.
+
+First measurement (all 23 tracks): 25,682 word-introducing lessons; **22,744** without a hook,
+**22,378** without visible etymology, 21,697 with neither. Most of the gap is the generated
+vocabulary waves, whose lessons are a headword and a gloss.
+
+### 9.3 The ratchet
+
+`ETYMOLOGY_GAP_PINS` in `tests/root-ledger.test.ts` pins both counts for every track **exactly**,
+like `FORWARD_REFERENCE_CEILINGS`. A rise fails and names the newest offending lessons in reading
+order — fix the lesson, never the pin. A fall fails and asks for the pin to be lowered in the same
+change, so cleared debt cannot be re-spent. A new word lesson without both a hook and visible
+etymology therefore cannot land, and coverage can only grow.
+
+### 9.4 The empty etymology block
+
+The visible rule trusts structure first: a `… taken apart` block, or a heading that names an origin,
+counts as visible etymology whatever it says. That is a hole. A block can take apart **syntax**
+(why a postposition trails its noun) or list a word's **parts** (`lavar` + `-dora`) and never say
+where the word came from. A review of the Spanish track found 48 such blocks. They count as
+visible, so `wordLessonsWithoutVisibleEtymology` cannot see them.
+
+`wordLessonsWithEmptyEtymologyBlock` counts them. A word-introducing lesson is counted when
+
+1. its visible etymology rests **only** on structure — it has a `taken apart` block or an origin
+   heading — **and**
+2. no block passes `blockStatesOrigin`, **and**
+3. neither the preamble nor any block passes the prose test `statesOrigin` (§9.2).
+
+`blockStatesOrigin(block, language)` is `statesOrigin(block.markdown, language)`, **or**, inside a
+block the parser types `etymology` (a `taken apart` block) and nowhere else, one of these looser
+origin signals:
+
+| signal | fires on |
+|---|---|
+| `inherited`, `borrowed` | the words themselves |
+| `a-loan` | "a loan", "a loanword" — never a quoted or emphasised gloss (`"a loan"`) |
+| `taken-over` | "taken over" |
+| `tatsama`, `tadbhava` | the Indic loan / inheritance terms, singular or plural |
+| `learned-word`, `semi-learned` | "a/the learned word", "a learned borrowing"; "semi-learned" |
+| `built-on` | "built on", "built from" |
+| `comes-from` | "come from", "comes from" |
+| `goes-back-to` | "goes back to", but not before a gerund ("goes back to behaving") |
+| `traced-to`, `descends-from` | "traced to"; "descend(s) from" |
+| `source-tag` | a parenthesised source: `(DEDR`, `(CDIAL`, `(EtymDB`, `(Lewis & Short`, `(Vasmer`, `(Lane` |
+| `source-named` | the same sources named in running prose: `DEDR 3376`, `CDIAL 4573` (with an entry number), `EtymDB`, `Vasmer`, `Lewis & Short` |
+| `native-family` | "native Dravidian", "native Indo-Aryan", "native Germanic", and the other families |
+| `derived-from` | "formed / made / derived / fused / coined / shortened / cut short / worn down / came / grew from", or a comma or dash, then "from" and an emphasised form: "*porte*, from *porter*" |
+| `cousin-of` | "cousin / twin / relative / kin of / to / in" + a source language: "a cousin of English *swine*" |
+| `is-english` | a bold headword "is English" a bold word: "**drei** is English **three**" (never the italic letters of a sound note) |
+| `donor-word` | a donor language, not the track's own, + a noun or verb that tells descent: "Latin said *hodie*", "two Latin words", "a Germanic verb" |
+| `uncertain`, `not-settled`, `unknown-origin`, `no-sure-origin`, `disputed` | an origin stated as unknown or contested — the explicit answer §9.1 allows |
+| `starred` | a starred reconstruction, written `\*` in the Markdown: `*\*ātmanaka*` |
+
+Inside a `taken apart` block these words almost always mean etymology; outside one ("She
+inherited the house") they do not, which is why §9.2 rejected them corpus-wide and why they stay
+confined to the block. `source-named`, `native-family`, `derived-from`, `cousin-of`, `is-english` and
+`donor-word` were added to the requested list after measurement showed the list alone left more
+than a thousand blocks that cite DEDR by entry number, call a word "native Dravidian", derive it
+from a form, or name its Latin or English kin — each an origin statement the reader does see.
+`goes-back-to`, `a-loan` and `learned-word` were tightened, not dropped, after a misfire ("the tenth
+goes back to behaving") or a likely one (a quoted gloss "a loan"). A bare donor-language name ("Latin",
+"Greek") anywhere in the block was measured and rejected: it fired on "Latin letters", "no Hebrew
+twin worth the claim" and "like the Dravidian languages to its south".
+
+First measurement (all 23 tracks): 4,782 word lessons were visible on structure alone with no
+§9.2 origin statement anywhere; the signals read 4,307 of them as origins, leaving **475** with an
+empty etymology block (Spanish 88, French 66, Russian 52, Chinese 43, German 43). A reading of 30
+of the 475 found 7 that do state an origin in a shape no signal covers, so the count is an upper
+bound on the empty blocks.
+
+The count is a measure of a block that says nothing about origin, not a judgment of whether what
+it says is true. Its known misses, measured on the corpus, are recorded in the module comment of
+`src/etymology-coverage.ts`.
+
+`EMPTY_ETYMOLOGY_BLOCK_PINS` in `tests/root-ledger.test.ts` pins the count for every track
+exactly, beside `ETYMOLOGY_GAP_PINS`, under the same ratchet: a rise fails and names the newest
+lessons; a fall fails until the pin is lowered with it. The pin may only fall.

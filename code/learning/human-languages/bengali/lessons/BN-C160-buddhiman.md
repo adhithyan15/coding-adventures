@@ -14,7 +14,8 @@ romanization: "buddhimān"
 concept_tag: BN-GUN160-BUDDHIMAN
 prerequisites: [BN-C159-tobu, BN-C159-nahole]
 sounds: []
-roots: []
+roots: [sanskrit-buddhimat]
+etymology_hook: "buddhimān ← Sanskrit buddhimat 'intelligent', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C159-nahole]
 <!-- hl-knowledge: introduces=[BN-LEX-C160-GUN160-01]; assesses=[] -->
 
 **বুদ্ধিমান** — *buddhimān* — "intelligent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বুদ্ধিমান** (*buddhimān*) is Sanskrit *buddhimat*, "intelligent", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

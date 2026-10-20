@@ -13,7 +13,8 @@ gloss: "a pain"
 concept_tag: GE-THING156-SCHMERZ
 prerequisites: [GE-C155-unfall, GE-C156-rezept]
 sounds: []
-roots: []
+roots: [germanic-smertaz]
+etymology_hook: "Schmerz ← Middle High German smërze — the same Germanic word as English smart, 'to sting'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C156-rezept]
 <!-- hl-knowledge: introduces=[GE-LEX-C156-THING156-02]; assesses=[] -->
 
 **der Schmerz** — "a pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schmerz** ← Middle High German *smërze* — inherited; EtymDB 2.1 lists it beside English *smart*, "a sharp pain", and Dutch *smart*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an ant"
 concept_tag: PT-ANIMAIS4-FORMIGA
 prerequisites: [PT-C63-macaco, PT-C63-abelha]
 sounds: []
-roots: []
+roots: [formica-latin]
+etymology_hook: "formiga ← Latin formica 'ant' — English formic acid was first taken from ants"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C63-abelha]
 <!-- hl-knowledge: introduces=[PT-LEX-C63-ANIMAIS4-04]; assesses=[] -->
 
 **a formiga** — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**formiga** ← Latin *formica*, "ant" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "pōkalām"
 concept_tag: TA-CARE-LETS-GO
 prerequisites: [TA-C106-safely, TA-C106-late]
 sounds: []
-roots: []
+roots: [po-go-dravidian]
+etymology_hook: "போகலாம் — native Dravidian (DEDR 4572); Malayalam pōka"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C106-late]
 **போகலாம்** (*pōkalām*) — "let's go", "we can go".
 
 It is **போ**, "go", with **-லாம்**, "may, let us".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**போகலாம்** (*pōkalām*) is native Dravidian. DEDR 4572 lists Malayalam *pōka*. It is *pō*, "to go", with *-kalām*, "let us".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

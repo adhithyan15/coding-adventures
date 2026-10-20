@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C462-clamito",
+    "language": "latin",
+    "chapter": 462,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:630766c5755e5c80"
+  },
+  "findings": []
+}

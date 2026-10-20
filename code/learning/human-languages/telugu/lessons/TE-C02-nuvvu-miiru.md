@@ -12,6 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [TE-C02-peru]
 sounds: [long-ii]
 roots: [niin-dravidian]
+etymology_hook: "nuvvu, mīru: native Dravidian; DEDR 3684 lists nīvu with Tamil nī, and 3688 mīru with Tamil nīm"
 duration:
   max_seconds: 120
 requires:
@@ -45,8 +46,8 @@ reviews_of: [TE-C02-naa-peru]
 <!-- hl-knowledge: introduces=[TE-ETYMON-C02-NUVVU-MIIRU-02]; assesses=[] -->
 
 **నువ్వు** (*nuvvu*, familiar "you") traces to Proto-Dravidian **\*nīn** — the
-same native root as Tamil *nī* and Kannada *nīnu*. **మీరు** (*mīru*) is the
-respectful/plural "you."
+same native root as Tamil *nī* and Kannada *nīnu* (DEDR 3684, which spells the
+Telugu *nīvu*). **మీరు** (*mīru*) is the respectful/plural "you" (DEDR 3688).
 
 ## Grammar Lens: respect by the plural
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C02-NUVVU-MIIRU-03]; assesses=[] -->

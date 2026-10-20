@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for spring, then the Sanskrit for summer.
 You'll want to know: प्रकोष्ठः.
 प्रकोष्ठः (prakoṣṭhaḥ) — "a room" of a गृहम्.
 
+The word, taken apart.
+Prakoṣṭha is built from pra and koṣṭha, "an enclosure, an inner part" (MW). MW records it as a court in a house and as a room by a palace gate, as well as "forearm" (CDIAL 8450); the plain sense "room" grew out of these.
+
 What you've built.
 One part of the house.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for summer, then the Sanskrit for a room.
 
 You'll want to know: पाकशाला.
 पाकशाला (pākaśālā) — "the kitchen": पाक, "cooking", the noun of पचति, with शाला, "hall".
+
+The word, taken apart.
+Pākaśālā is a compound of pāka, "cooking", from the root √pac, and śālā, "hall, house"; MW records it as "cooking-room". Śālā is inherited: MW compares German Saal and English hall.
 
 What you've built.
 The cooking hall.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a room, then the Sanskrit for the kitch
 You'll want to know: स्नानगृहम्.
 स्नानगृहम् (snānagṛham) — "the bathroom": स्नान, "bathing", with गृहम्, "house", which you know.
 
+The word, taken apart.
+Snānagṛha is built from snāna, "bathing", from the root √snā, and gṛha, "house". It is not a modern coinage: MW records it as "bathing-house, bath-room" in the Mahābhārata.
+
 What you've built.
 The bathing house.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for the kitchen, then the Sanskrit for the 
 You'll want to know: छदिः.
 छदिः (chadiḥ) — "the roof", over every प्रकोष्ठः (prakoṣṭhaḥ) of the house.
 
+The word, taken apart.
+Chadiḥ is built on the root √chad, "to cover" (MW): the roof is the covering, as the chattra is.
+
 What you've built.
 Outside, but still home.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the bathroom, then the Sanskrit for the
 
 You'll want to know: कुञ्चिका.
 कुञ्चिका (kuñcikā) — "a key". कुञ्चिका कुत्र? — "where is the key?"
+
+The word, taken apart.
+MW files kuñcikā under the root √kuñc, "to bend, curve"; CDIAL 3225 sets it under √kuc, with a question mark. It lives on as Punjabi kuñjī, "key", which Hindi borrowed.
 
 What you've built.
 The thing that is always lost.

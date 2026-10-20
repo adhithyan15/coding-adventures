@@ -12,7 +12,7 @@ concept_tag: AR-COLOUR-BLACK-WHITE
 prerequisites: [AR-C08-al-jumua-as-sabt]
 sounds: [hamza-variants, feminine-alif-hamza-ending, arabic-rtl]
 roots: [sawad-black, bayad-white]
-etymology_hook: "أسود aswad / سوداء sawdaa' (black) and أبيض abyad / بيضاء baydaa' (white) share ONE grammatical template — masc. أ...   fem. ...اء — that Arabic reserves for colors and physical traits"
+etymology_hook: "aswad on the root s-w-d 'black', abyaḍ on b-y-ḍ 'white' (Lane), both in the afʿal colour shape"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,11 @@ at the end instead. This isn't the simple "add one letter" pattern *āsif/
 āsifa* used — it's a **dedicated template** Arabic reserves specifically for
 **colors and physical characteristics** (this same shape appears again for
 red and blue in the next lesson).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أسود** (*aswad*) and **أبيض** (*abyaḍ*) are colour words in the *afʿal* shape on native roots: *aswad* on *s-w-d*, "black", and *abyaḍ* on *b-y-ḍ*, "white" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C09-ASWAD-ABYAD-01, AR-CONCEPT-C09-ASWAD-ABYAD-02] -->

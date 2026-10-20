@@ -14,7 +14,8 @@ romanization: "vālā"
 concept_tag: UR-DEF90-VALA
 prerequisites: [UR-C90-khud, UR-C90-kaunsa]
 sounds: []
-roots: []
+roots: [sanskrit-pala-protector]
+etymology_hook: "vālā: usually traced to Sanskrit pālaka 'keeper'; CDIAL lists gharwālā under *gharapāla (CDIAL 4435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C90-kaunsa]
 <!-- hl-knowledge: introduces=[UR-LEX-C90-DEF90-04]; assesses=[] -->
 
 **والا** — *vālā* — "the one (that)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**والا** (*vālā*) is usually traced to Sanskrit *pālaka*, "guardian, keeper", built on *pāla*, "protector". CDIAL has no entry for *vālā* itself, but it lists *gharwālā*, "householder", under a reconstructed *\*gharapāla*, "house guardian" (CDIAL 4435).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

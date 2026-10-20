@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 499,
-  "sourceHash": "fnv1a64:697eb47d41933ebf",
+  "sourceHash": "fnv1a64:1d5dd2cb05020b1b",
   "lessonIds": [
     "ES-C499-bocadillo",
     "ES-C499-batido",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch499.txt",
   "json": "spanish/narration/ch499.json",
-  "textHash": "fnv1a64:0c348bfdaad48d46",
-  "jsonHash": "fnv1a64:3b29647c405d6e56",
+  "textHash": "fnv1a64:04afa20df8506853",
+  "jsonHash": "fnv1a64:4d6c2ad5b76d5a1e",
   "findings": []
 }

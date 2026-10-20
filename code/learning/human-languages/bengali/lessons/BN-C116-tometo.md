@@ -14,7 +14,8 @@ romanization: "tômeṭo"
 concept_tag: BN-THINGS116-TOMETO
 prerequisites: [BN-C116-rosun, BN-C116-ada]
 sounds: []
-roots: []
+roots: [english-tomato]
+etymology_hook: "tômeṭo ← English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C116-ada]
 <!-- hl-knowledge: introduces=[BN-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **টমেটো** — *tômeṭo* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টমেটো** (*tômeṭo*) is a loan from English *tomato*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: GU-JOIN-KEM-KEMKE
 prerequisites: [GU-C34-kemke, GU-C31-samajto-nathi]
 sounds: []
 roots: []
-etymology_hook: "The first exchange in this book where the reader can hold both ends."
+etymology_hook: "kem? … kemke …: CDIAL has no entry for kem or kemke, so their deeper history is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +57,8 @@ if you can ask it you can already say most of the reply.
 This is also where the repair kit pays off. If the reason comes back too fast,
 you now have both halves of that exchange too — ask *kem*, and if the answer
 outruns you, say *samajto nathī* and get it again.
+
+CDIAL has no entry for *kem* or for *kemke*, so their deeper history is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-KEM-KEMKE-01, GU-JOIN-KEMKE-01, GU-NEG-SAMAJTO-NATHI-01] -->

@@ -13,6 +13,7 @@ You'll want to know: ನದಿ.
 ನದಿ (nadi) — "a river".
 Sanskrit nadī, and under it a root nad- meaning "to roar, to sound". A river is named for the noise it makes. That is a word coined by somebody who heard one before they ever saw one, in the dark, in the rain.
 Kannada's own river-word is ಹೊಳೆ (hoḷe), and it opens with the h you have learned to read as an old p. ಹೊಳೆ is the water you can walk to — the stream behind the village. ನದಿ (nadi) is the ಕಾವೇರಿ. The borrowed word took the big rivers and left the small ones to the inherited one, which is the opposite of what usually happens.
+CDIAL 6943 lists Sanskrit nadī, "river".
 
 What you've built.
 The first of five things you would have to name to ask your way.
@@ -46,6 +47,9 @@ English has no comfortable word for this, which is why the Indian English one is
 The Deccan is dry and the rain arrives all at once, so this is the thing the land needed most, and Karnataka has thousands of them, many of them eight or nine hundred years old and still in use. Bengaluru's own neighbourhoods are named after the ones it has built over.
 ಕೆರೆ (kere) is inherited, and it is one of those words that tells you what its speakers were doing.
 
+The word, taken apart.
+ಕೆರೆ (kere) is native Dravidian, of the root kiṟ, "to confine, block up, fence", and DEDR 1980 lists keṟe, "tank", under it: water penned in; the entry also has Tamil ceṟi and Telugu ceṟa.
+
 What you've built.
 Two: water that runs, and water somebody stopped.
 
@@ -76,6 +80,9 @@ You'll want to know: ಬೆಟ್ಟ.
 Inherited, and it opens with the b the previous chapter set beside everybody else's v, so you can hear which layer of the language it belongs to before you know anything else about it.
 Kannada distinguishes sizes here where English shrugs. ಗುಡ್ಡ (guḍḍa) is the small rise you would walk up without planning to; ಬೆಟ್ಟ (beṭṭa) is the one that has a temple on top and a name on the map. ನಂದಿ ಬೆಟ್ಟ (beṭṭa) north of Bengaluru and ಚಾಮುಂಡಿ ಬೆಟ್ಟ (beṭṭa) above Mysuru are both ಬೆಟ್ಟ (beṭṭa), and nobody would call either a ಗುಡ್ಡ.
 A hill with a name is a hill people climb for a reason, and in Karnataka the reason is usually at the summit.
+
+The word, taken apart.
+ಬೆಟ್ಟ (beṭṭa) is native Dravidian, one word with Tamil viṭam (DEDR 5474). DEDR gives Kannada beṭṭa, beṭṭu, "big hill, mountain": the old v- has become b-.
 
 What you've built.
 Three, and the first of them that stands up.
@@ -108,6 +115,7 @@ You'll want to know: ಹಳ್ಳಿ.
 The h tells you what happened: an older paḷḷi stands behind it, worn down by the same law that turned the fruit-word and the flower-word into ಹಣ್ಣು and ಹೂವು.
 What makes this one worth stopping for is that the older shape did not disappear — it is written on road signs across the state. Hundreds of Karnataka place names end in -halli, and hundreds more across the border end in -palli and -pally. Same word, one of them having passed through the Kannada law and the other not. A learner who can hear that ending can read a map as a record of a sound change.
 Tamil kept paḷḷi too and steered it a different way, toward a place of rest and then toward a school.
+DEDR 4018 lists Kannada paḷḷi, haḷḷi with Tamil paḷḷi and Telugu palli. DEDR 4018 compares Sanskrit pallī, "small village".
 
 What you've built.
 Four, and this one is signposted the length of the state.
@@ -139,6 +147,9 @@ You'll want to know: ದಾರಿ.
 This is the word that turns the other four into directions. ಕೆರೆಗೆ ದಾರಿ (dāri) — the way to the tank — and you already have the little -ge that hangs on the end of the place you are heading for.
 Kannada keeps a second word for the same thing, ಹಾದಿ (hādi), and speakers use the two close to interchangeably, though ಹಾದಿ leans a little toward the worn track and ದಾರಿ (dāri) a little toward the route you choose.
 Put ದಾರಿ (dāri) with the polite word you already have and you have the sentence a stranger needs most: ದಯವಿಟ್ಟು ದಾರಿ (dāri) ಹೇಳಿ — please tell me the way. Notice that nothing in it names you. Kannada lets the asking be the request.
+
+The word, taken apart.
+ದಾರಿ (dāri) is native Dravidian, one word with Telugu dāri (DEDR 3170). DEDR notes that Tamil tārai, "path", is a loan from Telugu.
 
 What you've built.
 Five: ನದಿ (nadi), ಕೆರೆ (kere), ಬೆಟ್ಟ (beṭṭa), ಹಳ್ಳಿ (haḷḷi), ದಾರಿ (dāri). Four landmarks and the thread between them.

@@ -4,7 +4,7 @@
   "chapter": 121,
   "title": "Musical instrument, Veena, Cloth, Jewel, Gold",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f99c5b054ea115a9",
+  "sourceHash": "fnv1a64:4b0e7de0cd43dda9",
   "lessons": [
     {
       "id": "SA-C121-vadyam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf77365a5d46eb05",
+      "sourceHash": "fnv1a64:38564537f7397a09",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vādya comes from the root √vad \"speak, sound\": first \"to be said\", then \"to be played\", and so \"a musical instrument\" (CDIAL 11511). It lives on as Hindi bājā \"musical instrument\" (CDIAL 11511)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a72920b75ec94d4f",
+      "sourceHash": "fnv1a64:18e3a915c28119e7",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW calls vīṇā \"the Indian lute\" of doubtful derivation; EtymDB traces it to an Indo-Iranian word that Middle Persian also kept, so its source is not settled. It lives on as Hindi bīn \"lute\" (CDIAL 12048)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eed4e85109f78754",
+      "sourceHash": "fnv1a64:ad5b0a8b824681b7",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paṭṭa \"cloth, woven silk, a strip or bandage\" is probably from a non-Aryan source, says CDIAL 7700, which rejects a link with pattra \"leaf\". It lives on as Hindi paṭṭī \"strip of cloth\" (CDIAL 7700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc90a4cc7dfa2365",
+      "sourceHash": "fnv1a64:4425ebd6cb8ec185",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ratna first meant \"a gift, wealth\" in the Rigveda and later \"a jewel\" (MW). MW derives it from the root √rā \"give\", while CDIAL 10600 refers it to √raṇ \"rejoice\", so its root is not settled. Pali kept it as ratana \"jewel\" (CDIAL 10600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c770edd70b7bffb",
+      "sourceHash": "fnv1a64:73b80dafb67c43f4",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suvarṇa is built from su \"good\" and varṇa \"colour\" (CDIAL 13519): \"of a good, bright colour\", and so \"gold\". It wore down into Hindi, Punjabi and Bengali sonā \"gold\" (CDIAL 13519)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

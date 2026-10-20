@@ -14,7 +14,8 @@ romanization: "slózhnyy"
 concept_tag: RU-KACH188-SLOZHNYY
 prerequisites: [RU-C188-nuzhnyy, RU-C188-vozmozhnyy]
 sounds: []
-roots: []
+roots: [slavic-lozhiti]
+etymology_hook: "сложный is с- 'together' + ложить 'to lay': things laid together"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C188-vozmozhnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C188-KACH188-05]; assesses=[] -->
 
 **сложный** (*slózhnyy*) — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сложный** is *с-*, "together", with *лож-*, from *ложить*, "to lay": complicated is "put together from parts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Meeting Comes Off the Page",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5e74874d9fcd231f",
+  "sourceHash": "fnv1a64:57e74a82de2cd82c",
   "lessons": [
     {
       "id": "UR-C18-aam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d6e4c6ab534b2dc",
+      "sourceHash": "fnv1a64:510169c59aa4a002",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "آم is inherited: Sanskrit āmra became Prakrit amba and then Urdu ām, the ordinary north Indian name for the fruit for as long as there has been a north Indian name for it."
+              "text": "آم is inherited: Sanskrit āmra (CDIAL 1268) became Prakrit amba and then Urdu ām, the ordinary north Indian name for the fruit for as long as there has been a north Indian name for it."
             },
             {
               "kind": "speech",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaec72e813302ced",
+      "sourceHash": "fnv1a64:305b21c068c8b353",
       "notice": null,
       "blocks": [
         {
@@ -382,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74966115176e06c0",
+      "sourceHash": "fnv1a64:b536604599f761c0",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پرانا (purānā) is inherited: Sanskrit purāṇa, \"ancient, belonging to former times,\" built on purā, \"formerly.\" Behind that stands Proto-Indo-European per-, in the sense \"forward, before.\""
+              "text": "پرانا (purānā) is inherited: Sanskrit purāṇa, \"ancient, belonging to former times\" (CDIAL 8283), built on purā, \"formerly.\" Behind that stands Proto-Indo-European per-, in the sense \"forward, before.\""
             },
             {
               "kind": "speech",
@@ -791,7 +791,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35fadff6a461a9a6",
+      "sourceHash": "fnv1a64:8dd1b5f3417b38d4",
       "notice": null,
       "blocks": [
         {
@@ -862,7 +862,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "یہ and وہ (voh) did not arrive separately. They come down together from the Old Indo-Aryan demonstratives Sanskrit wrote as iyam — the near one — and asau — the far one. Urdu inherited a pair, and it still runs the pair the way it inherited it: everything Urdu points at gets sorted into near or far first, and only then into what it actually is."
+              "text": "یہ and وہ (voh) did not arrive separately. They come down together from Old Indo-Aryan demonstratives: CDIAL lists Hindi yah under Sanskrit eṣa, \"this\" — the near one (CDIAL 2530) — and vah under asau, \"that\" — the far one (CDIAL 972). Urdu inherited a pair, and it still runs the pair the way it inherited it: everything Urdu points at gets sorted into near or far first, and only then into what it actually is."
             },
             {
               "kind": "speech",

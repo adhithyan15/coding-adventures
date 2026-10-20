@@ -14,7 +14,8 @@ romanization: "thaklelā"
 concept_tag: MR-GUN261-THAKLELA
 prerequisites: [MR-C260-vivahit, MR-C261-kurup]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thaklelā: from thakṇe 'to become tired' ← *sthakk 'stop, halt' (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C261-kurup]
 <!-- hl-knowledge: introduces=[MR-LEX-C261-GUN261-02]; assesses=[] -->
 
 **थकलेला** — *thaklelā* — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थकलेला** (*thaklelā*) is the "-ed" form of *thakṇẽ*, "to become tired", which comes from a reconstructed *\*sthakk-*, "stop, halt" (CDIAL 13737).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

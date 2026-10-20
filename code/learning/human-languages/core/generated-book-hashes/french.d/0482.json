@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:5815ed67ae1e55e7",
+  "lessonIds": [
+    "FR-C482-eternuer",
+    "FR-C482-allergie",
+    "FR-C482-pollen",
+    "FR-C482-demangeaison",
+    "FR-C482-gratter"
+  ],
+  "tex": "french/book/chapters/ch482-eternuements-et-allergies.tex"
+}

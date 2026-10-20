@@ -13,7 +13,8 @@ gloss: "for a long time"
 concept_tag: LA-TEMP263-DIU
 prerequisites: [LA-C263-interea, LA-C263-aliquando]
 sounds: []
-roots: []
+roots: [diu-latin, dies-latin]
+etymology_hook: "diū 'for a long time' — an old case form from the root of diēs 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C263-aliquando]
 <!-- hl-knowledge: introduces=[LA-LEX-C263-TEMP263-04]; assesses=[] -->
 
 **diū** — "for a long time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diū** is an old case form from the root of *diēs*, "day" (Lewis & Short), usually traced to Proto-Indo-European *\*dyewi*, "during the day" (EtymDB 2.1): first "by day", then "for a long time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

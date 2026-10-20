@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:04d3791cc43e66e5",
+  "lessonIds": [
+    "IT-C423-crociera",
+    "IT-C423-cabina",
+    "IT-C423-marinaio",
+    "IT-C423-prua",
+    "IT-C423-poppa"
+  ],
+  "tex": "italian/book/chapters/ch423-sul-traghetto.tex"
+}

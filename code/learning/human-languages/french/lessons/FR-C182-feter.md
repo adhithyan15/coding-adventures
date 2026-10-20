@@ -13,7 +13,8 @@ gloss: "to celebrate"
 concept_tag: FR-VERB-FETER
 prerequisites: [FR-C182-detruire, FR-C182-exagerer]
 sounds: []
-roots: []
+roots: [festum-latin]
+etymology_hook: "fêter — from the word for 'a feast', Latin festa — English feast and festival"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C182-exagerer]
 <!-- hl-knowledge: introduces=[FR-LEX-C182-VERBES182-05]; assesses=[] -->
 
 **fêter** — "to celebrate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fêter** ← Old French *fester* (EtymDB 2.1), from the word for "a feast", ← Latin *festa*, "festivals" (Lewis & Short); the circumflex marks the lost *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

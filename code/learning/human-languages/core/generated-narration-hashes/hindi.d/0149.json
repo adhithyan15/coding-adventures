@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 149,
-  "sourceHash": "fnv1a64:53fea615cf3a9950",
+  "sourceHash": "fnv1a64:4c820a781cca9d76",
   "lessonIds": [
     "HI-C149-macchar",
     "HI-C149-cinti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch149.txt",
   "json": "hindi/narration/ch149.json",
-  "textHash": "fnv1a64:84a39b2aca6a03fb",
-  "jsonHash": "fnv1a64:1945049f407fe19e",
+  "textHash": "fnv1a64:7eb340b3ada68839",
+  "jsonHash": "fnv1a64:f186f47733b5859e",
   "findings": []
 }

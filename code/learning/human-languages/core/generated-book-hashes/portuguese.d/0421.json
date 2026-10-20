@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:f99ef8d98616f674",
+  "lessonIds": [
+    "PT-C421-escala",
+    "PT-C421-embarque",
+    "PT-C421-vaivem",
+    "PT-C421-pista",
+    "PT-C421-fuso"
+  ],
+  "tex": "portuguese/book/chapters/ch421-no-aeroporto.tex"
+}

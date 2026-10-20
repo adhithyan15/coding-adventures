@@ -12,6 +12,9 @@ Before the new one: say the Persian for first, then the Persian for fourth.
 You'll want to know: سر.
 سر — sar — "the head".
 
+The word, taken apart.
+sar is a native Persian word, inherited rather than borrowed: it continues Middle Persian sar, "head" (EtymDB). EtymDB takes it further back to Proto-Iranian sarah-, "head". (EtymDB also lists Arabic sirr, "secret", but that is a different word that happens to look alike.)
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for fourth, then the Persian for the head.
 
 You'll want to know: گوش.
 گوش — gush — "an ear".
+
+The word, taken apart.
+gush is a native Persian word, inherited rather than borrowed: it continues Middle Persian gōš, "ear" (EtymDB). Old Persian had gauša-, "ear" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for the head, then the Persian for an ear.
 You'll want to know: بینی.
 بینی — bini — "a nose".
 
+The word, taken apart.
+bini is a native Persian word, inherited rather than borrowed: it continues Middle Persian wēnīg, "nose" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for an ear, then the Persian for a nose.
 You'll want to know: دهان.
 دهان — dahân — "a mouth".
 
+The word, taken apart.
+dahân is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian dahān, "mouth".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a nose, then the Persian for a mouth.
 
 You'll want to know: دندان.
 دندان — dandân — "a tooth".
+
+The word, taken apart.
+dandân is a native Persian word, inherited rather than borrowed: it continues Middle Persian dandān, "tooth" (EtymDB). EtymDB takes it back to the Indo-European word for "tooth", h₃dónts, the same word behind Latin dens and English tooth.
 
 What you've built.
 One more word for this chapter.

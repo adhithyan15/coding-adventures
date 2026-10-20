@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 237,
-  "sourceHash": "fnv1a64:f6f4b230d52609ac",
+  "sourceHash": "fnv1a64:0e7286f6f2114ab0",
   "lessonIds": [
     "KA-C237-kaccu",
     "KA-C237-balasu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch237.txt",
   "json": "kannada/narration/ch237.json",
-  "textHash": "fnv1a64:0f7eb1b5e51c48da",
-  "jsonHash": "fnv1a64:be6eb8d290ae12b0",
+  "textHash": "fnv1a64:d354c6b35d98a8ef",
+  "jsonHash": "fnv1a64:0a0ca7c41e6b2bee",
   "findings": []
 }

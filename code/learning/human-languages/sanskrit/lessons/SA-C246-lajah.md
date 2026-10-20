@@ -14,7 +14,8 @@ romanization: "lājāḥ"
 concept_tag: SA-THG246-LAJAH
 prerequisites: [SA-C245-lavangam, SA-C245-ela]
 sounds: []
-roots: []
+roots: [sanskrit-laja]
+etymology_hook: "lāja 'parched grain', which MW files under a root √lāj 'fry'; Hindi lāī (CDIAL 11011)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C245-ela]
 <!-- hl-knowledge: introduces=[SA-LEX-C246-THG246-01]; assesses=[] -->
 
 **लाजाः** — *lājāḥ* — "puffed rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lājāḥ* is the plural of *lāja*, "fried or parched grain", used in the plural for the grains (MW). MW files it under a root √lāj, "to fry", and it is already in the Vājasaneyi Saṃhitā (CDIAL 11011). It lives on as Hindi *lāī*, "parched grain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

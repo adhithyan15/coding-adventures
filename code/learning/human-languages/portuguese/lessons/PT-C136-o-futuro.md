@@ -13,7 +13,8 @@ gloss: "the future"
 concept_tag: PT-FUT136-O-FUTURO
 prerequisites: [PT-C135-o-passado, PT-C135-acontecer]
 sounds: []
-roots: []
+roots: [esse-latin]
+etymology_hook: "futuro ← Latin futurus 'about to be', a form of esse 'to be' — English future"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C135-acontecer]
 <!-- hl-knowledge: introduces=[PT-LEX-C136-FUT136-01]; assesses=[] -->
 
 **o futuro** — "the future". Portuguese has two futures. The everyday one is **ir** with an infinitive: **Vou falar.** — "I am going to speak." The one-word future adds endings to the infinitive: **falarei**, **falarás**, **falará**. It is the one you will read.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**futuro** ← Latin *futurus*, "about to be" (EtymDB 2.1), a form of *esse*, "to be" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

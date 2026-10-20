@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Dal benzinaio",
+  "label": "ch:it-dal-benzinaio",
+  "canDo": "I can fill up the car: the attendant, diesel, fuel, the tank and refuelling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C408-rifornire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can fill up the car: the attendant, diesel, fuel, the tank and refuelling.",
+    "assesses": [
+      "IT-LEX-C408-BENZINAIO-03",
+      "IT-LEX-C408-BENZINAIO-04",
+      "IT-LEX-C408-BENZINAIO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "musalsal"
 concept_tag: AR-SHAY248-MUSALSAL
 prerequisites: [AR-C248-tatbiq, AR-C248-jihaz]
 sounds: []
-roots: []
+roots: [s-l-s-l]
+etymology_hook: "musalsal: built on s-l-s-l, Lane's silsila 'a chain': linked one to the next, a serial"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C248-jihaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C248-SHAY248-05]; assesses=[] -->
 
 **مسلسل** — *musalsal* — "a TV series".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسلسل** (*musalsal*) is the passive participle of *salsala*, "to link in a chain", built on the doubled root *s-l-s-l*, which Lane lists under *s-l-l* with *silsila*, "a chain": linked one to the next, a serial.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

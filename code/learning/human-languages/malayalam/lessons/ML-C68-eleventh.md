@@ -11,7 +11,8 @@ romanization: "patinonnāṁ"
 concept_tag: ML-ORDINAL-ELEVENTH
 prerequisites: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky, ML-C20-pathinonnu-irupathu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "patinonnāṁ: native Dravidian, ten + one + -āṁ (DEDR 3918, 990)"
 duration:
   max_seconds: 220
 requires:
@@ -34,7 +35,7 @@ reviews_of: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky]
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-05, ML-LEX-C68-ORDINAL-01, ML-LEX-C65-ASK-01, ML-LEX-C53-SKY-01] -->
 
 [PAUSE 2s]
-- [YOU RECALL: say *pathāṁ* — **R1**]
+- [YOU RECALL: say *pattāṁ* — **R1**]
 - [YOU RECALL: say *āṟāṁ* — **R2**]
 - [YOU RECALL: say *apēkṣa* — **R3**]
 - [YOU RECALL: say *ākāśaṁ* — **R4**]
@@ -44,11 +45,16 @@ reviews_of: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky]
 
 **പതിനൊന്നാം** (*patinonnāṁ*) — "**eleventh**".
 
-**പതിനൊന്ന്** was itself a built word: *pathin-*, the joining shape of ten, with
+**പതിനൊന്ന്** was itself a built word: *patin-*, the joining shape of ten, with
 *onnŭ* welded on. Now the ordinal ending goes on top of *that*, and the result is
 a word of three parts, not one of which had to be learned as a whole.
 
 **പതിനൊന്നാം ദിവസം** (*patinonnāṁ divasaṁ*), the eleventh day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പതിനൊന്നാം** (*patinonnāṁ*) is native Dravidian throughout: the joining shape of "ten" (DEDR 3918, with Tamil *patiṉ-*), "one" (DEDR 990), and the ordinal ending *-āṁ*.
 
 ## Grammar Lens: the ending is a fact about numbers, not about ten
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C68-ORDINAL-07]; assesses=[ML-LEX-C68-ORDINAL-06] -->
@@ -56,7 +62,7 @@ a word of three parts, not one of which had to be learned as a whole.
 Most books stop an ordinal chapter at *tenth*, and a learner reasonably concludes
 that those ten words were the set. In Malayalam there is no set. **ആം** attaches
 to a **number**, so every number you learn from here on arrives with its ordinal
-already made: **ഇരുപത്** gives **ഇരുപതാം** (*irupathāṁ*), twentieth, without a
+already made: **ഇരുപത്** gives **ഇരുപതാം** (*irupatāṁ*), twentieth, without a
 lesson.
 
 That is why this book taught the ending in the very first lesson of the previous
@@ -67,7 +73,7 @@ chapter rather than after ten examples. The examples were never the content.
 
 [PAUSE 1s]
 - [YOU SAY: *patinonnŭ*, then *patinonnāṁ*]
-- [YOU SAY: *pathāṁ, patinonnāṁ*]
+- [YOU SAY: *pattāṁ, patinonnāṁ*]
 - [YOU SAY: take *irupatŭ* and make its ordinal yourself]
 
 ## Wrap-up Recall

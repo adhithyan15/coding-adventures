@@ -1,0 +1,11 @@
+{
+  "id": "IT-C344-evidente",
+  "pathSegment": "IT-PATH-344-PROVA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-344-PROVA",
+      "order": 1
+    }
+  ]
+}

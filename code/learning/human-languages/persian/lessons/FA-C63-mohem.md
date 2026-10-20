@@ -14,7 +14,8 @@ romanization: "mohem"
 concept_tag: FA-ADJ63-MOHEM
 prerequisites: [FA-C62-sangin, FA-C62-dorost]
 sounds: []
-roots: []
+roots: [arabic-muhimm]
+etymology_hook: "mohem ← Arabic muhimm 'important', root h-m-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C62-dorost]
 <!-- hl-knowledge: introduces=[FA-LEX-C63-ADJ63-01]; assesses=[] -->
 
 **مهم** — *mohem* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mohem* is borrowed from Arabic *muhimm*, "important". Its Arabic root is *h-m-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

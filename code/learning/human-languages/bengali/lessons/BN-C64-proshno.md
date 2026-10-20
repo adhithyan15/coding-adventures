@@ -14,7 +14,8 @@ romanization: "prôshno"
 concept_tag: BN-SCHOOL64-PROSHNO
 prerequisites: [BN-C64-skul, BN-C64-taka]
 sounds: []
-roots: []
+roots: [sanskrit-prashna]
+etymology_hook: "prôshno ← Sanskrit praśna 'question', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C64-taka]
 <!-- hl-knowledge: introduces=[BN-LEX-C64-SCHOOL64-05]; assesses=[] -->
 
 **প্রশ্ন** — *prôshno* — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রশ্ন** (*prôshno*) is Sanskrit *praśna*, "question", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

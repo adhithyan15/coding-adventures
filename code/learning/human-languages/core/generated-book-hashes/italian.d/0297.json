@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:005796aea7c77fdc",
+  "lessonIds": [
+    "IT-C297-arrestare",
+    "IT-C297-arresto",
+    "IT-C297-manette",
+    "IT-C297-catturare",
+    "IT-C297-fuggire"
+  ],
+  "tex": "italian/book/chapters/ch297-in-manette.tex"
+}

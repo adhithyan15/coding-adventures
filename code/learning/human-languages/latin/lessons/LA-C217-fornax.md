@@ -13,7 +13,8 @@ gloss: "a furnace, a kiln"
 concept_tag: LA-RES217-FORNAX
 prerequisites: [LA-C216-vigil, LA-C217-tegula]
 sounds: []
-roots: []
+roots: [fornax-latin, furnus-latin]
+etymology_hook: "fornāx 'furnace' — kin to furnus 'oven'; English warm is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C217-tegula]
 <!-- hl-knowledge: introduces=[LA-LEX-C217-RES217-02]; assesses=[] -->
 
 **fornāx, fornācis** — "a furnace, a kiln".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fornāx** belongs with *fornus*, *furnus*, "an oven" (Lewis & Short), usually traced to Proto-Indo-European *\*gwher-*, "warm"; English *warm* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

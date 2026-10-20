@@ -14,7 +14,8 @@ romanization: "shákhmaty"
 concept_tag: RU-VESHCH253-SHAKHMATY
 prerequisites: [RU-C253-skazka, RU-C253-istoriya]
 sounds: []
-roots: []
+roots: [persian-shah]
+etymology_hook: "шахматы is from шах мат, 'the king is helpless', from Persian shāh 'king'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C253-istoriya]
 <!-- hl-knowledge: introduces=[RU-LEX-C253-VESHCH253-03]; assesses=[] -->
 
 **шахматы** (*shákhmaty*) — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шахматы** — Old Russian *шахматы*, from 1280; it is built on *шах мат*, "checkmate", from Persian *shāh*, "king", probably through a German source (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

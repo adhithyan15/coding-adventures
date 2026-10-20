@@ -11,7 +11,8 @@ romanization: "niccayamāka"
 concept_tag: TA-REPLY-CERTAINLY
 prerequisites: [TA-C47-enough, TA-C45-nose, TA-C46-doctor]
 sounds: []
-roots: []
+roots: [sanskrit-niscaya]
+etymology_hook: "நிச்சயமாக ← Sanskrit niścaya 'conviction' (CDIAL 7439), + the adverb ending -āka"
 duration:
   max_seconds: 210
 requires:

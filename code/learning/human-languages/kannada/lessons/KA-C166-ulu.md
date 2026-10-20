@@ -14,7 +14,8 @@ romanization: "uḷu"
 concept_tag: KA-VERB-ULU
 prerequisites: [KA-C165-uli, KA-C165-kayisu]
 sounds: []
-roots: []
+roots: [dravidian-uzhu-plough]
+etymology_hook: "uḷu: native Dravidian, one word with Tamil uḻu (DEDR 688)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C165-kayisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C166-KRIYE166-01]; assesses=[] -->
 
 **ಉಳು** — *uḷu* — "to plough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಳು** (*uḷu*) is native Dravidian, one word with Tamil *uḻu* (DEDR 688). DEDR gives the older Kannada *uḻ*, "to plough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

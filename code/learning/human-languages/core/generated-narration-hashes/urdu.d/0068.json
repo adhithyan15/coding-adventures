@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 68,
-  "sourceHash": "fnv1a64:9acd0807f0e0f253",
+  "sourceHash": "fnv1a64:e1718666a6bb3078",
   "lessonIds": [
     "UR-C68-bakri",
     "UR-C68-bher",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch68.txt",
   "json": "urdu/narration/ch68.json",
-  "textHash": "fnv1a64:11ec5c9c14e8b218",
-  "jsonHash": "fnv1a64:0c9ec53a57f3f893",
+  "textHash": "fnv1a64:033375d4e80610cd",
+  "jsonHash": "fnv1a64:da80da98977b9414",
   "findings": []
 }

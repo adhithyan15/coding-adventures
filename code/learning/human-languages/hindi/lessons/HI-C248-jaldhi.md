@@ -14,7 +14,8 @@ romanization: "jald hī"
 concept_tag: HI-THG248-JALDHI
 prerequisites: [HI-C248-lagbhag, HI-C248-badme]
 sounds: []
-roots: []
+roots: [persian-jald]
+etymology_hook: "jald usually traced to Persian jald 'quick'; hī is the Hindi 'only, very'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C248-badme]
 <!-- hl-knowledge: introduces=[HI-LEX-C248-THG248-04]; assesses=[] -->
 
 **जल्द ही** — *jald hī* — "soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जल्द ही** (*jald hī*) is *jald*, "quick", usually traced to Persian *jald*, with the Hindi emphatic *hī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

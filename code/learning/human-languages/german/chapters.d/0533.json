@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Ein gemütliches Zuhause",
+  "label": "ch:ge-ein-gemutliches-zuhause",
+  "canDo": "I can describe a cosy home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R533-review-final-533",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can describe a cosy home.",
+    "assesses": [
+      "GE-LEX-C533-GEMUETLICH-03",
+      "GE-LEX-C533-GEMUETLICH-04",
+      "GE-LEX-C533-GEMUETLICH-05"
+    ]
+  }
+}

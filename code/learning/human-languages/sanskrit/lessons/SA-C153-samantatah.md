@@ -14,7 +14,8 @@ romanization: "samantataḥ"
 concept_tag: SA-LOC153-SAMANTATAH
 prerequisites: [SA-C153-ubhayatah, SA-C153-paritah]
 sounds: []
-roots: []
+roots: [sanskrit-samanta]
+etymology_hook: "samantataḥ ← samanta 'having ends together, whole' (sam 'together' + anta 'end') + -tas (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C153-paritah]
 <!-- hl-knowledge: introduces=[SA-LEX-C153-LOC153-05]; assesses=[] -->
 
 **समन्ततः** — *samantataḥ* — "on all sides".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samantataḥ* is built from *samanta* "having the ends together, whole, on every side", that is *sam* "together" + *anta* "end", with the ending *-tas* (MW): "from every side, all around".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

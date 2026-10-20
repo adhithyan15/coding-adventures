@@ -14,7 +14,8 @@ romanization: "hamkâr"
 concept_tag: FA-KAR214-HAMKAR
 prerequisites: [FA-C214-karfarma, FA-C214-karmand]
 sounds: []
-roots: []
+roots: [persian-ham, persian-kar]
+etymology_hook: "hamkâr: Persian ham- 'together' + kâr 'work', both inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C214-karmand]
 <!-- hl-knowledge: introduces=[FA-LEX-C214-KAR214-04]; assesses=[] -->
 
 **همکار** — *hamkâr* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamkâr* is built from *ham-*, "same, together", and *kâr*, "work": one who works with you. Both are inherited: EtymDB traces *ham* to Old Persian *hama-* and *kâr* to Middle Persian *kār*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

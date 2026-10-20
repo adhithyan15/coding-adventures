@@ -11,7 +11,8 @@ romanization: "mañcu"
 concept_tag: TE-NOUN-MIST
 prerequisites: [TE-C59-wind]
 sounds: []
-roots: []
+roots: [dravidian-manju-mist]
+etymology_hook: "mañcu: native Dravidian, one word with Tamil mañcu and Kannada mañju (DEDR 4641)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C59-wind]
 This is worth sitting with. A language draws its lines where its speakers need them. Telugu splits its cooking vessels three ways and lumps mist, dew and snow together; a language spoken where snow falls would do the opposite.
 
 మంచు కురుస్తోంది is "it is misting" on the coast and "it is snowing" in the hills, with no change to the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మంచు** (*mañcu*) is native Dravidian, one word with Tamil *mañcu*, Kannada *mañju* and Malayalam *maññu* (DEDR 4641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

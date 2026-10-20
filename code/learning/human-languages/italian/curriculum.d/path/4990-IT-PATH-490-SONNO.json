@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-490-SONNO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-490-SONNO"
+  ],
+  "after": []
+}

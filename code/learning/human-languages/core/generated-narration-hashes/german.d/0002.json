@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 2,
-  "sourceHash": "fnv1a64:59817ab4afb054d5",
+  "sourceHash": "fnv1a64:411a389ecbf91e8b",
   "lessonIds": [
     "GE-C02-ich",
     "GE-C02-du-sie",
@@ -18,7 +18,7 @@
   "drivablePrefix": 10,
   "text": "german/narration/ch02.txt",
   "json": "german/narration/ch02.json",
-  "textHash": "fnv1a64:06bcc27b8ef5f4ac",
-  "jsonHash": "fnv1a64:a643b521d80917d1",
+  "textHash": "fnv1a64:47ffdd8d1cf052b9",
+  "jsonHash": "fnv1a64:aa399ddf07b32f0d",
   "findings": []
 }

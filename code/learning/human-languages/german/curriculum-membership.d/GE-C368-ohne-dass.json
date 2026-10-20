@@ -1,0 +1,11 @@
+{
+  "id": "GE-C368-ohne-dass",
+  "pathSegment": "GE-PATH-368-STATTDESSEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-368-STATTDESSEN",
+      "order": 2
+    }
+  ]
+}

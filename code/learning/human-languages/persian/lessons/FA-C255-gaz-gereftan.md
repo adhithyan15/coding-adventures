@@ -14,7 +14,8 @@ romanization: "gâz gereftan"
 concept_tag: FA-VERB-GAZ-GEREFTAN
 prerequisites: [FA-C255-mesvak-zadan, FA-C255-vazn-kardan]
 sounds: []
-roots: []
+roots: [old-persian-grab]
+etymology_hook: "gâz gereftan: Persian gâz 'bite' + gereftan 'to take'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C255-vazn-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C255-KONESH255-04]; assesses=[] -->
 
 **گاز گرفتن** — *gâz gereftan* — "to bite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gâz gereftan* is "to take a bite": *gâz*, "bite", is a native word, and *gereftan*, "to take", is inherited. *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

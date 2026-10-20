@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Children, a Child, Aunt, Grandchildren",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2597188fc2db6c2f",
+  "sourceHash": "fnv1a64:740c0e1187c6a7f4",
   "lessons": [
     {
       "id": "RU-C36-children",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfd24560e2bd75c3",
+      "sourceHash": "fnv1a64:f846ad1e10ca4d0d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "дети (déti) is the plural of дитя, \"a child\", from Proto-Slavic dětę, děti — inherited. Vasmer traces it to the PIE root dʰeh₁(i)-, \"to suckle\", the root of доить, \"to milk\": a child is one who is nursed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24f53f7ebdc74fe1",
+      "sourceHash": "fnv1a64:7119637a638d2e8f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ребёнок (rebyónok) grew from Old Russian робя, \"child\", Proto-Slavic orbę, with a diminutive ending; роб- became реб- by an old vowel assimilation (Vasmer). The same root gave раб, \"slave\", and Vasmer lists Latin orbus, \"bereaved\", and Greek orphanós, \"orphan\", as cousins."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08af7c6839166320",
+      "sourceHash": "fnv1a64:a46bc6e7d8671e15",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тётя (tyótya) is a nursery word, says Vasmer, like тятя, an old word for \"dad\". Lithuanian tetà, \"aunt\", and Greek tétta, \"daddy\", are formed the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba1a5bac2ab2ebd2",
+      "sourceHash": "fnv1a64:b955c1a9306ba51b",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "внук (vnuk) from Proto-Slavic vŭnukŭ — inherited. Vasmer thinks it may belong with an old nursery word for an elder, seen in Old High German ano, \"ancestor\", and Latin anus, \"old woman\"; he finds other proposals less likely."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5d61023dbd53b87",
+      "sourceHash": "fnv1a64:94a7dfe147f53fcc",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "внучка (vnúchka) is внук (vnuk), \"grandson\", with -ка, which makes the female word; к turns to ч before it, as in рука, \"hand\", and ручка, \"a little hand; a pen\". Vasmer traces внук (vnuk) to Proto-Slavic vŭnukŭ and tentatively links it with an old nursery word for an elder, kept in Latin anus, \"old woman\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "bōraṭi"
 concept_tag: ML-AROGYAM275-BORATI
 prerequisites: [ML-C274-pollal, ML-C274-prameham]
 sounds: []
-roots: []
+roots: [english-bore, dravidian-adi-beat]
+etymology_hook: "bōraṭi: English bore + native aṭi 'a blow' (DEDR 77)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C274-prameham]
 <!-- hl-knowledge: introduces=[ML-LEX-C275-AROGYAM275-01]; assesses=[] -->
 
 **ബോറടി** — *bōraṭi* — "boredom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബോറടി** (*bōraṭi*) joins English *bore* to native *aṭi*, "a blow, a stroke" (DEDR 77, with Tamil *aṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 108,
-  "sourceHash": "fnv1a64:d263d4860d02b2ed",
+  "sourceHash": "fnv1a64:bf4c1d770d30ef90",
   "lessonIds": [
     "BN-C108-jhata",
     "BN-C108-balish",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch108.txt",
   "json": "bengali/narration/ch108.json",
-  "textHash": "fnv1a64:afc0c7f62a7a8495",
-  "jsonHash": "fnv1a64:50704082ce8fe4cb",
+  "textHash": "fnv1a64:15d36127f38b6dd0",
+  "jsonHash": "fnv1a64:3ee74b0cc554080f",
   "findings": []
 }

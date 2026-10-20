@@ -1,0 +1,11 @@
+{
+  "id": "IT-C459-rata",
+  "pathSegment": "IT-PATH-459-BANCA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-459-BANCA",
+      "order": 4
+    }
+  ]
+}

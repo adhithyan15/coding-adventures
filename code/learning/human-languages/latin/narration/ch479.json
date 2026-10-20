@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 479,
+  "title": "Orchard, Olive tree, Press, To graft, Grape harvest",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:db4d3ebee86071c4",
+  "lessons": [
+    {
+      "id": "LA-C479-pomarium",
+      "sequence": 25470,
+      "title": "pōmārium, pōmāriī — an orchard",
+      "headword": "pōmārium, pōmāriī",
+      "romanization": "pōmārium, pōmāriī",
+      "gloss": "an orchard",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7962be1f2d322afb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to shear, then the Latin for to milk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pōmārium, pōmāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōmārium, pōmāriī — \"an orchard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In pōmāriō arborēs plēnae pōmōrum sunt. In the orchard the trees are full of fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: pōmārium, pōmāriī n., from pōmum 'fruit'. A pōmārius sells fruit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōmārium is built on pōmum 'fruit' with the suffix -ārium 'place for' (Lewis & Short, under pōmārius)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōmārium, pōmāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōmārium, pōmāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōmārium, pōmāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōmārium, pōmāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pōmārium, pōmāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pōmārium, pōmāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to shear, then the Latin for to milk, then say pōmārium, pōmāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to shear, then the Latin for to milk, then say *pōmārium, pōmāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pōmārium, pōmāriī mean? (\"An orchard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C479-olea",
+      "sequence": 25480,
+      "title": "olea, oleae — an olive tree; an olive",
+      "headword": "olea, oleae",
+      "romanization": "olea, oleae",
+      "gloss": "an olive tree; an olive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef86588e223c9bca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to milk, then the Latin for an orchard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: olea, oleae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "olea, oleae — \"an olive tree; an olive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In colle multae oleae sunt. On the hill there are many olive trees."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: olea, oleae f. A variant of olīva."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "olea was borrowed from Greek elaia 'olive, olive tree' (EtymDB), like olīva and oleum 'oil'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "olea, oleae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *olea, oleae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "olea, oleae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *olea, oleae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with olea, oleae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *olea, oleae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to milk, then the Latin for an orchard, then say olea, oleae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to milk, then the Latin for an orchard, then say *olea, oleae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does olea, oleae mean? (\"An olive tree; an olive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C479-prelum",
+      "sequence": 25490,
+      "title": "prēlum, prēlī — a press (for wine or oil)",
+      "headword": "prēlum, prēlī",
+      "romanization": "prēlum, prēlī",
+      "gloss": "a press (for wine or oil)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2d5fd52778681b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an orchard, then the Latin for an olive tree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prēlum, prēlī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prēlum, prēlī — \"a press (for wine or oil)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servī ūvās in prēlō premunt. The slaves press the grapes in the press."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: prēlum, prēlī n., also praelum. The heavy beam that squeezed grapes and olives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prēlum is built on premō 'to press' (EtymDB; Lewis & Short), from an older prem-lom. English press comes from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prēlum, prēlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prēlum, prēlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prēlum, prēlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prēlum, prēlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prēlum, prēlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prēlum, prēlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an orchard, then the Latin for an olive tree, then say prēlum, prēlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an orchard, then the Latin for an olive tree, then say *prēlum, prēlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does prēlum, prēlī mean? (\"A press (for wine or oil)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C479-insero",
+      "sequence": 25500,
+      "title": "īnserō, īnserere — to graft, to plant in",
+      "headword": "īnserō, īnserere",
+      "romanization": "īnserō, īnserere",
+      "gloss": "to graft, to plant in",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e6852a098b1a76a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an olive tree, then the Latin for a press."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnserō, īnserere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnserō, īnserere — \"to graft, to plant in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Agricola rāmum pirī in mālum īnserit. The farmer grafts a pear branch onto an apple tree."
+            },
+            {
+              "kind": "speech",
+              "text": "īnserō, īnserere, īnsēvī, īnsitum, from serō, serere, sēvī 'to sow'. A different verb īnserō, īnserere, īnseruī, īnsertum 'to put in' gives English insert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnserō 'to graft' is built from in- 'in' and serō, serere, sēvī 'to sow, to plant' (EtymDB; Lewis & Short). It must be kept apart from īnserō 'to put in', from serō, seruī 'to join'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnserō, īnserere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnserō, īnserere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnserō, īnserere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnserō, īnserere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnserō, īnserere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnserō, īnserere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an olive tree, then the Latin for a press, then say īnserō, īnserere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an olive tree, then the Latin for a press, then say *īnserō, īnserere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnserō, īnserere mean? (\"To graft, to plant in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C479-vindemia",
+      "sequence": 25510,
+      "title": "vindēmia, vindēmiae — the grape harvest, the vintage",
+      "headword": "vindēmia, vindēmiae",
+      "romanization": "vindēmia, vindēmiae",
+      "gloss": "the grape harvest, the vintage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cfc227d8184e42b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a press, then the Latin for to graft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vindēmia, vindēmiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vindēmia, vindēmiae — \"the grape harvest, the vintage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Autumnō vindēmia est; tōta familia ūvās legit. In autumn it is the grape harvest; the whole household gathers grapes."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: vindēmia, vindēmiae f. English vintage comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vindēmia is built from vīnum 'wine, grapes' and dēmō 'to take off, to remove' (EtymDB; Lewis & Short): taking the grapes off the vine. English vintage comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vindēmia, vindēmiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vindēmia, vindēmiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vindēmia, vindēmiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vindēmia, vindēmiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vindēmia, vindēmiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vindēmia, vindēmiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a press, then the Latin for to graft, then say vindēmia, vindēmiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a press, then the Latin for to graft, then say *vindēmia, vindēmiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vindēmia, vindēmiae mean? (\"The grape harvest, the vintage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

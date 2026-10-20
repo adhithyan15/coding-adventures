@@ -14,6 +14,7 @@ concept_tag: PT-COISAS223-BAGAGEM
 prerequisites: [PT-C222-moeda, PT-C223-saida]
 sounds: []
 roots: []
+etymology_hook: "bagagem ← French bagage — English baggage is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C223-saida]
 <!-- hl-knowledge: introduces=[PT-LEX-C223-COISAS223-02]; assesses=[] -->
 
 **a bagagem** — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bagagem** ← French *bagage* — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an airport"
 concept_tag: PT-LUGARES85-AEROPORTO
 prerequisites: [PT-C84-por-isso, PT-C84-causa]
 sounds: []
-roots: []
+roots: [portus-latin]
+etymology_hook: "aeroporto = aero- 'air' (from Greek aer) + porto 'port' (← Latin portus 'harbour')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C84-causa]
 <!-- hl-knowledge: introduces=[PT-LEX-C85-LUGARES85-01]; assesses=[] -->
 
 **o aeroporto** — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aeroporto** is built from *aero-*, "air", from Greek *aēr*, and *porto*, "port" ← Latin *portus*, "harbour" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

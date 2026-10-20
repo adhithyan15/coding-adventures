@@ -14,7 +14,8 @@ romanization: "vāhtūk"
 concept_tag: MR-VASTU190-VAHTUK
 prerequisites: [MR-C189-tota, MR-C190-sejar]
 sounds: []
-roots: []
+roots: [sanskrit-vahayati]
+etymology_hook: "vāhtūk: built on vāh- 'carry', from vāhṇe ← vāhayati 'drives' (CDIAL 11612)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C190-sejar]
 <!-- hl-knowledge: introduces=[MR-LEX-C190-VASTU190-02]; assesses=[] -->
 
 **वाहतूक** — *vāhtūk* — "traffic, transport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाहतूक** (*vāhtūk*) is built on the stem *vāh-*, "carry", of Marathi *vāhṇẽ*, "to carry", which CDIAL lists under Sanskrit *vāhayati*, "drives" (CDIAL 11612).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

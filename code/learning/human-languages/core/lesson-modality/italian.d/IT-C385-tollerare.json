@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C385-tollerare",
+    "language": "italian",
+    "chapter": 385,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31ac17c50089d932"
+  },
+  "findings": []
+}

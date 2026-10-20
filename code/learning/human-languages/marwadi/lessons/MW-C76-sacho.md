@@ -14,7 +14,8 @@ romanization: "sācho"
 concept_tag: MW-ADJ76-SACHO
 prerequisites: [MW-C76-patlo, MW-C76-bhari]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sācho ← Sanskrit satya 'true', a tadbhava (CDIAL 13112, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C76-bhari]
 <!-- hl-knowledge: introduces=[MW-LEX-C76-ADJ76-03]; assesses=[] -->
 
 **साचो** — *sācho* — "true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साचो** (*sācho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *satya*, "true". CDIAL lists Marwari *sāco* under it (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

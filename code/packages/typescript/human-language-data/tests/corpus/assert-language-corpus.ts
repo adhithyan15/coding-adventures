@@ -16,7 +16,10 @@ import {
   loadTrackLanguageCurriculum,
   loadTrackLessons,
 } from "../../src/loader.js";
-import { measureLessonBudgets } from "../../src/lesson-budgets.js";
+import {
+  measureLessonBudgets,
+  type LessonBudgetKind,
+} from "../../src/lesson-budgets.js";
 import type { ParsedLesson } from "../../src/parse.js";
 import {
   MODALITY_MANIFEST_DIR,
@@ -127,6 +130,8 @@ export interface LanguageLessonBudgetExpectation {
   readonly idioms?: number;
   readonly senses?: number;
   readonly cultureClaims?: number;
+  /** Optional independent identity census for conflict-free exact totals. */
+  readonly units?: Readonly<Record<LessonBudgetKind, readonly string[]>>;
   /** Stable prefix for every declared unit id, for example `GE`. */
   readonly unitPrefix: string;
 }
@@ -134,12 +139,13 @@ export interface LanguageLessonBudgetExpectation {
 /**
  * Pin one track's completed lesson-content review in that track's own test.
  *
- * The filter is load-bearing: schema-v1 lessons have no declaration contract,
- * so counting them as reviewed zeroes would certify debt that was never read.
- * Keeping the expectation in a language-owned suite lets independent backfill
- * lanes advance without editing one corpus-wide counter. High-churn tracks may
- * omit generated totals and retain the stronger complete-measurement/zero-excess
- * invariant, so independent chapters do not share a per-language counter either.
+ * Fixed historical counts filter out schema-v1 lessons because those lessons
+ * have no declaration contract. Derived mode deliberately does not: every
+ * canonical language lesson participates, so a schema-v1 downgrade lowers the
+ * measured count and fails. Keeping the expectation language-owned lets
+ * independent backfill lanes advance without editing one corpus-wide counter.
+ * High-churn tracks can add direct unit identities and retain exact deletion
+ * detection without sharing a per-language count.
  */
 export function expectLanguageLessonBudgets(
   language: string,
@@ -147,11 +153,27 @@ export function expectLanguageLessonBudgets(
   candidates?: ParsedLesson[],
 ): void {
   const root = defaultCurriculumRoot();
-  const lessons = (candidates ?? loadTrackLessons(language, root)).filter(
-    (lesson) =>
-      lesson.language === language &&
-      (lesson.frontmatter as Record<string, unknown>).schema_version === "2",
+  const languageLessons = (candidates ?? loadTrackLessons(language, root)).filter(
+    (lesson) => lesson.language === language,
   );
+  if (expected.lessons === undefined) {
+    expect(
+      languageLessons
+        .filter(
+          (lesson) =>
+            (lesson.frontmatter as Record<string, unknown>).schema_version !== "2",
+        )
+        .map((lesson) => String((lesson.frontmatter as Record<string, unknown>).id)),
+      `${language} derived lesson-content census requires every canonical lesson to use schema v2`,
+    ).toEqual([]);
+  }
+  const lessons =
+    expected.lessons === undefined
+      ? languageLessons
+      : languageLessons.filter(
+          (lesson) =>
+            (lesson.frontmatter as Record<string, unknown>).schema_version === "2",
+        );
   const policy = loadChapterPolicy(root);
   const report = measureLessonBudgets(lessons, {
     idioms: policy.maxNewIdiomsPerLesson ?? 1,
@@ -172,6 +194,17 @@ export function expectLanguageLessonBudgets(
   if (expected.senses !== undefined) expect(report.summary.senses).toBe(expected.senses);
   if (expected.cultureClaims !== undefined) {
     expect(report.summary.cultureClaims).toBe(expected.cultureClaims);
+  }
+  if (expected.units !== undefined) {
+    for (const kind of ["idiom", "sense", "culture-claim"] as const) {
+      expect(
+        report.findings
+          .filter((finding) => finding.kind === kind)
+          .map((finding) => finding.unitId)
+          .sort(),
+        `${language} ${kind} declarations match direct identity owners`,
+      ).toEqual([...expected.units[kind]].sort());
+    }
   }
   expect(report.excesses, `${language} lesson-content budget excesses`).toEqual([]);
   expect(

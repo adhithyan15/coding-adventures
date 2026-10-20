@@ -14,7 +14,8 @@ romanization: "taḷḷu"
 concept_tag: TA-VERB-TALLU
 prerequisites: [TA-C154-ennu, TA-C154-kattu]
 sounds: []
-roots: []
+roots: [dravidian-tallu-push]
+etymology_hook: "தள்ளு — native Dravidian (DEDR 3135); Malayalam taḷḷuka, Kannada taḷḷu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C154-kattu]
 <!-- hl-knowledge: introduces=[TA-LEX-C155-ACT155-01]; assesses=[] -->
 
 **தள்ளு** — *taḷḷu* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தள்ளு** (*taḷḷu*) is native Dravidian. DEDR 3135 lists Malayalam *taḷḷuka* and Kannada *taḷḷu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

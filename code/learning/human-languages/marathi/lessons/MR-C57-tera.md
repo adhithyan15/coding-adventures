@@ -11,7 +11,8 @@ gloss: thirteen — three-and-ten, and the third word in a row to end in -रा
 concept_tag: MR-LEX-TERA
 prerequisites: [MR-C56-bara, MR-W56-au-matra, MR-R56-ten-to-twelve]
 sounds: [matra-e, matra-aa]
-roots: []
+roots: [sanskrit-trayodasha]
+etymology_hook: "terā ← *trayēdaśa, CDIAL's variant of Sanskrit trayodaśa 'thirteen'; a tadbhava (CDIAL 6001)"
 duration:
   max_seconds: 210
 requires:

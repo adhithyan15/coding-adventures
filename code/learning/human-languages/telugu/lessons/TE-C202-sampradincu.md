@@ -14,7 +14,8 @@ romanization: "sampradiñcu"
 concept_tag: TE-VERB-SAMPRADINCU
 prerequisites: [TE-C201-kadulu, TE-C202-carcincu]
 sounds: []
-roots: []
+roots: [sanskrit-sampradana]
+etymology_hook: "sampradiñcu: origin of the stem uncertain; it looks Sanskrit, but our sources do not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C202-carcincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C202-KRIYA202-02]; assesses=[] -->
 
 **సంప్రదించు** — *sampradiñcu* — "to contact, to consult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంప్రదించు** (*sampradiñcu*) has the Telugu verb ending *-iñcu* on a stem that looks Sanskrit, but neither DEDR nor CDIAL lists it, so its source is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

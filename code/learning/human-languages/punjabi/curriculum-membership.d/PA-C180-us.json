@@ -1,0 +1,11 @@
+{
+  "id": "PA-C180-us",
+  "pathSegment": "PA-PATH-180-A2-PLACE-REFERENCE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-180-A2-PLACE-REFERENCE",
+      "order": 1
+    }
+  ]
+}

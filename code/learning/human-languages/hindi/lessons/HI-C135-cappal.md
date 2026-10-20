@@ -15,6 +15,7 @@ concept_tag: HI-THINGS135-CAPPAL
 prerequisites: [HI-C134-sisa, HI-C134-anguthi]
 sounds: []
 roots: []
+etymology_hook: "cappal: not in CDIAL; DEDR 1963 compares it, with a Cf., to Dravidian 'sandal' words such as Telugu ceppu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C134-anguthi]
 <!-- hl-knowledge: introduces=[HI-LEX-C135-THINGS135-01]; assesses=[] -->
 
 **चप्पल** — *cappal* — "a sandal, a slipper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चप्पल** (*cappal*) is uncertain, and CDIAL has no entry for it. DEDR, under Dravidian words for "sandal" such as Telugu *ceppu*, adds "Cf. H. cappal" (DEDR 1963): a comparison, not a settled source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

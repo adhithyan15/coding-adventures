@@ -14,7 +14,8 @@ romanization: "pereúlok"
 concept_tag: RU-MESTO183-PEREULOK
 prerequisites: [RU-C182-vykhodnoy, RU-C182-vovremya]
 sounds: []
-roots: []
+roots: [slavic-ula]
+etymology_hook: "переулок is пере- 'across' + улок, from улица 'street': a cross street"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C182-vovremya]
 <!-- hl-knowledge: introduces=[RU-LEX-C183-MESTO183-01]; assesses=[] -->
 
 **переулок** (*pereúlok*) — "a side street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**переулок** is *пере-*, "across", with *-улок*, from *улица*, "street" (Vasmer): a lane that crosses between streets.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

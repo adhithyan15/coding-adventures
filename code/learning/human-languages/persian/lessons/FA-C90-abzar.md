@@ -14,7 +14,8 @@ romanization: "abzâr"
 concept_tag: FA-CAN90-ABZAR
 prerequisites: [FA-C89-hagh, FA-C89-forsat]
 sounds: []
-roots: []
+roots: [persian-abzar]
+etymology_hook: "abzâr: inherited, usually traced to Middle Persian abzār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C89-forsat]
 <!-- hl-knowledge: introduces=[FA-LEX-C90-CAN90-01]; assesses=[] -->
 
 **ابزار** — *abzâr* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abzâr* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *abzār*, "tool, means".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

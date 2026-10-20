@@ -11,7 +11,8 @@ romanization: "āśīrvādaṁ"
 concept_tag: TE-NOUN-BLESSING
 prerequisites: [TE-C51-respect]
 sounds: []
-roots: []
+roots: [sanskrit-ashis]
+etymology_hook: "āśīrvādaṁ ← Sanskrit āśīrvāda 'blessing': āśis 'wish' (CDIAL 1457) + vāda 'utterance' (CDIAL 11507)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C51-respect]
 The ceremony behind it is still in daily use. You bend and touch an elder's feet, and what comes back is ఆశీర్వాదం --- a hand on the head --- at a birthday, before an examination, at a wedding, and at every departure.
 
 Notice *vāda* sitting there. It is the same piece inside ధన్యవాదములు, "utterances of 'worthy'". Twice now this language has counted a thing said as a thing given.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆశీర్వాదం** (*āśīrvādaṁ*) is Sanskrit *āśīrvāda*, "blessing", taken over whole as a learned loan, a tatsama: *āśis*, "wish, blessing" (CDIAL 1457), and *vāda*, "utterance" (CDIAL 11507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

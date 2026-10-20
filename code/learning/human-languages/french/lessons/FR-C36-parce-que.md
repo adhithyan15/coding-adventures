@@ -47,6 +47,8 @@ reviews_of: [FR-C36-mais, FR-C32-pourquoi, FR-C34-cest]
 Three words are welded in there: **par** ("by"), **ce** ("this") and **que**
 ("that"). *By this that…* — a phrase that pointed forward at the reason about to
 be given, said so often that the first two fused and the third stayed loose.
+All three are inherited from Latin: *par* ← *per*, *ce* ← *ecce hoc*, "look,
+this", and *que* ← *quid*, *quem* or *quia* (EtymDB 2.1 lists all three).
 
 English built its own the same way. **Because** is **by** + **cause**, and the
 seam is still faintly visible if you look. Two languages, two prepositions, two
@@ -54,7 +56,7 @@ pointing words, one job.
 
 Before a vowel the **que** elides, exactly as *le* and *de* do:
 
-> **parce qu'il est tard** — because it's late.
+> **parce qu'il est midi** — because it's noon.
 
 And the **ce** inside it is the same *ce* you took two chapters ago — the fourth
 place that one small pointing word has turned up.
@@ -64,7 +66,7 @@ place that one small pointing word has turned up.
 
 - [YOU SAY: the question and its answer — "Pourquoi ? — Parce que je suis
   fatigué."]
-- [YOU SAY: elided — "parce qu'il est tard"]
+- [YOU SAY: elided — "parce qu'il est midi"]
 - [YOU SAY: the three pieces, slowly — *par … ce … que*]
 - [YOU SAY: all four joiners — "et, ou, mais, parce que"]
 

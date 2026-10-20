@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-319-SANTOS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-319-SANTOS"
+  ],
+  "after": []
+}

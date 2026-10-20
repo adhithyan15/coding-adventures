@@ -14,7 +14,8 @@ romanization: "chālāk"
 concept_tag: UR-SIFAT223-CHALAK
 prerequisites: [UR-C222-naqli, UR-C222-sachcha]
 sounds: []
-roots: []
+roots: [persian-chalak]
+etymology_hook: "chālāk: usually traced to Persian chālāk 'quick, clever'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C222-sachcha]
 <!-- hl-knowledge: introduces=[UR-LEX-C223-SIFAT223-01]; assesses=[] -->
 
 **چالاک** — *chālāk* — "cunning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چالاک** (*chālāk*) is a loan, usually traced to Persian *chālāk*, "quick, clever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

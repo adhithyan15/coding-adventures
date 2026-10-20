@@ -1,0 +1,11 @@
+{
+  "id": "ES-C582-conllevar",
+  "pathSegment": "ES-PATH-582-CONSEC",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-582-CONSEC",
+      "order": 2
+    }
+  ]
+}

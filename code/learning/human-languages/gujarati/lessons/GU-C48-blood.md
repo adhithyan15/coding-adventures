@@ -14,7 +14,8 @@ romanization: "lohī"
 concept_tag: GU-BODY3-BLOOD
 prerequisites: [GU-C48-knee, GU-C48-heart]
 sounds: []
-roots: []
+roots: [sanskrit-lohita]
+etymology_hook: "lohī ← Sanskrit lohita 'red; blood', a tadbhava (CDIAL 11165)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C48-heart]
 <!-- hl-knowledge: introduces=[GU-LEX-C48-BODY3-03]; assesses=[] -->
 
 **લોહી** (*lohī*) — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લોહી** (*lohī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lohita*, "red; blood" (CDIAL 11165). It is a form of *rohita*, "red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

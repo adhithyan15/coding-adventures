@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "No pavilhão",
+  "label": "ch:pt-no-pavilhao",
+  "canDo": "I can talk about indoor sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C512-ginastica",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about indoor sports.",
+    "assesses": [
+      "PT-LEX-C512-PAVILHAO-03",
+      "PT-LEX-C512-PAVILHAO-04",
+      "PT-LEX-C512-PAVILHAO-05"
+    ]
+  }
+}

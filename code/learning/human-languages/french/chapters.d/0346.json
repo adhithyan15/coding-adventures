@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Causes et conséquences",
+  "label": "ch:fr-causes-et-consequences",
+  "canDo": "I can say what caused or provoked something, name a consequence, and say what it leads to or follows from.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C346-decouler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say what caused or provoked something, name a consequence, and say what it leads to or follows from.",
+    "assesses": [
+      "FR-LEX-C346-CONSEQUENCE-03",
+      "FR-LEX-C346-CONSEQUENCE-04",
+      "FR-LEX-C346-CONSEQUENCE-05"
+    ]
+  }
+}

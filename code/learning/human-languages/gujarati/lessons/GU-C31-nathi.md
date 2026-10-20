@@ -11,8 +11,8 @@ gloss: "is not — the word that turns a sentence over"
 concept_tag: GU-NEG-NATHI
 prerequisites: [GU-C02-chhe, GU-C01-haa-naa]
 sounds: []
-roots: []
-etymology_hook: "નથી is ન + અસ્તિ worn into one word — 'not' plus the ancient 'is' that English still says as is."
+roots: [sanskrit-nasti]
+etymology_hook: "નથી is ન + અસ્તિ worn into one word: CDIAL lists nathī under Sanskrit nāsti 'is not' (CDIAL 7091)"
 duration:
   max_seconds: 230
 requires:
@@ -61,6 +61,8 @@ The two halves are still visible inside it. **ન** is the old *na*, "not". The
 comes down into English as **is** and into Latin as *est*. So *nathī* is
 literally **not-is**, two words that fused so long ago that Gujarati now treats
 them as one.
+
+CDIAL lists **નથી** (*nathī*) under Sanskrit *nāsti*, "is not", which is *na* and *asti* (CDIAL 7091).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-NEG-NATHI-01, GU-CONCEPT-C02-CHHE-01] -->

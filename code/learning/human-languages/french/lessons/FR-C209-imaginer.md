@@ -13,7 +13,8 @@ gloss: "to imagine"
 concept_tag: FR-VERB-IMAGINER
 prerequisites: [FR-C208-prevenir, FR-C209-profiter]
 sounds: []
-roots: []
+roots: [imago-latin]
+etymology_hook: "imaginer ← Latin imaginari, from imago 'an image' — English imagine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C209-profiter]
 <!-- hl-knowledge: introduces=[FR-LEX-C209-VERBES209-02]; assesses=[] -->
 
 **imaginer** — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**imaginer** ← Latin *imaginari*, "to picture", from *imago*, "an image" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suji"
 concept_tag: BN-JINIS231-SUJI
 prerequisites: [BN-C231-ata2, BN-C231-moyda]
 sounds: []
-roots: []
+roots: [indo-aryan-sujji]
+etymology_hook: "suji ← *sūjjī 'coarse wheat meal', a reconstructed form; a tadbhava (CDIAL 13552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C231-moyda]
 <!-- hl-knowledge: introduces=[BN-LEX-C231-JINIS231-05]; assesses=[] -->
 
 **সুজি** — *suji* — "semolina".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুজি** (*suji*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sūjjī*, "coarse wheat meal", a form CDIAL reconstructs from its descendants (CDIAL 13552). CDIAL lists Bengali *suji*, "coarse flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

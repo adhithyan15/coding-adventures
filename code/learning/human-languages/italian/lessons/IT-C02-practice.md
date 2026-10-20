@@ -11,6 +11,7 @@ concept_tag: CH2-PRACTICE
 prerequisites: [IT-C02-prego, IT-C02-come, IT-C02-stare, IT-C02-come-stai, IT-C02-come-sta, IT-C02-come-va, IT-C02-cosi-cosi, IT-C02-non-ce-male]
 sounds: []
 roots: []
+etymology_hook: "review: prego ← pregare 'to pray'; come ← Latin quomodo 'how'; stare ← Latin stare 'to stand'"
 duration:
   max_seconds: 297
 requires:
@@ -63,9 +64,9 @@ Italian twin of Spanish *¿y usted?* and French *et toi?*.
 - **prego** — you're welcome (← *pregare*, "to pray"; English
   *precarious*).
 - **come** — how (← *quōmodo*; sibling of *cómo* / *comment*).
-- **stare** — "to be" from *stand* (= Spanish *estar*); vs *essere* (identity).
+- **stare** — "to be" from *stand* (= Spanish *estar*); not the identity be-verb.
 - **Come stai? / sta? / va?** — informal, formal, and the "how's it going?"
-  form (*va* ← *andare*, "to go").
+  form (*va*, "it goes").
 - **così così** — so-so (English "so-so" borrowed it whole).
 
 ## Guided Practice
@@ -83,5 +84,5 @@ Italian twin of Spanish *¿y usted?* and French *et toi?*.
 [PAUSE 3s] Which verb carries *Come stai?*, and what does it literally ask?
 (*stare*, "to stand" — "how do you stand?") What does *prego* answer, and from
 what root? (*grazie*; ← *pregare*, "to pray.") Italian can ask "how are you" two
-ways — which verbs? (*stare*, stand; *andare* → *va*, go.) Next chapter:
-**introducing yourself** — mi chiamo, come ti chiami.
+ways — which verbs? (*stare*, stand; *va*, go.) Next chapter:
+**introducing yourself** — saying your name and asking someone theirs.

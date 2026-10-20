@@ -14,7 +14,8 @@ romanization: "mriyate"
 concept_tag: SA-VERB-MRIYATE
 prerequisites: [SA-C232-vartate, SA-C232-jayate]
 sounds: []
-roots: []
+roots: [sanskrit-marate]
+etymology_hook: "mriyate ← √mṛ 'die'; MW compares Latin morior, mors; Hindi marnā is probably from sister form marate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C232-jayate]
 <!-- hl-knowledge: introduces=[SA-LEX-C232-ACT232-03]; assesses=[] -->
 
 **म्रियते** — *mriyate* — "dies".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mriyate* is the present of the root √mṛ, "to die" (MW; CDIAL 10383). The root is inherited from Indo-European: MW compares Latin *morior*, "I die", and *mors*, "death". Hindi *marnā* probably continues the sister form *marate*, CDIAL 9871 says.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

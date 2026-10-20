@@ -14,7 +14,8 @@ romanization: "lalāṭam"
 concept_tag: SA-BODY-FOREHEAD
 prerequisites: [SA-C69-throat, SA-C69-belly]
 sounds: []
-roots: []
+roots: [sanskrit-lalata]
+etymology_hook: "lalāṭa 'forehead', later form of Vedic rarāṭa (MW); origin not settled; Hindi lilāṛ (CDIAL 10970)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C69-belly]
 <!-- hl-knowledge: introduces=[SA-LEX-C69-BODY-04]; assesses=[] -->
 
 **ललाटम्** (*lalāṭam*) — "the forehead", above the **अक्षि**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Lalāṭa* is the later form of Vedic *rarāṭa* (MW, CDIAL 10970). Its own origin is
+not settled, though CDIAL takes the side form *niṭāla* as borrowed from Dravidian.
+It lives on as Hindi *lilāṛ*, "forehead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

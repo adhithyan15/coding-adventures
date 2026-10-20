@@ -13,7 +13,8 @@ gloss: "an interview"
 concept_tag: IT-LAV203-COLLOQUIO
 prerequisites: [IT-C202-sci, IT-C203-contratto]
 sounds: []
-roots: []
+roots: [colloquium-latin]
+etymology_hook: "colloquio ← Latin colloquium 'a conversation', com- + loqui 'to speak' — English colloquial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C203-contratto]
 <!-- hl-knowledge: introduces=[IT-LEX-C203-LAV203-02]; assesses=[] -->
 
 **il colloquio** — "an interview".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colloquio** ← Latin *colloquium*, "a conversation" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *colloquio*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

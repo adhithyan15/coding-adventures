@@ -14,7 +14,8 @@ romanization: "kalisu"
 concept_tag: KA-VERB-KALISU2
 prerequisites: [KA-C148-huduku, KA-C148-kali]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn]
+etymology_hook: "kalisu: native Dravidian, 'make learn', from kali 'to learn'; DEDR 1297 lists kalisu 'to teach'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C148-kali]
 <!-- hl-knowledge: introduces=[KA-LEX-C148-ACT148-04]; assesses=[] -->
 
 **ಕಲಿಸು** — *kalisu* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲಿಸು** (*kalisu*) is native Dravidian, from *kali*, "to learn", and DEDR 1297 lists *kalisu*, "to teach", itself: teaching is "making learn"; the entry also has Tamil *kal*, Telugu *kaṟacu* and Malayalam *kalkka*. DEDR 1297 compares Sanskrit *kalā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

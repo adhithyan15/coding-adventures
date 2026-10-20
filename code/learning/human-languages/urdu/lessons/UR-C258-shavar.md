@@ -14,7 +14,8 @@ romanization: "shāvar"
 concept_tag: UR-CHIZ258-SHAVAR
 prerequisites: [UR-C258-paip, UR-C258-nal]
 sounds: []
-roots: []
+roots: [english-shower]
+etymology_hook: "shāvar ← English shower"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C258-nal]
 <!-- hl-knowledge: introduces=[UR-LEX-C258-CHIZ258-05]; assesses=[] -->
 
 **شاور** — *shāvar* — "a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاور** (*shāvar*) is a loan from English *shower*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for a week, then the Persian for a year.
 You'll want to know: دقیقه.
 دقیقه — daghighe — "a minute".
 
+The word, taken apart.
+daghighe is borrowed from Arabic daqīqa, "minute". Its Arabic root is d-q-q (Lane). The root means "fine, thin": a minute is a fine division of time.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a year, then the Persian for a minute.
 
 You'll want to know: امروز.
 امروز — emruz — "today".
+
+The word, taken apart.
+emruz is em-, "this", with ruz, "day": "this day". Both are native Persian; ruz continues Middle Persian rōz (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a minute, then the Persian for today.
 You'll want to know: دیروز.
 دیروز — diruz — "yesterday".
 
+The word, taken apart.
+diruz is di, the old Persian word for "yesterday" (usually traced to Middle Persian dīg), with ruz, "day". Both parts are native; ruz continues Middle Persian rōz (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for today, then the Persian for yesterday.
 You'll want to know: فردا.
 فردا — fardâ — "tomorrow".
 
+The word, taken apart.
+fardâ is a native Persian word, inherited rather than borrowed: it continues Middle Persian fradāg, "tomorrow" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for yesterday, then the Persian for tomorrow
 
 You'll want to know: حالا.
 حالا — hâlâ — "now".
+
+The word, taken apart.
+hâlâ is borrowed from Arabic ḥālan, "now, at present". Its Arabic root is ḥ-w-l (Lane). It is the word ḥāl, "state", used as an adverb.
 
 What you've built.
 One more word for this chapter.

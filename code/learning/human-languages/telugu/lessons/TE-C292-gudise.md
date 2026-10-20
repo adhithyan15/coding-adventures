@@ -14,7 +14,8 @@ romanization: "guḍise"
 concept_tag: TE-STHALAM292-GUDISE
 prerequisites: [TE-C291-eduruga, TE-C291-cuttu2]
 sounds: []
-roots: []
+roots: [dravidian-kudi-house]
+etymology_hook: "guḍise: native Dravidian; DEDR 1655 lists guḍise 'hut' with Kannada guḍisalu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C291-cuttu2]
 <!-- hl-knowledge: introduces=[TE-LEX-C292-STHALAM292-01]; assesses=[] -->
 
 **గుడిసె** — *guḍise* — "a hut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుడిసె** (*guḍise*) is native Dravidian. DEDR 1655 lists *guḍise*, "hut, cottage", with Kannada *guḍisalu*, "hut", and Tamil *kuṭical*, "hut". DEDR compares Sanskrit *kuṭī*, "hut" (CDIAL 3232), which CDIAL partly takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

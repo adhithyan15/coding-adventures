@@ -14,7 +14,8 @@ romanization: "pôrdā"
 concept_tag: BN-THINGS133-PORDA
 prerequisites: [BN-C133-moshari, BN-C133-kombol]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "pôrdā: usually traced to Persian parda 'curtain, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C133-kombol]
 <!-- hl-knowledge: introduces=[BN-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **পর্দা** — *pôrdā* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পর্দা** (*pôrdā*) is a loan, usually traced to Persian *parda*, "curtain, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

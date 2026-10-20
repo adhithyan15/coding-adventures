@@ -14,7 +14,8 @@ romanization: "āḷśī"
 concept_tag: MR-QUAL150-ALSI
 prerequisites: [MR-C150-kacca, MR-C150-sant]
 sounds: []
-roots: []
+roots: [sanskrit-alasya]
+etymology_hook: "āḷśī ← Sanskrit ālasya 'sloth', a tadbhava (CDIAL 1371)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C150-sant]
 <!-- hl-knowledge: introduces=[MR-LEX-C150-QUAL150-04]; assesses=[] -->
 
 **आळशी** — *āḷśī* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आळशी** (*āḷśī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ālasya*, "sloth" (CDIAL 1371). It is built on *alasa*, "idle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

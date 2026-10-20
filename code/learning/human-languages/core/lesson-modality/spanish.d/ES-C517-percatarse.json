@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C517-percatarse",
+    "language": "spanish",
+    "chapter": 517,
+    "sequence": 15460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8c0dfdd1de715b3"
+  },
+  "findings": []
+}

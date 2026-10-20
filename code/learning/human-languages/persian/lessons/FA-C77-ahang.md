@@ -14,7 +14,8 @@ romanization: "âhang"
 concept_tag: FA-NUMBERS77-AHANG
 prerequisites: [FA-C77-donya, FA-C77-rang]
 sounds: []
-roots: []
+roots: [persian-ahang]
+etymology_hook: "âhang ← Middle Persian āhang (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C77-rang]
 <!-- hl-knowledge: introduces=[FA-LEX-C77-NUMBERS77-05]; assesses=[] -->
 
 **آهنگ** — *âhang* — "a song, a tune".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âhang* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *āhang*, "pull, draught; melody" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:c93ac462ba564add",
+  "lessonIds": [
+    "PT-C511-torneio",
+    "PT-C511-taca",
+    "PT-C511-medalha",
+    "PT-C511-podio",
+    "PT-C511-recorde"
+  ],
+  "tex": "portuguese/book/chapters/ch511-tacas-e-medalhas.tex"
+}

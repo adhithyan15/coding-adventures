@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [TE-C02-nuvvu-miiru]
 sounds: [independent-ee, retroflex-ti]
 roots: [yaa-dravidian]
+etymology_hook: "ēmiṭi: native Dravidian, built on ēmi 'what' (DEDR 5151), on the question base e-"
 duration:
   max_seconds: 120
 requires:
@@ -48,6 +49,8 @@ reviews_of: [TE-C02-nuvvu-miiru, TE-C02-naa-peru]
 **\*yā-/\*e-** — the same Dravidian question-root as Tamil *eṉṉa* and Kannada
 *ēnu*, heading Telugu's question family: *ēmiṭi* (what), *evaru* (who), *ekkaḍa*
 (where), *enduku* (why).
+
+DEDR 5151 lists Telugu *ēmi*, "what", beside Tamil *eṉṉa* and Kannada *ēn*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

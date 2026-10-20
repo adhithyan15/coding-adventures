@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-411-ALUGUER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-411-ALUGUER"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:70b03a27bab612c4",
+  "lessonIds": [
+    "IT-C472-testardo",
+    "IT-C472-pigro",
+    "IT-C472-generoso",
+    "IT-C472-avaro",
+    "IT-C472-vantarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch472.txt",
+  "json": "italian/narration/ch472.json",
+  "textHash": "fnv1a64:c40a235294c3b4b8",
+  "jsonHash": "fnv1a64:f12df6eb727ab787",
+  "findings": []
+}

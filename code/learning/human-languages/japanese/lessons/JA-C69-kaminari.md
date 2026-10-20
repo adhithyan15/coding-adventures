@@ -14,7 +14,8 @@ romanization: "kaminari"
 concept_tag: JA-THINGS69-KAMINARI
 prerequisites: [JA-C68-yuuhi, JA-C69-niji]
 sounds: []
-roots: []
+roots: [japanese-kami-god, japanese-naru]
+etymology_hook: "kaminari: native; usually kami 'god' + nari 'sounding' — the god's roar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C69-niji]
 <!-- hl-knowledge: introduces=[JA-LEX-C69-THINGS69-02]; assesses=[] -->
 
 **かみなり** — *kaminari* — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かみなり** (*kaminari*) is a native word, inherited rather than borrowed. It is usually taken apart as *kami*, "god", and *nari*, "sounding", from *naru*, "to sound": the god's roar. Its one kanji, "thunder", is read as a whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

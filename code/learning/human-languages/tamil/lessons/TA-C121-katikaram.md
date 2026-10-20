@@ -14,7 +14,8 @@ romanization: "kaṭikāram"
 concept_tag: TA-THINGS121-KATIKARAM
 prerequisites: [TA-C120-pena, TA-C120-kagitam, TA-C18-mani-homophone-time, TA-C28-afternoon-boundary, TA-C28-pirpakal]
 sounds: []
-roots: []
+roots: [sanskrit-ghati]
+etymology_hook: "கடிகாரம் — built on Sanskrit ghaṭikā 'water-clock, 24 minutes' (CDIAL 4406); the ending is not clear"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C120-kagitam]
 <!-- hl-knowledge: introduces=[TA-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **கடிகாரம்** — *kaṭikāram* — "a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கடிகாரம்** (*kaṭikāram*) is built on Sanskrit *ghaṭikā*, "water-clock, a period of 24 minutes" (CDIAL 4406, under *ghaṭa*, "pot"). How the ending *-āram* was formed is not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

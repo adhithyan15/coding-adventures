@@ -14,7 +14,8 @@ romanization: "cet"
 concept_tag: PA-TIME103-CET
 prerequisites: [PA-C103-navambar, PA-C103-dasambar]
 sounds: []
-roots: []
+roots: [sanskrit-caitra]
+etymology_hook: "cet ← Sanskrit caitra 'the month of the full moon in Citrā', a tadbhava (CDIAL 4915)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C103-dasambar]
 <!-- hl-knowledge: introduces=[PA-LEX-C103-TIME103-04]; assesses=[] -->
 
 **ਚੇਤ** — *cet* — "Chet, the first month of the Nanakshahi calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੇਤ** (*cet*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caitra*, "the month of the full moon in Citrā" (CDIAL 4915). CDIAL lists Punjabi *cetar*, "March-April, spring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

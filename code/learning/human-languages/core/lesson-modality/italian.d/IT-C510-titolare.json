@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C510-titolare",
+    "language": "italian",
+    "chapter": 510,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e9a6e4b6bcc890"
+  },
+  "findings": []
+}

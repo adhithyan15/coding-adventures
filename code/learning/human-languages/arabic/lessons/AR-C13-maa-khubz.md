@@ -12,7 +12,7 @@ concept_tag: AR-FOOD-BASIC
 prerequisites: [AR-C12-al-fusul]
 sounds: [hamza-final, arabic-rtl]
 roots: [semitic-maa-irregular, khabaza-bake]
-etymology_hook: "ماء maa' 'water' is one of Arabic's few genuinely IRREGULAR nouns (its plural miyaah and construct forms don't follow the ordinary pattern) — خبز khubz 'bread' is built on the plain, regular root kh-b-z, 'to bake'"
+etymology_hook: "māʾ: old Semitic, under m-w-h in Lane (Hebrew mayim); khubz: root kh-b-z 'to bake' (Lane)"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +59,11 @@ grammar of the rest of the language settled into its regular patterns.
 (*kh-b-z*), "**to bake**." Where *māʾ* is a fossil, *khubz* is
 transparent: the noun for the baked thing, straight from the verb for
 baking it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماء** (*māʾ*) is an old Semitic noun, listed by Lane under *m-w-h*; Hebrew *mayim*, "water", is its cousin. **خبز** (*khubz*), "bread", is built on the native root *kh-b-z*, "to bake" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C13-MAA-KHUBZ-02] -->

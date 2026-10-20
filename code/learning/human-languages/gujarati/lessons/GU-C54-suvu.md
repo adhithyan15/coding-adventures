@@ -14,7 +14,8 @@ romanization: "sūvũ"
 concept_tag: GU-VERB-SUVU
 prerequisites: [GU-C54-chalvu, GU-C54-uthvu]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "sūvũ ← Sanskrit svapati 'sleeps', a tadbhava (CDIAL 13902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C54-uthvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C54-MOVE-04]; assesses=[] -->
 
 **સૂવું** (*sūvũ*) — "to sleep, to lie down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સૂવું** (*sūvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *svapati*, "sleeps" (CDIAL 13902).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

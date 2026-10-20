@@ -14,7 +14,8 @@ romanization: "makhbaz"
 concept_tag: AR-MAKAN172-MAKHBAZ
 prerequisites: [AR-C171-kathiran, AR-C172-sala]
 sounds: []
-roots: []
+roots: [khabaza-bake]
+etymology_hook: "makhbaz: built on the root kh-b-z, 'to bake bread' (Lane); makhbaz is the ma- place noun, 'a place of baking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C172-sala]
 <!-- hl-knowledge: introduces=[AR-LEX-C172-MAKAN172-02]; assesses=[] -->
 
 **مخبز** — *makhbaz* — "a bakery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مخبز** (*makhbaz*) is built on the native Arabic root *kh-b-z*, "to bake bread" (Lane). *Makhbaz* is the *ma-* place noun, "a place of baking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

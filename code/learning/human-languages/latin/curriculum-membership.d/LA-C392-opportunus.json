@@ -1,0 +1,11 @@
+{
+  "id": "LA-C392-opportunus",
+  "pathSegment": "LA-PATH-392-CAVEO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-392-CAVEO",
+      "order": 3
+    }
+  ]
+}

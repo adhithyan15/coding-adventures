@@ -11,7 +11,8 @@ romanization: "vittŭ"
 concept_tag: ML-NOUN-SEED
 prerequisites: [ML-C54-root, ML-C52-garland]
 sounds: []
-roots: []
+roots: [dravidian-vittu-seed]
+etymology_hook: "vittŭ: native Dravidian, one word with Tamil vittu and Kannada bittu (DEDR 5401)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *vittu*, and it closes the tree by going back to where
 Like വേര് it travels into the abstract. The വിത്ത് of a plan is its beginning, and Malayalam will talk about sowing one. The doubled *tt* in the middle is worth catching by ear — Malayalam holds it long, and the length is what separates this word from others in its neighbourhood.
 
 Sowing season in Kerala is set by the rains rather than by a date, which is why the farming words in this language lean on the weather more than on the calendar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിത്ത്** (*vittŭ*) is native Dravidian, one word with Tamil *vittu*, Kannada *bittu* and Telugu *vittu* (DEDR 5401).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

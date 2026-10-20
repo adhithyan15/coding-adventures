@@ -14,7 +14,8 @@ romanization: "ṭopī"
 concept_tag: GU-CLOTHES-CAP
 prerequisites: [GU-C87-shirt, GU-C87-sandals]
 sounds: []
-roots: []
+roots: [indo-aryan-toppa]
+etymology_hook: "ṭopī ← *ṭoppa 'hat, covering', a reconstructed form; a tadbhava (CDIAL 5481)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C87-sandals]
 <!-- hl-knowledge: introduces=[GU-LEX-C87-CLOTHES-04]; assesses=[] -->
 
 **ટોપી** (*ṭopī*) — "a cap, a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટોપી** (*ṭopī*) is a tadbhava. It comes from *\*ṭoppa*, "hat, covering", a form CDIAL reconstructs (CDIAL 5481). CDIAL thinks a link with Sanskrit *āṭopa* very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

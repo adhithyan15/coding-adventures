@@ -14,7 +14,8 @@ romanization: "aparāhṇaḥ"
 concept_tag: SA-TIME90-APARAHNAH
 prerequisites: [SA-C90-ahah, SA-C90-pradosah]
 sounds: []
-roots: []
+roots: [sanskrit-apara-latter, sanskrit-ahar]
+etymology_hook: "aparāhṇa 'afternoon' ← apara 'later' + ahna 'day'; MW compares apara with Gothic afar 'after'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C90-pradosah]
 <!-- hl-knowledge: introduces=[SA-LEX-C90-TIME90-03]; assesses=[] -->
 
 **अपराह्णः** — *aparāhṇaḥ* — "afternoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Aparāhṇa* is built from *apara*, "later, hinder", and *ahna*, a form of *ahar*,
+"day" (MW). *Apara* is inherited: MW compares Gothic *afar*, "after".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

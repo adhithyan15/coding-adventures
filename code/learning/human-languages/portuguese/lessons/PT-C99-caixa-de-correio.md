@@ -13,7 +13,8 @@ gloss: "a letterbox"
 concept_tag: PT-CASA99-CAIXA-DE-CORREIO
 prerequisites: [PT-C99-chavena, PT-C99-garrafa]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "caixa de correio — 'box of post': caixa ← Catalan caixa; correio ← Spanish correo"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C99-garrafa]
 <!-- hl-knowledge: introduces=[PT-LEX-C99-CASA99-03]; assesses=[] -->
 
 **a caixa de correio** — "a letterbox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**caixa de correio** is "box of post": *caixa*, "box", and *correio*, "post", from Spanish *correo* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

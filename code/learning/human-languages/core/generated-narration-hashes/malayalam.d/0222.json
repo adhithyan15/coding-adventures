@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 222,
-  "sourceHash": "fnv1a64:d47881cb35911fb1",
+  "sourceHash": "fnv1a64:1148ac760b2533d3",
   "lessonIds": [
     "ML-C222-bhumisastram",
     "ML-C222-sahityam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch222.txt",
   "json": "malayalam/narration/ch222.json",
-  "textHash": "fnv1a64:f01a8220376d11b5",
-  "jsonHash": "fnv1a64:91c4a565dcabde13",
+  "textHash": "fnv1a64:c8cf183be4dfb0f0",
+  "jsonHash": "fnv1a64:d0e843e3fe04345d",
   "findings": []
 }

@@ -12,7 +12,7 @@ concept_tag: AR-AGE
 prerequisites: [AR-C16-al-saa]
 sounds: [arabic-ain, possessive-suffix-ka-ki]
 roots: [arabic-umr-life]
-etymology_hook: "كم عمرك؟ (kam ʿumruka?, 'how old are you?') is literally 'how much [is] your ʿumr' — ʿumr (life, lifetime, age) from root ع-م-ر, the same root behind the name ʿUmar; Arabic asks age with a NOUN + possessive suffix, no verb at all — a FOURTH shape, after Romance's 'have', Germanic's 'be', and Latin's 'born + accusative of duration'"
+etymology_hook: "kam ʿumruka: kam 'how much' + ʿumr 'life', root ʿ-m-r 'to live long' (Lane), + -ka 'your'"
 duration:
   max_seconds: 240
 requires:
@@ -56,8 +56,8 @@ expressed as a possessed **noun**: "**your** ʿumr," "**my** ʿumr."
 
 > **كم عمرك؟** — "How old are you?" (to a man) — literally "**how much [is]
   your** *ʿumr*." (*kam ʿumruka?*)
-> **عمري عشرون سنة.** — "I am twenty years old." — literally "**my** *ʿumr*
-  [is] twenty years." (*ʿumrī ʿishrūna sana*.)
+
+The answer is *ʿumrī*, "my *ʿumr*," then the years; it arrives with the numbers.
 
 Notice there's **no verb "to be" at all** in the present tense here — Arabic
 simply juxtaposes two nouns ("my age" / "twenty years"), exactly the way it
@@ -67,13 +67,18 @@ Germanic's "I **am** twenty years [old]," not Latin's "**born** twenty years
 [so far]," but "**my age** [is] twenty years" — age as a possessed
 noun-quantity, stated without any verb at all.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kam*, "how much", is an inherited question word; *ʿumr*, "life", is built on the native root *ʿ-m-r*, "to live long" (Lane).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ʿumr" — age, lifetime, life span]
 - [YOU SAY: "kam ʿumruka?" — how old are you? (to a man)]
-- [YOU SAY: "ʿumrī ʿishrūna sana" — my age is twenty years, no verb at all]
+- [YOU SAY: "ʿumrī" — my age]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02] -->

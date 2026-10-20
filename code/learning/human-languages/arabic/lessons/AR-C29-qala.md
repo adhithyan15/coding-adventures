@@ -6,13 +6,13 @@ sequence: 740
 chapter: 29
 type: word
 headword: قال
-gloss: "he said" — the letter qāf finally named, and one root that yields a saying, an article, a speaker and a spoken thing
+gloss: '"he said" — the letter qāf finally named, and one root that yields a saying, an article, a speaker and a spoken thing'
 concept_tag: VERB-SAY
 romanization: qāla
 prerequisites: [AR-C28-jaa]
 sounds: [qaf, long-vowel-alif, rtl-known-letters]
 roots: [q-w-l]
-etymology_hook: "قال (qāla, 'he said') is the root ق-و-ل with its weak middle و swallowed — qawala collapses to qāla, and the و returns in قَوْل (qawl, 'an utterance'); the same skeleton fills the doer and done-to patterns as قائِل (qāʾil, 'a speaker') and مَقُول (maqūl, 'spoken'), and the place pattern as مَقالة (maqāla, 'an article')"
+etymology_hook: "qāla: root q-w-l 'to say' (Lane); its w returns in qawl 'saying'; Hebrew qōl 'voice' is a cousin"
 duration:
   max_seconds: 240
 requires:
@@ -79,6 +79,8 @@ Those first two are the very patterns met back in *shukran*, which paired
 *shākir* ("thankful") with *mashkūr* ("thanked"). Learn a pattern once and
 it works on every root — which is why Arabic vocabulary grows in families
 rather than one word at a time.
+
+*Qāla* is built on this native root (Lane); Hebrew *qōl*, "voice", is usually counted a cousin.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C29-QALA-01, AR-CONCEPT-C29-QALA-02] -->

@@ -14,7 +14,8 @@ romanization: "surmaī"
 concept_tag: UR-SIFAT162-SURMAI
 prerequisites: [UR-C162-pakistani, UR-C162-hindustani]
 sounds: []
-roots: []
+roots: [persian-surma]
+etymology_hook: "surmaī: the colour of surma 'kohl', usually traced to Persian surma, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C162-hindustani]
 <!-- hl-knowledge: introduces=[UR-LEX-C162-SIFAT162-05]; assesses=[] -->
 
 **سرمئی** — *surmaī* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سرمئی** (*surmaī*) is "the colour of *surma*", the dark grey powder put round the eyes, with the ending *-ī*. *surma* is usually traced to Persian *surma*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

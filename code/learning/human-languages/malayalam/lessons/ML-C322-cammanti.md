@@ -14,7 +14,8 @@ romanization: "cammanti"
 concept_tag: ML-VASTU322-CAMMANTI
 prerequisites: [ML-C322-porotta, ML-C322-kappa]
 sounds: []
-roots: []
+roots: [malayalam-cammanti]
+etymology_hook: "cammanti 'chutney': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C322-kappa]
 <!-- hl-knowledge: introduces=[ML-LEX-C322-VASTU322-05]; assesses=[] -->
 
 **ചമ്മന്തി** — *cammanti* — "a chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചമ്മന്തി** (*cammanti*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

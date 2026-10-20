@@ -14,7 +14,8 @@ romanization: "aḷiya"
 concept_tag: KA-VASTU226-ALIYA
 prerequisites: [KA-C226-atte, KA-C226-sose]
 sounds: []
-roots: []
+roots: [dravidian-aliya-soninlaw]
+etymology_hook: "aḷiya: native Dravidian (DEDR 2410)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C226-sose]
 <!-- hl-knowledge: introduces=[KA-LEX-C226-VASTU226-04]; assesses=[] -->
 
 **ಅಳಿಯ** — *aḷiya* — "son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಳಿಯ** (*aḷiya*) is native Dravidian (DEDR 2410). DEDR lists *aḷiya* itself, "son-in-law".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

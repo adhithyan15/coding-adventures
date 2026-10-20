@@ -14,7 +14,8 @@ romanization: "māmpaḻam"
 concept_tag: TA-THINGS123-MAMPALAM
 prerequisites: [TA-C123-kaykari, TA-C123-valaippalam, TA-C34-pidi, TA-C34-pidi]
 sounds: []
-roots: []
+roots: [dravidian-maa-mango, dravidian-pazhu-ripen]
+etymology_hook: "மாம்பழம் — native: mā 'mango' (DEDR 4782) + paḻam 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TA-C123-valaippalam]
 <!-- hl-knowledge: introduces=[TA-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **மாம்பழம்** — *māmpaḻam* — "a mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாம்பழம்** (*māmpaḻam*) is native: *mā*, "mango" (DEDR 4782; Malayalam *mā*), and *paḻam*, "fruit" (DEDR 4004). DEDR compares Sanskrit *mākanda*, "mango tree", and *phala*, "fruit". English *mango* came, through Portuguese, from the Malayalam form *māṅṅa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

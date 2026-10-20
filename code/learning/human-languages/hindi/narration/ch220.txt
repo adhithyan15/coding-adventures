@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a war, then the Hindi for an army.
 You'll want to know: झंडा.
 झंडा — jhaṇḍā — "a flag".
 
+The word, taken apart.
+झंडा (jhaṇḍā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhvajadaṇḍa, "flagstaff", a form CDIAL reconstructs from its descendants (CDIAL 6898). It is built from dhvaja, "flag", and daṇḍa, "staff".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for an army, then the Hindi for a flag.
 
 You'll want to know: बचपन.
 बचपन — bacpan — "childhood".
+
+The word, taken apart.
+बचपन (bacpan) is baccā, "child", with -pan, "-hood". Baccā is the loan usually traced to Persian bacca.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a flag, then the Hindi for childhood.
 You'll want to know: जवानी.
 जवानी — javānī — "youth".
 
+The word, taken apart.
+जवानी (javānī) is usually traced to Persian javānī, "youth". It is built on javān, "young", and that word may have reached Hindi by two roads: CDIAL lists a Hindi juwān, "a youth", under the inherited yuvāna, "young" (CDIAL 10510).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for childhood, then the Hindi for youth.
 You'll want to know: बुढ़ापा.
 बुढ़ापा — buṛhāpā — "old age".
 
+The word, taken apart.
+बुढ़ापा (buṛhāpā) is būṛhā, "old", with the ending -āpā, "-ness". CDIAL lists būṛhā under a reconstructed buḍḍha, "old" (CDIAL 9271).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for youth, then the Hindi for old age.
 
 You'll want to know: जीवन.
 जीवन — jīvan — "life".
+
+The word, taken apart.
+जीवन (jīvan) is Sanskrit jīvana, "life", taken over whole as a learned loan, a tatsama (CDIAL 5243). CDIAL lists the inherited form as jīan.
 
 What you've built.
 One more word for this chapter.

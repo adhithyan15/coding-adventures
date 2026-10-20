@@ -13,7 +13,8 @@ gloss: "sometimes"
 concept_tag: PT-TEMPO129-AS-VEZES
 prerequisites: [PT-C129-seculo, PT-C129-muitas-vezes]
 sounds: []
-roots: []
+roots: [vicis-latin]
+etymology_hook: "às vezes — 'at times': vez ← Latin vicis 'turn, change' — English vicissitude"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C129-muitas-vezes]
 <!-- hl-knowledge: introduces=[PT-LEX-C129-TEMPO129-03]; assesses=[] -->
 
 **às vezes** — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**às vezes** is "at times": *vez*, "time, turn" ← Latin *vicis*, "turn, change" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

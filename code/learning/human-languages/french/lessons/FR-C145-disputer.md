@@ -13,7 +13,8 @@ gloss: "to quarrel"
 concept_tag: FR-VERB-DISPUTER
 prerequisites: [FR-C145-telephoner, FR-C145-discuter]
 sounds: []
-roots: []
+roots: [putare-latin]
+etymology_hook: "se disputer ← Latin disputare 'to weigh up, to argue' — English dispute"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C145-discuter]
 <!-- hl-knowledge: introduces=[FR-LEX-C145-VERBES145-05]; assesses=[] -->
 
 **se disputer** — "to quarrel".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**se disputer** ← Latin *disputare*, "to weigh up, to argue" (Lewis & Short) — a learned borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

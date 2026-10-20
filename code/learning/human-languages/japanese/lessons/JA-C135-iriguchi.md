@@ -14,8 +14,8 @@ romanization: "iriguchi"
 concept_tag: JA-ANCHOR-IRIGUCHI
 prerequisites: [JA-C135-doyoubi, JA-W01-i, JA-W03-ri, JA-W01-chi, JA-W134-bu, JA-W133-nu, JA-C124-mushiatsui]
 sounds: [mora]
-roots: []
-etymology_hook: Iriguchi is the entrance sign on stations and shops; its third sign is く with the voicing mark, a sign the book has not yet written.
+roots: [japanese-iru-enter, japanese-kuchi]
+etymology_hook: "iriguchi: native iri 'entering' (iru) + kuchi 'mouth', voiced"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +56,11 @@ lesson writes it.
 
 The *guchi* is *kuchi*, "a mouth", voiced where it joins the word in front of
 it: an entrance is the mouth you go in by.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いりぐち** (*iriguchi*) is a native compound, inherited rather than borrowed: *iri*, "entering", from *iru*, "to enter", and *kuchi*, "mouth", voiced to *guchi* (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IRIGUCHI, JA-SCRIPT-I-01, JA-SCRIPT-RI-01, JA-SCRIPT-CHI-01] -->

@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Which One, and the Form the Book Owed You",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c25d42e2b3df8831",
+  "sourceHash": "fnv1a64:7e2518faa5976a7d",
   "lessons": [
     {
       "id": "GE-C34-welcher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2c4ffc8fb5b7e62",
+      "sourceHash": "fnv1a64:b0c555395a61b0be",
       "notice": null,
       "blocks": [
         {
@@ -78,11 +78,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "welcher is two ancient pieces: hwa- — the what you already meet at the front of every W-word — and -lîk, \"like, bodily form\", the ancestor of English -ly and of the word like itself. What-like."
+              "text": "welcher from Proto-Germanic hwilīkaz (EtymDB 2.1), two ancient pieces: hwa- — the what at the front of every W-word — and -lîk, \"like, bodily form\", the ancestor of English -ly and of the word like itself. What-like."
             },
             {
               "kind": "speech",
-              "text": "English built its own word out of the very same two: hwā + līc gave hwilc, which wore down to which. So both languages ask \"which one\" by asking \"what kind\", and the shared seam is still visible if you set wel-cher beside wh-ich."
+              "text": "English built its own word out of the very same two: hwā + līc gave hwilc, which wore down to which. So both languages ask \"which one\" by asking \"what kind\", and the seam shows if you set wel-cher beside wh-ich."
             }
           ]
         },
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:751417a0849f09e7",
+      "sourceHash": "fnv1a64:5ed9e7c96d1bbe1f",
       "notice": null,
       "blocks": [
         {
@@ -387,6 +387,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "den is a form of der, inherited from the Germanic pointing word behind English the and that."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one row of three moves",
           "segments": [
@@ -411,15 +422,11 @@
             {
               "kind": "speech",
               "text": "That is the whole announcement, and it is smaller than German's reputation suggests. Die and das stand still. So do their ein and kein partners — eine, keine, ein, kein — while ein becomes einen and kein becomes keinen on exactly the row where der becomes den."
-            },
-            {
-              "kind": "speech",
-              "text": "Three words you already say, all moving together, all on one row. Nothing new has been added; a pattern has been pointed at."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -430,7 +437,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -510,7 +517,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -706,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0045a1debacdf6c4",
+      "sourceHash": "fnv1a64:6b9ea50185952215",
       "notice": null,
       "blocks": [
         {
@@ -755,6 +762,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gibt is a form of the verb \"to give\" from Old High German geban from Proto-Germanic gebaną — inherited, the same verb as English give. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: what follows it is an object",
           "segments": [
@@ -777,7 +795,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -844,7 +862,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

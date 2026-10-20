@@ -14,6 +14,7 @@ concept_tag: GE-STADT1-BAHNHOF
 prerequisites: [GE-C96-laden, GE-C96-markt]
 sounds: []
 roots: []
+etymology_hook: "Bahnhof — the word for 'track, way' + the word for 'yard, court': the railway's yard"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C96-markt]
 <!-- hl-knowledge: introduces=[GE-LEX-C96-STADT1-03]; assesses=[] -->
 
 **der Bahnhof** — "a railway station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bahnhof** is built from the word for "way, track" (Old High German *bana*, "path") and the word for "yard, court" (Old High German *hof*) — both inherited (EtymDB 2.1): the railway's yard.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

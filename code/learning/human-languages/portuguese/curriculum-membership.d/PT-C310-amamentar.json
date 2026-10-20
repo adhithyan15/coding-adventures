@@ -1,0 +1,11 @@
+{
+  "id": "PT-C310-amamentar",
+  "pathSegment": "PT-PATH-310-BATIZADO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-310-BATIZADO",
+      "order": 4
+    }
+  ]
+}

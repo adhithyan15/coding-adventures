@@ -13,7 +13,8 @@ gloss: "to function, to work (of a machine)"
 concept_tag: PT-VERB-FUNCIONAR
 prerequisites: [PT-C237-celebrar, PT-C237-travar]
 sounds: []
-roots: []
+roots: [fungi-latin]
+etymology_hook: "funcionar ← French fonctionner, from Latin functio 'performance'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C237-travar]
 <!-- hl-knowledge: introduces=[PT-LEX-C237-VERBOS237-05]; assesses=[] -->
 
 **funcionar** — "to function, to work (of a machine)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**funcionar** ← French *fonctionner*, "to work" (EtymDB 2.1) — borrowed. Behind it is Latin *functio*, "performance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

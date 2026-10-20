@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a book, then the Marwadi for a pen.
 You'll want to know: अखबार.
 अखबार — akhbār — "a newspaper".
 
+The word, taken apart.
+अखबार (akhbār) is a loan from Arabic aḫbār, "reports, news", which reached Marwadi through Persian. Its Arabic root is ḫ-b-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a pen, then the Marwadi for a newspaper.
 
 You'll want to know: स्कूल.
 स्कूल — skūl — "a school".
+
+The word, taken apart.
+स्कूल (skūl) is a loan from English school.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a newspaper, then the Marwadi for a scho
 You'll want to know: सवाल.
 सवाल — savāl — "a question".
 
+The word, taken apart.
+सवाल (savāl) is a loan from Arabic suʾāl, "a question", which reached Marwadi through Persian. Its Arabic root is s-ʾ-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a school, then the Marwadi for a questio
 You'll want to know: जवाब.
 जवाब — javāb — "an answer".
 
+The word, taken apart.
+जवाब (javāb) is a loan from Arabic jawāb, "an answer", which reached Marwadi through Persian. Its Arabic root is j-w-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a question, then the Marwadi for an answ
 
 You'll want to know: सबद.
 सबद — sabad — "a word".
+
+The word, taken apart.
+सबद (sabad) is Sanskrit śabda, "sound, word", borrowed and lightly reshaped, a semi-tatsama: the ś became s and a vowel split the bd. The fully inherited descendant is Hindi and Gujarati sād, "call, voice", which CDIAL lists under the same word (CDIAL 12298).
 
 What you've built.
 One more word for this chapter.

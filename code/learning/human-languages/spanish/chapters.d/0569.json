@@ -1,0 +1,19 @@
+{
+  "chapter": 569,
+  "title": "La lucha",
+  "label": "ch:es-la-lucha",
+  "canDo": "I can say that people fought, defended themselves, defeated the enemy and won, and talk about the conflict.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C569-conflicto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 569: I can say that people fought, defended themselves, defeated the enemy and won, and talk about the conflict.",
+    "assesses": [
+      "ES-LEX-C569-LUCHA-03",
+      "ES-LEX-C569-LUCHA-04",
+      "ES-LEX-C569-LUCHA-05"
+    ]
+  }
+}

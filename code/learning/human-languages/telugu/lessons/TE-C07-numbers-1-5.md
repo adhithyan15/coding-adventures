@@ -6,13 +6,13 @@ sequence: 330
 chapter: 7
 type: word
 headword: ఒకటి రెండు మూడు నాలుగు ఐదు
-gloss: one to five — the Dravidian family numbers, with Telugu's maverick "one"
+gloss: one to five — the Dravidian family numbers, with Telugu's odd-looking "one"
 romanization: "okaṭi reṇḍu mūḍu nālugu aidu"
 concept_tag: TE-NUMBERS-1-5
 prerequisites: [TE-C01-namaskaram]
 sounds: [telugu-inherent-a, retroflex-series, telugu-u-ending]
 roots: [proto-dravidian-numbers]
-etymology_hook: "Telugu shares the family's 2–5 (iraṇṭu ↔ reṇḍu) but strikes out alone on ONE — okaṭi, not oṉṟu/ondu/onnu"
+etymology_hook: "Telugu shares the family's 2–5 (iraṇṭu ↔ reṇḍu); its ONE, okaṭi, looks least like oṉṟu/ondu/onnu"
 duration:
   max_seconds: 240
 requires:
@@ -34,8 +34,8 @@ reviews_of: [TE-C01-namaskaram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Four of these five are old Dravidian friends. The very first one is
-Telugu going its own way.
+[PAUSE 2s] All five are old Dravidian friends, but the very first one wears
+Telugu's own shape.
 
 ## You'll want to know: The five
 <!-- hl-knowledge: introduces=[TE-LEX-C07-NUMBERS-1-5-01]; assesses=[] -->
@@ -53,10 +53,10 @@ The symbols **౧ ౨ ౩ ౪ ౫** are Telugu's own digits.
 ## The word, taken apart - The odd one, then the family
 <!-- hl-knowledge: introduces=[TE-ETYMON-C07-NUMBERS-1-5-02]; assesses=[] -->
 
-**One** is where Telugu leaves the family. Its cousins agree — Tamil *oṉṟu*,
-Kannada *ondu*, Malayalam *onnu*, all from an old *oṉ-* — but Telugu says
-**okaṭi**, a different formation altogether. It's the number to memorise fresh
-rather than reason across from Tamil.
+**One** is where Telugu looks least like the family. Its cousins sound alike —
+Tamil *oṉṟu*, Kannada *ondu*, Malayalam *onnu* — but Telugu says **okaṭi**, built
+differently on the same root: DEDR 990 files them together. It's the number to
+memorise fresh rather than reason across from Tamil.
 
 From two onward, the family closes ranks again:
 
@@ -82,14 +82,14 @@ ends hard, Telugu tends to round the word off with a vowel.
 
 [PAUSE 1s]
 - [YOU SAY: "okaṭi, reṇḍu, mūḍu, nālugu, aidu"]
-- [YOU SAY: the maverick — "okaṭi", NOT the oṉṟu/ondu/onnu of its cousins]
+- [YOU SAY: the odd shape — "okaṭi", beside the oṉṟu/ondu/onnu of its cousins]
 - [YOU SAY: the family — "iraṇṭu → reṇḍu", the opening vowel dropped]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C07-NUMBERS-1-5-01, TE-ETYMON-C07-NUMBERS-1-5-02, TE-SCRIPT-C07-NUMBERS-1-5-03] -->
 
 [PAUSE 3s] Count to five in Telugu. (*Okaṭi, reṇḍu, mūḍu, nālugu, aidu*.) Which
-number does Telugu form unlike the rest of the family, and what do the others
+number does Telugu shape unlike the rest of the family, and what do the others
 say? (**One** — Telugu *okaṭi* vs *oṉṟu / ondu / onnu*.) How does *reṇḍu* relate
 to Tamil *iraṇṭu*? (The opening vowel was dropped.) What vowel do most Telugu
 words here end in? (**‑u**.) Next: six to ten.

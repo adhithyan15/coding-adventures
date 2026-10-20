@@ -14,7 +14,8 @@ romanization: "nenapisikoḷḷu"
 concept_tag: KA-VERB-NENAPISIKOLLU
 prerequisites: [KA-C164-aph-madu, KA-C165-kadi]
 sounds: []
-roots: []
+roots: [dravidian-ninai-think, dravidian-kol-take]
+etymology_hook: "nenapisikoḷḷu: native nenapu 'memory' (DEDR 3683) + koḷḷu 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C165-kadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C165-KRIYE165-02]; assesses=[] -->
 
 **ನೆನಪಿಸಿಕೊಳ್ಳು** — *nenapisikoḷḷu* — "to recall, to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆನಪಿಸಿಕೊಳ್ಳು** (*nenapisikoḷḷu*) is native Dravidian: *nenapu*, "remembrance", which DEDR 3683 lists under *nene*, "to think of", with Tamil *niṉai*, made into a verb and joined to *koḷḷu*, "to take" (DEDR 2151): "to bring to one's own mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

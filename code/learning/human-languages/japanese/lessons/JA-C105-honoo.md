@@ -14,7 +14,8 @@ romanization: "honoo"
 concept_tag: JA-THINGS105-HONOO
 prerequisites: [JA-C105-hakama, JA-C105-yukata]
 sounds: []
-roots: []
+roots: [japanese-honoo]
+etymology_hook: "honoo: native Japanese, inherited, not borrowed; kanji 炎 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C105-yukata]
 <!-- hl-knowledge: introduces=[JA-LEX-C105-THINGS105-03]; assesses=[] -->
 
 **ほのお** — *honoo* — "a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほのお** (*honoo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

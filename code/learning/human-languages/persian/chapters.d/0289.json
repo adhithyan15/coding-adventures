@@ -1,0 +1,20 @@
+{
+  "chapter": 289,
+  "title": "Writing --- Four Lines, And The Gap Inside A Word",
+  "label": "ch:fa-four-lines",
+  "canDo": "I can write four connected lines of Persian to a named reader, setting one thing against another with vali and giving a reason with chon.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-W289-chahar-khat",
+    "kind": "task",
+    "summary": "Complete FA-W289-chahar-khat: four lines to one reader, at least one with vali and one with chon, then check the spacing around every vav.",
+    "assesses": [
+      "FA-LEX-C92-WHY92-03",
+      "FA-LEX-C158-CHERA158-02",
+      "FA-SCRIPT-VAV-01"
+    ],
+    "note": "Both joiners carry vav, which never joins to the letter on its left, so each word has a gap inside it. Spacing becomes part of the spelling: the gap between words must be wider than the break inside one."
+  }
+}

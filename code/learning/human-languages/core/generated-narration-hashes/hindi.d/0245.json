@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 245,
-  "sourceHash": "fnv1a64:c8e17471499b45a3",
+  "sourceHash": "fnv1a64:822ca9c27507ff6c",
   "lessonIds": [
     "HI-C245-har",
     "HI-C245-sab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch245.txt",
   "json": "hindi/narration/ch245.json",
-  "textHash": "fnv1a64:2bc72a4203afe741",
-  "jsonHash": "fnv1a64:fc9b7adcc906d812",
+  "textHash": "fnv1a64:f787009cab9d3469",
+  "jsonHash": "fnv1a64:56c875dad2e7b281",
   "findings": []
 }

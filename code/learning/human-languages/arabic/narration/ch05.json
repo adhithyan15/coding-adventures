@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d6ad418a6220bf64",
+  "sourceHash": "fnv1a64:1a3b7dc1e63c348e",
   "lessons": [
     {
       "id": "AR-C05-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87df47abf971b5ea",
+      "sourceHash": "fnv1a64:1cb3a1111acc60a8",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نعم (naʿam) is listed by Lane under n-ʿ-m as a particle meaning \"even so, yes\". It is not built from the root's verbs, and its deeper origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -153,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8d85ddaeac2ebde",
+      "sourceHash": "fnv1a64:fb5d75877a9ab345",
       "notice": null,
       "blocks": [
         {
@@ -230,6 +241,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لا (lā) is an old negative particle inherited from the Semitic parent language, not built on a three-letter root; Hebrew lō, \"no, not\", is its cousin."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -269,7 +291,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

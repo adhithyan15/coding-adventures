@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-SP-01",
+  "category": "Spatial notions",
+  "label": "location, and being somewhere",
+  "probe": [
+    "SA-GRAMMAR-LOCATIVE-CASE",
+    "SA-LEX-C14-DEIXIS-03",
+    "SA-LEX-C14-DEIXIS-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG3-01",
+    "A1-NG3-03"
+  ],
+  "note": "The locative case plus atra and tatra. Near/far as ADJECTIVES are not taught, so relative distance is not expressible."
+}

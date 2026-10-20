@@ -12,7 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [FA-C02-esm-e-man]
 sounds: [rtl, long-a, short-vowels-unwritten]
 roots: [indo-iranian-tu]
-etymology_hook: Persian to and English thou continue the old Indo-European familiar-you word; shomâ also uses plural as respect, like Russian vy and French vous.
+etymology_hook: "to and English thou continue the Indo-European familiar 'you'; shomâ uses the plural for respect, like vous"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +59,11 @@ Persian uses plural **shomâ** for respectful singular address, much as Russian
 uses *vy* and French uses *vous*. Use **shomâ** with an unfamiliar adult or in
 a first meeting. Use **to** after the relationship is familiar. English once
 made a similar distinction but now uses *you* for both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*to* is inherited: it is the old Indo-European familiar "you", the word behind English *thou* and Latin *tu*, usually traced to Middle Persian *tō*. *shomâ* is inherited too, usually traced to Middle Persian *ašmā*, the old plural "you".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER] -->

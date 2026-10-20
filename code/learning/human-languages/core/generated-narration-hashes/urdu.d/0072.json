@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 72,
-  "sourceHash": "fnv1a64:e3e3e4f05dacf36f",
+  "sourceHash": "fnv1a64:2c0fe4a87025b725",
   "lessonIds": [
     "UR-C72-ucha",
     "UR-C72-nicha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch72.txt",
   "json": "urdu/narration/ch72.json",
-  "textHash": "fnv1a64:68a960f2b07d4919",
-  "jsonHash": "fnv1a64:6e8a66dd3b1fffd9",
+  "textHash": "fnv1a64:f972bed9a09de756",
+  "jsonHash": "fnv1a64:535d9b9da8f8efb1",
   "findings": []
 }

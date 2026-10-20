@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Agulhas e linhas",
+  "label": "ch:pt-agulhas-e-linhas",
+  "canDo": "I can talk about sewing, knitting and embroidery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C500-bordar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about sewing, knitting and embroidery.",
+    "assesses": [
+      "PT-LEX-C500-COSTURA-03",
+      "PT-LEX-C500-COSTURA-04",
+      "PT-LEX-C500-COSTURA-05"
+    ]
+  }
+}

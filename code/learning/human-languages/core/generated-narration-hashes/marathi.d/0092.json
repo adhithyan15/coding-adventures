@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 92,
-  "sourceHash": "fnv1a64:a61f57ed44a89857",
+  "sourceHash": "fnv1a64:8f2e48cedfde6928",
   "lessonIds": [
     "MR-C92-kap",
     "MR-C92-tat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch92.txt",
   "json": "marathi/narration/ch92.json",
-  "textHash": "fnv1a64:4cb5df569384c132",
-  "jsonHash": "fnv1a64:f2cce29495b8d462",
+  "textHash": "fnv1a64:484770baf7339de6",
+  "jsonHash": "fnv1a64:ad2cd35535831710",
   "findings": []
 }

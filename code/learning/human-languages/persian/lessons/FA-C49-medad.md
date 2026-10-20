@@ -14,7 +14,8 @@ romanization: "medâd"
 concept_tag: FA-SCHOOL49-MEDAD
 prerequisites: [FA-C48-livan, FA-C48-daftar]
 sounds: []
-roots: []
+roots: [arabic-midad]
+etymology_hook: "medâd ← Arabic midād 'ink', root m-d-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C48-daftar]
 <!-- hl-knowledge: introduces=[FA-LEX-C49-SCHOOL49-01]; assesses=[] -->
 
 **مداد** — *medâd* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*medâd* is borrowed from Arabic *midād*, "ink". Its Arabic root is *m-d-d* (Lane). Persian moved the word from ink to the pencil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

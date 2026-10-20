@@ -13,7 +13,8 @@ gloss: "the wind"
 concept_tag: PT-TEMPO-VENTO
 prerequisites: [PT-C58-nuvem, PT-C59-chuva]
 sounds: []
-roots: []
+roots: [ventus-latin]
+etymology_hook: "vento ← Latin ventus 'wind' — English vent and ventilate share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C59-chuva]
 <!-- hl-knowledge: introduces=[PT-LEX-C59-TEMPO-02]; assesses=[] -->
 
 **o vento** — "the wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vento** ← Latin *ventus*, "wind" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

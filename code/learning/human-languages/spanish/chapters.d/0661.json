@@ -1,0 +1,19 @@
+{
+  "chapter": 661,
+  "title": "En recepción",
+  "label": "ch:es-en-recepcion",
+  "canDo": "I can deal with hotel staff, from the receptionist to the concierge, and say how long I am staying.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C661-conserje",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 661: I can deal with hotel staff, from the receptionist to the concierge, and say how long I am staying.",
+    "assesses": [
+      "ES-LEX-C661-RECEPCION-03",
+      "ES-LEX-C661-RECEPCION-04",
+      "ES-LEX-C661-RECEPCION-05"
+    ]
+  }
+}

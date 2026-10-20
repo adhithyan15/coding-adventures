@@ -1,0 +1,11 @@
+{
+  "id": "FR-C481-attelle",
+  "pathSegment": "FR-PATH-481-ENTORSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-481-ENTORSE",
+      "order": 3
+    }
+  ]
+}

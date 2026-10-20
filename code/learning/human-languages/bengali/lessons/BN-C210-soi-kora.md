@@ -14,7 +14,8 @@ romanization: "sôi kôrā"
 concept_tag: BN-VERB-SOI-KORA
 prerequisites: [BN-C209-khoroch-kora, BN-C209-ojon-kora]
 sounds: []
-roots: []
+roots: [arabic-sahih, sanskrit-karoti]
+etymology_hook: "sôi kôrā: sôi 'signature', usually traced through Persian to Arabic ṣaḥīḥ 'sound, correct', + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C209-ojon-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C210-ACT210-01]; assesses=[] -->
 
 **সই করা** — *sôi kôrā* — "to sign".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সই করা** (*sôi kôrā*) is *sôi*, "a signature", usually traced, through Persian, to Arabic *ṣaḥīḥ*, "sound, correct" (Lane), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

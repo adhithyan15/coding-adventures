@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 121,
-  "sourceHash": "fnv1a64:327a49b2191bbc38",
+  "sourceHash": "fnv1a64:040fb029138f5e2a",
   "lessonIds": [
     "RU-C121-shark",
     "RU-C121-nail-2",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch121.txt",
   "json": "russian/narration/ch121.json",
-  "textHash": "fnv1a64:7248363270963585",
-  "jsonHash": "fnv1a64:48ec22ab0c64646a",
+  "textHash": "fnv1a64:326d4f6b0c4b215f",
+  "jsonHash": "fnv1a64:bc8313442111dc4c",
   "findings": []
 }

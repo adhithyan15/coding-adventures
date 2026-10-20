@@ -13,7 +13,8 @@ gloss: "to be born"
 concept_tag: PT-VERB-NASCER
 prerequisites: [PT-C172-provar, PT-C173-salvar]
 sounds: []
-roots: []
+roots: [nasci-latin]
+etymology_hook: "nascer ← Latin nasci 'to be born' — English nascent and native share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C173-salvar]
 <!-- hl-knowledge: introduces=[PT-LEX-C173-VERBOS173-02]; assesses=[] -->
 
 **nascer** — "to be born".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nascer** ← Latin *nasci*, "to be born" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *nascer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

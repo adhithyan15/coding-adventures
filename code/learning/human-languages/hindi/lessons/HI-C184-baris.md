@@ -14,7 +14,8 @@ romanization: "bāriś"
 concept_tag: HI-THG184-BARIS
 prerequisites: [HI-C184-almari, HI-C184-aina]
 sounds: []
-roots: []
+roots: [persian-barish]
+etymology_hook: "bāriś: usually traced to Persian bārish 'rain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C184-aina]
 <!-- hl-knowledge: introduces=[HI-LEX-C184-THG184-05]; assesses=[] -->
 
 **बारिश** — *bāriś* — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बारिश** (*bāriś*) is a loan, usually traced to Persian *bārish*, "rain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

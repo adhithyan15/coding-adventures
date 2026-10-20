@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Learns, Teaches, Forgets, Climbs, Climbs down",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:444fa570499a03a6",
+  "sourceHash": "fnv1a64:bc8826bbe0377623",
   "lessons": [
     {
       "id": "SA-C135-siksate",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4741afab7796025d",
+      "sourceHash": "fnv1a64:9bdda215568e81d4",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "śikṣate comes from the desiderative of the root √śak \"be able\" (MW): \"wishes to be able\", and so \"learns\". It lives on as Hindi sīkhnā \"to learn\" (CDIAL 12430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f29abbf32ef18c42",
+      "sourceHash": "fnv1a64:5faa3d296823dbe9",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pāṭhayati is the causative of the root √paṭh \"read aloud, recite\" (CDIAL 8037): \"makes someone recite\", and so \"teaches\". It is the causing form of paṭhati \"reads\", and Sindhi kept it as pāṛhaṇu \"to teach\" (CDIAL 8037)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e461c71a7b5ed04",
+      "sourceHash": "fnv1a64:2af3e35d819d9295",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vismarati comes from vi \"away, apart\" and the root √smṛ \"remember\" (CDIAL 12021): \"remembers away\", forgets. MW compares √smṛ with Latin memor \"mindful\", the source of English memory; it lives on as Hindi bisarnā \"to forget\" (CDIAL 12021)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a2079ad85f65738",
+      "sourceHash": "fnv1a64:62167ecbfac993d6",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ārohati comes from ā \"onto, up to\" and the root √ruh \"climb, rise, grow\" (MW; CDIAL 1335): \"climbs up, mounts\". It lives on as Hindi arohnā \"to mount, ride\" (CDIAL 1335)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d44b1a8d9f9f2e15",
+      "sourceHash": "fnv1a64:9a39bd7890d152a1",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avarohati comes from ava \"down\" and the root √ruh \"climb, rise\" (MW; CDIAL 817): \"climbs down, descends\", the mirror of ārohati. Pali wore it down to orohati \"descends\" (CDIAL 817)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

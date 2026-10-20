@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 260,
-  "sourceHash": "fnv1a64:e7e047f935f370e4",
+  "sourceHash": "fnv1a64:48df3b9d41a475f3",
   "lessonIds": [
     "AR-C260-rashsha",
     "AR-C260-taraqa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch260.txt",
   "json": "arabic/narration/ch260.json",
-  "textHash": "fnv1a64:4e46caa33203ecd8",
-  "jsonHash": "fnv1a64:bc12d09ed8770b7a",
+  "textHash": "fnv1a64:166a54d8d43df394",
+  "jsonHash": "fnv1a64:f39f9e8b8af6ace3",
   "findings": []
 }

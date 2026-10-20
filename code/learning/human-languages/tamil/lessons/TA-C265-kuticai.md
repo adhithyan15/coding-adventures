@@ -14,7 +14,8 @@ romanization: "kuṭicai"
 concept_tag: TA-IDAM265-KUTICAI
 prerequisites: [TA-C264-pallattakku, TA-C265-mavattam]
 sounds: []
-roots: []
+roots: [dravidian-kudi-house]
+etymology_hook: "குடிசை — native Dravidian (DEDR 1655); Malayalam kuṭi 'house, hut', Telugu guḍise"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C265-mavattam]
 <!-- hl-knowledge: introduces=[TA-LEX-C265-IDAM265-02]; assesses=[] -->
 
 **குடிசை** — *kuṭicai* — "a hut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குடிசை** (*kuṭicai*) is native Dravidian. DEDR 1655 lists Malayalam *kuṭi*, "house, hut" and Telugu *guḍise*. It is built on *kuṭi*, "dwelling". The entry compares Sanskrit *kuṭi*, "hut" (CDIAL 3232).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

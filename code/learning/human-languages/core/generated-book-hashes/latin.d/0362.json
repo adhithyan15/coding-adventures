@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:8564529757b73e48",
+  "lessonIds": [
+    "LA-C362-refello",
+    "LA-C362-refuto",
+    "LA-C362-redarguo",
+    "LA-C362-convinco",
+    "LA-C362-coniectura"
+  ],
+  "tex": "latin/book/chapters/ch362-proving-someone-wrong.tex"
+}

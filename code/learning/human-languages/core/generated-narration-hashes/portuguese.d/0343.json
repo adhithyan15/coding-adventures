@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:2a7647085196d05f",
+  "lessonIds": [
+    "PT-C343-equivoco",
+    "PT-C343-esclarecer",
+    "PT-C343-esclarecimento",
+    "PT-C343-sublinhar",
+    "PT-C343-salientar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch343.txt",
+  "json": "portuguese/narration/ch343.json",
+  "textHash": "fnv1a64:bcbb68406ab86486",
+  "jsonHash": "fnv1a64:4c36bc5b629cc695",
+  "findings": []
+}

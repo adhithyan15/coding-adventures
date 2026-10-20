@@ -6,7 +6,7 @@ sequence: 910
 chapter: 42
 type: word
 headword: exspectō, exspectāre
-gloss: "I wait" — to wait, in Latin, is to look out for something, and the four verbs of this chapter together
+gloss: '"I wait" — to wait, in Latin, is to look out for something, and the four verbs of this chapter together'
 concept_tag: VERB-WAIT
 prerequisites: [LA-C42-ludo, LA-C42-accipio, LA-C42-fero, LA-C37-video]
 sounds: [macron-long-vowel, macron-none-short-vowel]

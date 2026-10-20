@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Zufall oder nicht?",
+  "label": "ch:ge-zufall-oder-nicht",
+  "canDo": "I can say that something happened by chance, ask why with weshalb, and say how to prevent or avoid a problem.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C347-weshalb",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say that something happened by chance, ask why with weshalb, and say how to prevent or avoid a problem.",
+    "assesses": [
+      "GE-LEX-C347-ZUFALL-03",
+      "GE-LEX-C347-ZUFALL-04",
+      "GE-LEX-C347-ZUFALL-05"
+    ]
+  }
+}

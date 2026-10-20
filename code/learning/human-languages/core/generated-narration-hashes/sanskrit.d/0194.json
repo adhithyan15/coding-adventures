@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 194,
-  "sourceHash": "fnv1a64:aa8a5bd70d4365f5",
+  "sourceHash": "fnv1a64:8fbda027c0bc04db",
   "lessonIds": [
     "SA-C194-paritosikam",
     "SA-C194-nimantranam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch194.txt",
   "json": "sanskrit/narration/ch194.json",
-  "textHash": "fnv1a64:e273fe2cbc2ef303",
-  "jsonHash": "fnv1a64:f33cbb9e452ebd5a",
+  "textHash": "fnv1a64:c02e1426163b8e3c",
+  "jsonHash": "fnv1a64:ed89107f9cd6cea8",
   "findings": []
 }

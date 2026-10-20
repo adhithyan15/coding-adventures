@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-309-GENERAZIONE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-309-GENERAZIONE"
+  ],
+  "after": []
+}

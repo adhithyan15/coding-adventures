@@ -55,7 +55,8 @@ reviews_of: [ES-C353-farmacia, ES-C353-biblioteca]
 
 A **mouseîon** is a seat of the **Moûsai**, the Muses — nine goddesses who
 between them owned poetry, song, dance, history and astronomy. To a Greek those
-were one field, and the Muse was who you asked for help before starting.
+were one field, and the Muse was who you asked for help before starting. *Museo* ← Latin
+*museum*, from Greek *mouseîon* (EtymDB 2.1).
 
 The most famous *mouseion* was at Alexandria, and it was nothing like a museum.
 It was a walled institution where scholars lived at royal expense, ate together,

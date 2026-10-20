@@ -14,7 +14,8 @@ romanization: "tikaḍe"
 concept_tag: MR-JAGA172-TIKADE
 prerequisites: [MR-C172-saglikade, MR-C172-itaratra]
 sounds: []
-roots: []
+roots: [sanskrit-kati-hip]
+etymology_hook: "tikaḍe: ti- 'that' + -kaḍe 'toward', as kaḍ 'side' (CDIAL 2639)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C172-itaratra]
 <!-- hl-knowledge: introduces=[MR-LEX-C172-JAGA172-04]; assesses=[] -->
 
 **तिकडे** — *tikaḍe* — "over there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तिकडे** (*tikaḍe*) is *ti-*, the far-pointing stem of **तिथे**, with **-कडे**, "toward", which matches Marathi *kaḍ*, "side" (CDIAL 2639).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

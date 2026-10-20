@@ -14,7 +14,8 @@ romanization: "prāvŭ"
 concept_tag: ML-THINGS153-PRAVU
 prerequisites: [ML-C152-mayil, ML-C152-tatta, ML-C30-shubha-sayaahnam]
 sounds: []
-roots: []
+roots: [dravidian-pura-dove]
+etymology_hook: "prāvŭ: native Dravidian, one word with Tamil puṟā and Kannada hoṟasu (DEDR 4334)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C152-tatta]
 <!-- hl-knowledge: introduces=[ML-LEX-C153-THINGS153-01]; assesses=[] -->
 
 **പ്രാവ്** — *prāvŭ* — "a dove, a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രാവ്** (*prāvŭ*) is native Dravidian, one word with Tamil *puṟā* and Kannada *hoṟasu* (DEDR 4334).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

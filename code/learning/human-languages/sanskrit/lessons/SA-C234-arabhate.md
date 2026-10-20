@@ -14,7 +14,8 @@ romanization: "ārabhate"
 concept_tag: SA-VERB-ARABHATE
 prerequisites: [SA-C234-susyati, SA-C234-plavate]
 sounds: []
-roots: []
+roots: [sanskrit-arabhate]
+etymology_hook: "ārabhate ← ā- + √rabh 'take hold': 'seizes', then 'undertakes, begins' (MW; CDIAL 1305)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C234-plavate]
 <!-- hl-knowledge: introduces=[SA-LEX-C234-ACT234-03]; assesses=[] -->
 
 **आरभते** — *ārabhate* — "begins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ārabhate* is built on *ā-* and the root √rabh, "to take hold of" (MW), which MW connects with √labh, "to obtain". In the Rigveda it means "seizes", and from the Śatapatha Brāhmaṇa "undertakes, begins" (CDIAL 1305): to begin is to take hold of a task.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 120,
-  "sourceHash": "fnv1a64:8c602ff99d908a7d",
+  "sourceHash": "fnv1a64:a1775b27545475b9",
   "lessonIds": [
     "PA-C120-rumal",
     "PA-C120-savaitar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch120.txt",
   "json": "punjabi/narration/ch120.json",
-  "textHash": "fnv1a64:4c59ac657ff9b901",
-  "jsonHash": "fnv1a64:67501d4708f71351",
+  "textHash": "fnv1a64:0eab886fcb913e1d",
+  "jsonHash": "fnv1a64:16448312e78e768d",
   "findings": []
 }

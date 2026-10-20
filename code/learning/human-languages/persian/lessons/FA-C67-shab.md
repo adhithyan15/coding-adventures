@@ -14,7 +14,8 @@ romanization: "shab"
 concept_tag: FA-TIME67-SHAB
 prerequisites: [FA-C66-ghabl, FA-C67-sobh]
 sounds: []
-roots: []
+roots: [persian-shab]
+etymology_hook: "shab: inherited, usually traced to Middle Persian šab"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C67-sobh]
 <!-- hl-knowledge: introduces=[FA-LEX-C67-TIME67-02]; assesses=[] -->
 
 **شب** — *shab* — "night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shab* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šab*, "night".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

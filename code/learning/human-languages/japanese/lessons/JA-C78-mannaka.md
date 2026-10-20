@@ -14,7 +14,8 @@ romanization: "mannaka"
 concept_tag: JA-LOC78-MANNAKA
 prerequisites: [JA-C78-ushiro, JA-C78-yoko]
 sounds: []
-roots: []
+roots: [japanese-ma-true, japanese-naka-middle]
+etymology_hook: "mannaka: native ma 'true, very' + naka 'middle', with a nasal beat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C78-yoko]
 <!-- hl-knowledge: introduces=[JA-LEX-C78-LOC78-05]; assesses=[] -->
 
 **まんなか** — *mannaka* — "the very middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まんなか** (*mannaka*) is a native compound, inherited rather than borrowed: *ma*, "true, very", with a nasal beat added, and *naka*, "middle" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

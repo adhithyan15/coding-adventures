@@ -15,6 +15,7 @@ concept_tag: MR-THINGS140-KHADAK
 prerequisites: [MR-C140-bi, MR-C140-mati]
 sounds: []
 roots: []
+etymology_hook: "khaḍak 'rock': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C140-mati]
 <!-- hl-knowledge: introduces=[MR-LEX-C140-THINGS140-04]; assesses=[] -->
 
 **खडक** — *khaḍak* — "a rock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **खडक** (*khaḍak*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

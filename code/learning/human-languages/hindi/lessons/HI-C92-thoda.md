@@ -14,7 +14,8 @@ romanization: "thoṛā"
 concept_tag: HI-DEGREE-A-LITTLE
 prerequisites: [HI-C91-sintesis-sangya, HI-C41-adjective-system, HI-C05-bolta-hun]
 sounds: []
-roots: []
+roots: [sanskrit-stoka]
+etymology_hook: "thoṛā ← Sanskrit stoka 'a drop; a little', with an added -ṛ- (CDIAL 13720)"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ hedges, not with the person speaking.
 
 This catches English speakers out, because *a little* in English is a fixed
 lump that never changes. Here it is an adjective, and adjectives agree.
+
+**थोड़ा** comes from Sanskrit *stoka*, "a drop; a little" (CDIAL 13720).
 
 ## Grammar Lens: where it stands
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C92-DEG-01, HI-CONCEPT-C05-BOLTAHUN-01] -->

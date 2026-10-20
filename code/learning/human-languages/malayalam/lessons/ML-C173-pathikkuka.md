@@ -14,7 +14,8 @@ romanization: "paṭhikkuka"
 concept_tag: ML-VERB-PATHIKKUKA
 prerequisites: [ML-C173-cirikkuka, ML-C173-nokkuka, ML-C95-akathu-purathu, ML-C95-akathu-purathu]
 sounds: []
-roots: []
+roots: [sanskrit-path]
+etymology_hook: "paṭhikkuka ← Sanskrit paṭhati 'recites, reads' (CDIAL 7712) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C173-nokkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C173-ACT173-03]; assesses=[] -->
 
 **പഠിക്കുക** — *paṭhikkuka* — "to study, to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഠിക്കുക** (*paṭhikkuka*) is built on Sanskrit *paṭhati*, "repeats aloud, reads" (CDIAL 7712), with the ending that makes a Malayalam verb. Learning was reciting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

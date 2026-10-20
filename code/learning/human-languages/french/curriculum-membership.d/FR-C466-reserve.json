@@ -1,0 +1,11 @@
+{
+  "id": "FR-C466-reserve",
+  "pathSegment": "FR-PATH-466-TIMIDITE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-466-TIMIDITE",
+      "order": 2
+    }
+  ]
+}

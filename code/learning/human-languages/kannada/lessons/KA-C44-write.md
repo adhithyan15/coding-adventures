@@ -11,7 +11,8 @@ romanization: "bare"
 concept_tag: KA-VERB-WRITE
 prerequisites: [KA-C44-speak, KA-C42-old]
 sounds: []
-roots: []
+roots: [dravidian-varai-write]
+etymology_hook: "bare: native Dravidian, one word with Tamil vari and Malayalam vara (DEDR 5263)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C44-speak]
 **ಬರೆ** (*bare*) — "write".
 
 An old Dravidian stem, unrelated to the Sanskrit words for writing. It is the same root behind *baraha*, 'writing'.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬರೆ** (*bare*) is native Dravidian, one word with Tamil *vari* and Malayalam *vara* (DEDR 5263). DEDR 5263 compares, with a query, Prakrit *rajju*, "a writer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "yojayati"
 concept_tag: SA-VERB-YOJAYATI
 prerequisites: [SA-C144-utpatati, SA-C144-niksipati]
 sounds: []
-roots: []
+roots: [sanskrit-yojayati]
+etymology_hook: "yojayati, causative of √yuj 'yoke, join', which MW sets beside Latin jungere and English yoke; yoga is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C144-niksipati]
 <!-- hl-knowledge: introduces=[SA-LEX-C144-ACT144-05]; assesses=[] -->
 
 **योजयति** — *yojayati* — "joins, arranges".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yojayati* is the causative of the root √yuj "yoke, join" (CDIAL 10531): "makes join, harnesses, arranges". MW sets √yuj beside Latin *jungere* "join" and English *yoke*, and *yoga* comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

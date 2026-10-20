@@ -11,7 +11,8 @@ romanization: "cukki"
 concept_tag: KA-NOUN-STAR
 prerequisites: [KA-C53-moon, KA-C51-blessing]
 sounds: []
-roots: []
+roots: [dravidian-cukka-dot]
+etymology_hook: "cukki: native Dravidian; DEDR 2646 lists Kannada cukke 'dot' and cikki 'star', with Telugu cukka 'star, dot'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C53-moon]
 Which is why it belongs to the ರಂಗೋಲಿ as much as to the night. The pattern at the doorway is set out first as a grid of ಚುಕ್ಕಿ, points of rice flour placed at even spacing, and the lines are drawn around and between them afterwards. A woman saying she is putting down ಚುಕ್ಕಿ in the morning is talking about her doorstep.
 
 The borrowed word for a star is ನಕ್ಷತ್ರ (*nakṣatra*), and that is the one an astrologer reaches for. ಚುಕ್ಕಿ is the one a child points with.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚುಕ್ಕಿ** (*cukki*) is native Dravidian. DEDR 2646 lists Kannada *cukke*, "small mark, dot", and *cikki*, "spot, star", with Telugu *cukka*, "star, spot, dot". Tamil *cukkai*, "star", is a loan from Telugu, the entry says.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

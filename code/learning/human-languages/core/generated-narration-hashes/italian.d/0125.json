@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 125,
-  "sourceHash": "fnv1a64:e61789b2612cf274",
+  "sourceHash": "fnv1a64:924bf9fa4a1ad45a",
   "lessonIds": [
     "IT-C125-rumoroso",
     "IT-C125-ultimo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch125.txt",
   "json": "italian/narration/ch125.json",
-  "textHash": "fnv1a64:0d7db4e3b092246f",
-  "jsonHash": "fnv1a64:913e8251eb1ba3ba",
+  "textHash": "fnv1a64:5de419d6b060e868",
+  "jsonHash": "fnv1a64:0a7666a3f527e8a5",
   "findings": []
 }

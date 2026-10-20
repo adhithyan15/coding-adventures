@@ -1,0 +1,11 @@
+{
+  "id": "ES-C638-limitar",
+  "pathSegment": "ES-PATH-638-LIMITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-638-LIMITE",
+      "order": 1
+    }
+  ]
+}

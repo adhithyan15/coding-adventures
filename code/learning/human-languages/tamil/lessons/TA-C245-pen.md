@@ -14,7 +14,8 @@ romanization: "peṇ"
 concept_tag: TA-PORUL245-PEN
 prerequisites: [TA-C245-uraiyatal, TA-C245-an]
 sounds: []
-roots: []
+roots: [dravidian-pen-woman]
+etymology_hook: "பெண் — native Dravidian (DEDR 4395); Malayalam peṇ 'girl, woman', Kannada peṇ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C245-an]
 <!-- hl-knowledge: introduces=[TA-LEX-C245-PORUL245-05]; assesses=[] -->
 
 **பெண்** — *peṇ* — "a woman, female".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பெண்** (*peṇ*) is native Dravidian. DEDR 4395 lists Malayalam *peṇ*, "girl, woman" and Kannada *peṇ*. The entry compares Sanskrit *pṛṇākā*, "young female (of deer)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

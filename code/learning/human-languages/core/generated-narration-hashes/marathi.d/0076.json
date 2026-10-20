@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 76,
-  "sourceHash": "fnv1a64:8a448feb003fe4f3",
+  "sourceHash": "fnv1a64:40d1499b32f5673c",
   "lessonIds": [
     "MR-C76-navra",
     "MR-C76-bayko",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch76.txt",
   "json": "marathi/narration/ch76.json",
-  "textHash": "fnv1a64:bb9fa18bc50c2c9d",
-  "jsonHash": "fnv1a64:a107314ebaaf7e49",
+  "textHash": "fnv1a64:ead34d0b5dbc5168",
+  "jsonHash": "fnv1a64:b34f728d7eedd2e3",
   "findings": []
 }

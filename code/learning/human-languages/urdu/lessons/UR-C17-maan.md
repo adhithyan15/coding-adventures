@@ -12,7 +12,7 @@ concept_tag: UR-MOTHER
 prerequisites: [UR-C17-review-shapes, UR-W06-bari-ye]
 sounds: [rtl, short-vowels-unwritten, nasal-vowel]
 roots: [sanskrit-matr, pie-mehter]
-etymology_hook: māṅ comes down through Prakrit from Sanskrit mātā, stem mātṛ, from Proto-Indo-European *méh₂tēr -- the root behind English mother, Latin mater, Greek mētēr and Persian mādar; Urdu holds two of these at once, the inherited māṅ used at home and the borrowed Persian mādar kept for formal and literary registers, which is the same native-beside-borrowed pairing the track has met in bhāī beside khāndān.
+etymology_hook: "māṅ ← Sanskrit mātṛ 'mother' (CDIAL 10016), from PIE *méh₂tēr, the root of English mother"
 duration:
   max_seconds: 280
 requires:
@@ -60,8 +60,7 @@ you have been putting on the end of *maiṅ* and *hūṅ* all along.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-MAAN-MATER]; assesses=[UR-LEX-MAAN, UR-LEX-KHANDAN, UR-ETYMON-BHAI-BROTHER] -->
 
-**ماں** is **inherited**. It comes down through Prakrit from Sanskrit *mātā*,
-stem *mātṛ*, and behind that stands Proto-Indo-European **\*méh₂tēr**. The same
+**ماں** is **inherited**. It comes down through Prakrit from Sanskrit *mātā*, stem *mātṛ*, under which CDIAL lists Hindi *mā* and *māī*, "mother" (CDIAL 10016), and behind that stands Proto-Indo-European **\*méh₂tēr**. The same
 root gives English **mother**, Latin **mater** (behind *maternal*, *matrix*),
 Greek **mētēr**, and Persian **mādar**.
 

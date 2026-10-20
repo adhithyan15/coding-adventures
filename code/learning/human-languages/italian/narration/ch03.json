@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8ac55335c615b404",
+  "sourceHash": "fnv1a64:061c3744ddc11c99",
   "lessons": [
     {
       "id": "IT-C03-io",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d42d281577b634af",
+      "sourceHash": "fnv1a64:aab79e7c2fbf2719",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is io from, and what English words share it? (Ego — ego, egoist.) Why does Italian usually drop io? (The verb ending already says who.) When do you keep it? (For emphasis/contrast.) Next: use it to introduce yourself — mi chiamo."
+              "text": "What Latin word is io from, and what English words share it? (Ego — ego, egoist.) Why does Italian usually drop io? (The verb ending already says who.) When do you keep it? (For emphasis/contrast.) Next: use it to introduce yourself — the \"I am called\" phrase."
             }
           ]
         }
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8486cecf03fc1cbe",
+      "sourceHash": "fnv1a64:d0340e123df79f4a",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does Come ti chiami? literally ask? (\"How do you call yourself?\") What changes for the formal Lei version? (ti chiami becomes si chiama.) Which \"how\" word is it built on? (come from quōmodo.) Next: the reply when you meet — piacere."
+              "text": "What does Come ti chiami? literally ask? (\"How do you call yourself?\") What changes for the formal Lei version? (ti chiami becomes si chiama.) Which \"how\" word is it built on? (come from quōmodo.) Next: the reply when you meet — \"a pleasure.\""
             }
           ]
         }
@@ -602,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38c75f8e11c4a330",
+      "sourceHash": "fnv1a64:0ec1f1898ef5cea1",
       "notice": null,
       "blocks": [
         {
@@ -700,11 +700,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chain it all — greet, name, ask, how-are-you, goodbye: \"Ciao! Mi chiamo … Come ti chiami? … Come stai? … A domani!\"",
+              "instruction": "chain it all — greet, name, ask, how-are-you, goodbye: \"Ciao! Mi chiamo … Come ti chiami? … Come stai? … Ciao!\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: chain it all — greet, name, ask, how-are-you, goodbye: \"Ciao! Mi chiamo … Come ti chiami? … Come stai? … A domani!\"]"
+              "source": "[YOU SAY: chain it all — greet, name, ask, how-are-you, goodbye: \"Ciao! Mi chiamo … Come ti chiami? … Come stai? … Ciao!\"]"
             },
             {
               "kind": "repeat",

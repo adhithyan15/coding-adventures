@@ -1,0 +1,11 @@
+{
+  "id": "IT-C422-remo",
+  "pathSegment": "IT-PATH-422-BARCA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-422-BARCA",
+      "order": 2
+    }
+  ]
+}

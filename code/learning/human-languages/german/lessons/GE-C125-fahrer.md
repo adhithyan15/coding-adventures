@@ -13,7 +13,8 @@ gloss: "a driver"
 concept_tag: GE-BERUF125-FAHRER
 prerequisites: [GE-C125-bauer, GE-C125-baecker]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "Fahrer — fahren 'to travel, to drive' + -er; fahren is kin to English fare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C125-baecker]
 <!-- hl-knowledge: introduces=[GE-LEX-C125-BERUF125-03]; assesses=[] -->
 
 **der Fahrer** — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Fahrer** is *fahren*, "to travel, to drive", + *-er*: the driver. EtymDB 2.1 lists *fahren* beside English *fare*, as in "farewell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

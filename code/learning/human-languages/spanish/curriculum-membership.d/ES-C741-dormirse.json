@@ -1,0 +1,11 @@
+{
+  "id": "ES-C741-dormirse",
+  "pathSegment": "ES-PATH-741-CANSANCIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-741-CANSANCIO",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "sambandhī"
 concept_tag: GU-FAMILY3-RELATIVE
 prerequisites: [GU-C53-son, GU-C53-daughter]
 sounds: []
-roots: []
+roots: [sanskrit-sambandhin]
+etymology_hook: "sambandhī ← Sanskrit saṁbandhin 'connected by marriage', a tatsama (CDIAL 12957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C53-daughter]
 <!-- hl-knowledge: introduces=[GU-LEX-C53-FAMILY3-04]; assesses=[] -->
 
 **સંબંધી** (*sambandhī*) — "a relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સંબંધી** (*sambandhī*) is Sanskrit *saṁbandhin*, "connected by marriage", taken over whole as a learned loan, a tatsama (CDIAL 12957). CDIAL lists the inherited Gujarati form as *samaṁdhī*, "kinsman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

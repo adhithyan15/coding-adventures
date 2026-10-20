@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:f59786de56603b1c",
+  "lessonIds": [
+    "PT-C513-maratona",
+    "PT-C513-atletismo",
+    "PT-C513-ciclismo",
+    "PT-C513-competir",
+    "PT-C513-cronometro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch513.txt",
+  "json": "portuguese/narration/ch513.json",
+  "textHash": "fnv1a64:fe4b17d3c4afb303",
+  "jsonHash": "fnv1a64:701e6381a5c20969",
+  "findings": []
+}

@@ -3859,7 +3859,10 @@ impl Compiler {
                         (
                             ProcedureParamMode::Name,
                             ProcedureParamType::Scalar(ScalarType::Real),
-                        ) => self.is_selector_call_safe_runtime_real_value(actual),
+                        ) => {
+                            self.is_selector_call_safe_runtime_real_value(actual)
+                                || self.is_selector_call_safe_standard_entier_sign_root(actual)
+                        }
                         _ => true,
                     }
                 });
@@ -3874,10 +3877,259 @@ impl Compiler {
         children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
     }
 
+    fn is_selector_call_safe_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                            self.is_selector_call_safe_runtime_real_root(operand)
+                        });
+                }
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1 && self.is_selector_call_safe_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_signed_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_entier_sign_root(node) {
+            return true;
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                && self.is_selector_call_safe_signed_entier_sign_root(child);
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_signed_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_signed_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_additive_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_signed_entier_sign_root(node) {
+            return true;
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            let operand_start = usize::from(matches!(
+                sequence.first(),
+                Some(Piece::Op(op)) if matches!(op.as_str(), "+" | "-")
+            ));
+            let additive_len = sequence.len().saturating_sub(operand_start);
+            if additive_len >= 3 && additive_len % 2 == 1 {
+                let mut saw_bounded_root = false;
+                for (index, piece) in sequence.iter().skip(operand_start).enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_signed_entier_sign_root(operand) {
+                            if saw_bounded_root {
+                                return false;
+                            }
+                            saw_bounded_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                return saw_bounded_root;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_additive_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_additive_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_multiplicative_entier_sign_root(
+        &self,
+        node: &GrammarASTNode,
+    ) -> bool {
+        if self.is_selector_call_safe_additive_entier_sign_root(node) {
+            return true;
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_bounded_root = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_additive_entier_sign_root(operand) {
+                            if saw_bounded_root {
+                                return false;
+                            }
+                            saw_bounded_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/")) {
+                        return false;
+                    }
+                }
+                return saw_bounded_root;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_multiplicative_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_multiplicative_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_powered_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_multiplicative_entier_sign_root(node) {
+            return true;
+        }
+        if node.rule_name == "expr_pow" {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index == 0 {
+                        let Piece::Node(base) = piece else {
+                            return false;
+                        };
+                        if !self.is_selector_call_safe_multiplicative_entier_sign_root(base) {
+                            return false;
+                        }
+                    } else if index % 2 == 0 {
+                        let Piece::Node(exponent) = piece else {
+                            return false;
+                        };
+                        if expr_static_real_arithmetic_value_with(exponent, &|_| None).is_none() {
+                            return false;
+                        }
+                    } else if !matches!(
+                        piece,
+                        Piece::Op(op) if matches!(op.as_str(), "^" | "**")
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_powered_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_powered_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_standard_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        self.is_selector_call_safe_standard_entier_sign_root_with_depth(node, 6)
+    }
+
+    fn is_selector_call_safe_standard_entier_sign_root_with_depth(
+        &self,
+        node: &GrammarASTNode,
+        remaining_standard_calls: usize,
+    ) -> bool {
+        if self.is_selector_call_safe_powered_entier_sign_root(node) {
+            return true;
+        }
+        if remaining_standard_calls > 0 && node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                            self.is_selector_call_safe_runtime_real_root(operand)
+                        });
+                }
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sign" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_standard_entier_sign_root_with_depth(
+                            actuals[0],
+                            remaining_standard_calls - 1,
+                        );
+                }
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_standard_entier_sign_root_with_depth(
+                child,
+                remaining_standard_calls,
+            );
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_standard_entier_sign_root_with_depth(
+                children[0],
+                remaining_standard_calls,
+            )
+    }
+
     fn builtin_nonnegative_bounded_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_nonnegative_bounded_sign_operand(then_node)?;
+            let else_operand = self.builtin_nonnegative_bounded_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_nonnegative_bounded_sign_operand(child);
         }
@@ -3913,7 +4165,13 @@ impl Compiler {
             "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
             "cos" => self.builtin_direct_sign_operand(actuals[0]),
             "exp" => self.builtin_single_exp_sign_operand(node),
-            "ln" => self.builtin_single_exp_nonnegative_sign_operand(actuals[0]),
+            "ln" => self
+                .builtin_single_exp_nonnegative_sign_operand(actuals[0])
+                .or_else(|| self.builtin_double_exp_sign_operand(actuals[0]))
+                .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0]))
+                .or_else(|| {
+                    self.builtin_quadruple_exp_nonpositive_sign_operand(actuals[0])
+                }),
             _ => None,
         }
     }
@@ -3945,8 +4203,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_direct_sign_operand(then_node)?;
             let else_operand = self.builtin_direct_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4085,8 +4343,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_nonpositive_unit_sign_operand(then_node)?;
             let else_operand = self.builtin_nonpositive_unit_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4227,8 +4485,8 @@ impl Compiler {
         {
             let then_operand = self.builtin_nonnegative_unit_sign_operand(then_node)?;
             let else_operand = self.builtin_nonnegative_unit_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
@@ -4298,6 +4556,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_single_exp_sign_operand(then_node)?;
+            let else_operand = self.builtin_single_exp_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         let operand = self.builtin_exp_operand(node)?;
         if self.contains_builtin_exp_call(operand) {
             return None;
@@ -4309,6 +4579,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_single_exp_nonnegative_sign_operand(then_node)?;
+            let else_operand = self.builtin_single_exp_nonnegative_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         let operand = self.builtin_exp_operand(node)?;
         if self.contains_builtin_exp_call(operand) {
             return None;
@@ -4316,28 +4598,206 @@ impl Compiler {
         self.builtin_nonnegative_bounded_sign_operand(operand)
     }
 
-    fn builtin_sign_operand<'n>(
+    fn builtin_double_exp_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            let then_operand = self.builtin_sign_operand(then_node)?;
-            let else_operand = self.builtin_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_value(then_operand)
-                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            let then_operand = self.builtin_double_exp_sign_operand(then_node)?;
+            let else_operand = self.builtin_double_exp_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
+        let inner_exp = self.builtin_exp_operand(self.builtin_exp_operand(node)?)?;
+        if self.contains_builtin_exp_call(inner_exp) {
+            return None;
+        }
+        self.builtin_sign_operand(inner_exp)
+    }
+
+    fn builtin_triple_exp_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_triple_exp_sign_operand(then_node)?;
+            let else_operand = self.builtin_triple_exp_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
+        let middle_exp = self.builtin_exp_operand(node)?;
+        let inner_exp = self.builtin_exp_operand(middle_exp)?;
+        let operand = self.builtin_exp_operand(inner_exp)?;
+        if self.contains_builtin_exp_call(operand) {
+            return None;
+        }
+        self.builtin_sign_operand(operand)
+    }
+
+    fn builtin_quadruple_exp_nonpositive_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand =
+                self.builtin_quadruple_exp_nonpositive_sign_operand(then_node)?;
+            let else_operand =
+                self.builtin_quadruple_exp_nonpositive_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
+        let outer_middle_exp = self.builtin_exp_operand(node)?;
+        let inner_middle_exp = self.builtin_exp_operand(outer_middle_exp)?;
+        let inner_exp = self.builtin_exp_operand(inner_middle_exp)?;
+        let operand = self.builtin_exp_operand(inner_exp)?;
+        if self.contains_builtin_exp_call(operand) {
+            return None;
+        }
+        self.builtin_nonpositive_unit_sign_operand(operand)
+    }
+
+    fn builtin_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        let operand = self.builtin_sign_operand_unchecked(node)?;
+        (self.builtin_sign_unit_offset_count(node)? <= MAX_SIGN_OFFSET_UNITS)
+            .then_some(operand)
+    }
+
+    fn builtin_sign_unit_offset_count(&self, node: &GrammarASTNode) -> Option<u64> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            return Some(
+                self.builtin_sign_unit_offset_count(then_node)?
+                    .max(self.builtin_sign_unit_offset_count(else_node)?),
+            );
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.builtin_sign_unit_offset_count(child);
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                .then(|| self.builtin_sign_unit_offset_count(child))?;
+        }
+        if pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            return self.builtin_sign_unit_offset_count(literal_power_identity_base(
+                node, true,
+            )?);
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut count = 0u64;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if self.builtin_sign_operand_unchecked(operand).is_some() {
+                            count = count
+                                .checked_add(self.builtin_sign_unit_offset_count(operand)?)?;
+                        } else {
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            count = count.checked_add(exact_sign_offset_units(value)?)?;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return None;
+                    }
+                }
+                return Some(count);
+            }
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if self.builtin_sign_operand_unchecked(operand).is_some() {
+                            return self.builtin_sign_unit_offset_count(operand);
+                        }
+                    }
+                }
+                return None;
+            }
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            if direct_tokens(node).is_empty() && children.len() == 1 {
+                return self.builtin_sign_unit_offset_count(children[0]);
+            }
+            return None;
+        }
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&source_name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "sign" => Some(0),
+            "abs" | "entier" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan" => {
+                self.builtin_sign_unit_offset_count(actuals[0])
+            }
+            _ => None,
+        }
+    }
+
+    fn builtin_sign_operand_unchecked<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_sign_operand_unchecked(then_node)?;
+            let else_operand = self.builtin_sign_operand_unchecked(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_operand)
+                && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
                 return Some(then_operand);
             }
             return None;
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_sign_operand(child);
+            return self.builtin_sign_operand_unchecked(child);
         }
         if let Some((sign, child)) = single_signed_child(node) {
             if matches!(sign, "+" | "-") {
-                return self.builtin_sign_operand(child);
+                return self.builtin_sign_operand_unchecked(child);
             }
             return None;
         }
@@ -4346,7 +4806,7 @@ impl Compiler {
             .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
         {
             if let Some(base) = literal_power_identity_base(node, true) {
-                return self.builtin_sign_operand(base);
+                return self.builtin_sign_operand_unchecked(base);
             }
             return None;
         }
@@ -4359,14 +4819,14 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand(operand) {
+                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
-                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
-                            .is_some_and(|value| value == 0.0)
-                        {
-                            return None;
+                        } else {
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            exact_sign_offset_units(value)?;
                         }
                     } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
                         return None;
@@ -4388,7 +4848,7 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand(operand) {
+                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
@@ -4429,7 +4889,7 @@ impl Compiler {
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_sign_operand(children[0]);
+                return self.builtin_sign_operand_unchecked(children[0]);
             }
             return None;
         }
@@ -4448,13 +4908,19 @@ impl Compiler {
         }
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
-            "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
+            "abs" | "entier" => self.builtin_sign_operand_unchecked(actuals[0]),
             "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
-            "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
+            "sin" | "cos" | "arctan" => self.builtin_sign_operand_unchecked(actuals[0]),
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
-                self.builtin_sign_operand(actuals[0])
+                self.builtin_sign_operand_unchecked(actuals[0])
             }
-            "ln" => self.builtin_single_exp_sign_operand(actuals[0]),
+            "ln" => self
+                .builtin_single_exp_sign_operand(actuals[0])
+                .or_else(|| self.builtin_double_exp_sign_operand(actuals[0]))
+                .or_else(|| self.builtin_triple_exp_sign_operand(actuals[0]))
+                .or_else(|| {
+                    self.builtin_quadruple_exp_nonpositive_sign_operand(actuals[0])
+                }),
             _ => None,
         }
     }
@@ -4601,6 +5067,133 @@ impl Compiler {
         children.len() == 1 && self.is_selector_call_safe_runtime_real_value(children[0])
     }
 
+    fn is_selector_call_safe_runtime_real_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_runtime_real_value(node) {
+            return true;
+        }
+        if self.is_selector_call_safe_signed_entier_sign_root(node) {
+            return true;
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                && self.is_selector_call_safe_runtime_real_root(child);
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real_root = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_runtime_real_root(operand) {
+                            saw_runtime_real_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real_root {
+                    return true;
+                }
+            }
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real_root = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_runtime_real_root(operand) {
+                            saw_runtime_real_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/")) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real_root {
+                    return true;
+                }
+            }
+        }
+        if node.rule_name == "expr_pow" {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real_root = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_runtime_real_root(operand) {
+                            saw_runtime_real_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(
+                        piece,
+                        Piece::Op(op) if matches!(op.as_str(), "^" | "**")
+                    ) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real_root {
+                    return true;
+                }
+            }
+        }
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sign" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_runtime_real_root(actuals[0]);
+                }
+            }
+        }
+        if direct_tokens(node).is_empty() {
+            let children = direct_nodes(node);
+            if children.len() == 1 {
+                return self.is_selector_call_safe_runtime_real_root(children[0]);
+            }
+        }
+        let Some(source_name) = exact_bare_variable_expression_name(node) else {
+            return false;
+        };
+        if self.active_by_name_binding(&source_name).is_some() {
+            return false;
+        }
+        self.require_var(&source_name).is_ok_and(|binding| {
+            binding.ty == ScalarType::Real
+                && !binding.is_global
+                && self.runtime_real_slots.contains(&binding.slot)
+        })
+    }
+
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
         if self.is_direct_formatter_safe_real_procedure_call(node) {
             return true;
@@ -4727,8 +5320,8 @@ impl Compiler {
         }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
-                return self.is_selector_call_safe_runtime_real_value(then_node)
-                    && self.is_selector_call_safe_runtime_real_value(else_node);
+                return self.is_selector_call_safe_runtime_real_root(then_node)
+                    && self.is_selector_call_safe_runtime_real_root(else_node);
             }
             return match self.static_boolean_value(condition) {
                 Some(true) => self.is_runtime_real_assignment_value(then_node),
@@ -11482,6 +12075,37 @@ fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
 /// for an integer base).  64 mirrors BASIC's BA-pow cap.
 const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 
+/// Total exact additive offset units a bounded `sign`-rooted transform may
+/// carry before `entier`.
+///
+/// The proof only needs every value on a runtime path to stay an exact
+/// binary64 integer: `sign(x)` contributes `-1`, `0`, or `1`, so a combined
+/// offset of at most `2^53 - 1` keeps `sign(x) ± offset` within `±2^53`, the
+/// same exact-integer range the static integer snapshots already use. Any
+/// smaller cap is arbitrary; the outer selector rule already accepts finite
+/// static terms of any size outside `entier`.
+///
+/// ```text
+/// offset term      sign(x) + term ∈            accepted
+/// 44               {43, 44, 45}                yes
+/// 2^53 - 1         {2^53 - 2, …, 2^53}         yes (all exact)
+/// 2^53             {…, 2^53 + 1}               no  (2^53 + 1 rounds)
+/// 0.5              {-0.5, 0.5, 1.5}            no  (not a whole unit)
+/// ```
+const MAX_SIGN_OFFSET_UNITS: u64 = 9_007_199_254_740_991;
+
+/// Units contributed by one variable-free additive term around a bounded
+/// `sign` result: its magnitude when it is a whole number within
+/// [`MAX_SIGN_OFFSET_UNITS`], otherwise `None` (fractional, non-finite, or too
+/// large terms stay conservative). Zero contributes no units.
+fn exact_sign_offset_units(value: f64) -> Option<u64> {
+    let magnitude = value.abs();
+    (magnitude.is_finite()
+        && magnitude.fract() == 0.0
+        && magnitude <= MAX_SIGN_OFFSET_UNITS as f64)
+        .then_some(magnitude as u64)
+}
+
 /// Bound compile-time simulation of `step` progress and scalar recurrences.
 /// Real addition is not algebraically invertible, so mirror emitted operations
 /// while keeping adversarial source programs from consuming unbounded time.
@@ -13366,18 +13990,604 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_conditional_selector_calls_do_not_trust_local_branches() {
+    fn al4_runtime_real_calling_selectors_allow_unaliased_local_branches() {
         for source in [
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real x; x := pick(); output(if choose() then x else x) end",
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left else right) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left else right) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose unaliased local runtime-real snapshots for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_signed_unaliased_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then -left else +right) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then -left else +right) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose signed unaliased local runtime-real snapshots for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_additive_unaliased_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left + 1.0 else right - 0.25) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left + 1.0 else right - 0.25) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose additive unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_multiplicative_unaliased_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left * 2.0 else 14.0 / right) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left * 2.0 else 14.0 / right) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose multiplicative unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_powered_unaliased_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left ^ 2 else right ^ 1) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then left ^ 2 else right ^ 1) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose powered unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_standard_function_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 12.25; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then abs(left) else sqrt(right)) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 12.25; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then abs(left) else sqrt(right)) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose standard-function transforms of unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_sign_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose exact entier-sign transforms of unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose real name-formal results rooted in exact transforms of unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_signed_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose signed exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_additive_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose additive exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_multiplicative_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose multiplicative exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_powered_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose powered exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_standard_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_nested_standard_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose two nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_triple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose three nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_quadruple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose four nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_quintuple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose five nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_sextuple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(entier(sign(left))))))))) else relay(abs(abs(abs(abs(abs(abs(entier(sign(right))))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(entier(sign(left))))))))) else relay(abs(abs(abs(abs(abs(abs(entier(sign(right))))))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose six nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_sign_wrapped_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose sign-wrapped exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_wrapped_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose entier-wrapped exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_wrapped_bounded_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose entier-wrapped bounded local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_exact_offset_bounded_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) - 1)) else relay(entier(entier(sign(right)) - 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 2)) else relay(entier(entier(sign(right)) + 2)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 2) else ((entier(sign(right)) + 1) + 1))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 3)) else relay(entier(entier(sign(right)) + 3)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 3) else ((entier(sign(right)) + 1) + 2))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 4)) else relay(entier(entier(sign(right)) + 4)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 4) else ((entier(sign(right)) + 1) + 3))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 5)) else relay(entier(entier(sign(right)) + 5)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 5) else ((entier(sign(right)) + 2) + 3))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 6)) else relay(entier(entier(sign(right)) + 6)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 6) else ((entier(sign(right)) + 1) + 5))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 7)) else relay(entier(entier(sign(right)) + 7)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 7) else ((entier(sign(right)) + 2) + 5))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 8)) else relay(entier(entier(sign(right)) + 8)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 8) else ((entier(sign(right)) + 3) + 5))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 9)) else relay(entier(entier(sign(right)) + 9)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 9) else ((entier(sign(right)) + 4) + 5))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 10)) else relay(entier(entier(sign(right)) + 10)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 10) else ((entier(sign(right)) + 4) + 6))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 11)) else relay(entier(entier(sign(right)) + 11)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 11) else ((entier(sign(right)) + 5) + 6))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 12)) else relay(entier(entier(sign(right)) + 12)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 12) else ((entier(sign(right)) + 5) + 7))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 13)) else relay(entier(entier(sign(right)) + 13)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 13) else ((entier(sign(right)) + 6) + 7))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 14)) else relay(entier(entier(sign(right)) + 14)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 14) else ((entier(sign(right)) + 7) + 7))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 15)) else relay(entier(entier(sign(right)) + 15)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 15) else ((entier(sign(right)) + 7) + 8))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 16)) else relay(entier(entier(sign(right)) + 16)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 16) else ((entier(sign(right)) + 8) + 8))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 17)) else relay(entier(entier(sign(right)) + 17)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 17) else ((entier(sign(right)) + 8) + 9))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 18)) else relay(entier(entier(sign(right)) + 18)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 18) else ((entier(sign(right)) + 9) + 9))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 19)) else relay(entier(entier(sign(right)) + 19)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 19) else ((entier(sign(right)) + 9) + 10))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 20)) else relay(entier(entier(sign(right)) + 20)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 20) else ((entier(sign(right)) + 10) + 10))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 21)) else relay(entier(entier(sign(right)) + 21)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 21) else ((entier(sign(right)) + 10) + 11))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 22)) else relay(entier(entier(sign(right)) + 22)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 22) else ((entier(sign(right)) + 11) + 11))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 23)) else relay(entier(entier(sign(right)) + 23)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 23) else ((entier(sign(right)) + 11) + 12))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 24)) else relay(entier(entier(sign(right)) + 24)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 24) else ((entier(sign(right)) + 12) + 12))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 25)) else relay(entier(entier(sign(right)) + 25)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 25) else ((entier(sign(right)) + 12) + 13))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 26)) else relay(entier(entier(sign(right)) + 26)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 26) else ((entier(sign(right)) + 13) + 13))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 27)) else relay(entier(entier(sign(right)) + 27)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 27) else ((entier(sign(right)) + 13) + 14))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 28)) else relay(entier(entier(sign(right)) + 28)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 28) else ((entier(sign(right)) + 14) + 14))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 29)) else relay(entier(entier(sign(right)) + 29)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 29) else ((entier(sign(right)) + 14) + 15))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 30)) else relay(entier(entier(sign(right)) + 30)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 30) else ((entier(sign(right)) + 15) + 15))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 31)) else relay(entier(entier(sign(right)) + 31)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 31) else ((entier(sign(right)) + 15) + 16))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 32)) else relay(entier(entier(sign(right)) + 32)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 32) else ((entier(sign(right)) + 16) + 16))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 33)) else relay(entier(entier(sign(right)) + 33)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 33) else ((entier(sign(right)) + 16) + 17))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 34)) else relay(entier(entier(sign(right)) + 34)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 34) else ((entier(sign(right)) + 17) + 17))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 35)) else relay(entier(entier(sign(right)) + 35)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 35) else ((entier(sign(right)) + 17) + 18))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 36)) else relay(entier(entier(sign(right)) + 36)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 36) else ((entier(sign(right)) + 18) + 18))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 37)) else relay(entier(entier(sign(right)) + 37)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 37) else ((entier(sign(right)) + 18) + 19))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 38)) else relay(entier(entier(sign(right)) + 38)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 38) else ((entier(sign(right)) + 19) + 19))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 39)) else relay(entier(entier(sign(right)) + 39)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 39) else ((entier(sign(right)) + 19) + 20))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 40)) else relay(entier(entier(sign(right)) + 40)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 40) else ((entier(sign(right)) + 20) + 20))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 41)) else relay(entier(entier(sign(right)) + 41)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 41) else ((entier(sign(right)) + 20) + 21))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 42)) else relay(entier(entier(sign(right)) + 42)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 42) else ((entier(sign(right)) + 21) + 21))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 43)) else relay(entier(entier(sign(right)) + 43)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 43) else ((entier(sign(right)) + 21) + 22))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 44)) else relay(entier(entier(sign(right)) + 44)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 44) else ((entier(sign(right)) + 22) + 22))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1000)) else relay(entier(entier(sign(right)) + 1000)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1000) else ((entier(sign(right)) + 600) + 400))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 9007199254740991)) else relay(entier(entier(sign(right)) - 9007199254740991)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 9007199254740991) else ((entier(sign(right)) + 4503599627370496) + 4503599627370495))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose an exact-offset bounded local transform through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure abs(x); real x; abs := x; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x) else echo(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x + 1.0) else echo(x + 1.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x * 2.0) else echo(x * 2.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x ^ 2) else echo(x ^ 2)) end",
             "begin boolean procedure choose; choose := true; integer procedure sign(x); value x; real x; sign := 1; real procedure echo(x); real x; echo := x; output(if choose() then echo(sign(-2.5)) else echo(sign(-2.5))) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real left, right, result; left := pick(); right := pick(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) + entier(sign(right))) else relay(entier(sign(right)) + entier(sign(left))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) * entier(sign(right))) else relay(entier(sign(right)) / entier(sign(left))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ entier(sign(right))) else relay(entier(sign(right)) ^ entier(sign(left))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ right) else relay(entier(sign(right)) ^ left); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(abs(entier(left)))) else relay(entier(abs(entier(right)))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 9007199254740992)) else relay(entier(entier(sign(right)) + 9007199254740992)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 9007199254740991 + 1)) else relay(entier(entier(sign(right)) + 1 + 9007199254740991)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 9007199254740991) else (entier(sign(right)) + 9007199254740991)) + 1)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 0.5)) else relay(entier(entier(sign(right)) + 0.5)); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a calling selector must not admit transformed locals or overridden builtins",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_reject_septuple_nested_standard_local_name_actual_branches()
+    {
+        let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(abs(entier(sign(left)))))))))) else relay(abs(abs(abs(abs(abs(abs(abs(entier(sign(right)))))))))); output(result) end";
+        let err = compile_source(source, "test")
+            .expect_err("seven nested standard-function wrappers must remain outside the bounded selector proof");
+        assert!(format!("{err:?}").contains("input nests deeper than the supported limit"));
+    }
+
+    #[test]
+    fn al4_runtime_real_conditional_selector_calls_reject_shared_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left else right) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then -left else +right) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left + 1.0 else right - 0.25) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left * 2.0 else 14.0 / right) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left ^ 2 else right ^ 1) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then abs(left) else sqrt(right)) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("a calling selector must not reuse pre-call local provenance");
+                .expect_err("shared storage must remain invalid across a calling selector");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
@@ -13427,14 +14637,10 @@ mod tests {
 
     #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
-        for source in [
-            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
-            "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
-        ] {
-            let err = compile_source(source, "test")
-                .expect_err("computed copies must not inherit formatter provenance");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
-        }
+        let source = "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end";
+        let err = compile_source(source, "test")
+            .expect_err("computed copies must not inherit formatter provenance");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
@@ -13654,10 +14860,101 @@ mod tests {
         for source in [
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) + 0); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(0 - abs(sign(pick()))))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 1))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 2))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 1) + 1)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 3))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 1) + 2)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 4))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 2) + 2)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 5))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 2) + 3)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 6))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 1) + 5)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 7))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 2) + 5)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 8))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 3) + 5)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 9))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 4) + 5)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 10))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 4) + 6)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 11))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 5) + 6)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 12))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 5) + 7)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 13))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 6) + 7)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 14))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 7) + 7)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 15))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 7) + 8)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 16))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 8) + 8)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 17))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 8) + 9)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 18))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 9) + 9)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 19))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 9) + 10)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 20))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 10) + 10)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 21))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 10) + 11)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 22))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 11) + 11)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 23))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 11) + 12)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 24))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 12) + 12)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 25))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 12) + 13)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 26))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 13) + 13)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 27))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 13) + 14)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 28))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 14) + 14)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 29))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 14) + 15)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 30))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 15) + 15)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 31))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 15) + 16)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 32))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 16) + 16)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 33))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 16) + 17)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 34))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 17) + 17)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 35))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 17) + 18)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 36))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 18) + 18)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 37))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 18) + 19)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 38))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 19) + 19)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 39))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 19) + 20)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 40))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 20) + 20)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 41))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 20) + 21)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 42))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 21) + 21)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 43))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 21) + 22)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 44))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 22) + 22)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 45))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 500) + 500)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) - 9007199254740991))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 4503599627370496) + 4503599627370495)))) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "exact additive zero preserves the bounded sign result through entier for {source:?}: {error}"
+                    "an exact additive zero or whole-unit offset within 2^53 - 1 preserves the bounded sign result through entier for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -13672,11 +14969,16 @@ mod tests {
     #[test]
     fn al4_additive_entier_sign_widening_rejects_unproven_terms() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 9007199254740992); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 9007199254740991 + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 9007199254740991) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 4503599627370496) + 4503599627370496)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 0.5); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 9007199254740993); output(result) end",
             "begin real procedure pick; pick := -2.25; integer zero; real result; zero := 0; result := entier(sign(pick()) + zero); output(result) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("a nonzero or variable additive term exceeds the bounded sign proof");
+                .expect_err("an offset beyond 2^53 - 1 units, a fractional offset, or a variable term exceeds the bounded sign proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
@@ -14756,6 +16058,249 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_nonnegative_sign_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else cos(sign(right())))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(if choose() then sign(abs(sign(left()))) else entier(abs(sign(right()))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves a branch-total conditional nonnegative bounded sign range for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_nonnegative_sign_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else abs(right()))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(if choose() then sign(abs(sign(left()))) else sign(abs(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else exp(exp(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure cos(x); value x; real x; cos := 1.0; real result; result := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else cos(sign(right())))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain a proven nonnegative bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(ln(if choose() then exp(sin(sign(left()))) else exp(arctan(sign(right()))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(ln(if choose() then exp(abs(sign(left()))) else exp(sqrt(abs(sign(right()))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln preserves a branch-total conditional of single bounded exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_exp_result_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(ln(if choose() then exp(sign(left())) else sqrt(abs(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(ln(if choose() then exp(sign(left())) else exp(sign(right())))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(ln(if choose() then exp(sign(left())) else exp(exp(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(if choose() then exp(sign(left())) else exp(sign(right())))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain one built-in exponential over a proven bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_double_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(ln(if choose() then exp(exp(sin(sign(left())))) else exp(exp(arctan(sign(right()))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(ln(if choose() then exp(exp(abs(sign(left())))) else exp(exp(sqrt(abs(sign(right())))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln preserves a branch-total conditional of double bounded exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_double_exp_result_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(ln(if choose() then exp(exp(sign(left()))) else exp(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(ln(if choose() then exp(exp(sign(left()))) else exp(exp(sign(right())))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(ln(if choose() then exp(exp(sign(left()))) else exp(exp(exp(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(ln(if choose() then exp(exp(sign(left()))) else exp(exp(sign(right())))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain exactly two built-in exponentials over a proven bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_triple_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(ln(if choose() then exp(exp(exp(sin(sign(left()))))) else exp(exp(exp(arctan(sign(right())))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left()))))) else exp(exp(exp(sqrt(abs(sign(right()))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln preserves a branch-total conditional of triple bounded exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_triple_exp_result_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(ln(if choose() then exp(exp(exp(sign(left())))) else exp(exp(sign(right())))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(ln(if choose() then exp(exp(exp(sign(left())))) else exp(exp(exp(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(ln(if choose() then exp(exp(exp(sign(left())))) else exp(exp(exp(exp(sign(right())))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(ln(if choose() then exp(exp(exp(sign(left())))) else exp(exp(exp(sign(right()))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain exactly three built-in exponentials over a proven bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_conditional_nonpositive_quadruple_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 0.0; real x; x := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := 2.25; real procedure right; right := 0.0; real x; x := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln preserves a branch-total conditional of nonpositive quadruple exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_wraps_conditional_nonpositive_quadruple_exp_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves a branch-total conditional of nonpositive quadruple exponentials for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_local_runtime_real_roots_cross_all_bounded_conditional_result_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))); output(x) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "every bounded conditional result proof accepts unaliased local runtime-real roots for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_local_runtime_real_result_widening_rejects_shared_roots() {
+        let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right, x; procedure capture; right := 0.0; left := pick(); right := pick(); x := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end";
+        let err = compile_source(source, "test").expect_err(
+            "a captured local is shared storage and cannot root a selector-call-safe conditional proof",
+        );
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "failed with an unexpected diagnostic: {err:?}"
+        );
+    }
+
+    #[test]
+    fn al4_conditional_nonpositive_quadruple_exp_result_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; integer procedure right; right := 2; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := 2.25; real procedure right; right := 0.0; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(-abs(sign(right()))))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 0.0; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain exactly four built-in exponentials over a proven nonpositive bounded runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
     fn al4_conditional_single_exp_sign_widening_rejects_unproven_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(exp(if choose() then sin(sign(left())) else sin(right()))); output(result) end",
@@ -14841,14 +16386,75 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_direct_double_exp_result_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(ln(exp(exp(sign(pick()))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(ln(exp(exp(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln over exactly two bounded exponentials preserves a direct sign-rooted result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_direct_triple_exp_result_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(ln(exp(exp(exp(sign(pick())))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real x; x := entier(sqrt(ln(exp(exp(exp(sign(pick()))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln over exactly three bounded exponentials preserves a direct sign-rooted result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_nonpositive_quadruple_exp_result_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real x; x := entier(sqrt(ln(exp(exp(exp(exp(-abs(sign(pick()))))))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln over exactly four exponentials preserves a nonpositive sign-rooted result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(exp(-abs(sign(pick()))))))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(pick()))); output(result) end",
-            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
+                "deeper exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
@@ -14946,11 +16552,11 @@ mod tests {
     fn al4_sqrt_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(sign(pick()))))); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(exp(abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(exp(exp(exp(abs(sign(pick()))))))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(ln(exp(abs(sign(pick())))))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "signed, nested exponential, and overridden exp mappings must remain conservative under sqrt-ln",
+                "signed, deeper exponential, and overridden exp mappings must remain conservative under sqrt-ln",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

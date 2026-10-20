@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 172,
-  "sourceHash": "fnv1a64:e8af794a12a2997d",
+  "sourceHash": "fnv1a64:10b326c6b860a0ae",
   "lessonIds": [
     "KA-C172-aparupakke",
     "KA-C172-pratidina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch172.txt",
   "json": "kannada/narration/ch172.json",
-  "textHash": "fnv1a64:3f09c75a5fab6e23",
-  "jsonHash": "fnv1a64:d5865289c96af1ee",
+  "textHash": "fnv1a64:0c919f7a0980414e",
+  "jsonHash": "fnv1a64:167e377893c9e9e7",
   "findings": []
 }

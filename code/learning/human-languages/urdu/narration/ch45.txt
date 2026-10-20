@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a wife, then the Urdu for a child.
 You'll want to know: لڑکا.
 لڑکا — laṛkā — "a boy".
 
+The word, taken apart.
+لڑکا (laṛkā) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍikka, "child", a form CDIAL reconstructs from its descendants (CDIAL 10924). CDIAL calls the group a "defective" word for children and notes similar formations in Munda.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a child, then the Urdu for a boy.
 
 You'll want to know: لڑکی.
 لڑکی — laṛkī — "a girl".
+
+The word, taken apart.
+لڑکی (laṛkī) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍikka, "child", a form CDIAL reconstructs from its descendants (CDIAL 10924). laṛkī is the feminine of laṛkā, "boy". CDIAL calls the group a "defective" word for children and notes similar formations in Munda.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a boy, then the Urdu for a girl.
 You'll want to know: آدمی.
 آدمی — ādmī — "a man".
 
+The word, taken apart.
+آدمی (ādmī) is a loan from Arabic ādamī, "human, of Adam", which reached Urdu through Persian. Its Arabic root is ʾ-d-m (Lane). The ending -ī means "belonging to", so the word is "one of Adam's".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a girl, then the Urdu for a man.
 You'll want to know: پڑوسی.
 پڑوسی — paṛosī — "a neighbour".
 
+The word, taken apart.
+پڑوسی (paṛosī) is a tadbhava, a word inherited and reshaped by sound change. It comes from prativeśiya, "neighbour", a form CDIAL reconstructs from its descendants (CDIAL 8599). It is a variant CDIAL reconstructs beside Sanskrit prativeśya, "neighbour".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a man, then the Urdu for a neighbour.
 
 You'll want to know: مہمان.
 مہمان — mehmān — "a guest".
+
+The word, taken apart.
+مہمان (mehmān) is a loan, usually traced to Persian mihmān, "guest".
 
 What you've built.
 One more word for this chapter.

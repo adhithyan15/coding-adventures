@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed — 16 stale style-drop pins removed (X-7)
+
+The emitters now lower these, so the gate's inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) failed on every main CI run.
+Removed from `ALLOWED_STYLE_DROPS`: `(SwiftUI, "align")`, `(SwiftUI, "border-bottom-style")`, `(Compose, "border-bottom-style")`, `(Xaml, "border-bottom-style")`, `(Qt, "align")`, `(Qt, "border-bottom-color")`, `(Qt, "border-bottom-style")`, `(Qt, "border-bottom-width")`, `(Qt, "padding-bottom")`, `(Flutter, "align")`, `(Flutter, "border-bottom-style")`, `(Flutter, "color")`, `(Flutter, "font-size")`, `(Flutter, "padding-bottom")`, `(Flutter, "text-align")`, `(Flutter, "width")`. Comments that only explained
+removed pins went with them.
+
 ### Fixed — the SwiftUI `gap` pin was licensing a drop that never happened
 
 `(SwiftUI, "gap")` is off `ALLOWED_STYLE_DROPS`. It was never a real drop:

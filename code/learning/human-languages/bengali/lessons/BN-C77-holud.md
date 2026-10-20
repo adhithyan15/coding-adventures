@@ -14,7 +14,8 @@ romanization: "hôlud"
 concept_tag: BN-ADJ77-HOLUD
 prerequisites: [BN-C76-sotti, BN-C77-mittha]
 sounds: []
-roots: []
+roots: [sanskrit-haridra]
+etymology_hook: "hôlud ← Sanskrit haridrā 'turmeric', a tadbhava (CDIAL 13992)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C77-mittha]
 <!-- hl-knowledge: introduces=[BN-LEX-C77-ADJ77-02]; assesses=[] -->
 
 **হলুদ** — *hôlud* — "yellow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হলুদ** (*hôlud*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haridrā*, "turmeric" (CDIAL 13992). Bengali names the colour after the spice.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

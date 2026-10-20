@@ -14,7 +14,8 @@ romanization: "toṭar"
 concept_tag: TA-VERB-TOTAR
 prerequisites: [TA-C166-camatanam-cey, TA-C166-yoci]
 sounds: []
-roots: []
+roots: [dravidian-todu-touch]
+etymology_hook: "தொடர் — native Dravidian (DEDR 3480); Malayalam toṭuka 'to touch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C166-yoci]
 <!-- hl-knowledge: introduces=[TA-LEX-C167-ACT167-01]; assesses=[] -->
 
 **தொடர்** — *toṭar* — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொடர்** (*toṭar*) is native Dravidian. DEDR 3480 lists Malayalam *toṭuka*, "to touch". The entry lists *toṭar*, "to follow, to be connected", under *toṭu*, "to touch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

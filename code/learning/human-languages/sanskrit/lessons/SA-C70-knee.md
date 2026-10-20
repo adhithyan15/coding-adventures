@@ -14,7 +14,8 @@ romanization: "jānu"
 concept_tag: SA-BODY-KNEE
 prerequisites: [SA-C69-tongue, SA-C70-nail]
 sounds: []
-roots: []
+roots: [sanskrit-janu]
+etymology_hook: "jānu 'knee' is inherited: MW compares Greek gonu, Latin genū and Gothic kniu (CDIAL 5195)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C70-nail]
 <!-- hl-knowledge: introduces=[SA-LEX-C70-BODY2-02]; assesses=[] -->
 
 **जानु** (*jānu*) — "the knee", halfway down the **पादः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Jānu* is inherited: MW compares Greek *gonu*, Latin *genū* and Gothic *kniu*, the
+cousin of English **knee** (CDIAL 5195).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

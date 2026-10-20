@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:c635bb014bb03afa",
+  "lessonIds": [
+    "PT-C463-trovoada",
+    "PT-C463-trovejar",
+    "PT-C463-relampejar",
+    "PT-C463-granizo",
+    "PT-C463-aguaceiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch463.txt",
+  "json": "portuguese/narration/ch463.json",
+  "textHash": "fnv1a64:ebc261dfe9832784",
+  "jsonHash": "fnv1a64:ecf1f6f9555fabcb",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C315-anniversario",
+    "language": "italian",
+    "chapter": 315,
+    "sequence": 18270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83f8e1a2b5f3f8d1"
+  },
+  "findings": []
+}

@@ -13,6 +13,9 @@ You'll want to know: క్షేమం.
 క్షేమం (kṣēmaṁ) — "wellbeing, safety".
 క్షేమంగా ఉన్నారా? — "are you keeping well?", a warmer, more formal cousin of బాగున్నారా?, heard from elders and read at the top of letters.
 
+The word, taken apart.
+క్షేమం (kṣēmaṁ) is Sanskrit kṣema, "ease, happiness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 3745).
+
 What you've built.
 A respectful way to ask after someone.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for weakness, then the Telugu for wellbeing.
 You'll want to know: హాయిగా.
 హాయిగా (hāyigā) — "comfortably, pleasantly".
 హాయిగా (hāyigā) ఉంది — "it is pleasant", said of a cool breeze, a good rest, an easy day.
+
+The word, taken apart.
+హాయిగా (hāyigā) is hāyi, "comfort, pleasantness", with the adverb ending -gā. The origin of hāyi is uncertain: neither DEDR nor CDIAL records it.
 
 What you've built.
 A word for when things are good.
@@ -73,6 +79,9 @@ You'll want to know: సుఖం.
 సుఖం (sukhaṁ) — "comfort, ease, contentment".
 సుఖంగా ఉన్నారా? — "are you comfortable?", a host's question. Its opposite is the కష్టం you already have: ease against difficulty.
 
+The word, taken apart.
+సుఖం (sukhaṁ) is Sanskrit sukha, "easy; comfort, happiness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13451).
+
 What you've built.
 Ease, set against a word you know for its opposite.
 
@@ -103,6 +112,9 @@ You'll want to know: సంతోషంగా.
 సంతోషంగా (santōṣaṁgā) — "happily, gladly".
 It is సంతోషం, the "pleased" of your first introductions, with -గా. సంతోషంగా (santōṣaṁgā) alone answers a request: "gladly".
 
+The word, taken apart.
+సంతోషంగా (santōṣaṁgā) is santōṣaṁ, "joy", from Sanskrit santoṣa, "satisfaction" (CDIAL 12895), with the Telugu adverb ending -gā.
+
 What you've built.
 An old word put to a new job with the ending you know.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for comfort, then the Telugu for gladly.
 You'll want to know: ఒళ్ళు.
 ఒళ్ళు (oḷḷu) — "the body".
 ఒళ్ళు (oḷḷu) నొప్పులు — "body aches", with the plural of నొప్పి. What a fever leaves behind.
+
+The word, taken apart.
+ఒళ్ళు (oḷḷu) is native Dravidian, one word with Tamil uṭal and Kannada oḍal (DEDR 586). DEDR lists Telugu oḍalu and oḷḷu, "body".
 
 What you've built.
 Well, comfortable, at ease, glad, and the body that aches when you are not.

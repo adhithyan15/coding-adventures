@@ -10,7 +10,8 @@ gloss: "to pass away"
 concept_tag: ES-VERB-FALLECER
 prerequisites: [ES-C496-llenar, ES-C497-nacer]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "fallecer ← spoken Latin *fallescere, from fallere 'to fail': first 'to run short', then 'to die'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C497-nacer]
 > *His grandfather passed away last year.*
 
 A gentler, more formal word than *morir*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fallecer** comes from spoken Latin *\*fallescere* (EtymDB 2.1), built on *fallere*, "to deceive, to fail" — first "to run short", then "to die". *Fallar*, "to fail", is a relative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

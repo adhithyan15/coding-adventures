@@ -14,7 +14,8 @@ romanization: "pātukāppāṉa"
 concept_tag: TA-QUAL149-PATUKAPPANA
 prerequisites: [TA-C149-pirapalamana, TA-C149-apattana]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard]
+etymology_hook: "பாதுகாப்பான — ends in native kāppu 'protection' (DEDR 1416); the first part pātu is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C149-apattana]
 <!-- hl-knowledge: introduces=[TA-LEX-C149-QUAL149-03]; assesses=[] -->
 
 **பாதுகாப்பான** — *pātukāppāṉa* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாதுகாப்பான** (*pātukāppāṉa*) ends in native *kāppu*, "protection", from *kā*, "to guard" (DEDR 1416). The first part, *pātu*, is not settled, so the origin of the whole word is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

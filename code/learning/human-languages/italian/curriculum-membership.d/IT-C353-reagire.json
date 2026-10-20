@@ -1,0 +1,11 @@
+{
+  "id": "IT-C353-reagire",
+  "pathSegment": "IT-PATH-353-REAZIONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-353-REAZIONE",
+      "order": 1
+    }
+  ]
+}

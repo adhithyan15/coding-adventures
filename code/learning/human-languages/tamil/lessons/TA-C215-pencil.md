@@ -14,7 +14,8 @@ romanization: "peṉcil"
 concept_tag: TA-PORUL215-PENCIL
 prerequisites: [TA-C214-mavu, TA-C214-rotti]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "பென்சில் ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C214-rotti]
 <!-- hl-knowledge: introduces=[TA-LEX-C215-PORUL215-01]; assesses=[] -->
 
 **பென்சில்** — *peṉcil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பென்சில்** (*peṉcil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "yātrā"
 concept_tag: HI-THG180-YATRA
 prerequisites: [HI-C180-mariz, HI-C180-ilaj]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "yātrā ← Sanskrit yātrā 'journey, procession', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C180-ilaj]
 <!-- hl-knowledge: introduces=[HI-LEX-C180-THG180-04]; assesses=[] -->
 
 **यात्रा** — *yātrā* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**यात्रा** (*yātrā*) is Sanskrit *yātrā*, "journey, procession", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

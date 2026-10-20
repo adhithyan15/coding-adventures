@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 164,
-  "sourceHash": "fnv1a64:f198ecf5b868727d",
+  "sourceHash": "fnv1a64:bf1998edf1ada7da",
   "lessonIds": [
     "GE-C164-nachbarin",
     "GE-C164-cousine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch164.txt",
   "json": "german/narration/ch164.json",
-  "textHash": "fnv1a64:b9bbabb307c32550",
-  "jsonHash": "fnv1a64:c14eebe13e3df902",
+  "textHash": "fnv1a64:0357d9dbf35a1c46",
+  "jsonHash": "fnv1a64:5517126a22103946",
   "findings": []
 }

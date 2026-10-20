@@ -13,7 +13,8 @@ gloss: "a bone"
 concept_tag: PT-SAUDE211-OSSO
 prerequisites: [PT-C211-paciencia, PT-C211-sorte]
 sounds: []
-roots: []
+roots: [os-latin]
+etymology_hook: "osso ← Vulgar Latin ossum, from Latin os, ossis 'bone' — English ossify"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C211-sorte]
 <!-- hl-knowledge: introduces=[PT-LEX-C211-SAUDE211-03]; assesses=[] -->
 
 **o osso** — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**osso** ← Latin *ossum*, "bone" (EtymDB 2.1), from Latin *os, ossis* — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

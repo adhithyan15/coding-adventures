@@ -1,0 +1,11 @@
+{
+  "id": "ES-C600-civismo",
+  "pathSegment": "ES-PATH-600-SOCIEDAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-600-SOCIEDAD",
+      "order": 2
+    }
+  ]
+}

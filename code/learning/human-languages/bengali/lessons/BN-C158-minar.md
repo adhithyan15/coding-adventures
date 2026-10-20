@@ -14,7 +14,8 @@ romanization: "minār"
 concept_tag: BN-JAYGA158-MINAR
 prerequisites: [BN-C158-prasad, BN-C158-durgo]
 sounds: []
-roots: []
+roots: [arabic-manar]
+etymology_hook: "minār ← Arabic manār 'lighthouse, minaret', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C158-durgo]
 <!-- hl-knowledge: introduces=[BN-LEX-C158-JAYGA158-04]; assesses=[] -->
 
 **মিনার** — *minār* — "a minaret, a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিনার** (*minār*) is a loan from Arabic *manār*, "lighthouse, minaret", which reached Bengali through Persian. Its Arabic root is *n-w-r* (Lane). The word belongs with Arabic *nūr*, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prayatnaḥ"
 concept_tag: SA-WRK230-PRAYATNAH
 prerequisites: [SA-C230-saphalata, SA-C230-viphalata]
 sounds: []
-roots: []
+roots: [sanskrit-prayatna, sanskrit-yatate]
+etymology_hook: "prayatna ← pra- + √yat 'strive': 'persevering effort' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C230-viphalata]
 <!-- hl-knowledge: introduces=[SA-LEX-C230-WRK230-03]; assesses=[] -->
 
 **प्रयत्नः** — *prayatnaḥ* — "an effort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prayatna* is built on *pra-*, "forth", and the root √yat, "to strive" (MW), the root of *yatate*, "tries". MW glosses it "persevering effort".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

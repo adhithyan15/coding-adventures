@@ -14,7 +14,8 @@ romanization: "vīraḥ"
 concept_tag: SA-QUAL129-VIRAH
 prerequisites: [SA-C129-navinah, SA-C129-pracinah]
 sounds: []
-roots: []
+roots: [sanskrit-vira]
+etymology_hook: "vīra 'man, hero' is inherited from Indo-European, the same word as Latin vir 'man', cf. virile (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C129-pracinah]
 <!-- hl-knowledge: introduces=[SA-LEX-C129-QUAL129-04]; assesses=[] -->
 
 **वीरः** — *vīraḥ* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vīra* "a man, a hero" is inherited from Indo-European: Latin *vir* "man", the source of English *virile*, is the same word (EtymDB). It lives on as Punjabi *vīr* "hero" and *vīrā* "brother" (CDIAL 12056).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C365-ingiusto",
+  "pathSegment": "IT-PATH-365-GIUSTIZIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-365-GIUSTIZIA",
+      "order": 1
+    }
+  ]
+}

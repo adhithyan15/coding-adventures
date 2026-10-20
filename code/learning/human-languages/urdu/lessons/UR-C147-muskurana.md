@@ -14,7 +14,8 @@ romanization: "muskurānā"
 concept_tag: UR-VERB-MUSKURANA
 prerequisites: [UR-C147-yad-karna, UR-C147-chikhna]
 sounds: []
-roots: []
+roots: [indo-aryan-muss]
+etymology_hook: "muskurānā ← *muss 'smile, sob', a reconstructed form; a tadbhava (CDIAL 10227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C147-chikhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C147-ACT147-04]; assesses=[] -->
 
 **مسکرانا** — *muskurānā* — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسکرانا** (*muskurānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*muss*, "smile, sob", a form CDIAL reconstructs from its descendants (CDIAL 10227). CDIAL notes an added *-k-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

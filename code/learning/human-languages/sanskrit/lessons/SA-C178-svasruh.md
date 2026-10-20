@@ -14,7 +14,8 @@ romanization: "śvaśrūḥ"
 concept_tag: SA-PPL178-SVASRUH
 prerequisites: [SA-C178-matulani, SA-C178-svasurah]
 sounds: []
-roots: []
+roots: [sanskrit-shvashru]
+etymology_hook: "śvaśrū ← the feminine of śvaśura, inherited: MW compares Latin socrus, German Schwieger; Hindi sās (CDIAL 12759)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C178-svasurah]
 <!-- hl-knowledge: introduces=[SA-LEX-C178-PPL178-03]; assesses=[] -->
 
 **श्वश्रूः** — *śvaśrūḥ* — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śvaśrū* is the feminine partner of *śvaśura*, "father-in-law" (MW). It is inherited too: MW compares Latin *socrus* and German *Schwieger-*, both "mother-in-law". It lives on as Hindi *sās* (CDIAL 12759).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

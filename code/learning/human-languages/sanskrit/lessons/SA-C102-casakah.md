@@ -14,7 +14,8 @@ romanization: "caṣakaḥ"
 concept_tag: SA-THINGS102-CASAKAH
 prerequisites: [SA-C101-syutah, SA-C102-sthali]
 sounds: []
-roots: []
+roots: [sanskrit-cashaka]
+etymology_hook: "caṣaka 'cup, wine-glass' is perhaps borrowed from Iranian (CDIAL 4726a, after EWA)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C102-sthali]
 <!-- hl-knowledge: introduces=[SA-LEX-C102-THINGS102-02]; assesses=[] -->
 
 **चषकः** — *caṣakaḥ* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*caṣaka* "a cup, a wine-glass" belongs to classical poetry (MW). CDIAL 4726a, after EWA, takes it as borrowed from Iranian, while EtymDB links it with a root √caṣ "eat", so its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

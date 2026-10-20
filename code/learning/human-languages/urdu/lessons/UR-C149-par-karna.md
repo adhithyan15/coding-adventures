@@ -14,7 +14,8 @@ romanization: "pār karnā"
 concept_tag: UR-VERB-PAR-KARNA
 prerequisites: [UR-C148-qarz-dena, UR-C148-bachana]
 sounds: []
-roots: []
+roots: [sanskrit-para-bank, kr-do]
+etymology_hook: "pār 'the far side' ← Sanskrit pāra (CDIAL 8100); karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C148-bachana]
 <!-- hl-knowledge: introduces=[UR-LEX-C149-ACT149-01]; assesses=[] -->
 
 **پار کرنا** — *pār karnā* — "to cross".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پار کرنا** (*pār karnā*) is "to do the far side". *pār* comes from Sanskrit *pāra*, "the further bank" (CDIAL 8100), and *karnā* from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

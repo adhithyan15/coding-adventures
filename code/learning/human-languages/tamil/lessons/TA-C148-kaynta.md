@@ -14,7 +14,8 @@ romanization: "kāynta"
 concept_tag: TA-QUAL148-KAYNTA
 prerequisites: [TA-C148-akalamana, TA-C148-kurukiya]
 sounds: []
-roots: []
+roots: [dravidian-kaay-heat]
+etymology_hook: "காய்ந்த — native Dravidian (DEDR 1458); Malayalam kāyuka 'to grow dry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C148-kurukiya]
 <!-- hl-knowledge: introduces=[TA-LEX-C148-QUAL148-04]; assesses=[] -->
 
 **காய்ந்த** — *kāynta* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காய்ந்த** (*kāynta*) is native Dravidian. DEDR 1458 lists Malayalam *kāyuka*, "to grow dry". It comes from *kāy*, "to grow hot, to dry up". The entry compares Sanskrit (lexicons) *kāhala*, "dry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

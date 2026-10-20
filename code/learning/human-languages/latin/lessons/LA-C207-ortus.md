@@ -13,7 +13,8 @@ gloss: "sunrise; a rising"
 concept_tag: LA-TEMP207-ORTUS
 prerequisites: [LA-C207-aetas, LA-C207-occasus]
 sounds: []
-roots: []
+roots: [ortus-latin, oriri-latin]
+etymology_hook: "ortus 'sunrise' — built on orior 'to rise'; English orient"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C207-occasus]
 <!-- hl-knowledge: introduces=[LA-LEX-C207-TEMP207-04]; assesses=[] -->
 
 **ortus, ortūs** — "sunrise; a rising".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ortus** is built on *orior*, "to rise" (Lewis & Short): the sun's rising. English *orient*, "the east", comes from the same verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

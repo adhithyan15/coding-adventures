@@ -14,7 +14,8 @@ romanization: "aṣlī"
 concept_tag: AR-SIFA240-ASLI
 prerequisites: [AR-C240-muattal, AR-C240-jahiz]
 sounds: []
-roots: []
+roots: [ʾ-ṣ-l]
+etymology_hook: "aṣlī: built on the root ʾ-ṣ-l, 'a root, an origin' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C240-jahiz]
 <!-- hl-knowledge: introduces=[AR-LEX-C240-SIFA240-03]; assesses=[] -->
 
 **أصلي** — *aṣlī* — "genuine, original".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أصلي** (*aṣlī*) is built on the native Arabic root *ʾ-ṣ-l*, "a root, an origin" (Lane). *Aṣlī* is *aṣl*, "root, origin", with the adjective ending *-ī*: "original".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

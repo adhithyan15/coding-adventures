@@ -149,7 +149,7 @@ Malayalam took in a great deal of Sanskrit. Eating is one of the places it never
 You'll want to know.
 തിന്നുക — tinnuka — to eat.
 ഉണ്ണുക — uṇṇuka — to eat a meal, to dine.
-Two inherited verbs, both alive. Tinnuka is eating in general. Uṇṇuka is sitting down to a proper meal, and gives the noun ഊണ് (ūṇŭ), "lunch." The tenses are regular: tinnunnu, tinnu, tinnuṁ.
+Two inherited verbs, both alive. Tinnuka is eating in general. Uṇṇuka is sitting down to a proper meal, and gives the everyday noun for lunch, which comes later. The tenses are regular: tinnunnu, tinnu, tinnuṁ.
 
 Sounds you'll need: the letters in this word.
 തി (ti) + ന്നു (a doubled nn with u) + ക (ka) becomes തിന്നുക (tinnuka), with the long n you held in vannu. In ഉണ്ണുക that doubled letter is retroflex ണ്ണ (ṇṇ): uṇ-ṇu-ka.
@@ -237,7 +237,7 @@ Five verbs, and every one let you stand in front of it as ñān, "I." The last o
 You'll want to know.
 അറിയുക — aṟiyuka — to know.
 Present aṟiyunnu, past അറിഞ്ഞു (aṟiññu), and the form you have met: അറിയാം (aṟiyāṁ), with the -āṁ ending of the last lesson.
-Native Dravidian, and the sisters kept the root — Tamil அறி (aṟi), Kannada ಅರಿ (ari) — though for everyday knowing each reached elsewhere: Tamil தெரியும் (teriyum), Telugu తెలుసు (telusu). Malayalam stayed with aṟi-.
+Native Dravidian (DEDR 314), cognate with Tamil and Kannada; the sisters kept the root — Tamil அறி (aṟi), Kannada ಅರಿ (ari) — though for everyday knowing each reached elsewhere: Tamil தெரியும் (teriyum), Telugu తెలుసు (telusu). Malayalam stayed with aṟi-.
 
 Sounds you'll need: the letters in this word.
 അ (the standing vowel a) + റി (ṟi) + യു (yu) + ക (ka) becomes അറിയുക (aṟiyuka). The റ is Malayalam's hard, tapped ṟ, a different letter and a different sound from the soft ര (r) of varuka.

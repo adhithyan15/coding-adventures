@@ -14,7 +14,8 @@ romanization: "bhāgnā"
 concept_tag: HI-VERB-BHAGNA
 prerequisites: [HI-C171-rukna, HI-C172-rokna]
 sounds: []
-roots: []
+roots: [sanskrit-bhajyate]
+etymology_hook: "bhāgnā ← Sanskrit bhagna 'broken, defeated', the past form CDIAL lists under bhajyate (9361)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C172-rokna]
 <!-- hl-knowledge: introduces=[HI-LEX-C172-ACT172-02]; assesses=[] -->
 
 **भागना** — *bhāgnā* — "to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भागना** (*bhāgnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhagna*, "broken, defeated", the past participle that CDIAL lists in its entry for *bhajyate*, "is broken" (CDIAL 9361). Bloch linked the sense "flee" with a different old verb; CDIAL finds that unnecessary, since "broken" could come to mean "routed, fled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

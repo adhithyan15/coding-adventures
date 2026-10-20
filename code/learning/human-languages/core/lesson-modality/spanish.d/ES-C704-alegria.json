@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C704-alegria",
+    "language": "spanish",
+    "chapter": 704,
+    "sequence": 25100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca81303939089175"
+  },
+  "findings": []
+}

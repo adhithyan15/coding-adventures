@@ -12,7 +12,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [PA-W09-aunkar]
 sounds: [pair-bindi-sh, aunkar-u, kanna-aa]
 roots: [sanskrit-shubha, sanskrit-ratri]
-etymology_hook: the first word is Sanskrit śubha, "auspicious, splendid, good", and ਰਾਤ descends from Sanskrit ratri, "night" — so the whole parting is Sanskritic on both halves, which is unusual in a book whose farewells have been Arabic (rabb rākhā's rabb) and Persian by turns. It is also the formal register: in ordinary Punjabi speech rabb rākhā or an English good night is heard far more often, and a learner should know which room this phrase belongs in.
+etymology_hook: 'the first word is Sanskrit śubha, "auspicious, splendid, good", and ਰਾਤ descends from Sanskrit ratri, "night" — so the whole parting is Sanskritic on both halves, which is unusual in a book whose farewells have been Arabic (rabb rākhā''s rabb) and Persian by turns. It is also the formal register: in ordinary Punjabi speech rabb rākhā or an English good night is heard far more often, and a learner should know which room this phrase belongs in.'
 duration:
   max_seconds: 290
 requires:

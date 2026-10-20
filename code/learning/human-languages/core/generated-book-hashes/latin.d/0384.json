@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:73357b3fced11c94",
+  "lessonIds": [
+    "LA-C384-suffragium",
+    "LA-C384-comitia",
+    "LA-C384-candidatus",
+    "LA-C384-ambitio",
+    "LA-C384-eligo"
+  ],
+  "tex": "latin/book/chapters/ch384-elections.tex"
+}

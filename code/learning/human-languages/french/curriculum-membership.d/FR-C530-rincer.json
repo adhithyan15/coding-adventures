@@ -1,0 +1,11 @@
+{
+  "id": "FR-C530-rincer",
+  "pathSegment": "FR-PATH-530-VAISSELLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-530-VAISSELLE",
+      "order": 2
+    }
+  ]
+}

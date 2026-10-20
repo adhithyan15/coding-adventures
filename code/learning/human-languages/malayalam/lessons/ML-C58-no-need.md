@@ -11,7 +11,8 @@ romanization: "vēṇṭa"
 concept_tag: ML-WORD-NO-NEED
 prerequisites: [ML-C58-venam, ML-C58-a-little, ML-C56-vessel]
 sounds: []
-roots: []
+roots: [dravidian-vendu-want]
+etymology_hook: "vēṇṭa: native Dravidian, the negative of the same verb as vēṇaṁ; Tamil vēṇṭu (DEDR 5528)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The negative partner of വേണം (*vēṇaṁ*), "it is wanted". വേണ�
 This is the polite refusal at a Kerala meal, and it is said often, because the serving is persistent. Said gently it declines; said firmly it stops the ladle. A guest who has learned only one refusal in Malayalam should learn this one.
 
 Note that it declines the offer rather than the person. Malayalam has warmer ways of saying no to a request, and this one keeps to food, drink and objects.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേണ്ട** (*vēṇṭa*) is native Dravidian, the negative of the same verb as *vēṇaṁ*; DEDR 5528 lists the root with Tamil *vēṇṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

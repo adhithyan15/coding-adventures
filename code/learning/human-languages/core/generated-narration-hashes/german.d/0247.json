@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 247,
-  "sourceHash": "fnv1a64:2593f37a30df0d05",
+  "sourceHash": "fnv1a64:884c873c44ba571e",
   "lessonIds": [
     "GE-C247-bestehen",
     "GE-C247-beweisen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch247.txt",
   "json": "german/narration/ch247.json",
-  "textHash": "fnv1a64:e075d32b171d9376",
-  "jsonHash": "fnv1a64:ff5139ed150f2934",
+  "textHash": "fnv1a64:d992560f6b56f24d",
+  "jsonHash": "fnv1a64:0009d9f3bef9fa70",
   "findings": []
 }

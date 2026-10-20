@@ -14,7 +14,8 @@ romanization: "minikui"
 concept_tag: JA-QUAL128-MINIKUI
 prerequisites: [JA-C128-isamashii, JA-C128-komakai]
 sounds: []
-roots: []
+roots: [japanese-minikui]
+etymology_hook: "minikui: native Japanese, inherited, not borrowed; kanji 醜い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C128-komakai]
 <!-- hl-knowledge: introduces=[JA-LEX-C128-QUAL128-05]; assesses=[] -->
 
 **みにくい** — *minikui* — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みにくい** (*minikui*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict also writes it with "see" and "hateful", which matches the usual account, *mi*, "to see", and *nikui*, "hateful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

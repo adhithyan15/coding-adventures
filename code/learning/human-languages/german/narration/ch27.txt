@@ -46,6 +46,9 @@ die Jahre — the plural of das Jahr.
 The plural adds -e and takes die, as plurals do, and it stays capitalised because German capitalises every noun in every number.
 Here is why it matters. The age sentence counts, and a count takes a plural: you are so many Jahre old, never so many Jahr. From here on it is Jahre that does the work, and das Jahr that sits behind it.
 
+The word, taken apart.
+Jahre is the plural of Jahr from Old High German jār from Proto-Germanic jērą — inherited, the same word as English year. (EtymDB 2.1).
+
 Sounds you'll need.
 j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar.
 h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is.
@@ -112,6 +115,9 @@ That is not a coincidence to be grateful for; it is inheritance. Neither languag
 The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind.
 To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb.
 
+The phrase, taken apart.
+alt from Old High German alt from Proto-Germanic aldaz — inherited, the same word as English old. (EtymDB 2.1) The other three words are inherited too.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "Wie alt bist du?"]
@@ -140,6 +146,9 @@ Ich bin zwanzig Jahre alt. — "I am twenty years old."
 Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours.
 And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as "I'm twenty" is — the Jahre alt can go, and in speech usually does.
 Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson.
+
+The phrase, taken apart.
+alt from Old High German alt from Proto-Germanic aldaz, English old; Jahre from Old High German jār from Proto-Germanic jērą, English year. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -213,7 +222,7 @@ Wie alt bist du? means How old are you?
 Zwanzig Jahre alt. Und du? means Twenty years old. And you?
 Ich bin achtzehn. means I am eighteen.
 Und du bist müde. means And you are tired.
-Aber nicht alt! means But not old!
+Müde, nicht alt! means Tired, not old!
 Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share.
 
 Guided Practice.

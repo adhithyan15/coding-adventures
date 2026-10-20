@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 207,
-  "sourceHash": "fnv1a64:90ab403a8dc35660",
+  "sourceHash": "fnv1a64:f037381953239239",
   "lessonIds": [
     "TE-C207-callarcu",
     "TE-C207-tattu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch207.txt",
   "json": "telugu/narration/ch207.json",
-  "textHash": "fnv1a64:e2f7dba4346dacbf",
-  "jsonHash": "fnv1a64:dbbd11b995c9f878",
+  "textHash": "fnv1a64:9240bd7b9c2aea82",
+  "jsonHash": "fnv1a64:cff171c9f2b34a69",
   "findings": []
 }

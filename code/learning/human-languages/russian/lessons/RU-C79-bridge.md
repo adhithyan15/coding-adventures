@@ -14,7 +14,8 @@ romanization: "most"
 concept_tag: RU-TRAVEL-BRIDGE
 prerequisites: [RU-C79-plane, RU-C79-car]
 sounds: []
-roots: []
+roots: [slavic-mostu]
+etymology_hook: "мост ← Proto-Slavic *mostŭ; a Germanic source is doubtful, Vasmer says"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C79-car]
 <!-- hl-knowledge: introduces=[RU-LEX-C79-TRAVEL-05]; assesses=[] -->
 
 **мост** (*most*) — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мост** ← Proto-Slavic *\*mostŭ*, "bridge; a plank floor" — inherited. Vasmer finds a Germanic source unreliable but compares Old High German *mast*, "a pole", so the deeper origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

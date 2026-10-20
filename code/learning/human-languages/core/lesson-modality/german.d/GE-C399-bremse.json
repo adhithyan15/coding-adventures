@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C399-bremse",
+    "language": "german",
+    "chapter": 399,
+    "sequence": 21580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13fe06ba17053d0b"
+  },
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "the economy"
 concept_tag: GE-THING209-WIRTSCHAFT
 prerequisites: [GE-C209-partei, GE-C209-politik]
 sounds: []
-roots: []
+roots: [germanic-werduz]
+etymology_hook: "Wirtschaft — Wirt 'host, landlord' + -schaft: running a household, then the economy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C209-politik]
 <!-- hl-knowledge: introduces=[GE-LEX-C209-THING209-05]; assesses=[] -->
 
 **die Wirtschaft** — "the economy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wirtschaft** is the word for "host, landlord", Old High German *wirt* ← Proto-Germanic *\*werduz*, + *-schaft* (EtymDB 2.1): first running a household or an inn, then the whole economy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

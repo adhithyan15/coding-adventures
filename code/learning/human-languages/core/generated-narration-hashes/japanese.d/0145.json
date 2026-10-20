@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:b9d467a7231320d7",
+  "lessonIds": [
+    "JA-W145-four-lines"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch145.txt",
+  "json": "japanese/narration/ch145.json",
+  "textHash": "fnv1a64:dc07daefbfec7820",
+  "jsonHash": "fnv1a64:1753c0556883c0d2",
+  "findings": []
+}

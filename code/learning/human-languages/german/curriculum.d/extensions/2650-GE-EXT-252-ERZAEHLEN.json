@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-252-ERZAEHLEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell what happened in the Präteritum with ich ging, ich kam and ich las, and place one event in the past with als.",
+  "prerequisites": []
+}

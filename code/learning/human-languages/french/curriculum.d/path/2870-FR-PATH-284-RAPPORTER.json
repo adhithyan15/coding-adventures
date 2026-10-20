@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-284-RAPPORTER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-284-RAPPORTER"
+  ],
+  "after": []
+}

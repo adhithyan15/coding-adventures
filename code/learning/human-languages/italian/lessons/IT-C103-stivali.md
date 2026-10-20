@@ -14,6 +14,7 @@ concept_tag: IT-VESTITI103-STIVALI
 prerequisites: [IT-C103-guanti, IT-C103-sciarpa]
 sounds: []
 roots: []
+etymology_hook: "stivali ← Old French estival, from Latin aestivus 'of summer': a summer boot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C103-sciarpa]
 <!-- hl-knowledge: introduces=[IT-LEX-C103-VESTITI103-05]; assesses=[] -->
 
 **gli stivali** — "boots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stivali** is the plural of *stivale* ← Old French *estival* — borrowed; behind it is Medieval Latin *aestivale*, a summer boot, from *aestivus*, "of summer". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

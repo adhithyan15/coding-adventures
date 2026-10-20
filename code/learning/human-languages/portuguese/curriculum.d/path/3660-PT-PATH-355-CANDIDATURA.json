@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-355-CANDIDATURA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-355-CANDIDATURA"
+  ],
+  "after": []
+}

@@ -13,7 +13,8 @@ gloss: "to cook"
 concept_tag: FR-VERB-CUISINER
 prerequisites: [FR-C60-pleurer, FR-C60-laver]
 sounds: []
-roots: []
+roots: [coquere-latin]
+etymology_hook: "cuisiner — from the word for 'kitchen' ← Latin coquina, from coquere 'to cook' — English cook"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C60-laver]
 <!-- hl-knowledge: introduces=[FR-LEX-C60-VERBES12-03]; assesses=[] -->
 
 **cuisiner** — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cuisiner** — built from the French word for "kitchen, cooking", which ← Vulgar Latin *\*cocina* ← Latin *coquina*, "kitchen", from *coquere*, "to cook". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

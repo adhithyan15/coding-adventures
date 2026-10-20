@@ -14,7 +14,8 @@ romanization: "kauṛā"
 concept_tag: PA-QUAL143-KAURA
 prerequisites: [PA-C143-ganda, PA-C143-khatta]
 sounds: []
-roots: []
+roots: [sanskrit-katuka]
+etymology_hook: "kauṛā ← Sanskrit kaṭuka 'pungent, bitter', a tadbhava (CDIAL 2641)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C143-khatta]
 <!-- hl-knowledge: introduces=[PA-LEX-C143-QUAL143-04]; assesses=[] -->
 
 **ਕੌੜਾ** — *kauṛā* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੌੜਾ** (*kauṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭuka*, "pungent, bitter" (CDIAL 2641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:ea7ece39c62617f9",
+  "lessonIds": [
+    "SA-C267-school-recall",
+    "SA-C267-exam-time",
+    "SA-C267-homework-plan",
+    "SA-C267-complete-school-plan",
+    "SA-C267-mixed-school-practice",
+    "SA-C267-school-plan-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch267-one-small-school-day-plan.tex"
+}

@@ -14,7 +14,8 @@ romanization: "kāmgār"
 concept_tag: MR-VASTU210-KAMGAR
 prerequisites: [MR-C210-khatik, MR-C210-karagir]
 sounds: []
-roots: []
+roots: [sanskrit-karman, persian-gar]
+etymology_hook: "kāmgār: kām 'work' ← karman (CDIAL 2892) + -gār 'doer', usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C210-karagir]
 <!-- hl-knowledge: introduces=[MR-LEX-C210-VASTU210-04]; assesses=[] -->
 
 **कामगार** — *kāmgār* — "a worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कामगार** (*kāmgār*) is *kām*, "work", from Sanskrit *karman*, "act, work" (CDIAL 2892), with *-gār*, "one who does", an ending usually traced to Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

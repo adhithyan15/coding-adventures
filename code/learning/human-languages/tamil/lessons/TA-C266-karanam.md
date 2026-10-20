@@ -14,7 +14,8 @@ romanization: "kāraṇam"
 concept_tag: TA-KARANAM266-KARANAM
 prerequisites: [TA-C266-tarceyalaka, TA-C266-atirstavacamaka]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "காரணம் ← Sanskrit kāraṇa 'cause' (CDIAL 3057)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C266-atirstavacamaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C266-KARANAM266-05]; assesses=[] -->
 
 **காரணம்** — *kāraṇam* — "a reason, a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காரணம்** (*kāraṇam*) is a loan from Sanskrit *kāraṇa*, "cause" (CDIAL 3057).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

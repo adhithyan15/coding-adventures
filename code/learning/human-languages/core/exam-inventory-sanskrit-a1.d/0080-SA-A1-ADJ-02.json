@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-ADJ-02",
+  "category": "Viśeṣaṇa — the adjective",
+  "label": "relational adjectives: the gentilic, saying what country or people someone belongs to",
+  "probe": [
+    "SA-LEX-C59-ORIGIN-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-02"
+  ],
+  "note": "Closed by SA-C59-bharatiyah: `bhāratīyaḥ`, taught as the -iya suffix applied to a place name rather than as one word to memorise, and agreeing by the chapter-15 adjective rule."
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C453-ductor",
+    "language": "latin",
+    "chapter": 453,
+    "sequence": 24130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17ae810df733433b"
+  },
+  "findings": []
+}

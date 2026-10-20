@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:491d0b6c36c6bff7",
+  "sourceHash": "fnv1a64:7abbd3001de5c60c",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21b372226941f516",
+      "sourceHash": "fnv1a64:b8819906d007ea29",
       "notice": null,
       "blocks": [
         {
@@ -65,24 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "That root travelled. Latin limbus is a hanging border or hem, and English took it twice:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "the hanging thing"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "word: limb. the hanging thing: what hangs off the trunk.",
-                "word: limbo. the hanging thing: the edge, the hem of things."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So लंबा (lambā) and English limb are the same old idea about hanging, arrived at from opposite ends of a continent."
+              "text": "CDIAL glosses the Sanskrit word \"pendent\", and notes that Sanskrit already used it for \"long\" in compounds (CDIAL 10951)."
             }
           ]
         },
@@ -151,20 +134,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"लंबा (lambā) रास्ता\" — a long road, the same word doing the other job",
+              "instruction": "\"लंबा (lambā) दिन\" — a long day, the same word doing the other job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"लंबा रास्ता\" — a long road, the same word doing the other job]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which English word for an arm or a leg comes from the same root (limb)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which English word for an arm or a leg comes from the same root (*limb*)]"
+              "source": "[YOU SAY: \"लंबा दिन\" — a long day, the same word doing the other job]"
             }
           ]
         },
@@ -193,14 +167,14 @@
       "title": "पतला (patlā) — thin, and a root that fell over",
       "headword": "पतला",
       "romanization": "patlā",
-      "gloss": "thin — Sanskrit for what has fallen flat, and the word Hindi uses for a thin person, a thin sheet and a thin soup alike",
+      "gloss": "thin — Sanskrit for leaf-like, and the word Hindi uses for a thin person, a thin sheet and a thin soup alike",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3099aa7ad53e7d75",
+      "sourceHash": "fnv1a64:efb6868c40772d18",
       "notice": null,
       "blocks": [
         {
@@ -242,23 +216,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पतला (patlā) goes back to Sanskrit पत्र and the root पत् (pat), \"to fall.\" A thin thing is one that has fallen flat — flattened out until there is hardly anything left of it."
+              "text": "पतला (patlā) goes back to Sanskrit pattrala, \"leafy\", which CDIAL takes to have meant \"leaf-like, thin\" (CDIAL 7736). It is built on पत्र (pattra), \"leaf\" (first \"wing-feather\"), from the root पत् (pat), \"to fly\". A thin thing is as flat as a leaf."
             },
             {
               "kind": "speech",
-              "text": "The same root is sitting in two Hindi words you may already recognise:"
+              "text": "The leaf word is still in everyday Hindi:"
             },
             {
               "kind": "table",
               "headers": [
                 "word",
-                "the falling in it"
+                "what it is"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "word: पत्ता (pattā). the falling in it: a leaf — the thing that falls.",
-                "word: patjhaṛ. the falling in it: autumn — literally the leaf-fall."
+                "word: पत्ता (pattā). what it is: a leaf.",
+                "word: patjhaṛ. what it is: autumn: pat, \"leaf\", with jhaṛ, \"fall\"."
               ]
             },
             {
@@ -354,7 +328,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did the Sanskrit root पत् mean? (To fall.) What is a thin thing, by that picture? (Something flattened, fallen out flat.) Which English name for autumn matches the Hindi one? (Fall.)"
+              "text": "What did pattrala, behind पतला (patlā), mean? (Leafy, leaf-like.) What is a thin thing, by that picture? (Something as flat as a leaf.) Which English name for autumn matches the Hindi one? (Fall.)"
             }
           ]
         }
@@ -373,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5acdf67a5824bf7d",
+      "sourceHash": "fnv1a64:94847149bb92dfec",
       "notice": null,
       "blocks": [
         {
@@ -435,7 +409,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोटा (moṭā) is from Sanskrit मूर्त by way of Prakrit, carrying the sense of something solid, with body to it — a shape that has taken form rather than staying an outline."
+              "text": "मोटा (moṭā) comes from a reconstructed mōṭṭa, one of a group of related forms that CDIAL heads muṭṭa, \"defective\" (CDIAL 10187): words for things stumpy, blunt or lumpish. CDIAL glosses the Hindi word \"fat\", and it means something thick, with body to it."
             },
             {
               "kind": "speech",
@@ -550,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6c7280ffedae163",
+      "sourceHash": "fnv1a64:749b85b6af8d2cca",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +588,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit नत (nata) is behind it, meaning bent, bowed, stooping — the same root as namaste, where the bowing is a greeting. A nāṭā person is pictured as one closer to the ground."
+              "text": "CDIAL traces it to a reconstructed naṭṭa, \"defective\", one of its groups of words for things stunted or lacking, and glosses the Hindi word \"short, dwarfish\" (CDIAL 6935)."
             },
             {
               "kind": "speech",
@@ -711,7 +685,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why can choṭā not mean short about a person? (About a person it means younger.) What did the Sanskrit root behind नाटा (nāṭā) mean? (Bent or bowed — the same idea as the bow in namaste.)"
+              "text": "Why can choṭā not mean short about a person? (About a person it means younger.) What does CDIAL reconstruct behind नाटा (nāṭā)? (naṭṭa, \"defective\": something stunted.)"
             }
           ]
         }

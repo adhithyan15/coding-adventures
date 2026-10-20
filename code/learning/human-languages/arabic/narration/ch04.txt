@@ -31,7 +31,7 @@ So the round O you write is a Phoenician eye, and Arabic's ʿayn is the same sig
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — Where you've heard it.
-You have been saying this sound since Chapter 1: السلام عليكم (as-salāmu ʿalaykum) — the ʿ in ʿalaykum is this letter. And the farewell you'll write two lessons from now, مع السلامة (as-salāma) (maʿa s-salāma), opens with it.
+You have been saying this sound since Chapter 1: السلام عليكم (as-salāmu ʿalaykum) — the ʿ in ʿalaykum is this letter. And the farewell you'll write two lessons from now opens with it.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -72,7 +72,7 @@ Now look carefully at this:
 ة = the same loop + tāʾ's two dots above.
 Its name says exactly what it is: tāʾ marbūṭa, "the tied-up tāʾ" — a ت (tāʾ, Lesson 4) whose ends have been tied into a loop. It appears only at the end of a word, and it is the standard mark of a feminine noun or adjective.
 You already know its partner: back in Lesson 4 you learned ت with two dots above. Put those same two dots on a hāʾ loop and you get the feminine ending. Nothing new to memorise — just two known pieces combined.
-Where you've seen it: the farewell مع السلامة (as-salāma) (maʿa s-salāma) ends in ة — salāma is feminine. That's the next lesson.
+Where you'll see it: the farewell you write in the next lesson ends in ة — its last word is feminine.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -86,7 +86,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What makes ه unusual among the letters you've learned? (Its loop changes shape dramatically by position — four very different coats.) What is ة made of, and what does its name mean? (hāʾ's loop + tāʾ's two dots; "tied tāʾ".) What does ة tell you about a word, and where can it appear? (That it is feminine; only at the end.) Next: assembling the farewell مع السلامة (as-salāma) (maʿa s-salāma).
+What makes ه unusual among the letters you've learned? (Its loop changes shape dramatically by position — four very different coats.) What is ة made of, and what does its name mean? (hāʾ's loop + tāʾ's two dots; "tied tāʾ".) What does ة tell you about a word, and where can it appear? (That it is feminine; only at the end.) Next: assembling the farewell.
 
 
 Lesson 3 of 8.
@@ -121,7 +121,7 @@ salām, salāma, islām, muslim — all from the Semitic root s–l–m, "peace,
 Script — Assemble it — right to left.
 م then ع (ʿayn) becomes مع (maʿa).
 lift; ا + ل (the al-), the lām joining into…
-س, ل, ا — and remember the لا ligature, and that alif breaks…
+س, ل, ا — and remember the ligature, ل + ا becomes لا, and that alif breaks…
 م, then ة to close.
 becomes مع السلامة (as-salāma) (maʿa s-salāma).
 
@@ -162,7 +162,7 @@ It is a preposition, and unlike الـ (al-) or بـ (bi-) from Chapter 3, it is
 So Arabic has two words touching on "with": the one-letter بـ (bi-, "in/by means of," as in bi-khayr) and the full word مع (maʿa, "accompanied by"). Bi-khayr is "in goodness"; maʿa is standing next to something.
 
 Why it's said this way — The Semitic cousin.
-maʿa from Semitic ʿimma, and its Hebrew cousin is עִם (ʿim), "with." The same pairing you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2. Three chapters, three cousins — the family resemblance is systematic, not a coincidence.
+maʿa is usually set beside Hebrew עִם (ʿim), "with", though how the two are linked is debated. Compare the sure pairings you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2: there the family resemblance is systematic, not a coincidence.
 
 Guided Practice.
 [pause 1 second]
@@ -204,6 +204,9 @@ Same three consonants, one new shape, a new but related word. This is the engine
 You'll want to know — Two small rules, both already learned.
 1. The sun letter. S (س) is a sun letter, so the l of al- assimilates to it: written الس, but said as-salāma, not al-salāma. The same thing happens in السلام عليكم — the greeting you have said since Chapter 1.
 2. The feminine ة. Tāʾ marbūṭa marks salāma as feminine. Arabic abstract nouns very often are.
+
+The word, taken apart.
+السلامة (as-salāma) is salāma, "safety, soundness", built on the native root s-l-m, "to be safe, whole" (Lane), with the article al-.
 
 Guided Practice.
 [pause 1 second]

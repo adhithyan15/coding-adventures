@@ -6,7 +6,7 @@ sequence: 940
 chapter: 43
 type: word
 headword: emō, emere
-gloss: "I buy" — a verb that once meant simply "I take", which is the only reason redeem, example and premium mean what they do
+gloss: '"I buy" — a verb that once meant simply "I take", which is the only reason redeem, example and premium mean what they do'
 concept_tag: VERB-BUY
 prerequisites: [LA-C43-convenio, LA-C43-respondeo, LA-C42-accipio, LA-C37-do]
 sounds: [macron-none-short-vowel, macron-long-vowel]

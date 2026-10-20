@@ -11,7 +11,8 @@ romanization: "nilā"
 concept_tag: TA-NOUN-MOON
 prerequisites: [TA-C51-sun, TA-C49-gladness, TA-C50-flower]
 sounds: []
-roots: []
+roots: [dravidian-nilaa-moon]
+etymology_hook: "நிலா — native Dravidian (DEDR 3754); Malayalam nilā, Telugu nela"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C51-sun]
 Where both sisters took the Sanskrit moon — *candran* in Malayalam, *candruḍu* in Telugu — Tamil's everyday moon is its own. நிலா is inherited, and it is the moon as light rather than as a body: *nilā* is what lies on a courtyard at night, the moonlight and the moon in one word. Tamil has *cantiraṉ* as well, from the same Sanskrit its sisters took, and saves it for almanacs and for verse.
 
 Let the ஆ at the end run long. It is the length that makes the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிலா** (*nilā*) is native Dravidian. DEDR 3754 lists Malayalam *nilā* and Telugu *nela*. The entry glosses it "moonlight, moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

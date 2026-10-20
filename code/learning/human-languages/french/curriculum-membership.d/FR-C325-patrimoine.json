@@ -1,0 +1,11 @@
+{
+  "id": "FR-C325-patrimoine",
+  "pathSegment": "FR-PATH-325-PASSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-325-PASSE",
+      "order": 2
+    }
+  ]
+}

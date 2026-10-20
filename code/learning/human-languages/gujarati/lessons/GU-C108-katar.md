@@ -14,7 +14,8 @@ romanization: "kātar"
 concept_tag: GU-THINGS108-KATAR
 prerequisites: [GU-C108-vasan, GU-C108-chari]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "kātar ← Sanskrit kartari 'scissors, knife', a tadbhava (CDIAL 2858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C108-chari]
 <!-- hl-knowledge: introduces=[GU-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **કાતર** (*kātar*) — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાતર** (*kātar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kartari*, "scissors, knife" (CDIAL 2858).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

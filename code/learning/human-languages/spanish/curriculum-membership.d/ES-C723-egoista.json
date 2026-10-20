@@ -1,0 +1,11 @@
+{
+  "id": "ES-C723-egoista",
+  "pathSegment": "ES-PATH-723-GENEROSO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-723-GENEROSO",
+      "order": 1
+    }
+  ]
+}

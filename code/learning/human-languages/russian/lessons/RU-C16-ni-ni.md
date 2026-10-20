@@ -11,8 +11,8 @@ concept_tag: RU-JOIN-NEITHER
 romanization: "ni … ni …"
 prerequisites: [RU-C16-ili]
 sounds: []
-roots: [ne]
-etymology_hook: "ни is не with a different vowel — the negator you have used since the first verbs, wearing the coat it wears when it has to appear twice"
+roots: [pie-ne]
+etymology_hook: "ни is не with a different vowel — the negator you have used since the first verbs, in the coat it wears doubled"
 duration:
   max_seconds: 250
 requires:

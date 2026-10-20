@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:95a64ef1bbf63a58",
+  "lessonIds": [
+    "PT-C502-pescar",
+    "PT-C502-pesca",
+    "PT-C502-isca",
+    "PT-C502-anzol",
+    "PT-C502-cacar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch502.txt",
+  "json": "portuguese/narration/ch502.json",
+  "textHash": "fnv1a64:bbb4dbbcade9cbc9",
+  "jsonHash": "fnv1a64:b14f3ae969f9952b",
+  "findings": []
+}

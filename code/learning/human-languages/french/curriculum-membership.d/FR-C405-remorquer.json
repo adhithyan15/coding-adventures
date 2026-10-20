@@ -1,0 +1,11 @@
+{
+  "id": "FR-C405-remorquer",
+  "pathSegment": "FR-PATH-405-DEPANNEUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-405-DEPANNEUSE",
+      "order": 3
+    }
+  ]
+}

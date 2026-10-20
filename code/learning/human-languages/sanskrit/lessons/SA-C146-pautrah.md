@@ -14,7 +14,8 @@ romanization: "pautraḥ"
 concept_tag: SA-PPL146-PAUTRAH
 prerequisites: [SA-C145-kujati, SA-C145-jalpati]
 sounds: []
-roots: []
+roots: [sanskrit-pautra]
+etymology_hook: "pautra 'grandson' ← putra 'son' with lengthened vowel: 'the son's' (MW; CDIAL 8416); Hindi potā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C145-jalpati]
 <!-- hl-knowledge: introduces=[SA-LEX-C146-PPL146-01]; assesses=[] -->
 
 **पौत्रः** — *pautraḥ* — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pautra* is built from *putra* "son" with its first vowel strengthened to *au*: "belonging to a son", a son's son (MW; CDIAL 8416). It lives on as Hindi *potā* "grandson" (CDIAL 8416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

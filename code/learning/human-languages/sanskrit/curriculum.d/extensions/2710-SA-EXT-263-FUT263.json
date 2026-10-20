@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-263-FUT263",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that I will go tomorrow and distinguish my plan from a third-person future.",
+  "prerequisites": [
+    "SA-EXT-262-OBJ262"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 708,
+  "title": "Celos y envidia",
+  "label": "ch:es-celos-y-envidia",
+  "canDo": "I can talk about jealousy and envy between friends and partners.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C708-rencor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 708: I can talk about jealousy and envy between friends and partners.",
+    "assesses": [
+      "ES-LEX-C708-CELOS-03",
+      "ES-LEX-C708-CELOS-04",
+      "ES-LEX-C708-CELOS-05"
+    ]
+  }
+}

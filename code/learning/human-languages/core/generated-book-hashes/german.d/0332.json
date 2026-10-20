@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:3075cb666b7e6561",
+  "lessonIds": [
+    "GE-C332-begruenden",
+    "GE-C332-begruendung",
+    "GE-C332-naemlich",
+    "GE-C332-zumal",
+    "GE-C332-erlaeutern"
+  ],
+  "tex": "german/book/chapters/ch332-grunde-nennen.tex"
+}

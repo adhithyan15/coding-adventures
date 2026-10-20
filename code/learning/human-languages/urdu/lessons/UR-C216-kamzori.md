@@ -14,7 +14,8 @@ romanization: "kamzorī"
 concept_tag: UR-SEHAT216-KAMZORI
 prerequisites: [UR-C216-nind, UR-C216-khvab]
 sounds: []
-roots: []
+roots: [persian-kamzor]
+etymology_hook: "kamzorī: kamzor 'weak', usually traced to Persian kamzōr, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C216-khvab]
 <!-- hl-knowledge: introduces=[UR-LEX-C216-SEHAT216-05]; assesses=[] -->
 
 **کمزوری** — *kamzorī* — "weakness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کمزوری** (*kamzorī*) is *kamzor*, "weak", usually traced to Persian *kamzōr*, with the ending *-ī* that makes a noun. *kamzōr* is built from *kam*, "little", and *zōr*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to put"
 concept_tag: PT-VERB-POR
 prerequisites: [PT-C130-comecar, PT-C131-visitar]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "pôr ← Latin ponere 'to put, to place': Old Portuguese põer — English position"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C131-visitar]
 <!-- hl-knowledge: introduces=[PT-LEX-C131-VERBOS131-02]; assesses=[] -->
 
 **pôr** — "to put".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pôr** ← Latin *ponere*, "to put, to place" (EtymDB 2.1) — inherited. Old Portuguese *põer* had lost the *-n-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

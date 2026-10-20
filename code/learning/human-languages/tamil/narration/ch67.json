@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "What You Wear",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b72db622cfde2548",
+  "sourceHash": "fnv1a64:9055e19df02ef054",
   "lessons": [
     {
       "id": "TA-C67-shirt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d088ee293967fe9f",
+      "sourceHash": "fnv1a64:b763c5a39df7c130",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சட்டை (saṭṭai) is native Dravidian. DEDR 2310 lists Malayalam caṭṭa, Kannada caṭṭe and Telugu caṭṭa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77f7f695b10cb585",
+      "sourceHash": "fnv1a64:2596cfe925b09421",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேட்டி (vēṭṭi) is probably from Sanskrit veṣṭ-, \"to wrap\": CDIAL 12130 gives veṣṭa, \"band, enclosure\", and its family. A veshti is the cloth wrapped round."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -267,7 +289,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -450,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c85b3cf97edcc4ab",
+      "sourceHash": "fnv1a64:e313d38e92f73068",
       "notice": null,
       "blocks": [
         {
@@ -504,6 +526,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புடவை (puḍavai) is native Dravidian. DEDR 4256 lists Malayalam puṭava and Kannada puṭṭige. The entry compares Sanskrit phuṭṭikā, \"a kind of cloth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -514,7 +547,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -581,7 +614,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -612,7 +645,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0811ca6bbf2a8cf",
+      "sourceHash": "fnv1a64:4e2c4a086d65ed3d",
       "notice": null,
       "blocks": [
         {
@@ -653,6 +686,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செருப்பு (seruppu) is native Dravidian. DEDR 1963 lists Malayalam cerippu, Kannada kera and Telugu ceppu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -663,7 +707,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -721,7 +765,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -752,7 +796,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07aee1d1db6e286e",
+      "sourceHash": "fnv1a64:c21893bb8c5f3918",
       "notice": null,
       "blocks": [
         {
@@ -797,6 +841,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொப்பி (toppi) is a loan from Hindustani ṭopī, \"cap\". CDIAL 5481 sets the North Indian forms under ṭōppa, \"hat, covering\", whose own origin is unclear."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -807,7 +862,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -856,7 +911,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

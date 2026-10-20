@@ -14,7 +14,8 @@ romanization: "phikaṭ"
 concept_tag: MR-GUN233-PHIKAT
 prerequisites: [MR-C232-kharkharit, MR-C233-gadad]
 sounds: []
-roots: []
+roots: [indo-aryan-phikka]
+etymology_hook: "phikaṭ: as phikā 'pale, tasteless' ← *phikka 'defective' (CDIAL 9037)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C233-gadad]
 <!-- hl-knowledge: introduces=[MR-LEX-C233-GUN233-02]; assesses=[] -->
 
 **फिकट** — *phikaṭ* — "pale, light (of a colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फिकट** (*phikaṭ*) goes with Marathi *phikā*, "pale, tasteless", which CDIAL lists under a reconstructed *\*phikka-*, "defective" (CDIAL 9037).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

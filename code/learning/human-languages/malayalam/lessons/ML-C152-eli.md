@@ -14,7 +14,8 @@ romanization: "eli"
 concept_tag: ML-THINGS152-ELI
 prerequisites: [ML-C151-panni, ML-C151-simham, ML-C29-suprabhaatham]
 sounds: []
-roots: []
+roots: [dravidian-eli-rat]
+etymology_hook: "eli: native Dravidian, one word with Tamil eli and Kannada eli (DEDR 833)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C151-simham]
 <!-- hl-knowledge: introduces=[ML-LEX-C152-THINGS152-01]; assesses=[] -->
 
 **എലി** — *eli* — "a rat, a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എലി** (*eli*) is native Dravidian, one word with Tamil *eli*, Kannada *eli* and Telugu *eluka* (DEDR 833).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

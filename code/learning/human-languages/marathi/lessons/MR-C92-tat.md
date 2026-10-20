@@ -14,7 +14,8 @@ romanization: "tāṭ"
 concept_tag: MR-HOME92-TAT
 prerequisites: [MR-C91-killi, MR-C92-kap]
 sounds: []
-roots: []
+roots: [indo-aryan-tatta]
+etymology_hook: "tāṭ ← *taṭṭa 'pot' (CDIAL 5631); DEDR compares Tamil taṭṭam 'eating plate' (DEDR 3035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C92-kap]
 <!-- hl-knowledge: introduces=[MR-LEX-C92-HOME92-02]; assesses=[] -->
 
 **ताट** — *tāṭ* — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताट** (*tāṭ*) goes back to *\*taṭṭa*, "pot", a form CDIAL reconstructs; it glosses Marathi *tāṭ* "rimmed metal dining plate" (CDIAL 5631). DEDR sets Marathi *tāṭ* beside Dravidian words for a flat plate, such as Tamil *taṭṭam*, "eating plate" (DEDR 3035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

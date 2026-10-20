@@ -1,0 +1,11 @@
+{
+  "id": "IT-C298-banda",
+  "pathSegment": "IT-PATH-298-BANDA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-298-BANDA",
+      "order": 0
+    }
+  ]
+}

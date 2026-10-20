@@ -13,7 +13,8 @@ gloss: "a mechanic"
 concept_tag: PT-COISAS246-MECANICO
 prerequisites: [PT-C245-ecra, PT-C245-teclado]
 sounds: []
-roots: []
+roots: [machina-latin]
+etymology_hook: "mecânico ← Latin mechanicus, from Greek mekhanikos 'of machines' — English mechanic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C245-teclado]
 <!-- hl-knowledge: introduces=[PT-LEX-C246-COISAS246-01]; assesses=[] -->
 
 **o mecânico** — "a mechanic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mecânico** ← Latin *mechanicus*, "of machines" (Lewis & Short) — a learned borrowing from Latin. Latin took it from Greek *mēchanikos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

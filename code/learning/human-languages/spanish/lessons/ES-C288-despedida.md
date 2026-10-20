@@ -6,7 +6,7 @@ sequence: 3560
 chapter: 288
 type: word
 headword: la despedida
-gloss: the farewell — from despedir, Latin expetere, to ask out: a leave-taking was a request
+gloss: 'the farewell — from despedir, Latin expetere, to ask out: a leave-taking was a request'
 concept_tag: ES-LEAVE-FAREWELL
 prerequisites: [ES-C288-llegada]
 sounds: [d-soft, vowel-i]

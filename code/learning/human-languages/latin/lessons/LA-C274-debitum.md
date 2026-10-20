@@ -13,7 +13,8 @@ gloss: "a debt"
 concept_tag: LA-RES274-DEBITUM
 prerequisites: [LA-C274-lucrum, LA-C274-damnum]
 sounds: []
-roots: []
+roots: [debitum-latin, debere-latin]
+etymology_hook: "dēbitum 'debt' — the participle of dēbeō 'to owe'; English debt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C274-damnum]
 <!-- hl-knowledge: introduces=[LA-LEX-C274-RES274-05]; assesses=[] -->
 
 **dēbitum, dēbitī** — "a debt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēbitum** is the past participle of *dēbeō*, "to owe" (EtymDB 2.1), used as a noun: what is owed. English *debt* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

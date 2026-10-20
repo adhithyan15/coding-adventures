@@ -48,11 +48,12 @@ and Telugu.
 
 > **உனக்கு எத்தனை வயது ஆகிறது?** — "to you how many years is becoming?"
 >
-> **எனக்கு இருபது வயது ஆகிறது.** — "to me twenty years is becoming."
+> **எனக்குப் பத்து வயது ஆகிறது.** — "to me ten years is becoming."
 
 Formal/written Tamil uses the dative experiencer plus **ஆகிறது** (*aakirathu*,
-"is becoming," from *aaku*). Malayalam uses a similar dative shape but chooses
-"exists" instead.
+"is becoming," from *aaku*). Written Tamil also doubles the **ப** of *pattu*
+back onto *enakku* as **ப்**: *enakkup pattu*. Malayalam uses a similar dative
+shape but chooses "exists" instead.
 
 Do not compress these into "Tamil's one grammar." Both live in the language;
 setting and register choose between them.
@@ -63,7 +64,7 @@ setting and register choose between them.
 [PAUSE 1s]
 - [YOU SAY: "un vayasu enna?" — casual]
 - [YOU SAY: "unakku ettanai vayathu aakirathu?" — formal]
-- [YOU ANSWER: "enakku irupathu vayathu aakirathu"]
+- [YOU ANSWER: "enakkup pattu vayathu aakirathu"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAYATHU-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02] -->

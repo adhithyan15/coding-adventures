@@ -1,0 +1,11 @@
+{
+  "id": "IT-C307-svezzare",
+  "pathSegment": "IT-PATH-307-NASCITA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-307-NASCITA",
+      "order": 3
+    }
+  ]
+}

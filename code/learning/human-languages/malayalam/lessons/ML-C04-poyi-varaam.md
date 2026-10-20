@@ -12,6 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [ML-C04-pokuka, ML-C03-njaan, ML-C04-koodu]
 sounds: [poyi-participle, aam-ending]
 roots: [po-go-dravidian, va-come-dravidian]
+etymology_hook: "pōyi varāṁ: native Dravidian 'having gone, I'll come', Tamil pō + varu (DEDR 4572, 5270)"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +61,8 @@ Kannada *hōgi baruttēne*, Telugu *veḷḷi vastānu*). The warm reply is **�
 It reaches past Dravidian, too: Bengali, an Indo-Aryan language with no shared
 ancestor for these words, says goodbye with *āshi* — "I come." The whole south,
 and beyond, prefers a promise of return to a blunt farewell.
+
+Both verbs are native: DEDR 4572 for going, DEDR 5270 for coming.
 
 ## Grammar Lens: the -ആം ending, "let me / I will"
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C04-AAM-VOLITIONAL-01]; assesses=[ML-PHRASE-C04-POYI-VARAAM-01] -->

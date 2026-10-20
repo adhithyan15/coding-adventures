@@ -1,0 +1,11 @@
+{
+  "id": "ES-C755-trotar",
+  "pathSegment": "ES-PATH-755-ENTRENAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-755-ENTRENAR",
+      "order": 1
+    }
+  ]
+}

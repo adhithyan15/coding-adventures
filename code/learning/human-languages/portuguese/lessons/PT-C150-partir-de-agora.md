@@ -13,7 +13,8 @@ gloss: "from now on"
 concept_tag: PT-TEMPO150-PARTIR-DE-AGORA
 prerequisites: [PT-C150-seguir, PT-C150-finalmente]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "a partir de agora: partir ← Latin partire 'to divide'; agora ← Latin hac hora 'at this hour'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C150-finalmente]
 <!-- hl-knowledge: introduces=[PT-LEX-C150-TEMPO150-04]; assesses=[] -->
 
 **a partir de agora** — "from now on".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**a partir de agora** is "starting from now": *partir* ← Latin *partire*, "to divide, to share out" (EtymDB 2.1), and *agora* ← Latin *hac hora*, "at this hour" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

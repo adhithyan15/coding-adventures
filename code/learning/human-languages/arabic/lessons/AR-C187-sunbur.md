@@ -14,7 +14,8 @@ romanization: "ṣunbūr"
 concept_tag: AR-SHAY187-SUNBUR
 prerequisites: [AR-C186-ala, AR-C187-khallat]
 sounds: []
-roots: []
+roots: [ṣ-n-b-r]
+etymology_hook: "ṣunbūr: Lane gives a lone palm tree and the metal pipe of a water skin (ṣ-n-b-r); the tap comes from the pipe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C187-khallat]
 <!-- hl-knowledge: introduces=[AR-LEX-C187-SHAY187-02]; assesses=[] -->
 
 **صنبور** — *ṣunbūr* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صنبور** (*ṣunbūr*) is a native noun, filed under *ṣ-n-b-r* (Lane). Lane's *ṣunbūr* is a lone palm tree, slender at its base, and also the metal pipe of a leather water vessel, from which the tap comes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

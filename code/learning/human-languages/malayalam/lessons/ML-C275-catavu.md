@@ -14,7 +14,8 @@ romanization: "catavŭ"
 concept_tag: ML-AROGYAM275-CATAVU
 prerequisites: [ML-C275-borati, ML-C275-mula3]
 sounds: []
-roots: []
+roots: [dravidian-cati-bruise]
+etymology_hook: "catavŭ: native Dravidian, from the verb 'to be bruised'; Tamil cati (DEDR 2322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C275-mula3]
 <!-- hl-knowledge: introduces=[ML-LEX-C275-AROGYAM275-03]; assesses=[] -->
 
 **ചതവ്** — *catavŭ* — "a bruise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചതവ്** (*catavŭ*) is native Dravidian, a noun from the verb "to be bruised, squashed"; DEDR 2322 lists the root with Tamil *cati* and Kannada *sadaku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

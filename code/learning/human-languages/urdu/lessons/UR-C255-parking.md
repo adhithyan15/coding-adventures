@@ -14,7 +14,8 @@ romanization: "pārking"
 concept_tag: UR-CHIZ255-PARKING
 prerequisites: [UR-C255-jurmana, UR-C255-laisans]
 sounds: []
-roots: []
+roots: [english-parking]
+etymology_hook: "pārking ← English parking"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C255-laisans]
 <!-- hl-knowledge: introduces=[UR-LEX-C255-CHIZ255-05]; assesses=[] -->
 
 **پارکنگ** — *pārking* — "parking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پارکنگ** (*pārking*) is a loan from English *parking*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

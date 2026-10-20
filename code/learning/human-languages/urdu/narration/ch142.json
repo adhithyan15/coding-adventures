@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "To get off, To fill, To hide, To be saved, To grow, A1 timed writing",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8f9b1093e71fb108",
+  "sourceHash": "fnv1a64:9a8908e320d5a3a3",
   "lessons": [
     {
       "id": "UR-C142-utarna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe010cb6851cc80a",
+      "sourceHash": "fnv1a64:153d1c42a71f78b2",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اترنا (utarnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uttarati, \"passes over; descends\" (CDIAL 1770). CDIAL traces the sense from \"crosses over\" through \"lands\" to \"gets down\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ff5b669446b07c5",
+      "sourceHash": "fnv1a64:5f2decddd046fb0f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بھرنا (bharnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, \"bears, brings; fills\" (CDIAL 9397)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc268c2fcf238071",
+      "sourceHash": "fnv1a64:62dd756373bf91b5",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چھپنا (chhupnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from chupp, \"cover, hide\", a form CDIAL reconstructs from its descendants (CDIAL 5058)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdc945e30dd1942a",
+      "sourceHash": "fnv1a64:7621fc53d15d3c1b",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بچنا (bachnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vañcati, \"moves; escapes from\" (CDIAL 11208)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:545bb583e6143023",
+      "sourceHash": "fnv1a64:bdf2aaeea4279b90",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بڑھنا (baṛhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhate, \"grows, increases\" (CDIAL 11376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -844,10 +899,10 @@
     {
       "id": "UR-W10-a1-timed-production",
       "sequence": 7520,
-      "title": "Your first complete A1 writing paper",
-      "headword": "(timed A1 writing)",
+      "title": "A short Urdu A1 writing checkpoint",
+      "headword": "(short timed A1 writing checkpoint)",
       "romanization": "",
-      "gloss": "a complete 20-minute A1 form and named-reader message under assessment conditions",
+      "gloss": "a three-minute independent form attempt before the separate full A1 writing paper",
       "script": "urdu-nastaliq",
       "modality": "pen",
       "derivedModality": "pen",
@@ -856,7 +911,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:319ad1d2dacb919c",
+      "sourceHash": "fnv1a64:71a3637fa4b3fbd7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -882,11 +937,11 @@
             },
             {
               "kind": "speech",
-              "text": "This is an attempt, not a model. You will write the answers, and this page will not show you any copyable answer."
+              "text": "This is a short independent attempt, not a model. You will write the answers, and this page will not show you any copyable Urdu answer."
             },
             {
               "kind": "speech",
-              "text": "Put away Roman Urdu, Devanagari, dictionaries, translators, and spell-checkers. Set one timer for 20 minutes. Keep it running through both tasks. Write in Urdu script; either approved Nastaliq or accessibility Naskh is fine. Ordinary legible handwriting is enough: imitation Nastaliq calligraphy is not scored."
+              "text": "Put away Roman Urdu, Devanagari, dictionaries, translators, and spell-checkers. Set a three-minute timer. Write in Urdu script; either approved Nastaliq or accessibility Naskh is fine. Ordinary legible handwriting is enough: imitation Nastaliq calligraphy is not scored."
             }
           ]
         },
@@ -897,11 +952,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Task 1 — practical form: 7 minutes, 40 points."
+              "text": "One practical form — three minutes."
             },
             {
               "kind": "speech",
-              "text": "Complete all six fields in Urdu script for a new neighbourhood activity group. Short answers are enough."
+              "text": "Complete all six fields in Urdu script for a new neighbourhood activity group. Write one short answer in every field. Start the timer when you begin the first field; leave any unfinished field as evidence when it rings."
             },
             {
               "kind": "speech",
@@ -929,23 +984,7 @@
             },
             {
               "kind": "speech",
-              "text": "At seven minutes, move on even if a field is unfinished. Do not restart the timer and do not polish the form with time meant for the message."
-            },
-            {
-              "kind": "speech",
-              "text": "Task 2 — message: 13 minutes, 60 points."
-            },
-            {
-              "kind": "speech",
-              "text": "Reader: Amina. Purpose: help Amina recognise you and arrange your first meeting tomorrow."
-            },
-            {
-              "kind": "speech",
-              "text": "Write 30–40 words in Urdu script. Greet Amina, introduce yourself, say where you live and which language you speak, mention one place and one drink or food you like, ask where Amina lives, and close politely. The instructions give content, not sentences: choose and connect the Urdu yourself."
-            },
-            {
-              "kind": "speech",
-              "text": "When the 20-minute timer rings, stop, even if a line is unfinished. Record the number of completed form fields and the message word count. An honest timed attempt is more useful than a perfect untimed one."
+              "text": "When the three-minute timer rings, stop. Record the number of completed fields. An honest short attempt is more useful than a perfect untimed one."
             }
           ]
         },
@@ -956,33 +995,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Only after you have stopped, review the same attempt. Do not rewrite it yet. Mark one strength and one next step under each assessment criterion:"
+              "text": "Spend at most one minute looking at this first attempt. Note one field you completed clearly and one field to practise next; do not rewrite the timed answer. Keep the page as evidence."
             },
             {
               "kind": "speech",
-              "text": "Task fulfilment and relevant content — six filled fields; the named reader, meeting purpose, and requested message points are present."
-            },
-            {
-              "kind": "speech",
-              "text": "Comprehensibility and organisation — Amina can follow the message and see how its ideas connect."
-            },
-            {
-              "kind": "speech",
-              "text": "Urdu vocabulary, grammar, and register — familiar words and sentence patterns carry the intended meaning in a suitable everyday tone."
-            },
-            {
-              "kind": "speech",
-              "text": "Urdu orthographic control — Urdu letters, joining, spacing, and punctuation remain readable. Optional short vowels or diacritics earn no bonus and receive no penalty unless a tested contrast depends on them."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the paper. On another day, repeat the same two-task shape with new personal details. The goal is not to memorise this prompt; it is to make a complete Urdu attempt calmly inside the real limit."
+              "text": "This checkpoint is not the complete A1 writing paper. On another day, close this lesson and open the separate A1 writing-only learner paper for the authentic form and named-reader message under one 20-minute assessment clock. That paper and its later rubric review are a separate assessment session, not work inside this under-five-minute lesson. It is writing practice only; it does not establish full A1 exam readiness."
             }
           ]
         }

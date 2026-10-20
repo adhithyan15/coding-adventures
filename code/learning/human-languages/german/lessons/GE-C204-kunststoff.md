@@ -14,6 +14,7 @@ concept_tag: GE-THING204-KUNSTSTOFF
 prerequisites: [GE-C204-holz, GE-C204-metall]
 sounds: []
 roots: []
+etymology_hook: "Kunststoff — the word for 'art, skill' + Stoff 'material': man-made material"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C204-metall]
 <!-- hl-knowledge: introduces=[GE-LEX-C204-THING204-04]; assesses=[] -->
 
 **der Kunststoff** — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kunststoff** is the word for "art, skill" + *Stoff*, "material": material made by skill, not found in nature. *Kunst* is built on *können*, "to be able", inherited from Proto-Germanic *\*kunnaną* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

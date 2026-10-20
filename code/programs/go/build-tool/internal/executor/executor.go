@@ -425,6 +425,62 @@ func RewriteInlineEnvPrefixForWindows(command string) string {
 	return rewriteInlineEnvPrefixForWindows(command)
 }
 
+// PruneLeafCargoTargets makes ExecuteBuilds delete a package's own
+// generated build output -- a Cargo `target/` or an npm `node_modules/` --
+// once the package has finished building (pass or fail), when nothing in the
+// graph depends on it.
+//
+// CI's main full build runs every package on one runner, and each Mosaic
+// package and Rust program is its own Cargo workspace that compiles its whole
+// dependency tree into its own `target/`. Kept to the end, those directories
+// filled the runner's disk part-way through a shard: "No space left on
+// device" and linker bus errors killed shards 5, 6 and 12 on every main run
+// (X-7). A leaf's `target/` is read by nothing after its own build, so it can
+// go as soon as the build has reported.
+//
+// `node_modules/` is the same story one language over. Every TypeScript
+// package installs its own, and on PR #17759's first measured run they were
+// 21 GB of shard 8's disk, the largest single consumer, at 90% full. A
+// dependent resolves its `file:` dependencies' imports through *their*
+// `node_modules`, which is why only leaves are pruned.
+//
+// Only `<package>/target` beside a `Cargo.toml` and `<package>/node_modules`
+// beside a `package.json` are removed, so a member of a shared workspace
+// (whose output lives in the workspace root) is never touched. A symlinked
+// directory is never followed. A package with dependents keeps its output,
+// because a dependent may read it (a staged cdylib, say). The prune runs
+// while the package still holds its resource locks, so a BUILD that `cd`s
+// into this package cannot race it. Off by default; main's full build turns
+// it on with -prune-leaf-targets.
+var PruneLeafCargoTargets bool
+
+// leafBuildOutputs pairs the manifest that proves a directory is a
+// toolchain's own generated output with that directory.
+var leafBuildOutputs = []struct{ manifest, output string }{
+	{"Cargo.toml", "target"},
+	{"package.json", "node_modules"},
+}
+
+// pruneLeafCargoTarget applies the rule PruneLeafCargoTargets describes to
+// one package that has just finished building.
+func pruneLeafCargoTarget(pkg discovery.Package, graph *directedgraph.Graph) {
+	if successors, err := graph.Successors(pkg.Name); err != nil || len(successors) > 0 {
+		return
+	}
+	for _, pair := range leafBuildOutputs {
+		if _, err := os.Stat(filepath.Join(pkg.Path, pair.manifest)); err != nil {
+			continue
+		}
+		output := filepath.Join(pkg.Path, pair.output)
+		if info, err := os.Lstat(output); err != nil || !info.IsDir() {
+			continue
+		}
+		if err := os.RemoveAll(output); err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: could not prune %s: %v\n", output, err)
+		}
+	}
+}
+
 // ExecuteBuilds runs BUILD commands for packages respecting dependency order.
 //
 // This is the main orchestrator. It:
@@ -628,6 +684,9 @@ func ExecuteBuilds(
 				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
 				result := runPackageBuild(p, clippy)
 				tracker.Send(progress.Event{Type: progress.Finished, Name: p.Name, Status: result.Status})
+				if PruneLeafCargoTargets {
+					pruneLeafCargoTarget(p, graph)
+				}
 
 				resultsMu.Lock()
 				results[p.Name] = result
@@ -975,6 +1034,31 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:cabal-store"] = true
 		}
 
+		if pkg.Language == "ocaml" || opamCommandRe.MatchString(command) {
+			// opam keeps ONE switch under ~/.opam, and OCaml BUILDs both
+			// mutate it (`opam pin add`, `opam install --deps-only`) and read
+			// it for the rest of the build (`opam exec -- dune runtest`). Two
+			// at once can install over a switch another package is compiling
+			// against. Every OCaml package takes the lock for its whole build,
+			// so OCaml packages run one at a time while the rest of the shard
+			// keeps every worker. This replaces CI's old `-jobs 1` whenever an
+			// OCaml switch was active, which serialized ~1,000 unrelated
+			// packages on every shard that happened to hold one OCaml package
+			// and ran them past the 150-minute ceiling (#17631; OCAML05).
+			keys[OpamSwitchLockKey] = true
+		}
+
+		if rubyGemInstallRe.MatchString(command) {
+			// `bundle install` and `gem install` write into the one Ruby gem
+			// home the runner's Ruby owns, and RubyGems takes no lock across
+			// processes. Two packages that both need a gem nobody has
+			// installed yet compile its native extension in the same
+			// directory at once: main shard 11 (PR #17759) failed building
+			// json-3.1.0 with mkmf's own temp log deleted from under it.
+			// Same remedy as Hex and Cabal above.
+			keys[RubyGemsLockKey] = true
+		}
+
 		if (pkg.Language == "csharp" || pkg.Language == "fsharp") && strings.Contains(command, "dotnet ") {
 			// NuGet first-run migrations use global process mutex state outside
 			// DOTNET_CLI_HOME. Parallel dotnet package builds can race there on CI.
@@ -996,6 +1080,24 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 	}
 	return result
 }
+
+// OpamSwitchLockKey is the resource lock every opam-touching build holds.
+// code/scripts/ocaml_toolchain_lock.py pins this name: CI runs OCaml in
+// parallel with other languages only because this lock exists.
+const OpamSwitchLockKey = "global:opam-switch"
+
+// RubyGemsLockKey is the resource lock every BUILD that installs Ruby gems
+// into the shared gem home holds.
+const RubyGemsLockKey = "global:ruby-gems"
+
+// rubyGemInstallRe matches `bundle install` or `gem install` as commands
+// (also `bundle exec gem install`), not as substrings of other words.
+var rubyGemInstallRe = regexp.MustCompile(`(^|[\s;&|(])(bundle|gem)\s+install(\s|$)`)
+
+// opamCommandRe matches `opam` as a command word, so a non-OCaml BUILD that
+// drives opam (a scaffold fixture, say) is serialized with the OCaml ones,
+// while a path or name merely containing "opam" is not.
+var opamCommandRe = regexp.MustCompile(`(^|[\s;&|(])opam(\s|$)`)
 
 func isGradleCommand(command string) bool {
 	trimmed := strings.TrimSpace(command)

@@ -14,7 +14,8 @@ romanization: "vijñānaśāstraṁ"
 concept_tag: TE-PANI238-VIJNANASASTRAM
 prerequisites: [TE-C238-caritra, TE-C238-bhugolasastram]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana, sanskrit-shastra]
+etymology_hook: "vijñānaśāstraṁ: Sanskrit vijñāna 'discerning' (CDIAL 11707) + śāstra 'treatise' (CDIAL 12422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C238-bhugolasastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C238-PANI238-04]; assesses=[] -->
 
 **విజ్ఞానశాస్త్రం** — *vijñānaśāstraṁ* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విజ్ఞానశాస్త్రం** (*vijñānaśāstraṁ*) is Sanskrit: *vijñāna*, "act of discerning, knowledge" (CDIAL 11707), and *śāstra*, "treatise" (CDIAL 12422), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

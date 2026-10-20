@@ -146,6 +146,13 @@ independent attempt. The attempt shows only already taught Gurmukhi labels and
 nonverbal cues, never a value bank, romanization, dictionary, translator,
 spell-checker, or copyable answer.
 
+The named-reader message and its timed repair receive separate, no-model R3
+returns after their first short checkpoints. Each return is at most five minutes:
+the message preserves an independent clocked first attempt, and the later
+repair is recorded on a different page without changing that attempt's score.
+These retrievals are practice evidence, not either complete twenty-minute A1
+writing mock or a substitute for calibration and human validation.
+
 ### A2
 
 | paper | minutes | required task envelope |

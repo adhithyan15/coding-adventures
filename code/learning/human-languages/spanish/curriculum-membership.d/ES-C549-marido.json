@@ -1,0 +1,11 @@
+{
+  "id": "ES-C549-marido",
+  "pathSegment": "ES-PATH-549-CASADO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-549-CASADO",
+      "order": 3
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "marīcam"
 concept_tag: SA-THINGS107-MARICAM
 prerequisites: [SA-C106-supah, SA-C107-gudah]
 sounds: []
-roots: []
+roots: [sanskrit-marica]
+etymology_hook: "marīca 'peppercorn' is taken to be borrowed from Austroasiatic (CDIAL 9875, after EWA); Hindi mirc"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C107-gudah]
 <!-- hl-knowledge: introduces=[SA-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **मरीचम्** — *marīcam* — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*marīca* "black pepper" is taken to be borrowed from Austroasiatic (CDIAL 9875, after EWA). It lives on as Hindi *mirc* (CDIAL 9875).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

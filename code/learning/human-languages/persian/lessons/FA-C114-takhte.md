@@ -14,7 +14,8 @@ romanization: "takhte"
 concept_tag: FA-THINGS114-TAKHTE
 prerequisites: [FA-C113-medadtarash, FA-C114-khatkesh]
 sounds: []
-roots: []
+roots: [persian-takhte]
+etymology_hook: "takhte ← Middle Persian taxtag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C114-khatkesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **تخته** — *takhte* — "a board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*takhte* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *taxtag*, "plank, board" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

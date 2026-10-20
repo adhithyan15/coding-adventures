@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "What You Wear",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:06cae4081473ec74",
+  "sourceHash": "fnv1a64:4cb816334b3ef42d",
   "lessons": [
     {
       "id": "ML-C100-mundu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b33a50c00235c9e4",
+      "sourceHash": "fnv1a64:a8e9000063bf29a6",
       "notice": null,
       "blocks": [
         {
@@ -78,6 +78,10 @@
             {
               "kind": "speech",
               "text": "So the only new thing here is the word itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian: DEDR 4947 lists it with Tamil muṇṭu and Kannada muṇḍu."
             }
           ]
         },
@@ -153,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0689a4777fbb97fa",
+      "sourceHash": "fnv1a64:c75c1f557f851e61",
       "notice": null,
       "blocks": [
         {
@@ -217,6 +221,10 @@
             {
               "kind": "speech",
               "text": "പഴയ behaves as പുതിയ did — in front, unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It goes back to Sanskrit śāṭī, \"a strip of cloth, a garment\" (CDIAL 12381), worn down through Prakrit; English sari is the same word, borrowed through Hindustani."
             }
           ]
         },
@@ -292,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:954152568feb511e",
+      "sourceHash": "fnv1a64:f571c915002b99ec",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +360,10 @@
                 "word: മുണ്ട് (muṇṭŭ). joined to ആണ്: മുണ്ടാണ് (muṇṭāṇŭ).",
                 "word: ചെരുപ്പ് (ceruppŭ). joined to ആണ്: ചെരുപ്പാണ് (ceruppāṇŭ)."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian, one word with Tamil ceruppu (DEDR 1963)."
             }
           ]
         },
@@ -427,7 +439,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dc1504636e26b5da",
+      "sourceHash": "fnv1a64:7cbc141288cd7879",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -497,6 +509,10 @@
             {
               "kind": "speech",
               "text": "Nothing in this chapter asked you to learn a join. Both are long-standing: എന്താണ് has taken the half-u since your very first question, and കുട്ടി has taken the യ since ഇത് എന്റെ കുട്ടിയാണ്. പാട്ട്, കളി and ഭംഗി are the most recent words to use them, not the words they began with. What the chapter gave you is four things to wear."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is shared with Hindustani ṭopī, \"cap\". CDIAL 5481 sets up an Indo-Aryan form ṭōppa, \"hat, covering\", and its ultimate origin is uncertain."
             }
           ]
         },

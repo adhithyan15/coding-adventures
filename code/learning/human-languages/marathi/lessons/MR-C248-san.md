@@ -14,7 +14,8 @@ romanization: "saṇ"
 concept_tag: MR-VASTU248-SAN
 prerequisites: [MR-C247-siksan, MR-C247-bhavana]
 sounds: []
-roots: []
+roots: [sanskrit-kshana]
+etymology_hook: "saṇ ← Sanskrit kṣaṇa 'moment; festival', a tadbhava (CDIAL 3642)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C247-bhavana]
 <!-- hl-knowledge: introduces=[MR-LEX-C248-VASTU248-01]; assesses=[] -->
 
 **सण** — *saṇ* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सण** (*saṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣaṇa*, "moment; festival" (CDIAL 3642). CDIAL glosses the Marathi word "festival, holiday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

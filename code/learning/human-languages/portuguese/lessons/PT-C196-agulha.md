@@ -13,7 +13,8 @@ gloss: "a needle"
 concept_tag: PT-COISAS196-AGULHA
 prerequisites: [PT-C195-chama, PT-C195-clima]
 sounds: []
-roots: []
+roots: [acus-latin]
+etymology_hook: "agulha ← Vulgar Latin *acucula 'little needle', from acus 'needle'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C195-clima]
 <!-- hl-knowledge: introduces=[PT-LEX-C196-COISAS196-01]; assesses=[] -->
 
 **a agulha** — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agulha** ← Vulgar Latin *\*acucula*, "little needle", from Latin *acus*, "needle" (Lewis & Short) — inherited. EtymDB 2.1 traces it only to Old Portuguese *agulla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

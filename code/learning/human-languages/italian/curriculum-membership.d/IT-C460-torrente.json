@@ -1,0 +1,11 @@
+{
+  "id": "IT-C460-torrente",
+  "pathSegment": "IT-PATH-460-BOSCO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-460-BOSCO",
+      "order": 2
+    }
+  ]
+}

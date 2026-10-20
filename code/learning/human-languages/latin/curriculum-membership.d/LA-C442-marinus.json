@@ -1,0 +1,11 @@
+{
+  "id": "LA-C442-marinus",
+  "pathSegment": "LA-PATH-442-SALUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-442-SALUM",
+      "order": 3
+    }
+  ]
+}

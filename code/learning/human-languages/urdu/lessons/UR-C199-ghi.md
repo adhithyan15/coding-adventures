@@ -14,7 +14,8 @@ romanization: "ghī"
 concept_tag: UR-CHIZ199-GHI
 prerequisites: [UR-C198-viza, UR-C199-chapati]
 sounds: []
-roots: []
+roots: [sanskrit-ghrta]
+etymology_hook: "ghī ← Sanskrit ghṛta 'clarified butter, ghee', a tadbhava (CDIAL 4501)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C199-chapati]
 <!-- hl-knowledge: introduces=[UR-LEX-C199-CHIZ199-02]; assesses=[] -->
 
 **گھی** — *ghī* — "ghee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گھی** (*ghī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghṛta*, "clarified butter, ghee" (CDIAL 4501).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

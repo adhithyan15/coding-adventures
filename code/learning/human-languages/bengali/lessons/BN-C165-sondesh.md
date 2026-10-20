@@ -14,7 +14,8 @@ romanization: "sôndesh"
 concept_tag: BN-JINIS165-SONDESH
 prerequisites: [BN-C165-jm, BN-C165-kek]
 sounds: []
-roots: []
+roots: [sanskrit-samdesha]
+etymology_hook: "sôndesh: spelled as Sanskrit saṁdeśa 'message' (CDIAL 12904); how the sweet got the name is not recorded"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C165-kek]
 <!-- hl-knowledge: introduces=[BN-LEX-C165-JINIS165-04]; assesses=[] -->
 
 **সন্দেশ** — *sôndesh* — "sandesh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সন্দেশ** (*sôndesh*), the sweet, has the same form as Bengali *sôndesh*, "news, a message", Sanskrit *saṁdeśa*, "message", taken over whole (CDIAL 12904). CDIAL gives no Bengali form there, but it lists Maithili *sanes* for both "news" and "a present sent to another", which shows how a word for a message could come to name a gift; for the sweet itself the link is not recorded.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

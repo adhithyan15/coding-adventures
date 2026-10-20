@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 100,
-  "sourceHash": "fnv1a64:2315e3e0cc48475d",
+  "sourceHash": "fnv1a64:ed98b9c9c63a85f1",
   "lessonIds": [
     "KA-C100-map",
     "KA-C100-ticket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch100.txt",
   "json": "kannada/narration/ch100.json",
-  "textHash": "fnv1a64:a3446a426a53822e",
-  "jsonHash": "fnv1a64:483cf4f65d4dd1a5",
+  "textHash": "fnv1a64:6f1b907ec42b7f22",
+  "jsonHash": "fnv1a64:e21b9b4a1f886223",
   "findings": []
 }

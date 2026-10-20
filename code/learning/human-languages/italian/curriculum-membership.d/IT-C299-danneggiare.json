@@ -1,0 +1,11 @@
+{
+  "id": "IT-C299-danneggiare",
+  "pathSegment": "IT-PATH-299-SCONTRO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-299-SCONTRO",
+      "order": 4
+    }
+  ]
+}

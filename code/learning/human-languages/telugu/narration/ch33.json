@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:de7d9b44939ecb8b",
+  "sourceHash": "fnv1a64:12f6c2870358d978",
   "lessons": [
     {
       "id": "TE-C33-anuko",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1790610cd5a5577a",
+      "sourceHash": "fnv1a64:47fa27ee387321d6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -620,7 +620,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sisters scatter here as completely as they did over seeing: Tamil படி (paḍi), Kannada ಓದು (ōdu), Malayalam വായിക്കുക (vāyikkuka), Telugu చదువు (caduvu). Four unrelated everyday verbs for one act."
+              "text": "The sisters scatter here as completely as they did over seeing: Tamil படி (paḍi), Kannada ಓದು (ōdu), Malayalam വായിക്കുക (vāyikkuka), Telugu చదువు. Four different everyday verbs for one act. DEDR 2327 lists caduvu with a query, in an entry that compares Sanskrit catura, \"clever\"."
             }
           ]
         },
@@ -660,7 +660,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 32 gave you the harsh version of this with రా: there the word you call the verb by was not the word the endings attach to, and they went to vaccu- instead. This is the mild version — one stem, three vowels, plainly the same word. Expect the wobble; do not expect a second verb."
+              "text": "Chapter 32 gave you the harsh version of this with రా: there the word you call the verb by was not the word the endings attach to, and they went to vaccu- instead. This is the mild version — one stem, three vowels, plainly the same word."
             },
             {
               "kind": "speech",

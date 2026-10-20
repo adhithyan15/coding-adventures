@@ -13,7 +13,8 @@ gloss: "a bracelet"
 concept_tag: LA-RES193-ARMILLA
 prerequisites: [LA-C193-talus, LA-C193-tessera]
 sounds: []
-roots: []
+roots: [armilla-latin, armus-latin]
+etymology_hook: "armilla 'bracelet' — built on armus 'upper arm': a band for the arm"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C193-tessera]
 <!-- hl-knowledge: introduces=[LA-LEX-C193-RES193-04]; assesses=[] -->
 
 **armilla, armillae** — "a bracelet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**armilla** is built on *armus*, "the upper arm, the shoulder" (Lewis & Short), with *-illa*, a diminutive ending: a band for the arm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

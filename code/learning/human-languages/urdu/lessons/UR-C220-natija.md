@@ -14,7 +14,8 @@ romanization: "natījā"
 concept_tag: UR-VAJAH220-NATIJA
 prerequisites: [UR-C220-bad-qismati-se, UR-C220-vajah]
 sounds: []
-roots: []
+roots: [arabic-natija]
+etymology_hook: "natījā ← Arabic natīja 'result, outcome', through Persian (Lane, root n-t-j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C220-vajah]
 <!-- hl-knowledge: introduces=[UR-LEX-C220-VAJAH220-04]; assesses=[] -->
 
 **نتیجہ** — *natījā* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نتیجہ** (*natījā*) is a loan from Arabic *natīja*, "result, outcome", which reached Urdu through Persian. Its Arabic root is *n-t-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

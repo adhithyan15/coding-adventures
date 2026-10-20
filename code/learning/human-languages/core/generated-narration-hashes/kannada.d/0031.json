@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 31,
-  "sourceHash": "fnv1a64:5d04b2d9196794ea",
+  "sourceHash": "fnv1a64:b3eb701928525416",
   "lessonIds": [
     "KA-C31-shubha-madhyahna",
     "KA-C31-krushi",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "kannada/narration/ch31.txt",
   "json": "kannada/narration/ch31.json",
-  "textHash": "fnv1a64:4c680c49766d9cc7",
-  "jsonHash": "fnv1a64:e1d3346e61614720",
+  "textHash": "fnv1a64:e129a88c6f29c03f",
+  "jsonHash": "fnv1a64:7f481bc3fa5ced04",
   "findings": []
 }

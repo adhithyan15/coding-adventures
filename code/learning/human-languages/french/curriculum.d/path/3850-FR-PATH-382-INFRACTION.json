@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-382-INFRACTION",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-382-INFRACTION"
+  ],
+  "after": []
+}

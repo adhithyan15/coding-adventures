@@ -14,7 +14,8 @@ romanization: "ketâbdâr"
 concept_tag: FA-KAR284-KETABDAR
 prerequisites: [FA-C284-arayeshgar, FA-C284-postchi]
 sounds: []
-roots: []
+roots: [arabic-kitab, persian-dar-holder]
+etymology_hook: "ketâbdâr: ketâb ← Arabic kitāb (Lane) + Persian -dâr 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C284-postchi]
 <!-- hl-knowledge: introduces=[FA-LEX-C284-KAR284-04]; assesses=[] -->
 
 **کتابدار** — *ketâbdâr* — "a librarian".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ketâbdâr* is *ketâb*, "book", with *-dâr*, "holder": the book-keeper. *ketâb* is borrowed from Arabic *kitāb* (root *k-t-b*, Lane); *-dâr* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

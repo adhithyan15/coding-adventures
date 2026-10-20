@@ -14,7 +14,8 @@ romanization: "śilā"
 concept_tag: SA-EARTH-SHILA
 prerequisites: [SA-C38-ash, SA-C36-likewise, SA-C37-gracious]
 sounds: []
-roots: []
+roots: [sanskrit-shila-stone]
+etymology_hook: "śilā 'rock, slab' is in the Atharvaveda; origin not settled (MW); Hindi sil (CDIAL 12459)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C38-ash]
 Beside पर्वतः, which is the whole raised land, **शिला** is one piece of it you can put a hand on.
 
 Its history outside India is unsettled — nobody has agreed a cousin for it, the way nobody has for केशः or माला. Feminine, ending in **-आ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śilā* is already in the Atharvaveda. MW tentatively connects it with a root √śi,
+but its origin is not settled. It lives on as Hindi *sil*, a flat stone (CDIAL
+12459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

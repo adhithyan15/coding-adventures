@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 96,
-  "sourceHash": "fnv1a64:2fbeb62b4305096a",
+  "sourceHash": "fnv1a64:ff464ac09c3e376e",
   "lessonIds": [
     "GU-C96-epril",
     "GU-C96-me",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch96.txt",
   "json": "gujarati/narration/ch96.json",
-  "textHash": "fnv1a64:d8671294c5e8e7d3",
-  "jsonHash": "fnv1a64:10d846f6eb519e05",
+  "textHash": "fnv1a64:ca1796086e7d3150",
+  "jsonHash": "fnv1a64:d77923eaa1343643",
   "findings": []
 }

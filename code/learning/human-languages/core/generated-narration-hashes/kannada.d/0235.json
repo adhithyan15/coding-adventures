@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 235,
-  "sourceHash": "fnv1a64:1aa5e6094c958b68",
+  "sourceHash": "fnv1a64:b161328e4239e0fb",
   "lessonIds": [
     "KA-C235-bilu",
     "KA-C235-hindirugu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch235.txt",
   "json": "kannada/narration/ch235.json",
-  "textHash": "fnv1a64:5191489245fa4518",
-  "jsonHash": "fnv1a64:ac5751f99eb54c94",
+  "textHash": "fnv1a64:cb3101e1a21f92da",
+  "jsonHash": "fnv1a64:b049ec2f59eca238",
   "findings": []
 }

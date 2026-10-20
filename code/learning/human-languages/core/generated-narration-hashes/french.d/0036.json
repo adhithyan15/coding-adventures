@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 36,
-  "sourceHash": "fnv1a64:97f04bd9760d41e6",
+  "sourceHash": "fnv1a64:d7cd975a0e7307f3",
   "lessonIds": [
     "FR-C32-intonation",
     "FR-C32-est-ce-que",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "french/narration/ch36.txt",
   "json": "french/narration/ch36.json",
-  "textHash": "fnv1a64:b2a61fa7209e97cd",
-  "jsonHash": "fnv1a64:a61a76a128551114",
+  "textHash": "fnv1a64:28913f1afd9cc6b4",
+  "jsonHash": "fnv1a64:74fdc39509334bfa",
   "findings": []
 }

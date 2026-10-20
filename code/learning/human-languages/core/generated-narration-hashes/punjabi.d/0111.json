@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 111,
-  "sourceHash": "fnv1a64:187b4486da1e33d1",
+  "sourceHash": "fnv1a64:6dd3d6f3980eaf98",
   "lessonIds": [
     "PA-C111-daulat",
     "PA-C111-malak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch111.txt",
   "json": "punjabi/narration/ch111.json",
-  "textHash": "fnv1a64:04c4530b7bac2ba1",
-  "jsonHash": "fnv1a64:a8754198d36ef52d",
+  "textHash": "fnv1a64:7048c6219ac077ff",
+  "jsonHash": "fnv1a64:61852958d4c09693",
   "findings": []
 }

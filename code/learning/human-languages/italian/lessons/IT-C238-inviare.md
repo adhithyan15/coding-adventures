@@ -13,7 +13,8 @@ gloss: "to dispatch, to send"
 concept_tag: IT-VERB-INVIARE
 prerequisites: [IT-C238-indicare, IT-C238-informare]
 sounds: []
-roots: []
+roots: [via-latin]
+etymology_hook: "inviare — in- + via 'a way': to put on its way — English envoy is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C238-informare]
 <!-- hl-knowledge: introduces=[IT-LEX-C238-VERBI238-03]; assesses=[] -->
 
 **inviare** — "to dispatch, to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inviare** — built from *via*, "a way", with *in-*: to put on its way. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

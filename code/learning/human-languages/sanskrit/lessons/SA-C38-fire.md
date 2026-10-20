@@ -14,7 +14,8 @@ romanization: "agniḥ"
 concept_tag: SA-EARTH-AGNI
 prerequisites: [SA-C37-blessing, SA-C36-also, SA-C37-peace]
 sounds: []
-roots: []
+roots: [sanskrit-agni]
+etymology_hook: "agni 'fire' is inherited: MW compares Latin ignis and Lithuanian ugnis; Hindi āg (CDIAL 55)"
 duration:
   max_seconds: 210
 requires:

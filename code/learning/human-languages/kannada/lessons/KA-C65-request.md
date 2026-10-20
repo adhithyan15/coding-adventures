@@ -11,7 +11,8 @@ romanization: "vinanti"
 concept_tag: KA-NOUN-REQUEST
 prerequisites: [KA-C64-in-that-case, KA-C63-hunger]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapti]
+etymology_hook: "vinanti: usually traced to Sanskrit vijñapti 'request' through Prakrit (CDIAL 11706)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C64-in-that-case]
 ವಿನಂತಿ is the naming-word for the thing ದಯವಿಟ್ಟು has been doing for you since the please-chapter. ದಯವಿಟ್ಟು is how you make one; ವಿನಂತಿ is what you have made.
 
 Sanskrit, and its shape says *a bending* — the asker lowers himself a little, and that is exactly the difference between a ವಿನಂತಿ and an instruction.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿನಂತಿ** (*vinanti*) is usually traced to Sanskrit *vijñapti*, "information, request to a superior", through a Middle Indo-Aryan form; CDIAL 11706 lists Prakrit *viṇṇatti* and the Asokan *vinati*. It is a tadbhava, a loan reshaped by speech.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

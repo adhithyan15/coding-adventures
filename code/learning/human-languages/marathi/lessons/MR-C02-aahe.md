@@ -12,6 +12,7 @@ concept_tag: WORD-IS
 prerequisites: [MR-C02-naav, MR-C02-majhe]
 sounds: [standalone-vowel-aa]
 roots: [asti]
+etymology_hook: "āhe: CDIAL lists it under Sanskrit asti 'is', noting Bloch's view that it has another origin (CDIAL 977)"
 reviews_of: [MR-C02-naav, MR-C02-majhe]
 duration:
   max_seconds: 240
@@ -48,10 +49,9 @@ when a word begins with a vowel) + **हे** (*he*) → **आहे** *āhe*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-AAHE-COPULA, MR-ETYMON-AAHE-ASTI]; assesses=[] -->
 
-**आहे** (*āhe*, "is") descends from Sanskrit **अस्ति** (*ásti*, "is"), on the
-root **√as** ("to be"). That same *√as* / PIE **\*h₁es-** is the ancestor of
+**आहे** (*āhe*, "is") is listed by CDIAL under Sanskrit **अस्ति** (*ásti*, "is"), on the root **√as** ("to be"), though Bloch gives it another origin (CDIAL 977). That same *√as* / PIE **\*h₁es-** is the ancestor of
 Latin *est*, German *ist*, and English **is** itself — the deepest, oldest verb
-in the family, worn down to *āhe* in Marathi.
+in the family.
 
 ## Grammar Lens: the verb goes last
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-VERB-FINAL]; assesses=[] -->

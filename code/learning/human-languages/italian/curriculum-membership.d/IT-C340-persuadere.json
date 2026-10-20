@@ -1,0 +1,11 @@
+{
+  "id": "IT-C340-persuadere",
+  "pathSegment": "IT-PATH-340-DIBATTITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-340-DIBATTITO",
+      "order": 4
+    }
+  ]
+}

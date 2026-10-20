@@ -14,7 +14,8 @@ romanization: "tāḷũ"
 concept_tag: GU-FURNITURE-LOCK
 prerequisites: [GU-C62-table, GU-C62-fan]
 sounds: []
-roots: []
+roots: [sanskrit-tala-latch]
+etymology_hook: "tāḷũ ← Sanskrit tāla 'latch, bolt', which CDIAL compares with Dravidian words for a bolt (CDIAL 5749)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C62-fan]
 <!-- hl-knowledge: introduces=[GU-LEX-C62-FURNITURE-05]; assesses=[] -->
 
 **તાળું** (*tāḷũ*) — "a lock". It takes a **ચાવી**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તાળું** (*tāḷũ*) is a tadbhava of Sanskrit *tāla*, "latch, bolt" (CDIAL 5749). CDIAL compares Tamil and other Dravidian words for a bar, bolt or latch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

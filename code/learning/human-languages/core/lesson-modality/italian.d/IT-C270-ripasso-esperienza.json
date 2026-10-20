@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C270-ripasso-esperienza",
+    "language": "italian",
+    "chapter": 270,
+    "sequence": 15960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ae64ce130f0d4d0"
+  },
+  "findings": []
+}

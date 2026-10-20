@@ -14,7 +14,8 @@ romanization: "prôjāpôti"
 concept_tag: BN-ANIMALS71-PROJAPOTI
 prerequisites: [BN-C71-bhaluk, BN-C71-gadha]
 sounds: []
-roots: []
+roots: [sanskrit-prajapati]
+etymology_hook: "prôjāpôti ← Sanskrit prajāpati 'lord of creatures', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C71-gadha]
 <!-- hl-knowledge: introduces=[BN-LEX-C71-ANIMALS71-03]; assesses=[] -->
 
 **প্রজাপতি** — *prôjāpôti* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রজাপতি** (*prôjāpôti*) is Sanskrit *prajāpati*, "lord of creatures", taken over whole as a learned loan, a tatsama. Bengali uses the creator god's name for the butterfly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-QUAL223-VERHEIRATET
 prerequisites: [GE-C223-ungeduldig, GE-C223-ungluecklich]
 sounds: []
 roots: []
+etymology_hook: "verheiratet — 'married', the participle of a verb built on heiraten 'to marry'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C223-ungluecklich]
 <!-- hl-knowledge: introduces=[GE-LEX-C223-QUAL223-05]; assesses=[] -->
 
 **verheiratet** — "married".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verheiratet** is the past participle of a verb built from *ver-* + *heiraten*, "to marry", which goes back to Old High German *hīrāt*, "marriage" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

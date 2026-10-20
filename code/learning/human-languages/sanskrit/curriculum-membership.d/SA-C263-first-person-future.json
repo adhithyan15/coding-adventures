@@ -1,0 +1,11 @@
+{
+  "id": "SA-C263-first-person-future",
+  "pathSegment": "SA-PATH-263-FUT263",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-263-FUT263",
+      "order": 1
+    }
+  ]
+}

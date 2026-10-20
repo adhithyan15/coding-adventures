@@ -1,0 +1,11 @@
+{
+  "id": "FR-C449-ficeler",
+  "pathSegment": "FR-PATH-449-BURALISTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-449-BURALISTE",
+      "order": 4
+    }
+  ]
+}

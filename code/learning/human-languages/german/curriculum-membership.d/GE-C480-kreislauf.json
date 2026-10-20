@@ -1,0 +1,11 @@
+{
+  "id": "GE-C480-kreislauf",
+  "pathSegment": "GE-PATH-480-UEBELKEIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-480-UEBELKEIT",
+      "order": 4
+    }
+  ]
+}

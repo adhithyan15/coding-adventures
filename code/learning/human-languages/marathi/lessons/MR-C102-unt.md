@@ -14,7 +14,8 @@ romanization: "uṇṭ"
 concept_tag: MR-ANIMALS102-UNT
 prerequisites: [MR-C102-mor, MR-C102-asval]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "uṇṭ: usually traced to Sanskrit uṣṭra 'buffalo; camel'; CDIAL lists no Marathi form (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C102-asval]
 <!-- hl-knowledge: introduces=[MR-LEX-C102-ANIMALS102-04]; assesses=[] -->
 
 **उंट** — *uṇṭ* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उंट** (*uṇṭ*) is usually traced to Sanskrit *uṣṭra*, "buffalo" in the Rigveda and "camel" later (CDIAL 2387). CDIAL lists no Marathi form under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C285-conferenza-stampa",
+  "pathSegment": "IT-PATH-285-COMUNICATO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-285-COMUNICATO",
+      "order": 2
+    }
+  ]
+}

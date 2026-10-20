@@ -6,7 +6,7 @@ sequence: 900
 chapter: 42
 type: word
 headword: lūdō, lūdere
-gloss: "I play" — a small verb with an outsized English family, most of which is about being fooled rather than about play
+gloss: '"I play" — a small verb with an outsized English family, most of which is about being fooled rather than about play'
 concept_tag: VERB-PLAY
 prerequisites: [LA-C42-accipio, LA-C38-lego, LA-C38-scribo]
 sounds: [macron-long-vowel, macron-none-short-vowel]

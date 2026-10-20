@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 224,
-  "sourceHash": "fnv1a64:abad625948be1801",
+  "sourceHash": "fnv1a64:41d3abf082c4a85b",
   "lessonIds": [
     "AR-C224-kasaba",
     "AR-C224-iqtarada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch224.txt",
   "json": "arabic/narration/ch224.json",
-  "textHash": "fnv1a64:8ed47fe56ce043c6",
-  "jsonHash": "fnv1a64:b4073cb867c7254d",
+  "textHash": "fnv1a64:47aeb71fb3c8f482",
+  "jsonHash": "fnv1a64:516e06609468e113",
   "findings": []
 }

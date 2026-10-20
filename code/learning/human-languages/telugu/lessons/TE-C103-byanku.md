@@ -14,7 +14,8 @@ romanization: "byāṅku"
 concept_tag: TE-LOC103-BYANKU
 prerequisites: [TE-C103-badi, TE-C103-grandhalayam]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "byāṅku ← English bank, with Telugu's added -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C103-grandhalayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C103-LOC103-04]; assesses=[] -->
 
 **బ్యాంకు** — *byāṅku* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బ్యాంకు** (*byāṅku*) is a loan from English *bank*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

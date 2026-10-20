@@ -12,6 +12,9 @@ Before the new one: say the Persian for to fold, then the Persian for to hang up
 You'll want to know: داد زدن.
 داد زدن — dâd zadan — "to shout".
 
+The word, taken apart.
+dâd zadan pairs dâd, "cry", with zadan, "to strike". dâd is the old word for "justice" (Middle Persian dād, "law, justice", EtymDB), and a shout is usually explained as first a cry for justice. zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to hang up, then the Persian for to shou
 
 You'll want to know: مسواک زدن.
 مسواک زدن — mesvâk zadan — "to brush one's teeth".
+
+The word, taken apart.
+mesvâk zadan pairs mesvâk, borrowed from Arabic miswāk, "tooth-stick" (root s-w-k, Lane), with the Persian verb zadan, "to strike". zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to shout, then the Persian for to brush 
 You'll want to know: وزن کردن.
 وزن کردن — vazn kardan — "to weigh".
 
+The word, taken apart.
+vazn kardan pairs vazn, borrowed from Arabic wazn, "weight" (root w-z-n, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to brush one's teeth, then the Persian f
 You'll want to know: گاز گرفتن.
 گاز گرفتن — gâz gereftan — "to bite".
 
+The word, taken apart.
+gâz gereftan is "to take a bite": gâz, "bite", is a native word, and gereftan, "to take", is inherited. gereftan, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root gʰrebh₂-, "to seize".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to weigh, then the Persian for to bite.
 
 You'll want to know: جویدن.
 جویدن — javidan — "to chew".
+
+The word, taken apart.
+javidan is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian jōyīdan, "to chew".
 
 What you've built.
 One more word for this chapter.

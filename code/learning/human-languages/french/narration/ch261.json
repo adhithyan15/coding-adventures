@@ -1,0 +1,468 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 261,
+  "title": "Should, and Why — je devrais, expliquer",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:029996e8be7c166b",
+  "lessons": [
+    {
+      "id": "FR-C261-je-devrais",
+      "sequence": 15230,
+      "title": "je devrais — what you ought to do about it",
+      "headword": "je devrais",
+      "romanization": "je devrais",
+      "gloss": "I should — devoir softened into advice, with the same ending as je voudrais",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b22112774bbdd40f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I must leave\". (Je dois partir.) Then ask a stranger for a coffee. (Je voudrais un café.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An explanation often ends on a third move: what somebody ought to do. That move has its own form, and you already own its ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: je devrais",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "je devrais — \"I should\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is devoir with the soft ending of je voudrais: je devrais, tu devrais, il devrait, vous devriez. A bare infinitive follows, with nothing in between, exactly as after je dois:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je devrais travailler. — I should work. Tu devrais dormir. — You should sleep. (to a friend) Vous devriez vous reposer. — You should rest. (to anyone you call vous)."
+            },
+            {
+              "kind": "speech",
+              "text": "Je dois travailler has no way out. Je devrais travailler says I know I ought to, and have not promised. That softness is the register advice usually wants. The ending is the one in voudrais, and chapter two hundred and sixty-seven gives the whole form its name and its recipe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: advice, with its reason",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Advice sits naturally at the end of an arrow:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tu es fatigué, donc tu devrais dormir. — You're tired, so you should sleep. Je pense que tu devrais te reposer. — I think you should rest."
+            },
+            {
+              "kind": "speech",
+              "text": "With on, it becomes \"we ought to\": On devrait partir. — We ought to leave. Said late in an evening, it is a polite way to end it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "devoir is inherited from Latin dēbēre, \"to owe\" (EtymDB 2.1), and dēbēre is a compound: dē, \"from\", plus habēre, \"to have\" (Lewis & Short, under debeo). To owe is to have something from someone: you are holding what is theirs. So je devrais is, at root, \"I would owe it\": the debt is there, and nobody is collecting yet."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je devrais, tu devrais, il devrait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je devrais, tu devrais, il devrait*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hard one, then the soft one — Je dois travailler. then Je devrais travailler.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hard one, then the soft one — *Je dois travailler.* then *Je devrais travailler.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice to a tired friend — Tu es fatigué, alors tu devrais dormir.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice to a tired friend — *Tu es fatigué, alors tu devrais dormir.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "On devrait partir.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *On devrait partir.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the difference between je dois and je devrais? (Je dois is \"I must\"; je devrais is \"I should\", softer.) Which form you know has the same ending? (Je voudrais.) What are the two Latin pieces of dēbēre? (Dē and habēre — to have from someone.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C261-expliquer",
+      "sequence": 15240,
+      "title": "expliquer pourquoi — to unfold",
+      "headword": "expliquer pourquoi",
+      "romanization": "expliquer pourquoi",
+      "gloss": "to explain why — four moves in a row: a view, a cause, a consequence, and advice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2416a54482993e6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces are in your hands: je pense que for a view, parce que and donc for the two arrows, je devrais for advice. This lesson puts them in a row, under the verb that names the act."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: explaining something to someone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have expliquer, \"to explain\", a regular -er verb. The thing explained comes straight after it; the person who hears it takes à, or stands in front as a small pronoun:"
+            },
+            {
+              "kind": "speech",
+              "text": "J'explique le problème à ma mère. — I explain the problem to my mother. Je t'explique. — Let me explain. (to a friend) Vous pouvez m'expliquer? — Could you explain it to me?"
+            },
+            {
+              "kind": "speech",
+              "text": "And the explanation itself often opens with la raison, \"the reason\": La raison, c'est que… — \"The reason is that…\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the shape of an explanation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is a whole explanation, every word of it met before:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Pourquoi tu ne sors pas? — Je pense qu'il va pleuvoir. Et je suis malade, parce qu'hier il faisait froid. Donc je reste à la maison. Je devrais dormir."
+            },
+            {
+              "kind": "speech",
+              "text": "Four moves, and a word for each: a view (je pense que), a cause pointing back (parce que), a consequence pointing forward (donc), and advice (je devrais). With both arrows you can build it cause first or claim first, and the listener can follow either."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: folded, and unfolded",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "expliquer is a learned borrowing from Latin explicāre, \"to unfold, to open out flat\" (EtymDB 2.1; Lewis & Short, under explico), which is ex-, \"out\", plus plicāre, \"to fold\". To explain is to unfold: something was folded shut, and you open it out."
+            },
+            {
+              "kind": "speech",
+              "text": "The same plicāre came down into French the slow way, by mouth, and gave plier, \"to fold\", which you have (EtymDB 2.1). English kept the Latin in explicit, and complicated is the opposite: folded together."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Je t'explique. — then Vous pouvez m'expliquer?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Je t'explique.* — then *Vous pouvez m'expliquer ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four moves — Je pense qu'il va pleuvoir. Je suis malade. Donc je reste à la maison. Je devrais dormir.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four moves — *Je pense qu'il va pleuvoir. Je suis malade. Donc je reste à la maison. Je devrais dormir.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, cause last — Je reste à la maison parce que je suis malade.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, cause last — *Je reste à la maison parce que je suis malade.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "La raison, c'est que je suis malade.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *La raison, c'est que je suis malade.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four moves of an explanation and a word for each. (View je pense que, cause parce que, consequence donc, advice je devrais.) Who takes à after expliquer? (The person who hears it.) What is expliquer, taken apart? (Ex- and plicāre: to unfold.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C261-revision-explication",
+      "sequence": 15250,
+      "title": "Review — unfolding a decision",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a whole explanation aloud — a view, a cause, a consequence and a piece of advice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:404a1f509ad97034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I should work\". (Je devrais travailler.) Then \"let me explain\", to a friend. (Je t'explique.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, and a whole explanation. A view: je pense que, à mon avis. A cause, pointing back: parce que. A consequence, pointing forward: donc, alors. And advice, softened: je devrais, tu devrais, on devrait."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here is a friend's question, and an answer in four moves:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Pourquoi tu ne viens pas au cinéma? — À mon avis, le film est ennuyeux. Et je suis fatigué, parce que j'ai beaucoup travaillé. Donc je reste à la maison. Mais toi, tu devrais y aller!"
+            },
+            {
+              "kind": "speech",
+              "text": "Tu ne viens pas is from venir, \"to come\", one of the verbs that take être in the passé composé."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the view — À mon avis, le film est ennuyeux.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the view — *À mon avis, le film est ennuyeux.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cause — Je suis fatigué, parce que j'ai beaucoup travaillé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cause — *Je suis fatigué, parce que j'ai beaucoup travaillé.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the consequence — Donc je reste à la maison.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the consequence — *Donc je reste à la maison.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the advice — Mais toi, tu devrais y aller!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the advice — *Mais toi, tu devrais y aller !*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an explanation of your own, in four moves, for something you are not doing tonight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an explanation of your own, in four moves, for something you are not doing tonight]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which move does je devrais make? (Advice.) Say \"could you explain it to me?\" (Vous pouvez m'expliquer?) What does expliquer do, at root? (It unfolds.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

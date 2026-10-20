@@ -12,6 +12,9 @@ Before the new one: say the Italian for a pharmacist, then the Italian for a but
 You'll want to know: il suocero.
 il suocero — "a father-in-law".
 
+The word, taken apart.
+suocero from Latin socer, "a father-in-law" (socerum) — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for a butcher, then the Italian for a father
 
 You'll want to know: la suocera.
 la suocera — "a mother-in-law".
+
+The word, taken apart.
+suocera from Late Latin socera, for Latin socrus, "a mother-in-law" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for a father-in-law, then the Italian for a 
 You'll want to know: il genero.
 il genero — "a son-in-law".
 
+The word, taken apart.
+genero from Latin gener, "a son-in-law" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for a mother-in-law, then the Italian for a 
 You'll want to know: la nuora.
 la nuora — "a daughter-in-law".
 
+The word, taken apart.
+nuora from Latin nurus, "a daughter-in-law" — inherited. EtymDB 2.1 has no row for nuora; it derives Old Provençal nora from nurus.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for a son-in-law, then the Italian for a dau
 
 You'll want to know: il fidanzato.
 il fidanzato — "a boyfriend, a fiancé".
+
+The word, taken apart.
+fidanzato is the masculine of fidanzata: "the one pledged", from fidanza, "trust", which goes back to Latin fidere, "to trust". EtymDB 2.1 lists French fiancé as its cognate.
 
 What you've built.
 One more word for this chapter.

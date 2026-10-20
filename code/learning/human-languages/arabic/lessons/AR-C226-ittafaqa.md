@@ -14,7 +14,8 @@ romanization: "ittafaqa"
 concept_tag: AR-VERB-ITTAFAQA
 prerequisites: [AR-C226-itadhara, AR-C226-akhbara]
 sounds: []
-roots: []
+roots: [w-f-q]
+etymology_hook: "ittafaqa: built on the root w-f-q, 'to suit, to agree' (Lane); ittafaqa is Form VIII, 'to agree'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C226-akhbara]
 <!-- hl-knowledge: introduces=[AR-LEX-C226-ACT226-05]; assesses=[] -->
 
 **اتفق** — *ittafaqa* — "to agree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اتفق** (*ittafaqa*) is built on the native Arabic root *w-f-q*, "to suit, to agree" (Lane). *Ittafaqa* is Form VIII, "to agree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

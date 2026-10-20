@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 478,
-  "sourceHash": "fnv1a64:196535d9a2d3ee22",
+  "sourceHash": "fnv1a64:03e10fadda066add",
   "lessonIds": [
     "ES-C478-equipaje",
     "ES-C478-calzado",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch478.txt",
   "json": "spanish/narration/ch478.json",
-  "textHash": "fnv1a64:3bd36243292249bb",
-  "jsonHash": "fnv1a64:9f1528e3c0c72fc2",
+  "textHash": "fnv1a64:539863b30051f687",
+  "jsonHash": "fnv1a64:d6c2e09915704bbe",
   "findings": []
 }

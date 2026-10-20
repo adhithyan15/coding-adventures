@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:a3489715fe85b430",
+  "sourceHash": "fnv1a64:41c10485879c3c04",
   "lessonIds": [
     "GE-C14-haben",
     "GE-C14-hab-stamm",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "german/narration/ch22.txt",
   "json": "german/narration/ch22.json",
-  "textHash": "fnv1a64:d741a070108028b6",
-  "jsonHash": "fnv1a64:2d443b89148f99e4",
+  "textHash": "fnv1a64:0adc3ef1945a104d",
+  "jsonHash": "fnv1a64:6d17716dbfc45352",
   "findings": []
 }

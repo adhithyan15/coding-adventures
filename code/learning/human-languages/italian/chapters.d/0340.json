@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Il dibattito",
+  "label": "ch:it-il-dibattito",
+  "canDo": "I can take part in a debate: state a thesis, build an argument and try to persuade with a convincing reason.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C340-persuadere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can take part in a debate: state a thesis, build an argument and try to persuade with a convincing reason.",
+    "assesses": [
+      "IT-LEX-C340-DIBATTITO-03",
+      "IT-LEX-C340-DIBATTITO-04",
+      "IT-LEX-C340-DIBATTITO-05"
+    ]
+  }
+}

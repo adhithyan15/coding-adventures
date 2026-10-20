@@ -58,7 +58,7 @@ here it does real work:
 | *der* **M**orgen | noun | the morning |
 | **m**orgen | adverb | tomorrow |
 
-*Guten Morgen!* is "good **morning**." *Bis morgen* is "until **tomorrow**."
+*Guten Morgen!* is "good **morning**." Plain *morgen*, small m, is "**tomorrow**."
 The capital is the only thing telling them apart on the page — and once you know
 that, German's noun-capitalisation stops being decoration and starts being
 punctuation you can read.
@@ -76,7 +76,8 @@ make "tomorrow" out of "morning":
 | French | *matin* | *demain* |
 
 And English did it too, then half forgot: **morrow** meant *morning*, and
-**tomorrow** is literally *to (the) morrow*. So *bis morgen* is "see you on the
+**tomorrow** is literally *to (the) morrow*. German *morgen* ← Old High German
+*morgan* (EtymDB 2.1), the same word as English *morrow*. So *bis morgen* is "see you on the
 morrow," almost word for word.
 
 ## Guided Practice
@@ -84,7 +85,7 @@ morrow," almost word for word.
 
 [PAUSE 1s]
 - [YOU SAY: "Guten Morgen" — good morning, capital M]
-- [YOU SAY: "bis morgen" — until tomorrow, small m]
+- [YOU SAY: "morgen" — tomorrow, small m]
 - [YOU SAY: "morrow" then "morgen" — the same old word]
 
 ## Wrap-up Recall

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C574-recibir",
+    "language": "spanish",
+    "chapter": 574,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:849d9f9d05147a57"
+  },
+  "findings": []
+}

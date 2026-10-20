@@ -13,7 +13,8 @@ gloss: "young"
 concept_tag: PT-QUAL243-JOVEM
 prerequisites: [PT-C242-claro-clara, PT-C242-distante]
 sounds: []
-roots: []
+roots: [iuvenis-latin]
+etymology_hook: "jovem ← Latin iuvenis 'young' — English juvenile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C242-distante]
 <!-- hl-knowledge: introduces=[PT-LEX-C243-QUAL243-01]; assesses=[] -->
 
 **jovem** — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jovem** ← Latin *iuvenis*, "young" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

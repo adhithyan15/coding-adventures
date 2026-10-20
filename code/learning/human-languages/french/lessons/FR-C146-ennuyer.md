@@ -13,7 +13,8 @@ gloss: "to be bored"
 concept_tag: FR-VERB-ENNUYER
 prerequisites: [FR-C145-discuter, FR-C145-disputer]
 sounds: []
-roots: []
+roots: [odium-latin]
+etymology_hook: "s'ennuyer ← Vulgar Latin *inodiare, from in odio 'in hatred' — English annoy and ennui"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C145-disputer]
 <!-- hl-knowledge: introduces=[FR-LEX-C146-VERBES146-01]; assesses=[] -->
 
 **s'ennuyer** — "to be bored".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'ennuyer** ← Vulgar Latin *\*inodiare*, from Latin *in odio*, "in hatred" (Lewis & Short for *odium*) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mṛgālaya"
 concept_tag: KA-STHALA174-MRGALAYA
 prerequisites: [KA-C174-sarovara, KA-C174-guhe]
 sounds: []
-roots: []
+roots: [sanskrit-mrga, sanskrit-alaya]
+etymology_hook: "mṛgālaya: Sanskrit mṛga 'wild animal' (CDIAL 10264) + ālaya 'house' (CDIAL 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C174-guhe]
 <!-- hl-knowledge: introduces=[KA-LEX-C174-STHALA174-04]; assesses=[] -->
 
 **ಮೃಗಾಲಯ** — *mṛgālaya* — "a zoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೃಗಾಲಯ** (*mṛgālaya*) is Sanskrit *mṛga*, "wild animal, deer" (CDIAL 10264), and *ālaya*, "house" (CDIAL 1366): "a house of animals".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

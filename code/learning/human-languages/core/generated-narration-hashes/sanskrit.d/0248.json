@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 248,
-  "sourceHash": "fnv1a64:1bdc0c49914e8e5e",
+  "sourceHash": "fnv1a64:0b4255a492e8b9ac",
   "lessonIds": [
     "SA-C248-kosah",
     "SA-C248-nidhih",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch248.txt",
   "json": "sanskrit/narration/ch248.json",
-  "textHash": "fnv1a64:db0a1bededdf57bd",
-  "jsonHash": "fnv1a64:8fa9388fe4335458",
+  "textHash": "fnv1a64:257fdf2feb365537",
+  "jsonHash": "fnv1a64:f7478bb6cf7aba5f",
   "findings": []
 }

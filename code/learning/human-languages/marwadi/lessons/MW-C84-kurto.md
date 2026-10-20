@@ -14,7 +14,8 @@ romanization: "kurto"
 concept_tag: MW-TOWN84-KURTO
 prerequisites: [MW-C84-gav, MW-C84-sahar]
 sounds: []
-roots: []
+roots: [persian-kurta]
+etymology_hook: "kurto: usually traced to Persian kurta 'a long shirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C84-sahar]
 <!-- hl-knowledge: introduces=[MW-LEX-C84-TOWN84-03]; assesses=[] -->
 
 **कुरतो** — *kurto* — "a kurta, a long shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुरतो** (*kurto*) is a loan, usually traced to Persian *kurta*, "a long shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

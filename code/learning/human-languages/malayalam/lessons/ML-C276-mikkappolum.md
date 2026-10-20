@@ -14,7 +14,8 @@ romanization: "mikkappōḻuṁ"
 concept_tag: ML-SAMAYAM276-MIKKAPPOLUM
 prerequisites: [ML-C276-pativayi, ML-C276-palappolum]
 sounds: []
-roots: []
+roots: [dravidian-miku-excess, dravidian-pozhutu-time]
+etymology_hook: "mikkappōḻuṁ: native Dravidian, mikka 'the greater part' (DEDR 4838) + 'time' (DEDR 4559) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C276-palappolum]
 <!-- hl-knowledge: introduces=[ML-LEX-C276-SAMAYAM276-04]; assesses=[] -->
 
 **മിക്കപ്പോഴും** — *mikkappōḻuṁ* — "usually, most of the time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മിക്കപ്പോഴും** (*mikkappōḻuṁ*) is native Dravidian, "most times": *mikka*, "the greater part" (DEDR 4838, with Tamil *miku*), the word for "time" (DEDR 4559), and *-uṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hātoḍā"
 concept_tag: MR-THINGS132-HATODA
 prerequisites: [MR-C131-dori, MR-C131-khila]
 sounds: []
-roots: []
+roots: [indo-aryan-hastakuta]
+etymology_hook: "hātoḍā ← *hastakūṭa 'hand hammer', a reconstructed form; a tadbhava (CDIAL 14028)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C131-khila]
 <!-- hl-knowledge: introduces=[MR-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **हातोडा** — *hātoḍā* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हातोडा** (*hātoḍā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hastakūṭa*, "hand hammer", a form CDIAL reconstructs from its descendants (CDIAL 14028). It is *hasta*, "hand", and *kūṭa*, "hammer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

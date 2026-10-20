@@ -1,0 +1,11 @@
+{
+  "id": "IT-C394-bolletta",
+  "pathSegment": "IT-PATH-394-BILANCIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-394-BILANCIO",
+      "order": 2
+    }
+  ]
+}

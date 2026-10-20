@@ -14,6 +14,7 @@ concept_tag: GE-QUAL222-SPARSAM
 prerequisites: [GE-C221-selbststaendig, GE-C221-sonnig]
 sounds: []
 roots: []
+etymology_hook: "sparsam — sparen 'to save' + -sam: given to saving"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C221-sonnig]
 <!-- hl-knowledge: introduces=[GE-LEX-C222-QUAL222-01]; assesses=[] -->
 
 **sparsam** — "thrifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sparsam** is *sparen*, "to save", + *-sam*, a cousin of English *-some*: given to saving.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

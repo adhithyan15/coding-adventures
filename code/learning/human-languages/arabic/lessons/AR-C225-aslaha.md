@@ -14,7 +14,8 @@ romanization: "aṣlaḥa"
 concept_tag: AR-VERB-ASLAHA
 prerequisites: [AR-C225-sahaba, AR-C225-haddara]
 sounds: []
-roots: []
+roots: [ṣ-l-ḥ]
+etymology_hook: "aṣlaḥa: built on the root ṣ-l-ḥ, 'to be good, to be sound' (Lane); aṣlaḥa is Form IV, 'to make sound', to repair"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C225-haddara]
 <!-- hl-knowledge: introduces=[AR-LEX-C225-ACT225-03]; assesses=[] -->
 
 **أصلح** — *aṣlaḥa* — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أصلح** (*aṣlaḥa*) is built on the native Arabic root *ṣ-l-ḥ*, "to be good, to be sound" (Lane). *Aṣlaḥa* is Form IV, "to make sound", to repair.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

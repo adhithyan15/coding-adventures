@@ -11,7 +11,8 @@ romanization: "vitai"
 concept_tag: TA-NOUN-SEED
 prerequisites: [TA-C52-root, TA-C50-welcome, TA-C51-cloud]
 sounds: []
-roots: []
+roots: [dravidian-vittu-seed]
+etymology_hook: "விதை — native Dravidian (DEDR 5401); Malayalam vittu, Kannada bittu, Telugu vittu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C52-root]
 Malayalam വിത്ത് (*vittŭ*) and Telugu విత్తనం (*vittanaṁ*) are the same root wearing different endings, and Tamil keeps a *vittu* of its own beside விதை.
 
 விதை is the seed and the sowing of it at once: *vitaikka* is to sow. The thing and what you do with it share one shape, which saves Tamil a word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விதை** (*vitai*) is native Dravidian. DEDR 5401 lists Malayalam *vittu*, Kannada *bittu* and Telugu *vittu*. The verb *vitai* means "to sow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -35,7 +35,10 @@ it("pins Marwadi lesson-content budgets", () =>
     // lesson after the later vocabulary run has supplied time anchors, familiar
     // actions, preference and reason language. It introduces no atom: the work
     // is planning and independently connecting already-taught material.
-    lessons: 897,
+    //
+    // 897 -> 901: chapter 151 adds four source-verified joining lessons. Each
+    // remains below five minutes and declares no idiom, sense or culture claim.
+    lessons: 901,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,

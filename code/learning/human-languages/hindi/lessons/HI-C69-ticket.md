@@ -14,7 +14,8 @@ romanization: "ṭikaṭ"
 concept_tag: HI-NOUN-TICKET
 prerequisites: [HI-C69-station, HI-C37-chai]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikaṭ ← English ticket"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,11 @@ you first wrote a name.
 This is the word you actually say at a window. You already know how to ask for
 one thing politely: **एक चाय दीजिए** got you a cup of tea. **एक टिकट दीजिए** is
 the same frame with a new word dropped in, and it will get you onto a train.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टिकट** (*ṭikaṭ*) is a loan from English *ticket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

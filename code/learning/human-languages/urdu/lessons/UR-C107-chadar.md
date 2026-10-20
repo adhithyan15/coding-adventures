@@ -14,7 +14,8 @@ romanization: "chādar"
 concept_tag: UR-THINGS107-CHADAR
 prerequisites: [UR-C107-kambal, UR-C107-parda]
 sounds: []
-roots: []
+roots: [persian-chadar]
+etymology_hook: "chādar: usually traced to Persian chādar 'sheet, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C107-parda]
 <!-- hl-knowledge: introduces=[UR-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **چادر** — *chādar* — "a sheet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چادر** (*chādar*) is a loan, usually traced to Persian *chādar*, "sheet, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "of one's own accord"
 concept_tag: LA-CAUSA211-SPONTE
 prerequisites: [LA-C211-omnino, LA-C211-vix]
 sounds: []
-roots: []
+roots: [sponte-latin]
+etymology_hook: "sponte 'of one's own accord' — an old noun for 'free will'; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C211-vix]
 <!-- hl-knowledge: introduces=[LA-LEX-C211-CAUSA211-03]; assesses=[] -->
 
 **sponte** — "of one's own accord".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sponte** is the ablative of an old noun for "free will"; Lewis & Short link it with *spondeō*, "to pledge", but that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

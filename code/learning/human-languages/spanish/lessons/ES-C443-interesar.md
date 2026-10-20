@@ -11,6 +11,7 @@ concept_tag: ES-VERB-INTERESAR
 prerequisites: [ES-C443-doler, ES-C398-interesante, ES-C06-estudiar]
 sounds: [stress-final, s-clear]
 roots: [interesse-latin]
+etymology_hook: "interesar ← Latin inter esse 'to be between': to be at stake — English interest"
 duration:
   max_seconds: 275
 requires:

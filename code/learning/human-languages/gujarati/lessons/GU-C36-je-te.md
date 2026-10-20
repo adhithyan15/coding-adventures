@@ -11,8 +11,8 @@ gloss: "the one who … that one … — the relative pair, both ends marked"
 concept_tag: GU-JOIN-JE-TE
 prerequisites: [GU-C36-je, GU-C35-jo-to]
 sounds: []
-roots: []
-etymology_hook: "The same two-ended shape as જો … તો …: Gujarati marks the describing clause and the thing described."
+roots: [sanskrit-ya-relative, sanskrit-ta]
+etymology_hook: "je: usually traced to the relative ya-, named by CDIAL only in a note (10391); te likely from demonstrative ta- (5612)"
 duration:
   max_seconds: 250
 requires:
@@ -54,6 +54,8 @@ Gujarati keeps them visibly paired.
 
 Once you see the pair you can hear it everywhere: **જો … તો**, **જ્યારે …
 ત્યારે**, **જે … તે**. One family, one habit, three uses.
+
+*Je* is usually traced to the Sanskrit relative *ya-*, though CDIAL names the Gujarati word only in a note in that entry (CDIAL 10391); *te* is usually traced to the demonstrative *ta-*, though CDIAL 5612 lists only the Gujarati form *teṇe*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-JE-TE-01, GU-PRON-JE-01] -->

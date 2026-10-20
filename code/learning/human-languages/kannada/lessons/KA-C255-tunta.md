@@ -14,7 +14,8 @@ romanization: "tuṇṭa"
 concept_tag: KA-GUNA255-TUNTA
 prerequisites: [KA-C254-kandu, KA-C254-gulabi]
 sounds: []
-roots: []
+roots: [dravidian-tuntu-mischief]
+etymology_hook: "tuṇṭa: native Dravidian, one word with Tamil tuṇṭaṉ and Telugu tuṇṭa (DEDR 3312)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C254-gulabi]
 <!-- hl-knowledge: introduces=[KA-LEX-C255-GUNA255-01]; assesses=[] -->
 
 **ತುಂಟ** — *tuṇṭa* — "naughty, mischievous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುಂಟ** (*tuṇṭa*) is native Dravidian, one word with Tamil *tuṇṭaṉ*, Telugu *tuṇṭa* and Malayalam *tuṇṭan* (DEDR 3312). DEDR lists *tuṇṭa* itself, "a mischievous man, a rogue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

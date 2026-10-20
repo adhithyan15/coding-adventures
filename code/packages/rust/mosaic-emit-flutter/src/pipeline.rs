@@ -2071,21 +2071,73 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .any(|child| layout_contains_tag(child, tag))
 }
 
-/// Whether this tree contains a non-empty Flutter flex container with an
-/// authored `gap`.
+/// Whether a native drag/drop body lowers to a `Column` child list rather
+/// than one direct child.
 ///
-/// `Row` and `Column` are the only Flutter widgets whose child lists receive
-/// UI85 spacing. A `Stack` is an overlay, and a multi-child `Box` happens to
-/// use an internal Column only as a lowering detail; giving either one flex
-/// gap semantics would turn an unsupported declaration into the wrong layout.
+/// This predicate deliberately mirrors the two `Container` writers. The
+/// lightweight writer needs a list for every authored multi-child body and
+/// for a lone `For`, whose collection spread can evaluate to many widgets.
+/// The decorated writer has one narrower case: a leading `If` plus its
+/// optional `Else`, with no following child, lowers directly to one ternary
+/// widget. A later ordinary child makes the body a real list again. Keeping
+/// that distinction here prevents generated Dart from calling
+/// `_mosaicWithGap` without emitting its definition.
+fn drag_body_lowers_to_child_list(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> bool {
+    if !matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") || node.children.is_empty()
+    {
+        return false;
+    }
+
+    let uses_styled_box = node.part_name.as_deref().is_some_and(|part| {
+        let style_props = part_styles.get(part).map(String::as_str).unwrap_or("");
+        part_has_decoration(style_props)
+            || node_has_state_when(node)
+            || part_has_slot_state(part, part_styles)
+    });
+    let leading_if_is_entire_body = node.children[0].tag == "If"
+        && (node.children.len() == 1
+            || (node.children.len() == 2 && node.children[1].tag == "Else"));
+
+    if uses_styled_box && leading_if_is_entire_body {
+        return false;
+    }
+
+    node.children.len() > 1 || node.children[0].tag == "For"
+}
+
+/// Whether this tree contains a non-empty Flutter child list with an authored
+/// `gap` that lowers through `_mosaicWithGap`.
+///
+/// Non-wrapping `Row` and `Column` receive UI85 spacing through the helper. A
+/// wrapping `Row` lowers to `Wrap` and uses its native `spacing` /
+/// `runSpacing` arguments instead. `HostDraggable` and `HostDropTarget` have
+/// vertical content bodies, so their evaluated multi-child lists use the same
+/// helper. A `Stack` is an overlay, and a multi-child `Box` happens to use an
+/// internal Column only as a lowering detail; giving either one flex gap
+/// semantics would turn an unsupported declaration into the wrong layout.
 fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
-    let own_gap = !node.children.is_empty()
+    let own_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|props| parse_style_props(props));
+    let is_wrapping_row = node.tag == "Row"
+        && own_props.as_ref().is_some_and(|props| {
+            props
+                .get("flex-wrap")
+                .is_some_and(|value| value.trim().trim_matches('"') == "wrap")
+        });
+    let has_flex_children = !node.children.is_empty()
         && matches!(node.tag.as_str(), "Row" | "Column")
-        && node
-            .part_name
-            .as_deref()
-            .and_then(|part| part_styles.get(part))
-            .is_some_and(|props| parse_style_props(props).contains_key("gap"));
+        && !is_wrapping_row;
+    let has_drag_body_children = drag_body_lowers_to_child_list(node, part_styles);
+    let own_gap = (has_flex_children || has_drag_body_children)
+        && own_props
+            .as_ref()
+            .is_some_and(|props| props.contains_key("gap"));
     own_gap
         || node
             .children
@@ -2791,9 +2843,12 @@ struct TableCtx<'a> {
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
     /// The sibling-aware parent has committed to the one `Expanded` wrapper
-    /// that represents this leaf's `width: 100%`. HostInput uses this to avoid
-    /// adding its own fallback `Expanded` around the TextField.
+    /// that represents this leaf's percentage width. HostInput uses this to
+    /// avoid adding its own fallback `Expanded` around the TextField.
     fill_width_owned_by_parent: bool,
+    /// True only while emitting a direct child of a bounded `Wrap`. Percentage
+    /// widths in that position become `FractionallySizedBox` constraints.
+    direct_wrap_child: bool,
     /// True only while emitting a direct child of a height-bounded `Column`.
     /// Such children may safely honor `flex-grow` through `Expanded`.
     direct_column_child: bool,
@@ -3272,6 +3327,22 @@ fn emit_widget_tree(
         }
     }
 
+    // A wrapping Row supplies every direct child with its own finite share of
+    // the row. `FractionallySizedBox` is legal here (unlike `Expanded`, which
+    // only works in Flex parents) and works through a `For` body because the
+    // direct-wrap marker is threaded through the meta-primitive unchanged.
+    if ctx.direct_wrap_child && ctx.width_bounded {
+        if let Some(fraction) = part_percent_width_fraction(node, part_styles) {
+            record_style_read("width");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}FractionallySizedBox(\n{pad}  widthFactor: {},\n{pad}  child: {},\n{pad})\n",
+                dart_fraction(fraction),
+                body.trim_start()
+            );
+        }
+    }
+
     // A scroll view only scrolls when its viewport is bounded. Container
     // primitives consume `height` in their own lowering, but HostScroll has
     // no native height argument; wrap it in a SizedBox so authored fixed
@@ -3382,16 +3453,34 @@ fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) ->
 /// that their Flutter layout context supplies a finite horizontal constraint,
 /// and must record the style read only after choosing a concrete lowering.
 fn part_has_fill_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
-    let Some(part) = node.part_name.as_deref() else {
-        return false;
-    };
-    let Some(props) = part_styles.get(part) else {
-        return false;
-    };
+    part_percent_width_fraction(node, part_styles) == Some(1.0)
+}
+
+/// A part's authored percentage width as a parent-relative fraction.
+///
+/// Values must be finite and in `(0, 100]`. Parsing before formatting keeps
+/// authored text out of generated Dart, and the lower bound is the smallest
+/// value that still rounds to a non-zero integer flex weight.
+fn part_percent_width_fraction(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<f64> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
     let parsed = parse_style_props(props);
-    parsed
-        .get("width")
-        .is_some_and(|value| value.trim() == "100%")
+    let raw = parsed.get("width")?.trim().trim_matches('"').trim();
+    let percent = raw.strip_suffix('%')?.trim().parse::<f64>().ok()?;
+    (percent.is_finite() && (0.0001..=100.0).contains(&percent)).then_some(percent / 100.0)
+}
+
+/// Print a parsed fraction for Dart to six decimal places without trailing
+/// zeroes. This matches the precision already used by the Compose backend.
+fn dart_fraction(fraction: f64) -> String {
+    ((fraction * 1_000_000.0).round() / 1_000_000.0).to_string()
+}
+
+fn fraction_flex(fraction: f64) -> u32 {
+    (fraction * 1_000_000.0).round().max(1.0) as u32
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3706,6 +3795,13 @@ fn emit_container(
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
     let props = parse_style_props(style_props);
+    let wraps = widget == "Row"
+        && style_prop(&props, "flex-wrap")
+            .is_some_and(|value| value.trim().trim_matches('"') == "wrap");
+    if wraps {
+        record_style_read("flex-wrap");
+    }
+    let emitted_widget = if wraps { "Wrap" } else { widget };
     let state_layers = node
         .part_name
         .as_deref()
@@ -3739,7 +3835,7 @@ fn emit_container(
         || part_max_width(node, part_styles).is_some()
         || part_flex_grow(node, part_styles).is_some()
         || (!ctx.direct_row_child && ctx.width_bounded);
-    let row_accepts_flex = widget == "Row" && width_bounded;
+    let row_accepts_flex = widget == "Row" && !wraps && width_bounded;
     let height_bounded = height.is_some()
         || (ctx.direct_column_child
             && ctx.direct_column_accepts_flex
@@ -3747,8 +3843,9 @@ fn emit_container(
         || (!ctx.direct_column_child && ctx.height_bounded);
     let column_accepts_flex = widget == "Column" && height_bounded;
     let child_ctx = TableCtx {
-        direct_row_child: widget == "Row",
+        direct_row_child: widget == "Row" && !wraps,
         direct_row_accepts_flex: row_accepts_flex,
+        direct_wrap_child: wraps && width_bounded,
         direct_column_child: widget == "Column",
         direct_column_accepts_flex: column_accepts_flex,
         direct_stack_child: widget == "Stack",
@@ -3759,6 +3856,16 @@ fn emit_container(
 
     // Special case for Box → Container.
     if widget == "Container" {
+        // Drag/drop bodies are vertical lists. Reading `gap` even for a
+        // literal single child correctly treats it as a supported no-op. A
+        // single authored `For`, however, evaluates to many children and must
+        // flow through the list path below so spacing is inserted after the
+        // loop is evaluated.
+        let drag_gap = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+            .then(|| style_prop(&props, "gap"))
+            .flatten()
+            .map(|value| parse_pixel_value(value));
+        let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
         // Styled-cell path (Bug B). A Box that carries a `part_name`
         // with real styling — a border, background, height, text-align,
         // and/or `state-when-*` highlights — must lower to a `Container`
@@ -3790,7 +3897,10 @@ fn emit_container(
         // multiple children need a child Column wrapper since Container
         // only accepts one direct child.
         let style_args = style_to_container_args(style_props);
-        if node.children.len() == 1 && style_args.is_empty() {
+        if node.children.len() == 1
+            && style_args.is_empty()
+            && !(drag_gap.is_some() && expands_to_child_list)
+        {
             // If the resolved Mosaic style has no Flutter-visible container
             // properties, this wrapper changes neither layout nor visuals.
             return emit_widget_tree(
@@ -3808,7 +3918,7 @@ fn emit_container(
                 style_to_container_args(style_props)
             ));
         }
-        if node.children.len() == 1 {
+        if node.children.len() == 1 && !(drag_gap.is_some() && expands_to_child_list) {
             let child_src = emit_widget_tree(
                 &node.children[0],
                 indent + 2,
@@ -3840,8 +3950,19 @@ fn emit_container(
         } else {
             format!("{inner_pad}{style_args},\n")
         };
+        let child = if matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") {
+            if let Some(gap) = drag_gap {
+                format!(
+                    "Column(children: _mosaicWithGap(<Widget>[\n{children}{pad}  ], {gap}, Axis.vertical))"
+                )
+            } else {
+                format!("Column(children: [\n{children}{pad}  ])")
+            }
+        } else {
+            format!("Column(children: [\n{children}{pad}  ])")
+        };
         return Ok(format!(
-            "{pad}Container(\n{style_prefix}{pad}  child: Column(children: [\n{children}{pad}  ])\n{pad})\n"
+            "{pad}Container(\n{style_prefix}{pad}  child: {child}\n{pad})\n"
         ));
     }
 
@@ -3864,27 +3985,42 @@ fn emit_container(
     } else {
         None
     };
-    let cross_axis_alignment = flutter_cross_axis_alignment(&props, widget);
+    let cross_axis_alignment = (!wraps)
+        .then(|| flutter_cross_axis_alignment(&props, widget))
+        .flatten();
     let cross_axis_arg = cross_axis_alignment
         .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
         .unwrap_or_default();
     let body = if children.is_empty() {
-        if let Some(alignment) = cross_axis_alignment {
-            format!("{pad}const {widget}(crossAxisAlignment: {alignment}, children: [])\n")
+        if wraps && gap.is_some() {
+            let gap = gap.as_deref().expect("checked above");
+            format!(
+                "{pad}const {emitted_widget}(spacing: {gap}, runSpacing: {gap}, children: [])\n"
+            )
+        } else if let Some(alignment) = cross_axis_alignment {
+            format!("{pad}const {emitted_widget}(crossAxisAlignment: {alignment}, children: [])\n")
         } else {
-            format!("{pad}const {widget}(children: [])\n")
+            format!("{pad}const {emitted_widget}(children: [])\n")
         }
-    } else if let Some(gap) = gap {
+    } else if wraps {
+        let gap_args = gap
+            .as_deref()
+            .map(|gap| format!("{inner_pad}spacing: {gap},\n{inner_pad}runSpacing: {gap},\n"))
+            .unwrap_or_default();
+        format!(
+            "{pad}{emitted_widget}(\n{gap_args}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n"
+        )
+    } else if let Some(gap) = gap.as_deref() {
         let axis = if widget == "Row" {
             "Axis.horizontal"
         } else {
             "Axis.vertical"
         };
         format!(
-            "{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+            "{pad}{emitted_widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
         )
     } else {
-        format!("{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+        format!("{pad}{emitted_widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
     // `Row`/`Column`/`Stack` have no decoration mechanism of their own
@@ -4126,14 +4262,10 @@ fn emit_paired_children(
             || (ctx.direct_column_child && ctx.direct_column_accepts_flex))
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
-        let fill_width = ctx.direct_row_child
+        let percent_width = ctx.direct_row_child
             && ctx.direct_row_accepts_flex
-            && matches!(
-                child.tag.as_str(),
-                "Text" | "HostInput" | "Input" | "HostButton"
-            )
-            && part_has_fill_width(child, part_styles);
-        if fill_width {
+            && part_percent_width_fraction(child, part_styles).is_some();
+        if percent_width {
             record_child_style_read(child, "width");
         }
         // This children list owns the explicit flex wrapper. Do not also let
@@ -4143,8 +4275,9 @@ fn emit_paired_children(
             // leaf wrapper does not also add SizedBox(double.infinity).
             // HostInput recognizes that same declaration and suppresses its
             // own fallback Expanded below.
-            direct_row_child: ctx.direct_row_child && (flex.is_none() || fill_width),
-            fill_width_owned_by_parent: fill_width,
+            direct_row_child: ctx.direct_row_child && (flex.is_none() || percent_width),
+            fill_width_owned_by_parent: percent_width,
+            direct_wrap_child: false,
             direct_column_child: ctx.direct_column_child && flex.is_none(),
             ..ctx
         };
@@ -4180,8 +4313,14 @@ fn emit_paired_children(
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
             }
-            None if fill_width => {
-                expanded = format!("Expanded(child: {sub})");
+            None if percent_width => {
+                let fraction = part_percent_width_fraction(child, part_styles)
+                    .expect("percentage width was checked above");
+                expanded = if fraction == 1.0 {
+                    format!("Expanded(child: {sub})")
+                } else {
+                    format!("Expanded(flex: {}, child: {sub})", fraction_flex(fraction))
+                };
                 &expanded
             }
             None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
@@ -5219,11 +5358,24 @@ impl ElevationTier {
 /// — matches every other backend's `part_elevation_tier`; no real part
 /// conditions elevation on a state today.
 fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
-    match style_prop(props, "elevation").map(String::as_str) {
+    let tier = match style_prop(props, "elevation").map(String::as_str) {
         Some("raised") => Some(ElevationTier::Raised),
         Some("overlay") => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    // The web-facing CSS shadow and the portable elevation token are authored
+    // together. A supported elevation tier already emits equivalent native
+    // depth, so its non-inset CSS companion is not a genuine style drop. Inset
+    // shadows are drawing effects rather than elevation and remain explicit
+    // degradation debt.
+    if tier.is_some()
+        && props
+            .get("box-shadow")
+            .is_some_and(|value| !value.to_ascii_lowercase().contains("inset"))
+    {
+        record_style_read("box-shadow");
     }
+    tier
 }
 
 /// A node's own part's `flex-grow` value, or `None` when unset or
@@ -5672,6 +5824,12 @@ fn emit_styled_box(
         inherited_text_style: Some(inherited_text_style.as_str()),
         ..ctx
     };
+    let drag_gap = matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+        .then(|| style_prop(&base, "gap"))
+        .flatten()
+        .map(|value| parse_pixel_value(value));
+    let expands_to_child_list = node.children.len() == 1 && node.children[0].tag == "For";
+    let drag_body_uses_child_list = drag_body_lowers_to_child_list(node, part_styles);
 
     // The Box [cell] body is an `If (is-editing) { HostInput } Else
     // { Text }` pair — exactly one rendered widget after fusing. Detect
@@ -5681,7 +5839,7 @@ fn emit_styled_box(
     // Other shapes fall back to single-child / Column wrapping.
     let inner_child = if node.children.is_empty() {
         format!("{ip}const SizedBox.shrink()")
-    } else if node.children[0].tag == "If" {
+    } else if node.children[0].tag == "If" && !drag_body_uses_child_list {
         let else_node = node.children.get(1).filter(|n| n.tag == "Else");
         emit_if_dart(
             &node.children[0],
@@ -5694,7 +5852,7 @@ fn emit_styled_box(
         )?
         .trim_end_matches('\n')
         .to_string()
-    } else if node.children.len() == 1 {
+    } else if node.children.len() == 1 && !(drag_gap.is_some() && expands_to_child_list) {
         emit_widget_tree(
             &node.children[0],
             indent + 4,
@@ -5714,7 +5872,17 @@ fn emit_styled_box(
             emits,
             ctx,
         )?;
-        format!("{ip}Column(children: [\n{kids}{ip}])")
+        if matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget") {
+            if let Some(gap) = drag_gap {
+                format!(
+                    "{ip}Column(children: _mosaicWithGap(<Widget>[\n{kids}{ip}], {gap}, Axis.vertical))"
+                )
+            } else {
+                format!("{ip}Column(children: [\n{kids}{ip}])")
+            }
+        } else {
+            format!("{ip}Column(children: [\n{kids}{ip}])")
+        }
     };
     let inner_child = inner_child.trim_start();
 
@@ -6186,8 +6354,8 @@ fn emit_host_input(
     // its own and the part style was dropped entirely; both now funnel
     // through `host_input_decoration_arg`, because `decoration:` is a named
     // argument and a second one is a Dart compile error.
-    let hint = find_string_prop(node, "placeholder");
-    if let Some(decoration) = host_input_decoration_arg(node, part_styles, hint) {
+    let hint = host_input_hint_expr(node)?;
+    if let Some(decoration) = host_input_decoration_arg(node, part_styles, hint.as_deref()) {
         writeln!(
             out,
             "{input_pad}  decoration: InputDecoration({decoration}),"
@@ -6276,7 +6444,11 @@ fn emit_host_input(
         )
         .unwrap();
     }
-    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+    // `TextInputAction.newline` never submits, so a multiline field's
+    // `onSubmitted` would be dead code: Enter is a line break there, on every
+    // backend (#15930). Say so rather than emit a handler that cannot fire.
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline) {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
         let args = host_input_event_args(emits, emit_name, "value")?;
@@ -6367,6 +6539,34 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
     })
 }
 
+/// A text field's `placeholder` as the Dart expression `hintText:` takes,
+/// for `HostInput` and the legacy `Input` alike.
+///
+/// | authored form          | `hintText:`                          |
+/// |------------------------|--------------------------------------|
+/// | `placeholder : "Text"` | `"Text"` (escaped)                   |
+/// | `placeholder : 3`      | `"3"`                                |
+/// | `placeholder : slot: s`| `s` (camelCased, validated)          |
+/// | `placeholder : item`   | `item` (a `For` binding, validated)  |
+/// | `placeholder : ( e )`  | `( e )`, verbatim like `a11y-label`  |
+///
+/// This read string literals only, so every slot-bound placeholder (each
+/// toolkit `Input`, the note-type editor's card templates) showed no hint,
+/// and nothing reported the drop.
+fn host_input_hint_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    Ok(match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(text)) => Some(format!("\"{}\"", escape_dart_string(text))),
+        Some(LayoutPropValue::Number(number)) => Some(format!("\"{number}\"")),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field)?;
+            Some(field)
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => Some(expr.clone()),
+        _ => None,
+    })
+}
+
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
 ///
 /// Until this existed `emit_host_input` took `_part_styles` and never read
@@ -6377,7 +6577,9 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// editing row taller than its display rows, which is #15048.
 ///
 /// Returns the ARGUMENTS for a single `InputDecoration(..)`, hint included,
-/// or `None` when there is nothing to say. It must stay the only producer
+/// or `None` when there is nothing to say. `hint` is already a Dart
+/// expression (see [`host_input_hint_expr`]): a quoted literal or a bound
+/// value. It must stay the only producer
 /// of that argument: `decoration:` is a named parameter, and emitting it
 /// twice is a Dart compile error. The same shape bit the Qt emitter, which
 /// writes `color` from two places onto one `TextInput` (#15155).
@@ -6419,7 +6621,7 @@ fn host_input_decoration_arg(
 
     let mut args: Vec<String> = Vec::new();
     if let Some(hint) = hint {
-        args.push(format!("hintText: \"{}\"", escape_dart_string(hint)));
+        args.push(format!("hintText: {hint}"));
     }
 
     // `isDense` matters as much as the padding itself: without it Material
@@ -8526,6 +8728,7 @@ fn emit_host_table(
         direct_row_child: false,
         direct_row_accepts_flex: false,
         fill_width_owned_by_parent: false,
+        direct_wrap_child: false,
         direct_column_child: false,
         direct_column_accepts_flex: false,
         // The root gets the window's width.
@@ -9648,24 +9851,112 @@ fn path_bounding_size(xs: &[f64], ys: &[f64]) -> (f64, f64) {
     (w, h)
 }
 
-/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
-/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
-/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
-/// kernel-level capability); wiring it through to a real Dart
-/// field/`setState` binding is future work, the same not-yet-landed gap
-/// the XAML and Qt lowerings both note — a bound coordinate is
-/// therefore a clear compile error here, not a silent 0.
-fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+/// One `Path` geometry coordinate: a literal number, or a Dart expression
+/// for a bound one.
+///
+/// Bound coordinates are how a `For` draws data — SpiceWorkbench's waveform
+/// is `For ( each: slot: waveform-segments , as: segment ) { Path (kind:
+/// line, x1: ( segment[0] ), …) }` — so a literal-only `Path` cannot render
+/// any plot (#16926). The widget tree is rebuilt from its fields, so a bound
+/// coordinate is simply an expression where the literal would go:
+///
+/// | Authored            | Dart                       |
+/// |---------------------|----------------------------|
+/// | `x1: 28`            | `28`                       |
+/// | `x1: slot: start-x` | `(startX).toDouble()`      |
+/// | `x1: ( seg[0] )`    | `(seg[0]).toDouble()`      |
+///
+/// `.toDouble()` is defined on `num`, so it accepts an `int` or `double`
+/// element, and a `dynamic` one at run time. A value that is not finite (a
+/// diverged simulation's `NaN` or `Infinity`) becomes `0.0`, the posture
+/// UI36 takes for live numbers: `Size(Infinity, …)` throws during layout. The
+/// guard is an inline closure, `((double v) => v.isFinite ? v : 0.0)(…)`, so
+/// literal-only files gain no helper.
+#[derive(Debug, Clone)]
+enum PathCoord {
+    Literal(f64),
+    Bound(String),
+}
+
+impl PathCoord {
+    /// The value as Dart source.
+    fn dart(&self) -> String {
+        match self {
+            PathCoord::Literal(n) => n.to_string(),
+            PathCoord::Bound(expr) => expr.clone(),
+        }
+    }
+
+    /// Every coordinate's literal value, or `None` if any is bound.
+    fn all_literal(coords: &[PathCoord]) -> Option<Vec<f64>> {
+        coords
+            .iter()
+            .map(|c| match c {
+                PathCoord::Literal(n) => Some(*n),
+                PathCoord::Bound(_) => None,
+            })
+            .collect()
+    }
+}
+
+/// `(e).toDouble()` as Dart source, with a non-finite result replaced by `0.0`.
+fn dart_finite_double(expression: &str) -> String {
+    format!("((double v) => v.isFinite ? v : 0.0)(({expression}).toDouble())")
+}
+
+/// A circle's radius: like [`required_path_coord`], but a bound radius is
+/// also floored at `0`. `Container(width: -10)` fails Flutter's constraint
+/// assertion.
+fn required_path_radius(node: &LayoutNode) -> Result<PathCoord, PipelineEmitError> {
+    Ok(match required_path_coord(node, "r")? {
+        PathCoord::Bound(expr) => PathCoord::Bound(format!("({expr}).clamp(0.0, double.infinity)")),
+        literal => literal,
+    })
+}
+
+/// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
+/// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
+/// compile error, never a silent `0`.
+fn required_path_coord(node: &LayoutNode, prop_name: &str) -> Result<PathCoord, PipelineEmitError> {
     match find_prop_value(node, prop_name) {
-        Some(LayoutPropValue::Number(n)) => Ok(*n),
-        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
-            Err(PipelineEmitError::UnknownPrimitive(format!(
-                "Path prop '{prop_name}' is bound to a slot or expression, but the Flutter emitter only supports a literal number for Path geometry props today"
-            )))
+        Some(LayoutPropValue::Number(n)) => Ok(PathCoord::Literal(*n)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            Ok(PathCoord::Bound(dart_finite_double(&field)))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            Ok(PathCoord::Bound(dart_finite_double(expression.trim())))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
         ))),
+    }
+}
+
+/// A `Size(width, height)` bounding the given coordinates, as Dart source.
+///
+/// All-literal geometry keeps [`path_bounding_size`]'s `const Size(w, h)`, so
+/// it lowers byte-identically to before bindings existed. A bound coordinate
+/// drops the `const` and folds the extent at run time, from `0` as the
+/// literal helper does, without needing a `dart:math` import.
+fn path_bounding_size_dart(xs: &[PathCoord], ys: &[PathCoord]) -> String {
+    if let (Some(xs), Some(ys)) = (PathCoord::all_literal(xs), PathCoord::all_literal(ys)) {
+        let (w, h) = path_bounding_size(&xs, &ys);
+        return format!("const Size({w}, {h})");
+    }
+    let extent = |coords: &[PathCoord]| {
+        let parts: Vec<String> = coords.iter().map(PathCoord::dart).collect();
+        format!("<double>[{}].fold(0.0, (a, b) => b > a ? b : a)", parts.join(", "))
+    };
+    format!("Size({}, {})", extent(xs), extent(ys))
+}
+
+/// An `Offset(x, y)` as Dart source: `const` only when both are literal.
+fn path_offset_dart(x: &PathCoord, y: &PathCoord) -> String {
+    match (x, y) {
+        (PathCoord::Literal(x), PathCoord::Literal(y)) => format!("const Offset({x}, {y})"),
+        _ => format!("Offset({}, {})", x.dart(), y.dart()),
     }
 }
 
@@ -9720,10 +10011,22 @@ fn emit_path(
 
     match kind {
         "circle" => {
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let r = required_path_number(node, "r")?;
-            let d = 2.0 * r;
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let r = required_path_radius(node)?;
+            // All-literal geometry keeps its computed numbers; any binding
+            // writes the same arithmetic as a Dart expression.
+            let (left, top) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
+                Some(v) => ((v[0] - v[2]).to_string(), (v[1] - v[2]).to_string()),
+                None => (
+                    format!("{} - {}", cx.dart(), r.dart()),
+                    format!("{} - {}", cy.dart(), r.dart()),
+                ),
+            };
+            let d = match &r {
+                PathCoord::Literal(r) => (2.0 * r).to_string(),
+                PathCoord::Bound(_) => format!("2 * {}", r.dart()),
+            };
             let fill = paint.fill.as_deref().unwrap_or("null");
             let border = match &paint.stroke {
                 Some(stroke) => format!(
@@ -9737,39 +10040,45 @@ fn emit_path(
             );
             if direct_stack_child {
                 Ok(format!(
-                    "{pad}Positioned(left: {left}, top: {top}, child: {container})\n",
-                    left = cx - r,
-                    top = cy - r,
+                    "{pad}Positioned(left: {left}, top: {top}, child: {container})\n"
                 ))
             } else {
                 Ok(format!("{pad}{container}\n"))
             }
         }
         "line" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
-            let (w, h) = path_bounding_size(&[x1, x2], &[y1, y2]);
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
+            let size = path_bounding_size_dart(&[x1.clone(), x2.clone()], &[y1.clone(), y2.clone()]);
+            let start = path_offset_dart(&x1, &y1);
+            let end = path_offset_dart(&x2, &y2);
             let fill = paint.fill.as_deref().unwrap_or("null");
             let stroke = paint.stroke.as_deref().unwrap_or("null");
             Ok(format!(
-                "{pad}CustomPaint(size: const Size({w}, {h}), painter: _MosaicLinePainter(start: const Offset({x1}, {y1}), end: const Offset({x2}, {y2}), fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
+                "{pad}CustomPaint(size: {size}, painter: _MosaicLinePainter(start: {start}, end: {end}, fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
                 sw = paint.stroke_width,
             ))
         }
         "curve" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
-            let (w, h) = path_bounding_size(&[x1, cx, x2], &[y1, cy, y2]);
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
+            let size = path_bounding_size_dart(
+                &[x1.clone(), cx.clone(), x2.clone()],
+                &[y1.clone(), cy.clone(), y2.clone()],
+            );
+            let start = path_offset_dart(&x1, &y1);
+            let control = path_offset_dart(&cx, &cy);
+            let end = path_offset_dart(&x2, &y2);
             let fill = paint.fill.as_deref().unwrap_or("null");
             let stroke = paint.stroke.as_deref().unwrap_or("null");
             Ok(format!(
-                "{pad}CustomPaint(size: const Size({w}, {h}), painter: _MosaicCurvePainter(start: const Offset({x1}, {y1}), control: const Offset({cx}, {cy}), end: const Offset({x2}, {y2}), fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
+                "{pad}CustomPaint(size: {size}, painter: _MosaicCurvePainter(start: {start}, control: {control}, end: {end}, fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
                 sw = paint.stroke_width,
             ))
         }
@@ -10924,6 +11233,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow —
         // `elevation` is the only signal Flutter reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -10981,6 +11294,9 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
 
         assert!(!out.contains("boxShadow"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
@@ -11015,6 +11331,9 @@ mod tests {
             out.contains("blurRadius: 8, offset: const Offset(0, 4)"),
             "got:\n{out}"
         );
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
@@ -11459,6 +11778,75 @@ mod tests {
         assert!(out.contains("hintText: \"Type a formula\""));
     }
 
+    /// A bound placeholder is the `InputDecoration`'s `hintText`, for both
+    /// `HostInput` and the legacy `Input`, single- and multi-line. This read
+    /// string literals only, so `placeholder : slot: x` (every toolkit
+    /// `Input`, the note-type editor's card templates) showed no hint, and
+    /// the degradation report said nothing.
+    #[test]
+    fn text_field_bound_placeholder_is_the_hint_text() {
+        let m = component(
+            "X",
+            vec![slot("front-template-placeholder", SlotType::Text, true)],
+            vec![],
+        );
+        for tag in ["HostInput", "Input"] {
+            for multiline in [false, true] {
+                for (value, expected) in [
+                    (
+                        LayoutPropValue::SlotRef("front-template-placeholder".into()),
+                        "hintText: frontTemplatePlaceholder",
+                    ),
+                    (LayoutPropValue::Keyword("hint".into()), "hintText: hint"),
+                    (
+                        LayoutPropValue::Expr("( hints[0] )".into()),
+                        "hintText: ( hints[0] )",
+                    ),
+                ] {
+                    let mut props = vec![LayoutProp {
+                        name: "placeholder".into(),
+                        value,
+                    }];
+                    if multiline {
+                        props.push(LayoutProp {
+                            name: "multiline".into(),
+                            value: LayoutPropValue::Keyword("true".into()),
+                        });
+                    }
+                    let l = layout("X", node_with(tag, props, vec![]));
+                    let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+                    assert!(
+                        out.contains(expected),
+                        "{tag} multiline={multiline}: expected {expected} in:\n{out}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// A slot name that is not a Dart identifier is refused loudly, never
+    /// spliced into the decoration.
+    #[test]
+    fn text_field_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostInput",
+                vec![LayoutProp {
+                    name: "placeholder".into(),
+                    value: LayoutPropValue::SlotRef("x), evil(".into()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
+    }
+
     #[test]
     fn host_input_accessible_name_lowers_literal_and_slot_values() {
         let m = component(
@@ -11627,7 +12015,7 @@ mod tests {
     }
 
     #[test]
-    fn fixed_leaf_widths_wrap_text_input_and_button_but_leave_percentages_reported() {
+    fn fixed_leaf_widths_wrap_leaves_and_row_percentages_become_flex_shares() {
         fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
             LayoutNode {
                 tag: tag.into(),
@@ -11691,24 +12079,148 @@ mod tests {
             out.contains("width: 34,") && out.contains("child: ElevatedButton("),
             "fixed HostButton width must wrap the emitted widget:\n{out}"
         );
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
         assert!(
-            !out.contains("Expanded("),
-            "a fixed-width input must not also be expanded by its Row:\n{out}"
+            out.contains("Expanded(flex: 142857, child:") && out.contains("Text(\"Mon\")"),
+            "the parsed seventh-width must become the Row child's flex share:\n{out}"
         );
         assert!(
             !out.contains("width: 0"),
             "percentage width collapsed:\n{out}"
         );
 
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "the Row owns every valid width declaration"
+        );
+    }
+
+    #[test]
+    fn invalid_or_unbounded_row_percentages_remain_reported() {
+        fn percentage_text(part: &str) -> LayoutNode {
+            LayoutNode {
+                tag: "Text".into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("day".into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn width_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("PercentSafety", vec![], vec![]);
+        let l = layout(
+            "PercentSafety",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    percentage_text("invalid"),
+                    node_with("Row", vec![], vec![percentage_text("unbounded")]),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "PercentSafety".into(),
+            parts: vec![
+                width_part("invalid", "150%"),
+                width_part("unbounded", "14.2857%"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("percentages decline safely")
+            .output;
+        assert!(!out.contains("150%") && !out.contains("142857"), "{out}");
         let dropped = dropped_style_properties(&m, &l, &s);
         assert_eq!(
             dropped
                 .iter()
                 .map(|drop| (drop.part.as_str(), drop.name.as_str()))
                 .collect::<Vec<_>>(),
-            vec![("calendar-day", "width")],
-            "only the deliberately unsupported percentage width should remain"
+            vec![("invalid", "width"), ("unbounded", "width")]
         );
+    }
+
+    #[test]
+    fn wrapping_row_spreads_fractionally_sized_for_children() {
+        let m = component(
+            "Calendar",
+            vec![slot(
+                "cells",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut cell = node_with("Column", vec![], vec![text_node("day")]);
+        cell.part_name = Some("calendar-cell".into());
+        let cells = for_node(
+            LayoutPropValue::SlotRef("cells".into()),
+            "cell",
+            Some("ci"),
+            vec![cell],
+        );
+        let mut grid = node_with("Row", vec![], vec![cells]);
+        grid.part_name = Some("calendar-grid".into());
+        let l = layout("Calendar", grid);
+        let s = StyleDef {
+            component_name: "Calendar".into(),
+            parts: vec![
+                PartStyle {
+                    name: "calendar-grid".into(),
+                    base: vec![
+                        StyleProp {
+                            name: "flex-wrap".into(),
+                            value: "\"wrap\"".into(),
+                        },
+                        StyleProp {
+                            name: "gap".into(),
+                            value: "\"8\"".into(),
+                        },
+                    ],
+                    transitions: vec![],
+                    states: vec![],
+                },
+                PartStyle {
+                    name: "calendar-cell".into(),
+                    base: vec![StyleProp {
+                        name: "width".into(),
+                        value: "\"14.2857%\"".into(),
+                    }],
+                    transitions: vec![],
+                    states: vec![],
+                },
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("wrapping calendar emits")
+            .output;
+        assert!(out.contains("Wrap("), "{out}");
+        assert!(out.contains("spacing: 8"), "{out}");
+        assert!(out.contains("runSpacing: 8"), "{out}");
+        assert!(!out.contains("_mosaicWithGap"), "{out}");
+        assert!(out.contains("...cells.map((_)"), "{out}");
+        assert!(
+            out.contains("FractionallySizedBox(") && out.contains("widthFactor: 0.142857"),
+            "{out}"
+        );
+        assert_eq!(out.matches("FractionallySizedBox(").count(), 1, "{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]
@@ -12734,6 +13246,196 @@ mod tests {
     }
 
     #[test]
+    fn styled_draggable_gap_wraps_the_evaluated_vertical_child_list() {
+        let m = component("Card", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut draggable = node_with(
+            "HostDraggable",
+            vec![],
+            vec![
+                text_node("always"),
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("sometimes")],
+                ),
+            ],
+        );
+        draggable.part_name = Some("card".into());
+        let l = layout("Card", draggable);
+        let s = style_with_part(
+            "Card",
+            "card",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#ffffff".into(),
+                },
+                StyleProp {
+                    name: "gap".into(),
+                    value: "6px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit draggable gap")
+            .output;
+        let list_start = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("draggable body must use the gap helper");
+        let conditional = out
+            .find("_mosaicTruthy(visible)")
+            .expect("conditional child must stay in the evaluated list");
+        let call_end = out
+            .find("], 6, Axis.vertical))")
+            .expect("vertical gap helper call must close after the list");
+        assert!(
+            list_start < conditional && conditional < call_end,
+            "got:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn plain_drop_target_first_if_else_defines_the_gap_helper_it_calls() {
+        let m = component("Lane", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![],
+            vec![
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("yes")],
+                ),
+                else_node(vec![text_node("no")]),
+            ],
+        );
+        target.part_name = Some("lane".into());
+        let l = layout("Lane", target);
+        let s = style_with_part(
+            "Lane",
+            "lane",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "9".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit conditional drop-target gap")
+            .output;
+        let call = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("the evaluated conditional list must call the gap helper");
+        let condition = out[call..]
+            .find("_mosaicTruthy(visible)")
+            .expect("the If/Else pair must remain inside the evaluated list");
+        let call_end = out[call..]
+            .find("], 9, Axis.vertical))")
+            .expect("the vertical gap call must close after the conditional");
+        assert!(condition < call_end, "got:\n{out}");
+        assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
+        assert!(out.contains("DragTarget<_MosaicDragData>("), "got:\n{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn decorated_draggable_first_if_else_keeps_a_following_child_in_the_gap_list() {
+        let m = component("Card", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let mut draggable = node_with(
+            "HostDraggable",
+            vec![],
+            vec![
+                if_node(
+                    LayoutPropValue::SlotRef("visible".into()),
+                    vec![text_node("yes")],
+                ),
+                else_node(vec![text_node("no")]),
+                text_node("after"),
+            ],
+        );
+        draggable.part_name = Some("card".into());
+        let l = layout("Card", draggable);
+        let s = style_with_part(
+            "Card",
+            "card",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#ffffff".into(),
+                },
+                StyleProp {
+                    name: "gap".into(),
+                    value: "6px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit decorated conditional draggable gap")
+            .output;
+        let call = out
+            .find("Column(children: _mosaicWithGap(<Widget>[")
+            .expect("the multi-child decorated body must call the gap helper");
+        let condition = out[call..]
+            .find("_mosaicTruthy(visible)")
+            .expect("the If/Else pair must remain inside the evaluated list");
+        let following = out[call..]
+            .find("\"after\"")
+            .expect("the ordinary child after the If/Else pair must survive lowering");
+        let call_end = out[call..]
+            .find("], 6, Axis.vertical))")
+            .expect("the vertical gap call must close after every child");
+        assert!(condition < following && following < call_end, "got:\n{out}");
+        assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
+        assert!(out.contains("Draggable<_MosaicDragData>("), "got:\n{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn drop_target_gap_spaces_a_single_for_body_after_evaluation() {
+        let m = component(
+            "Lane",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![],
+            vec![for_node(
+                LayoutPropValue::SlotRef("items".into()),
+                "item",
+                Some("index"),
+                vec![text_node("item")],
+            )],
+        );
+        target.part_name = Some("lane".into());
+        let l = layout("Lane", target);
+        let s = style_with_part(
+            "Lane",
+            "lane",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "9".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("emit drop-target gap")
+            .output;
+        assert!(
+            out.contains("child: Column(children: _mosaicWithGap(<Widget>[\n")
+                && out.contains("...items.map((item)")
+                && out.contains("], 9, Axis.vertical))"),
+            "got:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
     fn non_drag_component_omits_drag_runtime_and_services_import() {
         let out = from_pipeline(
             &component("Plain", vec![], vec![]),
@@ -13463,6 +14165,34 @@ mod tests {
             "Input must not take the unresolved-component path, got:\n{out}"
         );
         assert!(out.contains("TextField"), "got:\n{out}");
+    }
+
+    /// #15930 — the kernel `HostInput` grows into a text area too, and with
+    /// `TextInputAction.newline` an `onSubmitted` handler could never fire,
+    /// so a multiline field emits none: Enter is a line break, as everywhere.
+    #[test]
+    fn multiline_host_input_is_a_text_area_without_a_dead_submit_handler() {
+        let m = component(
+            "Host",
+            vec![slot("v", SlotType::Text, true)],
+            vec![EmitDecl { name: "onSave".into(), params: vec![] }],
+        );
+        let make = |multiline: &str| {
+            let props = vec![
+                LayoutProp { name: "value".into(), value: LayoutPropValue::SlotRef("v".into()) },
+                LayoutProp { name: "multiline".into(), value: LayoutPropValue::Keyword(multiline.into()) },
+                LayoutProp { name: "onCommit".into(), value: LayoutPropValue::EmitRef("onSave".into()) },
+            ];
+            from_pipeline(&m, &layout("Host", node_with("HostInput", props, vec![])), &empty_style("Host"))
+                .expect("ok")
+                .output
+        };
+        let multi = make("true");
+        assert!(multi.contains("textInputAction: TextInputAction.newline,"), "{multi}");
+        assert!(multi.contains("maxLines: null,"), "{multi}");
+        assert!(!multi.contains("onSubmitted"), "{multi}");
+        let single = make("false");
+        assert!(single.contains("onSubmitted: (value) => dispatch(HostEventSave()),"), "{single}");
     }
 
     #[test]
@@ -17843,37 +18573,78 @@ mod tests {
     }
 
     #[test]
-    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+    fn path_slot_bound_circle_centre_becomes_a_dart_expression() {
+        // #16926: a bound centre was a compile error, so no data-driven
+        // circle could render. The authored `cx - r` is now Dart source.
         let m = component("X", vec![], vec![]);
-        let l = layout(
-            "X",
-            node_with(
-                "Path",
-                vec![
-                    LayoutProp {
-                        name: "kind".to_string(),
-                        value: LayoutPropValue::Keyword("circle".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cx".to_string(),
-                        value: LayoutPropValue::SlotRef("radius".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cy".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
-                    LayoutProp {
-                        name: "r".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
-                ],
-                vec![],
-            ),
-        );
-        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        let mut circle = path_node("dot", "circle", &[("cy", 5.0), ("r", 5.0)]);
+        circle.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("dot-x".to_string()),
+        });
+        let l = layout("X", node_with("Stack", vec![], vec![circle]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).expect("ok").output;
         assert!(
-            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("bound to a slot"))
+            out.contains("Positioned(left: ((double v) => v.isFinite ? v : 0.0)((dotX).toDouble()) - 5, top: 5 - 5,"),
+            "{out}"
         );
+        assert!(out.contains("Container(width: 10, height: 10,"), "{out}");
+    }
+
+    #[test]
+    fn path_line_binds_for_item_coordinates_without_const() {
+        // SpiceWorkbench's waveform shape: each segment is a list element.
+        let m = component("X", vec![], vec![]);
+        let mut line = path_node("segment", "line", &[("y2", 188.0)]);
+        for (name, expr) in [("x1", "segment[0]"), ("y1", "segment[1]"), ("x2", "segment[2]")] {
+            line.props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            });
+        }
+        let l = layout("X", line);
+        let out = from_pipeline(&m, &l, &empty_style("X")).expect("ok").output;
+        assert!(
+            out.contains("start: Offset(((double v) => v.isFinite ? v : 0.0)((segment[0]).toDouble()), ((double v) => v.isFinite ? v : 0.0)((segment[1]).toDouble()))"),
+            "{out}"
+        );
+        assert!(out.contains("end: Offset(((double v) => v.isFinite ? v : 0.0)((segment[2]).toDouble()), 188)"), "{out}");
+        assert!(
+            out.contains(
+                "size: Size(<double>[((double v) => v.isFinite ? v : 0.0)((segment[0]).toDouble()), ((double v) => v.isFinite ? v : 0.0)((segment[2]).toDouble())].fold(0.0, (a, b) => b > a ? b : a), <double>[((double v) => v.isFinite ? v : 0.0)((segment[1]).toDouble()), 188].fold(0.0, (a, b) => b > a ? b : a))"
+            ),
+            "{out}"
+        );
+        assert!(!out.contains("const Offset((segment"), "{out}");
+    }
+
+    #[test]
+    fn path_bound_radius_is_floored_at_zero() {
+        // `Container(width: -10)` fails Flutter's constraint assertion.
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cx", 10.0), ("cy", 10.0)]);
+        circle.props.push(LayoutProp {
+            name: "r".to_string(),
+            value: LayoutPropValue::Expr("size".to_string()),
+        });
+        let out = from_pipeline(&m, &layout("X", circle), &empty_style("X"))
+            .expect("ok")
+            .output;
+        let r = "(((double v) => v.isFinite ? v : 0.0)((size).toDouble())).clamp(0.0, double.infinity)";
+        assert!(out.contains(&format!("Container(width: 2 * {r}, height: 2 * {r},")), "{out}");
+    }
+
+    #[test]
+    fn path_bound_coordinate_with_an_unsafe_slot_name_is_refused() {
+        let m = component("X", vec![], vec![]);
+        let mut circle = path_node("dot", "circle", &[("cy", 1.0), ("r", 1.0)]);
+        circle.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("x); evil(".to_string()),
+        });
+        let l = layout("X", circle);
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "{err:?}");
     }
 
     #[test]
@@ -18659,7 +19430,7 @@ mod host_input_style_tests {
         let got = host_input_decoration_arg(
             &input_with_part("field"),
             &styles("field", "padding: 10px; background: #14221e"),
-            Some("Enter a value"),
+            Some("\"Enter a value\""),
         )
         .expect("decoration");
         assert!(got.contains("hintText: \"Enter a value\""), "got: {got}");
@@ -18694,7 +19465,7 @@ mod host_input_style_tests {
             None
         );
         assert_eq!(
-            host_input_decoration_arg(&node, &HashMap::new(), Some("Due")).as_deref(),
+            host_input_decoration_arg(&node, &HashMap::new(), Some("\"Due\"")).as_deref(),
             Some("hintText: \"Due\"")
         );
         assert_eq!(host_input_text_style_arg(&node, &HashMap::new()), None);

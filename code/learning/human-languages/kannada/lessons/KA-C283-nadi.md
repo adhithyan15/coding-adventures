@@ -14,7 +14,8 @@ romanization: "nāḍi"
 concept_tag: KA-AROGYA283-NADI
 prerequisites: [KA-C282-dadi, KA-C282-ascarya]
 sounds: []
-roots: []
+roots: [sanskrit-nadi-tube]
+etymology_hook: "nāḍi ← Sanskrit nāḍī 'tubular organ, tube', a tatsama (CDIAL 7047)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C282-ascarya]
 <!-- hl-knowledge: introduces=[KA-LEX-C283-AROGYA283-01]; assesses=[] -->
 
 **ನಾಡಿ** — *nāḍi* — "the pulse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಾಡಿ** (*nāḍi*) is Sanskrit *nāḍī*, "tubular organ, tube", taken over whole as a learned loan, a tatsama, with the final *-ī* shortened (CDIAL 7047). The pulse is felt in a vessel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

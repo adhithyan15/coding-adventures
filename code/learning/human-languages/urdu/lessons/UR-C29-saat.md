@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-SEVEN
 prerequisites: [UR-C29-chhe]
 sounds: [rtl, long-a]
 roots: [sanskrit-sapta, proto-indo-european-septm]
-etymology_hook: "saat continues Sanskrit sapta from Proto-Indo-European *septm -- Latin septem, English seven -- and beside Persian haft it shows the sound change Urdu did not undergo."
+etymology_hook: "sāt ← Sanskrit sapta 'seven' (CDIAL 13139); Persian haft is the same word with s turned to h"
 duration:
   max_seconds: 275
 requires:
@@ -46,7 +46,7 @@ reviews_of: [UR-C29-chhe, UR-C15-sardi]
 ## The word, taken apart — and the change Urdu did NOT make
 <!-- hl-knowledge: introduces=[UR-ETYMON-SAAT-SEVEN-PIE]; assesses=[UR-LEX-SAAT, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
 
-**سات** continues Sanskrit *sapta*, from Indo-European
+**سات** continues Sanskrit *sapta* (CDIAL 13139), from Indo-European
 \**septm*, "seven." Latin **septem**, English **seven** and Greek **heptá**
 are the same word.
 

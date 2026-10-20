@@ -14,7 +14,8 @@ romanization: "imēl"
 concept_tag: KA-VASTU186-IMEL
 prerequisites: [KA-C185-pars, KA-C186-sandesa]
 sounds: []
-roots: []
+roots: [english-email]
+etymology_hook: "imēl ← English email"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C186-sandesa]
 <!-- hl-knowledge: introduces=[KA-LEX-C186-VASTU186-02]; assesses=[] -->
 
 **ಇಮೇಲ್** — *imēl* — "an email".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಮೇಲ್** (*imēl*) is a loan from English *email*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bol"
 concept_tag: RU-HEALTH1-PAIN
 prerequisites: [RU-C31-face, RU-C31-blood]
 sounds: []
-roots: []
+roots: [slavic-boli]
+etymology_hook: "боль ← Proto-Slavic *bolĭ; Vasmer compares Old English bealu 'evil', a link Berneker rejected"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C31-blood]
 <!-- hl-knowledge: introduces=[RU-LEX-C32-HEALTH1-01]; assesses=[] -->
 
 **боль** (*bol*) — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**боль** ← Proto-Slavic *\*bolĭ* — inherited, with the verb *болеть*, "to ache, to be ill". Vasmer sets it beside Gothic *balwjan*, "to torment", and Old English *bealu*, "evil", the *bale* of *baleful*, but notes that Berneker rejected the link.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

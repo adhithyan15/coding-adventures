@@ -14,7 +14,8 @@ romanization: "sūcana"
 concept_tag: TE-CADUVU156-SUCANA
 prerequisites: [TE-C155-edurucudu, TE-C156-kalapattika]
 sounds: []
-roots: []
+roots: [sanskrit-sucana]
+etymology_hook: "sūcana ← Sanskrit sūcanā 'pointing out', a tatsama; CDIAL 13551a lists sūcyatē 'is indicated'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [TE-C156-kalapattika]
 
 The notice says **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — "The
 shop is closed today." Come back on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సూచన** (*sūcana*) is Sanskrit *sūcanā*, "pointing out, indication", taken over as a learned loan, a tatsama, with the final *-ā* shortened. CDIAL 13551a lists the related *sūcyatē*, "is indicated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

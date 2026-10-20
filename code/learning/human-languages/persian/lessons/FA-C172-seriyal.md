@@ -14,7 +14,8 @@ romanization: "seriyâl"
 concept_tag: FA-CHIZ172-SERIYAL
 prerequisites: [FA-C172-roman, FA-C172-majalle]
 sounds: []
-roots: []
+roots: [english-serial]
+etymology_hook: "seriyâl: a loan, usually traced to English serial 'serial'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C172-majalle]
 <!-- hl-knowledge: introduces=[FA-LEX-C172-CHIZ172-05]; assesses=[] -->
 
 **سریال** — *seriyâl* — "a TV series".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*seriyâl* is a loan, usually traced to English *serial*, "serial".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

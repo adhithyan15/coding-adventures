@@ -14,7 +14,8 @@ romanization: "zarabátyvat"
 concept_tag: RU-VERB-ZARABATYVAT
 prerequisites: [RU-C237-remontirovat, RU-C237-pereyezzhat]
 sounds: []
-roots: []
+roots: [slavic-orbu]
+etymology_hook: "зарабатывать is за- + работать 'to work': to earn by working"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C237-pereyezzhat]
 <!-- hl-knowledge: introduces=[RU-LEX-C237-ACT237-05]; assesses=[] -->
 
 **зарабатывать** (*zarabátyvat*) — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зарабатывать** is *за-* with *-рабатывать*, from *работать*, "to work": to earn is to get by working.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

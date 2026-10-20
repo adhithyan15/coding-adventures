@@ -14,6 +14,9 @@ ich war — "I was."
 Nobody says ich bin gewesen in ordinary speech when ich war will do. This is the past-tense form Germans actually use, in every region, out loud.
 And hear the shape of it. Bin has a b. Ist has an s and a t. War has a w and an r, and no sound in common with either. That is now three completely unalike stems inside one verb.
 
+The phrase, taken apart.
+war — inherited, from Old High German wesan, "to be" from Proto-Germanic wesaną; EtymDB 2.1 traces English was to the same verb.
+
 Sounds you'll need.
 w-as-v — German w is English v, so war begins like var.
 vowel-a-long — the a is long and open, the a of English father.
@@ -48,6 +51,9 @@ du warst — "you were."
 War plus -st, with nothing else moved. The same ending that made bist out of bin, and gehst out of gehen.
 So the past tense of this verb is better behaved than its present: you take one stem, war-, and add ordinary endings to it. Everything difficult about sein happens in the present.
 
+The phrase, taken apart.
+warst is the past stem war + -st. The stem goes back to Old High German wesan, "to be" from Proto-Germanic wesaną, the verb behind English was. (EtymDB 2.1).
+
 Sounds you'll need.
 u-long — du keeps its long rounded oo.
 final-t — and warst ends on the fully released t German always gives you, after the s. Say the s and the t both: varst.
@@ -79,6 +85,9 @@ You'll want to know: er war.
 er war — "he was."
 Not a new form. It is war, unchanged, the very word you learned for ich. And as with ist, it covers sie war ("she was"), es war ("it was") and das war ("that was") as well.
 This is a habit of the German simple past, not a quirk of this verb: the I-form and the he-form are always identical there. Ich sagte and er sagte. Ich hatte and er hatte. The present tense never does this; the past always does.
+
+The phrase, taken apart.
+war goes back to Old High German wesan, "to be" from Proto-Germanic wesaną; EtymDB 2.1 traces English was to the same verb.
 
 Sounds you'll need.
 r-final — two softening r sounds in a row now, one closing er and one closing war. Neither curls.
@@ -255,7 +264,7 @@ The exchange.
 Wo warst du? means Where were you?
 Ich war in Berlin. means I was in Berlin.
 Wie war es? means How was it?
-Es war gut. Aber ich bin müde. means It was good. But I am tired.
+Es war gut, und ich bin müde. means It was good, and I am tired.
 Wo ("where") and in are read straight off the English here; neither is asked of you yet.
 
 Guided Practice.

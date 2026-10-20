@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:2783424cf83088d7",
+  "lessonIds": [
+    "LA-C297-incipio",
+    "LA-C297-coepi",
+    "LA-C297-finio",
+    "LA-C297-perficio",
+    "LA-C297-intermitto"
+  ],
+  "tex": "latin/book/chapters/ch297-incipere-et-finire.tex"
+}

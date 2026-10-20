@@ -10,7 +10,8 @@ gloss: "to hate"
 concept_tag: ES-VERB-ODIAR
 prerequisites: [ES-C510-fiarse, ES-C510-pelear]
 sounds: []
-roots: []
+roots: [odium-latin]
+etymology_hook: "odiar — built on odio 'hatred', Latin odium — English odious"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C510-pelear]
 > Odio madrugar.
 >
 > *I hate getting up early.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**odiar** is built on *odio*, "hatred", from Latin *odium*, "hatred" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:a2d6b153afd3acd3",
+  "lessonIds": [
+    "GE-C359-gerechtigkeit",
+    "GE-C359-ungleichheit",
+    "GE-C359-armut",
+    "GE-C359-reichtum",
+    "GE-C359-benachteiligen"
+  ],
+  "tex": "german/book/chapters/ch359-gerecht-oder-nicht.tex"
+}

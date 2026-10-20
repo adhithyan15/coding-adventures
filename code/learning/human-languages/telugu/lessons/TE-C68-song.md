@@ -11,7 +11,8 @@ romanization: "pāṭa"
 concept_tag: TE-NOUN-SONG
 prerequisites: [TE-C68-voice]
 sounds: []
-roots: []
+roots: [dravidian-paadu-sing]
+etymology_hook: "pāṭa: native Dravidian, one word with Tamil pāṭu and Kannada pāḍu (DEDR 4065)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ teeth and the other has it curled back.
 The word is inherited and it is everywhere: work songs at the కల్లం, lullabies, film songs a whole state can hum. A Telugu speaker will name a పాట faster than a book.
 
 Anything repeated past patience becomes a పాట as an insult, in the way English reaches for the same old song.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాట** (*pāṭa*) is native Dravidian, one word with Tamil *pāṭu* and Kannada *pāḍu* (DEDR 4065). DEDR lists Telugu *pāḍu*, "to sing", and *pāṭa*, "song".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

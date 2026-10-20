@@ -1,0 +1,11 @@
+{
+  "id": "IT-C396-assegno",
+  "pathSegment": "IT-PATH-396-BANCA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-396-BANCA",
+      "order": 2
+    }
+  ]
+}

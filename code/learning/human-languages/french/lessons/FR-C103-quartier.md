@@ -13,7 +13,8 @@ gloss: "a district, a neighbourhood"
 concept_tag: FR-VILLE55-QUARTIER
 prerequisites: [FR-C102-boulangerie, FR-C102-mairie]
 sounds: []
-roots: []
+roots: [quattuor-latin]
+etymology_hook: "quartier ← Latin quartarius 'a fourth part' — English quarter, as in the Latin Quarter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C102-mairie]
 <!-- hl-knowledge: introduces=[FR-LEX-C103-VILLE55-01]; assesses=[] -->
 
 **le quartier** — "a district, a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quartier** ← Latin *quartarius*, "a fourth part", from *quartus*, "fourth" — first a quarter of something, then a part of a town. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

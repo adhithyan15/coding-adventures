@@ -13,7 +13,8 @@ gloss: "a lodging house"
 concept_tag: LA-RES227-DEVERSORIUM
 prerequisites: [LA-C227-cubile, LA-C227-hospitium]
 sounds: []
-roots: []
+roots: [deversorium-latin, vertere-latin]
+etymology_hook: "dēversōrium 'lodging house' — built on dēvertō 'to turn aside'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C227-hospitium]
 <!-- hl-knowledge: introduces=[LA-LEX-C227-RES227-04]; assesses=[] -->
 
 **dēversōrium, dēversōriī** — "a lodging house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēversōrium** is built on *dēvertō*, "to turn aside" (EtymDB 2.1), from *dē*, "away", and *vertō*, "to turn": a place where travellers turn aside for the night.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

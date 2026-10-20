@@ -13,7 +13,8 @@ gloss: "a delay"
 concept_tag: LA-TEMP237-MORA
 prerequisites: [LA-C236-amicitia, LA-C237-finis]
 sounds: []
-roots: []
+roots: [mora-latin]
+etymology_hook: "mora 'delay' — perhaps from PIE *(s)mer- 'to be mindful'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C237-finis]
 <!-- hl-knowledge: introduces=[LA-LEX-C237-TEMP237-02]; assesses=[] -->
 
 **mora, morae** — "a delay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mora** is often linked with Proto-Indo-European *\*(s)mer-*, "to be mindful, to linger in thought" (EtymDB 2.1), the root of *memor*, "mindful" (Lewis & Short), but the link is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

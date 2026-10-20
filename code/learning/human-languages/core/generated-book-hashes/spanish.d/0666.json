@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 666,
+  "sourceHash": "fnv1a64:8d0f3deedc85abfc",
+  "lessonIds": [
+    "ES-C666-saco-de-dormir",
+    "ES-C666-acampar",
+    "ES-C666-esterilla",
+    "ES-C666-caravana",
+    "ES-C666-linterna"
+  ],
+  "tex": "spanish/book/chapters/ch666-bajo-las-estrellas.tex"
+}

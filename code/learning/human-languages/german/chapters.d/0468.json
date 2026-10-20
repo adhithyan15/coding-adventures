@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Wut und Zorn",
+  "label": "ch:ge-wut-und-zorn",
+  "canDo": "I can talk about anger and losing my temper.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C468-toben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about anger and losing my temper.",
+    "assesses": [
+      "GE-LEX-C468-WUT-03",
+      "GE-LEX-C468-WUT-04",
+      "GE-LEX-C468-WUT-05"
+    ]
+  }
+}

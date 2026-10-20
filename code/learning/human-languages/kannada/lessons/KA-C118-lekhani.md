@@ -14,7 +14,8 @@ romanization: "lēkhani"
 concept_tag: KA-THINGS118-LEKHANI
 prerequisites: [KA-C118-gadiyara, KA-C118-cila, KA-S154-other-marks, KA-S173-letter-ttha]
 sounds: []
-roots: []
+roots: [sanskrit-lekhani]
+etymology_hook: "lēkhani ← Sanskrit lekhanī 'instrument for scraping', a tatsama (CDIAL 11103)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C118-cila]
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **ಲೇಖನಿ** — *lēkhani* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಲೇಖನಿ** (*lēkhani*) is Sanskrit *lekhanī*, "instrument for scraping", taken over whole as a learned loan, a tatsama, with the final *-ī* shortened (CDIAL 11103). The tool that scratched letters became the pen.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 170,
-  "sourceHash": "fnv1a64:006a8ca142ea04b7",
+  "sourceHash": "fnv1a64:8965e7792f686571",
   "lessonIds": [
     "MR-C170-laj",
     "MR-C170-matsar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch170.txt",
   "json": "marathi/narration/ch170.json",
-  "textHash": "fnv1a64:291d5b247d9ad801",
-  "jsonHash": "fnv1a64:d961cb98e2766636",
+  "textHash": "fnv1a64:8e0f2647a08b30ce",
+  "jsonHash": "fnv1a64:fbbe80dcdbdd89f8",
   "findings": []
 }

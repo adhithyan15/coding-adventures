@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-749-EDADES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-749-EDADES"
+  ],
+  "after": []
+}

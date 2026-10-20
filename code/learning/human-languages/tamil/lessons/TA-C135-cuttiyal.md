@@ -14,7 +14,8 @@ romanization: "cuttiyal"
 concept_tag: TA-THINGS135-CUTTIYAL
 prerequisites: [TA-C135-minviciri, TA-C135-kattarikkol]
 sounds: []
-roots: []
+roots: [dravidian-cutti-hammer]
+etymology_hook: "சுத்தியல் — native Dravidian (DEDR 2668); Malayalam cutti, Kannada suttige"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C135-kattarikkol]
 <!-- hl-knowledge: introduces=[TA-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **சுத்தியல்** — *cuttiyal* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுத்தியல்** (*cuttiyal*) is native Dravidian. DEDR 2668 lists Malayalam *cutti* and Kannada *suttige*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C499-tricher",
+  "pathSegment": "FR-PATH-499-JEUX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-499-JEUX",
+      "order": 4
+    }
+  ]
+}

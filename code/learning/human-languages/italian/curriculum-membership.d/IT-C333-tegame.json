@@ -1,0 +1,11 @@
+{
+  "id": "IT-C333-tegame",
+  "pathSegment": "IT-PATH-333-PENTOLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-333-PENTOLA",
+      "order": 4
+    }
+  ]
+}

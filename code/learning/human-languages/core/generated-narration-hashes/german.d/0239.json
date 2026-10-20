@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 239,
-  "sourceHash": "fnv1a64:5c0c06e310482524",
+  "sourceHash": "fnv1a64:91d89f6110ca5598",
   "lessonIds": [
     "GE-C239-stimmung",
     "GE-C239-streit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch239.txt",
   "json": "german/narration/ch239.json",
-  "textHash": "fnv1a64:1813628a7c00515c",
-  "jsonHash": "fnv1a64:8016d77f138f67e4",
+  "textHash": "fnv1a64:d572273f16a76bca",
+  "jsonHash": "fnv1a64:f9dabe9909a82108",
   "findings": []
 }

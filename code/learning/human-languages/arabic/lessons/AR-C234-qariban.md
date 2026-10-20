@@ -14,7 +14,8 @@ romanization: "qarīban"
 concept_tag: AR-WAQT234-QARIBAN
 prerequisites: [AR-C234-sanawi, AR-C234-duha]
 sounds: []
-roots: []
+roots: [q-r-b]
+etymology_hook: "qarīban: built on the root q-r-b, 'to be near' (Lane); qarīban is qarīb, 'near', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C234-duha]
 <!-- hl-knowledge: introduces=[AR-LEX-C234-WAQT234-03]; assesses=[] -->
 
 **قريبا** — *qarīban* — "soon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قريبا** (*qarīban*) is built on the native Arabic root *q-r-b*, "to be near" (Lane). *Qarīban* is *qarīb*, "near", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

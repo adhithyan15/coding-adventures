@@ -14,7 +14,8 @@ romanization: "dīpāvaḷi"
 concept_tag: TE-SAMAYAM252-DIPAVALI
 prerequisites: [TE-C251-tika, TE-C252-ugadi]
 sounds: []
-roots: []
+roots: [sanskrit-dipa, sanskrit-avali]
+etymology_hook: "dīpāvaḷi: Sanskrit dīpa 'lamp' (CDIAL 6348) + āvali 'row' (CDIAL 1423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C252-ugadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C252-SAMAYAM252-02]; assesses=[] -->
 
 **దీపావళి** — *dīpāvaḷi* — "Diwali, the festival of lamps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దీపావళి** (*dīpāvaḷi*) is Sanskrit: *dīpa*, "lamp" (CDIAL 6348), and *āvali*, "row, line" (CDIAL 1423): "a row of lamps". CDIAL doubts any tie between this "row" word and a look-alike, unless both were borrowed separately from non-Aryan sources.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bātcīt"
 concept_tag: HI-THG205-BATCIT
 prerequisites: [HI-C205-tikatghar, HI-C205-sandesa]
 sounds: []
-roots: []
+roots: [sanskrit-varta, sanskrit-citti]
+etymology_hook: "bātcīt: bāt 'talk' (CDIAL 11564) with cīt, from citti 'thought' (CDIAL 4801)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C205-sandesa]
 <!-- hl-knowledge: introduces=[HI-LEX-C205-THG205-05]; assesses=[] -->
 
 **बातचीत** — *bātcīt* — "a conversation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बातचीत** (*bātcīt*) is a rhyming pair: *bāt*, "talk", from Sanskrit *vārttā* (CDIAL 11564), and *cīt*, which CDIAL lists in this very pair under *citti*, "thought" (CDIAL 4801).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

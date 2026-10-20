@@ -11,7 +11,8 @@ romanization: "adu"
 concept_tag: KA-DEIXIS-THAT
 prerequisites: [KA-C41-this, KA-C37-kivi]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "adu: native Dravidian, the far-pointing base a- + a 'thing' ending; Tamil atu (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: [KA-C41-this]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **ಇದು** *idu*, which you will meet just now. The two of them
+Its partner is **ಇದು** *idu*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅದು** (*adu*) is native Dravidian: the far-pointing base *a-* with an ending meaning "thing". DEDR 1 lists Kannada *adu* with Tamil *atu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02] -->

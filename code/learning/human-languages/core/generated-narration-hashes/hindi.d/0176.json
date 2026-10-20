@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 176,
-  "sourceHash": "fnv1a64:fa2affb0244b47ae",
+  "sourceHash": "fnv1a64:c2936a08620ee19a",
   "lessonIds": [
     "HI-C176-hilana",
     "HI-C176-khicna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch176.txt",
   "json": "hindi/narration/ch176.json",
-  "textHash": "fnv1a64:31337d77799e03c9",
-  "jsonHash": "fnv1a64:e883b233c2531b79",
+  "textHash": "fnv1a64:d8c1b81a30013215",
+  "jsonHash": "fnv1a64:740b39fbfc3d82d6",
   "findings": []
 }

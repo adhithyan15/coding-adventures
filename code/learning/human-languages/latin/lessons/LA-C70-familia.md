@@ -13,7 +13,8 @@ gloss: "a family, a household"
 concept_tag: LA-FAMILIA1-FAMILIA
 prerequisites: [LA-C70-avus, LA-C70-avia]
 sounds: []
-roots: []
+roots: [familia-latin, famulus-latin]
+etymology_hook: "familia 'household' — built on famulus 'servant': everyone under one roof; English family"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C70-avia]
 <!-- hl-knowledge: introduces=[LA-LEX-C70-FAMILIA1-05]; assesses=[] -->
 
 **familia, familiae** — "a family, a household".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**familia** is built on *famulus*, "a household slave, a servant" (Lewis & Short): a *familia* was first everyone under one master's roof, the slaves included. English *family* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to deliver"
 concept_tag: FR-VERB-LIVRER
 prerequisites: [FR-C150-bavarder, FR-C150-brancher]
 sounds: []
-roots: []
+roots: [liber-free-latin]
+etymology_hook: "livrer ← Latin liberare 'to set free' — the Latin of libre; English deliver"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C150-brancher]
 <!-- hl-knowledge: introduces=[FR-LEX-C150-VERBES150-05]; assesses=[] -->
 
 **livrer** — "to deliver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**livrer** ← Latin *liberare*, "to set free", the Latin of *libre* (EtymDB 2.1) — inherited: to hand over was to release.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

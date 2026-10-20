@@ -13,7 +13,8 @@ gloss: "to kill"
 concept_tag: LA-VERB-INTERFICIO
 prerequisites: [LA-C168-commodo, LA-C168-propono]
 sounds: []
-roots: []
+roots: [interficere-latin, facere-latin]
+etymology_hook: "interficiō 'to kill' — inter 'between' + faciō 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C168-propono]
 <!-- hl-knowledge: introduces=[LA-LEX-C169-ACT169-01]; assesses=[] -->
 
 **interficiō, interficere** — "to kill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interficiō** is *inter*, "between", with *faciō*, "to make" (Lewis & Short): first to put out of the way, then to kill.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

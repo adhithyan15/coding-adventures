@@ -9,13 +9,13 @@ sequence: 940
 chapter: 36
 type: word
 headword: घर
-gloss: house, home — masculine, and from a Sanskrit word that meant a fenced enclosure before it meant a building
+gloss: house, home — masculine, and probably from a Sanskrit word that meant a fenced enclosure before it meant a building
 romanization: "ghar"
 concept_tag: HI-HOME-HOUSE
 prerequisites: [HI-C04-phir-milenge, HI-W04-write-mera-naam]
 sounds: [aspirated-gha, spineless-ra]
 roots: [grha-sanskrit, pie-gherdh]
-etymology_hook: "घर (ghar) is Sanskrit गृह (gṛha), and गृह is not built on 'to hold' the way the old grammarians' root-lists suggest — it goes back to a PIE root *gʰerdʰ- meaning ENCLOSURE, the root behind English yard and garden and the -grad in Belgrade; a house was first of all a fenced-in piece of ground, and the building came second; the everyday Hindi word is the worn-down inheritance (गृह → Prakrit ghara → घर) while गृह itself is still used in Hindi as a formal borrowing back out of Sanskrit"
+etymology_hook: "ghar ← ghara, usually taken as the spoken form of Sanskrit gṛha; CDIAL calls that link phonetically hard (4428)"
 duration:
   max_seconds: 240
 requires:
@@ -55,35 +55,35 @@ inherent *a* → **घर**, *ghar*.
 
 **घर** (*ghar*) = "**house, home**." And it is **masculine**.
 
-Every Hindi noun is masculine or feminine. Not the thing — the **word**. There
-is nothing manly about a house; the gender is a fact about *ghar* the way its
-spelling is, and you learn the two together or you learn them twice.
+Every Hindi noun is masculine or feminine. Not the thing — the **word**: the
+gender is a fact about *ghar* the way its spelling is.
 
 It is not decoration: it changes the words around the noun. Because *ghar* is
 masculine, "my house" is **मेरा घर** (*merā ghar*), the masculine **मेरा**,
 exactly as in **मेरा नाम**.
 
-Whole sentence: **यह मेरा घर है** (*yah merā ghar hai*), "**this is my house**."
+Whole sentence: **घर मेरा है** (*ghar merā hai*), "**the house is mine**."
 
 ## The word, taken apart: घर
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C36-GHAR-02]; assesses=[HI-CONCEPT-C36-GHAR-01] -->
 
-**घर** comes from Sanskrit **गृह** (*gṛha*), worn smooth through Prakrit *ghara*
-into the short word you just said. Hindi kept **गृह** too, borrowed back out of
-Sanskrit for formal use, so both shapes survive.
+**घर** comes from *ghara*, "house", already in the Pali canon
+(CDIAL 4428). It is usually taken as the spoken form of Sanskrit **गृह** (*gṛha*), but
+CDIAL calls that sound change phonetically difficult: likely, not proven.
+Hindi kept **गृह** too, for formal use.
 
 Further back, *gṛha* descends from an ancient root meaning **enclosure**,
 ***gʰerdʰ-*** — and English holds two plain descendants of it: **yard** and
 **garden**. Slavic holds the *-grad* in **Belgrade**, "town."
 
-So the oldest sense is not walls and a roof. It is **a fenced-in piece of
-ground**. You enclose the land first; the house is what goes inside afterwards.
+So, if the link holds, the oldest sense is not walls and a roof but **a
+fenced-in piece of ground**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C36-GHAR-02, HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-WRITE-MERA-NAAM-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *ghar* — house; then *merā ghar*; then *yah merā ghar hai*]
+- [YOU SAY: *ghar* — house; then *merā ghar*; then *ghar merā hai*]
 - [YOU SAY: *merā nām* and *merā ghar* one after the other — the same *merā*,
   because both nouns are masculine]
 - [YOU SAY: the two letters, *gha* and *ra*, and which of them has no spine]

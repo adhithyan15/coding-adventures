@@ -13,7 +13,8 @@ gloss: "ash"
 concept_tag: LA-RES275-CINIS
 prerequisites: [LA-C275-pulvis, LA-C275-fumus]
 sounds: []
-roots: []
+roots: [cinis-latin]
+etymology_hook: "cinis 'ash' — inherited, usually traced to PIE *ken- 'dust, ashes'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C275-fumus]
 <!-- hl-knowledge: introduces=[LA-LEX-C275-RES275-05]; assesses=[] -->
 
 **cinis, cineris** — "ash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cinis** is inherited, usually traced to Proto-Indo-European *\*ken-*, "dust, ashes" (EtymDB 2.1); Greek *konis*, "dust", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

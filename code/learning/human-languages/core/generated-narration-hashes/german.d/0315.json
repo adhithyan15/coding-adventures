@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:d8ab79e196379629",
+  "lessonIds": [
+    "GE-C315-ritter",
+    "GE-C315-koenig",
+    "GE-C315-prinzessin",
+    "GE-C315-riese",
+    "GE-C315-zwerg"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch315.txt",
+  "json": "german/narration/ch315.json",
+  "textHash": "fnv1a64:0975d16044102e42",
+  "jsonHash": "fnv1a64:e94ddb8856f27f3c",
+  "findings": []
+}

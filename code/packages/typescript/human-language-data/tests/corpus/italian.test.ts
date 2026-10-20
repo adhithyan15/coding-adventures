@@ -42,14 +42,21 @@ it("pins Italian lesson-content budgets", () =>
     // two reviews per run.
     // 1171 -> 1312: the fourth and last tranche, chapters 233-259: 135 word
     // lessons and two reviews per run. Italian attains A2 here.
-    lessons: 1312,
+    // 1312 -> 1315: chapters 260-262, the A1 writing stages Italian had not
+    // proved (my own line, with a clock, four lines). No new word or atom.
+    // 1315 -> 1350: chapters 263-272, the B1 core that realizes all five B1
+    // spine nodes (imperfetto, reasons, travel, experience, condizionale):
+    // 35 lessons, one reading and one writing, no idiom, sense or culture claim.
+    // 1350 -> 2710: chapters 273-536, the B1 vocabulary: 1,320 word lessons
+    // (one headword each) and 40 spaced reviews. Italian attains B1 here.
+    lessons: 2710,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,
     unitPrefix: "IT",
   }));
 
-it("pins Italian's pre-A1 writing ladder, now complete", () => {
+it("pins Italian's writing ladder IN ORDER, pre-A1 through A1", () => {
   const italian = languageWritingStages("italian");
 
   // Was ["observe-trace", "guided-copy"] -- a foothold, and the pin said so.
@@ -63,6 +70,14 @@ it("pins Italian's pre-A1 writing ladder, now complete", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    // The three A1 stages, proved by the appended writing chapters. ORDER is
+    // the point: a timed or connected paper before a controlled one is invalid.
+    "controlled-composition",
+    "timed-assessment-production",
+    "connected-composition",
+    // IT-W272-sei-righe: six connected lines about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
+    "connected-composition",
   ]);
   expect(italian.defects).toEqual([]);
   expect(italian.levels[0]).toMatchObject({

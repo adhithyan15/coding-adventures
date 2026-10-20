@@ -13,7 +13,8 @@ gloss: "elections"
 concept_tag: IT-COSE161-ELEZIONI
 prerequisites: [IT-C161-sindaco, IT-C161-comune]
 sounds: []
-roots: []
+roots: [electio-latin]
+etymology_hook: "elezioni — plural of elezione ← Latin electio 'a choice' — English election"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C161-comune]
 <!-- hl-knowledge: introduces=[IT-LEX-C161-COSE161-05]; assesses=[] -->
 
 **le elezioni** — "elections".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elezioni** is the plural of *elezione* ← Latin *electio*, "a choice", from *eligere*, "to pick out" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

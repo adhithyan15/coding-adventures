@@ -1,0 +1,11 @@
+{
+  "id": "ES-C727-educado",
+  "pathSegment": "ES-PATH-727-SENSIBLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-727-SENSIBLE",
+      "order": 3
+    }
+  ]
+}

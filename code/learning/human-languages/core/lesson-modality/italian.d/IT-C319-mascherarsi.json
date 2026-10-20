@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C319-mascherarsi",
+    "language": "italian",
+    "chapter": 319,
+    "sequence": 18480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c01824c8ed66138a"
+  },
+  "findings": []
+}

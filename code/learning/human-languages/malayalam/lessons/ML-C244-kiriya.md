@@ -14,7 +14,8 @@ romanization: "kīṟiya"
 concept_tag: ML-GUNAM244-KIRIYA
 prerequisites: [ML-C243-atisthanam, ML-C244-niranna]
 sounds: []
-roots: []
+roots: [dravidian-kiru-tear]
+etymology_hook: "kīṟiya: native Dravidian, 'torn'; Tamil kīṟu (DEDR 1624)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C244-niranna]
 <!-- hl-knowledge: introduces=[ML-LEX-C244-GUNAM244-02]; assesses=[] -->
 
 **കീറിയ** — *kīṟiya* — "torn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കീറിയ** (*kīṟiya*) is native Dravidian, a past form of the verb "to be slit, torn"; DEDR 1624 lists the root with Tamil *kīṟu*, Kannada *kītu* and Telugu *gīṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

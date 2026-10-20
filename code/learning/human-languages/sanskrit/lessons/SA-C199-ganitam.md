@@ -14,7 +14,8 @@ romanization: "gaṇitam"
 concept_tag: SA-SCH199-GANITAM
 prerequisites: [SA-C199-bhasa, SA-C199-vyakaranam]
 sounds: []
-roots: []
+roots: [sanskrit-ganita]
+etymology_hook: "gaṇita 'counted', past participle of gaṇayati 'counts'; then 'reckoning' (MW; CDIAL 3996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C199-vyakaranam]
 <!-- hl-knowledge: introduces=[SA-LEX-C199-SCH199-04]; assesses=[] -->
 
 **गणितम्** — *gaṇitam* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gaṇita* is the past participle of *gaṇayati*, "counts", built on the root √gaṇ (MW; CDIAL 3996). "What is counted" became "reckoning", and then mathematics.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

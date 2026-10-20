@@ -14,7 +14,8 @@ romanization: "dhūsaraḥ"
 concept_tag: SA-QUAL131-DHUSARAH
 prerequisites: [SA-C130-svacchah, SA-C131-krsnah]
 sounds: []
-roots: []
+roots: [sanskrit-dhusara]
+etymology_hook: "dhūsara 'dust-coloured, grey' (MW queries √dhvaṃs); CDIAL 6870 links words for dust; Hindi dhūsar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C131-krsnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C131-QUAL131-02]; assesses=[] -->
 
 **धूसरः** — *dhūsaraḥ* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhūsara* "dust-coloured, grey" is linked by CDIAL 6870 with words for dust, while MW suggests the root √dhvaṃs "fall to dust"; its exact formation is uncertain. Hindi and Marathi kept it as *dhūsar* "grey" (CDIAL 6870).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

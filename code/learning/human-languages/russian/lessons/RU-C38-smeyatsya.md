@@ -14,7 +14,8 @@ romanization: "smeyátsya"
 concept_tag: RU-VERB-SMEYATSYA
 prerequisites: [RU-C38-pet, RU-C38-tantsevat]
 sounds: []
-roots: []
+roots: [slavic-smijati]
+etymology_hook: "смеяться ← Proto-Slavic *smĭjati sę; Sanskrit smayate 'smiles' and English smile are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C38-tantsevat]
 <!-- hl-knowledge: introduces=[RU-LEX-C38-VERB1-04]; assesses=[] -->
 
 **смеяться** (*smeyátsya*) — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**смеяться** ← Proto-Slavic *\*smĭjati sę* — inherited; *-ся* is the old "oneself". Vasmer relates it to Latvian *smiêt*, "to laugh", Sanskrit *smáyate*, "smiles", Greek *meidiáō*, "I smile", and Middle English *smilen*, so English *smile* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

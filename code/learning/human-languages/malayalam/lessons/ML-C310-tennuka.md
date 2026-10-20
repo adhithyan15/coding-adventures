@@ -14,7 +14,8 @@ romanization: "tennuka"
 concept_tag: ML-VERB-TENNUKA
 prerequisites: [ML-C309-vivarikkuka, ML-C309-olivakkuka]
 sounds: []
-roots: []
+roots: [malayalam-tennu]
+etymology_hook: "tennuka 'to slip': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C309-olivakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C310-KRIYA310-01]; assesses=[] -->
 
 **തെന്നുക** — *tennuka* — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെന്നുക** (*tennuka*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

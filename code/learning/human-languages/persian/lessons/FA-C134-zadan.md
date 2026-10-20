@@ -14,7 +14,8 @@ romanization: "zadan"
 concept_tag: FA-VERB-ZADAN
 prerequisites: [FA-C133-residan, FA-C133-geristan]
 sounds: []
-roots: []
+roots: [persian-zadan]
+etymology_hook: "zadan: inherited, usually traced to Middle Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C133-geristan]
 <!-- hl-knowledge: introduces=[FA-LEX-C134-ACT134-01]; assesses=[] -->
 
 **زدن** — *zadan* — "to hit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zadan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zadan*, "to strike". It is usually set beside Avestan *jan-*, "to strike", and Sanskrit *han-*, "to kill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

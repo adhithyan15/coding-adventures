@@ -14,7 +14,8 @@ romanization: "shahar"
 concept_tag: HI-NOUN-CITY
 prerequisites: [HI-C68-india, HI-C56-village]
 sounds: []
-roots: []
+roots: [persian-shahr]
+etymology_hook: "shahar: usually traced to Persian shahr 'city'"
 duration:
   max_seconds: 240
 requires:

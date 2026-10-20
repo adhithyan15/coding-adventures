@@ -12,7 +12,7 @@ concept_tag: VERB-GET
 prerequisites: [MR-C24-shikne]
 sounds: [matra-i, retroflex-la, retroflex-na]
 roots: [sanskrit-milati-meet]
-etymology_hook: "मिळणे continues Sanskrit मिलति milati \"meets, joins\"; Marathi turned the l into its own retroflex ळ, and the verb takes its receiver in the dative — malā miḷtaṁ, \"to me it is got\""
+etymology_hook: "मिळणे ← Sanskrit milati 'meets, joins' (CDIAL 10133); Marathi turned the l into retroflex ळ"
 duration:
   max_seconds: 250
 requires:

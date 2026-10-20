@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a vehicle, then the Kannada for an autor
 You'll want to know: ಸಾಕುಪ್ರಾಣಿ.
 ಸಾಕುಪ್ರಾಣಿ — sākuprāṇi — "a pet".
 
+The word, taken apart.
+ಸಾಕುಪ್ರಾಣಿ (sākuprāṇi) joins native sāku, "to bring up, rear", which DEDR 2427 lists, to Sanskrit prāṇin, "a living creature" (CDIAL 8932): "a creature you rear".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for an autorickshaw, then the Kannada for a 
 
 You'll want to know: ಕರು.
 ಕರು — karu — "a calf".
+
+The word, taken apart.
+ಕರು (karu) is native Dravidian, one word with Tamil kaṉṟu, Telugu kandu and Malayalam kannu (DEDR 1411). DEDR lists older kaṟu, "calf".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a pet, then the Kannada for a calf.
 You'll want to know: ಅಳಿಲು.
 ಅಳಿಲು — aḷilu — "a squirrel".
 
+The word, taken apart.
+ಅಳಿಲು (aḷilu) is native Dravidian, one word with Tamil aṇil and Malayalam aṇil (DEDR 2315). DEDR lists aḷil, "squirrel".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a calf, then the Kannada for a squirrel.
 You'll want to know: ಹಲ್ಲಿ.
 ಹಲ್ಲಿ — halli — "a lizard".
 
+The word, taken apart.
+ಹಲ್ಲಿ (halli) is native Dravidian, one word with Tamil palli, Telugu palli and Malayalam palli (DEDR 3994). DEDR lists older palli, "house lizard": the p- has become h-. DEDR 3994 compares Sanskrit pallī.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a squirrel, then the Kannada for a lizar
 
 You'll want to know: ಜಿರಳೆ.
 ಜಿರಳೆ — jiraḷe — "a cockroach".
+
+The word, taken apart.
+ಜಿರಳೆ (jiraḷe) is native Dravidian, one word with Telugu jeṟi (DEDR 2797). DEDR lists jiṟale and jeraḷe, "cockroach".
 
 What you've built.
 One more word for this chapter.

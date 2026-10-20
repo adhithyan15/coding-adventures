@@ -11,7 +11,8 @@ romanization: "lōpaliki raṇḍi"
 concept_tag: TE-INVITE-COME
 prerequisites: [TE-C80-may, TE-C43-give]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside, vaccu-come-dravidian]
+etymology_hook: "lōpaliki raṇḍi: native lōpala 'inside' (DEDR 698) + raṇḍi 'please come' (DEDR 5270)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C80-may]
 రా was the blunt "come" you say to a friend. Add the respectful **-అండి** and it becomes what you say at your own door to anybody.
 
 With స్వాగతం it is the whole of a Telugu welcome: **రండి, స్వాగతం**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లోపలికి రండి** (*lōpaliki raṇḍi*) is native Dravidian: *lōpala*, "inside", which DEDR 698 lists, with the ending *-ki*, "to", and *raṇḍi*, "please come", from the verb DEDR 5270 lists as *vaccu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

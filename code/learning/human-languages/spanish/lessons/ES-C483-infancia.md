@@ -10,7 +10,8 @@ gloss: "childhood"
 concept_tag: ES-REF-INFANCIA
 prerequisites: [ES-C482-rapido, ES-C482-variedad]
 sounds: []
-roots: []
+roots: [latin-infans]
+etymology_hook: "infancia ← Latin infantia, from infans 'not speaking': in- + fari 'to speak' — English infant"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C482-variedad]
 > Pasé la infancia en un pueblo.
 >
 > *I spent my childhood in a village.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**infancia** ← Latin *infantia*, "inability to speak; early childhood" (EtymDB 2.1), from *infans*, "not speaking": *in-*, "not", and *fari*, "to speak" — a learned word. The young child was named as the one who cannot talk yet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

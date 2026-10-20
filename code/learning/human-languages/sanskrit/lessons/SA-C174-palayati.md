@@ -14,7 +14,8 @@ romanization: "pālayati"
 concept_tag: SA-VERB-PALAYATI
 prerequisites: [SA-C174-bhaksayati, SA-C174-tadayati]
 sounds: []
-roots: []
+roots: [sanskrit-palayati]
+etymology_hook: "pālayati 'guards' is an l-form of pārayati, linked by folk etymology with √pā 'protect' (CDIAL 8129)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C174-tadayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C174-ACT174-04]; assesses=[] -->
 
 **पालयति** — *pālayati* — "keeps, protects".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pālayati* "guards, protects, keeps" is, according to CDIAL 8129 after EWA, an *l*-form of *pārayati* "brings across", which people later linked with √pā "protect". It lives on as Hindi *pālnā* "to rear, to keep" (CDIAL 8129).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

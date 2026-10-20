@@ -13,6 +13,9 @@ You'll want to know: छुट्टी.
 छुट्टी (chuṭṭī) — "a holiday", "a day off", "leave from work".
 आज छुट्टी (chuṭṭī) है — "today is a holiday", with the आज you know.
 
+The word, taken apart.
+छुट्टी (chuṭṭī) goes back to a reconstructed kṣuṭyate, "is released" (CDIAL 3707). CDIAL marks chuṭṭī, "leave", as taken over into Hindi from Punjabi.
+
 What you've built.
 A day off.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for let's go, then the Hindi for a holiday.
 You'll want to know: देर हो गई.
 देर हो गई (der ho gaī) — "it has got late", "I am late".
 देर is the lateness you know; हो गई is "has become". The first reason to leave.
+
+The word, taken apart.
+देर हो गई (der ho gaī) is "lateness has gone and become". der is usually traced to Persian der, "late", while ho and gaī are forms of the inherited verbs "to be" (CDIAL 9416) and "to go" (CDIAL 10452).
 
 What you've built.
 A reason to go.
@@ -73,6 +79,9 @@ You'll want to know: आराम से.
 आराम से (ārām se) — "comfortably", and as a parting, "take it easy".
 आराम is the rest you know, with से, "with". आराम से (ārām se) बैठिए — "sit comfortably"; at the door, आराम से (ārām se) alone is "take it easy".
 
+The word, taken apart.
+आराम से (ārām se) is "with ease". ārām is usually traced to Persian ārām, "rest", and se, "with", is inherited (CDIAL 13310).
+
 What you've built.
 An unhurried goodbye.
 
@@ -103,6 +112,9 @@ You'll want to know: इजाज़त.
 इजाज़त (ijāzat) — "permission".
 अब इजाज़त (ijāzat) दीजिए — "now please give me leave to go", the most courteous way to excuse yourself from a host.
 
+The word, taken apart.
+इजाज़त (ijāzat) is a loan from Arabic ijāza, "permission", which reached Hindi through Persian. Its Arabic root is j-w-z (Lane).
+
 What you've built.
 A formal way out of a room.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for take it easy, then the Hindi for permissio
 You'll want to know: जाना है.
 जाना है (jānā hai) — "have to go".
 मुझे जाना है (jānā hai) — "I have to go", with the person in मुझे. जाना is "to go".
+
+The word, taken apart.
+जाना है (jānā hai) is "to go is", that is, "I must go". jānā comes from Sanskrit yāti, "goes" (CDIAL 10452).
 
 What you've built.
 A holiday, it's late, take it easy, leave to go, I have to go.

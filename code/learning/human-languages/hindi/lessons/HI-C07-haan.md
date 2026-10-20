@@ -14,10 +14,10 @@ romanization: "hāṃ"
 concept_tag: RESPONSE-YES
 prerequisites: [HI-C01-namaste]
 sounds: [chandrabindu-nasal, vowel-aa]
-roots: [haan]
-etymology_hook: "हाँ hāṃ 'yes' is a nasalised aa — the chandrabindu ँ (moon-dot) sends the vowel through the nose; jī hāṃ is polite"
+roots: [haan, sanskrit-jiva]
+etymology_hook: "hāṁ ← Sanskrit ām 'yes', with an added h- (CDIAL 1235); jī ← jīva 'long live!' (CDIAL 5240)"
 duration:
-  max_seconds: 180
+  max_seconds: 199
 requires:
   knowledge: []
 introduces:
@@ -52,6 +52,11 @@ but a humming *hããⁿ*, the sound sent up through the nose, the way French doe
 in the next word — both nasalise, but the moon-dot rides a vowel that has nothing
 above it, like *ा*.)
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हाँ** comes from Sanskrit *ām*, "yes", with an *h-* that CDIAL calls emphatic or taken from the verb "to be" (CDIAL 1235). The polite **जी** is from *jīva*, "long live!" (CDIAL 5240).
+
 ## You'll want to know — Saying it politely
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C07-HAAN-02]; assesses=[] -->
 
@@ -76,5 +81,5 @@ warms up a plain yes into a courteous one.
 
 [PAUSE 3s] How do you say yes in Hindi? (**hāṃ**, हाँ.) What does the
 **chandrabindu** ँ do to the vowel? (**Nasalises** it — sends it through the
-nose.) How do you make *hāṃ* polite? (Add **जी** — *jī hāṃ*.) Next: **नहीं**
-(*nahīṃ*), no.
+nose.) How do you make *hāṃ* polite? (Add **जी** — *jī hāṃ*.) Next: the word
+for no.

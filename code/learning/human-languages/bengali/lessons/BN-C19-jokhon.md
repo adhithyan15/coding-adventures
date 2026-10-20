@@ -11,8 +11,8 @@ gloss: when — the joiner that puts one event beside another in time, and half 
 concept_tag: BN-JOIN-JOKHON
 prerequisites: [BN-C19-je, BN-C07-asha, BN-C07-jaowa]
 sounds: []
-roots: []
-etymology_hook: "যখন is built on the same relative stem ya- as যে, with the ending that also makes তখন ('then') and কখন ('when?'): Bengali marks relative, demonstrative and interrogative with three prefixes on one frame, so learning the pair teaches the whole series"
+roots: [sanskrit-kshana]
+etymology_hook: "যখন: relative ja- + -khôn 'moment', built like তখন ← Sanskrit tatkṣaṇa 'that very moment' (CDIAL 5640)"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +49,11 @@ Bengali does not leave the pair half-finished the way English does. **যখন*
 the clause and **তখন** answers it, and a fluent speaker says both. English would
 say *when I come, I drink tea* and let the *then* be understood; Bengali puts it
 in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যখন** is the relative stem *ja-* on *-khôn*, "moment": CDIAL lists **তখন** under Sanskrit *tatkṣaṇa*, "that very moment", with *jakhan*, "when", built the same way (CDIAL 5640).
 
 ## Grammar Lens: one frame, three prefixes
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C19-JOKHON-01, BN-GRAMMAR-C19-JE-01] -->

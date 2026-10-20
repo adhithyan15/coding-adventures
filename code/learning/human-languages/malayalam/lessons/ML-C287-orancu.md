@@ -14,7 +14,8 @@ romanization: "ōṟañcŭ"
 concept_tag: ML-VASTU287-ORANCU
 prerequisites: [ML-C287-palampori, ML-C287-pappaya]
 sounds: []
-roots: []
+roots: [english-orange]
+etymology_hook: "ōṟañcŭ ← English orange"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C287-pappaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C287-VASTU287-04]; assesses=[] -->
 
 **ഓറഞ്ച്** — *ōṟañcŭ* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓറഞ്ച്** (*ōṟañcŭ*) ← English *orange*, which goes back through Arabic and Persian to the Sanskrit word for the orange tree.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

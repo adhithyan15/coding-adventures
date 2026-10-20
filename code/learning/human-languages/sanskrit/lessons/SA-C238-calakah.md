@@ -14,7 +14,8 @@ romanization: "cālakaḥ"
 concept_tag: SA-PPL238-CALAKAH
 prerequisites: [SA-C238-vaijnanikah, SA-C238-araksakah]
 sounds: []
-roots: []
+roots: [sanskrit-calaka, sanskrit-calati]
+etymology_hook: "cālaka ← causative of √cal 'move' + -aka: 'one who sets in motion'; the 'driver' sense is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C238-araksakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C238-PPL238-05]; assesses=[] -->
 
 **चालकः** — *cālakaḥ* — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cālaka* is built on the causative of the root √cal, "to move", with the agent suffix *-aka*: "one who sets in motion". MW knows it only as "a restive elephant", so the sense "driver" is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

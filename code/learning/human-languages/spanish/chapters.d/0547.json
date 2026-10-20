@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Los novios",
+  "label": "ch:es-los-novios",
+  "canDo": "I can say that two people got engaged: the boyfriend, the girlfriend, the engagement and the ring.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C547-anillo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can say that two people got engaged: the boyfriend, the girlfriend, the engagement and the ring.",
+    "assesses": [
+      "ES-LEX-C547-NOVIOS-03",
+      "ES-LEX-C547-NOVIOS-04",
+      "ES-LEX-C547-NOVIOS-05"
+    ]
+  }
+}

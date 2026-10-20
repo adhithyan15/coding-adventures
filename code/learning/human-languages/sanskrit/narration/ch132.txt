@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for clear, then the Sanskrit for thick.
 You'll want to know: कृशः.
 कृशः — kṛśaḥ — "thin".
 
+The word, taken apart.
+kṛśa "lean, thin, emaciated" is old, in the Rigveda, and is inherited from Indo-European (EtymDB). Pali wore it down to kisa "lean" (CDIAL 3441).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for thick, then the Sanskrit for thin.
 
 You'll want to know: वक्रः.
 वक्रः — vakraḥ — "crooked".
+
+The word, taken apart.
+vakra "crooked, curved, bent" is old, in the Atharvaveda, and CDIAL 11185 sets it under the root √vañc "go crookedly", noting that similar words may be non-Aryan. Pali kept it as vakka "crooked" (CDIAL 11185).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for thin, then the Sanskrit for crooked.
 You'll want to know: ऋजुः.
 ऋजुः — ṛjuḥ — "straight".
 
+The word, taken apart.
+ṛju "straight, upright, honest" is old, in the Rigveda, and is inherited from Indo-European: Latin rēctus and English right are its cousins (EtymDB). Marathi kept it as ujū "straight, honest" (CDIAL 2448).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for crooked, then the Sanskrit for straight
 You'll want to know: पूर्णः.
 पूर्णः — pūrṇaḥ — "full".
 
+The word, taken apart.
+pūrṇa is the past participle of the root √pṝ "fill" (CDIAL 8339): "filled, full". It is inherited from Indo-European, and Latin plēnus (English plenty) and Persian pur "full" are cousins (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for straight, then the Sanskrit for full.
 
 You'll want to know: रिक्तः.
 रिक्तः — riktaḥ — "empty".
+
+The word, taken apart.
+rikta is the past participle of the root √ric "leave, empty" (CDIAL 10729): "left, emptied". The root is inherited from Indo-European, kin to Latin linquere "leave" (EtymDB), and rikta lives on as Hindi rītā "empty" (CDIAL 10729).
 
 What you've built.
 One more word for this chapter.

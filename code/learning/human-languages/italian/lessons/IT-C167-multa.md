@@ -13,7 +13,8 @@ gloss: "a fine"
 concept_tag: IT-COSE167-MULTA
 prerequisites: [IT-C167-autostrada, IT-C167-traffico]
 sounds: []
-roots: []
+roots: [multa-latin]
+etymology_hook: "multa ← Latin multa 'a fine', a learned word — English mulct is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C167-traffico]
 <!-- hl-knowledge: introduces=[IT-LEX-C167-COSE167-04]; assesses=[] -->
 
 **la multa** — "a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**multa** ← Latin *multa*, "a fine, a penalty" (Lewis & Short) — a learned borrowing; EtymDB 2.1 has no row for *multa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

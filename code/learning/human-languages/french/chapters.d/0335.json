@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Le débat",
+  "label": "ch:fr-le-debat",
+  "canDo": "I can take part in a debate: debate a question, state a thesis, build a line of argument and try to persuade someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C335-persuader",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can take part in a debate: debate a question, state a thesis, build a line of argument and try to persuade someone.",
+    "assesses": [
+      "FR-LEX-C335-DEBAT-03",
+      "FR-LEX-C335-DEBAT-04",
+      "FR-LEX-C335-DEBAT-05"
+    ]
+  }
+}

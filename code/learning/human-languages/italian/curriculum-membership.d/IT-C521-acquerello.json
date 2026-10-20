@@ -1,0 +1,11 @@
+{
+  "id": "IT-C521-acquerello",
+  "pathSegment": "IT-PATH-521-PITTURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-521-PITTURA",
+      "order": 4
+    }
+  ]
+}

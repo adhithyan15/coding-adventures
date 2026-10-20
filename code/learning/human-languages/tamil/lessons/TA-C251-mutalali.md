@@ -14,7 +14,8 @@ romanization: "mutalāḷi"
 concept_tag: TA-VELAI251-MUTALALI
 prerequisites: [TA-C251-porul, TA-C251-virpanai]
 sounds: []
-roots: []
+roots: [dravidian-mutal-beginning, dravidian-aal-man]
+etymology_hook: "முதலாளி — native: mutal 'capital' (DEDR 4950) + āḷi 'one who holds' (DEDR 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C251-virpanai]
 <!-- hl-knowledge: introduces=[TA-LEX-C251-VELAI251-05]; assesses=[] -->
 
 **முதலாளி** — *mutalāḷi* — "an employer, a boss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முதலாளி** (*mutalāḷi*) is native: *mutal*, "capital, principal sum" (DEDR 4950), and *āḷi*, "one who holds" (DEDR 399): "the holder of the capital".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:331859c97c75b596",
+  "lessonIds": [
+    "LA-C430-temo",
+    "LA-C430-modiolus",
+    "LA-C430-sufflamen",
+    "LA-C430-subiungo",
+    "LA-C430-disiungo",
+    "LA-R430-review-423-430"
+  ],
+  "tex": "latin/book/chapters/ch430-cart-pole-wheel-hub-drag-shoe-to-yoke-to-unyoke.tex"
+}

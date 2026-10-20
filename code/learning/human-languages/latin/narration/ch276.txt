@@ -12,6 +12,9 @@ Before the new one: say the Latin for smoke, then the Latin for ash.
 You'll want to know: vespa, vespae.
 vespa, vespae — "a wasp".
 
+The word, taken apart.
+vespa is inherited, usually traced to Proto-Indo-European wobhseh2, "wasp", from webh-, "to weave" (EtymDB 2.1): the insect that weaves its nest. English wasp is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for ash, then the Latin for a wasp.
 
 You'll want to know: culex, culicis.
 culex, culicis — "a gnat, a mosquito".
+
+The word, taken apart.
+culex has no sure origin; EtymDB 2.1 records a proposed Proto-Indo-European source, but the link is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a wasp, then the Latin for a gnat.
 You'll want to know: pūlex, pūlicis.
 pūlex, pūlicis — "a flea".
 
+The word, taken apart.
+pūlex is inherited, usually traced to Proto-Indo-European plusis, "flea" (EtymDB 2.1), with its sounds rearranged; Greek psylla, "flea", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a gnat, then the Latin for a flea.
 You'll want to know: vermis, vermis.
 vermis, vermis — "a worm".
 
+The word, taken apart.
+vermis is inherited, usually traced to Proto-Indo-European wrmis, "worm" (EtymDB 2.1); Gothic waurms, "serpent", and English worm are cousins (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a flea, then the Latin for a worm.
 
 You'll want to know: testūdō, testūdinis.
 testūdō, testūdinis — "a tortoise".
+
+The word, taken apart.
+testūdō is built on testa, "a piece of baked clay, a shell" (Lewis & Short), with -ūdō, an ending for a quality: the shelled creature.
 
 What you've built.
 One more word for this chapter.

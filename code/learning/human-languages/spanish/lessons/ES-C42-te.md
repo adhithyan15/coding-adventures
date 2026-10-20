@@ -6,11 +6,12 @@ sequence: 1221
 chapter: 85
 type: word
 headword: te quiero
-gloss: "you" as the object — and the sentence it makes, which is the one people actually need
+gloss: '"you" as the object — and the sentence it makes, which is the one people actually need'
 concept_tag: ES-PRONOUN-TE
 prerequisites: [ES-C42-me-objeto, ES-C11-querer]
 sounds: []
-roots: []
+roots: [tu-latin, quaerere-latin]
+etymology_hook: "te quiero — te is Latin te 'you'; quiero is querer, Latin quaerere 'to seek'"
 teaches_cells: []
 duration:
   max_seconds: 290
@@ -61,6 +62,11 @@ does not mean wanting them — it means **loving** them. *Quiero un libro* is
 So the sentence is built entirely out of pieces you already had. What is new is
 not a form — it is that the verb changes its meaning depending on whether its
 object is a thing or a person.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**te** is Latin *te*, "you", the form for the one an action lands on, unchanged; the next lesson follows it further. *Quiero* is *querer*, Latin *quaerere*, "to seek".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-TE-DIRECT-OBJECT, ES-LEX-TE-OBJECT, ES-LEX-TE-QUIERO, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUERER, ES-LEX-TU, ES-LEX-ME, ES-LEX-LIBRO] -->

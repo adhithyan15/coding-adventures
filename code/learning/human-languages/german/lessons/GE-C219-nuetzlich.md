@@ -13,7 +13,8 @@ gloss: "useful"
 concept_tag: GE-QUAL219-NUETZLICH
 prerequisites: [GE-C218-mutig, GE-C219-neugierig]
 sounds: []
-roots: []
+roots: [germanic-nutona]
+etymology_hook: "nützlich ← Middle High German nützelich: the word for 'use' + -lich"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C219-neugierig]
 <!-- hl-knowledge: introduces=[GE-LEX-C219-QUAL219-02]; assesses=[] -->
 
 **nützlich** — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nützlich** ← Middle High German *nützelich* (EtymDB 2.1): the word for "use, benefit", from Old High German *nuzzōn*, "to use", + *-lich*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

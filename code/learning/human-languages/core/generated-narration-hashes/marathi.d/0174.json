@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 174,
-  "sourceHash": "fnv1a64:df75fb7dfdb292c3",
+  "sourceHash": "fnv1a64:1db52aae4124a5e0",
   "lessonIds": [
     "MR-C174-aramdayak",
     "MR-C174-sabhya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch174.txt",
   "json": "marathi/narration/ch174.json",
-  "textHash": "fnv1a64:4f50790714e0cd2d",
-  "jsonHash": "fnv1a64:7b6d6ed5fe9f1db5",
+  "textHash": "fnv1a64:4d16bd4a8095349f",
+  "jsonHash": "fnv1a64:08094462454b2e70",
   "findings": []
 }

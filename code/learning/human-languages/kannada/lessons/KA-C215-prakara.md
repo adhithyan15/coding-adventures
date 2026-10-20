@@ -14,7 +14,8 @@ romanization: "prakāra"
 concept_tag: KA-KARANA215-PRAKARA
 prerequisites: [KA-C214-kavalu, KA-C215-mulaka]
 sounds: []
-roots: []
+roots: [sanskrit-prakara]
+etymology_hook: "prakāra ← Sanskrit prakāra 'sort, manner', a tatsama (CDIAL 8435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C215-mulaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C215-KARANA215-02]; assesses=[] -->
 
 **ಪ್ರಕಾರ** — *prakāra* — "according to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಕಾರ** (*prakāra*) is Sanskrit *prakāra*, "sort, manner", taken over whole as a learned loan, a tatsama (CDIAL 8435). "In the manner of" became "according to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

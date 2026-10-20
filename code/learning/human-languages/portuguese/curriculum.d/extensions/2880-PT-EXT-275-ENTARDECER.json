@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-275-ENTARDECER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when in the day something happened: at dawn, late in the afternoon, at nightfall, at twilight, or the day before.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C533-inesperado",
+    "language": "spanish",
+    "chapter": 533,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df7d5d91550bcf44"
+  },
+  "findings": []
+}

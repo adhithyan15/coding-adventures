@@ -14,6 +14,7 @@ concept_tag: IT-COSE221-FORESTA
 prerequisites: [IT-C221-panetteria, IT-C221-macelleria]
 sounds: []
 roots: []
+etymology_hook: "foresta ← Medieval Latin foresta, probably through Old French forest — English forest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C221-macelleria]
 <!-- hl-knowledge: introduces=[IT-LEX-C221-COSE221-03]; assesses=[] -->
 
 **la foresta** — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**foresta** goes back to Medieval Latin *foresta*, "an open wood" (EtymDB 2.1), probably through Old French *forest*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

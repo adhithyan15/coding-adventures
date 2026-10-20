@@ -14,7 +14,8 @@ romanization: "prikhodít"
 concept_tag: RU-VERB-PRIKHODIT
 prerequisites: [RU-C143-yezdit, RU-C143-khodit]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "приходить is при- 'to, near' + ходить 'to walk': to arrive"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C143-khodit]
 <!-- hl-knowledge: introduces=[RU-LEX-C143-ACT143-04]; assesses=[] -->
 
 **приходить** (*prikhodít*) — "to come, to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**приходить** is *при-*, "to, toward", with *ходить*, "to walk": to come to a place. Vasmer ties *ход* to the Indo-European root *\*sed-*, "to sit", its *х* grown from an *s* after prefixes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

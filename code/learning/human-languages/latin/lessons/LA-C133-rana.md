@@ -13,7 +13,8 @@ gloss: "a frog"
 concept_tag: LA-THINGS133-RANA
 prerequisites: [LA-C132-papilio, LA-C133-aranea]
 sounds: []
-roots: []
+roots: [rana-latin]
+etymology_hook: "rāna 'frog' — origin unknown; perhaps imitating the croak"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C133-aranea]
 <!-- hl-knowledge: introduces=[LA-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **rāna, rānae** — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rāna** has no sure origin; it is often thought to imitate the frog's croak.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

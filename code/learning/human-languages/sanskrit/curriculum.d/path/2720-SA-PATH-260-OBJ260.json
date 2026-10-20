@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-260-OBJ260",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-260-OBJ260"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "ḥisāb"
 concept_tag: AR-AMAL220-HISAB
 prerequisites: [AR-C220-qard, AR-C220-bidaa]
 sounds: []
-roots: []
+roots: [ḥ-s-b]
+etymology_hook: "ḥisāb: built on the root ḥ-s-b, 'to count, to reckon' (Lane); ḥisāb is the verbal noun, 'reckoning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C220-bidaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C220-AMAL220-04]; assesses=[] -->
 
 **حساب** — *ḥisāb* — "an account".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حساب** (*ḥisāb*) is built on the native Arabic root *ḥ-s-b*, "to count, to reckon" (Lane). *Ḥisāb* is the verbal noun, "reckoning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 620,
+  "sourceHash": "fnv1a64:0aab6b352b37aa7a",
+  "lessonIds": [
+    "ES-C620-solucion",
+    "ES-C620-solucionar",
+    "ES-C620-obstaculo",
+    "ES-C620-complicado",
+    "ES-C620-plantear"
+  ],
+  "tex": "spanish/book/chapters/ch620-buscar-soluciones.tex"
+}

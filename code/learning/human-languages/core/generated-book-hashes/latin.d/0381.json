@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:9fe6cec542f15964",
+  "lessonIds": [
+    "LA-C381-causidicus",
+    "LA-C381-cliens",
+    "LA-C381-navicularius",
+    "LA-C381-librarius",
+    "LA-C381-agrimensor"
+  ],
+  "tex": "latin/book/chapters/ch381-pleaders-clients-and-clerks.tex"
+}

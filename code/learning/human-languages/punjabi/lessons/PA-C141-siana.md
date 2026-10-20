@@ -14,7 +14,8 @@ romanization: "siāṇā"
 concept_tag: PA-QUAL141-SIANA
 prerequisites: [PA-C140-bhara, PA-C141-calak]
 sounds: []
-roots: []
+roots: [indo-aryan-sajana]
+etymology_hook: "siāṇā ← *sajāna 'clever', a reconstructed form; a tadbhava (CDIAL 13088)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C141-calak]
 <!-- hl-knowledge: introduces=[PA-LEX-C141-QUAL141-02]; assesses=[] -->
 
 **ਸਿਆਣਾ** — *siāṇā* — "wise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਿਆਣਾ** (*siāṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sajāna*, "clever", a form CDIAL reconstructs from its descendants (CDIAL 13088). CDIAL explains it as *\*sajñāna*, "knowing", with its *j* reshaped after *jānāti*, "knows".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

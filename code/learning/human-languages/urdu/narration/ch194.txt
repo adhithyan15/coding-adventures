@@ -12,6 +12,9 @@ Before the new one: say the Urdu for greedy, then the Urdu for worried.
 You'll want to know: چوکور.
 چوکور — chaukor — "square".
 
+The word, taken apart.
+چوکور (chaukor) is "four-edged": chau-, "four", with kor, "edge", which CDIAL lists under a reconstructed korā, "edge" (CDIAL 3531).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for worried, then the Urdu for square.
 
 You'll want to know: ٹیڑھا.
 ٹیڑھا — ṭeṛhā — "crooked".
+
+The word, taken apart.
+ٹیڑھا (ṭeṛhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from treḍḍha, "slanting, squinting", a form CDIAL reconstructs from its descendants (CDIAL 6071). It is a form CDIAL gives beside a reconstructed treḍḍa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for square, then the Urdu for crooked.
 You'll want to know: اتھلا.
 اتھلا — uthlā — "shallow".
 
+The word, taken apart.
+اتھلا (uthlā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthala, "shallow", a form CDIAL reconstructs from its descendants (CDIAL 1899). It is built on sthala, "dry land".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for crooked, then the Urdu for shallow.
 You'll want to know: باسی.
 باسی — bāsī — "stale".
 
+The word, taken apart.
+باسی (bāsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāsita, "infused, scented" (CDIAL 11604). The sense turned from "scented" to "smelling, stale".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for shallow, then the Urdu for stale.
 
 You'll want to know: تیکھا.
 تیکھا — tīkhā — "spicy, hot".
+
+The word, taken apart.
+تیکھا (tīkhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tīkṣṇa, "sharp; hot, pungent" (CDIAL 5839).
 
 What you've built.
 One more word for this chapter.

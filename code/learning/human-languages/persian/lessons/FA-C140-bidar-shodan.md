@@ -14,7 +14,8 @@ romanization: "bidâr shodan"
 concept_tag: FA-VERB-BIDAR-SHODAN
 prerequisites: [FA-C140-roshan-kardan, FA-C140-khamush-kardan]
 sounds: []
-roots: []
+roots: [persian-shudan]
+etymology_hook: "bidâr shodan: Persian bidâr 'awake' + shodan 'to become'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C140-khamush-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C140-KONESH140-05]; assesses=[] -->
 
 **بیدار شدن** — *bidâr shodan* — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bidâr shodan* pairs *bidâr*, "awake", a native Persian word, with *shodan*, "to become": "to become awake". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

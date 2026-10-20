@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Garanzie e fatture",
+  "label": "ch:it-garanzie-e-fatture",
+  "canDo": "I can deal with what I buy: a guarantee, an invoice, a quote and whether it is good value.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C397-conveniente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can deal with what I buy: a guarantee, an invoice, a quote and whether it is good value.",
+    "assesses": [
+      "IT-LEX-C397-GARANZIA-03",
+      "IT-LEX-C397-GARANZIA-04",
+      "IT-LEX-C397-GARANZIA-05"
+    ]
+  }
+}

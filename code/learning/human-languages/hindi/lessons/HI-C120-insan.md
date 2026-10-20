@@ -14,7 +14,8 @@ romanization: "insān"
 concept_tag: HI-FORM-PERSON
 prerequisites: [HI-C120-pahchan, HI-C120-parichay]
 sounds: []
-roots: []
+roots: [arabic-insan]
+etymology_hook: "insān ← Arabic insān 'human being', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C120-parichay]
 **इंसान** (*insān*) — "a human being, a person".
 
 **अच्छा इंसान** — "a good person", with **अच्छा**. **आदमी** is a man; **इंसान** is anyone.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इंसान** (*insān*) is a loan from Arabic *insān*, "human being", which reached Hindi through Persian. Its Arabic root is *ʾ-n-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

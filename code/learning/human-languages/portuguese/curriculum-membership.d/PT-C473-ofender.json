@@ -1,0 +1,11 @@
+{
+  "id": "PT-C473-ofender",
+  "pathSegment": "PT-PATH-473-MANEIRAS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-473-MANEIRAS",
+      "order": 4
+    }
+  ]
+}

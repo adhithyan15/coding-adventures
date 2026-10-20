@@ -14,7 +14,8 @@ romanization: "vanam"
 concept_tag: SA-NOUN-FOREST
 prerequisites: [SA-C16-road]
 sounds: []
-roots: []
+roots: [sanskrit-vana]
+etymology_hook: "vana 'tree, forest' is Rigvedic; origin not settled; it lives on as Hindi ban (CDIAL 11258)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,13 @@ exactly that.
 Its ending is *-am*, so it belongs with *gṛham* — which gives the chapter a
 neat symmetry: the two *-am* words so far are the house you live inside and the
 wild you do not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vana* is a Rigvedic word for a single tree or a wood (CDIAL 11258). MW files
+it under the root √van, "to like, win", but its origin is not settled. It
+lives on as Hindi *ban*, "forest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

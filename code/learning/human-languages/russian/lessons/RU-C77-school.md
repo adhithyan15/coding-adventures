@@ -14,7 +14,8 @@ romanization: "shkóla"
 concept_tag: RU-TOWN1-SCHOOL
 prerequisites: [RU-C77-shop, RU-C77-market]
 sounds: []
-roots: []
+roots: [schola-latin]
+etymology_hook: "школа came through Polish from Latin schola, from Greek scholē 'leisure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C77-market]
 <!-- hl-knowledge: introduces=[RU-LEX-C77-TOWN1-05]; assesses=[] -->
 
 **школа** (*shkóla*) — "a school". Where the **учитель** and the **ученик** meet.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**школа** — recorded from 1388; it came through Polish *szkoła* from Latin *schola*, from Greek *scholḗ*, "leisure", then "lecture, school" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "remontírovat"
 concept_tag: RU-VERB-REMONTIROVAT
 prerequisites: [RU-C237-umirat, RU-C237-stuchat]
 sounds: []
-roots: []
+roots: [french-remonte]
+etymology_hook: "ремонтировать is ремонт 'repair' + -ировать; ремонт ← French remonte, first 'restocking with horses'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C237-stuchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C237-ACT237-03]; assesses=[] -->
 
 **ремонтировать** (*remontírovat*) — "to renovate, to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ремонтировать** is *ремонт*, "repair", made into a verb. *ремонт* comes from French *remonte*, "a fresh supply of horses" (Vasmer); under Peter the Great it meant supplying horses to regiments.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

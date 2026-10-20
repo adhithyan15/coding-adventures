@@ -14,7 +14,8 @@ romanization: "dhyāna"
 concept_tag: KA-AROGYA209-DHYANA
 prerequisites: [KA-C209-tamase, KA-C209-yoga]
 sounds: []
-roots: []
+roots: [sanskrit-dhyana]
+etymology_hook: "dhyāna ← Sanskrit dhyāna 'meditation', a tatsama (CDIAL 6889)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C209-yoga]
 <!-- hl-knowledge: introduces=[KA-LEX-C209-AROGYA209-05]; assesses=[] -->
 
 **ಧ್ಯಾನ** — *dhyāna* — "meditation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಧ್ಯಾನ** (*dhyāna*) is Sanskrit *dhyāna*, "meditation", taken over whole as a learned loan, a tatsama (CDIAL 6889).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

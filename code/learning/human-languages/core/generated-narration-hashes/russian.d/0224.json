@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 224,
-  "sourceHash": "fnv1a64:9701184aaa2530ac",
+  "sourceHash": "fnv1a64:ddcdd6e49501522f",
   "lessonIds": [
     "RU-C224-beryoza",
     "RU-C224-yel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch224.txt",
   "json": "russian/narration/ch224.json",
-  "textHash": "fnv1a64:08e369465e6571df",
-  "jsonHash": "fnv1a64:bb193dd302361e2a",
+  "textHash": "fnv1a64:6f4ac6e9e53cfbb2",
+  "jsonHash": "fnv1a64:34f431a63a280d58",
   "findings": []
 }

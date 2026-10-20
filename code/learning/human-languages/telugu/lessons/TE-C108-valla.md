@@ -14,7 +14,8 @@ romanization: "valla"
 concept_tag: TE-WANT108-VALLA
 prerequisites: [TE-C108-karanam, TE-C108-anduvalla]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "valla: native Dravidian; DEDR 5276 lists valana, the instrumental postposition, under val 'strong'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C108-anduvalla]
 <!-- hl-knowledge: introduces=[TE-LEX-C108-WANT108-05]; assesses=[] -->
 
 **వల్ల** — *valla* — "because of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వల్ల** (*valla*) is native Dravidian. DEDR 5276 lists *valana*, an instrumental postposition, under *val-*, "strong, able", with Tamil *val*, "strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

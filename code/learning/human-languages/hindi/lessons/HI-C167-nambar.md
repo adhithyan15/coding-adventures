@@ -14,7 +14,8 @@ romanization: "nambar"
 concept_tag: HI-READ167-NAMBAR
 prerequisites: [HI-C167-kiraya, HI-C167-tarikh]
 sounds: []
-roots: []
+roots: [english-number]
+etymology_hook: "nambar ← English number"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C167-tarikh]
 [YOU READ: the sign]
 
 The sign says **कमरा नंबर बीस।** (*kamrā nambar bīs.*) Room twenty.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नंबर** (*nambar*) is a loan from English *number*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

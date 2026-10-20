@@ -14,7 +14,8 @@ romanization: "puḷḷiyuḷḷa"
 concept_tag: ML-GUNAM321-PULLIYULLA
 prerequisites: [ML-C320-bhayankaramaya, ML-C320-atipoli]
 sounds: []
-roots: []
+roots: [dravidian-pulli-dot, dravidian-ul-be]
+etymology_hook: "puḷḷiyuḷḷa: native Dravidian, 'having spots': puḷḷi (DEDR 4327) + uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C320-atipoli]
 <!-- hl-knowledge: introduces=[ML-LEX-C321-GUNAM321-01]; assesses=[] -->
 
 **പുള്ളിയുള്ള** — *puḷḷiyuḷḷa* — "spotted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുള്ളിയുള്ള** (*puḷḷiyuḷḷa*) is native Dravidian, "having spots": *puḷḷi*, "dot, spot" (DEDR 4327, with Tamil *puḷḷi*), and *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

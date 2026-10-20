@@ -14,7 +14,8 @@ romanization: "ākāśaḥ"
 concept_tag: SA-SKY-AKASHA
 prerequisites: [SA-C30-anjali, SA-C29-please, SA-C30-door]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ākāśa 'open space, sky' ← ā- + the root √kāś 'shine, be visible' (MW; CDIAL 1008)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C30-anjali]
 **आकाशः** is the openness overhead. It is built on a piece meaning "to shine, to be visible", with **आ** in front — so the sky is named as the bright open place where things can be seen at all, rather than as a lid over the world.
 
 This one stayed home. Hindi, Marathi, Bengali and Telugu all keep it as *ākāś* or *ākāśam*, and traders carried it east, where Malay and Indonesian say *angkasa* for the sky to this day. Ends in **-अः**, like **दीपः** and **हस्तः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ākāśa* is built from the prefix *ā-* and the root √kāś, "to shine, be visible"
+(MW, CDIAL 1008). It first meant open space, and later the sky.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

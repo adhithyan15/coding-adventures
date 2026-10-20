@@ -13,7 +13,8 @@ gloss: "a shop"
 concept_tag: IT-CITTA1-NEGOZIO
 prerequisites: [IT-C80-strada, IT-C81-citta]
 sounds: []
-roots: []
+roots: [negotium-latin]
+etymology_hook: "negozio ← Latin negotium 'business, not-leisure' — English negotiate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C81-citta]
 <!-- hl-knowledge: introduces=[IT-LEX-C81-CITTA1-02]; assesses=[] -->
 
 **il negozio** — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**negozio** ← Latin *negotium*, "business", literally "not-leisure" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

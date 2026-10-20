@@ -15,6 +15,7 @@ concept_tag: MR-VERB-GHADI-KARNE
 prerequisites: [MR-C195-tulna-karne, MR-C196-phirayla-jane]
 sounds: []
 roots: []
+etymology_hook: "ghaḍī 'a fold': origin not settled; CDIAL's ghaḍī is 'water-clock' (CDIAL 4406), a different word; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C196-phirayla-jane]
 <!-- hl-knowledge: introduces=[MR-LEX-C196-ACT196-02]; assesses=[] -->
 
 **घडी करणे** — *ghaḍī karṇe* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **घडी**, "a fold", is not settled. CDIAL has no entry for it in this sense; its Marathi *ghaḍī* is a different word, "water-clock" (CDIAL 4406). **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

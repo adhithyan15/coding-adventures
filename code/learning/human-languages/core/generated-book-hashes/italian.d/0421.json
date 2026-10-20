@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:5991e3ea48874bb7",
+  "lessonIds": [
+    "IT-C421-molo",
+    "IT-C421-pontile",
+    "IT-C421-imbarcarsi",
+    "IT-C421-sbarcare",
+    "IT-C421-salpare"
+  ],
+  "tex": "italian/book/chapters/ch421-al-porto.tex"
+}

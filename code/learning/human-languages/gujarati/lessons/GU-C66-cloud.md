@@ -14,7 +14,8 @@ romanization: "vādaḷ"
 concept_tag: GU-WEATHER-CLOUD
 prerequisites: [GU-C65-soil, GU-C66-wind]
 sounds: []
-roots: []
+roots: [sanskrit-vardala]
+etymology_hook: "vādaḷ ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C66-wind]
 <!-- hl-knowledge: introduces=[GU-LEX-C66-WEATHER-02]; assesses=[] -->
 
 **વાદળ** (*vādaḷ*) — "a cloud". Before the **વરસાદ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાદળ** (*vādaḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather" (CDIAL 11567).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

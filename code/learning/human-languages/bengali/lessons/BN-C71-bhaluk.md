@@ -14,7 +14,8 @@ romanization: "bhāluk"
 concept_tag: BN-ANIMALS71-BHALUK
 prerequisites: [BN-C70-sap, BN-C70-kak]
 sounds: []
-roots: []
+roots: [sanskrit-bhalluka]
+etymology_hook: "bhāluk ← *bhallukka, beside Sanskrit bhallūka 'bear', whose origin is disputed (CDIAL 9415)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C70-kak]
 <!-- hl-knowledge: introduces=[BN-LEX-C71-ANIMALS71-01]; assesses=[] -->
 
 **ভালুক** — *bhāluk* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভালুক** (*bhāluk*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhallukka*, "bear", a form CDIAL reconstructs from its descendants (CDIAL 9415). It stands beside Sanskrit *bhallūka*, "bear", whose source is disputed: CDIAL reports both an Indo-European origin and Przyluski's Austroasiatic one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

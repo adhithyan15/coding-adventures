@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 239,
-  "sourceHash": "fnv1a64:cc5ab67487cece9c",
+  "sourceHash": "fnv1a64:08157e3b8f5e00c8",
   "lessonIds": [
     "FR-C239-unir",
     "FR-C239-valoir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch239.txt",
   "json": "french/narration/ch239.json",
-  "textHash": "fnv1a64:59e64d259636b963",
-  "jsonHash": "fnv1a64:947c4963a0ec7a1c",
+  "textHash": "fnv1a64:d42e497c1e38890d",
+  "jsonHash": "fnv1a64:91339cac47fb85d7",
   "findings": []
 }

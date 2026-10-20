@@ -6,7 +6,7 @@ sequence: 410
 chapter: 10
 type: word
 headword: o pai, a mãe
-gloss: father and mother — the most worn-down of all: pater→pai, mater→mãe
+gloss: 'father and mother — the most worn-down of all: pater→pai, mater→mãe'
 concept_tag: PT-FAMILY-PARENTS
 prerequisites: [PT-C09-estacoes, PT-C01-ola]
 sounds: [nasal-ae, diphthong-ai]
@@ -81,5 +81,5 @@ dressed-up versions of the same word.
 happened to the *-t-* of *pater/māter* in Portuguese? (It **vanished** — *pater →
 pae → pai*.) What does **os pais** mean literally and in use? (Literally "the
 fathers"; in use, "**the parents**.") What word does *o país* (accented) mean?
-(The **country** — a spelling trap.) Next: **o irmão, a irmã** — and a surprise
+(The **country** — a spelling trap.) Next: brother and sister — and a surprise
 about where "brother" comes from.

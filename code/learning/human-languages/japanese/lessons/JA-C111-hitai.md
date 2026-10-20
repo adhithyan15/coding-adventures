@@ -14,7 +14,8 @@ romanization: "hitai"
 concept_tag: JA-THINGS111-HITAI
 prerequisites: [JA-C110-kakato, JA-C110-sune]
 sounds: []
-roots: []
+roots: [japanese-hitai]
+etymology_hook: "hitai: native Japanese, inherited, not borrowed; kanji 額 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C110-sune]
 <!-- hl-knowledge: introduces=[JA-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **ひたい** — *hitai* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひたい** (*hitai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

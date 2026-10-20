@@ -14,7 +14,8 @@ romanization: "kokilaḥ"
 concept_tag: SA-THINGS124-KOKILAH
 prerequisites: [SA-C124-sarovarah, SA-C124-naditiram]
 sounds: []
-roots: []
+roots: [sanskrit-kokila]
+etymology_hook: "kokila 'Indian cuckoo' is imitative of its call (MW), like English cuckoo; Hindi koyal (CDIAL 3483)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C124-naditiram]
 <!-- hl-knowledge: introduces=[SA-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **कोकिलः** — *kokilaḥ* — "a cuckoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kokila* "the Indian cuckoo, the koel" is imitative of the bird's call (MW), as Greek *kokkyx* and English *cuckoo* are (EtymDB). It lives on as Hindi *koyal* (CDIAL 3483).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

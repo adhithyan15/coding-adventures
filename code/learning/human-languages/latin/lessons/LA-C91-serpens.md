@@ -13,7 +13,8 @@ gloss: "a snake"
 concept_tag: LA-ANIMALIA2-SERPENS
 prerequisites: [LA-C91-leo, LA-C91-ursus]
 sounds: []
-roots: []
+roots: [serpens-latin, serpere-latin]
+etymology_hook: "serpēns 'snake' — 'the creeping thing', from serpō 'to creep', from PIE *serp-"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C91-ursus]
 <!-- hl-knowledge: introduces=[LA-LEX-C91-ANIMALIA2-05]; assesses=[] -->
 
 **serpēns, serpentis** — "a snake". Literally "the creeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**serpēns** is the present participle of *serpō*, "to creep" (Lewis & Short), used as a noun: the creeping thing. *serpō* is usually traced to Proto-Indo-European *\*serp-*, "to crawl, to creep" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

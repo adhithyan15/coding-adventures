@@ -14,7 +14,8 @@ romanization: "priglashát"
 concept_tag: RU-VERB-PRIGLASHAT
 prerequisites: [RU-C141-vstrechat, RU-C141-znakomitsya]
 sounds: []
-roots: []
+roots: [slavic-golsu]
+etymology_hook: "приглашать is при- + глас, the Church Slavonic shape of голос 'voice': to call someone to you"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C141-znakomitsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C141-ACT141-03]; assesses=[] -->
 
 **приглашать** (*priglashát*) — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**приглашать** is *при-*, "to, toward", with *-глашать*, from *глас*, the Church Slavonic shape of *голос*, "voice": to call someone over. Vasmer relates *голос* to Old Norse *kalla*, "to call".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

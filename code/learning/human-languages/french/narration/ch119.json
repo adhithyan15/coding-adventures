@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Beef, Vegetables, Mushroom, Beans, Cucumber",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b148195f7c298b8c",
+  "sourceHash": "fnv1a64:3e0bed813b5efd27",
   "lessons": [
     {
       "id": "FR-C119-boeuf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be1111cbd6dd77ee",
+      "sourceHash": "fnv1a64:c4ac5292d1887863",
       "notice": null,
       "blocks": [
         {
@@ -71,6 +71,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bœuf from Latin bos, bovis, \"ox\" (EtymDB 2.1) — inherited: the stressed o became œu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -81,7 +92,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -130,7 +141,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:530ffc6efbf817d8",
+      "sourceHash": "fnv1a64:71b6ec738eb00408",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "légumes is the plural of the word for \"a vegetable\", from Latin legumen, \"a pulse, a bean\" (Lewis & Short) — a learned borrowing."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -284,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f02d7a820ed6ee90",
+      "sourceHash": "fnv1a64:4d90320ee6679e32",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "champignon from Vulgar Latin campaniolus, \"growing in the fields\", from Latin campania, \"level country\", and campus, \"a field\" (EtymDB 2.1) — inherited: ca- became cha-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -327,7 +360,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -376,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -407,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12dbe4d56be6357a",
+      "sourceHash": "fnv1a64:ff56429a3cea8567",
       "notice": null,
       "blocks": [
         {
@@ -440,6 +473,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "haricots is the plural of the word for \"bean\", whose origin is uncertain. It first named a meat stew, from an Old French verb meaning \"to chop up\"; the bean sense may owe something to Nahuatl ayacotli, \"bean\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -450,7 +494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -499,7 +543,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -530,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a96735e79d75245b",
+      "sourceHash": "fnv1a64:402ae1730c4adfa8",
       "notice": null,
       "blocks": [
         {
@@ -563,6 +607,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "concombre from Old Provençal cocombre from Latin cucumis, cucumeris, \"cucumber\" — borrowed from the south. (EtymDB 2.1 records the Latin word.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -573,7 +628,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -622,7 +677,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

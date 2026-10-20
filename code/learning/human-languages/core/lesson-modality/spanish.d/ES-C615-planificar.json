@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C615-planificar",
+    "language": "spanish",
+    "chapter": 615,
+    "sequence": 20500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18970762efb6f961"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "kheḍṇā"
 concept_tag: PA-VERB-KHEDNA
 prerequisites: [PA-C57-turna, PA-C57-daurna]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "kheḍṇā ← *kheḍḍ 'play', a reconstructed form; a tadbhava (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C57-daurna]
 <!-- hl-knowledge: introduces=[PA-LEX-C57-VERBS57-04]; assesses=[] -->
 
 **ਖੇਡਣਾ** — *kheḍṇā* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖੇਡਣਾ** (*kheḍṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kheḍḍ*, "play", a form CDIAL reconstructs from its descendants (CDIAL 3918). CDIAL adds that, if Sanskrit *krīḍati*, "plays", is of non-Aryan origin, these words may come from the same source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

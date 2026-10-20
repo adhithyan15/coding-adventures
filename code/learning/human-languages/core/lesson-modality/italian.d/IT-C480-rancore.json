@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C480-rancore",
+    "language": "italian",
+    "chapter": 480,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39f1d50f7e7742f0"
+  },
+  "findings": []
+}

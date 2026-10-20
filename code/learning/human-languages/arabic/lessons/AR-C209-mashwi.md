@@ -14,7 +14,8 @@ romanization: "mashwī"
 concept_tag: AR-SIFA209-MASHWI
 prerequisites: [AR-C208-qaida, AR-C208-tariqa]
 sounds: []
-roots: []
+roots: [sh-w-y]
+etymology_hook: "mashwī: built on the root sh-w-y, 'to roast' (Lane); mashwī is the passive participle, 'roasted, grilled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C208-tariqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C209-SIFA209-01]; assesses=[] -->
 
 **مشوي** — *mashwī* — "grilled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشوي** (*mashwī*) is built on the native Arabic root *sh-w-y*, "to roast" (Lane). *Mashwī* is the passive participle, "roasted, grilled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

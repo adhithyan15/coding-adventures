@@ -14,7 +14,8 @@ romanization: "dhirāʿ"
 concept_tag: AR-SIHHA168-DHIRA
 prerequisites: [AR-C167-haraba, AR-C167-ikhtafa]
 sounds: []
-roots: []
+roots: [dh-r-ʿ]
+etymology_hook: "dhirāʿ: built on the root dh-r-ʿ, 'the forearm' (Lane); Hebrew zeroaʿ, 'arm', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C167-ikhtafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C168-SIHHA168-01]; assesses=[] -->
 
 **ذراع** — *dhirāʿ* — "an arm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذراع** (*dhirāʿ*) is built on the native Arabic root *dh-r-ʿ*, "the forearm; a cubit" (Lane). Hebrew *zeroaʿ*, "arm", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

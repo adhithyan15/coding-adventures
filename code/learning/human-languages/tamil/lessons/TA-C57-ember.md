@@ -11,7 +11,8 @@ romanization: "kaṉal"
 concept_tag: TA-NOUN-EMBER
 prerequisites: [TA-C57-smoke, TA-C55-bone, TA-C56-let-it-be]
 sounds: []
-roots: []
+roots: [dravidian-kanal-glow]
+etymology_hook: "கனல் — native Dravidian (DEDR 1406); Malayalam kanal 'live coals', Kannada kanal 'to glow'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C57-smoke]
 The live coal under the ash: fire with no flame on it. Malayalam has the word unchanged, കനൽ (*kanal*). Telugu's నిప్పు (*nippu*) covers this and open fire together.
 
 It is the word Tamil reaches for when it means heat held rather than heat let go. A *kaṉal* in somebody's eye is anger they are keeping to themselves, and everyone in the room can tell.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கனல்** (*kaṉal*) is native Dravidian. DEDR 1406 lists Malayalam *kanal*, "live coals" and Kannada *kanal*, "to glow". The entry compares Sanskrit *kanala*, "shining".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

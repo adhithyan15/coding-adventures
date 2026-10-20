@@ -1,0 +1,11 @@
+{
+  "id": "GE-C521-schriftsteller",
+  "pathSegment": "GE-PATH-521-GEDICHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-521-GEDICHT",
+      "order": 4
+    }
+  ]
+}

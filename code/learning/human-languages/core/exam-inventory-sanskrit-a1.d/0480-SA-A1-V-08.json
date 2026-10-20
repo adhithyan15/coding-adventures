@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-V-08",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "the infinitive and other non-finite forms",
+  "probe": [
+    "SA-GRAMMAR-INFINITIVE-TUM-01",
+    "SA-GRAMMAR-GERUND-TVA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-V-12",
+    "A1-V-13",
+    "A1-V-14",
+    "A1-SUB-01",
+    "A1-SUB-02"
+  ],
+  "note": "Closed by SA-C55-gatva and SA-C55-gantum: the -tva gerund and the -tum infinitive, the two non-finite forms a beginner needs to put two actions in one clause. The -ta past participle is still untaught."
+}

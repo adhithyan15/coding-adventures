@@ -49,6 +49,11 @@ the vowel and added a *d* on the end; nothing else happened to it.
 The moon was the first Germanic god-slot in the week, which is why it comes
 first here.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mond** ← Old High German *māno* ← Proto-Germanic *\*mēnô*, "moon" — inherited, the same word as English *moon*. (EtymDB 2.1)
+
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MOND-01] -->
 

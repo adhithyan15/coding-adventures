@@ -14,7 +14,8 @@ romanization: "rajisṟṟar ceyyuka"
 concept_tag: ML-VERB-RAJISRRAR-CEYYUKA
 prerequisites: [ML-C268-amgikarikkuka, ML-C268-putukkuka]
 sounds: []
-roots: []
+roots: [english-register, cey-do-dravidian]
+etymology_hook: "rajisṟṟar ceyyuka: English register + native ceyyuka 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C268-putukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C268-KRIYA268-04]; assesses=[] -->
 
 **രജിസ്റ്റർ ചെയ്യുക** — *rajisṟṟar ceyyuka* — "to register".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രജിസ്റ്റർ ചെയ്യുക** (*rajisṟṟar ceyyuka*) joins English *register* to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ilākhe"
 concept_tag: KA-KELASA271-ILAKHE
 prerequisites: [KA-C271-muskara, KA-C271-samsthe]
 sounds: []
-roots: []
+roots: [arabic-alaqa]
+etymology_hook: "ilākhe ← Arabic ʿalāqa 'connection', through Persian and Hindustani ilāqa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C271-samsthe]
 <!-- hl-knowledge: introduces=[KA-LEX-C271-KELASA271-05]; assesses=[] -->
 
 **ಇಲಾಖೆ** — *ilākhe* — "a government department".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಲಾಖೆ** (*ilākhe*) is Hindustani *ilāqa*, "district, jurisdiction", from Arabic *ʿalāqa*, "connection", through Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

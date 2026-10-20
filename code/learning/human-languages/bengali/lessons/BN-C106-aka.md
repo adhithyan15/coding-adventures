@@ -14,7 +14,8 @@ romanization: "ā̃kā"
 concept_tag: BN-VERB-AKA
 prerequisites: [BN-C106-chhora, BN-C106-tepa]
 sounds: []
-roots: []
+roots: [sanskrit-ankayati]
+etymology_hook: "āṁkā ← Sanskrit aṅkayati 'marks, brands', a tadbhava (CDIAL 104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C106-tepa]
 <!-- hl-knowledge: introduces=[BN-LEX-C106-ACT106-03]; assesses=[] -->
 
 **আঁকা** — *ā̃kā* — "to draw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আঁকা** (*āṁkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅkayati*, "marks, brands" (CDIAL 104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

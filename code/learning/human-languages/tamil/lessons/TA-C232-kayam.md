@@ -14,7 +14,8 @@ romanization: "kāyam"
 concept_tag: TA-NALAM232-KAYAM
 prerequisites: [TA-C231-camali, TA-C232-palvali]
 sounds: []
-roots: []
+roots: [tamil-kaayam-wound]
+etymology_hook: "காயம் 'wound' — origin uncertain; perhaps the same word as kāyam 'scar' (DEDR 1460)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C232-palvali]
 <!-- hl-knowledge: introduces=[TA-LEX-C232-NALAM232-02]; assesses=[] -->
 
 **காயம்** — *kāyam* — "a wound, an injury".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **காயம்** (*kāyam*), "wound", is uncertain. DEDR does not give this sense, but it lists *kāyam*, "scar", beside *kāy*, "to form a callus, as from a wound" (DEDR 1460), and the two may be one word. Another possible source is Prakrit *ghāya*, "wound" (CDIAL 4460).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

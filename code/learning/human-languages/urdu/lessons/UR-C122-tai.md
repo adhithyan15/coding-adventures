@@ -14,7 +14,8 @@ romanization: "ṭāī"
 concept_tag: UR-THINGS122-TAI
 prerequisites: [UR-C122-chappal, UR-C122-batan]
 sounds: []
-roots: []
+roots: [english-tie]
+etymology_hook: "ṭāī ← English tie"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C122-batan]
 <!-- hl-knowledge: introduces=[UR-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **ٹائی** — *ṭāī* — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹائی** (*ṭāī*) is a loan from English *tie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

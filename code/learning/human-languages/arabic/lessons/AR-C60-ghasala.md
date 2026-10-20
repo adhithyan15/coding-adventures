@@ -14,7 +14,8 @@ romanization: "ghasala"
 concept_tag: AR-VERB-GHASALA
 prerequisites: [AR-C59-aghlaqa, AR-C60-tabakha]
 sounds: []
-roots: []
+roots: [gh-s-l]
+etymology_hook: "ghasala: built on the root gh-s-l, 'to wash' (Lane); ghasala is the plain verb, 'he washed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C60-tabakha]
 <!-- hl-knowledge: introduces=[AR-LEX-C60-VERBS60-02]; assesses=[] -->
 
 **غسل** — *ghasala* — "to wash (he washed)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غسل** (*ghasala*) is built on the native Arabic root *gh-s-l*, "to wash" (Lane). *Ghasala* is the plain verb, "he washed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

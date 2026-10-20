@@ -14,7 +14,8 @@ romanization: "kaḻutai"
 concept_tag: TA-THINGS141-KALUTAI
 prerequisites: [TA-C141-cilanti, TA-C141-panri]
 sounds: []
-roots: []
+roots: [dravidian-kazhutai-ass]
+etymology_hook: "கழுதை — native Dravidian (DEDR 1364); Malayalam kaḻuta, Kannada katte, Telugu gāḍida"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C141-panri]
 <!-- hl-knowledge: introduces=[TA-LEX-C141-THINGS141-05]; assesses=[] -->
 
 **கழுதை** — *kaḻutai* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கழுதை** (*kaḻutai*) is native Dravidian. DEDR 1364 lists Malayalam *kaḻuta*, Kannada *katte* and Telugu *gāḍida*. The entry compares Sanskrit *gardabha*, "ass" (CDIAL 4054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

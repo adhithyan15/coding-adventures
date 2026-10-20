@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:1b104e1a3a86cbf1",
+  "lessonIds": [
+    "PT-C485-arranhar",
+    "PT-C485-arranhao",
+    "PT-C485-nodoa-negra",
+    "PT-C485-inchar",
+    "PT-C485-inchado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch485.txt",
+  "json": "portuguese/narration/ch485.json",
+  "textHash": "fnv1a64:5789c0eb1eb178a6",
+  "jsonHash": "fnv1a64:52ea164cbd532d71",
+  "findings": []
+}

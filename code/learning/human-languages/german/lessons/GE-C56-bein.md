@@ -13,7 +13,8 @@ gloss: "a leg"
 concept_tag: GE-KOERPER1-BEIN
 prerequisites: [GE-C27-oeffnen, GE-C27-schliessen]
 sounds: []
-roots: []
+roots: [germanic-baina]
+etymology_hook: "Bein ← Old High German bein 'bone' ← Proto-Germanic *bainą — the same word as English bone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C27-schliessen]
 <!-- hl-knowledge: introduces=[GE-LEX-C56-KOERPER1-01]; assesses=[] -->
 
 **das Bein** — "a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bein** ← Old High German *bein*, "bone" ← Proto-Germanic *\*bainą* — inherited. English *bone* is the same word; German moved it from the bone to the whole leg. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

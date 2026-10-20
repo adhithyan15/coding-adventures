@@ -5376,6 +5376,7 @@ fn dc_sweep_measurements_execute_probe_and_parsed_cards() {
         "
 .measure dc mid_swing PP V(mid) FROM=0 TO=2
 .meas dc mid_final FINAL V(mid)
+.measure dc mid_at FIND V(mid) AT=1.5
 .end
 ",
     )
@@ -5383,7 +5384,7 @@ fn dc_sweep_measurements_execute_probe_and_parsed_cards() {
 
     assert_eq!(
         format_measurement_table(&measurements),
-        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_swing\tdc\tV(mid)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\nmid_final\tdc\tV(mid)\tlast\t\t\t1.000000e+00\n"
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_swing\tdc\tV(mid)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\nmid_final\tdc\tV(mid)\tlast\t\t\t1.000000e+00\nmid_at\tdc\tV(mid)\tfind\t1.500000e+00\t1.500000e+00\t7.500000e-01\n"
     );
 }
 

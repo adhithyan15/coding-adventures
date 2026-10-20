@@ -11,7 +11,8 @@ romanization: "puṭṭŭ"
 concept_tag: ML-DISH-PUTTU
 prerequisites: [ML-C132-sambar, ML-C132-appam]
 sounds: []
-roots: []
+roots: [malayalam-puttu]
+etymology_hook: "puṭṭŭ: of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C132-appam]
 <!-- hl-knowledge: introduces=[ML-LEX-C132-DISHES-04]; assesses=[] -->
 
 **പുട്ട്** (*puṭṭŭ*) — steamed rice and **തേങ്ങ** in a tube, a breakfast of Kerala.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുട്ട്** (*puṭṭŭ*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

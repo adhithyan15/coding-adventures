@@ -12,6 +12,7 @@ concept_tag: TE-VERB-UNDU
 prerequisites: [TE-C05-maatlaadu, TE-C03-miiru-elaa-unnaaru]
 sounds: [retroflex-nd]
 roots: [dravidian-undu-be]
+etymology_hook: "uṇḍu: native Dravidian, one word with Tamil uḷ, uṇṭu and Kannada uḷ (DEDR 697)"
 duration:
   max_seconds: 150
 requires:
@@ -50,6 +51,8 @@ does an enormous amount of work. It is the verb behind Chapter 3's *unnāru*
 ("you are") and *bāgunnānu* ("I'm well") — and it also means "to reside": *nēnu
 Hyderābādlō uṇṭānu* ("I live in Hyderabad"). One
 verb covers "be," "stay," and "live."
+
+DEDR 697 lists Telugu *uṇḍu*, "to be, exist, live", with Tamil *uḷ*, "to be", and *uṇṭu*, "there is", and Kannada *uḷ*.
 
 ## Grammar Lens: "in" comes after the noun
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C05-UNDU-03]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gaṅgireddu"
 concept_tag: TE-VASTUVU229-GANGIREDDU
 prerequisites: [TE-C228-toka, TE-C229-tapakayalu]
 sounds: []
-roots: []
+roots: [dravidian-erutu-ox]
+etymology_hook: "gaṅgireddu: gaṅgi + native reddu, eddu 'ox' (DEDR 815, which lists gaṅgi-reddu 'temple bull')"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C229-tapakayalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C229-VASTUVU229-02]; assesses=[] -->
 
 **గంగిరెద్దు** — *gaṅgireddu* — "a decorated performing bull seen at Sankranti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గంగిరెద్దు** (*gaṅgireddu*) is native Dravidian in its second part. DEDR 815 lists *gaṅgi-reddu*, "bull consecrated to a temple", under *eddu*, "ox, bull", one word with Tamil *erutu*, "bull".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

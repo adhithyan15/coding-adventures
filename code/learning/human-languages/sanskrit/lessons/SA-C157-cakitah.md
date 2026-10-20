@@ -14,7 +14,8 @@ romanization: "cakitaḥ"
 concept_tag: SA-QUAL157-CAKITAH
 prerequisites: [SA-C157-kupitah, SA-C157-bhitah]
 sounds: []
-roots: []
+roots: [sanskrit-cakita]
+etymology_hook: "cakita 'trembling, startled' (MW, under √cak); MW gives only grammarians' senses; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C157-bhitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C157-QUAL157-03]; assesses=[] -->
 
 **चकितः** — *cakitaḥ* — "startled, surprised".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cakita* "trembling, timid, startled" is filed by MW under the root √cak, which the grammarians gloss in unrelated ways, so its origin is uncertain. It is a word of classical poetry, in the *Meghadūta* and the *Raghuvaṃśa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: LITERARY-REGISTER
 prerequisites: [ES-C275-delgado-flaco]
 sounds: [vowel-a, vowel-e]
 roots: [magis]
+etymology_hook: "mas 'but' ← Latin magis 'more', the same word as más, split by meaning"
 duration:
   max_seconds: 240
 requires:

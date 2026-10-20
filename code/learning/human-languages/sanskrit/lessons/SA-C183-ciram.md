@@ -14,7 +14,8 @@ romanization: "ciram"
 concept_tag: SA-TIME183-CIRAM
 prerequisites: [SA-C183-muhurtah, SA-C183-hora]
 sounds: []
-roots: []
+roots: [sanskrit-cira]
+etymology_hook: "ciram 'for long' is the accusative of cira 'long-lasting', of unclear origin (MW queries √ci; CDIAL 4824)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C183-hora]
 <!-- hl-knowledge: introduces=[SA-LEX-C183-TIME183-04]; assesses=[] -->
 
 **चिरम्** — *ciram* — "for a long time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ciram* is the accusative of *cira*, "long-lasting", used as an adverb (MW). The origin of *cira* is uncertain: MW suggests the root √ci with a question mark. Gujarati and Marathi keep *cir*, "for a long time" (CDIAL 4824).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

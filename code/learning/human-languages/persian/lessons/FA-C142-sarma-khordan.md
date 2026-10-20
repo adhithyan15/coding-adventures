@@ -14,7 +14,8 @@ romanization: "sarmâ khordan"
 concept_tag: FA-VERB-SARMA-KHORDAN
 prerequisites: [FA-C142-pishnahad-kardan, FA-C142-entekhab-kardan]
 sounds: []
-roots: []
+roots: [persian-khurdan]
+etymology_hook: "sarmâ khordan: Persian sarmâ 'cold' + khordan 'to eat'; native, inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C142-entekhab-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C142-KONESH142-04]; assesses=[] -->
 
 **سرما خوردن** — *sarmâ khordan* — "to catch a cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarmâ khordan* pairs *sarmâ*, "the cold" (from *sard*, "cold", inherited, EtymDB), with *khordan*, "to eat": to "eat" the cold, the way Persian also "eats" a blow or a fall. *khordan*, "to eat", is an inherited verb; EtymDB traces it to Middle Persian *xwar-*, "to eat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taṛkā"
 concept_tag: PA-TIME99-TARKA
 prerequisites: [PA-C98-desh, PA-C99-adhirat]
 sounds: []
-roots: []
+roots: [sanskrit-trat]
+etymology_hook: "taṛkā 'daybreak': matches Hindi taṛkā 'dawn', listed under the imitative traṭ 'crackle' (CDIAL 5988)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C99-adhirat]
 <!-- hl-knowledge: introduces=[PA-LEX-C99-TIME99-02]; assesses=[] -->
 
 **ਤੜਕਾ** — *taṛkā* — "daybreak, early morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤੜਕਾ** (*taṛkā*) matches Hindi *taṛkā*, "dawn", which CDIAL lists under the imitative Sanskrit *traṭ*, "crackle", comparing the English "crack of dawn" (CDIAL 5988). The same entry gives Punjabi *taṛakṇā*, "to crack, crackle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

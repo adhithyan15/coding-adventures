@@ -14,7 +14,8 @@ romanization: "taruḥ"
 concept_tag: SA-TREE-TARU
 prerequisites: [SA-C31-snow, SA-C30-door, SA-C31-sky]
 sounds: []
-roots: []
+roots: [sanskrit-taru]
+etymology_hook: "taru 'tree' (MW); MW connects it with dru and dāru 'wood', the family of English tree (CDIAL 5711)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C31-snow]
 You have had **वनम्**, a forest, for a long while now. **तरुः** is one tree standing in it.
 
 Sanskrit keeps several names for a tree — *vṛkṣa*, *druma*, and this one — and **तरुः** is the shortest and the easiest to say. It ends in *-uḥ*, like **गुरुः** and **वायुः**, so you already know how it behaves.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Taru* is an epic word for a tree (CDIAL 5711). MW connects it with *dru* and
+*dāru*, "wood", the inherited family of English **tree**, but the exact link is
+not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MR-CAN122-HAVA
 prerequisites: [MR-C122-malak, MR-C122-takad]
 sounds: []
 roots: []
+etymology_hook: "havā 'wanted, needed': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C122-takad]
 <!-- hl-knowledge: introduces=[MR-LEX-C122-CAN122-04]; assesses=[] -->
 
 **हवा** — *havā* — "wanted, needed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **हवा** (*havā*) is not settled. Neither CDIAL nor DEDR has an entry for it. It is not the Hindi *havā*, "air", which is Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

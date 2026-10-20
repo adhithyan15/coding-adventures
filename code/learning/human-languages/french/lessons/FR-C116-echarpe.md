@@ -14,6 +14,7 @@ concept_tag: FR-HABITS68-ECHARPE
 prerequisites: [FR-C116-ceinture, FR-C116-gants]
 sounds: []
 roots: []
+etymology_hook: "écharpe ← Old French escharpe, a strap bag, from Frankish *skirpja — English scarf"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C116-gants]
 <!-- hl-knowledge: introduces=[FR-LEX-C116-HABITS68-05]; assesses=[] -->
 
 **l'écharpe** — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**écharpe** ← Old French *escharpe*, a pilgrim's bag on a strap, from Frankish *\*skirpja*, "a bag of rushes" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

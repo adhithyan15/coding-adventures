@@ -11,7 +11,8 @@ romanization: "tereyiri"
 concept_tag: KA-DO-OPEN
 prerequisites: [KA-C100-station, KA-C100-near]
 sounds: []
-roots: []
+roots: [dravidian-tira-open]
+etymology_hook: "tereyiri: native, from tere 'to open' (DEDR 3259), with the polite ending -iri"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C100-near]
 **ಕಾಯಿರಿ**, "please wait".
 
 **ಬಾಗಿಲು ತೆರೆಯಿರಿ** (*bāgilu tereyiri*) — "please open the door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೆರೆಯಿರಿ** (*tereyiri*) is native Dravidian, of the root for "opening", and DEDR 3259 lists *teṟe*, "to open, uncover", itself; the entry also has Tamil *tiṟa*, Telugu *teṟa* and Malayalam *tuṟakka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

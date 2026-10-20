@@ -14,7 +14,8 @@ romanization: "fāil"
 concept_tag: HI-THG250-FAIL
 prerequisites: [HI-C249-mobail, HI-C249-dastavez]
 sounds: []
-roots: []
+roots: [english-file]
+etymology_hook: "fāil ← English file"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C249-dastavez]
 <!-- hl-knowledge: introduces=[HI-LEX-C250-THG250-01]; assesses=[] -->
 
 **फ़ाइल** — *fāil* — "a file".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फ़ाइल** (*fāil*) is a loan from English *file*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

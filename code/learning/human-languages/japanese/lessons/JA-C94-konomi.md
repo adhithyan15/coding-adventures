@@ -14,7 +14,8 @@ romanization: "konomi"
 concept_tag: JA-LIKE94-KONOMI
 prerequisites: [JA-C93-yotei, JA-C94-konomu]
 sounds: []
-roots: []
+roots: [japanese-konomu]
+etymology_hook: "konomi: native, the noun from konomu 'to like'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C94-konomu]
 <!-- hl-knowledge: introduces=[JA-LEX-C94-LIKE94-02]; assesses=[] -->
 
 **このみ** — *konomi* — "a liking, taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**このみ** (*konomi*) is native: the noun made from *konomu*, "to like", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

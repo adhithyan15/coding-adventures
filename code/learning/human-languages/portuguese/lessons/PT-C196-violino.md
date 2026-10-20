@@ -14,6 +14,7 @@ concept_tag: PT-COISAS196-VIOLINO
 prerequisites: [PT-C196-ferramenta, PT-C196-guitarra]
 sounds: []
 roots: []
+etymology_hook: "violino ← Italian violino 'little viola' — English violin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C196-guitarra]
 <!-- hl-knowledge: introduces=[PT-LEX-C196-COISAS196-04]; assesses=[] -->
 
 **o violino** — "a violin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**violino** ← Italian *violino*, "little viola" (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

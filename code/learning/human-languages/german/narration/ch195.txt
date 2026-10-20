@@ -12,6 +12,9 @@ Before the new one: say the German for a round trip, then the German for a marke
 You'll want to know: die Fußgängerzone.
 die Fußgängerzone — "a pedestrian zone".
 
+The word, taken apart.
+Fußgängerzone is Fuß + a noun built on gehen, "to go", + Zone, "zone", which came through Latin from Greek zṓnē, "belt": a belt of town for people on foot.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a market square, then the German for a pe
 
 You'll want to know: der Dom.
 der Dom — "a cathedral".
+
+The word, taken apart.
+Dom from Middle High German tuom from Medieval Latin domus (episcopalis), "the (bishop's) house" — borrowed. The modern form was reshaped after French dôme (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a pedestrian zone, then the German for a 
 You'll want to know: das Denkmal.
 das Denkmal — "a monument".
 
+The word, taken apart.
+Denkmal is denken, "to think, to remember", + the old word for "a mark", Old High German māl (EtymDB 2.1): a mark to remember by, copying Greek mnēmósynon.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a cathedral, then the German for a monume
 You'll want to know: der Turm.
 der Turm — "a tower".
 
+The word, taken apart.
+Turm from Middle High German turn from Old French torn, tor from Latin turris, "tower" (EtymDB 2.1) — borrowed, like English tower.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a monument, then the German for a tower.
 
 You'll want to know: die Burg.
 die Burg — "a castle".
+
+The word, taken apart.
+Burg from Old High German burg from Proto-Germanic burgz, "stronghold" — inherited. (EtymDB 2.1) English borough and the -bury of place names are the same word.
 
 What you've built.
 One more word for this chapter.

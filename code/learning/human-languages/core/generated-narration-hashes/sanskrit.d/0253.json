@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 253,
-  "sourceHash": "fnv1a64:9217e003c6fb3bbd",
+  "sourceHash": "fnv1a64:30a5b5f9d9caa454",
   "lessonIds": [
     "SA-C253-kitah",
     "SA-C253-luta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch253.txt",
   "json": "sanskrit/narration/ch253.json",
-  "textHash": "fnv1a64:31c31312b28dc471",
-  "jsonHash": "fnv1a64:40210376602acf50",
+  "textHash": "fnv1a64:c042ab864ea78c2b",
+  "jsonHash": "fnv1a64:1d92db7e0b0e0695",
   "findings": []
 }

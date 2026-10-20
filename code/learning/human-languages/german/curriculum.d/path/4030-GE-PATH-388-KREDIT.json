@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-388-KREDIT",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-388-KREDIT"
+  ],
+  "after": []
+}

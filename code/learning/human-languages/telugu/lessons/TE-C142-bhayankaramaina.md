@@ -14,7 +14,8 @@ romanization: "bhayaṅkaramaina"
 concept_tag: TE-QUAL142-BHAYANKARAMAINA
 prerequisites: [TE-C142-kastapade, TE-C142-telivaina]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya, tamil-aaku-become]
+etymology_hook: "bhayaṅkaramaina: Sanskrit bhayaṅkara 'fear-making' (bhaya, CDIAL 9390) + native ayina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C142-telivaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C142-QUAL142-03]; assesses=[] -->
 
 **భయంకరమైన** — *bhayaṅkaramaina* — "terrible, dreadful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భయంకరమైన** (*bhayaṅkaramaina*) is *bhayaṅkara*, Sanskrit for "causing fear", built on Sanskrit *bhaya*, "fear" (CDIAL 9390), with native *ayina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

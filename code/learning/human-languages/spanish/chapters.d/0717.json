@@ -1,0 +1,19 @@
+{
+  "chapter": 717,
+  "title": "Días difíciles",
+  "label": "ch:es-dias-dificiles",
+  "canDo": "I can talk about a hard time, sadness and letting off steam.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C717-desesperado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 717: I can talk about a hard time, sadness and letting off steam.",
+    "assesses": [
+      "ES-LEX-C717-SUFRIR-03",
+      "ES-LEX-C717-SUFRIR-04",
+      "ES-LEX-C717-SUFRIR-05"
+    ]
+  }
+}

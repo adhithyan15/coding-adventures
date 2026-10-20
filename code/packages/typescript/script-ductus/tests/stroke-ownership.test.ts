@@ -341,9 +341,15 @@ describe("stroke ownership migration baseline", () => {
         return files;
       };
       const kannada = JSON.parse(good.get("kannada.json")!) as Record<string, unknown>;
+      // A case-insensitive filesystem maps Kannada.json onto kannada.json. To
+      // exercise the unsafe spelling everywhere, remove the valid twin before
+      // writing the uppercase name rather than asking the directory to hold
+      // both spellings at once.
+      const uppercaseName = variant("kannada.json", undefined);
+      uppercaseName.set("Kannada.json", good.get("kannada.json")!);
       const cases: [string, Map<string, string>, RegExp][] = [
         ["no registry pin", variant(REGISTRY_PIN_FILE, undefined), /_registry\.json is missing/],
-        ["an uppercase name", variant("Kannada.json", good.get("kannada.json")), /unsafe/],
+        ["an uppercase name", uppercaseName, /unsafe/],
         ["a non-JSON file", variant("notes.txt", "hi"), /unsafe/],
         ["an extra field", variant("kannada.json", JSON.stringify({ ...kannada, note: "x" })), /kannada\.json: expected/],
         ["a missing field", variant("kannada.json", JSON.stringify({ ...kannada, keyHash: undefined })), /kannada\.json: expected/],

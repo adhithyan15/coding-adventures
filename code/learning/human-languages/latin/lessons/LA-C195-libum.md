@@ -13,7 +13,8 @@ gloss: "a cake"
 concept_tag: LA-RES195-LIBUM
 prerequisites: [LA-C194-rumor, LA-C194-historia]
 sounds: []
-roots: []
+roots: [libum-latin]
+etymology_hook: "lībum 'cake' — origin uncertain; Varro tied it to lībō 'to pour an offering'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C194-historia]
 <!-- hl-knowledge: introduces=[LA-LEX-C195-RES195-01]; assesses=[] -->
 
 **lībum, lībī** — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lībum** has no sure origin; Varro tied it to *lībō*, "to pour out an offering" (Lewis & Short), since such cakes were offered to the gods.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

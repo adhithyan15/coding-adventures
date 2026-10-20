@@ -11,7 +11,8 @@ romanization: "dēṣyaṁ"
 concept_tag: ML-FEEL-ANGER
 prerequisites: [ML-C116-sadness, ML-C116-fear]
 sounds: []
-roots: []
+roots: [sanskrit-dvesha]
+etymology_hook: "dēṣyaṁ ← Sanskrit dvēṣya 'hateful', from dvēṣa 'hatred' (CDIAL 6696), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C116-fear]
 <!-- hl-knowledge: introduces=[ML-LEX-C116-FEELINGS-03]; assesses=[] -->
 
 **ദേഷ്യം** (*dēṣyaṁ*) — "anger". **ദേഷ്യപ്പെടേണ്ട** — "don't be angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദേഷ്യം** (*dēṣyaṁ*) is Sanskrit *dvēṣya*, "hateful", from *dvēṣa*, "hatred" (CDIAL 6696), reshaped: the *dv-* lost its *v*, and hatred softened to anger.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

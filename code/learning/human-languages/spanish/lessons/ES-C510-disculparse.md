@@ -10,7 +10,8 @@ gloss: "to apologise"
 concept_tag: ES-VERB-DISCULPARSE
 prerequisites: [ES-C509-esperanza, ES-C509-acuerdo]
 sounds: []
-roots: []
+roots: [culpa-latin]
+etymology_hook: "disculparse — dis- + culpa 'blame' + -ar: to clear yourself of blame — English culprit"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C509-acuerdo]
 > *He apologised for arriving late.*
 
 It goes with *por*: *disculparse por algo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**disculparse** is *dis-*, which takes away, *culpa*, "blame", and *-ar*: to clear yourself of blame. *Culpa* is Latin *culpa*, "a fault".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

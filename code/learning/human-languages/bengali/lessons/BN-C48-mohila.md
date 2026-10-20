@@ -14,7 +14,8 @@ romanization: "môhilā"
 concept_tag: BN-FAMILY48-MOHILA
 prerequisites: [BN-C47-shishu, BN-C47-lok]
 sounds: []
-roots: []
+roots: [sanskrit-mahila]
+etymology_hook: "môhilā ← Sanskrit mahilā 'woman', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C47-lok]
 <!-- hl-knowledge: introduces=[BN-LEX-C48-FAMILY48-01]; assesses=[] -->
 
 **মহিলা** — *môhilā* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মহিলা** (*môhilā*) is Sanskrit *mahilā*, "woman", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

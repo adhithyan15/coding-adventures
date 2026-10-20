@@ -14,7 +14,8 @@ romanization: "koori"
 concept_tag: JA-THINGS69-KOORI
 prerequisites: [JA-C69-kaminari, JA-C69-shimo]
 sounds: []
-roots: []
+roots: [japanese-kooru]
+etymology_hook: "kōri: native, the noun from kōru 'to freeze'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C69-shimo]
 <!-- hl-knowledge: introduces=[JA-LEX-C69-THINGS69-04]; assesses=[] -->
 
 **こおり** — *koori* — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こおり** (*kōri*) is native: the noun made from *kōru*, "to freeze", by its stem; JMdict also spells it with the verb's kanji. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

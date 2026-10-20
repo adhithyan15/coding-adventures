@@ -56,7 +56,7 @@ The word, taken apart: politeness is a bent vowel.
 möchten is mögen with its vowel bent — the umlaut doing grammatical work again, as it has done in every plural that took one. The bent form is historically a past shape pressed into service for the present, and that is precisely what makes it polite.
 English runs the identical trick and nobody notices:
 I will have a coffee becomes I would like a coffee Can you help becomes Could you help.
-A past-shaped verb standing in the present puts a little distance between the speaker and the demand. Both languages found the same politeness strategy, and German marks it with two dots.
+A past-shaped verb standing in the present puts a little distance between the speaker and the demand. Both languages found the same politeness strategy, and German marks it with two dots. Mögen from Old High German mugan from Proto-Germanic maganą (EtymDB 2.1), the same verb as English may.
 
 Guided Practice.
 [pause 1 second]
@@ -92,7 +92,7 @@ The word, taken apart: the same missing ending in English.
 English has exactly the same hole, in exactly the same words, and every English speaker has been ignoring it for life:
 he walks, he lives, he thinks — but he must, he can, he may, with no -s at all.
 The reason is one accident, eight hundred years old and shared. This handful of verbs were once past tenses, and a past tense took no ending in the present because it was not a present. They then drifted into meaning present things and kept their bare shape.
-So the missing -t in er muss and the missing -s in he must are the same missing ending, and if the English one has never bothered you, the German one need not either.
+So the missing -t in er muss and the missing -s in he must are the same missing ending, and if the English one has never bothered you, the German one need not either. Müssen from Old High German muozan from Proto-Germanic mōtaną (EtymDB 2.1), the same verb as English must.
 
 Guided Practice.
 [pause 1 second]

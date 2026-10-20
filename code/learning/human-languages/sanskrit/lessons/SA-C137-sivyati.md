@@ -14,7 +14,8 @@ romanization: "sīvyati"
 concept_tag: SA-VERB-SIVYATI
 prerequisites: [SA-C136-marjayati, SA-C136-badhnati]
 sounds: []
-roots: []
+roots: [sanskrit-sivyati]
+etymology_hook: "sīvyati ← √siv 'sew', an Indo-European root (EtymDB), cf. Latin suere, English sew (MW); Hindi sīnā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C136-badhnati]
 <!-- hl-knowledge: introduces=[SA-LEX-C137-ACT137-01]; assesses=[] -->
 
 **सीव्यति** — *sīvyati* — "sews".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sīvyati* comes from the root √siv "sew", inherited from Indo-European (EtymDB): MW sets it beside Latin *suere* and English *sew*. It lives on as Hindi *sīnā* "to sew" (CDIAL 13444).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

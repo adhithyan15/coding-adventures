@@ -14,7 +14,8 @@ romanization: "isṭeshan"
 concept_tag: UR-TOWN80-ISTESHAN
 prerequisites: [UR-C79-sarak, UR-C79-baink]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "isṭeshan ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C79-baink]
 <!-- hl-knowledge: introduces=[UR-LEX-C80-TOWN80-01]; assesses=[] -->
 
 **اسٹیشن** — *isṭeshan* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اسٹیشن** (*isṭeshan*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

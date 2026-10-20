@@ -13,7 +13,8 @@ gloss: "to paint"
 concept_tag: GE-VERB-MALEN
 prerequisites: [GE-C68-schicken, GE-C68-zaehlen]
 sounds: []
-roots: []
+roots: [germanic-mela]
+etymology_hook: "malen ← Old High German mālōn 'to paint, to draw', built on the old word for 'a mark, a spot'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C68-zaehlen]
 <!-- hl-knowledge: introduces=[GE-LEX-C68-VERBEN5-04]; assesses=[] -->
 
 **malen** — "to paint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**malen** ← Old High German *mālōn*, "to paint, to draw" — inherited, built on the old word for "a mark, a spot", Old High German *māl* ← Proto-Germanic *\*mēlą*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "poseshchát"
 concept_tag: RU-VERB-TO-VISIT
 prerequisites: [RU-C130-fat, RU-C131-to-begin]
 sounds: []
-roots: []
+roots: [slavic-seti]
+etymology_hook: "посещать goes with посетить, apparently built on an old *sětĭ 'guest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C131-to-begin]
 <!-- hl-knowledge: introduces=[RU-LEX-C131-ACT131-02]; assesses=[] -->
 
 **посещать** (*poseshchát*) — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**посещать** is the ongoing partner of *посетить*, "to visit", which Vasmer thinks is apparently built on an old Slavic *\*sětĭ*, "a guest", a cousin of Lithuanian *svẽčias*, "guest", and Greek *hetaîros*, "companion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

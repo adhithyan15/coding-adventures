@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Rapina in banca",
+  "label": "ch:it-rapina-in-banca",
+  "canDo": "I can report a robbery: robbing, the robbers, the safe and the loot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C292-bottino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can report a robbery: robbing, the robbers, the safe and the loot.",
+    "assesses": [
+      "IT-LEX-C292-RAPINA-03",
+      "IT-LEX-C292-RAPINA-04",
+      "IT-LEX-C292-RAPINA-05"
+    ]
+  }
+}

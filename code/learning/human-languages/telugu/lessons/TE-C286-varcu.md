@@ -14,7 +14,8 @@ romanization: "vārcu"
 concept_tag: TE-VERB-VARCU
 prerequisites: [TE-C286-venakadu, TE-C286-tappincuko]
 sounds: []
-roots: []
+roots: [dravidian-vaar-flow]
+etymology_hook: "vārcu: native Dravidian; DEDR 5356 lists vārcu 'to drain off (rice water)' with Tamil vār 'to pour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C286-tappincuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C286-KRIYA286-04]; assesses=[] -->
 
 **వార్చు** — *vārcu* — "to drain (cooked rice)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వార్చు** (*vārcu*) is native Dravidian. DEDR 5356 lists *vārcu*, "to drain off, as water from boiled rice", with Tamil *vār*, "to flow, pour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

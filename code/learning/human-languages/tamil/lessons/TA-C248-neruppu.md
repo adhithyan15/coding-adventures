@@ -14,7 +14,8 @@ romanization: "neruppu"
 concept_tag: TA-PORUL248-NERUPPU
 prerequisites: [TA-C248-iyarkai, TA-C248-parai]
 sounds: []
-roots: []
+roots: [dravidian-neruppu-fire]
+etymology_hook: "நெருப்பு — native Dravidian (DEDR 2929); Malayalam nerippu 'fire', Telugu nippu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C248-parai]
 <!-- hl-knowledge: introduces=[TA-LEX-C248-PORUL248-05]; assesses=[] -->
 
 **நெருப்பு** — *neruppu* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நெருப்பு** (*neruppu*) is native Dravidian. DEDR 2929 lists Malayalam *nerippu*, "fire" and Telugu *nippu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

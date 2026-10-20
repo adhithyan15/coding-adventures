@@ -14,6 +14,7 @@ concept_tag: GE-READ143-ANZEIGE
 prerequisites: [GE-C142-vorhaben, GE-C143-miete]
 sounds: []
 roots: []
+etymology_hook: "Anzeige — the noun of a verb 'to announce', built from an- + zeigen 'to show'"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [GE-C143-miete]
 
 The advert says **Zimmer frei. Miete: 400 Euro im Monat.** A room is free, at
 400 euros a month.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Anzeige** is the noun of a verb built from *an-*, "at, to", + *zeigen*, "to show" ← Old High German *zeigōn* (EtymDB 2.1): an announcement shown to the public.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

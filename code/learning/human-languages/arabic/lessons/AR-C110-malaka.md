@@ -14,7 +14,8 @@ romanization: "malaka"
 concept_tag: AR-VERB-MALAKA
 prerequisites: [AR-C109-fann, AR-C110-adat]
 sounds: []
-roots: []
+roots: [m-l-k]
+etymology_hook: "malaka: built on the root m-l-k, 'to own, to possess' (Lane); the same root gives malik, 'a king'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C110-adat]
 <!-- hl-knowledge: introduces=[AR-LEX-C110-CAN110-02]; assesses=[] -->
 
 **ملك** — *malaka* — "to own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملك** (*malaka*) is built on the native Arabic root *m-l-k*, "to own, to possess" (Lane). The same root gives *malik*, "a king".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

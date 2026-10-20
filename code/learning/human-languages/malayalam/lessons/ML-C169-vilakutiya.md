@@ -14,7 +14,8 @@ romanization: "vilakūṭiya"
 concept_tag: ML-QUAL169-VILAKUTIYA
 prerequisites: [ML-C169-santamaya, ML-C169-tirakkulla, ML-C103-maarkku]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell, dravidian-kudu-join]
+etymology_hook: "vilakūṭiya: native Dravidian, 'whose price has grown': vila (DEDR 5421) + kūṭiya (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C169-tirakkulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C169-QUAL169-05]; assesses=[] -->
 
 **വിലകൂടിയ** — *vilakūṭiya* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിലകൂടിയ** (*vilakūṭiya*) is native Dravidian, "whose price has grown": *vila*, "price" (DEDR 5421), with *kūṭiya*, "increased", from the verb "to join, be added" (DEDR 1882, with Tamil *kūṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

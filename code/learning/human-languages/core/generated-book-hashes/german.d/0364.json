@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:5298181e6f0fde80",
+  "lessonIds": [
+    "GE-C364-bedingung",
+    "GE-C364-voraussetzung",
+    "GE-C364-voraussetzen",
+    "GE-C364-sofern",
+    "GE-C364-soweit"
+  ],
+  "tex": "german/book/chapters/ch364-unter-einer-bedingung.tex"
+}

@@ -14,7 +14,8 @@ romanization: "nākku"
 concept_tag: TA-THINGS132-NAKKU
 prerequisites: [TA-C132-mukam, TA-C132-vay]
 sounds: []
-roots: []
+roots: [dravidian-naa-tongue]
+etymology_hook: "நாக்கு — native Dravidian (DEDR 3633); Malayalam nākku, Kannada nālige, Telugu nāluka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C132-vay]
 <!-- hl-knowledge: introduces=[TA-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **நாக்கு** — *nākku* — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நாக்கு** (*nākku*) is native Dravidian. DEDR 3633 lists Malayalam *nākku*, Kannada *nālige* and Telugu *nāluka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

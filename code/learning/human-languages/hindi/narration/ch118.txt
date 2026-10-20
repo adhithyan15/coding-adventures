@@ -13,6 +13,9 @@ You'll want to know: लड़का.
 लड़का (laṛkā) — "a boy", and in a family, "a son".
 बेटा is "son" as a family word; लड़का (laṛkā) is any boy.
 
+The word, taken apart.
+लड़का (laṛkā) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍikka, "child", a form CDIAL reconstructs from its descendants (CDIAL 10924). CDIAL calls the group a "defective" word for children and notes similar formations in Munda.
+
 What you've built.
 A boy, beside the word for son you know.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for the in-laws' home, then the Hindi for a bo
 You'll want to know: लड़की.
 लड़की (laṛkī) — "a girl", and in a family, "a daughter".
 The -ई ending marks the girl, as in दादी beside दादा.
+
+The word, taken apart.
+लड़की (laṛkī) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍikka, "child", a form CDIAL reconstructs from its descendants (CDIAL 10924). laṛkī is the feminine of laṛkā, "boy". CDIAL notes similar formations in Munda.
 
 What you've built.
 Boy and girl as a pair.
@@ -73,6 +79,9 @@ You'll want to know: पति.
 पति (pati) — "a husband".
 मेरे पति (pati) — "my husband", with the respectful plural मेरे.
 
+The word, taken apart.
+पति (pati) is Sanskrit pati, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727).
+
 What you've built.
 A husband.
 
@@ -103,6 +112,9 @@ You'll want to know: पत्नी.
 पत्नी (patnī) — "a wife".
 It is built on पति (pati), with the -ई that marks a woman. मेरी पत्नी (patnī) — "my wife".
 
+The word, taken apart.
+पत्नी (patnī) is Sanskrit patnī, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742). It is the feminine of pati, "master, husband".
+
 What you've built.
 Husband and wife, one built on the other.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for a husband, then the Hindi for a wife.
 You'll want to know: रिश्तेदार.
 रिश्तेदार (riśtedār) — "a relative".
 रिश्ता is "a relationship", and -दार is "one who has": a relative is one who has a tie to you. वह मेरा रिश्तेदार (riśtedār) है — "he is my relative".
+
+The word, taken apart.
+रिश्तेदार (riśtedār) is a loan, usually traced to Persian rishtadār, "a relative". It is built from rishta, "thread, tie", and -dār, "holder".
 
 What you've built.
 Boy, girl, husband, wife, relative: the people an introduction reaches for.

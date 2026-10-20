@@ -14,7 +14,8 @@ romanization: "khāl"
 concept_tag: AR-FAMILY55-KHAL
 prerequisites: [AR-C55-jadda, AR-C55-amm]
 sounds: []
-roots: []
+roots: [kh-w-l]
+etymology_hook: "khāl: an old noun for the mother's brother, listed by Lane under the native Arabic root kh-w-l"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C55-amm]
 <!-- hl-knowledge: introduces=[AR-LEX-C55-FAMILY55-03]; assesses=[] -->
 
 **خال** — *khāl* — "an uncle (mother's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خال** (*khāl*), the mother's brother, is an old native noun, filed under the root *kh-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

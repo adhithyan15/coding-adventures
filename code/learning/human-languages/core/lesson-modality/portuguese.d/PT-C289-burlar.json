@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C289-burlar",
+    "language": "portuguese",
+    "chapter": 289,
+    "sequence": 16840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c982c8021e2e7086"
+  },
+  "findings": []
+}

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for Friday, then the Marathi for Saturday.
 You'll want to know: रविवार.
 रविवार — ravivār — "Sunday".
 
+The word, taken apart.
+रविवार (ravivār) is a Sanskrit compound, a tatsama: ravi, "the sun", and vāra, "day of the week" (CDIAL 11547). Sunday is the sun's day, as in English.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Put an event at a time: say पाच वाजता, at five o'clock.
 You'll want to know: तारीख.
 तारीख — tārīkh — "a date".
 
+The word, taken apart.
+तारीख (tārīkh) is a loan from Arabic tārīkh, "a dating, a date", which reached Marathi through Persian. Its Arabic root is ʾ-r-kh (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Marathi for Sunday, then the Marathi for a date.
 
 You'll want to know: सध्या.
 सध्या — sadhyā — "at present, these days".
+
+The word, taken apart.
+The origin of सध्या (sadhyā) is not settled. It may come from Sanskrit sadyas, "on the same day, at the very moment" (CDIAL 13123), but CDIAL lists no Marathi form under it.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Marathi for a date, then the Marathi for at present.
 You'll want to know: रोज.
 रोज — roj — "every day".
 
+The word, taken apart.
+रोज (roj) is a loan, usually traced to Persian rōz, "day". Marathi writes the z as ज.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Marathi for at present, then the Marathi for every d
 
 You'll want to know: उन्हाळा.
 उन्हाळा — unhāḷā — "summer".
+
+The word, taken apart.
+उन्हाळा (unhāḷā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uṣṇakāla, "hot season" (CDIAL 2391). It is uṣṇa, "hot", and kāla, "time".
 
 What you've built.
 One more word for this chapter.

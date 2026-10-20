@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 230,
-  "sourceHash": "fnv1a64:ba7b58c08cd02db5",
+  "sourceHash": "fnv1a64:9d30aebf73c6f7cb",
   "lessonIds": [
     "GE-C230-gegenteil",
     "GE-C230-geschichte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch230.txt",
   "json": "german/narration/ch230.json",
-  "textHash": "fnv1a64:fb05c201de36b382",
-  "jsonHash": "fnv1a64:c8e11a9439c98338",
+  "textHash": "fnv1a64:3d1d847465cb6296",
+  "jsonHash": "fnv1a64:98da48594215681c",
   "findings": []
 }

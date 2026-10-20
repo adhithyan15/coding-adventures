@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C368-supor",
+    "language": "portuguese",
+    "chapter": 368,
+    "sequence": 20890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c5be63a69e4a73d"
+  },
+  "findings": []
+}

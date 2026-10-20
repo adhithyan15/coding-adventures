@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 501,
-  "sourceHash": "fnv1a64:4a9013cd7c8c50bc",
+  "sourceHash": "fnv1a64:0686ac5ee4512924",
   "lessonIds": [
     "ES-C501-viajero",
     "ES-C501-conducir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch501.txt",
   "json": "spanish/narration/ch501.json",
-  "textHash": "fnv1a64:7d93fe561118338a",
-  "jsonHash": "fnv1a64:e2fda387a1098197",
+  "textHash": "fnv1a64:259ba5996974a483",
+  "jsonHash": "fnv1a64:2fbccdb46330b3c3",
   "findings": []
 }

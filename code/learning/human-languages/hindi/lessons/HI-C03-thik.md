@@ -14,7 +14,8 @@ romanization: "ṭhīk"
 concept_tag: WORD-WELL
 prerequisites: [HI-C03-hun, HI-C03-main]
 sounds: [retroflex-tha, matra-i]
-roots: []
+roots: [indo-aryan-thikka]
+etymology_hook: "ṭhīk ← *ṭhīkka 'firm, right', which CDIAL derives, probably, from sthita 'standing' (CDIAL 5503)"
 duration:
   max_seconds: 240
 requires:
@@ -50,11 +51,10 @@ an English "t."
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C03-THIK-01] -->
 
-**ठीक** (*ṭhīk*) means "correct, right, fine, exactly, OK." It is a genuinely
-**native** Indian word — no European cousin to hand — and one of the most useful
-in the language: *ṭhīk hai* ("OK / agreed"), *ṭhīk samay* ("the right time"),
-*sab ṭhīk?* ("all well?"). Not every word has a far-flung cognate, and that is
-worth seeing too: *ṭhīk* is Indian to the core.
+**ठीक** (*ṭhīk*) means "correct, right, fine, exactly, OK." It comes from a
+reconstructed *\*ṭhīkka*, "firm, right", probably from Sanskrit *sthita*,
+"standing" (CDIAL 5503). It is one of the most useful words in the language: *ṭhīk hai* ("OK / agreed"), *ṭhīk samay* ("the right time"),
+*sab ṭhīk?* ("all well?").
 
 ## The exchange — the reply
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C03-THIK-01] -->
@@ -85,6 +85,5 @@ sound.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C03-THIK-01] -->
 
-[PAUSE 3s] Give the whole reply to *āp kaise haiṁ?*, and say what is special about
-*ṭhīk*'s origin. (*Maiṁ ṭhīk hūṁ*; it is a native Indian word with no European
-cognate.)
+[PAUSE 3s] Give the whole reply to *āp kaise haiṁ?*, and say where *ṭhīk*
+probably comes from. (*Maiṁ ṭhīk hūṁ*; from Sanskrit *sthita*, "standing".)

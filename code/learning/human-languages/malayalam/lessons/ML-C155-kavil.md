@@ -10,11 +10,12 @@ chapter: 155
 type: word
 headword: "കവിൾ"
 gloss: "a cheek"
-romanization: "kavil"
+romanization: "kaviḷ"
 concept_tag: ML-THINGS155-KAVIL
 prerequisites: [ML-C154-toli, ML-C154-nerri]
 sounds: []
-roots: []
+roots: [dravidian-kavul-cheek]
+etymology_hook: "kaviḷ: native Dravidian, one word with Tamil kavuḷ (DEDR 1337)"
 duration:
   max_seconds: 200
 requires:
@@ -31,7 +32,7 @@ variety: standard-colloquial
 reviews_of: [ML-C154-nerri]
 ---
 
-# കവിൾ (kavil) — a cheek
+# കവിൾ (kaviḷ) — a cheek
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C154-THINGS154-04, ML-LEX-C154-THINGS154-05] -->
@@ -41,7 +42,12 @@ reviews_of: [ML-C154-nerri]
 ## You'll want to know: കവിൾ
 <!-- hl-knowledge: introduces=[ML-LEX-C155-THINGS155-01]; assesses=[] -->
 
-**കവിൾ** — *kavil* — "a cheek".
+**കവിൾ** — *kaviḷ* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കവിൾ** (*kaviḷ*) is native Dravidian, one word with Tamil *kavuḷ* (DEDR 1337). DEDR 1337 compares Sanskrit *kapola*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -52,10 +58,10 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C155-THINGS155-01, ML-LEX-C154-THINGS154-04, ML-LEX-C154-THINGS154-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: *kavil*]
-- [YOU SAY: *kavil*, once more]
-- [YOU SAY: say *kavil*]
-- [YOU RECALL: say the Malayalam for skin, then the Malayalam for a forehead, then say *kavil* again]
+- [YOU SAY: *kaviḷ*]
+- [YOU SAY: *kaviḷ*, once more]
+- [YOU SAY: say *kaviḷ*]
+- [YOU RECALL: say the Malayalam for skin, then the Malayalam for a forehead, then say *kaviḷ* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C155-THINGS155-01, ML-LEX-C154-THINGS154-04, ML-LEX-C154-THINGS154-05] -->

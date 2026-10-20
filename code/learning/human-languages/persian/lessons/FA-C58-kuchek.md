@@ -14,7 +14,8 @@ romanization: "kuchek"
 concept_tag: FA-ANIMALS58-KUCHEK
 prerequisites: [FA-C58-gorg, FA-C58-bozorg]
 sounds: []
-roots: []
+roots: [persian-kuchek]
+etymology_hook: "kuchek ← Middle Persian kōčak (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C58-bozorg]
 <!-- hl-knowledge: introduces=[FA-LEX-C58-ANIMALS58-03]; assesses=[] -->
 
 **کوچک** — *kuchek* — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuchek* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kōčak*, "small" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

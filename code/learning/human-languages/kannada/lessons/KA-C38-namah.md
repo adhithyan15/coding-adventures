@@ -14,7 +14,8 @@ gloss: "a salutation, bowing"
 concept_tag: KA-ANCHOR-NAMAH
 prerequisites: [KA-S131-vowel-sign-vocalic-r]
 sounds: []
-roots: []
+roots: [sanskrit-namas]
+etymology_hook: "namaḥ ← Sanskrit namas 'bow, adoration', a tatsama (CDIAL 6958)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *namaḥ*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಃ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಮಃ** (*namaḥ*) is Sanskrit *namas*, "bow, adoration", taken over whole as a learned loan, a tatsama (CDIAL 6958). *Namaḥ* is the shape Sanskrit gives *namas* at the end of a phrase, where the final *-s* becomes a breath.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-NAMAH] -->

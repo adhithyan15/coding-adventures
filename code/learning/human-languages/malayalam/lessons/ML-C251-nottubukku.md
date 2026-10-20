@@ -14,7 +14,8 @@ romanization: "nōṭṭubukkŭ"
 concept_tag: ML-VASTU251-NOTTUBUKKU
 prerequisites: [ML-C251-kampyuttar, ML-C251-phayal]
 sounds: []
-roots: []
+roots: [english-notebook]
+etymology_hook: "nōṭṭubukkŭ ← English notebook"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C251-phayal]
 <!-- hl-knowledge: introduces=[ML-LEX-C251-VASTU251-03]; assesses=[] -->
 
 **നോട്ടുബുക്ക്** — *nōṭṭubukkŭ* — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നോട്ടുബുക്ക്** (*nōṭṭubukkŭ*) ← English *notebook*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

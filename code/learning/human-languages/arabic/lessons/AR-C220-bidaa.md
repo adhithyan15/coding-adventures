@@ -14,7 +14,8 @@ romanization: "biḍāʿa"
 concept_tag: AR-AMAL220-BIDAA
 prerequisites: [AR-C220-bitaqa, AR-C220-qard]
 sounds: []
-roots: []
+roots: [b-ḍ-ʿ]
+etymology_hook: "biḍāʿa: built on the root b-ḍ-ʿ, 'to cut off a part' (Lane); Lane's biḍāʿa is a portion of property set apart for trade"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C220-qard]
 <!-- hl-knowledge: introduces=[AR-LEX-C220-AMAL220-03]; assesses=[] -->
 
 **بضاعة** — *biḍāʿa* — "goods, merchandise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بضاعة** (*biḍāʿa*) is built on the native Arabic root *b-ḍ-ʿ*, "to cut off a part" (Lane). Lane's *biḍāʿa* is a portion of property set apart for trade.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

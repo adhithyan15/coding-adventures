@@ -13,7 +13,8 @@ gloss: "a doctor (a man)"
 concept_tag: GE-GESUNDHEIT-ARZT
 prerequisites: [GE-C58-magen, GE-C59-fieber]
 sounds: []
-roots: []
+roots: [archiater-latin]
+etymology_hook: "Arzt ← Old High German arzāt ← Late Latin archiater ← Greek arkhiatros 'chief physician' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C59-fieber]
 <!-- hl-knowledge: introduces=[GE-LEX-C59-GESUNDHEIT-02]; assesses=[] -->
 
 **der Arzt** — "a doctor (a man)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Arzt** ← Old High German *arzat* ← Late Latin *archiāter* ← Greek *arkhiātros*, "chief physician" (EtymDB 2.1) — borrowed, the title of a court doctor worn down to the everyday word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

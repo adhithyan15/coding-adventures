@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 131,
-  "sourceHash": "fnv1a64:819a1d7431b5861c",
+  "sourceHash": "fnv1a64:62ae72ed57e38979",
   "lessonIds": [
     "AR-C131-ushb",
     "AR-C131-bidhra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch131.txt",
   "json": "arabic/narration/ch131.json",
-  "textHash": "fnv1a64:6cf0219033233168",
-  "jsonHash": "fnv1a64:23698c7f9c8938fa",
+  "textHash": "fnv1a64:1537eeb114137e5e",
+  "jsonHash": "fnv1a64:12588966b5cc6ec3",
   "findings": []
 }

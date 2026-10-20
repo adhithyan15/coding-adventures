@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an identity card, then the Kannada for a
 You'll want to know: ಹೊಗೆ.
 ಹೊಗೆ — hoge — "smoke".
 
+The word, taken apart.
+ಹೊಗೆ (hoge) is native Dravidian, one word with Telugu poga (DEDR 4240). DEDR gives the older Kannada poge, "smoke": the p- has become h-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a cheque, then the Kannada for smoke.
 
 You'll want to know: ಧೂಳು.
 ಧೂಳು — dhūḷu — "dust".
+
+The word, taken apart.
+ಧೂಳು (dhūḷu) comes from Sanskrit dhūli, "dust, powder", reshaped to Kannada sounds: a tadbhava (CDIAL 6835). Kannada turned the l into ḷ and ends in -u.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for smoke, then the Kannada for dust.
 You'll want to know: ಪ್ರವಾಹ.
 ಪ್ರವಾಹ — pravāha — "a flood".
 
+The word, taken apart.
+ಪ್ರವಾಹ (pravāha) is Sanskrit pravāha, "stream, current", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for dust, then the Kannada for a flood.
 You'll want to know: ಪ್ರಕೃತಿ.
 ಪ್ರಕೃತಿ — prakṛti — "nature".
 
+The word, taken apart.
+ಪ್ರಕೃತಿ (prakṛti) is Sanskrit prakṛti, "cause, source, nature", taken over whole as a learned loan, a tatsama (CDIAL 8446).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a flood, then the Kannada for nature.
 
 You'll want to know: ಪ್ರಾಣಿ.
 ಪ್ರಾಣಿ — prāṇi — "an animal".
+
+The word, taken apart.
+ಪ್ರಾಣಿ (prāṇi) is Sanskrit prāṇin, "living; living creature", taken over whole as a learned loan, a tatsama (CDIAL 8932). Kannada drops the final -n.
 
 What you've built.
 One more word for this chapter.

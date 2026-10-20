@@ -14,7 +14,8 @@ romanization: "yowai"
 concept_tag: JA-ADJ51-YOWAI
 prerequisites: [JA-C50-omoi, JA-C51-tsuyoi]
 sounds: []
-roots: []
+roots: [japanese-yowai]
+etymology_hook: "yowai: native Japanese, inherited, not borrowed; kanji 弱い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C51-tsuyoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C51-ADJ51-02]; assesses=[] -->
 
 **よわい** — *yowai* — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よわい** (*yowai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

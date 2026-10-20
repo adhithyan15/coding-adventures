@@ -13,7 +13,7 @@ prerequisites: [MR-C61-dahava, MR-C61-navva, MR-C61-aathva, MR-C61-satva, MR-C61
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 247
 requires:
   knowledge: [MR-LEX-DAHAVA, MR-LEX-NAVVA, MR-LEX-AATHVA, MR-LEX-SATVA, MR-LEX-SAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-GRAMMAR-ORDINAL-SET, MR-LEX-PAHILA, MR-LEX-DUSRA, MR-LEX-TISRA, MR-LEX-CHAUTHA, MR-LEX-PACHVA, MR-LEX-SATRA, MR-LEX-LAAMB]
 introduces:
@@ -46,7 +46,7 @@ reviews_of: [MR-C61-dahava, MR-C61-navva, MR-C61-aathva, MR-C61-satva, MR-C61-sa
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SAHAVA, MR-LEX-SATVA, MR-LEX-AATHVA, MR-LEX-NAVVA, MR-LEX-DAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-PAHILA, MR-LEX-DUSRA, MR-LEX-TISRA, MR-LEX-CHAUTHA, MR-LEX-PACHVA] -->
 
-<!-- hl-activity: {"id":"MR-R61-sixth-to-tenth-run","kind":"text","assesses":["MR-LEX-SAHAVA","MR-LEX-SATVA","MR-LEX-AATHVA","MR-LEX-NAVVA","MR-LEX-DAHAVA","MR-GRAMMAR-ORDINAL-VA"],"prompt":"Say first to tenth without stopping, then say which one of the ten broke the rule and how.","answer":"pahilā dusrā tisrā chauthā pāchvā sahāvā sātvā āṭhvā navvā dahāvā — navvā, which stands on the older nav rather than on naū","accepted":["पहिला दुसरा तिसरा चौथा पाचवा सहावा सातवा आठवा नववा दहावा"],"feedback":{"correct":"Ten in a row, and the one adjustment named.","incorrect":"Run the four inherited ones, then the six built ones, and stop at the one that surprised you."},"response_seconds":45} -->
+<!-- hl-activity: {"id":"MR-R61-sixth-to-tenth-run","kind":"text","assesses":["MR-LEX-SAHAVA","MR-LEX-SATVA","MR-LEX-AATHVA","MR-LEX-NAVVA","MR-LEX-DAHAVA","MR-GRAMMAR-ORDINAL-VA"],"prompt":"Say first to tenth without stopping, then say which one of the ten broke the rule and how.","answer":"pahilā dusrā tisrā chauthā pāchvā sahāvā sātvā āṭhvā navvā dahāvā — navvā, which stands on the older nav rather than on naū","accepted":["पहिला दुसरा तिसरा चौथा पाचवा सहावा सातवा आठवा नववा दहावा"],"feedback":{"correct":"Ten in a row, and the one adjustment named.","incorrect":"Run the four irregular ones, then the six regular ones, and stop at the one that surprised you."},"response_seconds":45} -->
 
 [PAUSE 1s]
 - [YOU SAY: *pahilā* … *dahāvā* — the whole ten]
@@ -72,7 +72,7 @@ There is a way to check that split without taking this book's word for it.
 | **सहावा** · **सातवा** · **आठवा** · **नववा** · **दहावा** | **no entry, any of them** |
 | **पाचवा** | an entry, but for a different word entirely — a returning sickness |
 
-Four in, the built ones out. A dictionary is a list of what a reader cannot work
+Four in, the regular ones out. A dictionary is a list of what a reader cannot work
 out for themselves, so the seam this book drew between **चौथा** and **पाचवा**
 was drawn in Marathi lexicography a century and a half before it was drawn here.
 

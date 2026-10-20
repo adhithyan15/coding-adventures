@@ -14,7 +14,8 @@ romanization: "donoṅ"
 concept_tag: UR-DEF89-DONON
 prerequisites: [UR-C89-koi, UR-C89-kuchh]
 sounds: []
-roots: []
+roots: [sanskrit-dvi]
+etymology_hook: "donoṅ: do 'two' with the ending -õ, 'all two'; CDIAL lists donõ 'both' under dva 'two' (CDIAL 6648)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C89-kuchh]
 <!-- hl-knowledge: introduces=[UR-LEX-C89-DEF89-05]; assesses=[] -->
 
 **دونوں** — *donoṅ* — "both".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دونوں** (*donoṅ*) is *do*, "two", with an ending that makes "both". CDIAL lists *donõ*, "both", beside *do* under Sanskrit *dva*, "two" (CDIAL 6648).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

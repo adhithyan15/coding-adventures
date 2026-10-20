@@ -1,0 +1,11 @@
+{
+  "id": "IT-W261-with-a-clock",
+  "pathSegment": "IT-PATH-260-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-260-WRITING",
+      "order": 1
+    }
+  ]
+}

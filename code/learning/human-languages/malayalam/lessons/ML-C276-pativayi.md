@@ -14,7 +14,8 @@ romanization: "pativāyi"
 concept_tag: ML-SAMAYAM276-PATIVAYI
 prerequisites: [ML-C275-raktasammarddam, ML-C276-eppolum]
 sounds: []
-roots: []
+roots: [dravidian-pati-settle, aaka-dravidian]
+etymology_hook: "pativāyi: native Dravidian, pativu 'custom' (DEDR 3911) + āyi 'as' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C276-eppolum]
 <!-- hl-knowledge: introduces=[ML-LEX-C276-SAMAYAM276-02]; assesses=[] -->
 
 **പതിവായി** — *pativāyi* — "regularly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പതിവായി** (*pativāyi*) is native Dravidian: *pativu*, "settlement, custom" (DEDR 3911, with Tamil *pati*), and *āyi*, "as, having become" (DEDR 333): "as a custom". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

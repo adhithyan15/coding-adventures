@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C498-vizinhanca",
+    "language": "portuguese",
+    "chapter": 498,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae0688fcb28b2aa8"
+  },
+  "findings": []
+}

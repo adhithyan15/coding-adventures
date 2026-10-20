@@ -11,7 +11,8 @@ romanization: "goḍugu"
 concept_tag: TE-NOUN-UMBRELLA
 prerequisites: [TE-C62-broom]
 sounds: []
-roots: []
+roots: [dravidian-kudai-umbrella]
+etymology_hook: "goḍugu: native Dravidian, one word with Tamil kuṭai and Kannada koḍe (DEDR 1663)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C62-broom]
 The word is inherited. Long before cloth and wire there was a గొడుగు of palm leaf, and the ceremonial one held over a deity or over a bride is still made and named the same way.
 
 It settles two things already met: గాలి will turn it inside out and మంచు will not, so a గొడుగు goes out in one kind of weather and stays at home in the other.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొడుగు** (*goḍugu*) is native Dravidian, one word with Tamil *kuṭai*, Kannada *koḍe* and Malayalam *kuṭa*, "umbrella" (DEDR 1663). DEDR compares Sanskrit *utkūṭa*, "umbrella", a word known only from lexicons.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

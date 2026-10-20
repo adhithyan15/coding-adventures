@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:b5d059c563a0b78c",
+  "lessonIds": [
+    "GE-C509-wettkampf",
+    "GE-C509-meisterschaft",
+    "GE-C509-pokal",
+    "GE-C509-medaille",
+    "GE-C509-siegerehrung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch509.txt",
+  "json": "german/narration/ch509.json",
+  "textHash": "fnv1a64:c006fb27b68ef30a",
+  "jsonHash": "fnv1a64:488088073476577a",
+  "findings": []
+}

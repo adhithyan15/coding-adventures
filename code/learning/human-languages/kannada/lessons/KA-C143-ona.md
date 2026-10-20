@@ -14,7 +14,8 @@ romanization: "oṇa"
 concept_tag: KA-QUAL143-ONA
 prerequisites: [KA-C142-kiridu, KA-C142-odde]
 sounds: []
-roots: []
+roots: [dravidian-onangu-dry]
+etymology_hook: "oṇa: native Dravidian; DEDR 601 lists oṇa 'dryness' under oṇagu 'to dry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C142-odde]
 <!-- hl-knowledge: introduces=[KA-LEX-C143-QUAL143-01]; assesses=[] -->
 
 **ಒಣ** — *oṇa* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಣ** (*oṇa*) is native Dravidian, from *oṇagu*, "to dry", and DEDR 601 lists *oṇa*, "dryness", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

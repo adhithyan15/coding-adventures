@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C429-campeggio",
+    "language": "italian",
+    "chapter": 429,
+    "sequence": 24370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdab025654c0b019"
+  },
+  "findings": []
+}

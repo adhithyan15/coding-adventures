@@ -14,7 +14,8 @@ romanization: "behtar"
 concept_tag: FA-SEFAT164-BEHTAR
 prerequisites: [FA-C163-kharab, FA-C163-mokhtalef]
 sounds: []
-roots: []
+roots: [persian-beh]
+etymology_hook: "behtar: Persian beh 'good' (Middle Persian weh) + -tar; not related to English better"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C163-mokhtalef]
 <!-- hl-knowledge: introduces=[FA-LEX-C164-SEFAT164-01]; assesses=[] -->
 
 **بهتر** — *behtar* — "better".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*behtar* is *beh*, "good", with the comparative ending *-tar*. *beh* is native, usually traced to Middle Persian *weh*. English *better* only looks alike: it is a Germanic word, and no source links it to *beh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

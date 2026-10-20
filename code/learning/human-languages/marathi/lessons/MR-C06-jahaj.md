@@ -14,7 +14,8 @@ gloss: "a ship"
 concept_tag: MR-ANCHOR-JAHAJ
 prerequisites: [MR-C06-chatri]
 sounds: []
-roots: []
+roots: [arabic-jahaz]
+etymology_hook: "jahāj ← Arabic jahāz 'equipment, gear', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **जहाज** — *jahāj* — "a ship".
 
 Say it: *jahāj*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ज**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जहाज** (*jahāj*) is a loan from Arabic *jahāz*, "equipment, gear", which reached Marathi through Persian. Its Arabic root is *j-h-z* (Lane). In Persian it came to mean a ship, and Marathi writes it with plain **ज**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-JAHAJ] -->

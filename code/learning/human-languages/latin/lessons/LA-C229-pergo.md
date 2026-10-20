@@ -13,7 +13,8 @@ gloss: "to go on, to continue"
 concept_tag: LA-VERB-PERGO
 prerequisites: [LA-C229-decerno, LA-C229-tempto]
 sounds: []
-roots: []
+roots: [pergere-latin, regere-latin]
+etymology_hook: "pergō 'to go on' — per 'through' + regō 'to direct'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C229-tempto]
 <!-- hl-knowledge: introduces=[LA-LEX-C229-ACT229-03]; assesses=[] -->
 
 **pergō, pergere** — "to go on, to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pergō** is contracted from *per*, "through", and *regō*, "to direct" (Lewis & Short): to keep on one's course.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

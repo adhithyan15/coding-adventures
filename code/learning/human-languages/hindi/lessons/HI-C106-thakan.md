@@ -14,7 +14,8 @@ romanization: "thakān"
 concept_tag: HI-UNWELL-TIREDNESS
 prerequisites: [HI-C63-fever, HI-C63-pain]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thakān: from thaknā 'to become weary', listed under a reconstructed *sthakk 'stop, halt' (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C63-pain]
 
 **आज बहुत थकान है** — "I am very tired today", literally "today there is a lot of tiredness".
 The **बहुत** and **आज** are both yours already.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थकान** (*thakān*) is built on *thaknā*, "to get tired", with the ending *-ān*. CDIAL lists *thaknā* under a reconstructed *\*sthakk*, "stop, halt", and calls its link with *sthā-*, "to stand", probable but not clear (CDIAL 13737).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

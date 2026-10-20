@@ -11,7 +11,8 @@ gloss: no problem / it's okay / you're welcome
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [GU-C01-haa-naa, GU-C01-aabhaar]
 sounds: [nasal-aa, no-top-line]
-roots: [na-negative]
+roots: [na-negative, sanskrit-nahi]
+etymology_hook: "vāndho: origin not settled, CDIAL has no entry; nahĩ goes with Old Gujarati nahīaṁ ← nahi 'surely not' (CDIAL 7035)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,8 @@ reply.
 (*nahĩ*) is the fuller form of the **ના** (*nā*) from the earlier yes/no lesson — both from
 the ancient **na-**, Proto-Indo-European **\*ne**, behind English **no**,
 **not**, and Hindi *nahīṁ*.
+
+CDIAL lists Old Gujarati *nahīaṁ* under Sanskrit *nahi*, "surely not" (CDIAL 7035), and *nahĩ* is its modern form. It has no entry for *vāndho*, so the origin of that word is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AABHAAR-01, GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C03-VANDHONAHI-01] -->

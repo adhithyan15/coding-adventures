@@ -14,7 +14,8 @@ romanization: "adrak"
 concept_tag: MW-THINGS136-ADRAK
 prerequisites: [MW-C136-mulo, MW-C136-lasan]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "adrak goes back to Sanskrit ārdraka 'fresh ginger'; CDIAL lists the inherited forms as ādā, ādũ (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C136-lasan]
 <!-- hl-knowledge: introduces=[MW-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **अदरक** — *adrak* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अदरक** (*adrak*) goes back to Sanskrit *ārdraka*, "fresh ginger" (CDIAL 1341). CDIAL lists the fully inherited forms as Hindi *ādā* and Gujarati *ādũ*; **अदरक** (*adrak*) keeps the *r* and *k* those forms lost, and CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

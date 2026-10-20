@@ -14,7 +14,8 @@ romanization: "nōkkam"
 concept_tag: TA-KARANAM177-NOKKAM
 prerequisites: [TA-C177-piraccinai, TA-C177-tirvu]
 sounds: []
-roots: []
+roots: [dravidian-nookku-look]
+etymology_hook: "நோக்கம் — native Dravidian (DEDR 3794); Malayalam nōkkuka 'to look at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C177-tirvu]
 <!-- hl-knowledge: introduces=[TA-LEX-C177-KARANAM177-04]; assesses=[] -->
 
 **நோக்கம்** — *nōkkam* — "a purpose, an aim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நோக்கம்** (*nōkkam*) is native Dravidian. DEDR 3794 lists Malayalam *nōkkuka*, "to look at". It is the noun of *nōkku*, "to look": an aim is where one looks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

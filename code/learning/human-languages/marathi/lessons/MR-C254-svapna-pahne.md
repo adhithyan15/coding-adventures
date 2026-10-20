@@ -14,7 +14,8 @@ romanization: "svapna pāhṇe"
 concept_tag: MR-VERB-SVAPNA-PAHNE
 prerequisites: [MR-C254-seva-karne, MR-C254-sahan-karne]
 sounds: []
-roots: []
+roots: [sanskrit-svapna, indo-aryan-pracah]
+etymology_hook: "svapna: Sanskrit svapna 'sleep, dream' (CDIAL 13904); pāhṇe under *pracāh 'look for' (CDIAL 8492)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C254-sahan-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C254-ACT254-05]; assesses=[] -->
 
 **स्वप्न पाहणे** — *svapna pāhṇe* — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वप्न** is Sanskrit *svapna*, "sleep, dream", a tatsama (CDIAL 13904). CDIAL lists **पाहणे** under a reconstructed *\*pracāh-*, "look for" (CDIAL 8492), and also under Sanskrit *prabhāti*, "shines forth, appears" (CDIAL 8709).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

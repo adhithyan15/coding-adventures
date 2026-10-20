@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C550-litteratus",
+    "language": "latin",
+    "chapter": 550,
+    "sequence": 29120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b99180c221ecbf37"
+  },
+  "findings": []
+}

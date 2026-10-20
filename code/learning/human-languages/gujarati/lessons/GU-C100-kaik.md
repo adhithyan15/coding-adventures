@@ -14,7 +14,8 @@ romanization: "kaīk"
 concept_tag: GU-DEF100-KAIK
 prerequisites: [GU-C99-darek, GU-C99-koi]
 sounds: []
-roots: []
+roots: [sanskrit-katipaya]
+etymology_hook: "kaīk: kaī 'several' + ek 'one'; CDIAL lists kaīk under Sanskrit katipaya 'several' (CDIAL 2696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C99-koi]
 <!-- hl-knowledge: introduces=[GU-LEX-C100-DEF100-01]; assesses=[] -->
 
 **કંઈક** (*kaīk*) — "something".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કંઈક** (*kaīk*) is *kaī*, "several", with *ek*, "one". CDIAL lists Gujarati *kaīk*, "some", under Sanskrit *katipaya*, "several" (CDIAL 2696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

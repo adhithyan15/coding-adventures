@@ -14,7 +14,8 @@ romanization: "cilaka"
 concept_tag: KA-VASTU303-CILAKA
 prerequisites: [KA-C303-jagali, KA-C303-atta]
 sounds: []
-roots: []
+roots: [dravidian-cilaka-latch]
+etymology_hook: "cilaka: native Dravidian, one word with Telugu cilaka (DEDR 2561)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C303-atta]
 <!-- hl-knowledge: introduces=[KA-LEX-C303-VASTU303-03]; assesses=[] -->
 
 **ಚಿಲಕ** — *cilaka* — "a door latch, a bolt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿಲಕ** (*cilaka*) is native Dravidian, one word with Telugu *cilaka* (DEDR 2561). DEDR lists *cilaka*, "a hasp or small chain for fastening a door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "samudraḥ"
 concept_tag: SA-LAND-SAMUDRA
 prerequisites: [SA-C33-town, SA-C31-snow, SA-C32-wood]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "samudra 'sea' ← sam 'together' + udra 'water': 'the gathering of waters' (MW; CDIAL 13236)"
 duration:
   max_seconds: 210
 requires:

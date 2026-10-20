@@ -14,7 +14,8 @@ romanization: "shuru"
 concept_tag: BN-TIME93-SHURU
 prerequisites: [BN-C93-hemonto, BN-C93-sekend]
 sounds: []
-roots: []
+roots: [arabic-shuru]
+etymology_hook: "shuru ← Arabic shurūʿ 'beginning', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C93-sekend]
 <!-- hl-knowledge: introduces=[BN-LEX-C93-TIME93-04]; assesses=[] -->
 
 **শুরু** — *shuru* — "the beginning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শুরু** (*shuru*) is a loan from Arabic *shurūʿ*, "beginning", which reached Bengali through Persian. Its Arabic root is *sh-r-ʿ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kūpī"
 concept_tag: SA-THINGS119-KUPI
 prerequisites: [SA-C119-katahah, SA-C119-patram]
 sounds: []
-roots: []
+roots: [sanskrit-kupa]
+etymology_hook: "kūpī 'flask', a feminine of kūpa 'hollow, well' (MW); MW compares Greek kypē 'hollow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C119-patram]
 <!-- hl-knowledge: introduces=[SA-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **कूपी** — *kūpī* — "a bottle, a flask".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kūpī* is a feminine of *kūpa* "a hole, a hollow, a well" (MW), and its sense "flask, bottle" comes from a late dictionary. MW compares Greek *kypē* "hollow"; *kūpa* itself lives on as Gujarati *kuvo* "small well" (CDIAL 3400).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

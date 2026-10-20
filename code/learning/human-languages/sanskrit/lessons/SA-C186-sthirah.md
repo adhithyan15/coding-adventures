@@ -14,7 +14,8 @@ romanization: "sthiraḥ"
 concept_tag: SA-QUAL186-STHIRAH
 prerequisites: [SA-C186-visalah, SA-C186-suksmah]
 sounds: []
-roots: []
+roots: [sanskrit-sthira]
+etymology_hook: "sthira 'firm', which MW files under √sthā 'stand' (Latin stāre, English stand); Hindi thir (CDIAL 13771)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C186-suksmah]
 <!-- hl-knowledge: introduces=[SA-LEX-C186-QUAL186-05]; assesses=[] -->
 
 **स्थिरः** — *sthiraḥ* — "steady".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sthira* is filed by MW under the root √sthā, "to stand", which MW compares with Latin *stāre* and English *stand*. CDIAL 13771 links it rather to a related root *sthar-*. Either way it lives on as Hindi *thir*, "firm, fixed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

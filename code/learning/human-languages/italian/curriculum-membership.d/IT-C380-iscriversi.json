@@ -1,0 +1,11 @@
+{
+  "id": "IT-C380-iscriversi",
+  "pathSegment": "IT-PATH-380-UNIVERSITA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-380-UNIVERSITA",
+      "order": 2
+    }
+  ]
+}

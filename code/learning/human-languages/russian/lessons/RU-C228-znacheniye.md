@@ -14,7 +14,8 @@ romanization: "znachéniye"
 concept_tag: RU-VESHCH228-ZNACHENIYE
 prerequisites: [RU-C228-pravilo, RU-C228-primer]
 sounds: []
-roots: []
+roots: [pie-gneh]
+etymology_hook: "значение is from значить 'to mean', from знак 'a sign', on знать 'to know'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C228-primer]
 <!-- hl-knowledge: introduces=[RU-LEX-C228-VESHCH228-04]; assesses=[] -->
 
 **значение** (*znachéniye*) — "a meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**значение** comes from *значить*, "to mean", from *знак*, "a sign", which goes with *знать*, "to know" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

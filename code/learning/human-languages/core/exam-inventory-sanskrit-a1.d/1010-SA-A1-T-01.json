@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-T-01",
+  "category": "Temporal notions",
+  "label": "the parts of the day, and the clock",
+  "probe": [
+    "SA-LEX-C45-DAYTIME-01",
+    "SA-LEX-C45-DAYTIME-02",
+    "SA-LEX-C45-DAYTIME-03",
+    "SA-LEX-C17-TIME-01",
+    "SA-LEX-C17-TIME-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG4-01"
+  ],
+  "note": "prātaḥ, madhyāhnaḥ, sāyam, dinam and rātriḥ. THE CLOCK IS NOT TAUGHT — no word for hour and no way to say a time — so half the proxy point is unanswerable."
+}

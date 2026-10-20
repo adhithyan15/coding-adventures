@@ -14,7 +14,8 @@ romanization: "gṛhapāṭhaṁ"
 concept_tag: ML-JOLI335-GRHAPATHAM
 prerequisites: [ML-C335-visayam, ML-C335-kanakku]
 sounds: []
-roots: []
+roots: [grha-sanskrit, sanskrit-patha-recitation]
+etymology_hook: "gṛhapāṭhaṁ: Sanskrit gṛha 'house' (CDIAL 4240) + pāṭha 'lesson' (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C335-kanakku]
 <!-- hl-knowledge: introduces=[ML-LEX-C335-JOLI335-04]; assesses=[] -->
 
 **ഗൃഹപാഠം** — *gṛhapāṭhaṁ* — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗൃഹപാഠം** (*gṛhapāṭhaṁ*) is a modern compound of Sanskrit *gṛha*, "house" (CDIAL 4240), and *pāṭha*, "lesson" (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

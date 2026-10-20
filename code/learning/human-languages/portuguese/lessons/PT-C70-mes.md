@@ -13,7 +13,8 @@ gloss: "a month"
 concept_tag: PT-QUANDO1-MES
 prerequisites: [PT-C69-sujo, PT-C70-semana]
 sounds: []
-roots: []
+roots: [mensis-latin]
+etymology_hook: "mês ← Latin mensis 'month' — English menstrual shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C70-semana]
 <!-- hl-knowledge: introduces=[PT-LEX-C70-QUANDO1-02]; assesses=[] -->
 
 **o mês** — "a month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mês** ← Latin *mensis*, "month" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

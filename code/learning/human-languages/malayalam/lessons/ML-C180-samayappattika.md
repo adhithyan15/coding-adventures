@@ -14,7 +14,8 @@ romanization: "samayappaṭṭika"
 concept_tag: ML-VAYANA180-SAMAYAPPATTIKA
 prerequisites: [ML-C179-tirumanikkuka, ML-C179-pratikshikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-samaya, sanskrit-pattika]
+etymology_hook: "samayappaṭṭika: Sanskrit samaya 'time' (CDIAL 13185) + paṭṭikā 'tablet, list' (CDIAL 7699)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [ML-C179-pratikshikkuka]
 
 The board says **ബസ്: രാവിലെ എട്ട് മണി** — *basŭ: rāvile eṭṭŭ maṇi* — "Bus: 8
 a.m." The bus leaves at eight, so be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സമയപ്പട്ടിക** (*samayappaṭṭika*) is built from Sanskrit parts: *samaya*, "time" (CDIAL 13185), and *paṭṭikā*, "a tablet, a slab" (CDIAL 7699), which became a written list.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

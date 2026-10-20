@@ -14,7 +14,8 @@ romanization: "chas"
 concept_tag: RU-TIME2-HOUR
 prerequisites: [RU-C69-today, RU-C69-yesterday]
 sounds: []
-roots: []
+roots: [slavic-chasu]
+etymology_hook: "час ← Proto-Slavic *časŭ 'time'; Old Prussian kīsman 'time' and Albanian kohë 'time' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C69-yesterday]
 <!-- hl-knowledge: introduces=[RU-LEX-C69-TIME2-03]; assesses=[] -->
 
 **час** (*chas*) — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**час** ← Proto-Slavic *\*časŭ*, "time, a while" — inherited. Vasmer relates it to Old Prussian *kīsman*, "time, a moment", and Albanian *kohë*, "time, weather". Ukrainian *час* still means "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

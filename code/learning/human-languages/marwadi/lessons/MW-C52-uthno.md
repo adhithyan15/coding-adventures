@@ -14,7 +14,8 @@ romanization: "uṭhṇo"
 concept_tag: MW-VERB-UTHNO
 prerequisites: [MW-C52-baithno, MW-C52-sovno]
 sounds: []
-roots: []
+roots: [indo-aryan-utthati]
+etymology_hook: "uṭhṇo ← *ut-sthāti 'stands up', reconstructed (CDIAL 1900, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C52-sovno]
 <!-- hl-knowledge: introduces=[MW-LEX-C52-VERBS52-03]; assesses=[] -->
 
 **उठणो** — *uṭhṇo* — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उठणो** (*uṭhṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ut-sthāti*, "stands up", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *ūṭhaï* under it (CDIAL 1900). It is built on *ud*, "up", and *sthā*, "stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C290-ertrinken",
+  "pathSegment": "GE-PATH-290-BEWUSSTLOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-290-BEWUSSTLOS",
+      "order": 4
+    }
+  ]
+}

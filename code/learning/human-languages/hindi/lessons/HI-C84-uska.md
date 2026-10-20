@@ -14,7 +14,8 @@ romanization: "uskā"
 concept_tag: HI-DET-HIS-HER
 prerequisites: [HI-C02-meraa, HI-C41-adjective-system]
 sounds: []
-roots: []
+roots: [sanskrit-asau]
+etymology_hook: "uskā: us, the form vah 'that' takes before an ending (CDIAL 972), with the possessive -kā"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +48,11 @@ your own.
 
 Hindi does not choose between those three, and the reason is the point of the
 lesson: **the possessive agrees with the thing owned, not with the owner.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उसका** (*uskā*) is *us*, the form **वह**, "that", takes before an ending, with the possessive *-kā*. CDIAL lists *us* under Sanskrit *asau*, "that" (CDIAL 972).
 
 ## Grammar Lens: English agrees with the owner, Hindi with the thing
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-01, HI-CONCEPT-C02-MERAA-01, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

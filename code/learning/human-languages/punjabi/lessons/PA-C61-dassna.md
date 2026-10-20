@@ -14,7 +14,8 @@ romanization: "dassṇā"
 concept_tag: PA-VERB-DASSNA
 prerequisites: [PA-C61-kattna, PA-C61-rokna]
 sounds: []
-roots: []
+roots: [sanskrit-darshayati]
+etymology_hook: "dassṇā: CDIAL lists Lahnda dassaṇ 'to show, tell' and Punjabi dasāuṇā under darśayati 'shows' (CDIAL 6210)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C61-rokna]
 <!-- hl-knowledge: introduces=[PA-LEX-C61-VERBS61-05]; assesses=[] -->
 
 **ਦੱਸਣਾ** — *dassṇā* — "to tell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੱਸਣਾ** (*dassṇā*) is inherited. CDIAL lists the matching Lahnda *dassaṇ*, "to show, tell", and Punjabi *dasāuṇā*, "makes show", under Sanskrit *darśayati*, "shows" (CDIAL 6210).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kṛṣṇaḥ"
 concept_tag: SA-QUAL131-KRSNAH
 prerequisites: [SA-C130-durbalah, SA-C130-svacchah]
 sounds: []
-roots: []
+roots: [sanskrit-krshna]
+etymology_hook: "kṛṣṇa 'black, dark' (RV) is inherited from Indo-European (EtymDB); Krishna is 'the dark one'; Hindi kānh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C130-svacchah]
 <!-- hl-knowledge: introduces=[SA-LEX-C131-QUAL131-01]; assesses=[] -->
 
 **कृष्णः** — *kṛṣṇaḥ* — "black, dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṛṣṇa* "black, dark" is old, in the Rigveda, and is inherited from Indo-European; Old Prussian *kirsnan* "black" is a cousin (EtymDB). As a name it is Krishna, "the dark one", whom Hindi calls *kānh* (CDIAL 3451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

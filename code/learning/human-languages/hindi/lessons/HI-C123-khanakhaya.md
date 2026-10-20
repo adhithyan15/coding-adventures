@@ -14,7 +14,8 @@ romanization: "khānā khāyā?"
 concept_tag: HI-HAAL-EATEN
 prerequisites: [HI-C123-bahutdin, HI-C123-kyachal]
 sounds: []
-roots: []
+roots: [sanskrit-khadati]
+etymology_hook: "khānā ← Sanskrit khādana 'food' (CDIAL 3867); khāyā ← khādati 'eats' (CDIAL 3865)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C123-kyachal]
 
 **खाना** is both "food" and "to eat": you *ate the eating*. Around a mealtime it is a greeting
 and a kindness.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाना खाया?** (*khānā khāyā?*) is "food, eaten?". The noun *khānā*, "food", comes from Sanskrit *khādana*, "food" (CDIAL 3867), and the verb from *khādati*, "chews, eats" (CDIAL 3865).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

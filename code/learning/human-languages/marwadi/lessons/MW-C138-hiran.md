@@ -14,7 +14,8 @@ romanization: "hiraṇ"
 concept_tag: MW-THINGS138-HIRAN
 prerequisites: [MW-C138-balad, MW-C138-bachhro]
 sounds: []
-roots: []
+roots: [sanskrit-harina]
+etymology_hook: "hiraṇ ← Sanskrit hariṇa 'deer', a tadbhava (CDIAL 13982, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C138-bachhro]
 <!-- hl-knowledge: introduces=[MW-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **हिरण** — *hiraṇ* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिरण** (*hiraṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hariṇa*, "deer". CDIAL gives no Marwari form in this entry (CDIAL 13982); the match is through Hindi *hiran* and Gujarati *haraṇ*. The Sanskrit word first meant "yellow". CDIAL rejects a proposed Austroasiatic source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

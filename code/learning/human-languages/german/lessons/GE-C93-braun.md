@@ -13,7 +13,8 @@ gloss: "brown"
 concept_tag: GE-ADJ5-BRAUN
 prerequisites: [GE-C93-wichtig, GE-C93-einfach]
 sounds: []
-roots: []
+roots: [germanic-brunaz]
+etymology_hook: "braun ← Old High German brūn ← Proto-Germanic *brūnaz — the same word as English brown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C93-einfach]
 <!-- hl-knowledge: introduces=[GE-LEX-C93-ADJ5-05]; assesses=[] -->
 
 **braun** — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**braun** ← Old High German *brūn* ← Proto-Germanic *\*brūnaz* — inherited, the same word as English *brown*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

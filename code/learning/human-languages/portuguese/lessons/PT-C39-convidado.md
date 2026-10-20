@@ -13,7 +13,8 @@ gloss: "a guest"
 concept_tag: PT-PESSOAS-CONVIDADO
 prerequisites: [PT-C39-crianca, PT-C39-vizinho]
 sounds: []
-roots: []
+roots: [invitare-latin]
+etymology_hook: "convidado — 'one invited', from the verb to invite ← Vulgar Latin *convitare, from invitare"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C39-vizinho]
 <!-- hl-knowledge: introduces=[PT-LEX-C39-PESSOAS-03]; assesses=[] -->
 
 **o convidado** — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**convidado** is "invited": the participle of the verb "to invite", used as a noun. That verb ← Vulgar Latin *\*convitare* (EtymDB 2.1), a reshaping of Latin *invitare*, "to invite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

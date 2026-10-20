@@ -14,7 +14,8 @@ romanization: "śṛṇoti"
 concept_tag: SA-VERB-HEAR
 prerequisites: [SA-C20-man, SA-C20-woman, SA-C21-remember]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "śṛṇoti ← the root √śru 'hear'; MW compares Greek kluō and English loud; Hindi sunnā (CDIAL 12598)"
 duration:
   max_seconds: 210
 requires:

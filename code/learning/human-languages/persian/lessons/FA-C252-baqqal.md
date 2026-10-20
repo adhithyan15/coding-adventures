@@ -14,7 +14,8 @@ romanization: "baqqâl"
 concept_tag: FA-KAR252-BAQQAL
 prerequisites: [FA-C251-bazikon, FA-C251-tarikh]
 sounds: []
-roots: []
+roots: [arabic-baqqal]
+etymology_hook: "baqqâl ← Arabic baqqāl 'seller of vegetables', root b-q-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C251-tarikh]
 <!-- hl-knowledge: introduces=[FA-LEX-C252-KAR252-01]; assesses=[] -->
 
 **بقال** — *baqqâl* — "a grocer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*baqqâl* is borrowed from Arabic *baqqāl*, "seller of vegetables". Its Arabic root is *b-q-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

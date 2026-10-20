@@ -11,7 +11,8 @@ romanization: "patukke"
 concept_tag: ML-REP-SLOWLY
 prerequisites: [ML-C118-mist, ML-C118-thunder]
 sounds: []
-roots: []
+roots: [dravidian-patungu-crouch]
+etymology_hook: "patukke: native Dravidian, from the verb 'to crouch, sneak'; Tamil patuṅku (DEDR 3912)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C118-thunder]
 
 **പതുക്കെ** (*patukke*) — "slowly". **പതുക്കെ പറയൂ** (*patukke paṟayū*) — "please say it
 slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പതുക്കെ** (*patukke*) is native Dravidian, from the verb "to crouch, move stealthily"; DEDR 3912 lists the root with Tamil *patuṅku* and Kannada *padugu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

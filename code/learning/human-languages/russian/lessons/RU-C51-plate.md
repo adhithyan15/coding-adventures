@@ -14,7 +14,8 @@ romanization: "tarélka"
 concept_tag: RU-TABLE-PLATE
 prerequisites: [RU-C50-clock, RU-C51-cup]
 sounds: []
-roots: []
+roots: [taliare-latin]
+etymology_hook: "тарелка probably came through Polish talerz from German talier, from Italian tagliere 'trencher', from 'to cut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C51-cup]
 <!-- hl-knowledge: introduces=[RU-LEX-C51-TABLE-02]; assesses=[] -->
 
 **тарелка** (*tarélka*) — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тарелка** — older *тарель*, recorded from 1509; Vasmer thinks it apparently came through Polish *talerz* and Czech *talíř* from Middle High German *talier*, from Italian *tagliere*, "a trencher", from *tagliare*, "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

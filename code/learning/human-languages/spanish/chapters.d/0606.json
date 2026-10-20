@@ -1,0 +1,19 @@
+{
+  "chapter": 606,
+  "title": "Ayudar a los demás",
+  "label": "ch:es-ayudar-a-los-demas",
+  "canDo": "I can talk about volunteering and the groups that help people.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C606-participar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 606: I can talk about volunteering and the groups that help people.",
+    "assesses": [
+      "ES-LEX-C606-SOLIDAR-03",
+      "ES-LEX-C606-SOLIDAR-04",
+      "ES-LEX-C606-SOLIDAR-05"
+    ]
+  }
+}

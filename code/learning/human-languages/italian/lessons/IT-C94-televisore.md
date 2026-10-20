@@ -14,6 +14,7 @@ concept_tag: IT-CASA94-TELEVISORE
 prerequisites: [IT-C93-barca, IT-C94-tappeto]
 sounds: []
 roots: []
+etymology_hook: "televisore — tele- 'far' + the word for a viewer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C94-tappeto]
 <!-- hl-knowledge: introduces=[IT-LEX-C94-CASA94-02]; assesses=[] -->
 
 **il televisore** — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**televisore** — built from *tele-*, "far", and the word for a viewer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -43,8 +43,8 @@ answer is already hiding inside the first farewell you learned.
 <!-- hl-knowledge: introduces=[LA-LEX-VALEO-FAMILY-01]; assesses=[] -->
 
 The attested reply is **valeō**: "I fare well" or "I am strong." Plautus's
-characters can intensify it as **valeō rēctē** ("I am properly well") or
-**valeō et salvōs sum rēctē** ("I am well and safe").
+characters can intensify it as **valeō rēctē** ("I am properly well"), or
+go on to say they are safe and sound too.
 
 The dictionary verb is **valēre**, "to be strong, be well." Watch one stem
 move through the exchange:
@@ -55,6 +55,11 @@ move through the exchange:
 
 That last imperative became the Chapter 1 goodbye. Latin's farewell is
 therefore a wish for the other person to remain well.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**valeō** is inherited, usually traced through Proto-Italic *\*walēō*, "to be strong", to Proto-Indo-European *\*h2welh1-*, "to rule, to be strong" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01] -->

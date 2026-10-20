@@ -13,7 +13,8 @@ gloss: "to come near"
 concept_tag: FR-VERB-APPROCHER
 prerequisites: [FR-C149-rever, FR-C150-eloigner]
 sounds: []
-roots: []
+roots: [prope-latin]
+etymology_hook: "s'approcher ← Late Latin appropiare, from prope 'near' — English approach"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C150-eloigner]
 <!-- hl-knowledge: introduces=[FR-LEX-C150-VERBES150-02]; assesses=[] -->
 
 **s'approcher** — "to come near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**s'approcher** ← Late Latin *appropiare*, "to draw near", from *prope*, "near", the Latin of *prochain* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

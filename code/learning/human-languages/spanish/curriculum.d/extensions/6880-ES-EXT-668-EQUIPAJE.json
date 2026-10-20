@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-668-EQUIPAJE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pack and unpack, wrap things up, drag my case and weigh my bag.",
+  "prerequisites": []
+}

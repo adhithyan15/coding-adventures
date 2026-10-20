@@ -14,7 +14,8 @@ romanization: "śubhraṁ"
 concept_tag: TE-QUAL137-SUBHRAM
 prerequisites: [TE-C137-mettani, TE-C137-gatti]
 sounds: []
-roots: []
+roots: [sanskrit-shubhra]
+etymology_hook: "śubhraṁ ← Sanskrit śubhra 'bright; white', a tatsama (CDIAL 12539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C137-gatti]
 <!-- hl-knowledge: introduces=[TE-LEX-C137-QUAL137-04]; assesses=[] -->
 
 **శుభ్రం** — *śubhraṁ* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శుభ్రం** (*śubhraṁ*) is Sanskrit *śubhra*, "bright; white", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12539). The sense "clean" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

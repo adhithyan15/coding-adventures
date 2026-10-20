@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 163,
-  "sourceHash": "fnv1a64:e4d83e47f7103751",
+  "sourceHash": "fnv1a64:dec4db0848df1241",
   "lessonIds": [
     "LA-C163-perendie",
     "LA-C163-postea",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch163.txt",
   "json": "latin/narration/ch163.json",
-  "textHash": "fnv1a64:cd8fa91b6ad71f9c",
-  "jsonHash": "fnv1a64:991b19ddb69f1e0e",
+  "textHash": "fnv1a64:46cc730ae6eb5c4b",
+  "jsonHash": "fnv1a64:03a8eeaa2b0482aa",
   "findings": []
 }

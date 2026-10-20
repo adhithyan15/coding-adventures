@@ -14,7 +14,8 @@ romanization: "sýtyy"
 concept_tag: RU-KACH158-SYTYY
 prerequisites: [RU-C158-myortvyy, RU-C158-golodnyy]
 sounds: []
-roots: []
+roots: [slavic-sytu]
+etymology_hook: "сытый ← Proto-Slavic *sytŭ; Lithuanian sotus 'full' and Latin satis 'enough' are compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C158-golodnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C158-KACH158-04]; assesses=[] -->
 
 **сытый** (*sýtyy*) — "well-fed, full up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сытый** ← Proto-Slavic *\*sytŭ* — inherited. Vasmer finds the comparison with Lithuanian *sotùs*, "full", Gothic *saþs*, "sated", and Latin *satis*, "enough", suggests itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

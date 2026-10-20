@@ -10,10 +10,10 @@ gloss: we said — the fourth slot, where the helper is the infinitive itself
 concept_tag: GE-PERFEKT-WIR
 prerequisites: [GE-C15-er-hat-gemacht]
 sounds: [w-is-v, ge-prefix, final-t]
-roots: []
+roots: [germanic-habjana, germanic-sagjana]
 etymology_hook: "German's wir form is identical to the infinitive across the whole language, which is why haben appears twice in the recipe with two different jobs"
 duration:
-  max_seconds: 150
+  max_seconds: 151
 requires:
   knowledge: [GE-GRAMMAR-PERFEKT-ER-01, GE-GRAMMAR-PERFEKT-HABEN-01, GE-LEX-GESAGT-01, GE-GRAMMAR-VERB-ENDINGS-01]
 introduces:
@@ -50,6 +50,11 @@ which is one of the few completely free pieces of the ending system.
 
 So the sentence has *haben* in it twice over in a sense — as the recipe's helper
 and as its own plain shape — and the participle at the back is still *gesagt*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wir haben gesagt** — *haben* ← Old High German *habēn* ← Proto-Germanic *\*habjaną*, English *have*; *gesagt* from *sagēn*, English *say*. (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-WIR-01, GE-GRAMMAR-PERFEKT-ER-01] -->

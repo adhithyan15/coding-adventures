@@ -13,7 +13,8 @@ gloss: "a cherry"
 concept_tag: IT-CIBO107-CILIEGIA
 prerequisites: [IT-C106-cetriolo, IT-C107-fragola]
 sounds: []
-roots: []
+roots: [cerasum-latin]
+etymology_hook: "ciliegia goes back to Latin cerasum 'cherry' — English cherry is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C107-fragola]
 <!-- hl-knowledge: introduces=[IT-LEX-C107-CIBO107-02]; assesses=[] -->
 
 **la ciliegia** — "a cherry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ciliegia** goes back to Latin *cerasum*, "a cherry" (Lewis & Short), a word Latin took from Greek; EtymDB 2.1 has no row for *ciliegia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tolaikkāṭci"
 concept_tag: TA-THINGS134-TOLAIKKATCI
 prerequisites: [TA-C134-tiraiccilai, TA-C134-mettai]
 sounds: []
-roots: []
+roots: [dravidian-tolai-far, dravidian-kaan-see]
+etymology_hook: "தொலைக்காட்சி — a coinage: tolai 'far' (DEDR 3519) + kāṭci 'sight', from kāṇ 'see' (DEDR 1443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C134-mettai]
 <!-- hl-knowledge: introduces=[TA-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **தொலைக்காட்சி** — *tolaikkāṭci* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தொலைக்காட்சி** (*tolaikkāṭci*) is a modern coinage from native parts: *tolai*, "far" (DEDR 3519), and *kāṭci*, "sight", from *kāṇ*, "to see" (DEDR 1443). It is a word-for-word "tele-vision".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

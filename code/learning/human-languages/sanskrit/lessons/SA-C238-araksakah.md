@@ -14,7 +14,8 @@ romanization: "ārakṣakaḥ"
 concept_tag: SA-PPL238-ARAKSAKAH
 prerequisites: [SA-C238-abhiyanta, SA-C238-vaijnanikah]
 sounds: []
-roots: []
+roots: [sanskrit-araksha, sanskrit-rakshati]
+etymology_hook: "ārakṣaka ← ā- + √rakṣ 'guard' + -aka: MW 'a watchman, patrol, police magistrate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C238-vaijnanikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C238-PPL238-04]; assesses=[] -->
 
 **आरक्षकः** — *ārakṣakaḥ* — "a policeman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ārakṣaka* is built on *ā-* and the root √rakṣ, "to guard", with the agent suffix *-aka* (MW), like *rakṣaka*, "guard", which you have already met. MW already glosses it "a watchman, patrol, police magistrate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

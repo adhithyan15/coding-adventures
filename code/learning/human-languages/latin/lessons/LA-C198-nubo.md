@@ -13,7 +13,8 @@ gloss: "to marry (of a bride)"
 concept_tag: LA-VERB-NUBO
 prerequisites: [LA-C198-defendo, LA-C198-morior]
 sounds: []
-roots: []
+roots: [nubere-latin]
+etymology_hook: "nūbō 'to marry' — inherited, usually traced to PIE *snewbh- 'to wed'; English nuptial"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C198-morior]
 <!-- hl-knowledge: introduces=[LA-LEX-C198-ACT198-04]; assesses=[] -->
 
 **nūbō, nūbere** — "to marry (of a bride)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūbō** is inherited, usually traced to Proto-Indo-European *\*snewbh-*, "to marry, to wed" (EtymDB 2.1). English *nuptial* comes from its participle *nūptus*, "married".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

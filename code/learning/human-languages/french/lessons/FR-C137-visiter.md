@@ -13,7 +13,8 @@ gloss: "to visit (a place)"
 concept_tag: FR-VERB-VISITER
 prerequisites: [FR-C136-mille, FR-C137-commencer]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "visiter ← Latin visitare 'to go to see' — English visit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C137-commencer]
 <!-- hl-knowledge: introduces=[FR-LEX-C137-VERBES89-02]; assesses=[] -->
 
 **visiter** — "to visit (a place)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**visiter** ← Latin *visitare*, "to go to see", from *videre*, "to see" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

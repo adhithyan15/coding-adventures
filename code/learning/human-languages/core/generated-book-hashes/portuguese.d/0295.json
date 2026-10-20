@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:7b036df24683045f",
+  "lessonIds": [
+    "PT-C295-suspeito",
+    "PT-C295-suspeita",
+    "PT-C295-deter",
+    "PT-C295-detencao",
+    "PT-C295-detido"
+  ],
+  "tex": "portuguese/book/chapters/ch295-suspeitos-e-detidos.tex"
+}

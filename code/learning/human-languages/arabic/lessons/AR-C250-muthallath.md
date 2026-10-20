@@ -14,7 +14,8 @@ romanization: "muthallath"
 concept_tag: AR-SHAY250-MUTHALLATH
 prerequisites: [AR-C250-rukham, AR-C250-mattat]
 sounds: []
-roots: []
+roots: [thalatha]
+etymology_hook: "muthallath: built on the root th-l-th, 'three' (Lane); muthallath is the Form II passive participle, 'made three-fold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C250-mattat]
 <!-- hl-knowledge: introduces=[AR-LEX-C250-SHAY250-05]; assesses=[] -->
 
 **مثلث** — *muthallath* — "a triangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مثلث** (*muthallath*) is built on the native Arabic root *th-l-th*, "three" (Lane). *Muthallath* is the Form II passive participle, "made three-fold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cāmḍe"
 concept_tag: MR-VASTU242-CAMDE
 prerequisites: [MR-C241-hirval, MR-C241-payvat]
 sounds: []
-roots: []
+roots: [sanskrit-carman]
+etymology_hook: "cāmḍe: built on cām 'hide' ← Sanskrit carman 'hide, skin' (CDIAL 4701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C241-payvat]
 <!-- hl-knowledge: introduces=[MR-LEX-C242-VASTU242-01]; assesses=[] -->
 
 **चामडे** — *cāmḍe* — "leather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चामडे** (*cāmḍe*) is built on Marathi *cām*, "hide, leather", which comes from Sanskrit *carman*, "hide, skin" (CDIAL 4701).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Kurta, Sari, Scarf, Cap, Coat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2c00ab784de3c475",
+  "sourceHash": "fnv1a64:1d8a4058461172ce",
   "lessons": [
     {
       "id": "HI-C136-kurta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44969c42320f5a28",
+      "sourceHash": "fnv1a64:8bf92801039e87be",
       "notice": null,
       "blocks": [
         {
@@ -62,6 +62,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुर्ता (kurtā) is a loan, usually traced to Persian kurta, \"a long shirt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -72,7 +83,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,7 +132,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4e23bc6fe99c710",
+      "sourceHash": "fnv1a64:f16ac776cadbfdb3",
       "notice": null,
       "blocks": [
         {
@@ -195,6 +206,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साड़ी (sāṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śāṭī, \"strip of cloth, garment\" (CDIAL 12381). CDIAL notes that the word also travelled west, to Pashto and to Persian shāl, the source of English shawl."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -205,7 +227,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f437c32c2178bcad",
+      "sourceHash": "fnv1a64:fbc0ba641535a02f",
       "notice": null,
       "blocks": [
         {
@@ -318,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुपट्टा (dupaṭṭā) is built from du-, \"two\", and paṭṭā, \"a strip of cloth\": a cloth of two breadths. CDIAL lists Hindi paṭṭī, \"strip of cloth\", under Sanskrit paṭṭa, \"cloth\", probably of non-Aryan source (CDIAL 7700). It also reconstructs dupaṭṭikā, \"two cloths\" (CDIAL 6413), but lists no Hindi form under it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -328,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -377,7 +410,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -408,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:018dccc9627e9f35",
+      "sourceHash": "fnv1a64:9b18f799ae90b4ff",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोपी (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, \"hat, covering\", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls a link with Sanskrit āṭopa, \"swelling\", very doubtful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:012b6e786407552f",
+      "sourceHash": "fnv1a64:641889f245e4023f",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोट (koṭ) is a loan from English coat. It is a different word from Hindi koṭ, \"fort\", from Sanskrit koṭṭa (CDIAL 3500)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

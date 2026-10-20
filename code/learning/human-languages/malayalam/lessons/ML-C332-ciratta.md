@@ -14,7 +14,8 @@ romanization: "ciraṭṭa"
 concept_tag: ML-VASTU332-CIRATTA
 prerequisites: [ML-C331-kampi, ML-C331-kampili]
 sounds: []
-roots: []
+roots: [dravidian-ciratta-shell]
+etymology_hook: "ciraṭṭa: native Dravidian, one word with Tamil ciraṭṭai and Kannada geraṭe (DEDR 2550)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C331-kampili]
 <!-- hl-knowledge: introduces=[ML-LEX-C332-VASTU332-01]; assesses=[] -->
 
 **ചിരട്ട** — *ciraṭṭa* — "a coconut shell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിരട്ട** (*ciraṭṭa*) is native Dravidian, one word with Tamil *ciraṭṭai* and Kannada *geraṭe* (DEDR 2550).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

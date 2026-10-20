@@ -1,0 +1,11 @@
+{
+  "id": "IT-C469-raffica",
+  "pathSegment": "IT-PATH-469-TEMPESTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-469-TEMPESTA",
+      "order": 2
+    }
+  ]
+}

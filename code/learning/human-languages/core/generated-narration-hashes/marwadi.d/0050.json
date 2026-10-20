@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 50,
-  "sourceHash": "fnv1a64:4c5236ff954bf407",
+  "sourceHash": "fnv1a64:0062b40744e355ed",
   "lessonIds": [
     "MW-C50-lugai",
     "MW-C50-parosi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch50.txt",
   "json": "marwadi/narration/ch50.json",
-  "textHash": "fnv1a64:2723a6a2f3ff8533",
-  "jsonHash": "fnv1a64:b21f131ccbf50309",
+  "textHash": "fnv1a64:1a1a614a95eac5b0",
+  "jsonHash": "fnv1a64:51fc34e4ed208b25",
   "findings": []
 }

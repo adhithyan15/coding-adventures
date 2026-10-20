@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "Thirty, Forty, Fifty, Sixty, Seventy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8b71c6d8a16c93b1",
+  "sourceHash": "fnv1a64:535ff4172d12f604",
   "lessons": [
     {
       "id": "MW-C86-tis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:903bae5303a1ccef",
+      "sourceHash": "fnv1a64:707f95d96fda1810",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तीस (tīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from triṃśat, \"thirty\". CDIAL lists Marwari tīs under it (CDIAL 6015)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62736d239fc88452",
+      "sourceHash": "fnv1a64:8bdc27f5f99c406f",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाळीस (chāḷīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṃśat, \"forty\". CDIAL lists Old Marwari cyārīsa under it (CDIAL 4656). CDIAL notes that the Old Marwari r comes from cyāri, \"four\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a77b09a1078064ba",
+      "sourceHash": "fnv1a64:af37273655addbb0",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पचास (pachās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcāśat, \"fifty\". CDIAL gives no Marwari form in this entry (CDIAL 7682); the match is through Hindi pacās and Gujarati pacās."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fb96c9fb512df3f",
+      "sourceHash": "fnv1a64:069b7bc766420e83",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "साठ (sāṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣaṣṭi, \"sixty\". CDIAL gives no Marwari form in this entry (CDIAL 12804); the match is through Hindi sāṭh and Gujarati sāṭhi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0697391b5ce5a75c",
+      "sourceHash": "fnv1a64:239349059c042b6f",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सित्तर (sittar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saptati, \"seventy\". CDIAL gives no Marwari form in this entry (CDIAL 13143); the match is through Hindi sattar and Gujarati sitter."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

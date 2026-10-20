@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 686,
+  "sourceHash": "fnv1a64:207c9f45441c6b1f",
+  "lessonIds": [
+    "ES-C686-cima",
+    "ES-C686-pico",
+    "ES-C686-subida",
+    "ES-C686-roca",
+    "ES-C686-escalar"
+  ],
+  "tex": "spanish/book/chapters/ch686-hacia-la-cima.tex"
+}

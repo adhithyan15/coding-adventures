@@ -15,6 +15,7 @@ concept_tag: GU-THINGS106-KABAT
 prerequisites: [GU-C105-jitvu, GU-C105-harvu]
 sounds: []
 roots: []
+etymology_hook: "kabāṭ: not settled; it matches Sanskrit kapāṭa 'leaf of a door', listed with Gujarati kamāṛ 'door' (CDIAL 2963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C105-harvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C106-THINGS106-01]; assesses=[] -->
 
 **કબાટ** (*kabāṭ*) — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **કબાટ** (*kabāṭ*) is not settled. It matches Sanskrit *kapāṭa*, "leaf of a door", under which CDIAL lists Gujarati *kamāṛ*, "door" (CDIAL 2963), but CDIAL does not list **કબાટ** (*kabāṭ*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

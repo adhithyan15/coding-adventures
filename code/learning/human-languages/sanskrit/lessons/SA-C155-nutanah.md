@@ -14,7 +14,8 @@ romanization: "nūtanaḥ"
 concept_tag: SA-QUAL155-NUTANAH
 prerequisites: [SA-C154-yadyapi, SA-C154-athava]
 sounds: []
-roots: []
+roots: [sanskrit-nutana]
+etymology_hook: "nūtana 'of now, new' ← nū, nu 'now' (MW; CDIAL 7575), which MW sets beside English now"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C154-athava]
 <!-- hl-knowledge: introduces=[SA-LEX-C155-QUAL155-01]; assesses=[] -->
 
 **नूतनः** — *nūtanaḥ* — "fresh, new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nūtana* is built from *nū*, *nu* "now" (MW; CDIAL 7575): "belonging to now", so "new, fresh". MW sets *nu* beside Greek *nyn*, Latin *nunc* and English *now*. Pali kept it as *nūtana* "recent, new" (CDIAL 7575).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

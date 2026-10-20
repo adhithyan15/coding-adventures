@@ -14,7 +14,8 @@ romanization: "bhavanam"
 concept_tag: SA-THG250-BHAVANAM
 prerequisites: [SA-C250-prasadah, SA-C250-kutiram]
 sounds: []
-roots: []
+roots: [sanskrit-bhavana, sanskrit-bhu]
+etymology_hook: "bhavana 'abode, house' ← root √bhū 'be, become' (MW; CDIAL 9417)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C250-kutiram]
 <!-- hl-knowledge: introduces=[SA-LEX-C250-THG250-04]; assesses=[] -->
 
 **भवनम्** — *bhavanam* — "a building, a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhavana* is built on the root √bhū, "to be, become" (MW), the root of *bhavati*: a house is the place where one is. Manu uses it for "a place of abode" (CDIAL 9417), and Pali has *bhavana*, "dwelling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

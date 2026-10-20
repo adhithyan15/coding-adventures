@@ -14,7 +14,8 @@ romanization: "rubáshka"
 concept_tag: RU-THINGS103-SHIRT
 prerequisites: [RU-C103-hat, RU-C103-jacket]
 sounds: []
-roots: []
+roots: [slavic-rubiti]
+etymology_hook: "рубашка is рубаха 'shirt' + -шка; рубаха is from руб, рубить 'to chop': a cut piece of cloth"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C103-jacket]
 <!-- hl-knowledge: introduces=[RU-LEX-C103-THINGS103-03]; assesses=[] -->
 
 **рубашка** (*rubáshka*) — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рубашка** is *рубаха*, "a shirt", with the fond *-шка*. Vasmer derives *рубаха* from *руб*, "a cut piece of cloth", and *рубить*, "to chop".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

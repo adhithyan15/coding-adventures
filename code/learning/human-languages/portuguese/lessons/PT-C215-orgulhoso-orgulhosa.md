@@ -14,6 +14,7 @@ concept_tag: PT-QUAL215-ORGULHOSO-ORGULHOSA
 prerequisites: [PT-C214-alias, PT-C215-ciumento-ciumenta]
 sounds: []
 roots: []
+etymology_hook: "orgulhoso — built from orgulho 'pride' (from Catalan orgull, a Frankish word) + -oso"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C215-ciumento-ciumenta]
 <!-- hl-knowledge: introduces=[PT-LEX-C215-QUAL215-02]; assesses=[] -->
 
 **orgulhoso / orgulhosa** — "proud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**orgulhoso** is built from *orgulho*, "pride", and *-oso*, "full of" (EtymDB 2.1). *orgulho* came from Catalan *orgull*, a word of Frankish origin (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

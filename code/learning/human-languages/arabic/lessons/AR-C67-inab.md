@@ -14,7 +14,8 @@ romanization: "ʿinab"
 concept_tag: AR-FOOD67-INAB
 prerequisites: [AR-C67-zubda, AR-C67-asal]
 sounds: []
-roots: []
+roots: [ʿ-n-b]
+etymology_hook: "ʿinab: built on the root ʿ-n-b, 'grapes' (Lane); Hebrew ʿenav, 'grape', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C67-asal]
 <!-- hl-knowledge: introduces=[AR-LEX-C67-FOOD67-05]; assesses=[] -->
 
 **عنب** — *ʿinab* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عنب** (*ʿinab*) is built on the native Arabic root *ʿ-n-b*, "grapes" (Lane). Hebrew *ʿenav*, "grape", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

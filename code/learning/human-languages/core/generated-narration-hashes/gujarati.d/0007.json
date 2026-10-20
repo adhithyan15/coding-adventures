@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 7,
-  "sourceHash": "fnv1a64:c5e95a23503f36ba",
+  "sourceHash": "fnv1a64:3a14cbdf5153c616",
   "lessonIds": [
     "GU-C07-dhool",
     "GU-C07-int",
@@ -16,7 +16,7 @@
   "drivablePrefix": 3,
   "text": "gujarati/narration/ch07.txt",
   "json": "gujarati/narration/ch07.json",
-  "textHash": "fnv1a64:0e049fbf49f2f826",
-  "jsonHash": "fnv1a64:7c277b2c2a8a58db",
+  "textHash": "fnv1a64:f557d4253697fb41",
+  "jsonHash": "fnv1a64:afb69387498010bf",
   "findings": []
 }

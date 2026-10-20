@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES164-BOUCHERIE
 prerequisites: [FR-C164-douane, FR-C164-reservation]
 sounds: []
 roots: []
+etymology_hook: "boucherie — from the word for 'butcher', first a seller of goat's meat — English butcher"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C164-reservation]
 <!-- hl-knowledge: introduces=[FR-LEX-C164-CHOSES164-04]; assesses=[] -->
 
 **la boucherie** — "a butcher's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**boucherie** — built from the word for "butcher", with *-ie*. The butcher was first a seller of goat's meat, from the word for "he-goat". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

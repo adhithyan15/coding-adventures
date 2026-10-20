@@ -13,7 +13,8 @@ gloss: "a page"
 concept_tag: PT-LAZER114-PAGINA
 prerequisites: [PT-C113-problema, PT-C114-frase]
 sounds: []
-roots: []
+roots: [pagina-latin]
+etymology_hook: "página ← Latin pagina 'page, a strip of papyrus' — English page"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C114-frase]
 <!-- hl-knowledge: introduces=[PT-LEX-C114-LAZER114-02]; assesses=[] -->
 
 **a página** — "a page".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**página** ← Latin *pagina*, "page, a strip of papyrus" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

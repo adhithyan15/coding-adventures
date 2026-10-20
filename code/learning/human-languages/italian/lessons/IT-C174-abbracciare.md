@@ -13,7 +13,8 @@ gloss: "to hug"
 concept_tag: IT-VERB-ABBRACCIARE
 prerequisites: [IT-C173-partita, IT-C174-baciare]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "abbracciare — a- + braccio 'arm': to take into one's arms — English embrace"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C174-baciare]
 <!-- hl-knowledge: introduces=[IT-LEX-C174-VERBI174-02]; assesses=[] -->
 
 **abbracciare** — "to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abbracciare** — built from *braccio*, "arm", with *a-*: to take into one's arms. *braccio* ← Latin *bracchium*, "arm". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

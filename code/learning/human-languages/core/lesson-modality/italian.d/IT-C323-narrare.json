@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C323-narrare",
+    "language": "italian",
+    "chapter": 323,
+    "sequence": 18690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c60b1786e575a763"
+  },
+  "findings": []
+}

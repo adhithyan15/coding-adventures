@@ -13,7 +13,8 @@ gloss: "to listen to"
 concept_tag: FR-VERB-ECOUTER
 prerequisites: [FR-C63-perdre, FR-C64-regarder]
 sounds: []
-roots: []
+roots: [auscultare-latin]
+etymology_hook: "écouter ← Latin auscultare 'to listen' — English auscultate, how doctors listen"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C64-regarder]
 <!-- hl-knowledge: introduces=[FR-LEX-C64-VERBES16-02]; assesses=[] -->
 
 **écouter** — "to listen to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**écouter** ← Old French *escouter* ← Latin *auscultare*, "to listen" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

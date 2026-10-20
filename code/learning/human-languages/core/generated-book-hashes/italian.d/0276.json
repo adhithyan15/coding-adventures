@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:74ffcf5d03ed241a",
+  "lessonIds": [
+    "IT-C276-avvenimento",
+    "IT-C276-vicenda",
+    "IT-C276-faccenda",
+    "IT-C276-cronologia",
+    "IT-C276-sequenza"
+  ],
+  "tex": "italian/book/chapters/ch276-una-lunga-vicenda.tex"
+}

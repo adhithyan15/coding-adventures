@@ -11,6 +11,7 @@ concept_tag: ES-COUNT-SOCIABLE
 prerequisites: [ES-C423-timido]
 sounds: [s-clear, b-soft, stress-penultimate]
 roots: [socius-latin]
+etymology_hook: "sociable ← Latin socius 'a companion' + -able — English society, associate, soccer"
 duration:
   max_seconds: 240
 requires:

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:0305dd75ea340ccf",
+  "lessonIds": [
+    "PT-C325-personagem",
+    "PT-C325-protagonista",
+    "PT-C325-heroi",
+    "PT-C325-vilao",
+    "PT-C325-desfecho"
+  ],
+  "tex": "portuguese/book/chapters/ch325-herois-e-viloes.tex"
+}

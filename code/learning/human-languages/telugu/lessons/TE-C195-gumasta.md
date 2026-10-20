@@ -14,7 +14,8 @@ romanization: "gumāstā"
 concept_tag: TE-PANI195-GUMASTA
 prerequisites: [TE-C194-nanem, TE-C195-adhikari]
 sounds: []
-roots: []
+roots: [persian-gumashta]
+etymology_hook: "gumāstā ← Persian gumāshta 'agent', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C195-adhikari]
 <!-- hl-knowledge: introduces=[TE-LEX-C195-PANI195-02]; assesses=[] -->
 
 **గుమాస్తా** — *gumāstā* — "a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గుమాస్తా** (*gumāstā*) is a loan from Persian *gumāshta*, "agent, one appointed", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

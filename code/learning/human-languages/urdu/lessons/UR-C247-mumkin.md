@@ -14,7 +14,8 @@ romanization: "mumkin"
 concept_tag: UR-SIFAT247-MUMKIN
 prerequisites: [UR-C246-hukumat, UR-C247-nata]
 sounds: []
-roots: []
+roots: [arabic-mumkin]
+etymology_hook: "mumkin ← Arabic mumkin 'possible', through Persian (Lane, root m-k-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C247-nata]
 <!-- hl-knowledge: introduces=[UR-LEX-C247-SIFAT247-02]; assesses=[] -->
 
 **ممکن** — *mumkin* — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممکن** (*mumkin*) is a loan from Arabic *mumkin*, "possible", which reached Urdu through Persian. Its Arabic root is *m-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

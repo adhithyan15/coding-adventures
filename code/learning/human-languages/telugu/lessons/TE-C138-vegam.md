@@ -14,7 +14,8 @@ romanization: "vēgaṁ"
 concept_tag: TE-QUAL138-VEGAM
 prerequisites: [TE-C137-subhram, TE-C137-muriki]
 sounds: []
-roots: []
+roots: [sanskrit-vega]
+etymology_hook: "vēgaṁ ← Sanskrit vega 'violent agitation; speed', a tatsama (CDIAL 12089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C137-muriki]
 <!-- hl-knowledge: introduces=[TE-LEX-C138-QUAL138-01]; assesses=[] -->
 
 **వేగం** — *vēgaṁ* — "fast; speed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేగం** (*vēgaṁ*) is Sanskrit *vega*, "violent agitation; speed", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 12089).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

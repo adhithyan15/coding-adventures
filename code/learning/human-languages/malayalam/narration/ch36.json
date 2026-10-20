@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:850d3530d8104759",
+  "sourceHash": "fnv1a64:1c37c26583fa2a0b",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ae30f55cd185deb",
+      "sourceHash": "fnv1a64:a606c35108b4239d",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ കുട്ടിയാണ്. — ithu ente kuṭṭiyāṇŭ. — \"This is my child.\""
+              "text": "എന്റെ കുട്ടി — ente kuṭṭi — \"my child\"."
             },
             {
               "kind": "speech",
@@ -83,11 +83,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente kuṭṭiyāṇŭ\" — this is my child",
+              "instruction": "\"ente kuṭṭi\" — my child",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente kuṭṭiyāṇŭ\" — this is my child]"
+              "source": "[YOU SAY: \"ente kuṭṭi\" — my child]"
             },
             {
               "kind": "prompt",
@@ -149,7 +149,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my child.\" (Ithu ente kuṭṭiyāṇŭ.) What two things can kuṭṭi mean? (A human child, or the young of an animal — like pūccakkuṭṭi, kitten.) Which English word carries the very same double duty? (Kid.) Name the six family people-words once more, and the group word none of them supplied. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti — and kuṭumbaṁ.)"
+              "text": "Say \"my child.\" (Ente kuṭṭi.) What two things can kuṭṭi mean? (A human child, or the young of an animal — like pūccakkuṭṭi, kitten.) Which English word carries the very same double duty? (Kid.) Name the six family people-words once more, and the group word none of them supplied. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti — and kuṭumbaṁ.)"
             }
           ]
         }
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a862ed0925ec8a0",
+      "sourceHash": "fnv1a64:96afb677b50c216d",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ മകനാണ്. — ithu ente makanāṇŭ. — \"This is my son.\""
+              "text": "എന്റെ മകൻ — ente makan — \"my son\"."
             }
           ]
         },
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മകൻ continues Proto-Dravidian makan, \"son.\" Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness the very first greetings already showed in nandi, athe, illa and śari, this time in a family word rather than a greeting."
+              "text": "മകൻ continues Proto-Dravidian makan, \"son.\" Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness the very first greetings already showed in nandi, ate, illa and śari, this time in a family word rather than a greeting."
             }
           ]
         },
@@ -228,11 +228,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente makanāṇŭ\" — this is my son",
+              "instruction": "\"ente makan\" — my son",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente makanāṇŭ\" — this is my son]"
+              "source": "[YOU SAY: \"ente makan\" — my son]"
             },
             {
               "kind": "prompt",
@@ -285,7 +285,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my son.\" (Ithu ente makanāṇŭ.) Which sister keeps almost the identical word? (Tamil — makan.) What did Kannada change? (Softened -k- to -g- and dropped the final -n, giving maga.) What does suhṛttŭ literally mean? (\"Good-heart\" — su plus hṛd.)"
+              "text": "Say \"my son.\" (Ente makan.) Which sister keeps almost the identical word? (Tamil — makan.) What did Kannada change? (Softened -k- to -g- and dropped the final -n, giving maga.) What does suhṛttŭ literally mean? (\"Good-heart\" — su plus hṛd.)"
             }
           ]
         }
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:577e0796fe5f1fda",
+      "sourceHash": "fnv1a64:91b7a4d473303d12",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ മകളാണ്. — ithu ente makaḷāṇŭ. — \"This is my daughter.\""
+              "text": "എന്റെ മകൾ — ente makaḷ — \"my daughter\"."
             }
           ]
         },
@@ -368,11 +368,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente makaḷāṇŭ\" — this is my daughter",
+              "instruction": "\"ente makaḷ\" — my daughter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente makaḷāṇŭ\" — this is my daughter]"
+              "source": "[YOU SAY: \"ente makaḷ\" — my daughter]"
             },
             {
               "kind": "prompt",
@@ -434,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my daughter.\" (Ithu ente makaḷāṇŭ.) How closely does Tamil match this word, compared with makan? (Even closer — makaḷ is identical sound for sound, where makan only nearly matched.) Ask \"how old is your son?\" using the age question's shape. (Ninṟe makanŭ etra vayassuṇṭŭ? — \"to your son, how much age exists?\") What is the general word for a child, before makan or makaḷ? (കുട്ടി, kuṭṭi.)"
+              "text": "Say \"my daughter.\" (Ente makaḷ.) How closely does Tamil match this word, compared with makan? (Even closer — makaḷ is identical sound for sound, where makan only nearly matched.) Ask \"how old is your son?\" using the age question's shape. (Ninṟe makanŭ etra vayassuṇṭŭ? — \"to your son, how much age exists?\") What is the general word for a child, before makan or makaḷ? (കുട്ടി, kuṭṭi.)"
             }
           ]
         }

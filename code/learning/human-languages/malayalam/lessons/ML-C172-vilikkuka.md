@@ -14,7 +14,8 @@ romanization: "viḷikkuka"
 concept_tag: ML-VERB-VILIKKUKA
 prerequisites: [ML-C172-kotukkuka, ML-C172-kontuvaruka]
 sounds: []
-roots: []
+roots: [dravidian-vil-call]
+etymology_hook: "viḷikkuka: native Dravidian, from the root 'to cry out, call'; Tamil viḷ (DEDR 5433)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C172-kontuvaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C172-ACT172-04]; assesses=[] -->
 
 **വിളിക്കുക** — *viḷikkuka* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിളിക്കുക** (*viḷikkuka*) is native Dravidian, from the root "to say, cry out, call"; DEDR 5433 lists the root with Tamil *viḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

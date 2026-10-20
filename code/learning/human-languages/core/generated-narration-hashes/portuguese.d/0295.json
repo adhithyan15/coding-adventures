@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:376e6f1cede4a5b0",
+  "lessonIds": [
+    "PT-C295-suspeito",
+    "PT-C295-suspeita",
+    "PT-C295-deter",
+    "PT-C295-detencao",
+    "PT-C295-detido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch295.txt",
+  "json": "portuguese/narration/ch295.json",
+  "textHash": "fnv1a64:a140947eafa55ed5",
+  "jsonHash": "fnv1a64:43c846e1416a5d04",
+  "findings": []
+}

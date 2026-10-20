@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES256-VIOLON
 prerequisites: [FR-C256-guitare, FR-C256-piano]
 sounds: []
 roots: []
+etymology_hook: "violon — from Old French viole with -on, after Italian violino — English violin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C256-piano]
 <!-- hl-knowledge: introduces=[FR-LEX-C256-CHOSES256-04]; assesses=[] -->
 
 **le violon** — "a violin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**violon** — built from Old French *viole*, a stringed instrument, with *-on*, under the influence of Italian *violino*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zabyvát"
 concept_tag: RU-VERB-ZABYVAT
 prerequisites: [RU-C204-stoit, RU-C204-tratit]
 sounds: []
-roots: []
+roots: [pie-bhuh]
+etymology_hook: "забывать is за- + бывать, from быть 'to be': to let a thing be past"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C204-tratit]
 <!-- hl-knowledge: introduces=[RU-LEX-C205-ACT205-01]; assesses=[] -->
 
 **забывать** (*zabyvát*) — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**забывать** is *за-*, "beyond", with *-бывать*, from *быть*, "to be" (Vasmer): to forget is to let a thing go past being.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

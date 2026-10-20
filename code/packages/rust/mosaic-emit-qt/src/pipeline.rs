@@ -2039,6 +2039,7 @@ fn qt_drop_reason(name: &str) -> &'static str {
             "only the supported Mosaic elevation tokens `raised` and `overlay` \
              lower to QtQuick.Effects.MultiEffect"
         }
+        "transform" => "only a single finite rotate(Ndeg) lowers to centered Qt Item rotation",
         "flex-grow" | "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
              inside a RowLayout or ColumnLayout, chosen where the child is \
@@ -2267,6 +2268,42 @@ fn conditional_lowered_px_expr(
     Some(expr)
 }
 
+/// Preserve the CSS fill-width spelling on a Qt Quick control.
+///
+/// `width: 100%` is not a scalar width. A control inside `RowLayout` or
+/// `ColumnLayout` expresses the same request with the attached
+/// `Layout.fillWidth` property. The lowering is deliberately all-or-nothing
+/// across state layers: a base fill width can remain a static `true` only when
+/// every width override also asks to fill. A state that switches to `120px`,
+/// `75%`, or an intrinsic keyword stays visible to the degradation reporter
+/// rather than being flattened into the wrong geometry.
+fn host_control_has_fill_width(base: &[StyleProp], layers: &[StateLayer<'_>]) -> bool {
+    fn raw_width(props: &[StyleProp]) -> Option<&str> {
+        props
+            .iter()
+            .find(|prop| prop.name == "width")
+            .map(|prop| prop.value.trim().trim_matches('"').trim())
+    }
+    if raw_width(base) != Some("100%") {
+        return false;
+    }
+    if layers
+        .iter()
+        .filter_map(|layer| raw_width(layer.props))
+        .any(|width| width != "100%")
+    {
+        return false;
+    }
+
+    record_style_read(base, "width");
+    for layer in layers {
+        if raw_width(layer.props).is_some() {
+            record_style_read(layer.props, "width");
+        }
+    }
+    true
+}
+
 /// Shared body of the two scalar builders above. `convert` is the whole
 /// difference between them.
 fn conditional_scalar_expr(
@@ -2329,7 +2366,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         .unwrap_or(&[]);
     let state_layers = collect_state_layers(node, part, ctx.part_styles);
 
-    let mut rect_lines: Vec<String> = Vec::new();
+    let mut rect_lines: Vec<String> = qml_rotation_lines(base, &state_layers);
 
     // --- Geometry -----------------------------------------------------
     // height → implicitHeight (+ Layout.preferredHeight for layout
@@ -2570,7 +2607,9 @@ impl ElevationTier {
 /// error), so an unrecognized value here is treated defensively as "no
 /// elevation" rather than panicking. Base props only — matches
 /// `mosaic-emit-xaml`/`mosaic-emit-compose`'s `part_elevation_tier`; no real
-/// part conditions elevation on a state today.
+/// part conditions elevation on a state today. A non-inset CSS `box-shadow`
+/// authored beside a supported elevation token is the web fallback for the
+/// same depth intent, so the native shadow consumes that companion too.
 fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
     let value = base_props
         .iter()
@@ -2588,6 +2627,18 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         // Recording only recognised tiers keeps a manually constructed or
         // future unsupported value visible to the drop reporter.
         record_style_read(base_props, "elevation");
+
+        // #17386 -- TaskApp authors the web-facing CSS shadow and portable
+        // elevation token together. Qt already emits equivalent native depth
+        // from the supported token, so the non-inset companion is not a real
+        // drop. Inset shadows are drawing effects and remain explicit debt.
+        if base_props
+            .iter()
+            .find(|prop| prop.name == "box-shadow")
+            .is_some_and(|prop| !prop.value.to_ascii_lowercase().contains("inset"))
+        {
+            record_style_read(base_props, "box-shadow");
+        }
     }
     tier
 }
@@ -2681,8 +2732,33 @@ fn qml_elevation_wrap(
     )
 }
 
+/// Item rotation is visual only: Qt Quick layouts continue using the original
+/// width and height. Canonicalize a finite number instead of interpolating
+/// authored syntax into executable QML; chains and other units remain debt.
+fn qml_rotation_degrees(value: &str) -> Option<String> {
+    let angle = value.trim().trim_matches('"').trim()
+        .strip_prefix("rotate(")?.strip_suffix("deg)")?.trim()
+        .parse::<f64>().ok()?;
+    angle.is_finite().then(|| angle.to_string())
+}
+
+/// Last active state wins, matching the other conditional paint properties.
+/// Record only accepted conversions so a rejected override stays observable.
+fn qml_rotation_lines(base: &[StyleProp], layers: &[StateLayer<'_>]) -> Vec<String> {
+    let mut rotation = lowered_style_prop(base, "transform", qml_rotation_degrees);
+    for layer in layers {
+        if let Some(angle) = lowered_style_prop(layer.props, "transform", qml_rotation_degrees) {
+            rotation = Some(format!("( {} ) ? {angle} : {}", layer.cond_expr,
+                rotation.as_deref().unwrap_or("0")));
+        }
+    }
+    rotation.map(|angle| vec!["transformOrigin: Item.Center".into(), format!("rotation: {angle}")])
+        .unwrap_or_default()
+}
+
 fn qml_rectangle_paint_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
+    lines.extend(qml_rotation_lines(props, &[]));
     if let Some(background) = style_prop(props, "background")
         .or_else(|| style_prop(props, "background-color"))
         .and_then(qml_hex_color_or_none)
@@ -2712,6 +2788,7 @@ fn qml_rectangle_paint_lines_with_states(
     layers: &[StateLayer<'_>],
 ) -> Vec<String> {
     let mut lines = Vec::new();
+    lines.extend(qml_rotation_lines(base, layers));
     let base_background =
         style_prop_any(base, &["background", "background-color"]).and_then(qml_hex_color_or_none);
     if let Some(background) = conditional_color_expr(
@@ -2797,20 +2874,104 @@ fn qml_shape_bounding_box_lines(xs: &[f64], ys: &[f64]) -> Vec<String> {
     vec![format!("width: {width}"), format!("height: {height}")]
 }
 
-/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
-/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
-/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
-/// kernel-level capability; wiring it through to a real QML property binding
-/// is future work, tracked separately, matching XAML's own not-yet-landed
-/// UI36 dependency for the same gap) — a bound coordinate is therefore a
-/// clear compile error here, not a silent 0.
-fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+/// The QML bounding-box lines for coordinates that may be bound.
+///
+/// With every coordinate literal this is exactly
+/// [`qml_shape_bounding_box_lines`], so literal geometry lowers
+/// byte-identically to before bindings existed. With any coordinate bound
+/// the size becomes a QML binding, `Math.max(0, …)`, which re-evaluates as
+/// the bound values change. The `0` floor matches the literal helper's
+/// fold from `0.0`.
+fn qml_path_bounding_box_lines(xs: &[PathCoord], ys: &[PathCoord]) -> Vec<String> {
+    if let (Some(xs), Some(ys)) = (PathCoord::all_literal(xs), PathCoord::all_literal(ys)) {
+        return qml_shape_bounding_box_lines(&xs, &ys);
+    }
+    let extent = |coords: &[PathCoord]| {
+        let parts: Vec<String> = coords.iter().map(PathCoord::qml).collect();
+        format!("Math.max(0, {})", parts.join(", "))
+    };
+    vec![format!("width: {}", extent(xs)), format!("height: {}", extent(ys))]
+}
+
+/// One `Path` geometry coordinate: a literal number, or a QML expression
+/// for a bound one.
+///
+/// Bound coordinates are how a `For` draws data — SpiceWorkbench's waveform
+/// is `For ( each: slot: waveform-segments , as: segment ) { Path (kind:
+/// line, x1: ( segment[0] ), …) }` — so a literal-only `Path` cannot render
+/// any plot (#16926). QML property bindings are JavaScript expressions that
+/// re-evaluate when their inputs change, so a bound coordinate is simply
+/// written where the literal would go:
+///
+/// | Authored            | QML                          |
+/// |---------------------|------------------------------|
+/// | `x1: 28`            | `28`                         |
+/// | `x1: slot: start-x` | `Number(mosaicRoot.startX)`† |
+/// | `x1: ( seg[0] )`    | `Number(seg[0])`†            |
+///
+/// † inside the finite guard described below.
+///
+/// `Number(…)` coerces whatever the slot or list element holds to a JS
+/// number, the same coercion the Web Components lowering applies. A value
+/// that is not finite (a diverged simulation's `NaN` or `Infinity`) becomes
+/// `0`, the posture UI36 takes for live numbers, rather than a `NaN` size
+/// that silently hides the shape. The guard is written inline as
+/// `(isFinite(Number(e)) ? Number(e) : 0)`; re-evaluating `e` is safe because
+/// the moslayout expression grammar has no calls or assignments.
+#[derive(Debug, Clone)]
+enum PathCoord {
+    Literal(f64),
+    Bound(String),
+}
+
+impl PathCoord {
+    /// The value as QML source.
+    fn qml(&self) -> String {
+        match self {
+            PathCoord::Literal(n) => n.to_string(),
+            PathCoord::Bound(expr) => expr.clone(),
+        }
+    }
+
+    /// Every coordinate's literal value, or `None` if any is bound.
+    fn all_literal(coords: &[PathCoord]) -> Option<Vec<f64>> {
+        coords
+            .iter()
+            .map(|c| match c {
+                PathCoord::Literal(n) => Some(*n),
+                PathCoord::Bound(_) => None,
+            })
+            .collect()
+    }
+}
+
+/// `Number(e)` as a QML expression, with a non-finite result replaced by `0`.
+fn qml_finite_number(expression: &str) -> String {
+    format!("(isFinite(Number({expression})) ? Number({expression}) : 0)")
+}
+
+/// A circle's radius: like [`required_path_coord`], but a bound radius is
+/// also floored at `0`, since a negative diameter is not a shape.
+fn required_path_radius(node: &LayoutNode) -> Result<PathCoord, PipelineEmitError> {
+    Ok(match required_path_coord(node, "r")? {
+        PathCoord::Bound(expr) => PathCoord::Bound(format!("Math.max(0, {expr})")),
+        literal => literal,
+    })
+}
+
+/// Read a required `Path` geometry prop, e.g. `cx`/`cy`/`r`/`x1`, as a
+/// literal or a binding (see [`PathCoord`]). A missing prop is still a clear
+/// compile error, never a silent `0`.
+fn required_path_coord(node: &LayoutNode, prop_name: &str) -> Result<PathCoord, PipelineEmitError> {
     match node.props.iter().find(|p| p.name == prop_name).map(|p| &p.value) {
-        Some(LayoutPropValue::Number(n)) => Ok(*n),
-        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
-            Err(PipelineEmitError::UnknownPrimitive(format!(
-                "Path prop '{prop_name}' is bound to a slot or expression, but the Qt/QML emitter only supports a literal number for Path geometry props today"
-            )))
+        Some(LayoutPropValue::Number(n)) => Ok(PathCoord::Literal(*n)),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(PathCoord::Bound(qml_finite_number(&format!("mosaicRoot.{field}"))))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            Ok(PathCoord::Bound(qml_finite_number(expression.trim())))
         }
         _ => Err(PipelineEmitError::UnknownPrimitive(format!(
             "Path missing required numeric prop '{prop_name}:'"
@@ -2855,11 +3016,25 @@ fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
 
     match kind {
         "circle" => {
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let r = required_path_number(node, "r")?;
-            let d = 2.0 * r;
-            let (x, y) = (cx - r, cy - r);
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let r = required_path_radius(node)?;
+            // All-literal geometry keeps its computed numbers; any binding
+            // turns the same arithmetic into a QML binding expression.
+            let (x, y, d) = match PathCoord::all_literal(&[cx.clone(), cy.clone(), r.clone()]) {
+                Some(v) => {
+                    let (cx, cy, r) = (v[0], v[1], v[2]);
+                    ((cx - r).to_string(), (cy - r).to_string(), (2.0 * r).to_string())
+                }
+                None => (
+                    format!("{} - {}", cx.qml(), r.qml()),
+                    format!("{} - {}", cy.qml(), r.qml()),
+                    match &r {
+                        PathCoord::Literal(r) => (2.0 * r).to_string(),
+                        PathCoord::Bound(_) => format!("2 * {}", r.qml()),
+                    },
+                ),
+            };
             let mut out = String::new();
             writeln!(out, "{pad}Rectangle {{").unwrap();
             writeln!(out, "{pad}    x: {x}").unwrap();
@@ -2874,47 +3049,54 @@ fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
             Ok(out)
         }
         "line" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
             let mut out = String::new();
             writeln!(out, "{pad}Shape {{").unwrap();
-            for line in qml_shape_bounding_box_lines(&[x1, x2], &[y1, y2]) {
+            for line in qml_path_bounding_box_lines(&[x1.clone(), x2.clone()], &[y1.clone(), y2.clone()]) {
                 writeln!(out, "{pad}    {line}").unwrap();
             }
             writeln!(out, "{pad}    ShapePath {{").unwrap();
             for line in qml_shape_path_paint_lines(props) {
                 writeln!(out, "{pad}        {line}").unwrap();
             }
-            writeln!(out, "{pad}        startX: {x1}").unwrap();
-            writeln!(out, "{pad}        startY: {y1}").unwrap();
-            writeln!(out, "{pad}        PathLine {{ x: {x2}; y: {y2} }}").unwrap();
+            writeln!(out, "{pad}        startX: {}", x1.qml()).unwrap();
+            writeln!(out, "{pad}        startY: {}", y1.qml()).unwrap();
+            writeln!(out, "{pad}        PathLine {{ x: {}; y: {} }}", x2.qml(), y2.qml()).unwrap();
             writeln!(out, "{pad}    }}").unwrap();
             writeln!(out, "{pad}}}").unwrap();
             Ok(out)
         }
         "curve" => {
-            let x1 = required_path_number(node, "x1")?;
-            let y1 = required_path_number(node, "y1")?;
-            let cx = required_path_number(node, "cx")?;
-            let cy = required_path_number(node, "cy")?;
-            let x2 = required_path_number(node, "x2")?;
-            let y2 = required_path_number(node, "y2")?;
+            let x1 = required_path_coord(node, "x1")?;
+            let y1 = required_path_coord(node, "y1")?;
+            let cx = required_path_coord(node, "cx")?;
+            let cy = required_path_coord(node, "cy")?;
+            let x2 = required_path_coord(node, "x2")?;
+            let y2 = required_path_coord(node, "y2")?;
             let mut out = String::new();
             writeln!(out, "{pad}Shape {{").unwrap();
-            for line in qml_shape_bounding_box_lines(&[x1, cx, x2], &[y1, cy, y2]) {
+            for line in qml_path_bounding_box_lines(
+                &[x1.clone(), cx.clone(), x2.clone()],
+                &[y1.clone(), cy.clone(), y2.clone()],
+            ) {
                 writeln!(out, "{pad}    {line}").unwrap();
             }
             writeln!(out, "{pad}    ShapePath {{").unwrap();
             for line in qml_shape_path_paint_lines(props) {
                 writeln!(out, "{pad}        {line}").unwrap();
             }
-            writeln!(out, "{pad}        startX: {x1}").unwrap();
-            writeln!(out, "{pad}        startY: {y1}").unwrap();
+            writeln!(out, "{pad}        startX: {}", x1.qml()).unwrap();
+            writeln!(out, "{pad}        startY: {}", y1.qml()).unwrap();
             writeln!(
                 out,
-                "{pad}        PathQuad {{ x: {x2}; y: {y2}; controlX: {cx}; controlY: {cy} }}"
+                "{pad}        PathQuad {{ x: {}; y: {}; controlX: {}; controlY: {} }}",
+                x2.qml(),
+                y2.qml(),
+                cx.qml(),
+                cy.qml()
             )
             .unwrap();
             writeln!(out, "{pad}    }}").unwrap();
@@ -5851,20 +6033,23 @@ fn pick_signal_arg_with(
 /// The Enter / Escape mapping mirrors UI25 §10 (the React backend
 /// merges both into a single `onKeyDown` handler; QML has dedicated
 /// signal handlers for both, so we use them directly).
+///
+/// `multiline: true` (UI29 §2.1) selects Qt Quick Controls' native
+/// `TextArea`, exactly as it does for the legacy `Input`. This path used to
+/// pass a hard-wired `false`, so every multiline `HostInput` was drawn as a
+/// one-line field (#15930).
 fn emit_host_input_qml(
     node: &LayoutNode,
     depth: usize,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
-    emit_text_input_qml(node, depth, ctx, false)
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    emit_text_input_qml(node, depth, ctx, multiline)
 }
 
-/// Lower the still-supported UI25 `Input` primitive.
-///
-/// UI29 deliberately narrowed `HostInput` to a single-line control, but the
-/// Notes package still needs UI25's multiline editor contract. Keep the
-/// single-line form on the normal host-input path and use Qt Quick Controls'
-/// native `TextArea` for `multiline: true`.
+/// Lower the still-supported UI25 `Input` primitive: the single-line form
+/// shares the host-input path, and `multiline: true` uses Qt Quick
+/// Controls' native `TextArea`, as `HostInput` now does too (#15930).
 fn emit_legacy_input_qml(
     node: &LayoutNode,
     depth: usize,
@@ -6253,10 +6438,14 @@ fn host_control_style_qml_lines(
     // its own is insufficient when the same control is emitted inside and
     // outside a Layout. Percentages and intrinsic CSS keywords remain
     // deliberate degradations because `qml_px_or_none` rejects them.
-    let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
-    if let Some(width) = width {
-        lines.push(format!("implicitWidth: {width}"));
-        lines.push(format!("Layout.preferredWidth: {width}"));
+    if host_control_has_fill_width(base, &state_layers) {
+        lines.push("Layout.fillWidth: true".to_string());
+    } else {
+        let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
+        if let Some(width) = width {
+            lines.push(format!("implicitWidth: {width}"));
+            lines.push(format!("Layout.preferredWidth: {width}"));
+        }
     }
     let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
     if let Some(height) = height {
@@ -7862,13 +8051,14 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     if node.tag == "HostTable" && host_table_has_native_semantics(node) {
         return true;
     }
-    if node.tag == "Input"
+    // `TextArea` (multiline) and `TextField` (placeholder) both live in
+    // QtQuick.Controls; a bare `TextInput` does not. Both primitives take
+    // `multiline` (#15930), and a `TextArea` without its import is a QML
+    // load error, not a degraded field.
+    if matches!(node.tag.as_str(), "Input" | "HostInput")
         && (find_keyword_prop(node, "multiline") == Some("true")
             || build_placeholder_text_attribute(node).is_some())
     {
-        return true;
-    }
-    if node.tag == "HostInput" && build_placeholder_text_attribute(node).is_some() {
         return true;
     }
     matches!(
@@ -11008,39 +11198,71 @@ mod tests {
     }
 
     #[test]
-    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+    fn path_slot_bound_circle_centre_becomes_a_qml_binding() {
+        // #16926: a bound centre was a compile error, so no data-driven
+        // circle could render. QML bindings are JavaScript, so the authored
+        // `cx - r` is written as a binding over the slot.
+        let m = component("Foo", vec![slot("moon-x", SlotType::Number, true)], vec![]);
+        let mut node = path_node("moon", "circle", &[("cy", 17.0), ("r", 17.0)]);
+        node.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("moon-x".to_string()),
+        });
+        let l = LayoutDef { component_name: "Foo".to_string(), root: node };
+        let out = from_pipeline(&m, &l, &empty_style("Foo")).unwrap().output;
+        assert!(out.contains("x: (isFinite(Number(mosaicRoot.moonX)) ? Number(mosaicRoot.moonX) : 0) - 17"), "{out}");
+        assert!(out.contains("y: 17 - 17"), "{out}");
+        assert!(out.contains("width: 34"), "a literal radius keeps a literal size: {out}");
+    }
+
+    #[test]
+    fn path_line_binds_for_item_coordinates_and_sizes_with_math_max() {
+        // SpiceWorkbench's waveform shape: each segment is a list element.
+        let mut node = path_node("segment", "line", &[("y2", 188.0)]);
+        for (name, expr) in [("x1", "segment[0]"), ("y1", " segment[1] "), ("x2", "segment[2]")] {
+            node.props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Expr(expr.to_string()),
+            });
+        }
+        let m = component("Plot", vec![], vec![]);
+        let l = LayoutDef { component_name: "Plot".to_string(), root: node };
+        let out = from_pipeline(&m, &l, &empty_style("Plot")).unwrap().output;
+        assert!(out.contains("startX: (isFinite(Number(segment[0])) ? Number(segment[0]) : 0)"), "{out}");
+        assert!(out.contains("startY: (isFinite(Number(segment[1])) ? Number(segment[1]) : 0)"), "{out}");
+        assert!(out.contains("PathLine { x: (isFinite(Number(segment[2])) ? Number(segment[2]) : 0); y: 188 }"), "{out}");
+        assert!(out.contains("width: Math.max(0, (isFinite(Number(segment[0])) ? Number(segment[0]) : 0), (isFinite(Number(segment[2])) ? Number(segment[2]) : 0))"), "{out}");
+        assert!(out.contains("height: Math.max(0, (isFinite(Number(segment[1])) ? Number(segment[1]) : 0), 188)"), "{out}");
+    }
+
+    #[test]
+    fn path_bound_radius_is_floored_at_zero() {
+        // A negative diameter is not a shape; a diverged value must not
+        // reach `width`.
         let m = component("Foo", vec![], vec![]);
-        let l = LayoutDef {
-            component_name: "Foo".to_string(),
-            root: LayoutNode {
-                tag: "Path".to_string(),
-                part_name: None,
-                props: vec![
-                    LayoutProp {
-                        name: "kind".to_string(),
-                        value: LayoutPropValue::Keyword("circle".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cx".to_string(),
-                        value: LayoutPropValue::SlotRef("moon-x".to_string()),
-                    },
-                    LayoutProp {
-                        name: "cy".to_string(),
-                        value: LayoutPropValue::Number(17.0),
-                    },
-                    LayoutProp {
-                        name: "r".to_string(),
-                        value: LayoutPropValue::Number(17.0),
-                    },
-                ],
-                children: Vec::new(),
-            },
-        };
+        let mut node = path_node("dot", "circle", &[("cx", 10.0), ("cy", 10.0)]);
+        node.props.push(LayoutProp {
+            name: "r".to_string(),
+            value: LayoutPropValue::Expr("size".to_string()),
+        });
+        let l = LayoutDef { component_name: "Foo".to_string(), root: node };
+        let out = from_pipeline(&m, &l, &empty_style("Foo")).unwrap().output;
+        let r = "Math.max(0, (isFinite(Number(size)) ? Number(size) : 0))";
+        assert!(out.contains(&format!("width: 2 * {r}")), "{out}");
+        assert!(out.contains(&format!("x: 10 - {r}")), "{out}");
+    }
+
+    #[test]
+    fn path_bound_coordinate_with_an_unsafe_slot_name_is_refused() {
+        let m = component("Foo", vec![], vec![]);
+        let mut node = path_node("moon", "circle", &[("cy", 1.0), ("r", 1.0)]);
+        node.props.push(LayoutProp {
+            name: "cx".to_string(),
+            value: LayoutPropValue::SlotRef("x); evil(".to_string()),
+        });
+        let l = LayoutDef { component_name: "Foo".to_string(), root: node };
         let err = from_pipeline(&m, &l, &empty_style("Foo")).unwrap_err();
-        assert!(
-            matches!(err, PipelineEmitError::UnknownPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
-            "{err:?}"
-        );
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "{err:?}");
     }
 
     #[test]
@@ -11497,6 +11719,60 @@ mod tests {
             !result.output.contains("onAccepted:"),
             "TextArea Enter must insert a newline rather than commit:\n{}",
             result.output
+        );
+    }
+
+    /// #15930 — the kernel `HostInput` honours `multiline: true` with the
+    /// same native `TextArea` the legacy `Input` gets. Qt hard-wired the
+    /// HostInput path to single-line, so the note-type editor's card
+    /// templates were one-line `TextField`s here.
+    #[test]
+    fn a_multiline_host_input_emits_native_text_area() {
+        let m = component(
+            "Editor",
+            vec![
+                slot("front-template", SlotType::Text, true),
+                slot("front-label", SlotType::Text, true),
+            ],
+            vec![
+                emit_decl("onFrontChange", vec![param("value", EmitPayloadType::Text)]),
+                emit_decl("onSave", vec![]),
+            ],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.to_string(),
+            value,
+        };
+        let l = LayoutDef {
+            component_name: "Editor".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("front-template-input".to_string()),
+                props: vec![
+                    prop("value", LayoutPropValue::SlotRef("front-template".to_string())),
+                    prop("multiline", LayoutPropValue::Keyword("true".to_string())),
+                    prop("a11y-label", LayoutPropValue::SlotRef("front-label".to_string())),
+                    prop("onChange", LayoutPropValue::EmitRef("onFrontChange".to_string())),
+                    prop("onCommit", LayoutPropValue::EmitRef("onSave".to_string())),
+                ],
+                children: Vec::new(),
+            },
+        };
+
+        let out = from_pipeline(&m, &l, &empty_style("Editor")).unwrap().output;
+        // No placeholder here, so only `multiline` can pull in the import
+        // `TextArea` needs; without it QML refuses to load the file.
+        assert!(out.contains("import QtQuick.Controls"), "got:\n{out}");
+        assert!(out.contains("TextArea {"), "got:\n{out}");
+        assert!(!out.contains("TextField {"), "got:\n{out}");
+        assert!(!out.contains("TextInput {"), "got:\n{out}");
+        assert!(out.contains("objectName: \"front-template-input\""), "got:\n{out}");
+        assert!(out.contains("text: frontTemplate"), "got:\n{out}");
+        assert!(out.contains("Accessible.name: frontLabel"), "got:\n{out}");
+        assert!(out.contains("onTextChanged: frontChange(text)"), "got:\n{out}");
+        assert!(
+            !out.contains("onAccepted:"),
+            "TextArea Enter must insert a newline rather than commit:\n{out}"
         );
     }
 
@@ -16527,6 +16803,52 @@ mod tests {
         }
     }
 
+    #[test]
+    fn degree_rotation_is_centered_and_preserves_ordered_states() {
+        let base = vec![sp("transform", "\"rotate(45deg)\"")];
+        let first = vec![sp("transform", "rotate(-90deg)")];
+        let last = vec![sp("transform", "rotate(180deg)")];
+        let layers = vec![
+            StateLayer { cond_expr: "first".into(), props: &first },
+            StateLayer { cond_expr: "last".into(), props: &last },
+        ];
+        assert_eq!(qml_rotation_lines(&base, &layers), vec![
+            "transformOrigin: Item.Center", "rotation: ( last ) ? 180 : ( first ) ? -90 : 45",
+        ]);
+        assert_eq!(qml_rotation_lines(&[], &layers)[1],
+            "rotation: ( last ) ? 180 : ( first ) ? -90 : 0");
+        assert!(qml_rectangle_paint_lines(&base).contains(&"rotation: 45".into()));
+        assert!(qml_rectangle_paint_lines_with_states(&base, &layers)
+            .contains(&"rotation: ( last ) ? 180 : ( first ) ? -90 : 45".into()));
+    }
+
+    #[test]
+    fn unsupported_degree_rotations_are_not_lowered() {
+        for value in ["rotate(1rad)", "rotate(NaNdeg)", "rotate(infdeg)",
+            "rotate(1e999deg)", "rotate(45deg) scale(2)", "translate(2px)",
+            "rotate(45deg);evil()", "rotate()"] {
+            assert_eq!(qml_rotation_degrees(value), None, "{value}");
+            assert!(qml_rotation_lines(&[sp("transform", value)], &[]).is_empty());
+        }
+    }
+
+    #[test]
+    fn degree_rotation_report_matches_emitted_box() {
+        let layout = box_layout_with_part("card");
+        let model = component("X", vec![], vec![]);
+        for (value, supported) in [("rotate(45deg)", true), ("rotate(1rad)", false)] {
+            let style = style_with_part("X", "card", vec![
+                ("background", "#ffffff"), ("width", "8px"),
+                ("height", "8px"), ("transform", value),
+            ]);
+            let output = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert_eq!(output.contains("rotation: 45"), supported, "{output}");
+            let drops = dropped_style_properties(&model, &layout, &style);
+            assert_eq!(drops.iter().any(|drop| drop.name == "transform"), !supported);
+            assert!(output.contains("implicitWidth: 8") && output.contains("implicitHeight: 8"));
+        }
+    }
+
     /// #15258: Mosaic's directional `align` centers every direct child on the
     /// matching RowLayout / ColumnLayout cross axis and leaves the drop report.
     #[test]
@@ -17471,7 +17793,61 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_host_control_geometry_remains_a_reported_drop() {
+    fn host_control_full_width_lowers_but_intrinsic_height_remains_a_drop() {
+        for tag in ["Input", "HostInput", "HostButton"] {
+            let model = component("FluidControl", vec![], vec![]);
+            let layout = LayoutDef {
+                component_name: "FluidControl".to_string(),
+                root: LayoutNode {
+                    tag: tag.to_string(),
+                    part_name: Some("control".to_string()),
+                    props: if tag == "HostButton" {
+                        vec![lp("label", LayoutPropValue::String("Save".to_string()))]
+                    } else {
+                        vec![]
+                    },
+                    children: vec![],
+                },
+            };
+            let style = StyleDef {
+                component_name: "FluidControl".to_string(),
+                parts: vec![PartStyle {
+                    name: "control".to_string(),
+                    base: vec![
+                        sp("width", "100%"),
+                        sp("height", "max-content"),
+                        sp("padding", "8px"),
+                    ],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(out.contains("Layout.fillWidth: true"), "{tag}:\n{out}");
+            assert!(!out.contains("implicitWidth: 100"), "{tag}:\n{out}");
+            assert!(!out.contains("implicitHeight: max-content"), "{tag}:\n{out}");
+
+            let dropped = dropped_style_properties(&model, &layout, &style);
+            let names: HashSet<&str> =
+                dropped.iter().map(|drop| drop.name.as_str()).collect();
+            assert!(
+                !names.contains("width"),
+                "{tag} fill width must lower: {dropped:?}"
+            );
+            assert!(
+                names.contains("height"),
+                "{tag} must report height: {dropped:?}"
+            );
+            assert!(
+                !names.contains("padding"),
+                "{tag} padding must lower: {dropped:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_host_control_percentage_width_remains_a_reported_drop() {
         let model = component("FluidButton", vec![], vec![]);
         let layout = LayoutDef {
             component_name: "FluidButton".to_string(),
@@ -17482,29 +17858,102 @@ mod tests {
                 children: vec![],
             },
         };
+        let style = style_with_part("FluidButton", "button", vec![("width", "75%")]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("Layout.fillWidth: true"), "got:\n{out}");
+        assert!(!out.contains("implicitWidth: 75"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "width");
+    }
+
+    #[test]
+    fn repeated_state_fill_width_remains_a_static_native_fill() {
+        let model = component(
+            "ResponsiveInput",
+            vec![slot("focused", SlotType::Bool, false)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "ResponsiveInput".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("input".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
         let style = StyleDef {
-            component_name: "FluidButton".to_string(),
+            component_name: "ResponsiveInput".to_string(),
             parts: vec![PartStyle {
-                name: "button".to_string(),
-                base: vec![
-                    sp("width", "100%"),
-                    sp("height", "max-content"),
-                    sp("padding", "8px"),
-                ],
+                name: "input".to_string(),
+                base: vec![sp("width", "100%")],
                 transitions: vec![],
-                states: vec![],
+                states: vec![StateStyle {
+                    slot: Some("focused".to_string()),
+                    slot_is_bool: true,
+                    state: "true".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "100%")],
+                }],
             }],
         };
 
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
-        assert!(!out.contains("implicitWidth: 100"), "got:\n{out}");
-        assert!(!out.contains("implicitHeight: max-content"), "got:\n{out}");
+        assert!(out.contains("Layout.fillWidth: true"), "got:\n{out}");
+        assert!(
+            !dropped_style_properties(&model, &layout, &style)
+                .iter()
+                .any(|drop| drop.name == "width")
+        );
+    }
+
+    #[test]
+    fn mixed_host_control_width_modes_remain_reported() {
+        let model = component(
+            "ResponsiveButton",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["fluid".to_string(), "fixed".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "ResponsiveButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "ResponsiveButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![sp("width", "100%")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "fixed".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "120px")],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("Layout.fillWidth: true"), "got:\n{out}");
 
         let dropped = dropped_style_properties(&model, &layout, &style);
-        let names: HashSet<&str> = dropped.iter().map(|drop| drop.name.as_str()).collect();
-        assert!(names.contains("width"), "missing width drop: {dropped:?}");
-        assert!(names.contains("height"), "missing height drop: {dropped:?}");
-        assert!(!names.contains("padding"), "padding must lower: {dropped:?}");
+        assert!(
+            dropped.iter().any(|drop| drop.name == "width" && drop.value == "100%"),
+            "mixed base fill width must remain visible: {dropped:?}"
+        );
     }
 
     /// The `For` delegate `Item` sizes to its children so the styled cell
@@ -17765,9 +18214,10 @@ mod tests {
         // `elevation` is the only signal Qt reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
 
-        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
-        assert_eq!(dropped.len(), 1, "only raw CSS shadow remains: {dropped:?}");
-        assert_eq!(dropped[0].name, "box-shadow");
+        assert!(
+            dropped_style_properties(&component("X", vec![], vec![]), &l, &style).is_empty(),
+            "the native elevation output must consume its non-inset CSS companion"
+        );
     }
 
     #[test]
@@ -17809,7 +18259,11 @@ mod tests {
             component_name: "X".to_string(),
             parts: vec![PartStyle {
                 name: "card".to_string(),
-                base: vec![sp("elevation", "floating"), sp("background", "#ffffff")],
+                base: vec![
+                    sp("box-shadow", "0 8px 20px rgba(0,0,0,.2)"),
+                    sp("elevation", "floating"),
+                    sp("background", "#ffffff"),
+                ],
                 transitions: vec![],
                 states: vec![],
             }],
@@ -17820,9 +18274,10 @@ mod tests {
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
         assert!(!out.contains("MultiEffect {"), "unsupported tier lowered:\n{out}");
         let dropped = dropped_style_properties(&model, &layout, &style);
-        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
-        assert_eq!(dropped[0].name, "elevation");
-        assert!(dropped[0].reason.contains("raised"), "got: {dropped:?}");
+        assert_eq!(dropped.len(), 2, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
+        assert_eq!(dropped[1].name, "elevation");
+        assert!(dropped[1].reason.contains("raised"), "got: {dropped:?}");
     }
 
     #[test]
@@ -17849,14 +18304,16 @@ mod tests {
             !out.contains("import QtQuick.Effects"),
             "got:\n{out}"
         );
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     #[test]
     fn inset_box_shadow_alongside_elevation_still_shadows_from_elevation_only() {
-        // The theme-toggle moon-icon `inset` hack: `elevation` is the only
-        // signal read, so an `inset` box-shadow value alongside a real
-        // `elevation` declaration behaves identically to any other
-        // box-shadow value -- it's ignored, not specially detected.
+        // The theme-toggle moon-icon `inset` hack is a drawing effect, not a
+        // portable depth fallback, so it must remain visible to the reporter
+        // even when native elevation is emitted alongside it.
         let style = StyleDef {
             component_name: "X".to_string(),
             parts: vec![PartStyle {
@@ -17876,6 +18333,9 @@ mod tests {
 
         assert!(out.contains("MultiEffect {"), "got:\n{out}");
         assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
@@ -18104,7 +18564,7 @@ mod tests {
     /// TaskApp's board cards rely on that box for their fill, inset, spacing,
     /// border, overdue edge, radius, pointer cursor, and elevation.
     #[test]
-    fn host_draggable_lowers_native_container_styles_without_hiding_raw_shadow() {
+    fn host_draggable_lowers_native_container_styles_and_reconciles_native_shadow() {
         let style = StyleDef {
             component_name: "Board".to_string(),
             parts: vec![PartStyle {
@@ -18167,9 +18627,10 @@ mod tests {
             assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
         }
 
-        let drops = dropped_style_properties(&m, &l, &style);
-        assert_eq!(drops.len(), 1, "got: {drops:?}");
-        assert_eq!(drops[0].name, "box-shadow");
+        assert!(
+            dropped_style_properties(&m, &l, &style).is_empty(),
+            "the supported draggable surface should retire its paired shadow drop"
+        );
     }
 
     /// A draggable is a container, so its inheritable typography belongs on

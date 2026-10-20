@@ -14,7 +14,8 @@ romanization: "oḻikaḻivŭ"
 concept_tag: ML-KARANAM243-OLIKALIVU
 prerequisites: [ML-C242-karyam, ML-C242-sahacaryam]
 sounds: []
-roots: []
+roots: [dravidian-ozhi-quit, dravidian-kazhi-pass]
+etymology_hook: "oḻikaḻivŭ: native Dravidian, 'getting out and getting away': oḻi (DEDR 1009) + kaḻivŭ (DEDR 1356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C242-sahacaryam]
 <!-- hl-knowledge: introduces=[ML-LEX-C243-KARANAM243-01]; assesses=[] -->
 
 **ഒഴികഴിവ്** — *oḻikaḻivŭ* — "an excuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴികഴിവ്** (*oḻikaḻivŭ*) is native Dravidian, a pair of verbal nouns, "escape and slipping away": the verb "to quit, give way" (DEDR 1009, with Tamil *oḻi*) and the verb "to pass, slip away" (DEDR 1356, with Tamil *kaḻi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

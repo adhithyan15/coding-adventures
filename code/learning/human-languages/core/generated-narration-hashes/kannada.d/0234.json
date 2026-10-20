@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 234,
-  "sourceHash": "fnv1a64:787d3f3771d1375e",
+  "sourceHash": "fnv1a64:57a2e3bf54528e72",
   "lessonIds": [
     "KA-C234-sibbandi",
     "KA-C234-naukara",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch234.txt",
   "json": "kannada/narration/ch234.json",
-  "textHash": "fnv1a64:bc5a2924a99073eb",
-  "jsonHash": "fnv1a64:9758a2d52a84da89",
+  "textHash": "fnv1a64:7808c1609eb233bf",
+  "jsonHash": "fnv1a64:37d0552343e005d5",
   "findings": []
 }

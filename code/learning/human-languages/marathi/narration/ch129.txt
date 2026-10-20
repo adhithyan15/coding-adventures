@@ -14,6 +14,9 @@ Before the new one: say the Marathi for an airport, then the Marathi for a hospi
 You'll want to know: ग्रंथालय.
 ग्रंथालय — granthālay — "a library".
 
+The word, taken apart.
+ग्रंथालय (granthālay) is a compound of Sanskrit parts, a tatsama: grantha, "knot", later "book" (CDIAL 4350), and ālaya, "abode".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marathi for a hospital, then the Marathi for a libra
 
 You'll want to know: उपहारगृह.
 उपहारगृह — upahārgṛh — "a restaurant".
+
+The word, taken apart.
+उपहारगृह (upahārgṛh) is a compound of Sanskrit parts, a tatsama: upahāra, "offering, gift of food", and gṛha, "house".
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Marathi for a library, then the Marathi for a restau
 You'll want to know: टपाल.
 टपाल — ṭapāl — "the post, mail".
 
+The word, taken apart.
+The origin of टपाल (ṭapāl) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Marathi for a restaurant, then the Marathi for the p
 You'll want to know: इमारत.
 इमारत — imārat — "a building".
 
+The word, taken apart.
+इमारत (imārat) is a loan from Arabic ʿimāra, "building, construction", which reached Marathi through Persian. Its Arabic root is ʿ-m-r (Lane). Persian and Hindustani say ʿimārat.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Marathi for the post, then the Marathi for a buildin
 
 You'll want to know: न्हाणीघर.
 न्हाणीघर — nhāṇīghar — "a bathroom".
+
+The word, taken apart.
+न्हाणीघर (nhāṇīghar) is "bathing house": nhāṇī, from Marathi nhāṇ, "bathing", which CDIAL lists under Sanskrit snāna, "bathing" (CDIAL 13789), and घर, "house".
 
 What you've built.
 One more word for this chapter.

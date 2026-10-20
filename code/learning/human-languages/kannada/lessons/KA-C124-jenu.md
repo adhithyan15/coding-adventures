@@ -14,7 +14,8 @@ romanization: "jēnu"
 concept_tag: KA-THINGS124-JENU
 prerequisites: [KA-C124-sunthi, KA-C124-bellulli]
 sounds: []
-roots: []
+roots: [dravidian-teen-honey]
+etymology_hook: "jēnu: native Dravidian, one word with Tamil tēṉ (DEDR 3268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C124-bellulli]
 <!-- hl-knowledge: introduces=[KA-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **ಜೇನು** — *jēnu* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೇನು** (*jēnu*) is native Dravidian, one word with Tamil *tēṉ* (DEDR 3268). DEDR lists Kannada *jēnu* and *tēnu*, "honey". DEDR 3268 compares, with a query, Prakrit *tiṇisa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

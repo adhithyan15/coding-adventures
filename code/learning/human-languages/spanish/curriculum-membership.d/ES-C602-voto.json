@@ -1,0 +1,11 @@
+{
+  "id": "ES-C602-voto",
+  "pathSegment": "ES-PATH-602-VOTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-602-VOTO",
+      "order": 0
+    }
+  ]
+}

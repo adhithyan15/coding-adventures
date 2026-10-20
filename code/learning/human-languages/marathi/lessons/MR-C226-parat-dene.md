@@ -14,7 +14,8 @@ romanization: "parat deṇe"
 concept_tag: MR-VERB-PARAT-DENE
 prerequisites: [MR-C225-talne, MR-C226-sucavne]
 sounds: []
-roots: []
+roots: [sanskrit-parivartate, sanskrit-dadati]
+etymology_hook: "parat: as paratṇe 'to return' ← parivartate 'turns round' (CDIAL 7872); deṇe ← dadāti (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C226-sucavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C226-ACT226-02]; assesses=[] -->
 
 **परत देणे** — *parat deṇe* — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परत**, "back", goes with *paratṇẽ*, "to return", which CDIAL lists under Sanskrit *parivartate*, "revolves, turns round" (CDIAL 7872). **देणे** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

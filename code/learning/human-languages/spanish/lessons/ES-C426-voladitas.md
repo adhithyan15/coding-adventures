@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-VOLADITAS
 prerequisites: [ES-C426-abreviaturas]
 sounds: []
 roots: []
+etymology_hook: "voladitas — 'little flown ones', from volar 'to fly', Latin volare"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,9 @@ Their commonest job is the **ordinal indicator**:
 English writes *1st* and *2nd*, changing the ending with the number. Spanish
 writes the same raised letter every time and changes it only for **gender**:
 **º** for a masculine word, **ª** for a feminine one.
+
+*Voladita* is built on *volar*, "to fly", Latin *volare*, with the small-ending
+*-ita*.
 
 ## Grammar Lens: the point goes before the raised letter
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C426-04, ES-ORTH-C426-03] -->

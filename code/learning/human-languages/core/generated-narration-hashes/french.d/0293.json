@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:f13516b7369447e4",
+  "lessonIds": [
+    "FR-C293-mystere",
+    "FR-C293-elucider",
+    "FR-C293-prouver",
+    "FR-C293-alibi",
+    "FR-C293-soupcon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch293.txt",
+  "json": "french/narration/ch293.json",
+  "textHash": "fnv1a64:65859e8964860ea8",
+  "jsonHash": "fnv1a64:b060adbe7a41a883",
+  "findings": []
+}

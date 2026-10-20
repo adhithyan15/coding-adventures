@@ -14,7 +14,8 @@ romanization: "walad"
 concept_tag: AR-FAMILY56-WALAD
 prerequisites: [AR-C55-zawja, AR-C56-tifl]
 sounds: []
-roots: []
+roots: [w-l-d]
+etymology_hook: "walad: built on the root w-l-d, 'to give birth' (Lane); walad is offspring, a child of either sex in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C56-tifl]
 <!-- hl-knowledge: introduces=[AR-LEX-C56-FAMILY56-02]; assesses=[] -->
 
 **ولد** — *walad* — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ولد** (*walad*) is built on the native Arabic root *w-l-d*, "to give birth" (Lane). *Walad* is offspring, a child of either sex in Lane; "boy" is the narrower modern use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 204,
-  "sourceHash": "fnv1a64:fdc1227e96310e2e",
+  "sourceHash": "fnv1a64:4aefa0022a000b82",
   "lessonIds": [
     "SA-C204-sucayati",
     "SA-C204-khanati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch204.txt",
   "json": "sanskrit/narration/ch204.json",
-  "textHash": "fnv1a64:ed3611f0b3071535",
-  "jsonHash": "fnv1a64:f23e137bed35dc96",
+  "textHash": "fnv1a64:7d9f2c48f9b2d243",
+  "jsonHash": "fnv1a64:b0498add07d4c010",
   "findings": []
 }

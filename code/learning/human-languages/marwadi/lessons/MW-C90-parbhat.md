@@ -14,7 +14,8 @@ romanization: "parbhāt"
 concept_tag: MW-TIME90-PARBHAT
 prerequisites: [MW-C90-athan, MW-C90-dinugai]
 sounds: []
-roots: []
+roots: [sanskrit-prabhata]
+etymology_hook: "parbhāt ← Sanskrit prabhāta 'shone forth; daybreak', a semi-tatsama (CDIAL 8707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C90-dinugai]
 <!-- hl-knowledge: introduces=[MW-LEX-C90-TIME90-04]; assesses=[] -->
 
 **परभात** — *parbhāt* — "dawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परभात** (*parbhāt*) is a semi-tatsama: Sanskrit *prabhāta*, "shone forth; daybreak", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 8707). Marwadi splits the *pr* with a vowel. The inherited line shows in Prakrit *pahāya*, "dawn", which CDIAL lists under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

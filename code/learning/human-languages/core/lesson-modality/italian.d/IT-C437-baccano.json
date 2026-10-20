@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C437-baccano",
+    "language": "italian",
+    "chapter": 437,
+    "sequence": 24740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aacdd2e10b53bfb3"
+  },
+  "findings": []
+}

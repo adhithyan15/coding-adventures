@@ -14,7 +14,8 @@ romanization: "dasht"
 concept_tag: FA-THINGS102-DASHT
 prerequisites: [FA-C102-ghahve, FA-C102-sharbat]
 sounds: []
-roots: []
+roots: [persian-dasht]
+etymology_hook: "dasht: inherited, usually traced to Middle Persian dašt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C102-sharbat]
 <!-- hl-knowledge: introduces=[FA-LEX-C102-THINGS102-05]; assesses=[] -->
 
 **دشت** — *dasht* — "a plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dasht* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dašt*, "plain". (EtymDB links it to the Indo-European word for "right hand", but that link is not settled.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

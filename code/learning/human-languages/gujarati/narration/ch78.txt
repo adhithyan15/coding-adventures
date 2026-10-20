@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for later, then the Gujarati for before.
 You'll want to know: સોમવાર.
 સોમવાર (somvār) — "Monday". Every day name ends in વાર, day.
 
+The word, taken apart.
+સોમવાર (somvār) is a Sanskrit compound, a tatsama: soma, "the moon", and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for monday to friday.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for before, then the Gujarati for Monday.
 
 You'll want to know: મંગળવાર.
 મંગળવાર (maṅgaḷvār) — "Tuesday".
+
+The word, taken apart.
+મંગળવાર (maṅgaḷvār) is a Sanskrit compound: maṅgala, "the planet Mars", and vāra, "day of the week" (CDIAL 9706, 11547). Gujarati says the l as ḷ.
 
 What you've built.
 One more word for monday to friday.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for Monday, then the Gujarati for Tuesday.
 You'll want to know: બુધવાર.
 બુધવાર (budhvār) — "Wednesday".
 
+The word, taken apart.
+બુધવાર (budhvār) is a Sanskrit compound, a tatsama: budha, "the planet Mercury", and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for monday to friday.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for Tuesday, then the Gujarati for Wednesda
 You'll want to know: ગુરુવાર.
 ગુરુવાર (guruvār) — "Thursday".
 
+The word, taken apart.
+ગુરુવાર (guruvār) is a Sanskrit compound, a tatsama: guru, "the planet Jupiter", and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for monday to friday.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for Wednesday, then the Gujarati for Thursd
 
 You'll want to know: શુક્રવાર.
 શુક્રવાર (śukravār) — "Friday".
+
+The word, taken apart.
+શુક્રવાર (śukravār) is a Sanskrit compound, a tatsama: śukra, "the planet Venus", and vāra, "day of the week" (CDIAL 12506, 11547).
 
 What you've built.
 One more word for monday to friday.

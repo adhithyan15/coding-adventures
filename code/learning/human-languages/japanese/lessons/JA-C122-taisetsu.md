@@ -14,7 +14,8 @@ romanization: "taisetsu"
 concept_tag: JA-QUAL122-TAISETSU
 prerequisites: [JA-C121-asai, JA-C122-fukai]
 sounds: []
-roots: []
+roots: [middle-chinese-dajh, middle-chinese-tshet]
+etymology_hook: "taisetsu: Sino-Japanese 大 'big' + 切 'cut; close, pressing', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C122-fukai]
 <!-- hl-knowledge: introduces=[JA-LEX-C122-QUAL122-02]; assesses=[] -->
 
 **たいせつ** — *taisetsu* — "precious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たいせつ** (*taisetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *dajH*) and *setsu*, "cut", and also "close, pressing" (*tshet*) (Unihan, KANJIDIC2, Guangyun; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

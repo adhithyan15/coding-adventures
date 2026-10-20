@@ -1,0 +1,11 @@
+{
+  "id": "ES-C639-rendirse",
+  "pathSegment": "ES-PATH-639-FINAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-639-FINAL",
+      "order": 2
+    }
+  ]
+}

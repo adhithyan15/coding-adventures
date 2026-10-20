@@ -14,7 +14,8 @@ romanization: "kiriket"
 concept_tag: TA-PORUL249-KIRIKET
 prerequisites: [TA-C249-vilaiyattu, TA-C249-kalpantu]
 sounds: []
-roots: []
+roots: [english-cricket]
+etymology_hook: "கிரிக்கெட் ← English cricket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C249-kalpantu]
 <!-- hl-knowledge: introduces=[TA-LEX-C249-PORUL249-03]; assesses=[] -->
 
 **கிரிக்கெட்** — *kiriket* — "cricket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிரிக்கெட்** (*kiriket*) is a loan from English *cricket*, with the vowels Tamil places between consonants.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

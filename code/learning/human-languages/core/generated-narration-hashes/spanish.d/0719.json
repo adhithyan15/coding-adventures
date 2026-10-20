@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 719,
+  "sourceHash": "fnv1a64:e8b53173805dd1fc",
+  "lessonIds": [
+    "ES-C719-angustia",
+    "ES-C719-soportar",
+    "ES-C719-dudar",
+    "ES-C719-preocupacion",
+    "ES-C719-preocupado",
+    "ES-R719-repaso-712-719"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch719.txt",
+  "json": "spanish/narration/ch719.json",
+  "textHash": "fnv1a64:5b753e709c9a885e",
+  "jsonHash": "fnv1a64:42c350ec49a1710d",
+  "findings": []
+}

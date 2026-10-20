@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:3462dacd3c29d567",
+  "lessonIds": [
+    "IT-C273-dapprima",
+    "IT-C273-innanzitutto",
+    "IT-C273-in-seguito",
+    "IT-C273-successivamente",
+    "IT-C273-dopodiche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch273.txt",
+  "json": "italian/narration/ch273.json",
+  "textHash": "fnv1a64:452a20200c7c950b",
+  "jsonHash": "fnv1a64:84cad7d19d8b98cd",
+  "findings": []
+}

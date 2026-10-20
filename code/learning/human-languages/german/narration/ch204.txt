@@ -12,6 +12,9 @@ Before the new one: say the German for wool, then the German for silk.
 You'll want to know: das Leder.
 das Leder — "leather".
 
+The word, taken apart.
+Leder from Old High German ledar from Proto-Germanic leþrą — inherited, the same word as English leather. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for silk, then the German for leather.
 
 You'll want to know: das Holz.
 das Holz — "wood".
+
+The word, taken apart.
+Holz from Middle High German holz from Old High German holz, "wood" — inherited, the same word as English holt, "a small wood". (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for leather, then the German for wood.
 You'll want to know: das Metall.
 das Metall — "metal".
 
+The word, taken apart.
+Metall from Latin metallum from Greek métallon, "mine, metal" — borrowed, like English metal. EtymDB 2.1 has the German word but not its source.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for wood, then the German for metal.
 You'll want to know: der Kunststoff.
 der Kunststoff — "plastic".
 
+The word, taken apart.
+Kunststoff is the word for "art, skill" + Stoff, "material": material made by skill, not found in nature. Kunst is built on können, "to be able", inherited from Proto-Germanic kunnaną (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for metal, then the German for plastic.
 
 You'll want to know: der Körper.
 der Körper — "the body".
+
+The word, taken apart.
+Körper from Middle High German korper, from Latin corpus, "body" (EtymDB 2.1 has the Latin word) — borrowed. English corpse and corps share it.
 
 What you've built.
 One more word for this chapter.

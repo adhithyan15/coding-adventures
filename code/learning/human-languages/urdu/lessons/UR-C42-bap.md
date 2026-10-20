@@ -14,7 +14,8 @@ romanization: "bāp"
 concept_tag: UR-HEALTH42-BAP
 prerequisites: [UR-C42-khush, UR-C42-udas]
 sounds: []
-roots: []
+roots: [indo-aryan-bappa]
+etymology_hook: "bāp ← *bāppa 'father', a nursery word, reconstructed (CDIAL 9209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C42-udas]
 <!-- hl-knowledge: introduces=[UR-LEX-C42-HEALTH42-04]; assesses=[] -->
 
 **باپ** — *bāp* — "a father".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باپ** (*bāp*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāppa*, "father", a form CDIAL reconstructs from its descendants (CDIAL 9209). CDIAL groups it with other nursery words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

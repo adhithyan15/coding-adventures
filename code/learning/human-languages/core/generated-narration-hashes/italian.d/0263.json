@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:bc17e6a992d10076",
+  "lessonIds": [
+    "IT-C263-parlavo",
+    "IT-C263-era",
+    "IT-C263-faceva",
+    "IT-C263-dormivo",
+    "IT-C263-ripasso-mentre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch263.txt",
+  "json": "italian/narration/ch263.json",
+  "textHash": "fnv1a64:f93ceb1061e92bf9",
+  "jsonHash": "fnv1a64:9c658b9c9748b3e9",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "pomâd"
 concept_tag: FA-SALAMAT151-POMAD
 prerequisites: [FA-C151-taval, FA-C151-jush]
 sounds: []
-roots: []
+roots: [french-pommade]
+etymology_hook: "pomâd: a loan, usually traced to French pommade 'ointment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C151-jush]
 <!-- hl-knowledge: introduces=[FA-LEX-C151-SALAMAT151-03]; assesses=[] -->
 
 **پماد** — *pomâd* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pomâd* is a loan, usually traced to French *pommade*, "ointment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

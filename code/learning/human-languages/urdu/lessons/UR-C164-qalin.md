@@ -14,7 +14,8 @@ romanization: "qālīn"
 concept_tag: UR-CHIZ164-QALIN
 prerequisites: [UR-C164-farnichar, UR-C164-razai]
 sounds: []
-roots: []
+roots: [persian-qali]
+etymology_hook: "qālīn: usually traced to Persian qālī 'carpet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C164-razai]
 <!-- hl-knowledge: introduces=[UR-LEX-C164-CHIZ164-05]; assesses=[] -->
 
 **قالین** — *qālīn* — "a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قالین** (*qālīn*) is a loan, usually traced to Persian *qālī*, "carpet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

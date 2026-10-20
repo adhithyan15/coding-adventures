@@ -13,7 +13,8 @@ gloss: "opening hours, a timetable"
 concept_tag: PT-LER137-O-HORARIO
 prerequisites: [PT-C136-planear, PT-C136-organizar]
 sounds: []
-roots: []
+roots: [hora-latin]
+etymology_hook: "horário — built from hora 'hour' (← Latin hora) + -ário"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [PT-C136-organizar]
 
 The door says **Horário: segunda a sexta, 9h–18h.** Open on weekdays from nine
 to six: not on **sábado**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**horário** is built from *hora*, "hour" (← Latin *hora*), and *-ário*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

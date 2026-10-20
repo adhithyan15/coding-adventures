@@ -14,7 +14,8 @@ romanization: "hasvũ"
 concept_tag: GU-VERB-HASVU
 prerequisites: [GU-C56-gaavu, GU-C56-naachvu]
 sounds: []
-roots: []
+roots: [sanskrit-hasati]
+etymology_hook: "hasvũ ← Sanskrit hasati 'laughs', a tadbhava (CDIAL 14021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C56-naachvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C56-VOICE-03]; assesses=[] -->
 
 **હસવું** (*hasvũ*) — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હસવું** (*hasvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasati*, "laughs" (CDIAL 14021).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

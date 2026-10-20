@@ -14,7 +14,8 @@ romanization: "sândvich"
 concept_tag: FA-CHIZ205-SANDVICH
 prerequisites: [FA-C204-poliver, FA-C205-kotlet]
 sounds: []
-roots: []
+roots: [english-sandwich]
+etymology_hook: "sândvich ← English sandwich 'sandwich'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C205-kotlet]
 <!-- hl-knowledge: introduces=[FA-LEX-C205-CHIZ205-02]; assesses=[] -->
 
 **ساندویچ** — *sândvich* — "a sandwich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sândvich* is borrowed from English *sandwich*, "sandwich" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

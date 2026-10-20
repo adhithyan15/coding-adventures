@@ -1,0 +1,11 @@
+{
+  "id": "IT-R518-ripasso-511-518",
+  "pathSegment": "IT-PATH-518-CANTO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-518-CANTO",
+      "order": 5
+    }
+  ]
+}

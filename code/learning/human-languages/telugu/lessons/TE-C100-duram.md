@@ -14,7 +14,8 @@ romanization: "dūraṁ"
 concept_tag: TE-LOC100-DURAM
 prerequisites: [TE-C100-tinnaga, TE-C100-daggara]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūraṁ ← Sanskrit dūra 'distant; distance', a tatsama (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C100-daggara]
 <!-- hl-knowledge: introduces=[TE-LEX-C100-LOC100-05]; assesses=[] -->
 
 **దూరం** — *dūraṁ* — "far; distance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దూరం** (*dūraṁ*) is Sanskrit *dūra*, "distant; distance", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

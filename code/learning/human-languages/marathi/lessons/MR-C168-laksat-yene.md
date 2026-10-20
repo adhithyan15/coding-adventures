@@ -14,7 +14,8 @@ romanization: "lakṣāt yeṇe"
 concept_tag: MR-VERB-LAKSAT-YENE
 prerequisites: [MR-C167-samsay-ghene, MR-C168-avarne]
 sounds: []
-roots: []
+roots: [sanskrit-laksha, sanskrit-aiti]
+etymology_hook: "lakṣāt: Sanskrit lakṣa 'mark, aim' + -āt 'in'; yeṇe ← aiti 'comes near' (CDIAL 2534)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C168-avarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C168-ACT168-02]; assesses=[] -->
 
 **लक्षात येणे** — *lakṣāt yeṇe* — "to notice, to realise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लक्षात** is "into the mark": Sanskrit *lakṣa*, "mark, aim", with **-त**, "in". **येणे** comes from Sanskrit *aiti*, "comes near" (CDIAL 2534).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

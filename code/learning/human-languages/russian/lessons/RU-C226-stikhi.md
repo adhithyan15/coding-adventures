@@ -14,7 +14,8 @@ romanization: "stikhí"
 concept_tag: RU-VESHCH226-STIKHI
 prerequisites: [RU-C226-tanets, RU-C226-roman]
 sounds: []
-roots: []
+roots: [greek-stichos]
+etymology_hook: "стихи is the plural of стих 'a line of verse', from Greek stichos 'a row, a line'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C226-roman]
 <!-- hl-knowledge: introduces=[RU-LEX-C226-VESHCH226-05]; assesses=[] -->
 
 **стихи** (*stikhí*) — "poems, poetry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стихи** is the plural of *стих*, "a line of verse", Old Church Slavonic *stixŭ*, from Greek *stíchos*, "a row, a line" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: TA-WORD-TAMIZH
 prerequisites: [TA-C05-pesu, TA-C03-naan]
 sounds: [zh-retroflex]
 roots: [tamizh]
+etymology_hook: "தமிழ் — native (DEDR 3080, which compares Sanskrit draviḍa), with nāṉ 'I' (DEDR 5160) and pēsu 'speak' (DEDR 4430)"
 reviews_of: [TA-C05-pesu, TA-C03-naan]
 duration:
   max_seconds: 240
@@ -42,7 +43,7 @@ with a sound almost no other language has.
 
 **நான் தமிழ் பேசுகிறேன்** = **நான்** (*nāṉ*, "I") + **தமிழ்** (*tamiḻ*, "Tamil,"
 the object) + **பேசுகிறேன்** (*pēsugiṟēṉ*, "speak") — "**I Tamil speak**," the
-verb last as always. The name **தமிழ்** (*tamiḻ*) is native, of debated but
+verb last as always. The name **தமிழ்** (*tamiḻ*) is native (DEDR 3080), of disputed but
 clearly Dravidian origin (often linked to a sense of "sweetness / one's own
 speech"); it names one of the oldest living literary languages in the world, with
 poetry two thousand years old still read today.

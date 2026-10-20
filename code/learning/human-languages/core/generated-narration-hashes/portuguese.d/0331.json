@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:b3125e357ca263ec",
+  "lessonIds": [
+    "PT-C331-temperar",
+    "PT-C331-tempero",
+    "PT-C331-refogar",
+    "PT-C331-refogado",
+    "PT-C331-lume-brando"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch331.txt",
+  "json": "portuguese/narration/ch331.json",
+  "textHash": "fnv1a64:6df52352162e0590",
+  "jsonHash": "fnv1a64:d35c35ca5b39ac76",
+  "findings": []
+}

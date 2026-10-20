@@ -14,7 +14,8 @@ romanization: "phôl"
 concept_tag: BN-FOOD56-PHOL
 prerequisites: [BN-C55-machh, BN-C56-dal]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phôl ← Sanskrit phala 'fruit', which CDIAL compares with Dravidian words (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C56-dal]
 <!-- hl-knowledge: introduces=[BN-LEX-C56-FOOD56-02]; assesses=[] -->
 
 **ফল** — *phôl* — "a fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফল** (*phôl*) is inherited from Sanskrit *phala*, "fruit", and has come down with almost no change (CDIAL 9051). CDIAL compares it with Dravidian words for ripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-302-INCENDIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a fire: how it broke out, the extinguisher and the burns.",
+  "prerequisites": []
+}

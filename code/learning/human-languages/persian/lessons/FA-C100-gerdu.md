@@ -15,6 +15,7 @@ concept_tag: FA-THINGS100-GERDU
 prerequisites: [FA-C100-khorma, FA-C100-anar]
 sounds: []
 roots: []
+etymology_hook: "gerdu: usually explained as built on Persian gerd 'round': the round nut"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C100-anar]
 <!-- hl-knowledge: introduces=[FA-LEX-C100-THINGS100-05]; assesses=[] -->
 
 **گردو** — *gerdu* — "a walnut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gerdu* is usually explained as built on *gerd*, "round", a native word: the round nut.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-THING-POLICIA
 prerequisites: [ES-C427-comprador]
 sounds: [s-clear, accent-i, stress-accent]
 roots: [polis-greek]
+etymology_hook: "policía ← Latin politia 'administration', from Greek polis 'the city'"
 duration:
   max_seconds: 240
 requires:

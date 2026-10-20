@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "And, Or, and Neither",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:855ba0cfcd00f84f",
+  "sourceHash": "fnv1a64:761230424b997086",
   "lessons": [
     {
       "id": "RU-C16-i",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a01a501e62ff0cbb",
+      "sourceHash": "fnv1a64:c17376f172e7070c",
       "notice": null,
       "blocks": [
         {
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc468e98285d59d3",
+      "sourceHash": "fnv1a64:596d9426c50107db",
       "notice": null,
       "blocks": [
         {
@@ -406,7 +406,7 @@
             },
             {
               "kind": "speech",
-              "text": "So and plus maybe gives or. Once you see и (i) at the front of или (íli), the pair is impossible to confuse: the short one joins, the long one doubts."
+              "text": "So and plus maybe gives or. Once you see и (i) at the front of или (íli), the pair is impossible to confuse: the short one joins, the long one doubts. Vasmer takes it the same way: и (i) plus ли."
             }
           ]
         },
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69d2cb95cb423d80",
+      "sourceHash": "fnv1a64:3dc3d36f252a3e45",
       "notice": null,
       "blocks": [
         {
@@ -636,7 +636,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fac9d8529445dcbb",
+      "sourceHash": "fnv1a64:e583940d903ba909",
       "notice": null,
       "blocks": [
         {
@@ -716,7 +716,7 @@
             },
             {
               "kind": "speech",
-              "text": "English swaps the whole word — too becomes either. Russian leaves тоже (tózhe) where it is and lets не do the work, which is one fewer word to learn."
+              "text": "English swaps the whole word — too becomes either. Russian leaves тоже (tózhe) where it is and lets не do the work, which is one fewer word to learn. Both pieces are old Slavic words; Vasmer compares же with Greek -ge, a small word of emphasis."
             }
           ]
         },

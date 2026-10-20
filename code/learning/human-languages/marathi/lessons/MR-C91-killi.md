@@ -14,7 +14,8 @@ romanization: "killī"
 concept_tag: MR-HOME91-KILLI
 prerequisites: [MR-C91-diva, MR-C91-pankha]
 sounds: []
-roots: []
+roots: [sanskrit-kila]
+etymology_hook: "killī ← *kīlla, a form beside Sanskrit kīla 'stake, peg'; CDIAL weighs a non-Aryan origin (CDIAL 3202)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C91-pankha]
 <!-- hl-knowledge: introduces=[MR-LEX-C91-HOME91-05]; assesses=[] -->
 
 **किल्ली** — *killī* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किल्ली** (*killī*) comes from *\*kīlla*, a form CDIAL reconstructs beside Sanskrit *kīla*, "stake, peg" (CDIAL 3202). CDIAL notes an Indo-European origin proposed for *kīla*, but thinks its variant shapes support a non-Aryan one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

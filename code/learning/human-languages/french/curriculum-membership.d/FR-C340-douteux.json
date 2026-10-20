@@ -1,0 +1,11 @@
+{
+  "id": "FR-C340-douteux",
+  "pathSegment": "FR-PATH-340-FIABLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-340-FIABLE",
+      "order": 2
+    }
+  ]
+}

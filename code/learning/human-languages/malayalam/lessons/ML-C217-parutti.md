@@ -14,7 +14,8 @@ romanization: "parutti"
 concept_tag: ML-VASTU217-PARUTTI
 prerequisites: [ML-C216-istika, ML-C216-simanru]
 sounds: []
-roots: []
+roots: [dravidian-parutti-cotton]
+etymology_hook: "parutti: native Dravidian, one word with Tamil parutti and Kannada parti (DEDR 3976)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C216-simanru]
 <!-- hl-knowledge: introduces=[ML-LEX-C217-VASTU217-01]; assesses=[] -->
 
 **പരുത്തി** — *parutti* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരുത്തി** (*parutti*) is native Dravidian, one word with Tamil *parutti*, Kannada *parti* and Telugu *p(r)atti* (DEDR 3976).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

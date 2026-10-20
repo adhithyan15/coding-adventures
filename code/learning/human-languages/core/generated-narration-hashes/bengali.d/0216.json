@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 216,
-  "sourceHash": "fnv1a64:21ca6fe5e860ac97",
+  "sourceHash": "fnv1a64:2879a5a83b767860",
   "lessonIds": [
     "BN-C216-grej",
     "BN-C216-pashe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch216.txt",
   "json": "bengali/narration/ch216.json",
-  "textHash": "fnv1a64:a8d3854943fc2a7c",
-  "jsonHash": "fnv1a64:4d7b2860337ddfae",
+  "textHash": "fnv1a64:371c84da93c8811f",
+  "jsonHash": "fnv1a64:2f9f85bc3aba45cd",
   "findings": []
 }

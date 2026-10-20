@@ -14,7 +14,8 @@ romanization: "sāngbādik"
 concept_tag: BN-KAJ236-SANGBADIK
 prerequisites: [BN-C236-chukti, BN-C236-sobha]
 sounds: []
-roots: []
+roots: [sanskrit-samvada]
+etymology_hook: "sāngbādik: Sanskrit saṁvāda 'news, conversation' + -ika 'one who deals in'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C236-sobha]
 <!-- hl-knowledge: introduces=[BN-LEX-C236-KAJ236-05]; assesses=[] -->
 
 **সাংবাদিক** — *sāngbādik* — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাংবাদিক** (*sāngbādik*) is Sanskrit *saṁvāda*, "conversation, news", taken over whole, + the ending *-ika*, "one who deals in": "one who deals in news".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a stone, then the Kannada for thunder.
 You'll want to know: ಮಿಂಚು.
 ಮಿಂಚು — miṁcu — "lightning".
 
+The word, taken apart.
+ಮಿಂಚು (miṁcu) is native Dravidian, from the root for "to glitter", and DEDR 4876 lists miñcu, "to shine, flash", itself; the entry also has Tamil miṉ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for thunder, then the Kannada for lightning.
 
 You'll want to know: ಬಿರುಗಾಳಿ.
 ಬಿರುಗಾಳಿ — birugāḷi — "a storm".
+
+The word, taken apart.
+ಬಿರುಗಾಳಿ (birugāḷi) is native Dravidian: biru, "vehemence, swiftness", which DEDR 5439 lists as biṟu, and gāḷi, "wind" (DEDR 1499). A storm is a violent wind.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for lightning, then the Kannada for a storm.
 You'll want to know: ಅಲೆ.
 ಅಲೆ — ale — "a wave".
 
+The word, taken apart.
+ಅಲೆ (ale) is native Dravidian, from ale, "to move to and fro, shake", which DEDR 240 lists itself; the entry also has Telugu ala and Malayalam ala. DEDR 240 compares, with a query, Sanskrit alaka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a storm, then the Kannada for a wave.
 You'll want to know: ಜಲಪಾತ.
 ಜಲಪಾತ — jalapāta — "a waterfall".
 
+The word, taken apart.
+ಜಲಪಾತ (jalapāta) is Sanskrit jala, "water" (CDIAL 5155), and pāta, "fall, flight" (CDIAL 8052): "a fall of water".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a wave, then the Kannada for a waterfall
 
 You'll want to know: ದ್ವೀಪ.
 ದ್ವೀಪ — dvīpa — "an island".
+
+The word, taken apart.
+ದ್ವೀಪ (dvīpa) is Sanskrit dvīpa, "land, island", taken over whole as a learned loan, a tatsama (CDIAL 6691).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "dūram"
 concept_tag: SA-DESCRIBE-FAR
 prerequisites: [SA-C88-daughter, SA-C89-beautiful]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūra 'distant', probably from the root √du 'go' (MW); it lives on as Hindi dūr (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C89-beautiful]
 <!-- hl-knowledge: introduces=[SA-LEX-C89-DESCRIBE-02]; assesses=[] -->
 
 **दूरम्** (*dūram*) — "far". **विद्यालयः दूरम्** — "the school is far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dūra* is a Rigvedic word for "distant", which MW derives, probably, from a root
+√du, "to go" (CDIAL 6495). It lives on as Hindi *dūr*, "far".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

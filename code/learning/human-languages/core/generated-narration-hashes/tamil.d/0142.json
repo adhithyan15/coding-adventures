@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 142,
-  "sourceHash": "fnv1a64:17a1e92852eaf7a4",
+  "sourceHash": "fnv1a64:3d5e064c9d5e8908",
   "lessonIds": [
     "TA-C142-ottakam",
     "TA-C142-vattu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch142.txt",
   "json": "tamil/narration/ch142.json",
-  "textHash": "fnv1a64:51eb8ba9c231ad8c",
-  "jsonHash": "fnv1a64:d76ad5d635e5d05c",
+  "textHash": "fnv1a64:96f039d1e74ca7bb",
+  "jsonHash": "fnv1a64:7562529859f87743",
   "findings": []
 }

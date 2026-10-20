@@ -14,7 +14,8 @@ romanization: "zang zadan"
 concept_tag: FA-VERB-ZANG-ZADAN
 prerequisites: [FA-C257-shekayat-kardan, FA-C258-jostoju-kardan]
 sounds: []
-roots: []
+roots: [persian-zadan]
+etymology_hook: "zang zadan: Persian zang 'bell' + zadan 'to strike'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C258-jostoju-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C258-KONESH258-02]; assesses=[] -->
 
 **زنگ زدن** — *zang zadan* — "to phone, to ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zang zadan* is "to strike the bell": *zang*, "bell", is a native word (a different *zang* means "rust"). *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

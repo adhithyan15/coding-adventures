@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-284-INCHIESTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what people saw and said: an inquiry, a reportage, a testimony, and passing on the news.",
+  "prerequisites": []
+}

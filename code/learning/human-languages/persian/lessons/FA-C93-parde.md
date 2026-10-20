@@ -14,7 +14,8 @@ romanization: "parde"
 concept_tag: FA-WHY93-PARDE
 prerequisites: [FA-C93-balesh, FA-C93-patu]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "parde ← Middle Persian pardag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C93-patu]
 <!-- hl-knowledge: introduces=[FA-LEX-C93-WHY93-04]; assesses=[] -->
 
 **پرده** — *parde* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parde* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pardag*, "curtain" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

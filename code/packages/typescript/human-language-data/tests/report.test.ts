@@ -210,4 +210,33 @@ describe("curriculum gap report", () => {
     });
     expect(renderCurriculumGapReport(report)).toContain("1 lessons over 300 effective seconds");
   });
+
+  it("reports etymology coverage per track, without the per-lesson gap list", () => {
+    // HL24 §9. Every fixture lesson is `type: word`, so all three introduce a
+    // word; none carries a hook, and one says where its word came from.
+    const lessons = [
+      lesson({ id: "AL-C01", language: "alpha", chapter: 1, minutes: 1 }),
+      lesson({ id: "AL-C02", language: "alpha", chapter: 2, minutes: 1, body: "hello is from Latin *salve*." }),
+      lesson({ id: "BE-C01", language: "beta", chapter: 1, minutes: 1 }),
+    ];
+    const report = buildCurriculumGapReport({ registry, lessons, books: { books: [] } });
+
+    expect(report.summary).toMatchObject({
+      wordLessons: 3,
+      wordLessonsWithoutEtymologyHook: 3,
+      wordLessonsWithoutVisibleEtymology: 2,
+      // HL24 §9.4: none of the three has a "taken apart" block, so none can be empty.
+      wordLessonsWithEmptyEtymologyBlock: 0,
+    });
+    expect(report.etymologyCoverage.tracks.map((track) => track.language)).toEqual(["alpha", "beta"]);
+    // The gap list runs to tens of thousands on the real corpus; the report
+    // publishes counts, and the ratchet test reads the list.
+    expect(Object.keys(report.etymologyCoverage).sort()).toEqual(["summary", "tracks"]);
+
+    const text = renderCurriculumGapReport(report);
+    expect(text).toContain("etymology: 3 of 3 word-introducing lessons carry no etymology_hook; 2 show");
+    expect(text).toContain("in the body, and 0 more only an empty etymology block (per track below)");
+    expect(text).toContain("Etymology coverage (HL24 §9)");
+    expect(text).toContain("alpha: 2 word lessons; 2 no hook, 1 no visible etymology, 1 neither");
+  });
 });

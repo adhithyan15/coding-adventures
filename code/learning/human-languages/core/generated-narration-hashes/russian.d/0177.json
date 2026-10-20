@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 177,
-  "sourceHash": "fnv1a64:f22890f88e2d1b72",
+  "sourceHash": "fnv1a64:f6a1fcdb9cb443f7",
   "lessonIds": [
     "RU-C177-obnimat",
     "RU-C177-tselovat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch177.txt",
   "json": "russian/narration/ch177.json",
-  "textHash": "fnv1a64:f5d287c1ab26f7bd",
-  "jsonHash": "fnv1a64:90ed1ed434faef5f",
+  "textHash": "fnv1a64:8a35446852fbab72",
+  "jsonHash": "fnv1a64:f605c4e6577af4ed",
   "findings": []
 }

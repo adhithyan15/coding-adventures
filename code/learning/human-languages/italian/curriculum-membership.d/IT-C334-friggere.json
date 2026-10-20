@@ -1,0 +1,11 @@
+{
+  "id": "IT-C334-friggere",
+  "pathSegment": "IT-PATH-334-SOFFRITTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-334-SOFFRITTO",
+      "order": 2
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 179,
   "title": "Soldier, Guard, Judge, Lawyer, Writer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:23250773c9769f8c",
+  "sourceHash": "fnv1a64:4711a5a5517d7a62",
   "lessons": [
     {
       "id": "SA-C179-sainikah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77d9ca082cbb7010",
+      "sourceHash": "fnv1a64:1edefbc163f6e985",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sainika is built on senā, \"army\", with the suffix -ika, \"belonging to\" (MW): \"one who belongs to the army\". Senā is the old word for \"army\", and it lives on as Hindi sen, \"army\" (CDIAL 13587)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb0cb0b36e4c64ca",
+      "sourceHash": "fnv1a64:330ca5b9cb561dbe",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rakṣaka is built on the root √rakṣ, \"to guard, protect\", with the agent suffix -aka (MW): \"one who guards\". CDIAL 10545 records it as \"watchman\", and the verb rakṣati lives on as Hindi rakhnā, \"to keep\" (CDIAL 10547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:564c8dbf35214e85",
+      "sourceHash": "fnv1a64:895e3337fa013e4b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nyāyādhīśa is a compound of nyāya, \"rule, justice, judicial sentence\", and adhīśa, \"lord, master\" (MW). MW does not list the compound, so using it for a court judge is a modern pairing. Nyāya is built on ni- and the root √i, \"to go\" (CDIAL 7614)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d24add80151a4c96",
+      "sourceHash": "fnv1a64:02e11085e3c0bbcb",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "adhivaktā is the nominative of adhivaktṛ, built on adhi- and vaktṛ, \"speaker\", from the root √vac, \"to speak\". MW already glosses it \"an advocate, protector\", the one who speaks up for you."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f87272b5d11050d0",
+      "sourceHash": "fnv1a64:2377aaac998f6b4e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lekhaka is built on the root √likh, \"to scratch, write\", which you have already met in likhati, with the agent suffix -aka (MW). It means \"scribe\" (CDIAL 11102), and Hindi took it over unchanged as lekhak."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

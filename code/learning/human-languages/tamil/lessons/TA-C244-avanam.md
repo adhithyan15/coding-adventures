@@ -15,6 +15,7 @@ concept_tag: TA-PORUL244-AVANAM
 prerequisites: [TA-C244-pottalam, TA-C244-pativam]
 sounds: []
 roots: []
+etymology_hook: "ஆவணம் — an old word for a written deed; origin uncertain, no DEDR entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C244-pativam]
 <!-- hl-knowledge: introduces=[TA-LEX-C244-PORUL244-04]; assesses=[] -->
 
 **ஆவணம்** — *āvaṇam* — "a document".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ஆவணம்** (*āvaṇam*) is uncertain. It is an old word for a written deed, and DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

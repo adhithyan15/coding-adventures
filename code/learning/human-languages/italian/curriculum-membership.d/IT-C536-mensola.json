@@ -1,0 +1,11 @@
+{
+  "id": "IT-C536-mensola",
+  "pathSegment": "IT-PATH-536-CASA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-536-CASA",
+      "order": 3
+    }
+  ]
+}

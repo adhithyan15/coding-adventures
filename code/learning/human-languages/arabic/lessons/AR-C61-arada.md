@@ -14,7 +14,8 @@ romanization: "arāda"
 concept_tag: AR-VERB-ARADA
 prerequisites: [AR-C61-taallama, AR-C61-nasiya]
 sounds: []
-roots: []
+roots: [r-w-d]
+etymology_hook: "arāda: built on the root r-w-d, 'to seek, to go to and fro seeking' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C61-nasiya]
 <!-- hl-knowledge: introduces=[AR-LEX-C61-VERBS61-03]; assesses=[] -->
 
 **أراد** — *arāda* — "to want (he wanted)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أراد** (*arāda*) is built on the native Arabic root *r-w-d*, "to seek, to go to and fro seeking" (Lane). Form IV *arāda* came to mean "to will, to want" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

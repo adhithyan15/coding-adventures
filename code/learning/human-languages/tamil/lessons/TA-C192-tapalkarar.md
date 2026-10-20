@@ -14,7 +14,8 @@ romanization: "tapālkārar"
 concept_tag: TA-VELAI192-TAPALKARAR
 prerequisites: [TA-C192-kavalar, TA-C192-ottunar]
 sounds: []
-roots: []
+roots: [hindustani-tapal]
+etymology_hook: "தபால்காரர் — tapāl 'post' ← Hindustani ṭapāl + -kārar 'the one who handles'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C192-ottunar]
 <!-- hl-knowledge: introduces=[TA-LEX-C192-VELAI192-03]; assesses=[] -->
 
 **தபால்காரர்** — *tapālkārar* — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தபால்காரர்** (*tapālkārar*) is *tapāl*, "post", a loan from Hindustani *ṭapāl*, "post, mail", with *-kārar*, "the one who handles".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

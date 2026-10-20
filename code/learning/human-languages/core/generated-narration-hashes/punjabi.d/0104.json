@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 104,
-  "sourceHash": "fnv1a64:229a2f6ad1bcccfb",
+  "sourceHash": "fnv1a64:4309e9cd46f85e21",
   "lessonIds": [
     "PA-C104-jeth",
     "PA-C104-har",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch104.txt",
   "json": "punjabi/narration/ch104.json",
-  "textHash": "fnv1a64:0ed756c281c66139",
-  "jsonHash": "fnv1a64:66c9ee5c3448310e",
+  "textHash": "fnv1a64:f31e8a07b175e584",
+  "jsonHash": "fnv1a64:5aa50624caac741d",
   "findings": []
 }

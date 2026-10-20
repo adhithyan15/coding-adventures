@@ -14,7 +14,8 @@ romanization: "dovẽ"
 concept_tag: PA-DEF107-DOVE
 prerequisites: [PA-C107-ap, PA-C107-apna]
 sounds: []
-roots: []
+roots: [sanskrit-dvi]
+etymology_hook: "dovẽ: built on do 'two' ← Sanskrit dva (CDIAL 6648); CDIAL has no entry for dovẽ itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C107-apna]
 <!-- hl-knowledge: introduces=[PA-LEX-C107-DEF107-04]; assesses=[] -->
 
 **ਦੋਵੇਂ** — *dovẽ* — "both".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੋਵੇਂ** (*dovẽ*) is built on *do*, "two", from Sanskrit *dva* (CDIAL 6648). CDIAL has no entry for *dovẽ* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

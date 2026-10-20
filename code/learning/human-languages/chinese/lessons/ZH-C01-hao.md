@@ -11,8 +11,8 @@ gloss: good, well
 concept_tag: ZH-WORD-HAO
 prerequisites: [ZH-C01-ni]
 sounds: [tone-3, pinyin-h, pinyin-ao]
-roots: []
-etymology_hook: 好 is 女 "woman" beside 子 "child" — the composition is the memory hook, because no English cousin exists.
+roots: [middle-chinese-xawx]
+etymology_hook: "hǎo 'good': inherited, from Middle Chinese xawX; the woman-and-child picture explains the character, not the word"
 duration:
   max_seconds: 200
 requires:
@@ -75,6 +75,9 @@ Two cautions, because a memory aid that pretends to be history rots:
   not a proven derivation.
 - Component glosses are hooks, not translations. **好** does not "mean"
   woman-child. It means good.
+
+The word itself is inherited from Middle Chinese *xawX*, "good" (Guangyun, in
+Baxter's transcription). The picture belongs to the writing, not to the word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAO, ZH-SCRIPT-HAO, ZH-METHOD-COMPONENT-HOOK] -->

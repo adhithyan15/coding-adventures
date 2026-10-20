@@ -11,7 +11,7 @@ concept_tag: IT-AGGIUNTA-ANCHE
 prerequisites: [IT-C30-ne, IT-C29-daccordo, IT-C23-amico-amica, IT-C23-famiglia, IT-C05-parlo-italiano]
 sounds: [hard-ch, open-a]
 roots: []
-etymology_hook: "Anch'io was said out loud in the parlo-un-po' dialogue, unglossed and never named; neanche is transparently né + anche, so the last lesson has already paid for half of this one"
+etymology_hook: "neanche = né (← Latin nec 'and not') + anche, whose own origin is uncertain"
 duration:
   max_seconds: 250
 requires:
@@ -68,7 +68,8 @@ never explained, because that chapter was busy with verb endings. It is *anche*
 > **neanche** — **neither, not … either, not even**.
 
 It is **né** + **anche**, welded into one word, and you were given the first
-half one lesson ago. Because it carries a *né*, it keeps the *non* rule with it:
+half one lesson ago. *Né* is inherited from Latin *nec*, "and not" (EtymDB 2.1);
+where *anche* comes from is uncertain. Because it carries a *né*, it keeps the *non* rule with it:
 
 > **Non prendo neanche il tè.** — I'm not having tea either.
 

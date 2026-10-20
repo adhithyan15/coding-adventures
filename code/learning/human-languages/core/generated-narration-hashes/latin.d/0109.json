@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 109,
-  "sourceHash": "fnv1a64:adc0efbc9f63a5d7",
+  "sourceHash": "fnv1a64:f2f066dc86bc95c7",
   "lessonIds": [
     "LA-C109-queo",
     "LA-C109-audeo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch109.txt",
   "json": "latin/narration/ch109.json",
-  "textHash": "fnv1a64:5b7a2acc7d53e9ab",
-  "jsonHash": "fnv1a64:ac2c59579408a910",
+  "textHash": "fnv1a64:c1df8605221c266f",
+  "jsonHash": "fnv1a64:5c98fbf0a6135bbe",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "roshan kardan"
 concept_tag: FA-VERB-ROSHAN-KARDAN
 prerequisites: [FA-C140-baz-kardan, FA-C140-pak-kardan]
 sounds: []
-roots: []
+roots: [persian-roshan, pie-kwer]
+etymology_hook: "roshan kardan: roshan ← Middle Persian rōšn 'bright' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C140-pak-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C140-KONESH140-03]; assesses=[] -->
 
 **روشن کردن** — *roshan kardan* — "to switch on, to light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*roshan kardan* pairs *roshan*, "bright, lit", with *kardan*, "to make". *roshan* is inherited: EtymDB traces it to Middle Persian *rōšn*, "light, bright". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: இது.
 இது — idu — this one — the thing near me.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is அது adu, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+இது (idu) is native Dravidian: the near base i- (DEDR 410). Malayalam has itu and Kannada idu.
 
 Guided Practice.
 [pause 1 second]
@@ -38,7 +41,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: அது.
 அது — adu — that one — the thing over there.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is இது idu, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is இது idu, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+அது (adu) is native Dravidian: the far base a- (DEDR 1). Malayalam has atu and Kannada adu.
 
 Guided Practice.
 [pause 1 second]
@@ -62,7 +68,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: இங்கே.
 இங்கே — iṅgē — here — where I am.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is அங்கே aṅgē, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+இங்கே (iṅgē) is native Dravidian: the near base i- with a place ending. DEDR 410 lists it under the same base as "this".
 
 Guided Practice.
 [pause 1 second]
@@ -89,7 +98,10 @@ You can already name things. This is how you POINT at them.
 You'll want to know: அங்கே.
 அங்கே — aṅgē — there — where I am not.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is இங்கே iṅgē, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is இங்கே iṅgē, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+அங்கே (aṅgē) is native Dravidian: the far base a- with a place ending. DEDR 1 lists it under the same base as "that".
 
 Guided Practice.
 [pause 1 second]
@@ -112,12 +124,15 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: யார்.
 யார் — yār — who? — asking about a person.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is எங்கே eṅgē, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no one: it asks your listener to name the person.
+yār opens with yā-, not with the i- of near or the a- of far that the four words before it share. It is the one word in this chapter outside that pattern, so learn it as itself: the asking word for people.
+
+The word, taken apart.
+யார் (yār) is native Dravidian, on the question base yā- (DEDR 5151). Malayalam has yār and ār, and Kannada yār.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "யார் (yār)" three times, picturing something different each time]
+[your turn — say: "யார் (yār)" three times, asking about a different person each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -127,7 +142,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is yār? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (e- — ask.)
+What is yār? (who? — asking about a person.) What sound does it start with: the i- of near, the a- of far, or neither? (Neither — yā-; it asks about a person.)
 
 
 Lesson 6 of 7.
@@ -139,12 +154,15 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: எங்கே.
 எங்கே — eṅgē — where? — asking about a place.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is யார் yār, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no place: it asks your listener to point one out.
+Its partners are இங்கே iṅgē and அங்கே aṅgē, which you have already met. The three differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+The word, taken apart.
+எங்கே (eṅgē) is native Dravidian: the question base e- with a place ending (DEDR 5151).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "எங்கே (eṅgē)" three times, picturing something different each time]
+[your turn — say: "எங்கே (eṅgē)" three times, asking about a different place each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -162,12 +180,12 @@ Warm-up.
 Say the six words from this chapter out loud, in order. Listen to how they begin.
 
 Grammar lens: one slot changes.
-You did not learn six words. You learned three beginnings and reused them.
+Five of these six words are three beginnings, reused; only the person question stands apart.
 [a table of 3 rows, read aloud]
 meaning: near. word: இங்கே iṅgē.
 meaning: far. word: அங்கே aṅgē.
 meaning: question. word: எங்கே eṅgē.
-Tamil shows the system at its cleanest: இது (idu), அது (adu), எது differ in one letter.
+Tamil shows the system at its cleanest: இங்கே (iṅgē), அங்கே (aṅgē), எங்கே (eṅgē) differ in one letter.
 Change the front, and the meaning walks from near to far to a question. Nothing else in the word moves.
 The same three beginnings run the thing-words too: இது idu and அது adu start exactly like the first two rows. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with.
 This is worth more than the six words are. When you meet a new word in this family later, you will not have to be taught all three of it — you will be taught one and work out the others.

@@ -14,7 +14,8 @@ romanization: "managaṭ"
 concept_tag: MR-THINGS145-MANAGAT
 prerequisites: [MR-C145-hanuvati, MR-C145-kopar]
 sounds: []
-roots: []
+roots: [indo-aryan-manigranthi]
+etymology_hook: "managaṭ ← *maṇigranthi 'wrist', a reconstructed form; a tadbhava (CDIAL 9734)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C145-kopar]
 <!-- hl-knowledge: introduces=[MR-LEX-C145-THINGS145-05]; assesses=[] -->
 
 **मनगट** — *managaṭ* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मनगट** (*managaṭ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*maṇigranthi*, "wrist", a form CDIAL reconstructs from its descendants (CDIAL 9734). It is built on *granthi*, "knot, joint".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

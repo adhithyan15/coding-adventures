@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Asking, and Asking Why",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c4e40b0c3cdb8b5",
+  "sourceHash": "fnv1a64:1d62dc29de67e442",
   "lessons": [
     {
       "id": "KA-S136-vowel-sign-uu",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cd11669bde28961",
+      "sourceHash": "fnv1a64:f3085756691bed79",
       "notice": null,
       "blocks": [
         {
@@ -225,6 +225,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೊತ್ತಾ (gottā) is native Dravidian: gottu, \"known\" (DEDR 1847, the same root as Tamil kuṟi, \"a mark\"), with -ā, the ending that makes a question."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one ending turns any statement into a question",
           "segments": [
@@ -243,7 +254,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -254,7 +265,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -330,7 +341,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -361,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13ea261155d40cf2",
+      "sourceHash": "fnv1a64:c3b5ee29850208ea",
       "notice": null,
       "blocks": [
         {
@@ -406,6 +417,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಲ್ವಾ (alvā) is native Dravidian: alla, \"is not\" (DEDR 234), worn down to al-, with -ā, the ending that makes a question."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: asking for agreement, not information",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -507,7 +529,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -538,7 +560,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ccbe2f6b88d470f",
+      "sourceHash": "fnv1a64:7d8805a5396e3946",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +605,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯಾಕೆ (yāke) is native Dravidian, built on the question base yā-. DEDR 5151 lists yāke itself, \"why\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -593,7 +626,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -687,7 +720,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

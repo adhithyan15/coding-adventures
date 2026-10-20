@@ -14,7 +14,8 @@ romanization: "kursī"
 concept_tag: MW-HOME62-KURSI
 prerequisites: [MW-C61-mithai, MW-C62-khirki]
 sounds: []
-roots: []
+roots: [arabic-kursi]
+etymology_hook: "kursī ← Arabic kursī 'chair, seat', through Persian (Lane, root k-r-s)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C62-khirki]
 <!-- hl-knowledge: introduces=[MW-LEX-C62-HOME62-02]; assesses=[] -->
 
 **कुरसी** — *kursī* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुरसी** (*kursī*) is a loan from Arabic *kursī*, "chair, seat", which reached Marwadi through Persian. Its Arabic root is *k-r-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

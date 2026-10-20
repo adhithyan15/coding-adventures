@@ -26,6 +26,11 @@ import {
 } from "../src/assessment-artifacts.js";
 import { runAssessmentArtifactCli } from "../src/assessment-artifact-cli.js";
 import {
+  PAPER_OMISSION_DIR,
+  omittedPaperMocks,
+  serializePaperOmissionCeiling,
+} from "../src/assessment-paper-omissions.js";
+import {
   defaultCurriculumRoot,
   listHumanValidationStatuses,
   loadAssessmentContracts,
@@ -73,6 +78,7 @@ function contract(language: string, withHumanValidation = false): unknown {
         fullMocks: [1, 2].map((n) => ({
           id: `${slug}-mock-${n}`,
           timed: true,
+          paper: `mocks/${slug}/mock-${n}.md`,
           rubric: `mocks/${slug}/rubric.md`,
           answerKey: `mocks/${slug}/mock-${n}-answer-key.md`,
           ...(withHumanValidation
@@ -84,12 +90,13 @@ function contract(language: string, withHumanValidation = false): unknown {
   };
 }
 
-/** Every distinct path the fixture contract promises: 7 inventories + 7 rubrics + 14 keys. */
+/** Every distinct path the fixture contract promises: inventories, papers, rubrics and keys. */
 function fixturePaths(): string[] {
   const out: string[] = [];
   for (const level of LEVELS) {
     const slug = level.toLowerCase();
     out.push(`task-shapes/${slug}.json`, `mocks/${slug}/rubric.md`);
+    out.push(`mocks/${slug}/mock-1.md`, `mocks/${slug}/mock-2.md`);
     out.push(`mocks/${slug}/mock-1-answer-key.md`, `mocks/${slug}/mock-2-answer-key.md`);
   }
   return out.sort();
@@ -134,6 +141,99 @@ afterEach(() => {
 // --- the check bites ---------------------------------------------------------
 
 describe("dangling assessment-contract references", () => {
+  it("rejects a newly declared but missing structure manifest", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ manifest?: string }> }> };
+    value.levels[1]!.fullMocks[0]!.manifest = "mocks/a1/mock-1-manifest.json";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    satisfy("fixtura");
+    const result = checkAssessmentArtifacts(root);
+    expect(result.diagnostics.map((entry) => entry.kind)).toEqual(["new-dangling-reference"]);
+    expect(result.diagnostics[0]!.message).toContain("A1.fullMocks[a1-mock-1].manifest");
+  });
+
+  it("refuses a structure manifest hidden in the grandfathered artifact ceiling", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ manifest?: string }> }> };
+    value.levels[1]!.fullMocks[0]!.manifest = "mocks/a1/mock-1-manifest.json";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    satisfy("fixtura");
+    write("core/assessment-artifact-ceiling/fixtura.json", `${JSON.stringify({
+      version: 1, language: "fixtura", unbuiltArtifacts: ["mocks/a1/mock-1-manifest.json"],
+    })}\n`);
+    expect(checkAssessmentArtifacts(root).diagnostics.map((entry) => entry.kind))
+      .toContain("manifest-may-not-be-pinned");
+  });
+
+  it("a full mock's answer key cannot stand in for its missing paper", () => {
+    satisfy("fixtura", ["mocks/a1/mock-1.md"]);
+    const result = checkAssessmentArtifacts(root);
+    expect(result.diagnostics.map((entry) => entry.kind)).toEqual(["new-dangling-reference"]);
+    expect(result.diagnostics[0]!.message).toContain("A1.fullMocks[a1-mock-1].paper");
+    expect(result.diagnostics[0]!.message).toContain("mocks/a1/mock-1.md");
+    const writes = new Map<string, string>();
+    expect(runAssessmentArtifactCli(["--write"], root, (path, body) => writes.set(path, body), () => {}, () => {}))
+      .toBe(1);
+    expect(writes.size).toBe(0);
+  });
+
+  it("rejects a paper path that escapes the track", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string }> }> };
+    value.levels[0]!.fullMocks[0]!.paper = "../outside.md";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/paper must be a safe relative artifact reference/);
+  });
+
+  it("does not accept the answer key itself as the paper", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string; answerKey: string }> }> };
+    value.levels[0]!.fullMocks[0]!.paper = value.levels[0]!.fullMocks[0]!.answerKey;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/paper must be distinct from rubric and answerKey/);
+  });
+
+  it("does not count two mock IDs pointing at the same learner paper", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string }> }> };
+    value.levels[1]!.fullMocks[1]!.paper = value.levels[1]!.fullMocks[0]!.paper;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/duplicate full mock paper paths/);
+  });
+
+  it("does not accept a dotted path alias of the answer key as the paper", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string; answerKey: string }> }> };
+    value.levels[0]!.fullMocks[0]!.paper = value.levels[0]!.fullMocks[0]!.answerKey.replace("mocks/", "mocks/./");
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/paper must be a safe relative artifact reference/);
+  });
+
+  it("does not let a duplicate mock ID reuse one legacy paper-omission pin", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ id: string; paper?: string }> }> };
+    value.levels[0]!.fullMocks[1]!.id = value.levels[0]!.fullMocks[0]!.id;
+    delete value.levels[0]!.fullMocks[1]!.paper;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/duplicate full mock ids/);
+  });
+
+  it("does not count a directory as a built learner-facing paper", () => {
+    satisfy("fixtura");
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string }> }> };
+    value.levels[0]!.fullMocks[0]!.paper = "mocks/pre-a1";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => checkAssessmentArtifacts(root)).toThrow(/not a regular file/);
+  });
+
+  it("rejects a paper reached through a directory junction outside its track", () => {
+    satisfy("fixtura");
+    const source = join(root, "fixtura", "mocks", "a1");
+    const elsewhere = join(root, "elsewhere");
+    cpSync(source, elsewhere, { recursive: true });
+    rmSync(source, { recursive: true });
+    try {
+      symlinkSync(elsewhere, source, process.platform === "win32" ? "junction" : "dir");
+    } catch (error) {
+      if (process.platform === "win32") return;
+      throw error;
+    }
+    expect(() => checkAssessmentArtifacts(root)).toThrow(/resolves outside the track directory/);
+  });
+
   it("RED: reports a contract that promises a file nobody wrote", () => {
     // Nothing on disk but the contract. Every promise dangles.
     const report = auditAssessmentArtifacts(root);
@@ -225,6 +325,48 @@ describe("dangling assessment-contract references", () => {
   });
 });
 
+describe("legacy paper omissions are exact pinned debt", () => {
+  it("rejects a new omission, accepts its exact legacy pin, then demands the pin fall", () => {
+    satisfy("fixtura");
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper?: string }> }> };
+    delete value.levels[0]!.fullMocks[0]!.paper;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(checkAssessmentArtifacts(root).diagnostics.map((entry) => entry.kind))
+      .toEqual(["new-paper-omission"]);
+
+    const omitted = omittedPaperMocks(loadAssessmentContracts(root)[0]!.contract);
+    expect(omitted).toEqual(['["level","pre-A1","pre-a1-mock-1"]']);
+    write(`${PAPER_OMISSION_DIR}/fixtura.json`, serializePaperOmissionCeiling({
+      version: 1, language: "fixtura", omittedMocks: omitted,
+    }));
+    expect(checkAssessmentArtifacts(root).diagnostics).toEqual([]);
+    expect(checkAssessmentArtifacts(root).pinnedPaperOmissions).toBe(1);
+
+    write("fixtura/assessment.json", `${JSON.stringify(contract("fixtura"))}\n`);
+    expect(checkAssessmentArtifacts(root).diagnostics.map((entry) => entry.kind))
+      .toContain("paper-omission-ceiling-has-fallen");
+  });
+
+  it("does not read an omission pin through a linked ceiling directory", () => {
+    satisfy("fixtura");
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper?: string }> }> };
+    delete value.levels[0]!.fullMocks[0]!.paper;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    const omitted = omittedPaperMocks(loadAssessmentContracts(root)[0]!.contract);
+    write("elsewhere/fixtura.json", serializePaperOmissionCeiling({
+      version: 1, language: "fixtura", omittedMocks: omitted,
+    }));
+    try {
+      symlinkSync(join(root, "elsewhere"), join(root, PAPER_OMISSION_DIR),
+        process.platform === "win32" ? "junction" : "dir");
+    } catch (error) {
+      if (process.platform === "win32") return;
+      throw error;
+    }
+    expect(() => checkAssessmentArtifacts(root)).toThrow(/resolves outside the omission-ceiling directory/);
+  });
+});
+
 // --- the ratchet -------------------------------------------------------------
 
 describe("the pinned ceiling", () => {
@@ -247,6 +389,13 @@ describe("the pinned ceiling", () => {
     expect(result.diagnostics[0]!.kind).toBe("new-dangling-reference");
     expect(result.diagnostics[0]!.message).toContain("mocks/c2/rubric.md");
     expect(result.diagnostics[0]!.message).not.toContain("mocks/c1/rubric.md");
+  });
+
+  it("never accepts a declared paper in the old artifact ceiling", () => {
+    satisfy("fixtura", ["mocks/a1/mock-1.md"]);
+    pin("fixtura", ["mocks/a1/mock-1.md"]);
+    expect(checkAssessmentArtifacts(root).diagnostics.map((entry) => entry.kind))
+      .toContain("paper-may-not-be-pinned");
   });
 
   it("refuses a swap: one debt paid, one taken, same total", () => {
@@ -413,23 +562,25 @@ describe("the generator refuses to write through a symlink", () => {
 
   it("refuses a symlinked ceiling FILE", () => {
     if (!canSymlink("file")) return void expect(process.platform).toBe("win32");
+    satisfy("fixtura", ["mocks/a1/rubric.md"]);
     const victim = join(root, "victim.txt");
     writeFileSync(victim, "original\n", "utf8");
     mkdirSync(join(root, ARTIFACT_CEILING_DIR), { recursive: true });
     symlinkSync(victim, join(root, ARTIFACT_CEILING_DIR, "fixtura.json"), "file");
     expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
-      .toThrow(/not a regular file — refusing to write through it/);
+      .toThrow(/is a symbolic link|not a regular file — refusing to write through it/);
     expect(readFileSync(victim, "utf8")).toBe("original\n");
   });
 
   it("refuses a symlinked ceiling DIRECTORY", () => {
     if (!canSymlink("junction")) return void expect(process.platform).toBe("win32");
+    satisfy("fixtura", ["mocks/a1/rubric.md"]);
     const elsewhere = join(root, "elsewhere");
     mkdirSync(elsewhere, { recursive: true });
     mkdirSync(join(root, "core"), { recursive: true });
     symlinkSync(elsewhere, join(root, ARTIFACT_CEILING_DIR), "junction");
     expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
-      .toThrow(/not a real directory — refusing to write through it/);
+      .toThrow(/is a symbolic link|not a real directory — refusing to write through it/);
     expect(readdirSync(elsewhere)).toEqual([]);
   });
 
@@ -441,10 +592,11 @@ describe("the generator refuses to write through a symlink", () => {
     // answering with a measurement rather than an argument — and because the
     // ordering of the two guards is now load-bearing for this message.
     if (!canSymlink("junction")) return void expect(process.platform).toBe("win32");
+    satisfy("fixtura", ["mocks/a1/rubric.md"]);
     rmSync(join(root, ARTIFACT_CEILING_DIR), { recursive: true, force: true });
     symlinkSync(join(root, "nowhere"), join(root, ARTIFACT_CEILING_DIR), "junction");
     expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
-      .toThrow(/is not a real directory — refusing to write through it/);
+      .toThrow(/is a symbolic link|is not a real directory — refusing to write through it/);
   });
 
   it("refuses an ANCESTOR symlink, which lstat alone cannot see", () => {
@@ -460,6 +612,7 @@ describe("the generator refuses to write through a symlink", () => {
     // way a real one would be — the registry that drives the write lives in the
     // linked-to tree.
     if (!canSymlink("junction")) return void expect(process.platform).toBe("win32");
+    satisfy("fixtura", ["mocks/a1/rubric.md"]);
     const outside = mkdtempSync(join(tmpdir(), "hl-outside-"));
     try {
       cpSync(join(root, "core"), outside, { recursive: true });

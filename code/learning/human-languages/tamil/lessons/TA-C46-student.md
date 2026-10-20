@@ -11,7 +11,8 @@ romanization: "māṇavaṉ"
 concept_tag: TA-ROLE-STUDENT
 prerequisites: [TA-C46-teacher, TA-C44-cloth, TA-C45-ear]
 sounds: []
-roots: []
+roots: [sanskrit-manava]
+etymology_hook: "மாணவன் ← Sanskrit māṇava 'a young man', a well-established loan, with the male -aṉ"
 duration:
   max_seconds: 210
 requires:

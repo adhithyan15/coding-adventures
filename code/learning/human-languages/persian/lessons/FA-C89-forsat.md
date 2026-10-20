@@ -14,7 +14,8 @@ romanization: "forsat"
 concept_tag: FA-CAN89-FORSAT
 prerequisites: [FA-C89-tavanayi, FA-C89-hagh]
 sounds: []
-roots: []
+roots: [arabic-fursa]
+etymology_hook: "forsat ← Arabic furṣa 'opportunity', root f-r-ṣ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C89-hagh]
 <!-- hl-knowledge: introduces=[FA-LEX-C89-CAN89-05]; assesses=[] -->
 
 **فرصت** — *forsat* — "a chance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*forsat* is borrowed from Arabic *furṣa*, "opportunity". Its Arabic root is *f-r-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

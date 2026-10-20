@@ -14,7 +14,8 @@ romanization: "pipāsā"
 concept_tag: SA-NEEDS-THIRST
 prerequisites: [SA-C67-sleep, SA-C67-hunger]
 sounds: []
-roots: []
+roots: [sanskrit-pipasa, sanskrit-pa-drink]
+etymology_hook: "pipāsā 'thirst', the 'wanting to drink' form of the root √pā 'drink'; Hindi pyās (CDIAL 8199)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C67-hunger]
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-03]; assesses=[] -->
 
 **पिपासा** (*pipāsā*) — "thirst". **पानीयम्** answers it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pipāsā* is built on the desire form of the root √pā, "to drink": thirst is
+"wanting to drink" (MW, CDIAL 8199). It lives on as Hindi *pyās*, "thirst".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

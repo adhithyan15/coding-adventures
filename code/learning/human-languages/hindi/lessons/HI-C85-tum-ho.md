@@ -14,7 +14,8 @@ romanization: "tum ho"
 concept_tag: HI-VERB-COPULA-TUM
 prerequisites: [HI-C85-boliye]
 sounds: []
-roots: []
+roots: [sanskrit-yushmad, sanskrit-bhavati]
+etymology_hook: "tum ← Sanskrit yuṣmad-, the plural 'you' (CDIAL 10511); ho is a form of honā, from bhavati 'is' (CDIAL 9416)"
 duration:
   max_seconds: 240
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C85-boliye, HI-C84-tumhara]
 **तुम हो** (*tum ho*) — "you are," at the *tum* level.
 
 **हो** is the copula that goes with **तुम**, and nothing else takes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तुम हो** (*tum ho*) is two inherited words. *tum* comes from *yuṣmad-*, the Sanskrit plural "you", with its *t-* from the singular *tuvam* (CDIAL 10511). *ho* is a form of *honā*, "to be", from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## Grammar Lens: the copula, completed
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-03, HI-LEX-C84-POSS-03] -->

@@ -13,7 +13,8 @@ gloss: "to visit"
 concept_tag: GE-VERB-BESUCHEN
 prerequisites: [GE-C138-million, GE-C139-beginnen]
 sounds: []
-roots: []
+roots: [germanic-sokijana]
+etymology_hook: "besuchen — be- + suchen 'to seek': to seek someone out; English beseech is the same build"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C139-beginnen]
 <!-- hl-knowledge: introduces=[GE-LEX-C139-VERB139-02]; assesses=[] -->
 
 **besuchen** — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**besuchen** is *be-* + *suchen*, "to seek": to seek someone out. EtymDB 2.1 lists it beside English *beseech* and Dutch *bezoeken*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

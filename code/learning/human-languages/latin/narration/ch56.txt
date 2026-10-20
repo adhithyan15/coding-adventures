@@ -60,7 +60,7 @@ Recalls first, then the seventh.
 
 The word, taken apart.
 septimus, septima, septimum — "seventh."
-Septem is seven. Put the ending on and the vowel in the middle goes quiet: septem becomes septimus, with e worn down to i because nothing is leaning on it. Latin does that to unstressed middles constantly, and once you have heard it here you will hear it everywhere.
+Septem is seven, inherited, a cousin of English seven (EtymDB 2.1). Put the ending on and the vowel in the middle goes quiet: septem becomes septimus, with e worn down to i because nothing is leaning on it. Latin does that to unstressed middles constantly, and once you have heard it here you will hear it everywhere.
 September is this number in a name, and the calendar lesson explained why it sits in ninth place: two months were pushed in at the front and the names never moved.
 The prettier descendant is the week. Septimāna was "a set of seven" — seven days — and it went into Spanish as semana and French as semaine. So in two of Latin's daughters the ordinary word for a week is a number word, and the number is this one.
 
@@ -99,7 +99,7 @@ Recalls first, then the eighth — the one that does not do what the last four d
 
 The word, taken apart.
 octāvus, octāva, octāvum — "eighth."
-Octō is eight. By now you would expect octus, and it is not that. This one takes -āvus, and it is the only ordinal in the ten that does.
+Octō is eight. By now you would expect octus, and it is not that. This one takes -āvus, and it is the only ordinal in the ten that does. EtymDB 2.1 traces octāvus straight to a Proto-Indo-European ordinal built on "eight".
 Worth stopping on, because it shows what a pattern in a language actually is. Four ordinals in a row behaved alike, so the shape looked settled; the eighth breaks step, and then the ninth breaks it differently, and the tenth goes back to behaving. A learner who was told a rule and then met these would think the rule was broken. A learner who was shown the shape and then shown where it bends has learned the language instead.
 October is this number in a month's name. And an octave in music is the eighth note, the one at which the names begin again — do to do — so the interval is named for the count that closes it.
 
@@ -138,7 +138,7 @@ Recalls first, then the ninth — and the best word-history in the chapter.
 
 The word, taken apart.
 nōnus, nōna, nōnum — "ninth."
-Novem is nine, and this time the word is not lengthened but squeezed: noven- collapses in on itself and comes out as nōnus, with a long ō where the ove used to be. Two ordinals running have now bent the shape in two different ways.
+Novem is nine, and this time the word is not lengthened but squeezed: noven- collapses in on itself and comes out as nōnus, with a long ō where the ove used to be (Lewis & Short). Novem is inherited, a cousin of English nine (EtymDB 2.1). Two ordinals running have now bent the shape in two different ways.
 November is this number in a name.
 And then nōna hōra. Counting from sunrise, the ninth hour is the middle of the afternoon, and it was the hour of a fixed prayer. Over centuries that prayer crept earlier and earlier in the day, until it was being said at midday — and the name went with it. English noon is nōna, still meaning "the ninth", attached now to an hour three hours away from the one it was named for. The word stayed put; the clock moved under it.
 
@@ -177,7 +177,7 @@ Recalls first, then the tenth, which closes the series.
 
 The word, taken apart.
 decimus, decima, decimum — "tenth."
-Decem is ten, and the ending goes on with the same worn-down middle you met in septimus: decem becomes decimus. Remember that c is hard — DEK-imus.
+Decem is ten, and the ending goes on with the same worn-down middle you met in septimus: decem becomes decimus. Remember that c is hard — DEK-imus. Decem is inherited, a cousin of English ten (EtymDB 2.1).
 December is this number in a name, and it is the last of the four the calendar froze.
 Decima on its own means "a tenth part", and that noun did a great deal of work. Decimate is the Roman army's punishment: a unit that broke was made to draw lots and one man in ten was killed by the other nine. A dime is a tenth of a dollar. A tithe is a tenth of a harvest, and décima is still the word for it in Spanish.
 That is the ten. Say them in order and you have a series that no cardinal count gives you: the place a thing holds, not how many of it there are.

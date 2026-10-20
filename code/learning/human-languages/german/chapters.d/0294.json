@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Naturkatastrophen",
+  "label": "ch:ge-naturkatastrophen",
+  "canDo": "I can report a natural disaster: a disaster, an earthquake, a flood, high water and to collapse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C294-einstuerzen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can report a natural disaster: a disaster, an earthquake, a flood, high water and to collapse.",
+    "assesses": [
+      "GE-LEX-C294-ERDBEBEN-03",
+      "GE-LEX-C294-ERDBEBEN-04",
+      "GE-LEX-C294-ERDBEBEN-05"
+    ]
+  }
+}

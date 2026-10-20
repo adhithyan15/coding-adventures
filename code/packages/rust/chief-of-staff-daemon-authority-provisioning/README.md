@@ -1,25 +1,24 @@
 # chief-of-staff-daemon-authority-provisioning
 
-This package turns the daemon's optional, strictly typed `[data_plane]`
-configuration into the two immutable authorities consumed by
+This package turns the daemon's strictly typed `[data_plane]` configuration
+into the immutable model-provider authority consumed by
 `chief-of-staff-host-data-plane`.
 
-Each channel-key declaration is scoped to one canonical UUID-v7 pipeline, one
-exact agent identity, one canonical UUID-v7 channel, and one direction. Raw
-32-byte files are resolved only against the explicit home directory and read
-through `chief-of-staff-daemon-secret-file`, so links, non-regular objects,
-foreign ownership, broad permissions, short reads, and long reads all fail
-closed. Temporary and retained secret buffers are zeroizing.
-
 Each Ollama declaration registers its model tag as the exact launch selector.
-Endpoints must be explicit `http://host:port` authorities and timeouts are
-non-zero and capped at five minutes. Provisioning performs no reachability
+Endpoints must be explicit `http://host:port` authorities, and timeouts are
+non-zero and capped at five minutes. Provisioning makes no reachability
 probe, so daemon startup never turns a temporarily stopped model server into a
 configuration mutation or a secret-bearing error.
 
-The package deliberately does not inject the resulting authorities into the
-daemon composition root. That remains a small follow-up once this loading
-boundary is independently reviewed and merged.
+## Channel keys are not here
+
+Until D18S P2.6d-2c this package also read every `[data_plane]
+channel_keys` file into the daemon. It no longer reads any. Each agent's
+channel keys belong to that agent's broker: the broker launcher
+(`chief-of-staff-broker-launcher`) opens one agent's key files, through
+`chief-of-staff-daemon-secret-file`, only when it launches that agent's
+broker. The daemon refuses to start with `channel_keys` and no
+`[hosts.broker]`.
 
 ## Validation
 

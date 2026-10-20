@@ -12,6 +12,9 @@ Before the new one: say the Tamil for to burn, then the Tamil for to put out.
 You'll want to know: சமீபத்தில்.
 சமீபத்தில் — camīpattil — "recently". Tamil's past for "I" ends in -ஏன் after a past stem: நான் சமீபத்தில் ஒரு புத்தகம் படித்தேன் — nāṉ camīpattil oru puttakam paṭittēṉ — "I recently read a book."
 
+The word, taken apart.
+சமீபத்தில் (camīpattil) is a loan from Sanskrit samīpa, "near" (CDIAL 13226). Camīpam, "nearness", takes the locative -il: "in the near (past)".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for to put out, then the Tamil for recently.
 
 You'll want to know: ஏற்கனவே.
 ஏற்கனவே — ēṟkaṉavē — "already". நான் ஏற்கனவே சாப்பிட்டேன் — nāṉ ēṟkaṉavē cāppiṭṭēṉ — "I have already eaten."
+
+The word, taken apart.
+The origin of ஏற்கனவே (ēṟkaṉavē) is uncertain. It may contain ēṟka, a form of ēl, "to happen, to be fitting" (DEDR 905), but DEDR does not list the word itself.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for recently, then the Tamil for already.
 You'll want to know: போன.
 போன — pōṉa — "last, previous". It is the past form of போ, "to go", used before a noun: போன வாரம் — pōṉa vāram — "last week"; போன வருடம் — pōṉa varuṭam — "last year".
 
+The word, taken apart.
+போன (pōṉa) is native Dravidian (DEDR 4572). It is the past of pō, "to go": "the one that has gone".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for already, then the Tamil for last.
 You'll want to know: ஒரு காலத்தில்.
 ஒரு காலத்தில் — oru kālattil — "once, at one time". It points far back: ஒரு காலத்தில் இங்கே ஒரு குளம் இருந்தது — oru kālattil iṅkē oru kuḷam iruntatu — "There was once a pond here." இருந்தது is the past of இரு.
 
+The word, taken apart.
+ஒரு காலத்தில் (oru kālattil) is native oru, "one" (DEDR 990), and kālam, "time", from Sanskrit kāla (CDIAL 3084), with the locative -il: "at one time".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for last, then the Tamil for once.
 
 You'll want to know: கழி.
 கழி — kaḻi — "to spend (time)". Said of time: விடுமுறையைக் கிராமத்தில் கழித்தேன் — viṭumuṟaiyaik kirāmattil kaḻittēṉ — "I spent the holiday in the village."
+
+The word, taken apart.
+கழி (kaḻi) is native Dravidian. DEDR 1356 lists Malayalam kaḻiyuka, "to pass, be spent".
 
 What you've built.
 One more word for this chapter.

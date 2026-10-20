@@ -13,7 +13,8 @@ gloss: "about, approximately"
 concept_tag: IT-PERCHE244-CIRCA
 prerequisites: [IT-C244-proprio, IT-C244-quasi]
 sounds: []
-roots: []
+roots: [circa-latin]
+etymology_hook: "circa ← Latin circa 'around' — English circa is the same Latin word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C244-quasi]
 <!-- hl-knowledge: introduces=[IT-LEX-C244-PERCHE244-03]; assesses=[] -->
 
 **circa** — "about, approximately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**circa** ← Latin *circa*, "around" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

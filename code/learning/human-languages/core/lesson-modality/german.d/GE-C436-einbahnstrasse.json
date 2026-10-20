@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C436-einbahnstrasse",
+    "language": "german",
+    "chapter": 436,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe47bc9385817e41"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "kalaśaḥ"
 concept_tag: SA-CRAFT-KALASHA
 prerequisites: [SA-C41-wheel, SA-C39-bird, SA-C40-sugar]
 sounds: []
-roots: []
+roots: [sanskrit-kalasha]
+etymology_hook: "kalaśa 'water-pot' is Rigvedic; MW compares Latin calix 'cup', a link not settled (CDIAL 2920)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,7 @@ reviews_of: [SA-C41-wheel]
 
 Fill it with पानीयम् and it is doing its everyday job; put it at a doorway and it is doing its other one.
 
-Greek *kalux*, a husk or a cup, has been offered as a cousin, and Latin *calix*, which English keeps in *chalice*, names the same swelling shape.
+Greek *kalux*, a husk or a cup, has been offered as a cousin (MW), though the link is not settled, and Latin *calix*, which English keeps in *chalice*, names the same swelling shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

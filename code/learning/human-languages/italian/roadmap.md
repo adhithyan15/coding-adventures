@@ -49,7 +49,7 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   (noon/midnight; *mezzo/mezza* ← *medius* + *giorno/notte*). **Authored.**
 - **Ch. 9 — Months & seasons**: the months **closest to Latin** (gennaio ← Januarius,
   **marzo ← Mars = martedì**, luglio/agosto ← Julius/Augustus; settembre–dicembre =
-  Latin **7–10**) → the seasons (primavera = "prima vera" first-green; *stagione* ←
+  Latin **7–10**) → the seasons (primavera ← Latin *prīma vēra* "first spring"; *stagione* ←
   *statiō* "a standing"; inverno ← *hibernum*). **Authored.**
 
 - **Ch. 10 — Family**: **padre/madre** (closest to Latin *pater/māter*, *-t-→-d-*;

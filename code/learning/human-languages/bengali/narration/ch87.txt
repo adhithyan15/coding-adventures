@@ -12,6 +12,9 @@ Before the new one: say the Bengali for eight, then the Bengali for ten.
 You'll want to know: কুড়ি.
 কুড়ি — kuṛi — "twenty".
 
+The word, taken apart.
+কুড়ি (kuṛi) is a tadbhava, a word inherited and reshaped by sound change. It comes from koḍi, "a score, twenty", a form CDIAL reconstructs from its descendants (CDIAL 3503). CDIAL reports Przyluski's view that the word is Austroasiatic, perhaps first a word for "man", twenty being the count of a person's fingers and toes.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for ten, then the Bengali for twenty.
 
 You'll want to know: তিরিশ.
 তিরিশ — tirish — "thirty".
+
+The word, taken apart.
+তিরিশ (tirish) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from triṁśat, "thirty" (CDIAL 6015). CDIAL writes the Bengali form tris.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for twenty, then the Bengali for thirty.
 You'll want to know: চল্লিশ.
 চল্লিশ — chôllish — "forty".
 
+The word, taken apart.
+চল্লিশ (chôllish) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṁśat, "forty" (CDIAL 4656).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for thirty, then the Bengali for forty.
 You'll want to know: পঞ্চাশ.
 পঞ্চাশ — pônchāsh — "fifty".
 
+The word, taken apart.
+পঞ্চাশ (pônchāsh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcāśat, "fifty" (CDIAL 7682).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for forty, then the Bengali for fifty.
 
 You'll want to know: একশো.
 একশো — ekshô — "a hundred".
+
+The word, taken apart.
+একশো (ekshô) is ek, "one", from Sanskrit ēka (CDIAL 2462), + shô, "hundred", which CDIAL lists as Bengali sa under Sanskrit śata, "hundred" (CDIAL 12278).
 
 What you've built.
 One more word for this chapter.

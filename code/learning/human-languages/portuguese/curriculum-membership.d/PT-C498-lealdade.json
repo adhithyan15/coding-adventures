@@ -1,0 +1,11 @@
+{
+  "id": "PT-C498-lealdade",
+  "pathSegment": "PT-PATH-498-CONVIVIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-498-CONVIVIO",
+      "order": 4
+    }
+  ]
+}

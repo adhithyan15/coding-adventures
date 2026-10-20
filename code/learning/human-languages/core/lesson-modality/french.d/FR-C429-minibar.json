@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C429-minibar",
+    "language": "french",
+    "chapter": 429,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f55712202adc13f"
+  },
+  "findings": []
+}

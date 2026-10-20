@@ -14,7 +14,8 @@ romanization: "istrī"
 concept_tag: UR-CHIZ224-ISTRI
 prerequisites: [UR-C223-tamizdar, UR-C223-hasin]
 sounds: []
-roots: []
+roots: [portuguese-estirar]
+etymology_hook: "istrī: usually traced to Portuguese estirar 'to stretch out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C223-hasin]
 <!-- hl-knowledge: introduces=[UR-LEX-C224-CHIZ224-01]; assesses=[] -->
 
 **استری** — *istrī* — "an iron (for clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استری** (*istrī*) is usually traced to Portuguese *estirar*, "to stretch out", for the pressing out of creases.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

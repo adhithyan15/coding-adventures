@@ -12,9 +12,9 @@ concept_tag: VERB-COME
 prerequisites: [TA-C32-po]
 sounds: [tamil-long-aa, tamil-vowel-sign-u]
 roots: [proto-dravidian-vaa-come]
-etymology_hook: "வா is native Dravidian *vā-/*var-, matching Malayalam വരുക and Kannada ಬಾ; the command is vā but every suffix attaches to varu-"
+etymology_hook: "வா — native Dravidian, filed under varu (DEDR 5270): Malayalam varuka, Kannada bā, Telugu rā"
 duration:
-  max_seconds: 240
+  max_seconds: 248
 requires:
   knowledge: [TA-GRAMMAR-IRU-02, TA-LEX-PO-01, TA-GRAMMAR-PO-02]
 introduces:
@@ -47,6 +47,11 @@ and the farewell you learned long ago has been hiding the reason.
 (*varuka*), Kannada **ಬಾ** (*bā*), Telugu **రా** (*rā*). Kannada's *b* and
 Telugu's *r* are two regular reshapings of the same old word, not three separate
 verbs.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வா** (*vā*) is native Dravidian. DEDR 5270 files it under *varu*, with Malayalam *varuka*, Kannada *bā* and Telugu *rā*.
 
 ## Grammar Lens: the word you say it by is not the word you build on
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-VAA-02]; assesses=[] -->

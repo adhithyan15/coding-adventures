@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ249-TEKKE
 prerequisites: [FA-C248-siman, FA-C248-gach]
 sounds: []
 roots: []
+etymology_hook: "tekke: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C248-gach]
 <!-- hl-knowledge: introduces=[FA-LEX-C249-CHIZ249-01]; assesses=[] -->
 
 **تکه** — *tekke* — "a piece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tekke* is the word for a piece, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

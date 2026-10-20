@@ -11,8 +11,8 @@ gloss: our — the possessive ending on a plural pronoun, which finishes a colum
 concept_tag: BN-GRAM-AMADER
 prerequisites: [BN-C24-tara, BN-C23-tar, BN-C02-amar, BN-C11-poribar]
 sounds: []
-roots: []
-etymology_hook: "The plural possessive is not the plural plus the possessive stacked in the obvious way: -রা steps aside and -দের takes its place. Bengali will not carry two endings in one slot, which is the rule that runs through its whole grammar of suffixes."
+roots: [asmad-first-person]
+etymology_hook: "āmāder: āmā-, from asmad 'we' (CDIAL 986), + -der, an ending whose origin is not settled"
 duration:
   max_seconds: 250
 requires:
@@ -54,6 +54,11 @@ possessive ending and is used across the board:
 | I / we | **আমার** | **আমাদের** |
 | you, plainly | **তোমার** | **তোমাদের** |
 | he, she / they | **তার** | **তাদের** |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The stem *āmā-* goes back to Sanskrit *asmad*, the stem of "we" (CDIAL 986); where **-দের** comes from is not settled, as CDIAL has no entry for it.
 
 ## Grammar Lens: one suffix at a time
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C24-AMADER-01, BN-GRAMMAR-C23-TAR-01, BN-GRAMMAR-C22-PLURAL-GULO-01, BN-GRAMMAR-C20-CLASSIFIER-01] -->

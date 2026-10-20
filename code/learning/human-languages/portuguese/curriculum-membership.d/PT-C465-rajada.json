@@ -1,0 +1,11 @@
+{
+  "id": "PT-C465-rajada",
+  "pathSegment": "PT-PATH-465-TEMPORAL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-465-TEMPORAL",
+      "order": 0
+    }
+  ]
+}

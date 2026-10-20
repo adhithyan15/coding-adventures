@@ -14,7 +14,8 @@ romanization: "jāydād"
 concept_tag: MW-CAN115-JAYDAD
 prerequisites: [MW-C114-malak, MW-C115-jamin]
 sounds: []
-roots: []
+roots: [persian-jaydad]
+etymology_hook: "jāydād: usually traced to Persian jāydād 'property, estate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C115-jamin]
 <!-- hl-knowledge: introduces=[MW-LEX-C115-CAN115-02]; assesses=[] -->
 
 **जायदाद** — *jāydād* — "property".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जायदाद** (*jāydād*) is a loan, usually traced to Persian *jāydād*, "property, estate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

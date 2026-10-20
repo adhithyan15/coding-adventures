@@ -14,7 +14,8 @@ romanization: "uṛnā"
 concept_tag: HI-VERB-URNA
 prerequisites: [HI-C161-torna, HI-C161-girna]
 sounds: []
-roots: []
+roots: [sanskrit-uddiyate]
+etymology_hook: "uṛnā ← Sanskrit uḍḍayate 'flies up', the by-form beside uḍḍīyate in CDIAL 1697"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C161-girna]
 <!-- hl-knowledge: introduces=[HI-LEX-C161-ACT161-05]; assesses=[] -->
 
 **उड़ना** — *uṛnā* — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उड़ना** (*uṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uḍḍayate*, "flies up", which CDIAL lists as the second form in its entry for *uḍḍīyate*, "flies up" (CDIAL 1697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

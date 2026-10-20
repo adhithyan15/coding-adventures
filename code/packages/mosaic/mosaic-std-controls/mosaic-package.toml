@@ -9,7 +9,7 @@ exports = ["Button", "Input", "Checkbox", "NumberInput", "Slider"]
 
 [dependencies]
 mosaic-pkg-toolkit = "0.11.0"
-mosaic-std-foundation = "0.1.0"
+mosaic-std-foundation = "0.2.0"
 
 [styles]
 token_palette = "tokens/controls.json"

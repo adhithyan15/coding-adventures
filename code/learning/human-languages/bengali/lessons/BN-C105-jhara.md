@@ -14,7 +14,8 @@ romanization: "jhāṛā"
 concept_tag: BN-VERB-JHARA
 prerequisites: [BN-C104-bondho, BN-C104-mochha]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatayati]
+etymology_hook: "jhāṛā ← *jhāṭayati 'shakes down', a reconstructed form; a tadbhava (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C104-mochha]
 <!-- hl-knowledge: introduces=[BN-LEX-C105-ACT105-01]; assesses=[] -->
 
 **ঝাড়া** — *jhāṛā* — "to dust, to shake out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝাড়া** (*jhāṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhāṭayati*, "shakes down", a form CDIAL reconstructs from its descendants (CDIAL 5328). CDIAL is unsure of its deeper source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

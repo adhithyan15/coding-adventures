@@ -13,7 +13,8 @@ gloss: "a shop assistant"
 concept_tag: FR-METIERS75-VENDEUR
 prerequisites: [FR-C123-cuisinier, FR-C123-policier]
 sounds: []
-roots: []
+roots: [vendere-latin]
+etymology_hook: "vendeur — from the verb 'to sell', from Latin vendere — English vendor"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C123-policier]
 <!-- hl-knowledge: introduces=[FR-LEX-C123-METIERS75-04]; assesses=[] -->
 
 **le vendeur** — "a shop assistant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vendeur** — built from the verb for "to sell", with *-eur*, "one who". The verb ← Latin *vendere*, "to sell" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

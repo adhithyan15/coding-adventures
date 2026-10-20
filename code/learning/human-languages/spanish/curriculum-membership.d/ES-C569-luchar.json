@@ -1,0 +1,11 @@
+{
+  "id": "ES-C569-luchar",
+  "pathSegment": "ES-PATH-569-LUCHA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-569-LUCHA",
+      "order": 0
+    }
+  ]
+}

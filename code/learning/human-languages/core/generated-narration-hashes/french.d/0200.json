@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 200,
-  "sourceHash": "fnv1a64:9d152c8040678d35",
+  "sourceHash": "fnv1a64:fb78b3a35863642f",
   "lessonIds": [
     "FR-C200-portail",
     "FR-C200-cloture",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch200.txt",
   "json": "french/narration/ch200.json",
-  "textHash": "fnv1a64:dd1160b58af8c0fa",
-  "jsonHash": "fnv1a64:a0f2429e7b14c3f4",
+  "textHash": "fnv1a64:2b41e3672c56bdfc",
+  "jsonHash": "fnv1a64:aac078bea79368f8",
   "findings": []
 }

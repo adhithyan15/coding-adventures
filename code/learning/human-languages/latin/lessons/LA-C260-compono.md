@@ -13,7 +13,8 @@ gloss: "to put together, to arrange"
 concept_tag: LA-VERB-COMPONO
 prerequisites: [LA-C260-exprimo, LA-C260-alo]
 sounds: []
-roots: []
+roots: [componere-latin, ponere-latin]
+etymology_hook: "compōnō 'to arrange' — con- 'together' + pōnō 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C260-alo]
 <!-- hl-knowledge: introduces=[LA-LEX-C260-ACT260-03]; assesses=[] -->
 
 **compōnō, compōnere** — "to put together, to arrange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compōnō** is *con-*, "together", with *pōnō*, "to put" (EtymDB 2.1). English *compose* and *component* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

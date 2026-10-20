@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Discordo de ti",
+  "label": "ch:pt-discordo-de-ti",
+  "canDo": "I can disagree politely: object, raise an objection and contradict what was said.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C338-contradizer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can disagree politely: object, raise an objection and contradict what was said.",
+    "assesses": [
+      "PT-LEX-C338-DESACORDO-03",
+      "PT-LEX-C338-DESACORDO-04",
+      "PT-LEX-C338-DESACORDO-05"
+    ]
+  }
+}

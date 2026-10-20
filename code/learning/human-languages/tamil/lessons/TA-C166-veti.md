@@ -14,7 +14,8 @@ romanization: "veṭi"
 concept_tag: TA-VERB-VETI
 prerequisites: [TA-C165-vananku, TA-C166-vilakkerru]
 sounds: []
-roots: []
+roots: [dravidian-veti-burst]
+etymology_hook: "வெடி — native Dravidian (DEDR 5473); Malayalam veṭi 'explosion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C166-vilakkerru]
 <!-- hl-knowledge: introduces=[TA-LEX-C166-ACT166-02]; assesses=[] -->
 
 **வெடி** — *veṭi* — "to burst, to explode".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வெடி** (*veṭi*) is native Dravidian. DEDR 5473 lists Malayalam *veṭi*, "explosion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

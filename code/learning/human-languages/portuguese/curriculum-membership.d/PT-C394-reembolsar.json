@@ -1,0 +1,11 @@
+{
+  "id": "PT-C394-reembolsar",
+  "pathSegment": "PT-PATH-394-GARANTIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-394-GARANTIA",
+      "order": 3
+    }
+  ]
+}

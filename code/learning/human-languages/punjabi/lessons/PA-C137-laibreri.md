@@ -14,7 +14,8 @@ romanization: "lāibrerī"
 concept_tag: PA-THINGS137-LAIBRERI
 prerequisites: [PA-C137-daftar, PA-C137-karkhana]
 sounds: []
-roots: []
+roots: [english-library]
+etymology_hook: "lāibrerī ← English library"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C137-karkhana]
 <!-- hl-knowledge: introduces=[PA-LEX-C137-THINGS137-05]; assesses=[] -->
 
 **ਲਾਇਬ੍ਰੇਰੀ** — *lāibrerī* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲਾਇਬ੍ਰੇਰੀ** (*lāibrerī*) is a loan from English *library*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

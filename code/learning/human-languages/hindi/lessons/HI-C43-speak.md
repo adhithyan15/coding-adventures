@@ -14,7 +14,8 @@ romanization: "bolnā"
 concept_tag: HI-VERB-SPEAK
 prerequisites: [HI-C43-listen, HI-C41-new]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bolnā ← *boll 'speak', a reconstructed form; a tadbhava (CDIAL 9321)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C43-listen]
 **बोलना** (*bolnā*) — "to speak".
 
 'To speak' as an activity. Hindi has a second verb, *kahnā*, for saying a particular thing — the difference English draws between *speak* and *say*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोलना** (*bolnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*boll*, "speak", a form CDIAL reconstructs from its descendants (CDIAL 9321). CDIAL calls a borrowing from Dravidian very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

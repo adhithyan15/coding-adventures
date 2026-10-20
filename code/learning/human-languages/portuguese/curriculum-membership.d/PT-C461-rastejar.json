@@ -1,0 +1,11 @@
+{
+  "id": "PT-C461-rastejar",
+  "pathSegment": "PT-PATH-461-PEQUENOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-461-PEQUENOS",
+      "order": 4
+    }
+  ]
+}

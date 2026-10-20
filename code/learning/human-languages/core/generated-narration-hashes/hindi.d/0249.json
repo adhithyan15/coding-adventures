@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 249,
-  "sourceHash": "fnv1a64:263ce5906ddbc3e6",
+  "sourceHash": "fnv1a64:43a41ccb45f78723",
   "lessonIds": [
     "HI-C249-sath",
     "HI-C249-eksath",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch249.txt",
   "json": "hindi/narration/ch249.json",
-  "textHash": "fnv1a64:787efd89639d8f8e",
-  "jsonHash": "fnv1a64:d648d0968cd2cf9b",
+  "textHash": "fnv1a64:4a882c13d56c945b",
+  "jsonHash": "fnv1a64:ad96b12cc29af9c3",
   "findings": []
 }

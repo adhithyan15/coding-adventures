@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 358,
+  "title": "Agreeing and Disagreeing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8fe402d1b1b81d47",
+  "lessons": [
+    {
+      "id": "LA-C358-assentior",
+      "sequence": 19250,
+      "title": "assentior, assentīrī — to agree (with), to assent",
+      "headword": "assentior, assentīrī",
+      "romanization": "assentior, assentīrī",
+      "gloss": "to agree (with), to assent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aaded1a5092327e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to suppose, then the Latin for an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: assentior, assentīrī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assentior, assentīrī — \"to agree (with), to assent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tibi assentior: nōn est tūtum. I agree with you: it is not safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: assentior, assentīrī, assēnsus sum, with the dative of the person: tibi assentior. English assent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assentior is built from ad \"towards\" and sentiō \"to feel, to think\" (EtymDB; Lewis & Short): to bring your feeling over to someone else's. English assent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assentior, assentīrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assentior, assentīrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assentior, assentīrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assentior, assentīrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with assentior, assentīrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *assentior, assentīrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to suppose, then the Latin for an opinion, then say assentior, assentīrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to suppose, then the Latin for an opinion, then say *assentior, assentīrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does assentior, assentīrī mean? (\"To agree (with), to assent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C358-dissentio",
+      "sequence": 19260,
+      "title": "dissentiō, dissentīre — to disagree, to differ in opinion",
+      "headword": "dissentiō, dissentīre",
+      "romanization": "dissentiō, dissentīre",
+      "gloss": "to disagree, to differ in opinion",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e690110ec0a31296",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an opinion, then the Latin for to agree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dissentiō, dissentīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dissentiō, dissentīre — \"to disagree, to differ in opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Saepe ā frātre meō dissentiō. I often disagree with my brother."
+            },
+            {
+              "kind": "speech",
+              "text": "dissentiō, dissentīre, dissēnsī, dissēnsum. The person you disagree with goes in the ablative with ā / ab. English dissent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dissentiō is built from dis- \"apart\" and sentiō \"to feel, to think\" (EtymDB; Lewis & Short): to feel apart. English dissent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dissentiō, dissentīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dissentiō, dissentīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dissentiō, dissentīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dissentiō, dissentīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dissentiō, dissentīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dissentiō, dissentīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an opinion, then the Latin for to agree, then say dissentiō, dissentīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an opinion, then the Latin for to agree, then say *dissentiō, dissentīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dissentiō, dissentīre mean? (\"To disagree, to differ in opinion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C358-consentio",
+      "sequence": 19270,
+      "title": "cōnsentiō, cōnsentīre — to agree together, to be of one mind",
+      "headword": "cōnsentiō, cōnsentīre",
+      "romanization": "cōnsentiō, cōnsentīre",
+      "gloss": "to agree together, to be of one mind",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdeafa954414b38f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to agree, then the Latin for to disagree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnsentiō, cōnsentīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnsentiō, cōnsentīre — \"to agree together, to be of one mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Omnēs cīvēs dē hāc rē cōnsentiunt. All the citizens agree about this matter."
+            },
+            {
+              "kind": "speech",
+              "text": "cōnsentiō, cōnsentīre, cōnsēnsī, cōnsēnsum. Where assentior is one person agreeing with another, cōnsentiō is many minds agreeing together. English consent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnsentiō is built from con- \"together\" and sentiō \"to feel, to think\" (EtymDB; Lewis & Short): to feel together. English consent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnsentiō, cōnsentīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnsentiō, cōnsentīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnsentiō, cōnsentīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnsentiō, cōnsentīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnsentiō, cōnsentīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnsentiō, cōnsentīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to agree, then the Latin for to disagree, then say cōnsentiō, cōnsentīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to agree, then the Latin for to disagree, then say *cōnsentiō, cōnsentīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnsentiō, cōnsentīre mean? (\"To agree together, to be of one mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C358-consensus",
+      "sequence": 19280,
+      "title": "cōnsēnsus, cōnsēnsūs — agreement, unanimity",
+      "headword": "cōnsēnsus, cōnsēnsūs",
+      "romanization": "cōnsēnsus, cōnsēnsūs",
+      "gloss": "agreement, unanimity",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2c114aaa4bb5223",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to disagree, then the Latin for to agree together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnsēnsus, cōnsēnsūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnsēnsus, cōnsēnsūs — \"agreement, unanimity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Omnium cōnsēnsū eum ducem fēcērunt. By common consent they made him leader."
+            },
+            {
+              "kind": "speech",
+              "text": "cōnsēnsus, cōnsēnsūs m., fourth declension. Omnium cōnsēnsū, by everyone's agreement, is a stock phrase. English consensus is the same word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnsēnsus is the noun built on cōnsentiō \"to agree together\" (EtymDB; Lewis & Short), and English took it over whole as consensus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnsēnsus, cōnsēnsūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnsēnsus, cōnsēnsūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnsēnsus, cōnsēnsūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnsēnsus, cōnsēnsūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnsēnsus, cōnsēnsūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnsēnsus, cōnsēnsūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to disagree, then the Latin for to agree together, then say cōnsēnsus, cōnsēnsūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to disagree, then the Latin for to agree together, then say *cōnsēnsus, cōnsēnsūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnsēnsus, cōnsēnsūs mean? (\"Agreement, unanimity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C358-controversia",
+      "sequence": 19290,
+      "title": "contrōversia, contrōversiae — a dispute, a controversy",
+      "headword": "contrōversia, contrōversiae",
+      "romanization": "contrōversia, contrōversiae",
+      "gloss": "a dispute, a controversy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:573da1a1fe42168b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to agree together, then the Latin for agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: contrōversia, contrōversiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contrōversia, contrōversiae — \"a dispute, a controversy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inter vīcīnōs contrōversia dē agrō erat. There was a dispute between the neighbours about a field."
+            },
+            {
+              "kind": "speech",
+              "text": "contrōversia, contrōversiae f. A quarrel at law over a boundary or a will, and a set debate in the schools of speaking. English controversy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contrōversia is built on contrōversus \"turned the other way\" (EtymDB; Lewis & Short), from contrā \"against\" and the participle of vertō \"to turn\": two sides turned against each other. English controversy comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contrōversia, contrōversiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contrōversia, contrōversiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contrōversia, contrōversiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contrōversia, contrōversiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with contrōversia, contrōversiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *contrōversia, contrōversiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to agree together, then the Latin for agreement, then say contrōversia, contrōversiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to agree together, then the Latin for agreement, then say *contrōversia, contrōversiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does contrōversia, contrōversiae mean? (\"A dispute, a controversy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

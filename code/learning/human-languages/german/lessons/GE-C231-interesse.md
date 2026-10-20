@@ -13,7 +13,8 @@ gloss: "an interest"
 concept_tag: GE-THING231-INTERESSE
 prerequisites: [GE-C231-hoffnung, GE-C231-humor]
 sounds: []
-roots: []
+roots: [interesse-latin]
+etymology_hook: "Interesse ← Medieval Latin interesse 'what matters', from Latin 'to be between'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C231-humor]
 <!-- hl-knowledge: introduces=[GE-LEX-C231-THING231-04]; assesses=[] -->
 
 **das Interesse** — "an interest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Interesse** ← Medieval Latin *interesse*, "what matters, compensation", from Latin *interesse*, "to be between" — borrowed. See *interessant*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

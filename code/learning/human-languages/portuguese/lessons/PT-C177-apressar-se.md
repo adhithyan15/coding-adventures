@@ -13,7 +13,8 @@ gloss: "to hurry"
 concept_tag: PT-VERB-APRESSAR-SE
 prerequisites: [PT-C177-habituar-se, PT-C177-perceber]
 sounds: []
-roots: []
+roots: [latin-pressus]
+etymology_hook: "apressar-se — built on the haste word (← Latin pressa 'pressed'), with -se 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C177-perceber]
 <!-- hl-knowledge: introduces=[PT-LEX-C177-VERBOS177-04]; assesses=[] -->
 
 **apressar-se** — "to hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**apressar** is built on the word for haste, from Latin *pressa*, "pressed". *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

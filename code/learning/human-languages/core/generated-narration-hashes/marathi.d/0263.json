@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 263,
-  "sourceHash": "fnv1a64:4ca18743a8a673a7",
+  "sourceHash": "fnv1a64:be897958b3178d36",
   "lessonIds": [
     "MR-C263-gayak",
     "MR-C263-karyakram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch263.txt",
   "json": "marathi/narration/ch263.json",
-  "textHash": "fnv1a64:b2e05f71ae25f04a",
-  "jsonHash": "fnv1a64:53d412fc2fdf31d7",
+  "textHash": "fnv1a64:5b551bbcb71ac8e7",
+  "jsonHash": "fnv1a64:c27e5ae6de3ed99a",
   "findings": []
 }

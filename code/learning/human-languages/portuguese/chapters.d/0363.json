@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Cidadãos",
+  "label": "ch:pt-cidadaos",
+  "canDo": "I can talk about citizens, their rights and freedoms, and equality.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C363-igualdade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can talk about citizens, their rights and freedoms, and equality.",
+    "assesses": [
+      "PT-LEX-C363-CIDADAO-03",
+      "PT-LEX-C363-CIDADAO-04",
+      "PT-LEX-C363-CIDADAO-05"
+    ]
+  }
+}

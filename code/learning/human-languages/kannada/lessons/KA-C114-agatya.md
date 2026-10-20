@@ -14,7 +14,8 @@ romanization: "agatya"
 concept_tag: KA-WANT114-AGATYA
 prerequisites: [KA-C114-uddesa, KA-C114-yojane]
 sounds: []
-roots: []
+roots: [sanskrit-agatya]
+etymology_hook: "agatya: origin uncertain; often linked to Sanskrit agatyā 'for want of another way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C114-yojane]
 <!-- hl-knowledge: introduces=[KA-LEX-C114-WANT114-03]; assesses=[] -->
 
 **ಅಗತ್ಯ** — *agatya* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಅಗತ್ಯ** (*agatya*) is uncertain. It is often linked to Sanskrit *agatyā*, "for want of another way", from *a-*, "not", and *gati*, "way, course", but no source settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

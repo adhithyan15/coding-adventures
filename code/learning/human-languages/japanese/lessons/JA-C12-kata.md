@@ -11,8 +11,8 @@ gloss: shoulder
 concept_tag: JA-BODY-SHOULDER
 prerequisites: [JA-C12-ha-tooth]
 sounds: [mora]
-roots: []
-etymology_hook: Two familiar signs make a new body label without a new writing form.
+roots: [japanese-kata-shoulder]
+etymology_hook: "kata: native Japanese, inherited, not borrowed; kanji 肩 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +47,11 @@ Then close with *wakarimashita*.
 > **かた** — *ka-ta* — shoulder
 
 Two known signs, two even morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かた** (*kata*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KATA-SHOULDER] -->

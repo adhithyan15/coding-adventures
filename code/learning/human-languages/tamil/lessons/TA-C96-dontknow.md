@@ -11,7 +11,8 @@ romanization: "teriyātu"
 concept_tag: TA-NOTATALL-DONT-KNOW
 prerequisites: [TA-C96-adada, TA-C96-thatsright]
 sounds: []
-roots: []
+roots: [dravidian-teri-be-clear]
+etymology_hook: "தெரியாது — native Dravidian (DEDR 3419); Malayalam teriyuka 'to understand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C96-thatsright]
 **தெரியாது** (*teriyātu*) — "don't know".
 
 **எனக்குத் தெரியாது** — "I don't know", literally "to me it is not known".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தெரியாது** (*teriyātu*) is native Dravidian. DEDR 3419 lists Malayalam *teriyuka*, "to understand". It is *teri*, "to become clear", with the negative ending: "it is not clear (to me)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

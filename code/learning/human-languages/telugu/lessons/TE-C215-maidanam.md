@@ -14,7 +14,8 @@ romanization: "maidānaṁ"
 concept_tag: TE-STHALAM215-MAIDANAM
 prerequisites: [TE-C215-edari, TE-C215-banda]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "maidānaṁ ← Persian maidān 'open plain', through Hindustani, + -ṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C215-banda]
 <!-- hl-knowledge: introduces=[TE-LEX-C215-STHALAM215-03]; assesses=[] -->
 
 **మైదానం** — *maidānaṁ* — "an open ground, a plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మైదానం** (*maidānaṁ*) is a loan from Persian *maidān*, "open plain, field", which came through Hindustani and took the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

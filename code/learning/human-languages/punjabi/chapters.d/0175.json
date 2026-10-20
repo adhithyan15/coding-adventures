@@ -1,0 +1,17 @@
+{
+  "chapter": 175,
+  "title": "Return to One Familiar Three-Field Repair",
+  "label": "ch:pa-form-repair-r4",
+  "canDo": "I can compare a fictional three-field form with its familiar card and correct one different part without rewriting the correct lines.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R175-form-repair-again",
+    "kind": "production",
+    "summary": "Make one supported correction and then one brief delayed correction on familiar fictional form values, outside scored A1 mock credit.",
+    "assesses": [
+      "PA-FORM-AGE-PHONE-DATE-REPAIR-01"
+    ]
+  }
+}

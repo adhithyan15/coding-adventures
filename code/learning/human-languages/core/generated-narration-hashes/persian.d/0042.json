@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 42,
-  "sourceHash": "fnv1a64:64c668f80b1824b4",
+  "sourceHash": "fnv1a64:1df125f159832bde",
   "lessonIds": [
     "FA-C42-shekar",
     "FA-C42-namak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch42.txt",
   "json": "persian/narration/ch42.json",
-  "textHash": "fnv1a64:5ec1618a7d2bf9ca",
-  "jsonHash": "fnv1a64:48784d47fea4750d",
+  "textHash": "fnv1a64:927ca0d998409a9e",
+  "jsonHash": "fnv1a64:c4efacbd97e93812",
   "findings": []
 }

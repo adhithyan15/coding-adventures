@@ -14,7 +14,8 @@ romanization: "pēram pēcu"
 concept_tag: TA-VERB-PERAM-PECU
 prerequisites: [TA-C163-parimaru, TA-C163-pakir]
 sounds: []
-roots: []
+roots: [pesu-speak-dravidian]
+etymology_hook: "பேரம் பேசு — pēram 'bargain', of uncertain origin, + native pēsu 'to speak' (DEDR 4430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C163-pakir]
 <!-- hl-knowledge: introduces=[TA-LEX-C163-ACT163-04]; assesses=[] -->
 
 **பேரம் பேசு** — *pēram pēcu* — "to bargain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பேரம் பேசு** (*pēram pēcu*) is *pēram*, "bargain", with native *pēsu*, "to speak" (DEDR 4430): "to talk a bargain". The origin of *pēram* is uncertain; DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

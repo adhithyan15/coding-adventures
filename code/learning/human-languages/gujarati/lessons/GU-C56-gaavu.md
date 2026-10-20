@@ -14,7 +14,8 @@ romanization: "gāvũ"
 concept_tag: GU-VERB-GAAVU
 prerequisites: [GU-C55-laavvu, GU-C55-pivu]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gāvũ ← Sanskrit gāyati 'sings', a tadbhava (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C55-pivu]
 <!-- hl-knowledge: introduces=[GU-LEX-C56-VOICE-01]; assesses=[] -->
 
 **ગાવું** (*gāvũ*) — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગાવું** (*gāvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gāyati*, "sings" (CDIAL 4135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

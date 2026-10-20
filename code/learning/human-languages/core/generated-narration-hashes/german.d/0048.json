@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 48,
-  "sourceHash": "fnv1a64:134ce422f3162bf4",
+  "sourceHash": "fnv1a64:521ffd90e006a17b",
   "lessonIds": [
     "GE-C35-oder",
     "GE-C35-aber",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "german/narration/ch48.txt",
   "json": "german/narration/ch48.json",
-  "textHash": "fnv1a64:b694ed29e23541fd",
-  "jsonHash": "fnv1a64:a049182fbf1639a6",
+  "textHash": "fnv1a64:609e41040d058248",
+  "jsonHash": "fnv1a64:2d8daeb545a16186",
   "findings": []
 }

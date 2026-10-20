@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C270-abwarten",
+    "language": "german",
+    "chapter": 270,
+    "sequence": 14920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26db8da89174ed22"
+  },
+  "findings": []
+}

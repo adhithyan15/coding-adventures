@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 166,
-  "sourceHash": "fnv1a64:865d9f348d378199",
+  "sourceHash": "fnv1a64:9e598db2ea21d80a",
   "lessonIds": [
     "BN-C166-shokun",
     "BN-C166-timi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch166.txt",
   "json": "bengali/narration/ch166.json",
-  "textHash": "fnv1a64:03fc0f111dc49127",
-  "jsonHash": "fnv1a64:23383fea019688f2",
+  "textHash": "fnv1a64:1cfcccd5a2bbc9e9",
+  "jsonHash": "fnv1a64:8744ec507475f26c",
   "findings": []
 }

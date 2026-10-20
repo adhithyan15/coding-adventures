@@ -13,7 +13,8 @@ gloss: "to want"
 concept_tag: GE-VERB-WOLLEN
 prerequisites: [GE-C135-kuehl, GE-C135-weich]
 sounds: []
-roots: []
+roots: [germanic-wiljana]
+etymology_hook: "wollen ← Old High German wellen ← Proto-Germanic *wiljaną — the same verb as English will"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C135-weich]
 <!-- hl-knowledge: introduces=[GE-LEX-C136-WUNSCH136-01]; assesses=[] -->
 
 **wollen** — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**wollen** goes back to Old High German *wellen* ← Proto-Germanic *\*wiljaną*, "to want" — inherited, the same verb as English *will*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

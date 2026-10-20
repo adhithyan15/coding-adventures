@@ -14,7 +14,8 @@ romanization: "muchi"
 concept_tag: BN-KAJ235-MUCHI
 prerequisites: [BN-C235-kormochari, BN-C235-sohokormi]
 sounds: []
-roots: []
+roots: [sanskrit-mocika]
+etymology_hook: "muchi ← Sanskrit mocika 'tanner and cobbler', a tadbhava (CDIAL 10349)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C235-sohokormi]
 <!-- hl-knowledge: introduces=[BN-LEX-C235-KAJ235-04]; assesses=[] -->
 
 **মুচি** — *muchi* — "a cobbler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মুচি** (*muchi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mocika*, "tanner and cobbler" (CDIAL 10349). CDIAL lists Bengali *moci*, "cobbler", and takes the word from Iranian, as in Pahlavi *mōč*, "shoe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

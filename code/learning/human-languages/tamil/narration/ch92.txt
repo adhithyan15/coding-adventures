@@ -13,6 +13,9 @@ You'll want to know: மெதுவாக.
 மெதுவாக (metuvāka) — "slowly".
 மெதுவாகப் பேசுங்கள் — "please speak slowly", with the verb பேசு you read long ago.
 
+The word, taken apart.
+மெதுவாக (metuvāka) is native Dravidian (DEDR 5070). The entry glosses metu "softness, gentleness, slowness"; -āka makes it "slowly".
+
 What you've built.
 The repair a beginner needs most.
 
@@ -42,6 +45,9 @@ Before the new one: say the Tamil for well, then the Tamil for slowly.
 You'll want to know: மறுபடியும்.
 மறுபடியும் (maṟupaṭiyum) — "again".
 மறுபடியும் (maṟupaṭiyum) சொல்லுங்கள் — "please say it again".
+
+The word, taken apart.
+மறுபடியும் (maṟupaṭiyum) is native: maṟu, "other, next" (DEDR 4766), and paṭi, "manner, time", with -um, "also": "once more, another time".
 
 What you've built.
 Slowly, and again.
@@ -73,6 +79,9 @@ You'll want to know: சத்தமாக.
 சத்தமாக (cattamāka) — "loudly".
 சத்தம் is "a noise, a sound". கொஞ்சம் சத்தமாகப் பேசுங்கள் — "please speak a little louder".
 
+The word, taken apart.
+சத்தமாக (cattamāka) is a loan from Sanskrit śabda, "sound, noise" (CDIAL 12298). The noun cattam, "sound, noise", takes -āka, "in the manner of".
+
 What you've built.
 Slowly, again, louder.
 
@@ -103,6 +112,9 @@ You'll want to know: ஒரு நிமிடம்.
 ஒரு நிமிடம் (oru nimiṭam) — "one minute", said the way English says "a moment".
 ஒரு is "one"; நிமிடம் is "a minute".
 
+The word, taken apart.
+ஒரு நிமிடம் (oru nimiṭam) is native oru, "one" (DEDR 990), and nimiṭam, "minute", from Sanskrit nimeṣa, "a wink, a moment" (CDIAL 7243).
+
 What you've built.
 A way to buy time.
 
@@ -132,6 +144,9 @@ Before the new one: say the Tamil for loudly, then the Tamil for one minute.
 You'll want to know: காத்திருங்கள்.
 காத்திருங்கள் (kāttiruṅkaḷ) — "please wait".
 காத்திருங்கள் (kāttiruṅkaḷ), ஒரு நிமிடம் (oru nimiṭam) — "please wait, one minute".
+
+The word, taken apart.
+காத்திருங்கள் (kāttiruṅkaḷ) is native: kā, "to watch, to wait" (DEDR 1416; Malayalam kākkuka), and iru, "to be" (DEDR 480): "be waiting".
 
 What you've built.
 Slowly, again, louder, one minute, wait.

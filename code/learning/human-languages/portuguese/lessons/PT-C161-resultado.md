@@ -13,7 +13,8 @@ gloss: "a result"
 concept_tag: PT-COISAS161-RESULTADO
 prerequisites: [PT-C160-turista, PT-C161-possibilidade]
 sounds: []
-roots: []
+roots: [salire-latin]
+etymology_hook: "resultado — from the verb to result ← Latin resultare 'to spring back'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C161-possibilidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C161-COISAS161-02]; assesses=[] -->
 
 **o resultado** — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**resultado** is built from the verb "to result", which ← Latin *resultare*, "to spring back" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

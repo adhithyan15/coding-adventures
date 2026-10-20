@@ -11,7 +11,8 @@ romanization: "āṉāl"
 concept_tag: TA-JOIN-BUT
 prerequisites: [TA-C75-permission, TA-C73-today, TA-C73-yesterday, TA-C73-before]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ஆனால் — native: 'if it is so', a form of ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 225
 requires:
@@ -57,6 +58,11 @@ The word is built out of ஆகு, "to become": ஆனால் began as "if th
 starts by granting the first half and then turns is exactly what *but* does.
 
 In everyday speech the tail wears down and you will hear **ஆனா**. It is the same word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஆனால்** (*āṉāl*) is native: a form of *ā*, "to become, to be" (DEDR 333), meaning "if it is so". "But" grew out of "be that as it may".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

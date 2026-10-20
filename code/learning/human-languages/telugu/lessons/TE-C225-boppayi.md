@@ -14,7 +14,8 @@ romanization: "boppāyi"
 concept_tag: TE-VASTUVU225-BOPPAYI
 prerequisites: [TE-C225-akukura, TE-C225-palakura]
 sounds: []
-roots: []
+roots: [telugu-boppayi-papaya]
+etymology_hook: "boppāyi: a form of the name papaya; DEDR and CDIAL do not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C225-palakura]
 <!-- hl-knowledge: introduces=[TE-LEX-C225-VASTUVU225-03]; assesses=[] -->
 
 **బొప్పాయి** — *boppāyi* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బొప్పాయి** (*boppāyi*) is a form of the fruit's name *papaya*, borrowed when the fruit reached India. DEDR and CDIAL do not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

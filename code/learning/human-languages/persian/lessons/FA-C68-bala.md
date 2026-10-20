@@ -14,7 +14,8 @@ romanization: "bâlâ"
 concept_tag: FA-PLACE68-BALA
 prerequisites: [FA-C68-dakhel, FA-C68-birun]
 sounds: []
-roots: []
+roots: [persian-bala]
+etymology_hook: "bâlâ: inherited, usually traced to Middle Persian bālāy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C68-birun]
 <!-- hl-knowledge: introduces=[FA-LEX-C68-PLACE68-03]; assesses=[] -->
 
 **بالا** — *bâlâ* — "up, above".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâlâ* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bālāy*, "height".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

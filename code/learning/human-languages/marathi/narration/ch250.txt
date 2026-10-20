@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a kite, then the Marathi for a spinning 
 You'll want to know: इतिहास.
 इतिहास — itihās — "history".
 
+The word, taken apart.
+इतिहास (itihās) is Sanskrit itihāsa, "tradition, history", a tatsama: iti ha āsa, "so indeed it was".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a spinning top, then the Marathi for his
 
 You'll want to know: भूगोल.
 भूगोल — bhūgol — "geography".
+
+The word, taken apart.
+भूगोल (bhūgol) is a compound of Sanskrit parts: bhū, "earth", and gola, "ball" (CDIAL 4321).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for history, then the Marathi for geography.
 You'll want to know: गणित.
 गणित — gaṇit — "mathematics".
 
+The word, taken apart.
+गणित (gaṇit) is Sanskrit gaṇita, "counted", taken over whole as a learned loan, a tatsama (CDIAL 3996).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for geography, then the Marathi for mathemat
 You'll want to know: कला.
 कला — kalā — "art".
 
+The word, taken apart.
+कला (kalā) is Sanskrit kalā, "any practical art", a tatsama. CDIAL takes the Sanskrit word from Dravidian (CDIAL 2927).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for mathematics, then the Marathi for art.
 
 You'll want to know: संघ.
 संघ — saṅgh — "a team".
+
+The word, taken apart.
+संघ (saṅgh) is Sanskrit saṅgha, "multitude, association", a tatsama: sam, "together", and han, "to strike" (CDIAL 12854).
 
 What you've built.
 One more word for this chapter.

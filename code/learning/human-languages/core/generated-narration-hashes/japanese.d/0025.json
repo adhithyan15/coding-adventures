@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 25,
-  "sourceHash": "fnv1a64:03a903d18f9a7478",
+  "sourceHash": "fnv1a64:7deb3775b926d811",
   "lessonIds": [
     "JA-C25-tomodachi",
     "JA-C25-otona",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch25.txt",
   "json": "japanese/narration/ch25.json",
-  "textHash": "fnv1a64:da93be5f1fb4774c",
-  "jsonHash": "fnv1a64:6495560e9117de77",
+  "textHash": "fnv1a64:d8ad37aa4de31563",
+  "jsonHash": "fnv1a64:a6659597183fdea2",
   "findings": []
 }

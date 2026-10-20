@@ -14,7 +14,8 @@ romanization: "tai"
 concept_tag: ML-VASTU332-TAI
 prerequisites: [ML-C332-kari, ML-C332-caram]
 sounds: []
-roots: []
+roots: [dravidian-tai-shoot]
+etymology_hook: "tai: native Dravidian, one word with Tamil tai and Kannada sasi (DEDR 3474)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C332-caram]
 <!-- hl-knowledge: introduces=[ML-LEX-C332-VASTU332-05]; assesses=[] -->
 
 **തൈ** — *tai* — "a sapling, a seedling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തൈ** (*tai*) is native Dravidian, one word with Tamil *tai*, Kannada *sasi* and Telugu *tēga* (DEDR 3474).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,7 @@ gloss: see you tomorrow — and the bis… family, complete
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [GE-C04-bis, GE-C04-bis-bald, GE-C04-bis-spater, GE-C04-morgen-tomorrow]
 sounds: [r-uvular-german, i-short]
-roots: [morgan-germanic]
+roots: [morgan-germanic, murganaz]
 etymology_hook: "bis morgen is see you on the morrow almost word for word, morrow being the old English morning"
 duration:
   max_seconds: 180
@@ -50,6 +50,11 @@ the noun *der Morgen*, "the morning."
 This is the one you say leaving work, or leaving a class you both attend again
 the next day. Unlike *bis bald* and *bis später*, it makes a claim that can be
 checked.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bis morgen** is *bis* + *morgen*, "tomorrow", which is the word for "morning" ← Old High German *morgan* ← Proto-Germanic *\*murganaz*. English *morrow* is the same word. (EtymDB 2.1)
 
 ## Grammar Lens: the bis… family, complete
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BIS-MORGEN-01, GE-LEX-BIS-BALD-01, GE-LEX-BIS-SPAETER-01, GE-LEX-BIS-01] -->

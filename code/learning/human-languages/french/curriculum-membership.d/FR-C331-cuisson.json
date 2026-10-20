@@ -1,0 +1,11 @@
+{
+  "id": "FR-C331-cuisson",
+  "pathSegment": "FR-PATH-331-FOUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-331-FOUR",
+      "order": 2
+    }
+  ]
+}

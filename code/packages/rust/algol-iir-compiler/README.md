@@ -212,8 +212,24 @@ may nest through a real name formal only when its actual has the same proof;
 unary signs, arithmetic composition with finite static operands, and
 real-valued standard functions preserve it, while a finite static real actual
 is safe directly. Variable-free exact `sign` and exact-range `entier` results
-may also widen through a real name formal. Selector calls paired with
-provenance-backed local or other real-name branches remain conservative.
+may also widen through a real name formal. Selector calls may also choose
+unaliased local runtime-real snapshots through unary signs, additive or
+multiplicative composition, powers with finite static operands, and pure
+supported standard-function transforms. Globals, captured locals, and other
+real-name branches remain conservative. The exact bounded
+`entier(sign(local-runtime-real))` transform is also safe across such a
+selector, including when a specialised real name formal carries the exact
+local-rooted transform. Unary signs may wrap that exact name actual without
+losing the proof, and additive composition may include finite static terms.
+That additive form may in turn be multiplied or divided by finite static
+terms, and the resulting exact local-rooted form may be the sole dynamic base
+of a power chain whose exponents are finite and static. Up to six supported built-in numeric standard
+functions, including integer-valued `sign`, may wrap that powered exact name
+actual. A user-declared procedure receives no built-in privilege and must
+qualify through the ordinary procedure proof.
+One additional built-in `entier` may wrap a supported bounded transform rooted
+in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
+`entier` operands remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
@@ -223,8 +239,13 @@ already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
 Unary `+` and `-` around the built-in `sign` result preserve the same bound.
 Built-in integer `abs` may also map that bounded result to exact `0` or `1`
 before `entier`; a user-declared `abs` remains conservative.
-Variable-free exact additive zero terms may surround that bounded result before
-`entier`; nonzero or dynamic additive terms remain conservative.
+Variable-free whole-number additive terms may surround that bounded result
+before `entier` while their checked total stays within `2^53 - 1` units
+(`MAX_SIGN_OFFSET_UNITS`), the range in which `sign(x) ± offset` is still an
+exact binary64 integer. Fractional, oversized, and dynamic additive terms
+remain conservative. The budget is tracked through parentheses, supported
+standard-function wrappers, and runtime conditional branches; each conditional
+path receives its own budget.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;
@@ -304,6 +325,30 @@ Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
 nested exponentials and user-declared overrides remain conservative.
+Built-in `sqrt` may also map a runtime conditional when every branch retains a
+proven nonnegative bounded runtime-real sign root; unrestricted,
+non-runtime-real, nested-exponential, and overridden branches remain gated.
+Built-in `ln` may map a runtime conditional when every branch is one built-in
+exponential over a proven bounded runtime-real sign root; missing, nested,
+non-runtime-real, and overridden exponential branches remain gated.
+Built-in `ln` may also map a runtime conditional when every branch is exactly
+two built-in exponentials over a proven bounded runtime-real sign root; missing,
+deeper, non-runtime-real, and overridden branches remain gated.
+The same exact two-exponential proof now applies to a direct sign-rooted
+operand; unrestricted roots and overrides remain gated.
+The direct proof extends to exactly three exponentials, whose complete
+sign-rooted tower remains finite. Exactly four exponentials are also accepted
+over a proven nonpositive unit sign root, whose narrower tower remains finite;
+a positive-capable fourth layer or a fifth nonpositive layer would overflow
+binary64 before `ln` and therefore remains gated.
+The same bounded proof extends to exactly three built-in exponentials per
+branch. It also extends to exactly four built-in exponentials per branch when
+every root is proven nonpositive; positive-capable, missing, deeper,
+non-runtime-real, and overridden branches remain gated.
+Across every bounded conditional family above, branch roots may be unaliased
+local real snapshots carrying runtime-real provenance across assignment;
+globals, captured locals, and by-name aliases remain gated across a selector
+call.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is

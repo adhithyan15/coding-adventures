@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 144,
-  "sourceHash": "fnv1a64:f245477e1b4cefa3",
+  "sourceHash": "fnv1a64:8d1c508641e9be4e",
   "lessonIds": [
     "HI-C144-patthar",
     "HI-C144-ret",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch144.txt",
   "json": "hindi/narration/ch144.json",
-  "textHash": "fnv1a64:0044f3b4644ff31a",
-  "jsonHash": "fnv1a64:ab97d55fa7575de4",
+  "textHash": "fnv1a64:de93789cee56c24d",
+  "jsonHash": "fnv1a64:2a14e090237a9744",
   "findings": []
 }

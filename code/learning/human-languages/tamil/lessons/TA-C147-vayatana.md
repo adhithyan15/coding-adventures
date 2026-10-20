@@ -14,7 +14,8 @@ romanization: "vayatāṉa"
 concept_tag: TA-QUAL147-VAYATANA
 prerequisites: [TA-C146-elai, TA-C147-ilaiya]
 sounds: []
-roots: []
+roots: [sanskrit-vayas-vigor-age]
+etymology_hook: "வயதான — vayatu 'age' ← Sanskrit vayas 'prime of life, age' (CDIAL 11305), + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C147-ilaiya]
 <!-- hl-knowledge: introduces=[TA-LEX-C147-QUAL147-02]; assesses=[] -->
 
 **வயதான** — *vayatāṉa* — "old (of people)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வயதான** (*vayatāṉa*) is *vayatu*, "age", a Tamil form of Sanskrit *vayas*, "prime of life, age" (CDIAL 11305), with *-āṉa*: "aged".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-ASK-OBJETIVO
 prerequisites: [ES-C467-alimentar, ES-C345-objeto, ES-C453-rotativo]
 sounds: [stress-penultimate, v-b]
 roots: [iacere-latin]
+etymology_hook: "objetivo — objeto + -ivo; Latin ob- + iacere 'to throw' — English objective"
 duration:
   max_seconds: 275
 requires:
@@ -48,7 +49,7 @@ is… As an adjective it means **objective**: *un informe objetivo*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C467-ALIMENTO-04, ES-LEX-C345-REF-05] -->
 
-You have the whole of this already. *El objeto* was **ob-**, before or
+You have the whole of this already. *El objeto*, from Latin *obiectum*, was **ob-**, before or
 against, plus **iacere**, to throw — a thing *thrown before* you, put in your
 way. That lesson listed the family: *object*, *project*, *inject*, *eject*,
 *subject*, all of them throws.

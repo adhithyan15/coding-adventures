@@ -13,7 +13,8 @@ gloss: "the morning"
 concept_tag: IT-TEMPO-MATTINA
 prerequisites: [IT-C78-mese, IT-C78-anno]
 sounds: []
-roots: []
+roots: [matutinus-latin]
+etymology_hook: "mattina ← Latin matutina 'of the morning' — English matins shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C78-anno]
 <!-- hl-knowledge: introduces=[IT-LEX-C78-TEMPO-04]; assesses=[] -->
 
 **la mattina** — "the morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mattina** ← Latin *matutina*, "of the morning" (Lewis & Short) — inherited; EtymDB 2.1 has no row for *mattina*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

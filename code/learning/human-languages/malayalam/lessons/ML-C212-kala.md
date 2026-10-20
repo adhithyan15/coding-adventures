@@ -14,7 +14,8 @@ romanization: "kala"
 concept_tag: ML-VASTU212-KALA
 prerequisites: [ML-C211-aparicitan, ML-C211-partti]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art]
+etymology_hook: "kala ← Sanskrit kalā 'an art' (CDIAL 2927), which CDIAL itself takes from Dravidian (DEDR 1297)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C211-partti]
 <!-- hl-knowledge: introduces=[ML-LEX-C212-VASTU212-01]; assesses=[] -->
 
 **കല** — *kala* — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കല** (*kala*) is Sanskrit *kalā*, "any practical art" (CDIAL 2927). CDIAL takes the Sanskrit word itself from Dravidian, and DEDR 1297 sets it beside Tamil *kal*, "to learn", so the word may have come home.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

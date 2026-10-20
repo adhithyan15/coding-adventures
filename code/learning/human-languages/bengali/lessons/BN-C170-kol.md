@@ -14,7 +14,8 @@ romanization: "kôl"
 concept_tag: BN-JINIS170-KOL
 prerequisites: [BN-C170-lain, BN-C170-michhil]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art]
+etymology_hook: "kôl: CDIAL lists kal 'machine' under Sanskrit kalā 'practical art', which it takes from Dravidian (2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C170-michhil]
 <!-- hl-knowledge: introduces=[BN-LEX-C170-JINIS170-05]; assesses=[] -->
 
 **কল** — *kôl* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *kal*, "lock of a gun, machine", under Sanskrit *kalā*, "any practical art", a word it takes from Dravidian (CDIAL 2927). A tap is a *kôl* in the sense "a device".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

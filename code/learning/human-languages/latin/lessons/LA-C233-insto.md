@@ -13,7 +13,8 @@ gloss: "to press on, to insist"
 concept_tag: LA-VERB-INSTO
 prerequisites: [LA-C232-servio, LA-C232-patior]
 sounds: []
-roots: []
+roots: [instare-latin, stare-latin]
+etymology_hook: "īnstō 'to press on' — in 'upon' + stō 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C232-patior]
 <!-- hl-knowledge: introduces=[LA-LEX-C233-ACT233-01]; assesses=[] -->
 
 **īnstō, īnstāre** — "to press on, to insist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īnstō** is *in*, "on, upon", with *stō*, "to stand" (EtymDB 2.1): to stand upon, to press on. English *instant* comes from its participle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

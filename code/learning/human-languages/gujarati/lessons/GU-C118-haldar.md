@@ -14,7 +14,8 @@ romanization: "haḷdar"
 concept_tag: GU-THINGS118-HALDAR
 prerequisites: [GU-C117-khir, GU-C118-masalo]
 sounds: []
-roots: []
+roots: [sanskrit-haridra]
+etymology_hook: "haḷdar ← Sanskrit haridrā 'turmeric', a tadbhava (CDIAL 13992)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C118-masalo]
 <!-- hl-knowledge: introduces=[GU-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **હળદર** (*haḷdar*) — "turmeric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હળદર** (*haḷdar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haridrā*, "turmeric" (CDIAL 13992).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

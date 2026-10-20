@@ -14,7 +14,8 @@ romanization: "phalvālā"
 concept_tag: UR-KAM263-PHALVALA
 prerequisites: [UR-C263-halvai, UR-C263-pansari]
 sounds: []
-roots: []
+roots: [sanskrit-phala, sanskrit-pala-protector]
+etymology_hook: "phal ← Sanskrit phala 'fruit' (CDIAL 9051) + vālā 'one who deals in', usually traced to pālaka 'keeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C263-pansari]
 <!-- hl-knowledge: introduces=[UR-LEX-C263-KAM263-04]; assesses=[] -->
 
 **پھل والا** — *phalvālā* — "a fruit seller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھل والا** (*phalvālā*) is "fruit-man". *phal*, "fruit", comes from Sanskrit *phala* (CDIAL 9051); *-vālā*, "one who deals in", is usually traced to Sanskrit *pālaka*, "keeper" (see CDIAL 4435).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

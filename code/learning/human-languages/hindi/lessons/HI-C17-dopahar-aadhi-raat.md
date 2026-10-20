@@ -15,7 +15,7 @@ concept_tag: HI-TIME-NOON-MIDNIGHT
 prerequisites: [HI-C16-mahine]
 sounds: [devanagari-vowel-sign-o, devanagari-long-ii]
 roots: [do-two, pahar-traditional-watch, aadhi-half, raat-night]
-etymology_hook: "दोपहर (dopahar) 'noon' is literally 'two pahars' — pahar being a traditional ~3-hour time-unit, with noon falling at the end of the second pahar after sunrise; आधी रात (aadhi raat) 'half night' is fully transparent, just like Latin's media nox"
+etymology_hook: "dopahar 'noon' = do 'two' + pahar 'watch', from Sanskrit prahara (CDIAL 8900); ādhī rāt is 'half night'"
 duration:
   max_seconds: 186
 requires:
@@ -44,7 +44,8 @@ system inside it — one very different from hours and minutes.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01]; assesses=[] -->
 
 **दोपहर** (*dopahar*) = "**noon, midday**" — literally "**two** (*do*) +
-**pahar**." A **पहर** (*pahar*, from Sanskrit *prahara*) is a traditional
+**pahar**." A **पहर** (*pahar*, from Sanskrit *prahara*, "a watch"; CDIAL 8900
+wonders whether *prahara* is Persian *pahra*, "watch", put into Sanskrit form) is a traditional
 Indian unit of time, roughly **three hours** long, with the day
 traditionally divided into eight *pahars* (four for daytime, four for
 night), counted from sunrise. Noon falls right around the end of the
@@ -58,7 +59,7 @@ rather than a precisely dated fact.)
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]; assesses=[] -->
 
 **आधी रात** (*ādhī rāt*) = "**midnight**," literally "**half night**" —
-**आधी** (*ādhī*, the feminine form of **आधा**, *ādhā*, "half") + **रात**
+**आधी** (*ādhī*, "half," in the form it takes before a feminine noun) + **रात**
 (*rāt*, "night"). No erosion, no double meaning — structurally identical to
 Latin's *media nox* and Spanish's *medianoche*.
 
@@ -79,4 +80,4 @@ Latin's *media nox* and Spanish's *medianoche*.
 pahars**" — a *pahar* being a traditional ~3-hour time-unit, with noon
 falling around the end of the second one after sunrise.) What does **आधी
 रात** literally mean? ("**Half night**" — *ādhī* "half" + *rāt* "night,"
-fully transparent, just like Latin's *media nox*.)
+fully transparent, like Latin's *media nox*.)

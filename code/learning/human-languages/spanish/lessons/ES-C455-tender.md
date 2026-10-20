@@ -11,6 +11,7 @@ concept_tag: ES-VERB-TENDER
 prerequisites: [ES-C455-claro, ES-C311-tienda, ES-C281-limpio]
 sounds: [nasal-n, d-soft, stress-final]
 roots: [tendere-latin]
+etymology_hook: "tender ← Latin tendere 'to stretch' — kin to tienda; English tent, tension"
 duration:
   max_seconds: 275
 requires:

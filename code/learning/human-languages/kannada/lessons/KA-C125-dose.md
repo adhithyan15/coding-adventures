@@ -14,7 +14,8 @@ romanization: "dōse"
 concept_tag: KA-THINGS125-DOSE
 prerequisites: [KA-C124-jenu, KA-C125-idli]
 sounds: []
-roots: []
+roots: [dravidian-dose-cake]
+etymology_hook: "dōse: native Dravidian, one word with Tamil tōcai and Telugu dōse (DEDR 3542)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C125-idli]
 <!-- hl-knowledge: introduces=[KA-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **ದೋಸೆ** — *dōse* — "a dosa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೋಸೆ** (*dōse*) is native Dravidian, one word with Tamil *tōcai* and Telugu *dōse* (DEDR 3542). DEDR lists *dōse* itself, "a spongy cake of rice flour". DEDR 3542 compares Sanskrit *dhosaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

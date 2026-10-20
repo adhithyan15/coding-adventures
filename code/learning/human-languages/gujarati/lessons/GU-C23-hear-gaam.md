@@ -11,8 +11,8 @@ gloss: village, heard before it is shown as a reading target
 concept_tag: GU-PLACE-VILLAGE-HEARD
 prerequisites: [GU-C22-route-three]
 sounds: [voiced-g, long-aa, nasal-consonant]
-roots: []
-etymology_hook: A place beyond the city enters through one short oral contrast.
+roots: [sanskrit-grama]
+etymology_hook: "gām ← Sanskrit grāma 'troop, village', a tadbhava (CDIAL 4368)"
 duration:
   max_seconds: 120
 requires:
@@ -38,6 +38,11 @@ reviews_of: [GU-C22-hear-shahar]
 <!-- hl-knowledge: introduces=[GU-LEX-GAAM-01]; assesses=[GU-LEX-SHAHAR-01] -->
 
 Recall *shahar*, city. Now listen twice: **gām**. It means **village**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગામ** (*gām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *grāma*, "troop, village" (CDIAL 4368).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-GAAM-01, GU-LEX-SHAHAR-01] -->

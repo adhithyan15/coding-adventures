@@ -13,7 +13,8 @@ gloss: "to organise"
 concept_tag: IT-VERB-ORGANIZZARE
 prerequisites: [IT-C138-il-progetto, IT-C138-prevedere]
 sounds: []
-roots: []
+roots: [organum-latin]
+etymology_hook: "organizzare — from organo ← Latin organum ← Greek organon 'a tool' — English organise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C138-prevedere]
 <!-- hl-knowledge: introduces=[IT-LEX-C138-FUT138-05]; assesses=[] -->
 
 **organizzare** — "to organise". A regular **-are** verb, so the future follows **parlare**: **Organizzerò tutto.** — "I will organise everything."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**organizzare** — built on *organo*, "an organ, an instrument", with *-izzare*, "-ise". *organo* ← Latin *organum*, from Greek *organon*, "a tool" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

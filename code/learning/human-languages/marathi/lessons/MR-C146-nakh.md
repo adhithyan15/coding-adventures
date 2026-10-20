@@ -14,7 +14,8 @@ romanization: "nakh"
 concept_tag: MR-THINGS146-NAKH
 prerequisites: [MR-C145-managat, MR-C146-angtha]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nakh ← Sanskrit nakha 'nail of finger or toe, claw', a tatsama (CDIAL 6914)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C146-angtha]
 <!-- hl-knowledge: introduces=[MR-LEX-C146-THINGS146-02]; assesses=[] -->
 
 **नख** — *nakh* — "a fingernail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नख** (*nakh*) is Sanskrit *nakha*, "nail of finger or toe, claw", taken over whole as a learned loan, a tatsama (CDIAL 6914).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

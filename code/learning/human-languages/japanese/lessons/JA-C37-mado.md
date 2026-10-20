@@ -14,7 +14,8 @@ romanization: "mado"
 concept_tag: JA-HOME37-MADO
 prerequisites: [JA-C36-kome, JA-C37-uchi]
 sounds: []
-roots: []
+roots: [japanese-mado]
+etymology_hook: "mado: native Japanese, inherited, not borrowed; kanji 窓 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C37-uchi]
 <!-- hl-knowledge: introduces=[JA-LEX-C37-HOME37-02]; assesses=[] -->
 
 **まど** — *mado* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まど** (*mado*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

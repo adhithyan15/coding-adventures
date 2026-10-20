@@ -14,7 +14,8 @@ romanization: "sāṛī"
 concept_tag: HI-THINGS136-SARI
 prerequisites: [HI-C135-paint, HI-C136-kurta, HI-C11-laal-niila, HI-C11-laal-niila, HI-C11-kaalaa-safed]
 sounds: []
-roots: []
+roots: [sanskrit-shati]
+etymology_hook: "sāṛī ← Sanskrit śāṭī 'strip of cloth, garment', a tadbhava (CDIAL 12381)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C136-kurta]
 <!-- hl-knowledge: introduces=[HI-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **साड़ी** — *sāṛī* — "a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साड़ी** (*sāṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śāṭī*, "strip of cloth, garment" (CDIAL 12381). CDIAL notes that the word also travelled west, to Pashto and to Persian *shāl*, the source of English *shawl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

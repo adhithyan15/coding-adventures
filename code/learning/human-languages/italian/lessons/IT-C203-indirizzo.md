@@ -13,7 +13,8 @@ gloss: "an address"
 concept_tag: IT-LAV203-INDIRIZZO
 prerequisites: [IT-C203-carriera, IT-C203-stampante]
 sounds: []
-roots: []
+roots: [directus-latin]
+etymology_hook: "indirizzo — from indirizzare 'to direct', built on Latin directus — English address"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C203-stampante]
 <!-- hl-knowledge: introduces=[IT-LEX-C203-LAV203-05]; assesses=[] -->
 
 **l'indirizzo** — "an address".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**indirizzo** is the noun of *indirizzare*, "to direct", built on Latin *directus*, "straight": where a letter is directed. EtymDB 2.1 lists Portuguese *endereço* as its cognate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

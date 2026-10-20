@@ -14,7 +14,8 @@ romanization: "marumakaḷ"
 concept_tag: ML-VASTU289-MARUMAKAL
 prerequisites: [ML-C289-ankutti, ML-C289-ammayi]
 sounds: []
-roots: []
+roots: [proto-dravidian-makal-daughter]
+etymology_hook: "marumakaḷ: native Dravidian, the feminine partner of marumakan (DEDR 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C289-ammayi]
 <!-- hl-knowledge: introduces=[ML-LEX-C289-VASTU289-03]; assesses=[] -->
 
 **മരുമകൾ** — *marumakaḷ* — "a niece; a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മരുമകൾ** (*marumakaḷ*) is native Dravidian, the feminine partner of *marumakan*, "nephew, son-in-law", which DEDR 4715 lists with Tamil *marukaṉ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

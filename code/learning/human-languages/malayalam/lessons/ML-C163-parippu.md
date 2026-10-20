@@ -14,7 +14,8 @@ romanization: "parippŭ"
 concept_tag: ML-THINGS163-PARIPPU
 prerequisites: [ML-C163-kanji, ML-C163-payaru]
 sounds: []
-roots: []
+roots: [dravidian-paruppu-dal]
+etymology_hook: "parippŭ: native Dravidian, one word with Tamil paruppu and Kannada pappu (DEDR 3978)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C163-payaru]
 <!-- hl-knowledge: introduces=[ML-LEX-C163-THINGS163-05]; assesses=[] -->
 
 **പരിപ്പ്** — *parippŭ* — "dal, split lentils".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരിപ്പ്** (*parippŭ*) is native Dravidian, one word with Tamil *paruppu*, Kannada *pappu* and Telugu *pappu* (DEDR 3978).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vēsukō"
 concept_tag: TE-VERB-VESUKO
 prerequisites: [TE-C145-digu, TE-C146-ceru]
 sounds: []
-roots: []
+roots: [dravidian-veeyu-put-on]
+etymology_hook: "vēsukō: native vēyu 'to put on (a dress)' (DEDR 5534) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C146-ceru]
 <!-- hl-knowledge: introduces=[TE-LEX-C146-ACT146-02]; assesses=[] -->
 
 **వేసుకో** — *vēsukō* — "to put on (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేసుకో** (*vēsukō*) is native Dravidian: *vēyu*, "to put on (as a dress)", which DEDR 5534 lists, with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

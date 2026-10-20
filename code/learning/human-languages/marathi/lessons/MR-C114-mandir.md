@@ -14,7 +14,8 @@ romanization: "mandir"
 concept_tag: MR-TOWN114-MANDIR
 prerequisites: [MR-C114-bas, MR-C114-pul]
 sounds: []
-roots: []
+roots: [sanskrit-mandira]
+etymology_hook: "mandir ← Sanskrit mandira 'dwelling, camp, town, temple', a tatsama (CDIAL 9852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C114-pul]
 <!-- hl-knowledge: introduces=[MR-LEX-C114-TOWN114-03]; assesses=[] -->
 
 **मंदिर** — *mandir* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंदिर** (*mandir*) is Sanskrit *mandira*, "dwelling, camp, town, temple", taken over whole as a learned loan, a tatsama (CDIAL 9852).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

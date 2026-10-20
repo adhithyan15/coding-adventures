@@ -14,7 +14,8 @@ romanization: "tōṭa"
 concept_tag: KA-LOC110-TOTA
 prerequisites: [KA-C110-sante, KA-C110-kadalatira]
 sounds: []
-roots: []
+roots: [dravidian-tottam-garden]
+etymology_hook: "tōṭa: native Dravidian; DEDR 3549 lists tōṭa 'garden' under tōḍu 'to dig'; Malayalam tōṭṭam"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C110-kadalatira]
 <!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-03]; assesses=[] -->
 
 **ತೋಟ** — *tōṭa* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೋಟ** (*tōṭa*) is native Dravidian, listed in DEDR 3549 as *tōṭa*, "garden", under *tōḍu*, "to dig"; the entry also has Malayalam *tōṭṭam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

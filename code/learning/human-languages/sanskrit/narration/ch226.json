@@ -4,7 +4,7 @@
   "chapter": 226,
   "title": "Planet, Comet, Animal, Creature, Winged creature",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:860776692145fd8e",
+  "sourceHash": "fnv1a64:4f88e229669c6e2b",
   "lessons": [
     {
       "id": "SA-C226-grahah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a762b41ae289f6d9",
+      "sourceHash": "fnv1a64:211c6da8bfb97155",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "graha is built on the root √grah, \"to seize\" (MW), which you met in gṛhṇāti: a planet is a \"seizer\", believed to grip people's fortunes. In the Rigveda it means \"as much as can be taken\" (CDIAL 4363), and Punjabi garauh is \"the influence of the planets\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76d0358e051b5eef",
+      "sourceHash": "fnv1a64:aefd7293ae9487b6",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhūmaketu is a compound of dhūma, \"smoke\", and ketu, \"bright sign, banner\" (MW): a star with a banner of smoke. MW compares dhūma with Latin fūmus, \"smoke\", and dhūma lives on as the Hindi word for smoke (CDIAL 6849)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7442902c979b9db",
+      "sourceHash": "fnv1a64:acb6998334f72be1",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paśu is a Rigvedic word for a domestic or sacrificial animal (CDIAL 7984). It is inherited from Indo-European: MW compares Latin pecu, \"cattle\", and English fee, from the time when wealth was counted in livestock. Hindi pasū means \"animal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c360e574f83151a",
+      "sourceHash": "fnv1a64:cb990523bb878ba1",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jantu is built on the root √jan, \"to be born, beget\" (MW): first \"offspring\", then any creature (CDIAL 5110). MW compares √jan with Latin gignere, \"to beget\", and Greek gignomai, \"I become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21585e10be5dfd63",
+      "sourceHash": "fnv1a64:876b87bbca406b3e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pakṣī is the nominative of pakṣin, \"winged\", built on pakṣa, \"wing\", with -in, \"having\" (MW): a bird is the winged one. It lives on as Gujarati and Punjabi paṅkhī, \"bird\" (CDIAL 7636)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

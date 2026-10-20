@@ -14,7 +14,8 @@ romanization: "nal"
 concept_tag: HI-THG267-NAL
 prerequisites: [HI-C267-rajai, HI-C267-maccharadani]
 sounds: []
-roots: []
+roots: [sanskrit-nada]
+etymology_hook: "nal: CDIAL puts Hindi nalā 'hollow reed' under naḍaka, a form beside Sanskrit naḍa 'reed' (CDIAL 6936)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C267-maccharadani]
 <!-- hl-knowledge: introduces=[HI-LEX-C267-THG267-03]; assesses=[] -->
 
 **नल** — *nal* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नल** (*nal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL does not list *nal* itself. It puts Hindi *nalā*, "hollow reed, windpipe", under *naḍaka*, "hollow of a bone", a form beside Sanskrit *naḍa*, "a species of reed", which keeps the plain reed-word *naṛ* (CDIAL 6936). It notes possible Dravidian or Munda contact.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

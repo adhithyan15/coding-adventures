@@ -12,7 +12,7 @@ The two courtesy words you have had since the first chapter, and a verb.
 [pause 8 seconds for the answer]
 [your turn — recall: спасибо, and чтобы with an infinitive after it]
 [pause 8 seconds for the answer]
-[your turn — recall: но, the contradicting but with no secure English cousin]
+[your turn — recall: но, the contradicting but, probably kin to English now]
 [pause 8 seconds for the answer]
 [your turn — recall: надо with nobody in the sentence, and хотеть, which has no cousin outside Slavic]
 [pause 8 seconds for the answer]
@@ -27,7 +27,7 @@ The ending -ите is the polite one, the same вы that здравствуйт�
 
 The word, taken apart — out of the guilt.
 извините (izvinítye) is из- ("out of") plus вина ("guilt, fault"), with the polite ending on the end.
-So the word literally asks the other person to take you out of the blame — which is a real picture, still visible in the Russian, and one English threw away when excuse stopped meaning anything at all on its own.
+So the word literally asks the other person to take you out of the blame — which is a real picture, still visible in the Russian, and one English threw away when excuse stopped meaning anything at all on its own. вина is inherited; Vasmer relates it to Latvian vaina, "guilt".
 
 Guided Practice.
 [pause 1 second]
@@ -69,9 +69,9 @@ Why it's said this way — which one to reach for.
 What separates them is weight, not politeness — both words are polite.
 извините (izvinítye) for the small thing: bumping somebody, interrupting, opening a request to a stranger. Nobody is really being blamed.
 простите (prastítye) for the real one: you have let somebody down and you are asking them to release you from it.
-Use простите (prastítye) for a trodden foot and you sound as though you had wrecked their week. Use извините (izvinítye) after a genuine wrong and you sound as though it did not matter.
-This is the same pair-with-a-rule that здравствуйте and привет form for greetings — Russian keeps a formal and a casual option side by side and expects you to choose. The difference here is that the choice is about the size of the offence rather than about who you are talking to.
-The etymology carries the same weight: простите (prastítye) is built on простой, simple, straight — to forgive is to make something straight again.
+Use простите (prastítye) for a trodden foot and you sound as though you had wrecked their week.
+This is the same pair-with-a-rule that здравствуйте and привет form for greetings — Russian keeps two options side by side. The difference here is that the choice is about the size of the offence rather than about who you are talking to.
+The etymology carries the same weight: простите (prastítye) is built on простой, Proto-Slavic prostŭ, "simple, free": to forgive is to set someone free, and Czech prostiti still means "to free" (Vasmer).
 
 Guided Practice.
 [pause 1 second]
@@ -106,15 +106,15 @@ A verb from the hand chapter, and yesterday's apology.
 
 You'll want to know first — повторите.
 повторите — paftarítye — say it again, repeat it.
-Until now the book could report a failure and do nothing about it. Я не понимаю said something had gone wrong; it did not ask anybody to change anything. This word does.
+Until now the book could only report a failure. This word asks for a fix.
 извините, повторите, пожалуйста — izvinítye, paftarítye, pazhálusta — sorry, please say that again.
-Three words you own, in the order a Russian says them: the opening, the request, the politeness. That is a complete repair turn.
+That is a complete repair turn.
 
 Grammar lens — the -ите ending is an order.
-Three words in two lessons now end in -ите: извините (izvinítye), простите (prastítye), повторите (paftarítye). That is not a coincidence and it is worth naming.
+Three words in two lessons now end in -ите: извините (izvinítye), простите (prastítye), повторите (paftarítye). That is worth naming.
 -ите is Russian's polite imperative — the ending that turns a verb into an instruction addressed to вы. Drop the -те and you get the ты form: извини, прости, повтори.
-So the two apologies were never nouns. They were commands all along, and seeing the ending makes them a set instead of three things to memorise.
-The word itself is по- plus втор-, second — the same втор- in вторник, Tuesday, the second day. To repeat is to do a thing a second time.
+So the two apologies were never nouns: they were commands all along.
+The word itself is по- plus втор-, second — the same втор- in вторник, Tuesday, the second day. To repeat is to do a thing a second time. второй goes back to Proto-Slavic vŭtorŭ, whose deeper origin Vasmer calls uncertain.
 
 Guided Practice.
 [pause 1 second]
@@ -143,8 +143,8 @@ A verb from the hand chapter, and the divider from earlier.
 
 You'll want to know first — медленно.
 медленно — myédlenna — slowly.
-Stress the first syllable, and let the two unstressed о and е at the end soften: MYÉD-len-na.
-Its shape is worth a moment. Russian makes an adverb by putting -о on the end of a describing word, and that is the whole rule — no ending to agree with anything, nothing to change. It is the simplest piece of grammar in this chapter and one of the most productive in the language.
+Stress the first syllable, and let the two unstressed о and е at the end soften: MYÉD-len-na. It is the adverb of the Russian word for "slow", Proto-Slavic mŭdĭlĭnŭ, with медлить, "to delay" (Vasmer).
+Its shape is worth a moment. Russian makes an adverb by putting -о on the end of a describing word, and that is the whole rule — no ending to agree with anything, nothing to change. It is one of the most productive rules in the language.
 
 Grammar lens — the second repair move.
 Take говорить, put the polite -ите on it, and add the adverb:
@@ -184,6 +184,9 @@ You'll want to know first — помогите.
 There is almost nothing new in this word, and that is the point of putting it here. You have had помогать since the verbs of the hand. You learned -ите two lessons ago. Put them together and you have the most important single word in any emergency, built entirely out of parts you owned already.
 извините, помогите, пожалуйста — izvinítye, pamagítye, pazhálusta — excuse me, please help.
 Say it once out loud. A course that can greet, thank, apologise, ask for a repeat, ask for slower speech and ask for help has covered every move a beginner needs to survive a conversation that goes wrong — and every one of those moves arrived in this chapter or the two behind it.
+
+The word, taken apart.
+помогите (pamagítye) is помогать, "to help", with -ите: по- with the root of мочь, "to be able", Proto-Slavic mogti, which Vasmer relates to Gothic magan, "to be able".
 
 Guided Practice.
 [pause 1 second]

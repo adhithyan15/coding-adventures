@@ -14,7 +14,8 @@ romanization: "rassī"
 concept_tag: MW-THINGS126-RASSI
 prerequisites: [MW-C126-chhano, MW-C126-boro]
 sounds: []
-roots: []
+roots: [sanskrit-rashmi]
+etymology_hook: "rassī ← Sanskrit raśmi 'rope, bridle, ray of light', a tadbhava (CDIAL 10648, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C126-boro]
 <!-- hl-knowledge: introduces=[MW-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **रस्सी** — *rassī* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रस्सी** (*rassī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *raśmi*, "rope, bridle, ray of light". CDIAL gives no Marwari form in this entry (CDIAL 10648); the match is through Hindi *rassī* and Gujarati *rasī*. CDIAL marks the doubled *ss* forms as taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 490,
+  "title": "Manter a forma",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a8c8f340385332db",
+  "lessons": [
+    {
+      "id": "PT-C490-saudavel",
+      "sequence": 27170,
+      "title": "saudável — healthy",
+      "headword": "saudável",
+      "romanization": "saudável",
+      "gloss": "healthy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:647b6ae13c326351",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for shiver, then the Portuguese for cramp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: saudável",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saudável — \"healthy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tento comer de forma saudável. I try to eat in a healthy way."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural saudáveis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saudável is built on saúde \"health\", which is inherited from Latin salūs \"health, safety\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saudável",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saudável*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saudável, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saudável*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with saudável",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *saudável*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for shiver, then the Portuguese for cramp, then say saudável again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for shiver, then the Portuguese for cramp, then say *saudável* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does saudável mean? (\"Healthy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C490-sedentario",
+      "sequence": 27180,
+      "title": "sedentário — sedentary",
+      "headword": "sedentário",
+      "romanization": "sedentário",
+      "gloss": "sedentary",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c884250be3c91e54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for cramp, then the Portuguese for healthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sedentário",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sedentário — \"sedentary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Com o trabalho no escritório, levo uma vida sedentária. With my office job, I lead a sedentary life."
+            },
+            {
+              "kind": "speech",
+              "text": "Uma vida sedentária — a life with little exercise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sedentário comes from Latin sedentārius \"sitting, sedentary\" (EtymDB), built on sedēre \"to sit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sedentário",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sedentário*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sedentário, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sedentário*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sedentário",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sedentário*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for cramp, then the Portuguese for healthy, then say sedentário again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for cramp, then the Portuguese for healthy, then say *sedentário* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sedentário mean? (\"Sedentary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C490-alongar",
+      "sequence": 27190,
+      "title": "alongar — to stretch; to lengthen",
+      "headword": "alongar",
+      "romanization": "alongar",
+      "gloss": "to stretch; to lengthen",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c722b7449b109a8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for healthy, then the Portuguese for sedentary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: alongar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alongar — \"to stretch; to lengthen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Depois de correr, alongo as pernas. After running, I stretch my legs."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazer alongamentos — to do stretches."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alongar is built from a- and longo \"long\", which is inherited from Latin longus (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alongar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alongar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alongar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alongar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with alongar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *alongar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for healthy, then the Portuguese for sedentary, then say alongar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for healthy, then the Portuguese for sedentary, then say *alongar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does alongar mean? (\"To stretch; to lengthen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C490-suar",
+      "sequence": 27200,
+      "title": "suar — to sweat",
+      "headword": "suar",
+      "romanization": "suar",
+      "gloss": "to sweat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6087e879835cf30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for sedentary, then the Portuguese for to stretch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: suar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suar — \"to sweat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No ginásio suo muito. I sweat a lot at the gym."
+            },
+            {
+              "kind": "speech",
+              "text": "Sweat is o suor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suar is inherited, through Old Portuguese, from Latin sūdāre \"to sweat\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with suar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *suar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for sedentary, then the Portuguese for to stretch, then say suar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for sedentary, then the Portuguese for to stretch, then say *suar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does suar mean? (\"To sweat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C490-massagem",
+      "sequence": 27210,
+      "title": "a massagem — massage",
+      "headword": "a massagem",
+      "romanization": "a massagem",
+      "gloss": "massage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2a4cd1592b9931b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to stretch, then the Portuguese for to sweat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a massagem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a massagem — \"massage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Depois do jogo, o jogador fez uma massagem às costas. After the match, the player had a back massage."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazer uma massagem — to give or have a massage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "massagem is usually traced to French massage, built on masser \"to knead\"; the source of the French verb is usually traced to Arabic, but it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a massagem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a massagem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a massagem, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a massagem*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a massagem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a massagem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to stretch, then the Portuguese for to sweat, then say a massagem again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to stretch, then the Portuguese for to sweat, then say *a massagem* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a massagem mean? (\"Massage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R490-revisao-483-490",
+      "sequence": 27220,
+      "title": "Revisão dos capítulos 483–490",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 483-490",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba3513197407e371",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for to sneeze and sneeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sneeze, sneeze, allergic, itch, to scratch an itch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sneeze, sneeze, allergic, itch, to scratch an itch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migraine, dizzy, dizziness, nausea, to vomit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: migraine, dizzy, dizziness, nausea, to vomit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scratch, scratch, bruise, to swell, swollen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scratch, scratch, bruise, to swell, swollen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thermometer, vaccine, injection, sprain, bandage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thermometer, vaccine, injection, sprain, bandage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "symptom, (medical) tests, diagnosis, to prescribe, treatment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: symptom, (medical) tests, diagnosis, to prescribe, treatment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rest, to cure, cure, to recover, recovery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rest, to cure, cure, to recover, recovery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insomnia, to snore, to yawn, shiver, cramp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: insomnia, to snore, to yawn, shiver, cramp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "healthy, sedentary, to stretch, to sweat, massage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: healthy, sedentary, to stretch, to sweat, massage]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To sneeze? (espirrar.) Sneeze? (o espirro.) Allergic? (alérgico.) Itch? (a comichão.) To scratch an itch? (coçar.) Migraine? (a enxaqueca.) Dizzy? (tonto.) Dizziness? (a tontura.) Nausea? (a náusea.) To vomit? (vomitar.) To scratch? (arranhar.) Scratch? (o arranhão.) Bruise? (a nódoa negra.) To swell? (inchar.) Swollen? (inchado.) Thermometer? (o termómetro.) Vaccine? (a vacina.) Injection? (a injeção.) Sprain? (a entorse.) Bandage? (a ligadura.) Symptom? (o sintoma.) (medical) tests? (as análises.) Diagnosis? (o diagnóstico.) To prescribe? (receitar.) Treatment? (o tratamento.) Rest? (o repouso.) To cure? (curar.) Cure? (a cura.) To recover? (recuperar.) Recovery? (a recuperação.) Insomnia? (a insónia.) To snore? (ressonar.) To yawn? (bocejar.) Shiver? (o arrepio.) Cramp? (a cãibra.) Healthy? (saudável.) Sedentary? (sedentário.) To stretch? (alongar.) To sweat? (suar.) Massage? (a massagem.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "a lip"
 concept_tag: LA-THINGS135-LABRUM
 prerequisites: [LA-C135-balaena, LA-C135-gallus]
 sounds: []
-roots: []
+roots: [labrum-latin]
+etymology_hook: "labrum 'lip' — inherited, usually traced to PIE *leb- 'lip'; English lip is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C135-gallus]
 <!-- hl-knowledge: introduces=[LA-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **labrum, labrī** — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**labrum** is inherited, usually traced to Proto-Indo-European *\*leb-*, "lip, to hang loosely" (EtymDB 2.1); English *lip* is a cousin. It is a different word from *labrum*, "a basin", contracted from *lavābrum*, "a bath" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

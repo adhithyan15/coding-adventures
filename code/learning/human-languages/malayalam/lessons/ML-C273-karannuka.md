@@ -14,7 +14,8 @@ romanization: "kaṟaṅṅuka"
 concept_tag: ML-VERB-KARANNUKA
 prerequisites: [ML-C273-vitaykkuka, ML-C273-kottuka]
 sounds: []
-roots: []
+roots: [dravidian-karangu-whirl]
+etymology_hook: "kaṟaṅṅuka: native Dravidian, one word with Tamil kaṟaṅku (DEDR 1387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C273-kottuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C273-KRIYA273-04]; assesses=[] -->
 
 **കറങ്ങുക** — *kaṟaṅṅuka* — "to spin, to go round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കറങ്ങുക** (*kaṟaṅṅuka*) is native Dravidian, one word with Tamil *kaṟaṅku* (DEDR 1387).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

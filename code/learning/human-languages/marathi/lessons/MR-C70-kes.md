@@ -14,7 +14,8 @@ romanization: "kes"
 concept_tag: MR-BODY70-KES
 prerequisites: [MR-C70-hat, MR-C70-pay]
 sounds: []
-roots: []
+roots: [sanskrit-kesha]
+etymology_hook: "kes ← Sanskrit keśa 'hair of the head', almost unchanged (CDIAL 3471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C70-pay]
 <!-- hl-knowledge: introduces=[MR-LEX-C70-BODY70-03]; assesses=[] -->
 
 **केस** — *kes* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**केस** (*kes*) is inherited from Sanskrit *keśa*, "hair of the head", and has come down with almost no change (CDIAL 3471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

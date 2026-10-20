@@ -14,7 +14,8 @@ romanization: "āmbulansŭ"
 concept_tag: ML-AROGYAM312-AMBULANSU
 prerequisites: [ML-C312-nalsu, ML-C312-kuttivayppu]
 sounds: []
-roots: []
+roots: [english-ambulance]
+etymology_hook: "āmbulansŭ ← English ambulance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C312-kuttivayppu]
 <!-- hl-knowledge: introduces=[ML-LEX-C312-AROGYAM312-05]; assesses=[] -->
 
 **ആംബുലൻസ്** — *āmbulansŭ* — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആംബുലൻസ്** (*āmbulansŭ*) ← English *ambulance*, from French *hôpital ambulant*, "walking hospital".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

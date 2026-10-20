@@ -11,7 +11,8 @@ romanization: "katti"
 concept_tag: TE-NOUN-KNIFE
 prerequisites: [TE-C56-basket]
 sounds: []
-roots: []
+roots: [dravidian-katti-knife]
+etymology_hook: "katti: native Dravidian, one word with Tamil katti and Kannada katti (DEDR 1204)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C56-basket]
 It is inherited, and it is spread right across the family — Tamil, Kannada and Malayalam all have a word of the same shape for a cutting blade. Tools that a household could make for itself keep their names for a very long time.
 
 కత్తి also does the work English gives to "sharp" when talking about people: కత్తిలాంటి is knife-like, said of somebody quick.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కత్తి** (*katti*) is native Dravidian, one word with Tamil *katti*, Kannada *katti* and Malayalam *katti* (DEDR 1204).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

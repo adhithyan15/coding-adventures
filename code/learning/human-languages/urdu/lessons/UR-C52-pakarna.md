@@ -14,7 +14,8 @@ romanization: "pakaṛnā"
 concept_tag: UR-VERB-PAKARNA
 prerequisites: [UR-C51-bhejna, UR-C51-ginna]
 sounds: []
-roots: []
+roots: [indo-aryan-pakkad]
+etymology_hook: "pakaṛnā ← *pakkaḍ 'seize', a reconstructed form; a tadbhava (CDIAL 7619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C51-ginna]
 <!-- hl-knowledge: introduces=[UR-LEX-C52-VERBS52-01]; assesses=[] -->
 
 **پکڑنا** — *pakaṛnā* — "to catch, to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پکڑنا** (*pakaṛnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pakkaḍ*, "seize", a form CDIAL reconstructs from its descendants (CDIAL 7619). CDIAL calls a link with Sanskrit *pragṛhṇāti*, "holds", obscure and doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

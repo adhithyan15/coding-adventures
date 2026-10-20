@@ -13,7 +13,8 @@ gloss: "curious"
 concept_tag: PT-QUAL185-CURIOSO-CURIOSA
 prerequisites: [PT-C185-corajoso-corajosa, PT-C185-medroso-medrosa]
 sounds: []
-roots: []
+roots: [cura-latin]
+etymology_hook: "curioso ← Latin curiosus 'careful, inquisitive', from cura — English curious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C185-medroso-medrosa]
 <!-- hl-knowledge: introduces=[PT-LEX-C185-QUAL185-05]; assesses=[] -->
 
 **curioso / curiosa** — "curious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**curioso** ← Latin *curiosus*, "careful, inquisitive" (EtymDB 2.1), from *cura*, "care" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

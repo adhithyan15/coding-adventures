@@ -11,6 +11,7 @@ concept_tag: DISCOURSE-COHESION
 prerequisites: [ES-C273-ademas]
 sounds: [vowel-a, vowel-o]
 roots: [tantus]
+etymology_hook: "tanto ← Latin tantus 'so much, so great': por lo tanto, 'for so much'"
 duration:
   max_seconds: 240
 requires:

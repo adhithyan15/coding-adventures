@@ -13,7 +13,8 @@ gloss: "an oven"
 concept_tag: PT-CASA93-FORNO
 prerequisites: [PT-C93-computador, PT-C93-frigorifico]
 sounds: []
-roots: []
+roots: [furnus-latin]
+etymology_hook: "forno ← Latin furnus 'oven' — English furnace shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C93-frigorifico]
 <!-- hl-knowledge: introduces=[PT-LEX-C93-CASA93-05]; assesses=[] -->
 
 **o forno** — "an oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forno** ← Latin *furnus*, "oven" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

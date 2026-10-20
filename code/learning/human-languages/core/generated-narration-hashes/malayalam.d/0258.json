@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 258,
-  "sourceHash": "fnv1a64:65b5858690ea92a6",
+  "sourceHash": "fnv1a64:512c1905764bf364",
   "lessonIds": [
     "ML-C258-cayam",
     "ML-C258-akrti",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch258.txt",
   "json": "malayalam/narration/ch258.json",
-  "textHash": "fnv1a64:fa816839026c0a5f",
-  "jsonHash": "fnv1a64:b74096d7e400620c",
+  "textHash": "fnv1a64:c34fb76df7ff764b",
+  "jsonHash": "fnv1a64:f49fdee0b8676563",
   "findings": []
 }

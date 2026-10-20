@@ -14,7 +14,8 @@ romanization: "kūli"
 concept_tag: KA-KELASA197-KULI
 prerequisites: [KA-C196-badagi, KA-C197-kavalugara]
 sounds: []
-roots: []
+roots: [dravidian-kuuli-wage]
+etymology_hook: "kūli: native Dravidian, one word with Tamil kūli and Telugu kūli (DEDR 1905)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C197-kavalugara]
 <!-- hl-knowledge: introduces=[KA-LEX-C197-KELASA197-02]; assesses=[] -->
 
 **ಕೂಲಿ** — *kūli* — "daily wages; a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೂಲಿ** (*kūli*) is native Dravidian, one word with Tamil *kūli*, Telugu *kūli* and Malayalam *kūli* (DEDR 1905). DEDR lists *kūli* itself, "hire, wages; day-labourer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

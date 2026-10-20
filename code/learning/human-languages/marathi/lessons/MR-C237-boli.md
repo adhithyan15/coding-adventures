@@ -14,7 +14,8 @@ romanization: "bolī"
 concept_tag: MR-VASTU237-BOLI
 prerequisites: [MR-C236-khore, MR-C237-parampara]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bolī ← *bōll 'speak', a reconstructed form; a tadbhava (CDIAL 9321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C237-parampara]
 <!-- hl-knowledge: introduces=[MR-LEX-C237-VASTU237-02]; assesses=[] -->
 
 **बोली** — *bolī* — "a dialect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोली** (*bolī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bōll*, "speak", a form CDIAL reconstructs from its descendants (CDIAL 9321). CDIAL glosses the Marathi word "language".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

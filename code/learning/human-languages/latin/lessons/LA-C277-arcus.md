@@ -13,7 +13,8 @@ gloss: "a bow; an arch"
 concept_tag: LA-RES277-ARCUS
 prerequisites: [LA-C277-galea, LA-C277-hasta]
 sounds: []
-roots: []
+roots: [arcus-latin]
+etymology_hook: "arcus 'bow, arch' — usually traced to PIE *h2erkwo- 'bow'; English arrow is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C277-hasta]
 <!-- hl-knowledge: introduces=[LA-LEX-C277-RES277-03]; assesses=[] -->
 
 **arcus, arcūs** — "a bow; an arch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arcus** is inherited, usually traced to Proto-Indo-European *\*h2erkwo-*, "bow, arch" (EtymDB 2.1); English *arrow* is a cousin. English *arc* and *arch* come from *arcus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

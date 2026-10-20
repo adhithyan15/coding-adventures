@@ -6,7 +6,7 @@ sequence: 750
 chapter: 40
 type: grammar
 headword: habláis
-gloss: "you all speak" in Spain — a whole form that half the Spanish world does not use
+gloss: '"you all speak" in Spain — a whole form that half the Spanish world does not use'
 concept_tag: ES-GRAMMAR-AR-PRESENT-PLURAL
 prerequisites: [ES-C07-hablan]
 sounds: []
@@ -61,7 +61,7 @@ across much of the Americas.
 
 That drift left Spain with a problem. If *vos* was being used for one polite
 person, what was left for an actual group? Spaniards added a word to disambiguate:
-**vos + otros**, "you **others**" — hence *vosotros*, and its feminine
+**vos + otros** (*otro* ← Latin *alter*), "you **others**" — hence *vosotros*, and its feminine
 *vosotras*.
 
 The Americas never needed the repair, because *ustedes* had already taken the

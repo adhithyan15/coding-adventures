@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-356-DESPEDIMENTO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-356-DESPEDIMENTO"
+  ],
+  "after": []
+}

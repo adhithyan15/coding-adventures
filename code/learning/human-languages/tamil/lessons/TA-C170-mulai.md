@@ -14,7 +14,8 @@ romanization: "mūḷai"
 concept_tag: TA-NALAM170-MULAI
 prerequisites: [TA-C170-talumpu, TA-C170-vayirruppokku]
 sounds: []
-roots: []
+roots: [dravidian-moolai-brain]
+etymology_hook: "மூளை — native Dravidian (DEDR 5051); Malayalam mūḷa, Telugu mūlaga 'marrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C170-vayirruppokku]
 <!-- hl-knowledge: introduces=[TA-LEX-C170-NALAM170-05]; assesses=[] -->
 
 **மூளை** — *mūḷai* — "the brain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மூளை** (*mūḷai*) is native Dravidian. DEDR 5051 lists Malayalam *mūḷa* and Telugu *mūlaga*, "marrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

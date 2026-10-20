@@ -4,7 +4,7 @@
   "chapter": 224,
   "title": "To mix, To serve, To taste, To fill, To cover",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2cdaddf08f9339e2",
+  "sourceHash": "fnv1a64:dba3529b6e5a9ec8",
   "lessons": [
     {
       "id": "ML-C224-kalarttuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58f350f3d3dfae22",
+      "sourceHash": "fnv1a64:49daed10ea588116",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കലർത്തുക (kalarttuka) is native Dravidian, the causative of the verb \"to be mixed\"; DEDR 1299 lists the root with Tamil kala, Kannada kali and Telugu kalayu. DEDR 1299 compares Sanskrit kalka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -132,9 +143,9 @@
     {
       "id": "ML-C224-vilambuka",
       "sequence": 10100,
-      "title": "വിളമ്പുക (viḷambuka) — to serve (food)",
+      "title": "വിളമ്പുക (viḷampuka) — to serve (food)",
       "headword": "വിളമ്പുക",
-      "romanization": "viḷambuka",
+      "romanization": "viḷampuka",
       "gloss": "to serve (food)",
       "script": "malayalam",
       "modality": "voice",
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2aee21037adeb268",
+      "sourceHash": "fnv1a64:1cb4feed4c4d2dd5",
       "notice": null,
       "blocks": [
         {
@@ -169,12 +180,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "വിളമ്പുക — viḷambuka — \"to serve (food)\"."
+              "text": "വിളമ്പുക — viḷampuka — \"to serve (food)\"."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിളമ്പുക (viḷampuka) is native Dravidian, one word with Tamil viḷampu (DEDR 5434)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -198,43 +220,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "viḷambuka",
+              "instruction": "viḷampuka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *viḷambuka*]"
+              "source": "[YOU SAY: *viḷampuka*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "viḷambuka, once more",
+              "instruction": "viḷampuka, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *viḷambuka*, once more]"
+              "source": "[YOU SAY: *viḷampuka*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say viḷambuka",
+              "instruction": "say viḷampuka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *viḷambuka*]"
+              "source": "[YOU SAY: say *viḷampuka*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Malayalam for to change, then the Malayalam for to mix, then say viḷambuka again",
+              "instruction": "say the Malayalam for to change, then the Malayalam for to mix, then say viḷampuka again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Malayalam for to change, then the Malayalam for to mix, then say *viḷambuka* again]"
+              "source": "[YOU RECALL: say the Malayalam for to change, then the Malayalam for to mix, then say *viḷampuka* again]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -246,7 +268,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does വിളമ്പുക (viḷambuka) mean? (\"To serve (food)\".) Say it once more."
+              "text": "What does വിളമ്പുക (viḷampuka) mean? (\"To serve (food)\".) Say it once more."
             }
           ]
         }
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49bb54fe845dd9d4",
+      "sourceHash": "fnv1a64:e6ec244a42227160",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രുചിക്കുക (rucikkuka) is built on Sanskrit ruci, \"light, beauty\", later \"relish, taste\" (CDIAL 10762), with the ending that makes a Malayalam verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96c83a1afb2d770a",
+      "sourceHash": "fnv1a64:23a76f3cf2d1b354",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിറയ്ക്കുക (niṟaykkuka) is native Dravidian, the causative of the verb \"to become full\"; DEDR 3682 lists the root with Tamil niṟai, Kannada neṟe and Telugu neṟayu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc7251ec21319898",
+      "sourceHash": "fnv1a64:189da3dbbc1073f4",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മൂടുക (mūṭuka) is native Dravidian, one word with Tamil mūṭu (DEDR 5034)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

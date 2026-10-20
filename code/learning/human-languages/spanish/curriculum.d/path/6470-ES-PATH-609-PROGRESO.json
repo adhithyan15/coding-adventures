@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-609-PROGRESO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-609-PROGRESO"
+  ],
+  "after": []
+}

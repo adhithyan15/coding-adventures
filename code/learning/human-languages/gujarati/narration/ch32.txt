@@ -9,6 +9,9 @@ Warm-up.
 [pause 3 seconds]
 Say the Gujarati word for home, from the first three-place map. Now listen twice: bārṇũ. It means door — the one you open to come in, and listen to that ending: the nasalized -ũ that marks a neuter word.
 
+The word, taken apart.
+બારણું (bārṇũ) is a tadbhava. CDIAL lists it, beside Gujarati bār, "door", under Sanskrit dvāra, "door" (CDIAL 6663).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bārṇũ"]
@@ -30,6 +33,9 @@ Lesson 2 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the word for door. Now listen twice: bārī. It means window — the same opening in a wall, only smaller, and one sound away from bārṇũ.
+
+The word, taken apart.
+બારી (bārī) is a tadbhava. CDIAL lists it under Sanskrit dvāra, "door", which also had a feminine dvārī (CDIAL 6663): a window is a small door.
 
 Guided Practice.
 [pause 1 second]
@@ -53,6 +59,9 @@ Warm-up.
 [pause 3 seconds]
 Say the words for door and for window. Now listen twice: khurshī. It means chair — the first thing in this chapter that stands inside the room rather than in its wall.
 
+The word, taken apart.
+ખુરશી (khurshī) is a loan from Arabic kursī, "chair, throne", which reached Gujarati through Persian. Its Arabic root is k-r-s (Lane).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "khurshī"]
@@ -75,6 +84,9 @@ Warm-up.
 [pause 3 seconds]
 Say the word for door. Now listen twice: chāvī. It means key — the thing the bārṇũ is opened with.
 
+The word, taken apart.
+ચાવી (chāvī) is a loan, usually traced to Portuguese chave, "key".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "chāvī"]
@@ -96,6 +108,9 @@ Lesson 5 of 8.
 Warm-up.
 [pause 3 seconds]
 Say the words for key and for chair. Now listen twice: dīvo. It means lamp — the one lit at sānj, and note it ends in -o, not the neuter -ũ.
+
+The word, taken apart.
+દીવો (dīvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dīpa, "lamp" (CDIAL 6348).
 
 Guided Practice.
 [pause 1 second]

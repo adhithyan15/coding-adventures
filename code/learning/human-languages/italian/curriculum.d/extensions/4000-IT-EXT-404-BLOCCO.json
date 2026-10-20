@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-404-BLOCCO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is wrong with a device: it freezes, it needs restarting, it has a virus, and I need an antivirus.",
+  "prerequisites": []
+}

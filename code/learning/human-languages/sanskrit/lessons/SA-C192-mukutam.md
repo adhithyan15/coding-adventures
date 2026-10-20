@@ -14,7 +14,8 @@ romanization: "mukuṭam"
 concept_tag: SA-THG192-MUKUTAM
 prerequisites: [SA-C191-calani, SA-C192-harah]
 sounds: []
-roots: []
+roots: [sanskrit-mukuta]
+etymology_hook: "mukuṭa 'crown' ← borrowed from Dravidian, as Tamil mukaṭu 'top' (CDIAL 10144; DEDR 4888)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C192-harah]
 <!-- hl-knowledge: introduces=[SA-LEX-C192-THG192-02]; assesses=[] -->
 
 **मुकुटम्** — *mukuṭam* — "a crown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mukuṭa* was borrowed from Dravidian, CDIAL 10144 says, comparing Tamil *mukaṭu*, "top, highest part" (DEDR 4888). It lives on as Hindi *mauṛ*, the crown a bridegroom wears.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

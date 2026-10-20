@@ -14,7 +14,8 @@ romanization: "vimāntaḷ"
 concept_tag: MR-LOC128-VIMANTAL
 prerequisites: [MR-C128-bag, MR-C128-udyan]
 sounds: []
-roots: []
+roots: [sanskrit-vimana, sanskrit-tala]
+etymology_hook: "vimāntaḷ: Sanskrit vimāna 'car of the gods' (CDIAL 11823) + taḷ 'surface, ground' ← tala (CDIAL 5731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C128-udyan]
 <!-- hl-knowledge: introduces=[MR-LEX-C128-LOC128-04]; assesses=[] -->
 
 **विमानतळ** — *vimāntaḷ* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विमानतळ** (*vimāntaḷ*) is a modern compound of Sanskrit parts: *vimāna*, "car of the gods", now "aircraft" (CDIAL 11823), and *taḷ*, "surface, ground", from Sanskrit *tala* (CDIAL 5731).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C357-betriebsrat",
+  "pathSegment": "GE-PATH-357-GEWERKSCHAFT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-357-GEWERKSCHAFT",
+      "order": 1
+    }
+  ]
+}

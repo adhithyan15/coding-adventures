@@ -11,7 +11,8 @@ romanization: "sakkare"
 concept_tag: KA-NOUN-SUGAR
 prerequisites: [KA-C61-jaggery, KA-C59-fire]
 sounds: []
-roots: []
+roots: [sanskrit-sharkara]
+etymology_hook: "sakkare ← Sanskrit śarkarā 'candied sugar', reshaped as a tadbhava (CDIAL 12338)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C61-jaggery]
 ಸಕ್ಕರೆ is the refined one, white and loose, and it is the traveller of this chapter. It goes back to a Sanskrit word meaning gravel or grit — a fair description of what sugar looks like beside a lump of ಬೆಲ್ಲ.
 
 The coffee-word and the tea-word each reached Kannada after a long journey inward. This word went the other way. It left India, crossed Arabic and Latin, turned into the English *sugar*, and Kannada kept the original at home the whole time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಕ್ಕರೆ** (*sakkare*) comes from Sanskrit *śarkarā*, "candied sugar", reshaped to Kannada sounds: a tadbhava (CDIAL 12338). Prakrit *sakkarā* shows the middle step.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "badalvũ"
 concept_tag: GU-VERB-BADALVU
 prerequisites: [GU-C143-atakvu, GU-C143-manvu]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalvũ ← Arabic badal 'a substitute, an exchange', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C143-manvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C143-ACT143-05]; assesses=[] -->
 
 **બદલવું** (*badalvũ*) — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બદલવું** (*badalvũ*) is a loan from Arabic *badal*, "a substitute, an exchange", which reached Gujarati through Persian. Its Arabic root is *b-d-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

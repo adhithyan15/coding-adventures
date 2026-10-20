@@ -13,7 +13,8 @@ gloss: "it is necessary, one ought"
 concept_tag: LA-CAN110-OPORTET
 prerequisites: [LA-C110-facultas, LA-C110-ars]
 sounds: []
-roots: []
+roots: [oportet-latin, opus-latin]
+etymology_hook: "oportet 'it is necessary' — usually linked with opus 'need'; its formation is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C110-ars]
 <!-- hl-knowledge: introduces=[LA-LEX-C110-CAN110-03]; assesses=[] -->
 
 **oportet** — "it is necessary, one ought".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oportet** is usually linked with *opus*, "need, work" (Lewis & Short), but how it was formed is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

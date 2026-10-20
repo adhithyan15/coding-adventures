@@ -14,7 +14,8 @@ romanization: "moryák"
 concept_tag: RU-RABOTA202-MORYAK
 prerequisites: [RU-C202-santekhnik, RU-C202-lyotchik]
 sounds: []
-roots: []
+roots: [pie-mori]
+etymology_hook: "моряк is море 'the sea' + -як: a man of the sea"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C202-lyotchik]
 <!-- hl-knowledge: introduces=[RU-LEX-C202-RABOTA202-04]; assesses=[] -->
 
 **моряк** (*moryák*) — "a sailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**моряк** is *море*, "sea", with *-як*, "a person": a seaman. *море* is a cousin of Latin *mare*, "sea" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

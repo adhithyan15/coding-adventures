@@ -14,7 +14,8 @@ romanization: "nandati"
 concept_tag: SA-VERB-NANDATI
 prerequisites: [SA-C144-niksipati, SA-C144-yojayati]
 sounds: []
-roots: []
+roots: [nand-rejoice, sanskrit-nandati]
+etymology_hook: "nandati ← √nand 'rejoice, be glad' (MW; CDIAL 6950); ānanda 'joy' is built on the same root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C144-yojayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C145-ACT145-01]; assesses=[] -->
 
 **नन्दति** — *nandati* — "is glad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nandati* comes from the root √nand "rejoice, be pleased" (MW; CDIAL 6950), already in the Rigveda. *ānanda* "joy", a word you already know, is built on the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

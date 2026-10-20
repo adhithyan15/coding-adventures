@@ -14,7 +14,8 @@ romanization: "rī̃gaṇ"
 concept_tag: GU-THINGS114-RIGAN
 prerequisites: [GU-C114-ghau, GU-C114-makai]
 sounds: []
-roots: []
+roots: [sanskrit-ringani]
+etymology_hook: "rīṁgaṇ: listed with rīṁgṇī 'egg-plant' under the lexical Sanskrit riṅgaṇī, another plant-name (CDIAL 10738)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C114-makai]
 <!-- hl-knowledge: introduces=[GU-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **રીંગણ** (*rī̃gaṇ*) — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Gujarati *rīṁgṇī*, the egg-plant, and *rīṁgṇũ*, its fruit, under the lexical Sanskrit *riṅgaṇī*, the name of another plant (CDIAL 10738). **રીંગણ** (*rīṁgaṇ*) is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

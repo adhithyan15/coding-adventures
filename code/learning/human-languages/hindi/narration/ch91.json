@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Character, Not Mood",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d4663b7e21fb4b7a",
+  "sourceHash": "fnv1a64:7c92d980ba6849c8",
   "lessons": [
     {
       "id": "HI-C83-buraa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e8b39c4c7a5c9c1",
+      "sourceHash": "fnv1a64:875772794d8a9d31",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,10 @@
             {
               "kind": "speech",
               "text": "A second everyday one: बुरा लगना — burā lagnā, \"to feel hurt,\" literally to strike one as bad. Hindi describes being offended as something the remark does, not something you do."
+            },
+            {
+              "kind": "speech",
+              "text": "बुरा (burā) comes from a reconstructed bura, \"defective\" (CDIAL 9289)."
             }
           ]
         },
@@ -164,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does बुरा (burā) मत मानो literally say? (Do not consider it bad.) Does बुरा (burā) bend? (Yes — it ends in -आ.) And मोटा, from the last chapter? (Also yes — same ending, same behaviour.)"
+              "text": "What does Hindi's \"no offence\" literally say? (Do not consider it bad.) Does बुरा (burā) bend? (Yes — it ends in -आ.) And मोटा, from the last chapter? (Also yes — same ending, same behaviour.)"
             }
           ]
         }
@@ -183,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad5ac8232927409d",
+      "sourceHash": "fnv1a64:7f40066c0f02fa6f",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bbe768597c9a935",
+      "sourceHash": "fnv1a64:d1902ca6fcea9c75",
       "notice": null,
       "blocks": [
         {
@@ -530,7 +534,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:eef7b565f00beaa9",
+      "sourceHash": "fnv1a64:a6aa80d3f9b34fa1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -568,7 +572,7 @@
             },
             {
               "kind": "speech",
-              "text": "Built from शरम / शर्म (śaram), \"shame, modesty,\" plus the ending -ईला."
+              "text": "Built from a noun and an ending: शरम / शर्म (śaram, \"shame, modesty\") + -ईला becomes शर्मीला (śarmīlā)."
             }
           ]
         },
@@ -605,7 +609,7 @@
             },
             {
               "kind": "speech",
-              "text": "शर्म itself is Persian, and it is the same word as English shame: both descend from the same ancient root for covering oneself."
+              "text": "शर्म itself came into Hindi from Persian šarm. It only sounds like English shame: the English word is Germanic, and no shared root is established."
             }
           ]
         },
@@ -716,7 +720,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a38f387ec11a19a",
+      "sourceHash": "fnv1a64:3994bb2134c8b5b1",
       "notice": null,
       "blocks": [
         {
@@ -881,7 +885,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c88b2da96174636d",
+      "sourceHash": "fnv1a64:4154ed06845e22d2",
       "notice": {
         "modality": "sight",
         "needs": [

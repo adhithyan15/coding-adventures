@@ -13,7 +13,8 @@ gloss: "a grandmother"
 concept_tag: IT-FAMIGLIA1-NONNA
 prerequisites: [IT-C44-figlia, IT-C44-nonno]
 sounds: []
-roots: []
+roots: [nonna-latin]
+etymology_hook: "nonna ← Late Latin nonna 'nun, nurse' — English nun is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C44-nonno]
 <!-- hl-knowledge: introduces=[IT-LEX-C44-FAMIGLIA1-04]; assesses=[] -->
 
 **la nonna** — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nonna** ← Late Latin *nonna*, "nun; nurse" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

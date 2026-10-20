@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for on time, then the Malayalam for free t
 You'll want to know: മരുന്നുകട.
 മരുന്നുകട — marunnukaṭa — "a pharmacy".
 
+The word, taken apart.
+മരുന്നുകട (marunnukaṭa) is native Dravidian, "medicine shop": marunnŭ, "medicine" (DEDR 4719, with Tamil maruntu), and kaṭa, "shop" (DEDR 1142).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for free time, then the Malayalam for a ph
 
 You'll want to know: തുണിക്കട.
 തുണിക്കട — tuṇikkaṭa — "a clothes shop".
+
+The word, taken apart.
+തുണിക്കട (tuṇikkaṭa) is native Dravidian, "cloth shop": tuṇi, "cloth" (DEDR 3307), and kaṭa, "shop" (DEDR 1142, with Tamil kaṭai).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a pharmacy, then the Malayalam for a c
 You'll want to know: ഇടത്ത്.
 ഇടത്ത് — iṭattŭ — "on the left".
 
+The word, taken apart.
+ഇടത്ത് (iṭattŭ) is native Dravidian: iṭam, "the left side" (DEDR 449, with Tamil iṭai), with the place ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a clothes shop, then the Malayalam for
 You'll want to know: വലത്ത്.
 വലത്ത് — valattŭ — "on the right".
 
+The word, taken apart.
+വലത്ത് (valattŭ) is native Dravidian: valam, "the right or strong side" (DEDR 5276, with Tamil val, "strong"), with the place ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for on the left, then the Malayalam for on
 
 You'll want to know: നേരെ.
 നേരെ — nēre — "straight ahead".
+
+The word, taken apart.
+നേരെ (nēre) is native Dravidian, built on nēr, "what is straight, even"; DEDR 3770 lists the root with Tamil nēr and Kannada nēr.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a trade, a craft"
 concept_tag: PT-PODER82-OFICIO
 prerequisites: [PT-C82-dever, PT-C82-necessidade]
 sounds: []
-roots: []
+roots: [officium-latin]
+etymology_hook: "ofício ← Latin officium 'duty, service' — English office shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C82-necessidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C82-PODER82-04]; assesses=[] -->
 
 **o ofício** — "a trade, a craft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ofício** ← Latin *officium*, "duty, service" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

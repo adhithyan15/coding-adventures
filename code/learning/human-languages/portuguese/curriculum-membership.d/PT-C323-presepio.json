@@ -1,0 +1,11 @@
+{
+  "id": "PT-C323-presepio",
+  "pathSegment": "PT-PATH-323-CONSOADA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-323-CONSOADA",
+      "order": 1
+    }
+  ]
+}

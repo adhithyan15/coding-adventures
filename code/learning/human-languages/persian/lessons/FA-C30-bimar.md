@@ -14,7 +14,8 @@ romanization: "bimâr"
 concept_tag: FA-BODY30-BIMAR
 prerequisites: [FA-C30-tab, FA-C30-bimarestan]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bimâr ← Middle Persian wēmār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C30-bimarestan]
 <!-- hl-knowledge: introduces=[FA-LEX-C30-BODY30-05]; assesses=[] -->
 
 **بیمار** — *bimâr* — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bimâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wēmār*, "sick, ill" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

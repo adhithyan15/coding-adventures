@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 88,
-  "sourceHash": "fnv1a64:fb710c38a5880ac0",
+  "sourceHash": "fnv1a64:58db5d3eb4abc252",
   "lessonIds": [
     "PA-C88-nere",
     "PA-C88-andar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch88.txt",
   "json": "punjabi/narration/ch88.json",
-  "textHash": "fnv1a64:3a788a8f13411054",
-  "jsonHash": "fnv1a64:16abfa9262c8b964",
+  "textHash": "fnv1a64:6cedb30eb033fcf2",
+  "jsonHash": "fnv1a64:13e8a8a15ca3315e",
   "findings": []
 }

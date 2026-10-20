@@ -11,7 +11,8 @@ romanization: "etra rūpa"
 concept_tag: ML-PRICE-QUESTION
 prerequisites: [ML-C91-vila-panam, ML-C81-dooram, ML-C88-tens]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, sanskrit-rupya]
+etymology_hook: "etra: native (DEDR 5151); rūpa 'rupee' goes back to Sanskrit rūpya 'stamped; silver' (CDIAL 10805)"
 duration:
   max_seconds: 260
 requires:
@@ -62,6 +63,11 @@ that chapter's exam point warned about.
 
 So this page is where three separate chapters meet: **the word that asks, the
 numbers that answer, and the unit they are counted in.**
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എത്ര രൂപ** (*etra rūpa*): *etra*, "how many", is native Dravidian (DEDR 5151). *rūpa*, "rupee", goes back through Hindustani *rupayā* to Sanskrit *rūpya*, "stamped; silver" (CDIAL 10805).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-MONEY-03, ML-CONCEPT-C91-PRICE-QUESTION-01, ML-LEX-C91-MONEY-01, ML-CONCEPT-C88-TENS-01] -->

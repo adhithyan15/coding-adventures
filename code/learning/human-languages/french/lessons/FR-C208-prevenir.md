@@ -13,7 +13,8 @@ gloss: "to warn"
 concept_tag: FR-VERB-PREVENIR
 prerequisites: [FR-C208-augmenter, FR-C208-diminuer]
 sounds: []
-roots: []
+roots: [venire-latin]
+etymology_hook: "prévenir ← Latin praevenire 'to come before' — English prevent"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C208-diminuer]
 <!-- hl-knowledge: introduces=[FR-LEX-C208-VERBES208-05]; assesses=[] -->
 
 **prévenir** — "to warn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prévenir** ← Latin *praevenire*, "to come before" (EtymDB 2.1) — a learned borrowing: to warn is to get there first.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

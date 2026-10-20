@@ -1,5 +1,55 @@
 # Changelog
 
+## 2026-10-19 (A multiline HostInput is a TextArea)
+
+- `HostInput ( multiline : true )` lowers to Qt Quick Controls' `TextArea`, as
+  the legacy multiline `Input` does; the HostInput path passed a hard-wired
+  single-line flag (#15930). `tree_needs_controls_import` now asks the same
+  question for both primitives, so a multiline HostInput without a placeholder
+  still imports `QtQuick.Controls` — without it QML refuses to load the file.
+
+## 2026-10-16 (Centered milestone rotations)
+
+- Lower single finite `rotate(Ndeg)` transforms on painted rectangles to centered
+  Qt Item rotation, with ordered state overrides and unchanged layout dimensions.
+  Unsupported units, chains, and non-finite angles remain reported (#17675).
+
+## 2026-10-13 (Path geometry binds to slots and For items)
+
+- `Path` coordinates (`cx`, `cy`, `r`, `x1` … `y2`) may now be bound to a
+  number slot or an expression (#16926). QML bindings are JavaScript, so a
+  bound coordinate is written as `Number(expr)` where the literal went, and
+  re-evaluates as its inputs change. SpiceWorkbench's schematic and waveform
+  now compile on Qt; they were refused before with "only supports a literal
+  number".
+- A bound circle's position is the binding `Number(cx) - r`. A bound line's
+  `Shape` size is `Math.max(0, …)`, floored at 0 as the literal size is.
+- A bound value that is not finite (a diverged simulation's `NaN` or
+  `Infinity`) becomes `0`, and a bound radius is floored at `0`. Without the
+  guard the shape silently disappeared.
+- All-literal geometry lowers byte-identically to before. An unsafe slot name
+  is refused.
+- `tests/spice_workbench_compiles_to_qt.rs` compiles the real package and pins
+  the bound geometry.
+
+## 2026-10-12 (elevation shadows leave the degradation report)
+
+- A non-inset CSS `box-shadow` paired with a supported Mosaic `elevation`
+  token now counts as consumed when Qt emits the equivalent native
+  `MultiEffect` depth (#17386).
+- Standalone shadows, inset shadows, and unsupported elevation values remain
+  explicit degradation debt. Emitted QML is unchanged.
+
+## 2026-10-12 (controls preserve fill widths)
+
+- Exact `width: 100%` declarations on `Input`, `HostInput`, and `HostButton`
+  now lower to Qt Quick's native `Layout.fillWidth: true` contract (#17338).
+- Other percentages, intrinsic widths, and controls whose states switch to a
+  scalar width remain explicit degradations instead of being flattened into
+  incorrect geometry.
+- Journal's inverse style-degradation ratchet drops its now-stale Qt `width`
+  pin while retaining the independently measured `min-height` gap.
+
 ## 2026-10-10 (HostDraggable preserves inherited text presentation)
 
 - Supported `color` and `font-size` declarations on `HostDraggable` now reach

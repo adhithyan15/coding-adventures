@@ -1,0 +1,11 @@
+{
+  "id": "PT-R300-revisao-293-300",
+  "pathSegment": "PT-PATH-300-CAPOTAR",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-300-CAPOTAR",
+      "order": 5
+    }
+  ]
+}

@@ -90,15 +90,15 @@ and — from Latin's *stāre* — **state**, **station**, **stable**, **constant
 - [YOU SAY: "ich verstehe, du verstehst, er versteht"]
 - [YOU SAY: "Ich verstehe Deutsch."]
 - [YOU SAY: both verbs — "Ich denke. Ich verstehe."]
-- [YOU SAY: the pieces — "ver- + stehen" beside "under + stand"]
+- [YOU SAY: the pieces — "ver- + stehen → verstehen", like "under + stand → understand"]
 - [YOU SAY: the parallel — like *grün* beside *viridis*, built, not shared]
 - [YOU SAY: where it happens — "der Kopf" — and what stands in it, "der Verstand"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VERSTEHEN-05, GE-ETYMON-VERSTEHEN-06, GE-LEX-DENKEN-02, GE-LEX-KOPF-02] -->
 
-[PAUSE 3s] What are the two pieces of **verstehen**? (***Ver-*** + ***stehen***.)
-Which English verb is *stehen*? (**Stand**.) Did English borrow *understand*
+[PAUSE 3s] Which English verb hides inside **verstehen**? (**Stand** — German
+built its own "under-stand" from its own pieces.) Did English borrow *understand*
 from German? (**No** — each built its own compound.) How solid is the "under =
 among" account? (**Standard, but not certain**.) Say "I think" and "I
 understand." (***Ich denke. Ich verstehe.***)

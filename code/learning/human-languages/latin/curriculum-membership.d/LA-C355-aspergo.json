@@ -1,0 +1,11 @@
+{
+  "id": "LA-C355-aspergo",
+  "pathSegment": "LA-PATH-355-CONDIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-355-CONDIO",
+      "order": 2
+    }
+  ]
+}

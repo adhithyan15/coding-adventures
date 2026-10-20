@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:81e74263456bd20b",
+  "lessonIds": [
+    "IT-C481-fianco",
+    "IT-C481-coscia",
+    "IT-C481-polpaccio",
+    "IT-C481-tallone",
+    "IT-C481-alluce"
+  ],
+  "tex": "italian/book/chapters/ch481-dalla-coscia-al-tallone.tex"
+}

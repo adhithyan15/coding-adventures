@@ -11,7 +11,8 @@ romanization: "tappu"
 concept_tag: TE-RESPOND-WRONG
 prerequisites: [TE-C86-oneminute, TE-C86-wait]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip]
+etymology_hook: "tappu: native Dravidian, one word with Tamil tappu and Kannada tappu (DEDR 3071)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C86-wait]
 
 You have met it before without seeing it: **తప్పకుండా**, "certainly", is built on the verb
 behind this word, "to slip, to miss". Certainly is *without slipping*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తప్పు** (*tappu*) is native Dravidian, one word with Tamil *tappu* and Kannada *tappu* (DEDR 3071). DEDR lists Telugu *tappu*, "error, mistake; to miss, fail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

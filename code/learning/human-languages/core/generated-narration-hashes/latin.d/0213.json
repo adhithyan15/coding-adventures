@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 213,
-  "sourceHash": "fnv1a64:ee9e590d90622681",
+  "sourceHash": "fnv1a64:70ed20d936b164ea",
   "lessonIds": [
     "LA-C213-peregrinus",
     "LA-C213-probus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch213.txt",
   "json": "latin/narration/ch213.json",
-  "textHash": "fnv1a64:592e789b3f38ec6d",
-  "jsonHash": "fnv1a64:de650bcb19ff73fe",
+  "textHash": "fnv1a64:40fbe5049b373514",
+  "jsonHash": "fnv1a64:437b861dfb204e7c",
   "findings": []
 }

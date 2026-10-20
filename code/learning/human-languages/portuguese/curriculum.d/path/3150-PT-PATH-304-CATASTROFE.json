@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-304-CATASTROFE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-304-CATASTROFE"
+  ],
+  "after": []
+}

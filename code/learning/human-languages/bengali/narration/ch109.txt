@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a quilt, then the Bengali for a mat.
 You'll want to know: চিরুনি.
 চিরুনি — chiruni — "a comb".
 
+The word, taken apart.
+চিরুনি (chiruni) looks like a noun made from cirā, "to split", which CDIAL lists under cīrayati, "splits" (CDIAL 4844); CDIAL does not list চিরুনি (chiruni) itself, so the link is not confirmed. The inherited word for a comb, kāṁkui, comes from Sanskrit kaṅkata (CDIAL 2598).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a mat, then the Bengali for a comb.
 
 You'll want to know: সাবান.
 সাবান — sābān — "soap".
+
+The word, taken apart.
+সাবান (sābān) is usually traced to Portuguese sabão, "soap"; Arabic ṣābūn, root ṣ-b-n (Lane), reached Hindi as sābun through Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a comb, then the Bengali for soap.
 You'll want to know: গামছা.
 গামছা — gāmchhā — "a thin towel".
 
+The word, taken apart.
+The origin of গামছা (gāmchhā) is not certain, but it appears to belong with Sanskrit aṅgoñcha, "towel". CDIAL gives no Bengali form there, but it lists Bihari gamchā, "towel", beside Hindi āṁgochā, and suggests the word may be aṅga, "limb, body", + a word for wiping (CDIAL 139).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for soap, then the Bengali for a thin towel.
 You'll want to know: সুই.
 সুই — sui — "a needle".
 
+The word, taken apart.
+সুই (sui) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sūcī, "needle" (CDIAL 13551).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a thin towel, then the Bengali for a nee
 
 You'll want to know: সুতো.
 সুতো — sutô — "thread".
+
+The word, taken apart.
+সুতো (sutô) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sūtra, "thread" (CDIAL 13561). CDIAL writes the Bengali form sutā.
 
 What you've built.
 One more word for this chapter.

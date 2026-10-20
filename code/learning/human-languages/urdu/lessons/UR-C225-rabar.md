@@ -14,7 +14,8 @@ romanization: "rabaṛ"
 concept_tag: UR-CHIZ225-RABAR
 prerequisites: [UR-C225-parsal, UR-C225-risala]
 sounds: []
-roots: []
+roots: [english-rubber]
+etymology_hook: "rabaṛ ← English rubber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C225-risala]
 <!-- hl-knowledge: introduces=[UR-LEX-C225-CHIZ225-04]; assesses=[] -->
 
 **ربڑ** — *rabaṛ* — "a rubber, an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ربڑ** (*rabaṛ*) is a loan from English *rubber*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-LUGARES87-SEMAFORO
 prerequisites: [PT-C87-esquina, PT-C87-cruzamento]
 sounds: []
 roots: []
+etymology_hook: "semáforo ← French sémaphore, from Greek sema 'sign' + -phoros 'bearing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C87-cruzamento]
 <!-- hl-knowledge: introduces=[PT-LEX-C87-LUGARES87-04]; assesses=[] -->
 
 **o semáforo** — "traffic lights".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semáforo** ← French *sémaphore* (EtymDB 2.1) — borrowed. The French word was built from Greek *sēma*, "sign", and *-phoros*, "bearing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

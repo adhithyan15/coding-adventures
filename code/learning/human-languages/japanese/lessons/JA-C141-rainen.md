@@ -14,7 +14,8 @@ romanization: "rainen"
 concept_tag: JA-FUT141-RAINEN
 prerequisites: [JA-C141-raigetsu, JA-C140-kyonen, JA-W137-pe, JA-W132-re]
 sounds: []
-roots: []
+roots: [middle-chinese-loj, middle-chinese-nen]
+etymology_hook: "rainen: Sino-Japanese 来 'come' + 年 'year', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ reviews_of: [JA-C141-raigetsu, JA-C140-kyonen, JA-W137-pe, JA-W132-re]
 > **らいねん ともだちと やまに いきます。** — *rainen tomodachi to yama ni
 > ikimasu* — "Next year I will go to the mountains with a friend." The
 > particle **と** means "with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**らいねん** (*rainen*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *nen*, "year" (*nen*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-RAINEN, JA-LEX-C141-RAIGETSU] -->

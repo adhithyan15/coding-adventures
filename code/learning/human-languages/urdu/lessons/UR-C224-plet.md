@@ -14,7 +14,8 @@ romanization: "pleṭ"
 concept_tag: UR-CHIZ224-PLET
 prerequisites: [UR-C224-jharu, UR-C224-jag]
 sounds: []
-roots: []
+roots: [english-plate]
+etymology_hook: "pleṭ ← English plate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C224-jag]
 <!-- hl-knowledge: introduces=[UR-LEX-C224-CHIZ224-04]; assesses=[] -->
 
 **پلیٹ** — *pleṭ* — "a dinner plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پلیٹ** (*pleṭ*) is a loan from English *plate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

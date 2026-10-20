@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C290-ameaca",
+    "language": "portuguese",
+    "chapter": 290,
+    "sequence": 16900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c06d170a1b1fe77"
+  },
+  "findings": []
+}

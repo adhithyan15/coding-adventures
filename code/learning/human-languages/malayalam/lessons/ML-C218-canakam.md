@@ -14,7 +14,8 @@ romanization: "cāṇakaṁ"
 concept_tag: ML-VASTU218-CANAKAM
 prerequisites: [ML-C217-cunnampu, ML-C218-valam]
 sounds: []
-roots: []
+roots: [malayalam-canakam]
+etymology_hook: "cāṇakaṁ 'cow dung': of uncertain origin; DEDR does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C218-valam]
 <!-- hl-knowledge: introduces=[ML-LEX-C218-VASTU218-02]; assesses=[] -->
 
 **ചാണകം** — *cāṇakaṁ* — "cow dung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാണകം** (*cāṇakaṁ*) is of uncertain origin; DEDR does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

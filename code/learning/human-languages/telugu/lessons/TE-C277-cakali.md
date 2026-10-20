@@ -14,7 +14,8 @@ romanization: "cākali"
 concept_tag: TE-PANI277-CAKALI
 prerequisites: [TE-C277-phiryadu, TE-C277-mangali]
 sounds: []
-roots: []
+roots: [telugu-cakali-washerman]
+etymology_hook: "cākali: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'washerman'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C277-mangali]
 <!-- hl-knowledge: introduces=[TE-LEX-C277-PANI277-03]; assesses=[] -->
 
 **చాకలి** — *cākali* — "a washerman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **చాకలి** (*cākali*) is uncertain. DEDR and CDIAL list no word of this shape meaning "washerman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MR-PLACE112-PUDHE
 prerequisites: [MR-C112-baher, MR-C112-mage]
 sounds: []
 roots: []
+etymology_hook: "puḍhe 'ahead': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C112-mage]
 <!-- hl-knowledge: introduces=[MR-LEX-C112-PLACE112-05]; assesses=[] -->
 
 **पुढे** — *puḍhe* — "ahead, in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पुढे** (*puḍhe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

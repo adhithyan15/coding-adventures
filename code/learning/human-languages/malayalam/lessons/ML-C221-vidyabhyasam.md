@@ -14,7 +14,8 @@ romanization: "vidyābhyāsaṁ"
 concept_tag: ML-JOLI221-VIDYABHYASAM
 prerequisites: [ML-C221-phisu, ML-C221-sahapathi]
 sounds: []
-roots: []
+roots: [sanskrit-vidya]
+etymology_hook: "vidyābhyāsaṁ: Sanskrit vidyā 'knowledge' (CDIAL 11741) + abhyāsa 'practice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C221-sahapathi]
 <!-- hl-knowledge: introduces=[ML-LEX-C221-JOLI221-05]; assesses=[] -->
 
 **വിദ്യാഭ്യാസം** — *vidyābhyāsaṁ* — "education".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിദ്യാഭ്യാസം** (*vidyābhyāsaṁ*) is Sanskrit: *vidyā*, "knowledge" (CDIAL 11741), and *abhyāsa*, "repetition, practice", with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

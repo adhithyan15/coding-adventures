@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:cb18fcb5962cb622",
+  "lessonIds": [
+    "IT-C411-cofano",
+    "IT-C411-bagagliaio",
+    "IT-C411-frizione",
+    "IT-C411-fanale",
+    "IT-C411-svitare"
+  ],
+  "tex": "italian/book/chapters/ch411-sotto-il-cofano.tex"
+}

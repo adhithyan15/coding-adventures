@@ -14,7 +14,8 @@ romanization: "marammat"
 concept_tag: HI-READ166-MARAMMAT
 prerequisites: [HI-C166-samay, HI-C166-vijnapan]
 sounds: []
-roots: []
+roots: [arabic-maramma]
+etymology_hook: "marammat ← Arabic maramma 'a repairing', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +49,11 @@ reviews_of: [HI-C166-vijnapan]
 The note says **बिजली की मरम्मत कल सुबह दस बजे।** (*bijlī kī marammat kal subah
 das baje.*) The electricity is being repaired tomorrow at ten, so plan the
 morning without it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मरम्मत** (*marammat*) is a loan from Arabic *maramma*, "a repairing", which reached Hindi through Persian. Its Arabic root is *r-m-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

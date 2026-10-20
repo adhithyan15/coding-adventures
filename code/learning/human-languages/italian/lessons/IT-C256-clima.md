@@ -13,7 +13,8 @@ gloss: "the climate"
 concept_tag: IT-COSE256-CLIMA
 prerequisites: [IT-C256-tuono, IT-C256-arcobaleno]
 sounds: []
-roots: []
+roots: [clima-latin]
+etymology_hook: "clima ← Latin clima, Greek klima 'a slope, a zone of the earth' — English climate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C256-arcobaleno]
 <!-- hl-knowledge: introduces=[IT-LEX-C256-COSE256-05]; assesses=[] -->
 
 **il clima** — "the climate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**clima** ← Latin *clima*, from Greek *klima*, "a slope; a zone of the earth" — a learned borrowing. EtymDB 2.1 has no row for *clima*; it derives Spanish *clima* and French *climat* from the Latin word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

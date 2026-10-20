@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 67,
-  "sourceHash": "fnv1a64:fb5dc95a403f6016",
+  "sourceHash": "fnv1a64:20fceb9542202c0e",
   "lessonIds": [
     "AR-C67-tamatim",
     "AR-C67-jazar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch67.txt",
   "json": "arabic/narration/ch67.json",
-  "textHash": "fnv1a64:d80bdce3f3f1ed9e",
-  "jsonHash": "fnv1a64:2a5df2925a21344d",
+  "textHash": "fnv1a64:584f7ce5ad839b4f",
+  "jsonHash": "fnv1a64:28c3c85bed592a2e",
   "findings": []
 }

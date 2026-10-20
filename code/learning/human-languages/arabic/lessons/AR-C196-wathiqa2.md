@@ -14,7 +14,8 @@ romanization: "wathiqa"
 concept_tag: AR-VERB-WATHIQA2
 prerequisites: [AR-C196-amtara, AR-C196-hannaa]
 sounds: []
-roots: []
+roots: [w-th-q]
+etymology_hook: "wathiqa: built on the root w-th-q, 'to trust' (Lane); wathiqa is the plain verb, 'he trusted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C196-hannaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C196-ACT196-05]; assesses=[] -->
 
 **وثق** — *wathiqa* — "to trust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وثق** (*wathiqa*) is built on the native Arabic root *w-th-q*, "to trust; to be firm" (Lane). *Wathiqa* is the plain verb, "he trusted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

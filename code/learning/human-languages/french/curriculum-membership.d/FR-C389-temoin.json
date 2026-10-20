@@ -1,0 +1,11 @@
+{
+  "id": "FR-C389-temoin",
+  "pathSegment": "FR-PATH-389-ENQUETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-389-ENQUETE",
+      "order": 2
+    }
+  ]
+}

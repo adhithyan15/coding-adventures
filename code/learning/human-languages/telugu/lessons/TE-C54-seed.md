@@ -11,7 +11,8 @@ romanization: "vittanaṁ"
 concept_tag: TE-NOUN-SEED
 prerequisites: [TE-C54-root]
 sounds: []
-roots: []
+roots: [dravidian-vittu-seed]
+etymology_hook: "vittanaṁ: native Dravidian, one word with Tamil vittu and Kannada bittu (DEDR 5401)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C54-root]
 Sanskrit's *bīja* was borrowed in as *bījaṁ*, and it does the abstract work — the seed of an idea, the germ of a quarrel. విత్తనం stays in the sack.
 
 The whole chapter is inside this word. A విత్తనం becomes a చెట్టు with a వేరు below and a కొమ్మ above.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విత్తనం** (*vittanaṁ*) is native Dravidian, one word with Tamil *vittu*, Kannada *bittu* and Malayalam *vittu* (DEDR 5401). DEDR lists Telugu *vittu*, "to sow; seed", and *vittanamu*, "seed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

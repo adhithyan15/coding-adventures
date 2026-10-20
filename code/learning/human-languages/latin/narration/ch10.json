@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Wine, and Bread",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3d7d0a5a4374dd30",
+  "sourceHash": "fnv1a64:8de5e33eac9ab524",
   "lessons": [
     {
       "id": "LA-C10-aqua-vinum",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8668663644ecd8ca",
+      "sourceHash": "fnv1a64:504288b692cc32b8",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pānis, pānis — \"bread.\" Spanish pan, French pain, Italian pane all continue it directly — bread mattered enough to keep its own name everywhere."
+              "text": "pānis, pānis — \"bread.\" Spanish pan, French pain, Italian pane all continue it directly — bread mattered enough to keep its own name everywhere. Pānis itself is inherited, built on an old root for feeding, peh₂- (EtymDB 2.1)."
             }
           ]
         },

@@ -15,6 +15,7 @@ concept_tag: UR-THINGS124-CHATTAN
 prerequisites: [UR-C123-jar, UR-C124-shakh]
 sounds: []
 roots: []
+etymology_hook: "chaṭṭān: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C124-shakh]
 <!-- hl-knowledge: introduces=[UR-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **چٹان** — *chaṭṭān* — "a rock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چٹان** (*chaṭṭān*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pataṅg"
 concept_tag: MR-VASTU249-PATANG
 prerequisites: [MR-C249-khelni, MR-C249-bahuli]
 sounds: []
-roots: []
+roots: [sanskrit-patanga]
+etymology_hook: "pataṅg: usually traced to Sanskrit pataṅga 'bird, insect' (CDIAL 7721)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C249-bahuli]
 <!-- hl-knowledge: introduces=[MR-LEX-C249-VASTU249-04]; assesses=[] -->
 
 **पतंग** — *pataṅg* — "a kite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पतंग** (*pataṅg*) is usually traced to Sanskrit *pataṅga*, "bird, flying insect" (CDIAL 7721), a word CDIAL thinks was crossed with a non-Aryan one. CDIAL lists no Marathi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

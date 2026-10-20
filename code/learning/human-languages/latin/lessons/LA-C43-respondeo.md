@@ -6,7 +6,7 @@ sequence: 920
 chapter: 43
 type: word
 headword: respondeō, respondēre
-gloss: "I answer" — literally "I pledge back", from the verb Romans used for a solemn promise, and the reason a husband is a spouse
+gloss: '"I answer" — literally "I pledge back", from the verb Romans used for a solemn promise, and the reason a husband is a spouse'
 concept_tag: VERB-ANSWER
 prerequisites: [LA-C42-exspecto, LA-C39-rogo, LA-C37-dico]
 sounds: [macron-long-vowel, macron-none-short-vowel]

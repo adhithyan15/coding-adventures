@@ -14,7 +14,8 @@ romanization: "māmūlu"
 concept_tag: TE-GUNAM181-MAMULU
 prerequisites: [TE-C181-asaktikaramaina, TE-C181-adbhutamaina]
 sounds: []
-roots: []
+roots: [arabic-mamul]
+etymology_hook: "māmūlu ← Arabic maʿmūl 'customary', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C181-adbhutamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C181-GUNAM181-05]; assesses=[] -->
 
 **మామూలు** — *māmūlu* — "ordinary, usual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మామూలు** (*māmūlu*) is a loan from Arabic *maʿmūl*, "customary, usual", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

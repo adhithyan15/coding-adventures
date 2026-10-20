@@ -14,7 +14,8 @@ romanization: "cācī"
 concept_tag: HI-THG188-CACI
 prerequisites: [HI-C188-jeb, HI-C188-dusman]
 sounds: []
-roots: []
+roots: [indo-aryan-cacca]
+etymology_hook: "cācī ← *cācca 'uncle', a reconstructed form; a tadbhava (CDIAL 4734)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C188-dusman]
 <!-- hl-knowledge: introduces=[HI-LEX-C188-THG188-04]; assesses=[] -->
 
 **चाची** — *cācī* — "an aunt (father's brother's wife)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाची** (*cācī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cācca*, "uncle", a form CDIAL reconstructs from its descendants (CDIAL 4734). *cācī* is its feminine. CDIAL suggests, with a query, a nursery word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

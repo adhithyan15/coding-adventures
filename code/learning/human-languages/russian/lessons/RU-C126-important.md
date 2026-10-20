@@ -14,7 +14,8 @@ romanization: "vázhnyy"
 concept_tag: RU-QUAL126-IMPORTANT
 prerequisites: [RU-C126-last, RU-C126-famous]
 sounds: []
-roots: []
+roots: [german-waage]
+etymology_hook: "важный came from Polish ważny, from waga 'a scale', from German Waage 'scales'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C126-famous]
 <!-- hl-knowledge: introduces=[RU-LEX-C126-QUAL126-03]; assesses=[] -->
 
 **важный** (*vázhnyy*) — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**важный** apparently came from Polish *ważny*, "weighty", from *waga*, "a scale", from German *Waage*, "scales" (Vasmer): important is "weighty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

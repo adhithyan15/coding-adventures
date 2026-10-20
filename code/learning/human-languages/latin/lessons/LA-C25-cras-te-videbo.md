@@ -6,7 +6,7 @@ sequence: 490
 chapter: 25
 type: phrase
 headword: crās tē vidēbō
-gloss: "see you tomorrow" — built from two genuinely classical pieces (crās, "tomorrow," and vidēbō, already met last lesson) using the exact same pattern as the attested propediem tē vidēbō, though this specific combination isn't itself pulled from one surviving letter
+gloss: '"see you tomorrow" — built from two genuinely classical pieces (crās, "tomorrow," and vidēbō, already met last lesson) using the exact same pattern as the attested propediem tē vidēbō, though this specific combination isn''t itself pulled from one surviving letter'
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [LA-C24-propediem-te-videbo]
 sounds: [macron-long-vowel, future-tense-bo]
@@ -66,14 +66,17 @@ etymology just don't resolve cleanly, even for a word this ordinary.
 Here's the real teaching point: **crās** didn't survive as the everyday
 word for "tomorrow" in most of its major daughter languages. **French**'s
 *demain*, **Italian**'s *domani*, and **Catalan**'s *demà* all rebuilt
-"tomorrow" from **dē māne** ("**in the morning**") instead — the same
-morning-based logic reappearing three separate times. **Sardinian** and
-**Sicilian** are the main holdouts that kept *crās* itself as an everyday
-word. Spanish, too, moved away from it, building its own *mañana* on
-**māne** ("morning") rather than keeping *crās*. A genuinely ordinary Latin
-word, abandoned by most of the family — echoing, if less completely, the
-same shape of story as *flāvus* from the colors lesson (which survives
-nowhere as an everyday word, only in names like *Flāvius*).
+"tomorrow" from a Latin phrase meaning "**in the morning**" instead:
+
+**dē** ("from") + **māne** ("morning") → **dē māne** → French *demain*
+
+That is the same morning-based logic reappearing three separate times.
+**Sardinian** and **Sicilian** are the main holdouts that kept *crās* itself as
+an everyday word. Spanish, too, moved away from it, building its own *mañana* on
+that same word for "morning" rather than keeping *crās*. A genuinely ordinary
+Latin word, abandoned by most of the family — echoing, if less completely, the
+same shape of story as *flāvus* from the colors lesson (which survives nowhere
+as an everyday word, only in names like *Flāvius*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-PROPEDIEM-TE-VIDEBO-01, LA-ETYMON-PROPEDIEM-TE-VIDEBO-02, LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03, LA-LEX-CRAS-TE-VIDEBO-01, LA-ETYMON-CRAS-TE-VIDEBO-02, LA-PRAGMATICS-CRAS-TE-VIDEBO-03] -->
@@ -88,9 +91,9 @@ nowhere as an everyday word, only in names like *Flāvius*).
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-PROPEDIEM-TE-VIDEBO-01, LA-ETYMON-PROPEDIEM-TE-VIDEBO-02, LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03, LA-LEX-CRAS-TE-VIDEBO-01, LA-ETYMON-CRAS-TE-VIDEBO-02, LA-PRAGMATICS-CRAS-TE-VIDEBO-03] -->
 
-[PAUSE 3s] Is **crās tē vidēbō** itself quoted in a surviving Cicero
-letter, the way *propediem tē vidēbō* was? (**No** — same grammatical
-pattern, built from two genuinely classical pieces, but not itself a direct
-citation.) Which Romance language kept **crās** as its everyday word for
-"tomorrow"? (**Sardinian and Sicilian** — most of the rest rebuilt it from *dē māne*,
-"in the morning," instead.)
+[PAUSE 3s] Is **crās tē vidēbō** itself quoted in a surviving Cicero letter, the
+way *propediem tē vidēbō* was? (**No** — same grammatical pattern, built from
+two genuinely classical pieces, but not itself a direct citation.) Which Romance
+language kept **crās** as its everyday word for "tomorrow"? (**Sardinian and
+Sicilian** — most of the rest rebuilt it from a phrase meaning "in the morning,"
+instead.)

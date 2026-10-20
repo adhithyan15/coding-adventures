@@ -14,7 +14,8 @@ romanization: "paṉikkaṭṭi"
 concept_tag: TA-PORUL184-PANIKKATTI
 prerequisites: [TA-C183-catni, TA-C183-poriyal]
 sounds: []
-roots: []
+roots: [dravidian-pani-dew, dravidian-kattu-harden]
+etymology_hook: "பனிக்கட்டி — native: paṉi 'frost' (DEDR 4035) + kaṭṭi 'lump', from kaṭṭu 'to harden' (DEDR 1148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C183-poriyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C184-PORUL184-01]; assesses=[] -->
 
 **பனிக்கட்டி** — *paṉikkaṭṭi* — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பனிக்கட்டி** (*paṉikkaṭṭi*) is native: *paṉi*, "dew, frost" (DEDR 4035), and *kaṭṭi*, "lump", from *kaṭṭu*, "to harden, to congeal" (DEDR 1148, which compares Sanskrit *kaṭhina*, "hard"): "a lump of frost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

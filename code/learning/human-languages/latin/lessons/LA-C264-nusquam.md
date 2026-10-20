@@ -13,7 +13,8 @@ gloss: "nowhere"
 concept_tag: LA-LOC264-NUSQUAM
 prerequisites: [LA-C263-diu, LA-C263-brevi]
 sounds: []
-roots: []
+roots: [nusquam-latin, usquam-latin]
+etymology_hook: "nusquam 'nowhere' — ne 'not' + usquam 'anywhere'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C263-brevi]
 <!-- hl-knowledge: introduces=[LA-LEX-C264-LOC264-01]; assesses=[] -->
 
 **nusquam** — "nowhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nusquam** is *ne*, "not", fused with *usquam*, "anywhere" (Lewis & Short): not anywhere.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:8f338d97179e0827",
+  "lessonIds": [
+    "IT-C454-salumeria",
+    "IT-C454-pescheria",
+    "IT-C454-fruttivendolo",
+    "IT-C454-pasticceria",
+    "IT-C454-rosticceria"
+  ],
+  "tex": "italian/book/chapters/ch454-il-cibo-in-negozio.tex"
+}

@@ -14,7 +14,8 @@ romanization: "halvā"
 concept_tag: UR-THINGS120-HALVA
 prerequisites: [UR-C119-paratha, UR-C119-samosa]
 sounds: []
-roots: []
+roots: [arabic-halwa]
+etymology_hook: "halvā ← Arabic ḥalwā 'a sweetmeat', through Persian (Lane, root ḥ-l-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C119-samosa]
 <!-- hl-knowledge: introduces=[UR-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **حلوہ** — *halvā* — "halwa, a sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حلوہ** (*halvā*) is a loan from Arabic *ḥalwā*, "a sweetmeat", which reached Urdu through Persian. Its Arabic root is *ḥ-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

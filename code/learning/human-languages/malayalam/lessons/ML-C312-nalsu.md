@@ -14,7 +14,8 @@ romanization: "naḻsŭ"
 concept_tag: ML-AROGYAM312-NALSU
 prerequisites: [ML-C312-rogam, ML-C312-rogi]
 sounds: []
-roots: []
+roots: [english-nurse]
+etymology_hook: "naḻsŭ ← English nurse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C312-rogi]
 <!-- hl-knowledge: introduces=[ML-LEX-C312-AROGYAM312-03]; assesses=[] -->
 
 **നഴ്സ്** — *naḻsŭ* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നഴ്സ്** (*naḻsŭ*) ← English *nurse*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

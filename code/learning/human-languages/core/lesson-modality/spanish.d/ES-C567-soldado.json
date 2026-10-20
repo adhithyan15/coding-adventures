@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C567-soldado",
+    "language": "spanish",
+    "chapter": 567,
+    "sequence": 18020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eaf0ac185f25862"
+  },
+  "findings": []
+}

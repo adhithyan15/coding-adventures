@@ -14,7 +14,8 @@ romanization: "vāstuviśārad"
 concept_tag: MR-VASTU180-VASTUVISARAD
 prerequisites: [MR-C180-chayacitrakar, MR-C180-patrakar]
 sounds: []
-roots: []
+roots: [sanskrit-vastu-site, sanskrit-visharada]
+etymology_hook: "vāstuviśārad: Sanskrit vāstu 'site, building' + viśārada 'skilled'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C180-patrakar]
 <!-- hl-knowledge: introduces=[MR-LEX-C180-VASTU180-05]; assesses=[] -->
 
 **वास्तुविशारद** — *vāstuviśārad* — "an architect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वास्तुविशारद** (*vāstuviśārad*) is a modern compound built from Sanskrit *vāstu*, "site of a house, building" (CDIAL 11606), and *viśārada*, "skilled, expert".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ām"
 concept_tag: BN-FOOD59-AM
 prerequisites: [BN-C58-peyaj, BN-C59-ruti]
 sounds: []
-roots: []
+roots: [sanskrit-amra]
+etymology_hook: "ām ← Sanskrit āmra 'mango tree; its fruit', a tadbhava (CDIAL 1268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C59-ruti]
 <!-- hl-knowledge: introduces=[BN-LEX-C59-FOOD59-02]; assesses=[] -->
 
 **আম** — *ām* — "a mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আম** (*ām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āmra*, "mango tree; its fruit" (CDIAL 1268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

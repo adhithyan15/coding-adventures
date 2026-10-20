@@ -11,8 +11,8 @@ gloss: no / not
 concept_tag: RESPONSE-NO
 prerequisites: [UR-C01-ji-han, UR-W01-sin]
 sounds: [rtl, long-i, nasal-vowel]
-roots: [indo-aryan-negative]
-etymology_hook: Nahī̃ belongs to Urdu's inherited Indo-Aryan core and links its grammar closely with Hindi.
+roots: [indo-aryan-negative, sanskrit-nahi]
+etymology_hook: "nahī̃ ← Sanskrit nahi 'surely not', from na 'not' + hi 'surely', a tadbhava (CDIAL 7035)"
 duration:
   max_seconds: 210
 requires:
@@ -61,6 +61,11 @@ Unlike the Persian-Arabic vocabulary that opened this chapter, this word is
 inherited Indo-Aryan, part of Urdu's own core. Hindi says the same spoken word,
 *nahī̃*, and writes it in a different script — which you do not need here.
 The page looks different; the word and its grammar align closely.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نہیں** (*nahī̃*) is a tadbhava, a word inherited and reshaped by sound change. It comes from Sanskrit *nahi*, "surely not", built from *na*, "not", and *hi*, "surely" (CDIAL 7035).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-LEX-SHUKRIYA] -->

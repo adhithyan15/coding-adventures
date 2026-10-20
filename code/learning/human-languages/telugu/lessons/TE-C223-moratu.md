@@ -14,7 +14,8 @@ romanization: "moraṭu"
 concept_tag: TE-GUNAM223-MORATU
 prerequisites: [TE-C223-panikirani, TE-C223-cindaravandara]
 sounds: []
-roots: []
+roots: [dravidian-murattu-rough]
+etymology_hook: "moraṭu: native Dravidian; DEDR 4971 lists moraṭu 'rough, rude' with Tamil muraṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C223-cindaravandara]
 <!-- hl-knowledge: introduces=[TE-LEX-C223-GUNAM223-05]; assesses=[] -->
 
 **మొరటు** — *moraṭu* — "rude, coarse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొరటు** (*moraṭu*) is native Dravidian. DEDR 4971 lists *moraṭu*, "rough, rude", with Tamil *muraṭu*, "roughness, rudeness". DEDR compares Sanskrit *murumba*, a lexicon word for crushed stone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

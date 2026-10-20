@@ -1,0 +1,11 @@
+{
+  "id": "IT-C522-modellare",
+  "pathSegment": "IT-PATH-522-SCULTURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-522-SCULTURA",
+      "order": 4
+    }
+  ]
+}

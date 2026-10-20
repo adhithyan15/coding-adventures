@@ -14,7 +14,8 @@ romanization: "daghighe"
 concept_tag: FA-TIME65-DAGHIGHE
 prerequisites: [FA-C64-hafte, FA-C64-sal]
 sounds: []
-roots: []
+roots: [arabic-daqiqa]
+etymology_hook: "daghighe ← Arabic daqīqa 'minute', root d-q-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C64-sal]
 <!-- hl-knowledge: introduces=[FA-LEX-C65-TIME65-01]; assesses=[] -->
 
 **دقیقه** — *daghighe* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daghighe* is borrowed from Arabic *daqīqa*, "minute". Its Arabic root is *d-q-q* (Lane). The root means "fine, thin": a minute is a fine division of time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

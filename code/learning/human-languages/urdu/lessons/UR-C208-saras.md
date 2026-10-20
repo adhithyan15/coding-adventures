@@ -14,7 +14,8 @@ romanization: "sāras"
 concept_tag: UR-CHIZ208-SARAS
 prerequisites: [UR-C207-sirka, UR-C208-bulbul]
 sounds: []
-roots: []
+roots: [sanskrit-sarasa]
+etymology_hook: "sāras ← Sanskrit sārasa 'the crane', a tadbhava (CDIAL 13359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C208-bulbul]
 <!-- hl-knowledge: introduces=[UR-LEX-C208-CHIZ208-02]; assesses=[] -->
 
 **سارس** — *sāras* — "a crane (bird)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سارس** (*sāras*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sārasa*, "the crane" (CDIAL 13359). It is built on *saras*, "lake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

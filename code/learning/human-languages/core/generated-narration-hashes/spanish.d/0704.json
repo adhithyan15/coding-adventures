@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 704,
+  "sourceHash": "fnv1a64:071cfcff863c5a10",
+  "lessonIds": [
+    "ES-C704-alegria",
+    "ES-C704-melancolia",
+    "ES-C704-dicha",
+    "ES-C704-emocionarse",
+    "ES-C704-llorar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch704.txt",
+  "json": "spanish/narration/ch704.json",
+  "textHash": "fnv1a64:c597748c12c1fe79",
+  "jsonHash": "fnv1a64:6aeddcf4df95c366",
+  "findings": []
+}

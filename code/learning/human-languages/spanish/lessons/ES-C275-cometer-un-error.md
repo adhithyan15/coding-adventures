@@ -11,6 +11,7 @@ concept_tag: COLLOCATION-PRECISE
 prerequisites: [ES-C275-deber-de]
 sounds: [vowel-a, vowel-e]
 roots: [committere]
+etymology_hook: "cometer ← Latin committere: com- + mittere 'to send' — English commit"
 duration:
   max_seconds: 240
 requires:

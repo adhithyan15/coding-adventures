@@ -14,7 +14,8 @@ romanization: "laṅgā"
 concept_tag: TE-THINGS131-LANGA
 prerequisites: [TE-C131-rupayi, TE-C131-batilu]
 sounds: []
-roots: []
+roots: [hindustani-lahanga]
+etymology_hook: "laṅgā: usually traced to Hindustani lahangā 'skirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C131-batilu]
 <!-- hl-knowledge: introduces=[TE-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **లంగా** — *laṅgā* — "a long skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లంగా** (*laṅgā*) is usually traced to Hindustani *lahangā*, "a long skirt". Neither DEDR nor CDIAL records the Telugu word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

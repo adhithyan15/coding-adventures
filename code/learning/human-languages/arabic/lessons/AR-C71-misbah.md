@@ -14,7 +14,8 @@ romanization: "miṣbāḥ"
 concept_tag: AR-HOME71-MISBAH
 prerequisites: [AR-C70-ard, AR-C71-mirah]
 sounds: []
-roots: []
+roots: [ṣ-b-ḥ]
+etymology_hook: "miṣbāḥ: built on the root ṣ-b-ḥ, 'morning' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C71-mirah]
 <!-- hl-knowledge: introduces=[AR-LEX-C71-HOME71-02]; assesses=[] -->
 
 **مصباح** — *miṣbāḥ* — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مصباح** (*miṣbāḥ*) is built on the native Arabic root *ṣ-b-ḥ*, "morning" (Lane). *Miṣbāḥ* is an instrument noun on the root of morning, a thing that gives light.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

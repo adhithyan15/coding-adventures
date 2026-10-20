@@ -14,7 +14,8 @@ romanization: "lekhakaḥ"
 concept_tag: SA-PPL179-LEKHAKAH
 prerequisites: [SA-C179-nyayadhisah, SA-C179-adhivakta]
 sounds: []
-roots: []
+roots: [sanskrit-lekhaka, likh-scratch]
+etymology_hook: "lekhaka ← root √likh 'scratch, write' + agent -aka (MW; CDIAL 11102)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C179-adhivakta]
 <!-- hl-knowledge: introduces=[SA-LEX-C179-PPL179-05]; assesses=[] -->
 
 **लेखकः** — *lekhakaḥ* — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lekhaka* is built on the root √likh, "to scratch, write", which you have already met in *likhati*, with the agent suffix *-aka* (MW). It means "scribe" (CDIAL 11102), and Hindi took it over unchanged as *lekhak*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

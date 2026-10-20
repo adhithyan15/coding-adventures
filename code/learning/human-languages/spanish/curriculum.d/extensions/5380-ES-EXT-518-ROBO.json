@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-518-ROBO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a robbery: what was stolen, who the suspect is, and how the thief ran away.",
+  "prerequisites": []
+}

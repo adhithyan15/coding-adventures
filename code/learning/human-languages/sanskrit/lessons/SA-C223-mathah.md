@@ -14,7 +14,8 @@ romanization: "maṭhaḥ"
 concept_tag: SA-THG223-MATHAH
 prerequisites: [SA-C223-tirtham, SA-C223-asramah]
 sounds: []
-roots: []
+roots: [sanskrit-matha]
+etymology_hook: "maṭha 'hut, cell of an ascetic', origin uncertain (MW; CDIAL 9727); Hindi maṛhī 'hut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C223-asramah]
 <!-- hl-knowledge: introduces=[SA-LEX-C223-THG223-05]; assesses=[] -->
 
 **मठः** — *maṭhaḥ* — "a monastery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*maṭha* first meant a hut, the cell of an ascetic or a student (MW), and later a monastery. Its origin is uncertain: CDIAL 9727 sends the reader to *maṇḍapa*, a word it suspects is non-Aryan. It lives on as Hindi *maṛhī*, "hut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

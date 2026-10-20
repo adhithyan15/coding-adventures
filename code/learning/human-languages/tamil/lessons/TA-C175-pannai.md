@@ -14,7 +14,8 @@ romanization: "paṇṇai"
 concept_tag: TA-IDAM175-PANNAI
 prerequisites: [TA-C175-kukai, TA-C175-otai]
 sounds: []
-roots: []
+roots: [dravidian-pannai-field]
+etymology_hook: "பண்ணை — native Dravidian (DEDR 3891); Malayalam paṇa 'worked ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C175-otai]
 <!-- hl-knowledge: introduces=[TA-LEX-C175-IDAM175-04]; assesses=[] -->
 
 **பண்ணை** — *paṇṇai* — "a farm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பண்ணை** (*paṇṇai*) is native Dravidian. DEDR 3891 lists Malayalam *paṇa*, "worked ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

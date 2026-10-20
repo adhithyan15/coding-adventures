@@ -14,7 +14,8 @@ romanization: "klās"
 concept_tag: UR-KAM211-KLAS
 prerequisites: [UR-C211-sekretari, UR-C211-mainejar]
 sounds: []
-roots: []
+roots: [english-class]
+etymology_hook: "klās ← English class"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C211-mainejar]
 <!-- hl-knowledge: introduces=[UR-LEX-C211-KAM211-03]; assesses=[] -->
 
 **کلاس** — *klās* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کلاس** (*klās*) is a loan from English *class*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

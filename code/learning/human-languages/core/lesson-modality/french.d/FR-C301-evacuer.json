@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C301-evacuer",
+    "language": "french",
+    "chapter": 301,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9213d41b729cc5a8"
+  },
+  "findings": []
+}

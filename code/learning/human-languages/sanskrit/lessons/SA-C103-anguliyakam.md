@@ -14,7 +14,8 @@ romanization: "aṅgulīyakam"
 concept_tag: SA-THINGS103-ANGULIYAKAM
 prerequisites: [SA-C103-kandukah, SA-C103-kridanakam]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "aṅgulīyaka ← aṅgulīya 'finger-ring' (CDIAL 136), from aṅguli 'finger' + -īya 'belonging to'; + -ka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C103-kridanakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C103-THINGS103-03]; assesses=[] -->
 
 **अंगुलीयकम्** — *aṅgulīyakam* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṅgulīyaka* is *aṅgulīya* "finger-ring" (CDIAL 136) with the suffix *-ka*, and *aṅgulīya* is built from *aṅguli* "finger" with the suffix *-īya* "belonging to": "the thing that belongs on a finger", a ring (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

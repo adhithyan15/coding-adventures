@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 87,
-  "sourceHash": "fnv1a64:493e1a2295bd1805",
+  "sourceHash": "fnv1a64:748c2cf2a6a7e00c",
   "lessonIds": [
     "PA-C87-hun",
     "PA-C87-hamesha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch87.txt",
   "json": "punjabi/narration/ch87.json",
-  "textHash": "fnv1a64:60ea8d397296d42f",
-  "jsonHash": "fnv1a64:87f5e4bd36cb389e",
+  "textHash": "fnv1a64:04eecb443426d89e",
+  "jsonHash": "fnv1a64:7cfbb646d0e8ad60",
   "findings": []
 }

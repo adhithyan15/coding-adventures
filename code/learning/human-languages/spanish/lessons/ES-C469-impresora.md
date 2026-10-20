@@ -11,6 +11,7 @@ concept_tag: ES-ASK-IMPRESORA
 prerequisites: [ES-C469-imprimir, ES-C432-lavadora, ES-C406-impreso]
 sounds: [stress-penultimate, r-tap]
 roots: [impressus-latin]
+etymology_hook: "impresora — from imprimir, Latin imprimere 'to press into': the printing machine"
 duration:
   max_seconds: 275
 requires:
@@ -76,13 +77,13 @@ sentence to sort it out. Spanish has decided in advance, in one letter.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C469-OFICINA-02, ES-LEX-C469-OFICINA-01] -->
 
-Same *imprimere* as the verb: *in-* plus *premere*, to press into.
+Same Latin *imprimere* as the verb: *in-* plus *premere*, to press into.
 
 Why feminine rather than masculine? *El contador* told you the ending does not
 decide; this is the mechanism underneath. *Impresora* started life as an
 adjective leaning on a noun — *la máquina impresora*, the printing machine.
 The noun dropped away and left its gender behind. So the article you cannot
-predict from the ending was fixed by a word that is no longer said.
+predict from the ending was fixed by a word no longer said.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C469-OFICINA-02, ES-LEX-C469-OFICINA-01] -->

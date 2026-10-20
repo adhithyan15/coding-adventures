@@ -14,7 +14,8 @@ romanization: "estekân"
 concept_tag: FA-CHIZ212-ESTEKAN
 prerequisites: [FA-C212-kise, FA-C212-kuze]
 sounds: []
-roots: []
+roots: [russian-stakan]
+etymology_hook: "estekân ← Russian stakan 'glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C212-kuze]
 <!-- hl-knowledge: introduces=[FA-LEX-C212-CHIZ212-05]; assesses=[] -->
 
 **استکان** — *estekân* — "a small tea glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*estekân* is borrowed from Russian *stakan*, "glass" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

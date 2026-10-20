@@ -14,7 +14,8 @@ romanization: "vāparvũ"
 concept_tag: GU-VERB-VAPARVU
 prerequisites: [GU-C139-bhulvu, GU-C139-sodhvu]
 sounds: []
-roots: []
+roots: [indo-aryan-vyaparati]
+etymology_hook: "vāparvũ ← *vyāparati 'is engaged in', a reconstructed form; a tadbhava (CDIAL 12203)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C139-sodhvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C139-ACT139-04]; assesses=[] -->
 
 **વાપરવું** (*vāparvũ*) — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાપરવું** (*vāparvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vyāparati*, "is engaged in", a form CDIAL reconstructs from its descendants (CDIAL 12203).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:b8faadd94089d182",
+  "lessonIds": [
+    "GE-C369-risiko",
+    "GE-C369-riskieren",
+    "GE-C369-absichern",
+    "GE-C369-garantie",
+    "GE-C369-garantieren",
+    "GE-R369-review-362-369"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch369.txt",
+  "json": "german/narration/ch369.json",
+  "textHash": "fnv1a64:bb641779183a4ec1",
+  "jsonHash": "fnv1a64:786fa1a32e0e8b0d",
+  "findings": []
+}

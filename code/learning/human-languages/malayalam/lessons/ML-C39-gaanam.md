@@ -14,7 +14,8 @@ gloss: "a song"
 concept_tag: ML-ANCHOR-GAANAM
 prerequisites: [ML-S130-letter-tha]
 sounds: []
-roots: []
+roots: [sanskrit-gana-song]
+etymology_hook: "gānam ← Sanskrit gāna 'singing, song', a tatsama (CDIAL 4130)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *gānam*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഗ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗാനം** (*gānam*) ← Sanskrit *gāna*, "singing, song", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 4130).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-GAANAM] -->

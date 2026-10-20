@@ -14,7 +14,8 @@ romanization: "pyās"
 concept_tag: HI-NOUN-THIRST
 prerequisites: [HI-C63-hunger, HI-C61-spoon, HI-C62-needle]
 sounds: []
-roots: []
+roots: [sanskrit-pipasa]
+etymology_hook: "pyās ← Sanskrit pipāsā 'thirst', a tadbhava (CDIAL 8199)"
 duration:
   max_seconds: 210
 requires:

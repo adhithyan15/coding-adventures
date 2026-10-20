@@ -14,6 +14,7 @@ concept_tag: IT-COSE166-CARTOLINA
 prerequisites: [IT-C166-francobollo, IT-C166-pacco]
 sounds: []
 roots: []
+etymology_hook: "cartolina — carta 'card' + -olina 'little': a little card"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C166-pacco]
 <!-- hl-knowledge: introduces=[IT-LEX-C166-COSE166-05]; assesses=[] -->
 
 **la cartolina** — "a postcard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cartolina** — built from *carta*, "paper, a card", with *-olina*, "little": a little card. EtymDB 2.1 has no row for it; the parts are plain to see.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

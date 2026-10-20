@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-670-INDICAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask the way and follow directions: turn, go through and turn off.",
+  "prerequisites": []
+}

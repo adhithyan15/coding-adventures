@@ -11,6 +11,7 @@ concept_tag: ES-WHERE-CIRCUS
 prerequisites: [ES-C420-teatro, ES-C420-exposicion]
 sounds: [ci-th-s, c-hard, stress-penultimate]
 roots: [circus-latin]
+etymology_hook: "circo ← Latin circus 'a ring', from Greek kirkos — English circle; Spanish cerca too"
 duration:
   max_seconds: 240
 requires:

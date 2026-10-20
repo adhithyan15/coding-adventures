@@ -13,7 +13,8 @@ gloss: "a window"
 concept_tag: PT-CASA1-JANELA
 prerequisites: [PT-C48-casa, PT-C48-cozinha]
 sounds: []
-roots: []
+roots: [ianua-latin]
+etymology_hook: "janela ← Vulgar Latin *ianuella 'little door', from Latin ianua 'door'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C48-cozinha]
 <!-- hl-knowledge: introduces=[PT-LEX-C48-CASA1-03]; assesses=[] -->
 
 **a janela** — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**janela** ← Vulgar Latin *\*ianuella*, "little door" (EtymDB 2.1), from Latin *ianua*, "door" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

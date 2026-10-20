@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Two Sibilants, One Liquid, and Three Standalone Vowels",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ea9b1c2deecb5f54",
+  "sourceHash": "fnv1a64:349952fd45ca821f",
   "lessons": [
     {
       "id": "MR-C08-ulat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:530a6d01d145bed9",
+      "sourceHash": "fnv1a64:246fee9a06e1daec",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उलट (ulaṭ) belongs with the verb ulaṭṇẽ, \"to turn over\", which CDIAL lists under a reconstructed ullaṭati, \"turns over\" (CDIAL 2368)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a81467ead0b8b367",
+      "sourceHash": "fnv1a64:51db24ce67bb36f5",
       "notice": null,
       "blocks": [
         {
@@ -180,6 +191,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शेष (śeṣ) is Sanskrit śeṣa, \"remainder\", taken over whole as a learned loan, a tatsama (CDIAL 12611). Its root is śiṣ, \"to leave\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -241,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02f7960fb5a4c194",
+      "sourceHash": "fnv1a64:2f168526e73ca43d",
       "notice": null,
       "blocks": [
         {
@@ -291,6 +313,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊब (ūb) is a tadbhava, a word inherited and reshaped by sound change. It comes from ubbā, \"damp heat\", a form CDIAL reconstructs from its descendants (CDIAL 2340). CDIAL glosses the Marathi word \"sultry heat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -321,7 +354,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -352,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a44d4474598fa607",
+      "sourceHash": "fnv1a64:bd8d3c6c049f936a",
       "notice": null,
       "blocks": [
         {
@@ -402,6 +435,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकदा (ekdā) is Sanskrit ekadā, \"once, at one time\", a tatsama: eka, \"one\", with the time ending -dā that also closes Sanskrit kadā, \"when\". CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -432,7 +476,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

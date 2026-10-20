@@ -14,7 +14,8 @@ romanization: "bīru"
 concept_tag: KA-VASTU220-BIRU
 prerequisites: [KA-C219-jigutu, KA-C220-muccala]
 sounds: []
-roots: []
+roots: [english-bureau]
+etymology_hook: "bīru ← English bureau"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C220-muccala]
 <!-- hl-knowledge: introduces=[KA-LEX-C220-VASTU220-02]; assesses=[] -->
 
 **ಬೀರು** — *bīru* — "a cupboard, a wardrobe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೀರು** (*bīru*) is a loan from English *bureau*, "a chest of drawers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

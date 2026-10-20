@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C547-anillo",
+    "language": "spanish",
+    "chapter": 547,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96734b25084c1d9f"
+  },
+  "findings": []
+}

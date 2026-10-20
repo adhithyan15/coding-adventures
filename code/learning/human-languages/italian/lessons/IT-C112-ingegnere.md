@@ -13,7 +13,8 @@ gloss: "an engineer"
 concept_tag: IT-LAVORO112-INGEGNERE
 prerequisites: [IT-C112-autista, IT-C112-avvocato]
 sounds: []
-roots: []
+roots: [ingenium-latin]
+etymology_hook: "ingegnere — a maker of devices; ingegno ← Latin ingenium 'talent' — English engineer and engine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C112-avvocato]
 <!-- hl-knowledge: introduces=[IT-LEX-C112-LAVORO112-04]; assesses=[] -->
 
 **l'ingegnere** — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ingegnere** — built from *ingegno*, "talent, a clever device", with *-iere*, the ending for a man who does a job: a maker of devices. *ingegno* ← Latin *ingenium*, "inborn talent" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

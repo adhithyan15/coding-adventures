@@ -14,7 +14,8 @@ romanization: "resid"
 concept_tag: FA-KHANDAN139-RESID
 prerequisites: [FA-C139-ejare, FA-C139-agahi]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "resid: past stem of Persian residan 'to arrive' (Middle Persian rasīdan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C139-agahi]
 <!-- hl-knowledge: introduces=[FA-LEX-C139-KHANDAN139-05]; assesses=[] -->
 
 **رسید** — *resid* — "a receipt". Ask for it when you pay: **لطفا رسید را بدهید** — *lotfan resid râ bedahid* — "The receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*resid* is the past stem of *residan*, "to arrive, to reach": what has arrived, so the slip that confirms it. The verb is inherited, usually traced to Middle Persian *rasīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

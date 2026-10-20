@@ -14,7 +14,8 @@ romanization: "mofid"
 concept_tag: FA-SEFAT273-MOFID
 prerequisites: [FA-C272-tarik, FA-C273-kesel-konande]
 sounds: []
-roots: []
+roots: [arabic-mufid]
+etymology_hook: "mofid ← Arabic mufīd 'beneficial, useful', root f-y-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C273-kesel-konande]
 <!-- hl-knowledge: introduces=[FA-LEX-C273-SEFAT273-02]; assesses=[] -->
 
 **مفید** — *mofid* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mofid* is borrowed from Arabic *mufīd*, "beneficial, useful". Its Arabic root is *f-y-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

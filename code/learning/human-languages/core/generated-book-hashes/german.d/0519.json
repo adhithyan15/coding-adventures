@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:3bd6af51c88cb81f",
+  "lessonIds": [
+    "GE-C519-galerie",
+    "GE-C519-ausstellen",
+    "GE-C519-skulptur",
+    "GE-C519-bildhauer",
+    "GE-C519-kunstwerk"
+  ],
+  "tex": "german/book/chapters/ch519-in-der-galerie.tex"
+}

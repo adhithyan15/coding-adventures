@@ -14,7 +14,8 @@ romanization: "rôbār"
 concept_tag: BN-THINGS129-ROBAR
 prerequisites: [BN-C129-girja, BN-C129-pensil]
 sounds: []
-roots: []
+roots: [english-rubber]
+etymology_hook: "rôbār ← English rubber"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C129-pensil]
 <!-- hl-knowledge: introduces=[BN-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **রবার** — *rôbār* — "an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রবার** (*rôbār*) is a loan from English *rubber*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

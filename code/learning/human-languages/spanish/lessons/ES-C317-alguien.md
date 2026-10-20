@@ -54,7 +54,7 @@ survived? (*Nata*, the born part.)
 **alguien** — "somebody."
 
 Take *algo* apart once more: *ali-* "other" plus *quod* "what." Now swap the
-second half. *Quem* is "whom" — the person form. *Ali-* plus *quem* is
+second half. *Quem* is "whom" — the person form. *Ali-* plus *quem* is Latin
 **aliquem**: some other whom.
 
 *Algo* and *alguien* are the same construction built twice, once for things and

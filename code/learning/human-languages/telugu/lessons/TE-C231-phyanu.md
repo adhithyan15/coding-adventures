@@ -14,7 +14,8 @@ romanization: "phyānu"
 concept_tag: TE-VASTUVU231-PHYANU
 prerequisites: [TE-C230-vinodam, TE-C230-natudu]
 sounds: []
-roots: []
+roots: [english-fan]
+etymology_hook: "phyānu ← English fan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C230-natudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C231-VASTUVU231-01]; assesses=[] -->
 
 **ఫ్యాను** — *phyānu* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫ్యాను** (*phyānu*) is a loan from English *fan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

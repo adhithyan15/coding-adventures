@@ -13,7 +13,8 @@ gloss: "a notice, an opinion"
 concept_tag: FR-LIRE142-LAVIS
 prerequisites: [FR-C141-organiser, FR-C142-lhoraire]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "avis ← Old French avis, from vis 'a view', Latin visus — English advice"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [FR-C142-lhoraire]
 
 The notice says **Avis : le magasin est fermé aujourd'hui.** The shop is closed
 today, so come back another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avis** ← Old French *avis*, built on *vis*, "a view", ← Latin *visus*, "a look" (EtymDB 2.1): how a matter looks to you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

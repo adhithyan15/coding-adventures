@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a spectator, then the Kannada for a carp
 You'll want to know: ಕಾವಲುಗಾರ.
 ಕಾವಲುಗಾರ — kāvalugāra — "a watchman, a security guard".
 
+The word, taken apart.
+ಕಾವಲುಗಾರ (kāvalugāra) is kāvalu, "guarding, watch", of the native kā, "to guard" (DEDR 1416, with Tamil kā), with -gāra, "one who does it".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a carpenter, then the Kannada for a watc
 
 You'll want to know: ಕೂಲಿ.
 ಕೂಲಿ — kūli — "daily wages; a labourer".
+
+The word, taken apart.
+ಕೂಲಿ (kūli) is native Dravidian, one word with Tamil kūli, Telugu kūli and Malayalam kūli (DEDR 1905). DEDR lists kūli itself, "hire, wages; day-labourer".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a watchman, then the Kannada for daily w
 You'll want to know: ಕಂಡಕ್ಟರ್.
 ಕಂಡಕ್ಟರ್ — kaṇḍakṭar — "a bus conductor".
 
+The word, taken apart.
+ಕಂಡಕ್ಟರ್ (kaṇḍakṭar) is a loan from English conductor.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for daily wages, then the Kannada for a bus 
 You'll want to know: ಮುಖ್ಯೋಪಾಧ್ಯಾಯ.
 ಮುಖ್ಯೋಪಾಧ್ಯಾಯ — mukhyōpādhyāya — "a headmaster".
 
+The word, taken apart.
+ಮುಖ್ಯೋಪಾಧ್ಯಾಯ (mukhyōpādhyāya) is Sanskrit mukhya, "chief" (CDIAL 10174), and upādhyāya, "teacher" (CDIAL 2301): "the chief teacher".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a bus conductor, then the Kannada for a 
 
 You'll want to know: ಕಾರ್ಯದರ್ಶಿ.
 ಕಾರ್ಯದರ್ಶಿ — kāryadarśi — "a secretary".
+
+The word, taken apart.
+ಕಾರ್ಯದರ್ಶಿ (kāryadarśi) is Sanskrit kārya, "business, affairs", and darśin, "one who sees, overseer": "the one who sees to the business".
 
 What you've built.
 One more word for this chapter.

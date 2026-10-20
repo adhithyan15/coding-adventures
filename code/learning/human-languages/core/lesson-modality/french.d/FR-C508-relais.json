@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C508-relais",
+    "language": "french",
+    "chapter": 508,
+    "sequence": 27880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a299f3cf2b4a4dd"
+  },
+  "findings": []
+}

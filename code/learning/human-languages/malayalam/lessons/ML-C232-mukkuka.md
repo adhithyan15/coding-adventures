@@ -14,7 +14,8 @@ romanization: "mukkuka"
 concept_tag: ML-VERB-MUKKUKA
 prerequisites: [ML-C231-karakkuka, ML-C232-kutirkkuka]
 sounds: []
-roots: []
+roots: [dravidian-muzhuku-sink]
+etymology_hook: "mukkuka: native Dravidian; DEDR 4993 lists Malayalam mukkuka 'to dip, immerse' with Tamil muḻuku 'to sink'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C232-kutirkkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C232-KRIYA232-02]; assesses=[] -->
 
 **മുക്കുക** — *mukkuka* — "to dip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുക്കുക** (*mukkuka*) is native Dravidian: DEDR 4993 lists it, "to dip, immerse", with Tamil *muḻuku* and Kannada *muḻugu*, "to sink, dive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

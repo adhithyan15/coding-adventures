@@ -14,7 +14,8 @@ romanization: "cākkŭ"
 concept_tag: ML-VASTU330-CAKKU
 prerequisites: [ML-C330-bharani, ML-C330-kutam]
 sounds: []
-roots: []
+roots: [english-sack]
+etymology_hook: "cākkŭ ← English sack"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C330-kutam]
 <!-- hl-knowledge: introduces=[ML-LEX-C330-VASTU330-04]; assesses=[] -->
 
 **ചാക്ക്** — *cākkŭ* — "a sack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാക്ക്** (*cākkŭ*) ← English *sack*, a word that goes back through Latin and Greek to a Semitic word for sackcloth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

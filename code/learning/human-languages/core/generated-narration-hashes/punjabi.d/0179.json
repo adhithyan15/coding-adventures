@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:b254c1e89e522afe",
+  "lessonIds": [
+    "PA-C179-samaa",
+    "PA-C179-savere",
+    "PA-C179-khullha",
+    "PA-C179-dupahir",
+    "PA-C179-band",
+    "PA-C179-status-review",
+    "PA-C179-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch179.txt",
+  "json": "punjabi/narration/ch179.json",
+  "textHash": "fnv1a64:ac8aeafcec429441",
+  "jsonHash": "fnv1a64:306736ccff8023b2",
+  "findings": []
+}

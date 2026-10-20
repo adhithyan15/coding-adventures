@@ -11,8 +11,8 @@ gloss: "ten — and the last of the ten words that build every number to ninety-
 concept_tag: ZH-NUMBER-TEN
 prerequisites: [ZH-W20-shi]
 sounds: [tone-2, tone-lexical]
-roots: []
-etymology_hook: "shi is second tone, the rise, and it is the last word this book needs before every number from eleven to ninety-nine falls out of what it already has."
+roots: [middle-chinese-dzyip]
+etymology_hook: "shí 'ten': inherited, from Middle Chinese dzyip, whose final p Mandarin lost"
 duration:
   max_seconds: 260
 requires:
@@ -60,6 +60,12 @@ level, fall, dip, fall, level, level, dip, rise.
 Ten is not simply the tenth word. It is the last one this book needs before
 **every number up to ninety-nine falls out of the ten it already has** — and the
 next chapter spends it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**十** *shí* is inherited from Middle Chinese *dzyip*, "ten", whose final *p*
+Mandarin lost (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-SHI, ZH-LEX-NUM-JIU, ZH-LEX-NUM-BA] -->

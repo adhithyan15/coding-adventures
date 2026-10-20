@@ -13,7 +13,8 @@ gloss: "a bean"
 concept_tag: LA-THINGS127-FABA
 prerequisites: [LA-C126-cepa, LA-C126-alium]
 sounds: []
-roots: []
+roots: [faba-latin]
+etymology_hook: "faba 'bean' — inherited, usually traced to PIE *bhabh- 'bean'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C126-alium]
 <!-- hl-knowledge: introduces=[LA-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **faba, fabae** — "a bean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**faba** is inherited, usually traced to Proto-Indo-European *\*bhabh-*, "bean" (EtymDB 2.1). English *bean* may be a distant cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

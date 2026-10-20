@@ -14,7 +14,8 @@ romanization: "shārib"
 concept_tag: AR-THINGS139-SHARIB
 prerequisites: [AR-C138-hajib, AR-C139-lihya]
 sounds: []
-roots: []
+roots: [sh-r-b]
+etymology_hook: "shārib: built on the root sh-r-b, 'to drink' (Lane); shārib is the active participle, 'drinking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C139-lihya]
 <!-- hl-knowledge: introduces=[AR-LEX-C139-THINGS139-02]; assesses=[] -->
 
 **شارب** — *shārib* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شارب** (*shārib*) is built on the native Arabic root *sh-r-b*, "to drink" (Lane). *Shārib* is the active participle, "drinking"; the moustache, over the lip that drinks, takes the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

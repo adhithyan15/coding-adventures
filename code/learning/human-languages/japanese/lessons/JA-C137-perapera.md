@@ -14,8 +14,8 @@ romanization: "perapera"
 concept_tag: JA-ANCHOR-PERAPERA
 prerequisites: [JA-C137-tenpura, JA-W08-ra, JA-W137-pi, JA-W135-gi, JA-C129-tanomoshii]
 sounds: [mora]
-roots: []
-etymology_hook: Perapera says that someone speaks a language with ease; its first and third signs are へ with the small circle, a sign the book has not yet written.
+roots: [japanese-perapera]
+etymology_hook: "perapera: a native mimetic word (JMdict), no kanji; inherited, not borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +54,11 @@ sound or a manner: *pera*, and *pera* again.
 Four beats: *pe–ra–pe–ra*. **ら** you already write. The other sign, twice,
 is **へ** with the small circle, so *he* becomes *pe*. The next lesson
 writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ぺらぺら** (*perapera*) is a native mimetic word, one that pictures a manner in sound; JMdict marks it as mimetic, and it has no kanji. It is inherited, not borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-PERAPERA, JA-SCRIPT-RA-01] -->

@@ -14,7 +14,8 @@ romanization: "obýchno"
 concept_tag: RU-VREMYA240-OBYCHNO
 prerequisites: [RU-C240-sezon, RU-C240-srazu]
 sounds: []
-roots: []
+roots: [slavic-uchiti]
+etymology_hook: "обычно is from обычный 'usual', from обычай 'a custom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C240-srazu]
 <!-- hl-knowledge: introduces=[RU-LEX-C240-VREMYA240-05]; assesses=[] -->
 
 **обычно** (*obýchno*) — "usually".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обычно** is the adverb of *обычный*, "usual", from *обычай*, "a custom", built from *\*ob-vyčajĭ*, on the root of *привыкнуть*, "to get used to" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

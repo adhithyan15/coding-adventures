@@ -14,7 +14,8 @@ romanization: "sīkhnā"
 concept_tag: UR-VERB-SIKHNA
 prerequisites: [UR-C50-milna, UR-C50-rahna]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "sīkhnā ← Sanskrit śikṣate 'learns', a tadbhava (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C50-rahna]
 <!-- hl-knowledge: introduces=[UR-LEX-C50-VERBS50-05]; assesses=[] -->
 
 **سیکھنا** — *sīkhnā* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیکھنا** (*sīkhnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

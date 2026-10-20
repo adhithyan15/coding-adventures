@@ -14,7 +14,8 @@ romanization: "priya"
 concept_tag: HI-ADDRESS-PRIYA
 prerequisites: [HI-C97-naam-ji]
 sounds: []
-roots: []
+roots: [sanskrit-priya]
+etymology_hook: "priya ← Sanskrit priya 'beloved', a tatsama (CDIAL 8974)"
 duration:
   max_seconds: 220
 requires:
@@ -45,6 +46,11 @@ work on the page.
 **प्रिय** (*priya*) — *dear*.
 
 It goes **before** the name: **प्रिय मीरा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रिय** (*priya*) is Sanskrit *priya*, "beloved", taken over whole as a learned loan, a tatsama (CDIAL 8974). CDIAL lists the inherited forms of the same word, such as *piyā*, "beloved".
 
 ## Grammar Lens: the opposite side of the name
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C97-PRIYA-01, HI-CONCEPT-C97-ADDRESS-01] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for within, then the Latin for out of doors.
 You'll want to know: igitur.
 igitur — "therefore".
 
+The word, taken apart.
+igitur has no sure origin; Lewis & Short build it from the pronoun stem of is, "he, that", with old adverb endings, but this is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for out of doors, then the Latin for therefore
 
 You'll want to know: tamen.
 tamen — "however, nevertheless".
+
+The word, taken apart.
+tamen probably begins with tam, "so" (Lewis & Short), but the ending is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for therefore, then the Latin for however.
 You'll want to know: quamquam.
 quamquam — "although".
 
+The word, taken apart.
+quamquam is quam, "how, as", doubled (Lewis & Short): however much, so although.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for however, then the Latin for although.
 You'll want to know: etsī.
 etsī — "even if".
 
+The word, taken apart.
+etsī is et, "even", with sī, "if" (EtymDB 2.1): even if.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for although, then the Latin for even if.
 
 You'll want to know: nisi.
 nisi — "unless, if not".
+
+The word, taken apart.
+nisi is sī, "if" (EtymDB 2.1), with the negative ne, "not", in front: if not.
 
 What you've built.
 One more word for this chapter.

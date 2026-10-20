@@ -14,7 +14,8 @@ romanization: "tarvũ"
 concept_tag: GU-VERB-TARVU
 prerequisites: [GU-C137-jaruri, GU-C138-kudvu, GU-C44-lines]
 sounds: []
-roots: []
+roots: [sanskrit-tarati]
+etymology_hook: "tarvũ ← Sanskrit tarati 'crosses; floats, swims', a tadbhava (CDIAL 5702)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C138-kudvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C138-ACT138-02]; assesses=[] -->
 
 **તરવું** (*tarvũ*) — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તરવું** (*tarvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tarati*, "crosses; floats, swims" (CDIAL 5702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

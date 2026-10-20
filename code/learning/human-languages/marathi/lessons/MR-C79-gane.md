@@ -14,7 +14,8 @@ romanization: "gāṇe"
 concept_tag: MR-VERB-GANE
 prerequisites: [MR-C79-hasne, MR-C79-radne]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gāṇe ← Sanskrit gāyati 'sings' (CDIAL 4135); the noun gāṇe 'singing' ← gāna (CDIAL 4130)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C79-radne]
 <!-- hl-knowledge: introduces=[MR-LEX-C79-VERBS79-04]; assesses=[] -->
 
 **गाणे** — *gāṇe* — "to sing; a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाणे** (*gāṇe*) is two inherited words in one shape. The verb comes from Sanskrit *gāyati*, "sings" (CDIAL 4135), and the noun from *gāna*, "singing" (CDIAL 4130).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

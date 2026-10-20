@@ -13,7 +13,8 @@ gloss: "a peacock"
 concept_tag: LA-RES192-PAVO
 prerequisites: [LA-C192-ciconia, LA-C192-noctua]
 sounds: []
-roots: []
+roots: [pavo-latin]
+etymology_hook: "pāvō 'peacock' — probably an eastern loan, like Greek taōs; English peacock begins with it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C192-noctua]
 <!-- hl-knowledge: introduces=[LA-LEX-C192-RES192-05]; assesses=[] -->
 
 **pāvō, pāvōnis** — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pāvō** is probably a loan from the east, like Greek *taōs*, "peacock" (Lewis & Short); both are thought to go back to a language of India, but the path is uncertain. English *peacock* begins with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

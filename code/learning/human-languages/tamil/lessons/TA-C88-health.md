@@ -11,7 +11,8 @@ romanization: "uṭalnalam"
 concept_tag: TA-DOCTOR-HEALTH
 prerequisites: [TA-C88-vomiting, TA-C88-headache]
 sounds: []
-roots: []
+roots: [dravidian-udal-body, nal-good-dravidian]
+etymology_hook: "உடல்நலம் — native: uṭal 'body' (DEDR 586) + nalam 'wellness' (DEDR 3610)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C88-headache]
 **உடல்நலம்** (*uṭalnalam*) — "health", literally "body-wellbeing".
 
 **நலம்** is the wellbeing of your first greetings; **உடல்** is "the body".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உடல்நலம்** (*uṭalnalam*) is native: *uṭal*, "body" (DEDR 586), and *nalam*, "wellness" (DEDR 3610).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

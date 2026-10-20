@@ -13,7 +13,8 @@ gloss: "a knee"
 concept_tag: LA-CORPUS2-GENU
 prerequisites: [LA-C64-collum, LA-C64-umerus]
 sounds: []
-roots: []
+roots: [genu-latin]
+etymology_hook: "genū 'knee' — inherited, usually traced to PIE *gonu 'knee'; English knee is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C64-umerus]
 <!-- hl-knowledge: introduces=[LA-LEX-C64-CORPUS2-03]; assesses=[] -->
 
 **genū, genūs** — "a knee". *Genuflect*: to bend the knee.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**genū** is inherited, usually traced to Proto-Indo-European *\*gonu*, "knee" (EtymDB 2.1). English *knee* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

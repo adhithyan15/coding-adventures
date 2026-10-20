@@ -14,7 +14,8 @@ romanization: "beccage"
 concept_tag: KA-GUNA291-BECCAGE
 prerequisites: [KA-C290-mukhya, KA-C291-tannage]
 sounds: []
-roots: []
+roots: [dravidian-vee-burn]
+etymology_hook: "beccage: native Dravidian; DEDR 5517 lists beccage 'warmth; warm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C291-tannage]
 <!-- hl-knowledge: introduces=[KA-LEX-C291-GUNA291-02]; assesses=[] -->
 
 **ಬೆಚ್ಚಗೆ** — *beccage* — "warm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಚ್ಚಗೆ** (*beccage*) is native Dravidian, DEDR 5517 lists *beccage*, "heat, warmth; warm", itself, under the root for "to burn"; the entry also has Malayalam *vēka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

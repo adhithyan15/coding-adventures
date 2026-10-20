@@ -14,7 +14,8 @@ romanization: "kumbāra"
 concept_tag: KA-KELASA306-KUMBARA
 prerequisites: [KA-C305-patrakarta, KA-C306-moci]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhakara]
+etymology_hook: "kumbāra: tadbhava of Sanskrit kumbhakāra 'potter' (CDIAL 3310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C306-moci]
 <!-- hl-knowledge: introduces=[KA-LEX-C306-KELASA306-02]; assesses=[] -->
 
 **ಕುಂಬಾರ** — *kumbāra* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಂಬಾರ** (*kumbāra*) is a tadbhava of Sanskrit *kumbhakāra*, "potter" (CDIAL 3310), through Prakrit *kuṁbhāra*: "pot maker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

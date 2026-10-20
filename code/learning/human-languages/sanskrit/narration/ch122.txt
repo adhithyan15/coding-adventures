@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a jewel, then the Sanskrit for gold.
 You'll want to know: रजतम्.
 रजतम् — rajatam — "silver".
 
+The word, taken apart.
+rajata first meant "whitish, silvery" in the Rigveda and then "silver" (MW). It is inherited from Indo-European, the same word as Latin argentum "silver" (EtymDB), whose symbol Ag is still on the periodic table. Pali kept it as rajata (CDIAL 10576).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for gold, then the Sanskrit for silver.
 
 You'll want to know: काचः.
 काचः — kācaḥ — "glass".
+
+The word, taken apart.
+kāca "glass" goes back to the Śatapatha Brāhmaṇa, where it means glass beads; MW cites only a grammarians' root √kac for it, so its origin is uncertain. It lives on as Hindi and Gujarati kāc "glass" (CDIAL 3007).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for silver, then the Sanskrit for glass.
 You'll want to know: शकटम्.
 शकटम् — śakaṭam — "a cart".
 
+The word, taken apart.
+śakaṭa "a cart, a waggon" appears from the Śrauta Sūtras on, and MW calls it of doubtful derivation; CDIAL 12236 suggests the root √śak with a query mark, so its origin is uncertain. It lives on as Hindi and Punjabi chakṛā "bullock-cart" (CDIAL 12236).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for glass, then the Sanskrit for a cart.
 You'll want to know: भाण्डम्.
 भाण्डम् — bhāṇḍam — "a pot".
 
+The word, taken apart.
+bhāṇḍa "a pot, any vessel; goods, wares" has an uncertain origin: MW queries a root √bhaṇḍ, and DEDR (appendix 50) notes Burrow's Indo-European proposal. It lives on as Punjabi bhāṁḍā "cooking pot" (CDIAL 9440).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a cart, then the Sanskrit for a pot.
 
 You'll want to know: खट्वा.
 खट्वा — khaṭvā — "a cot".
+
+The word, taken apart.
+khaṭvā "a bedstead, a cot" appears from the Kauśika Sūtra on, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi khāṭ "bedstead" and khaṭolā "cot" (CDIAL 3781).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "puli"
 concept_tag: TE-THINGS123-PULI
 prerequisites: [TE-C122-gurram, TE-C122-enugu]
 sounds: []
-roots: []
+roots: [dravidian-puli-tiger]
+etymology_hook: "puli: native Dravidian, one word with Tamil puli and Kannada puli (DEDR 4307)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C122-enugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **పులి** — *puli* — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పులి** (*puli*) is native Dravidian, one word with Tamil *puli* and Kannada *puli* (DEDR 4307). DEDR compares Prakrit *pulli*, "tiger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

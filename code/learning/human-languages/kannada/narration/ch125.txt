@@ -12,6 +12,9 @@ Before the new one: say the Kannada for garlic, then the Kannada for honey.
 You'll want to know: ಇಡ್ಲಿ.
 ಇಡ್ಲಿ — iḍli — "an idli".
 
+The word, taken apart.
+ಇಡ್ಲಿ (iḍli) is native Dravidian, one word with Tamil iṭṭali and Malayalam iṭṭali (DEDR 455). DEDR lists iḍḍali, iḍḍalige, a steamed cake of rice flour and black gram. DEDR 455 compares Sanskrit iṇḍarī.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for honey, then the Kannada for an idli.
 
 You'll want to know: ದೋಸೆ.
 ದೋಸೆ — dōse — "a dosa".
+
+The word, taken apart.
+ದೋಸೆ (dōse) is native Dravidian, one word with Tamil tōcai and Telugu dōse (DEDR 3542). DEDR lists dōse itself, "a spongy cake of rice flour". DEDR 3542 compares Sanskrit dhosaka.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for an idli, then the Kannada for a dosa.
 You'll want to know: ವಡೆ.
 ವಡೆ — vaḍe — "a vada".
 
+The word, taken apart.
+ವಡೆ (vaḍe) comes from Sanskrit vaṭaka, "round cake of pulse fried in oil", reshaped to Kannada sounds: a tadbhava (CDIAL 11213). Prakrit vaḍaga shows the softened middle.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a dosa, then the Kannada for a vada.
 You'll want to know: ಉಪ್ಪಿಟ್ಟು.
 ಉಪ್ಪಿಟ್ಟು — uppiṭṭu — "upma".
 
+The word, taken apart.
+ಉಪ್ಪಿಟ್ಟು (uppiṭṭu) is native Dravidian: uppu, "salt" (DEDR 2674), and hiṭṭu, "flour", whose older form piṭṭu, "flour, food", DEDR 3084 cites: salted flour.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a vada, then the Kannada for upma.
 
 You'll want to know: ರಾಗಿ.
 ರಾಗಿ — rāgi — "finger millet".
+
+The word, taken apart.
+ರಾಗಿ (rāgi) is native Dravidian, one word with Tamil irāki and Telugu rāgi (DEDR 812). DEDR 812 compares Sanskrit rāgā, a lexicon word for the same grain.
 
 What you've built.
 One more word for this chapter.

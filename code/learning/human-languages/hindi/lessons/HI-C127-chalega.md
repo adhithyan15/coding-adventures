@@ -14,7 +14,8 @@ romanization: "calegā"
 concept_tag: HI-NOTATALL-THATLL-DO
 prerequisites: [HI-C127-sachmuch, HI-C127-achhaji]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "calegā: future of calnā 'to move, go', from Sanskrit calati (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C127-achhaji]
 **चलेगा** (*calegā*) — "that'll do", "that works", literally "it will go".
 
 It is **चलना**, "to go", in the future. Offered a choice, **चलेगा** accepts it without fuss.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चलेगा** (*calegā*) is the future of *calnā*, "to move, go", which comes from Sanskrit *calati*, "goes away" (CDIAL 4715). "It will go" means "it will do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

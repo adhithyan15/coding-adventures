@@ -14,7 +14,8 @@ romanization: "míska"
 concept_tag: RU-VESHCH246-MISKA
 prerequisites: [RU-C246-mikrovolnovka, RU-C246-chaynik]
 sounds: []
-roots: []
+roots: [mensa-latin]
+etymology_hook: "миска is from миса 'a bowl', an old loan from Vulgar Latin mesa 'a table', perhaps through Gothic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C246-chaynik]
 <!-- hl-knowledge: introduces=[RU-LEX-C246-VESHCH246-03]; assesses=[] -->
 
 **миска** (*míska*) — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**миска** is a diminutive of *миса*, "a bowl", an old loan from Vulgar Latin *mēsa*, Latin *mēnsa*, "a table", perhaps through Gothic *mēs*, "a table, a dish" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

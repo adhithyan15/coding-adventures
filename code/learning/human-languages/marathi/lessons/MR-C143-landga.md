@@ -15,6 +15,7 @@ concept_tag: MR-THINGS143-LANDGA
 prerequisites: [MR-C143-harin, MR-C143-sasa]
 sounds: []
 roots: []
+etymology_hook: "lāṇḍgā 'wolf': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C143-sasa]
 <!-- hl-knowledge: introduces=[MR-LEX-C143-THINGS143-05]; assesses=[] -->
 
 **लांडगा** — *lāṇḍgā* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लांडगा** (*lāṇḍgā*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

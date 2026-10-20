@@ -14,7 +14,8 @@ romanization: "pāyasa"
 concept_tag: KA-VASTU258-PAYASA
 prerequisites: [KA-C258-majjige, KA-C258-benne]
 sounds: []
-roots: []
+roots: [sanskrit-payasa]
+etymology_hook: "pāyasa ← Sanskrit pāyasa 'food prepared with milk', a tatsama (CDIAL 8099)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C258-benne]
 <!-- hl-knowledge: introduces=[KA-LEX-C258-VASTU258-03]; assesses=[] -->
 
 **ಪಾಯಸ** — *pāyasa* — "sweet milk pudding, payasa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಾಯಸ** (*pāyasa*) is Sanskrit *pāyasa*, "food prepared with milk", taken over whole as a learned loan, a tatsama (CDIAL 8099).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

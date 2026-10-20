@@ -14,6 +14,7 @@ concept_tag: FR-TEMPS187-DEPUIS
 prerequisites: [FR-C187-soudain, FR-C187-jusqua]
 sounds: []
 roots: []
+etymology_hook: "depuis — de + puis: from then on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C187-jusqua]
 <!-- hl-knowledge: introduces=[FR-LEX-C187-TEMPS187-05]; assesses=[] -->
 
 **depuis** — "since, for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**depuis** — *de*, "from", and *puis*, "then": from then on. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

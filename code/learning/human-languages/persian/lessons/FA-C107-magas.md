@@ -14,7 +14,8 @@ romanization: "magas"
 concept_tag: FA-THINGS107-MAGAS
 prerequisites: [FA-C106-zanbur, FA-C107-pashe]
 sounds: []
-roots: []
+roots: [persian-magas]
+etymology_hook: "magas: inherited, usually traced to Middle Persian magas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C107-pashe]
 <!-- hl-knowledge: introduces=[FA-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **مگس** — *magas* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*magas* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *magas*, "fly". It is usually set beside Sanskrit *makṣikā*, "fly", as one Indo-Iranian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

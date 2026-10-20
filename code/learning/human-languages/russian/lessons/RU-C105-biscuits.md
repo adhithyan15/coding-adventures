@@ -14,7 +14,8 @@ romanization: "pechénye"
 concept_tag: RU-THINGS105-BISCUITS
 prerequisites: [RU-C105-flour, RU-C105-chocolate]
 sounds: []
-roots: []
+roots: [slavic-peci]
+etymology_hook: "печенье is from печь 'to bake': something baked"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C105-chocolate]
 <!-- hl-knowledge: introduces=[RU-LEX-C105-THINGS105-03]; assesses=[] -->
 
 **печенье** (*pechénye*) — "biscuits".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**печенье** is a noun from *печь*, "to bake": "something baked". *печь* ← Proto-Slavic *\*pekti*, which Vasmer relates to Sanskrit *paktí-*, "cooking", and Greek *pépsis*, "cooking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

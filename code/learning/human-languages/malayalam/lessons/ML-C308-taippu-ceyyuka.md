@@ -14,7 +14,8 @@ romanization: "ṭaippŭ ceyyuka"
 concept_tag: ML-VERB-TAIPPU-CEYYUKA
 prerequisites: [ML-C308-sekharikkuka, ML-C308-photto-etukkuka]
 sounds: []
-roots: []
+roots: [english-type, cey-do-dravidian]
+etymology_hook: "ṭaippŭ ceyyuka: English type + native ceyyuka (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C308-photto-etukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C308-KRIYA308-05]; assesses=[] -->
 
 **ടൈപ്പ് ചെയ്യുക** — *ṭaippŭ ceyyuka* — "to type".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ടൈപ്പ് ചെയ്യുക** (*ṭaippŭ ceyyuka*) joins English *type* to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

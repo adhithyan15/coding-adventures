@@ -14,7 +14,8 @@ romanization: "elliyū"
 concept_tag: KA-ILLA154-ELLIYU
 prerequisites: [KA-C154-yaru, KA-C154-endigu]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "elliyū: native elli 'where' (DEDR 5151) + -ū 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C154-endigu]
 <!-- hl-knowledge: introduces=[KA-LEX-C154-ILLA154-03]; assesses=[] -->
 
 **ಎಲ್ಲಿಯೂ** — *elliyū* — "nowhere, not anywhere (with a negative verb)". **ಅವನು ಎಲ್ಲಿಯೂ ಹೋಗಲಿಲ್ಲ** — *avanu elliyū hōgalilla* — "He didn't go anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಲ್ಲಿಯೂ** (*elliyū*) is native Dravidian: *elli*, "where" (DEDR 5151), with *-ū*, "even": with a "not" verb, "not even anywhere".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

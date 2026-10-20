@@ -14,7 +14,8 @@ romanization: "rakta"
 concept_tag: MR-BODY72-RAKTA
 prerequisites: [MR-C71-man, MR-C71-chehra]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "rakta ← Sanskrit rakta 'coloured, red; blood', a tatsama (CDIAL 10539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C71-chehra]
 <!-- hl-knowledge: introduces=[MR-LEX-C72-BODY72-01]; assesses=[] -->
 
 **रक्त** — *rakta* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रक्त** (*rakta*) is Sanskrit *rakta*, "coloured, red; blood", taken over whole as a learned loan, a tatsama (CDIAL 10539). It is the past participle of *rañj*, "to colour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

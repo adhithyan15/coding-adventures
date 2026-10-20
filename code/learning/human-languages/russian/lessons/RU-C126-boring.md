@@ -14,7 +14,8 @@ romanization: "skúchnyy"
 concept_tag: RU-QUAL126-BORING
 prerequisites: [RU-C126-important, RU-C126-interesting]
 sounds: []
-roots: []
+roots: [slavic-skuka]
+etymology_hook: "скучный is from скука 'boredom'; Vasmer ties скука to докучать 'to pester'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C126-interesting]
 <!-- hl-knowledge: introduces=[RU-LEX-C126-QUAL126-05]; assesses=[] -->
 
 **скучный** (*skúchnyy*) — "boring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**скучный** is *скука*, "boredom", with *-ный*. Vasmer will not separate *скука* from *докучать*, "to pester", but rejects the proposed outside links, so its origin is open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

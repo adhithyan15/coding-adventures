@@ -11,6 +11,7 @@ concept_tag: ES-REF-SOFA
 prerequisites: [ES-C432-tuberia, ES-C279-silla]
 sounds: [stress-final]
 roots: []
+etymology_hook: "sofá ← French sofa, from Arabic ṣuffa 'a raised, cushioned bench'"
 duration:
   max_seconds: 240
 requires:
@@ -50,10 +51,9 @@ so.
 came apart into a piece plus an ending; this one did not, and pretending
 otherwise would waste your time.
 
-It came into Spanish from Arabic, where the word named a raised, cushioned
-bench along a wall. Spanish took hundreds of words from Arabic over several
-centuries, and they tend to arrive **whole** like this rather than as pieces you
-can recombine.
+It came into Spanish through French *sofa*, from Arabic *ṣuffa*, a raised,
+cushioned bench along a wall. A word taken from another language tends to
+arrive **whole** like this rather than as pieces you can recombine.
 
 So the honest lesson of the chapter is two-sided:
 
@@ -76,4 +76,4 @@ would cost you minutes and teach you nothing.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-05, ES-LEX-C432-CASA-04] -->
 
 [PAUSE 3s] The sofa? (**el sofá**.) Could you have built it from a piece you
-had? (**No.**) Where did it come from? (**Arabic.**)
+had? (**No.**) Where did it come from? (**Arabic, through French.**)

@@ -14,6 +14,9 @@ You'll want to know: అవునా.
 Every question you have asked so far needed a question word. This one needs none: take అవును, "yes", and add -ఆ.
 That -ఆ is the whole yes-or-no machine. Hang it on the end of any statement and it becomes a question.
 
+The word, taken apart.
+అవునా (avunā) is avunu, "yes", which DEDR 333 lists under agu, "to be", with the question ending -ā. DEDR compares Sanskrit ām, "yes" (CDIAL 1235).
+
 Grammar Lens: -ఆ makes any statement a question.
 మీరు వెళ్తారు "you go" becomes మీరు వెళ్తారా? "do you go?". తెలుగు కష్టం becomes తెలుగు కష్టమా?. Nothing moves and no word is added: the last vowel lengthens into ఆ and the sentence is a question. This is the commonest question type in any listening paper, and it is one ending.
 
@@ -48,6 +51,9 @@ You'll want to know: తెలుసా.
 The first thing you will do with the new ending. You already have తెలుసు, "it is known"; add -ఆ and you are asking.
 మీకు తెలుగు తెలుసా (telusā)? — "do you know Telugu?" The knower sits in the dative మీకు, the way it did when you first met తెలుసు.
 
+The word, taken apart.
+తెలుసా (telusā) is telusu, "it is known", with the question ending -ā. The verb is native Dravidian: DEDR 3433 lists teliyu, "to be known", with Tamil teḷi, "to become clear".
+
 What you've built.
 A real question, built from a word you already had.
 
@@ -78,6 +84,9 @@ You'll want to know: నాకు తెలియదు.
 తెలియదు (teliyadu) — "it is not known", which is Telugu for "I don't know".
 This is the answer to the last word, and it is probably the sentence you will need most often of anything in this book.
 It is not తెలుసు with లేదు after it. Telugu negates an ordinary verb from the inside, with -అదు on the stem: తెలియ- + -దు.
+
+The word, taken apart.
+నాకు తెలియదు (nāku teliyadu) is native Dravidian: nāku, "to me", built on nā-, the oblique stem of nēnu (DEDR 5160), and teliyadu, "it is not known", from teliyu, "to be known" (DEDR 3433).
 
 Grammar Lens: how Telugu says a verb did not happen.
 The two negatives of your first lesson, లేదు and కాదు, deny existence and identity. An ordinary action is denied differently — with an ending on the verb itself: వెళ్తాను "I go" becomes వెళ్ళను "I don't go"; వస్తాను becomes రాను. The ending carries the negative and no separate word is used. తెలియదు is that pattern on తెలియ-.
@@ -113,6 +122,9 @@ You'll want to know: అర్థం కాలేదు.
 You already have నాకు అర్థమైంది, "I understood" — literally "to me it became meaning". This is the same sentence with the becoming denied: కా- "become" plus లేదు.
 Say it, and the person you are talking to will slow down. That is the whole point of a repair phrase.
 
+The word, taken apart.
+అర్థం కాలేదు (arthaṁ kālēdu) is Sanskrit artha, "aim, meaning" (CDIAL 638), with kālēdu, "did not become", built from two native Dravidian stems: kā-, "to become" (DEDR 333), and lē-, "be not" (DEDR 2559).
+
 What you've built.
 A way out of the moment you lose the thread.
 
@@ -143,6 +155,9 @@ You'll want to know: ఉన్నారా.
 ఉన్నారా (unnārā) — "is he or she there?".
 ఉండు in its respectful -ఆరు form, with the new -ఆ on the end. Three pieces you already had.
 It is what you say at a door or into a telephone: గురువు ఉన్నారా (unnārā)? — "is the teacher there?"
+
+The word, taken apart.
+ఉన్నారా (unnārā) is native Dravidian: a form of uṇḍu, "to be" (DEDR 697), with the respectful -āru and the question ending -ā.
 
 What you've built.
 A question you can ask at somebody's door.

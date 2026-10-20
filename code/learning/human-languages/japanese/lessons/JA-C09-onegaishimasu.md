@@ -11,8 +11,8 @@ gloss: please; I request it
 concept_tag: COURTESY-PLEASE
 prerequisites: [JA-C09-ichido]
 sounds: [mora, dakuten]
-roots: []
-etymology_hook: O marks respect, negai is a request or wish, and shimasu is the polite do; the whole expression politely hands over a request.
+roots: [japanese-negau, japanese-suru]
+etymology_hook: "onegai shimasu: polite o- + negai 'a wish' (from negau) + shimasu, polite 'do'"
 duration:
   max_seconds: 180
 requires:
@@ -49,6 +49,11 @@ request ending. Do not translate each piece while speaking.
 
 The common kanji spelling can wait. This chapter earns the sound and social use
 first, without switching writing systems mid-ramp.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おねがいします** (*onegai shimasu*) is built from three native pieces: the polite prefix *o-*, *negai*, "a wish, a request", from the verb *negau*, "to wish", and *shimasu*, the polite form of *suru*, "to do". Word for word: "I do the request" (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONEGAI-SHIMASU, JA-LEX-ICHIDO] -->

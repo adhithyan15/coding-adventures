@@ -14,7 +14,8 @@ romanization: "pāṭiñcu"
 concept_tag: TE-VERB-PATINCU
 prerequisites: [TE-C165-allu, TE-C166-konasagu]
 sounds: []
-roots: []
+roots: [telugu-patincu-observe]
+etymology_hook: "pāṭiñcu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to observe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C166-konasagu]
 <!-- hl-knowledge: introduces=[TE-LEX-C166-KRIYA166-02]; assesses=[] -->
 
 **పాటించు** — *pāṭiñcu* — "to observe, to follow (rules)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పాటించు** (*pāṭiñcu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to observe, follow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

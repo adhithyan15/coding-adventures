@@ -14,7 +14,8 @@ romanization: "sōlu"
 concept_tag: KA-VERB-SOLU
 prerequisites: [KA-C150-holi, KA-C151-gellu]
 sounds: []
-roots: []
+roots: [dravidian-tol-lose]
+etymology_hook: "sōlu: native Dravidian, one word with Tamil tōl and Malayalam tōlka (DEDR 3558)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C151-gellu]
 <!-- hl-knowledge: introduces=[KA-LEX-C151-ACT151-02]; assesses=[] -->
 
 **ಸೋಲು** — *sōlu* — "to lose (a game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೋಲು** (*sōlu*) is native Dravidian, one word with Tamil *tōl* and Malayalam *tōlka* (DEDR 3558). DEDR lists *sōl(u)*, "to be defeated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

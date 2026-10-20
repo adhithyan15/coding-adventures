@@ -14,7 +14,8 @@ romanization: "āsoj"
 concept_tag: MW-TIME93-ASOJ
 prerequisites: [MW-C93-savan, MW-C93-bhadvo]
 sounds: []
-roots: []
+roots: [sanskrit-ashvayuja]
+etymology_hook: "āsoj ← Sanskrit aśvayuja 'the month Āśvina, September-October', a tadbhava (CDIAL 925, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C93-bhadvo]
 <!-- hl-knowledge: introduces=[MW-LEX-C93-TIME93-03]; assesses=[] -->
 
 **आसोज** — *āsoj* — "Asoj (September-October)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आसोज** (*āsoj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aśvayuja*, "the month Āśvina, September-October". CDIAL gives no Marwari form in this entry (CDIAL 925); the match is through Hindi *asoj*. The name is built on *aśva*, "horse", and *yuj*, "yoke", a star pair.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

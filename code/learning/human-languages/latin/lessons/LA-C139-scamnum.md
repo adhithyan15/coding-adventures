@@ -13,7 +13,8 @@ gloss: "a bench"
 concept_tag: LA-THINGS139-SCAMNUM
 prerequisites: [LA-C138-armarium, LA-C139-cathedra]
 sounds: []
-roots: []
+roots: [scamnum-latin]
+etymology_hook: "scamnum 'bench' — inherited, usually traced to PIE *skabh- 'to prop up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C139-cathedra]
 <!-- hl-knowledge: introduces=[LA-LEX-C139-THINGS139-02]; assesses=[] -->
 
 **scamnum, scamnī** — "a bench".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scamnum** is inherited from Proto-Italic *\*skabnom*, "bench", usually traced to Proto-Indo-European *\*skabh-*, "to prop up" (EtymDB 2.1); *scabellum*, "a footstool", is its diminutive (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

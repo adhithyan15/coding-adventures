@@ -13,7 +13,8 @@ gloss: "a queen"
 concept_tag: LA-HOMINES2-REGINA
 prerequisites: [LA-C73-puella, LA-C73-senex]
 sounds: []
-roots: []
+roots: [regina-latin, rex-latin]
+etymology_hook: "rēgīna 'queen' — built on rēx, rēgis 'king', from PIE *h3reg- 'to rule'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C73-senex]
 <!-- hl-knowledge: introduces=[LA-LEX-C73-HOMINES2-03]; assesses=[] -->
 
 **rēgīna, rēgīnae** — "a queen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rēgīna** is built on *rēx*, *rēgis*, "a king" (Lewis & Short), which is usually traced to Proto-Indo-European *\*h3reg-*, "to rule, a chief" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

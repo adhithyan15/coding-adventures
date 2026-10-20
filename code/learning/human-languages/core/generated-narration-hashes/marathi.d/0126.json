@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 126,
-  "sourceHash": "fnv1a64:eea6f109e364a797",
+  "sourceHash": "fnv1a64:fe707d6049668ca6",
   "lessonIds": [
     "MR-C126-ravivar",
     "MR-C126-tarikh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch126.txt",
   "json": "marathi/narration/ch126.json",
-  "textHash": "fnv1a64:a551d0c747f2266c",
-  "jsonHash": "fnv1a64:9bf5227f458cca37",
+  "textHash": "fnv1a64:b1c5399b543bb866",
+  "jsonHash": "fnv1a64:0a8be19b61966696",
   "findings": []
 }

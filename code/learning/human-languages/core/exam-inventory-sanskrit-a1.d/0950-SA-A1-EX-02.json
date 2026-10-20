@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-EX-02",
+  "category": "Existential notions",
+  "label": "certainty and its lack",
+  "probe": [
+    "SA-LEX-C27-REPLY-04",
+    "SA-LEX-C42-REPLY-03",
+    "SA-LEX-C43-COURTESY-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG1-05"
+  ],
+  "note": "satyam, prāyaḥ and viśvāsaḥ ('trust'). Thin: there is no modal machinery."
+}

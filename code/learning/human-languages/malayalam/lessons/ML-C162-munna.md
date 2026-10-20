@@ -14,7 +14,8 @@ romanization: "mūṅṅa"
 concept_tag: ML-THINGS162-MUNNA
 prerequisites: [ML-C162-ottakam, ML-C162-taravu, ML-C22-paccha-manja]
 sounds: []
-roots: []
+roots: [malayalam-munna-owl]
+etymology_hook: "mūṅṅa 'owl': of uncertain origin; DEDR does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C162-taravu]
 <!-- hl-knowledge: introduces=[ML-LEX-C162-THINGS162-05]; assesses=[] -->
 
 **മൂങ്ങ** — *mūṅṅa* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൂങ്ങ** (*mūṅṅa*) is of uncertain origin; DEDR does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

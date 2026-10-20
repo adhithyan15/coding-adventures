@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 673,
+  "sourceHash": "fnv1a64:8f73d5d9f4c00bdf",
+  "lessonIds": [
+    "ES-C673-dirigirse",
+    "ES-C673-acortar",
+    "ES-C673-retroceder",
+    "ES-C673-rodear",
+    "ES-C673-bordear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch673.txt",
+  "json": "spanish/narration/ch673.json",
+  "textHash": "fnv1a64:ee6e1d6adbb2b773",
+  "jsonHash": "fnv1a64:161ed6de37adbd44",
+  "findings": []
+}

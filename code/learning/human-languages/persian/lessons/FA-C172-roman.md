@@ -14,7 +14,8 @@ romanization: "român"
 concept_tag: FA-CHIZ172-ROMAN
 prerequisites: [FA-C172-durbin, FA-C172-gitar]
 sounds: []
-roots: []
+roots: [french-roman]
+etymology_hook: "român ← French roman 'novel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C172-gitar]
 <!-- hl-knowledge: introduces=[FA-LEX-C172-CHIZ172-03]; assesses=[] -->
 
 **رمان** — *român* — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*român* is borrowed from French *roman*, "novel" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

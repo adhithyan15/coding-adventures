@@ -13,7 +13,8 @@ gloss: "a driver"
 concept_tag: PT-TRABALHO111-MOTORISTA
 prerequisites: [PT-C110-agricultor, PT-C110-padeiro]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "motorista — built from the motor word (← Latin motor 'one that moves') + -ista"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C110-padeiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C111-TRABALHO111-01]; assesses=[] -->
 
 **o motorista** — "a driver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**motorista** is built from the word for a motor and *-ista*, "one who". That word ← Latin *motor*, "one that moves", from *movere*, "to move".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

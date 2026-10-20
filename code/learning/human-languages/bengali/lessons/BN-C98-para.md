@@ -14,7 +14,8 @@ romanization: "pārā"
 concept_tag: BN-VERB-PARA
 prerequisites: [BN-C97-abdar, BN-C97-dabi]
 sounds: []
-roots: []
+roots: [sanskrit-parayati]
+etymology_hook: "pārā ← Sanskrit pārayati 'brings over; is able', a tadbhava (CDIAL 8106)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C97-dabi]
 <!-- hl-knowledge: introduces=[BN-LEX-C98-CAN98-01]; assesses=[] -->
 
 **পারা** — *pārā* — "to be able to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পারা** (*pārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pārayati*, "brings over; is able" (CDIAL 8106). CDIAL lists Bengali *pārā*, "to be able", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

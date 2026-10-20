@@ -11,7 +11,8 @@ romanization: "iṅglīṣu"
 concept_tag: TE-ABOUT-ENGLISH
 prerequisites: [TE-C89-job, TE-C89-language]
 sounds: []
-roots: []
+roots: [english-english]
+etymology_hook: "iṅglīṣu ← English 'English', with Telugu's added -u"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C89-language]
 **ఇంగ్లీషు** (*iṅglīṣu*) — "English", the language.
 
 **నాకు ఇంగ్లీషు వచ్చు, తెలుగు కొంచెం వచ్చు** — "I know English, and a little Telugu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంగ్లీషు** (*iṅglīṣu*) is a loan from English *English*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

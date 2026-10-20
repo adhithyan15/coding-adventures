@@ -14,7 +14,8 @@ romanization: "moṛ"
 concept_tag: BN-JAYGA157-MOR
 prerequisites: [BN-C157-jayga, BN-C157-phutpat]
 sounds: []
-roots: []
+roots: [sanskrit-murdhan, sanskrit-motati]
+etymology_hook: "moṛ: CDIAL lists moṛ 'head of a street' ← mūrdhan (10247) and moṛ 'a twist' (10186)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C157-phutpat]
 <!-- hl-knowledge: introduces=[BN-LEX-C157-JAYGA157-03]; assesses=[] -->
 
 **মোড়** — *moṛ* — "a corner, a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *moṛ*, "head of a street", under Sanskrit *mūrdhan*, "head, top" (CDIAL 10247), and Bengali *moṛ*, "a twist", under *mōṭati*, "twists" (CDIAL 10186). Which of the two lies behind **মোড়** (*moṛ*), "a corner, a crossroads", is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

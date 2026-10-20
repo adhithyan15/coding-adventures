@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 130,
-  "sourceHash": "fnv1a64:f86ffdd6a7cef2c7",
+  "sourceHash": "fnv1a64:f47bf66902f25d04",
   "lessonIds": [
     "UR-C130-kohni",
     "UR-C130-angutha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch130.txt",
   "json": "urdu/narration/ch130.json",
-  "textHash": "fnv1a64:4364b47e1ed3ceb2",
-  "jsonHash": "fnv1a64:bb61fde645792ef7",
+  "textHash": "fnv1a64:ef9e9c747a01d725",
+  "jsonHash": "fnv1a64:3f1761c911270257",
   "findings": []
 }

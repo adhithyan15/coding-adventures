@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:8e344f4e83f82e25",
+  "lessonIds": [
+    "GE-C271-melden",
+    "GE-C271-meldung",
+    "GE-C271-bericht",
+    "GE-C271-schlagzeile",
+    "GE-C271-artikel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch271.txt",
+  "json": "german/narration/ch271.json",
+  "textHash": "fnv1a64:56a0f64a61b3796a",
+  "jsonHash": "fnv1a64:54cd23c2edad4b71",
+  "findings": []
+}

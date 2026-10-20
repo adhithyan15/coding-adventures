@@ -155,6 +155,10 @@ describe("rolling up", () => {
   });
 });
 
+// Real-corpus assertions share one read-only load. Re-reading all curriculum
+// owners and lessons inside each timed assertion exhausts the Windows budget.
+const REAL_EVERYTHING = loadEverything();
+
 describe("exam alignment", () => {
   // The owner's instruction: do not leave things unmapped. A track with no mapping
   // silently drops out of every level report, and a learner asking "what is A1 in Tamil?"
@@ -166,7 +170,7 @@ describe("exam alignment", () => {
     ) as {
       tracks: Record<string, { basis: string; mapping: unknown; exam: string }>;
     };
-    const { registry } = loadEverything();
+    const { registry } = REAL_EVERYTHING;
 
     for (const language of registry.languages) {
       const entry = exams.tracks[language.id];
@@ -214,7 +218,7 @@ describe("corpus level summary", () => {
   // and all three were wrong about the total. It is re-measured here against the merged
   // corpus, which is the only place the real number exists.
   it("derives an exact closed summary without tracked generated rollups", () => {
-    const { registry, lessons, curricula: paths, spine } = loadEverything();
+    const { registry, lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     expect(summary.tracks.map((track) => track.language)).toEqual(
       registry.languages.map((language) => language.id).sort((a, b) => a.localeCompare(b)),
@@ -261,8 +265,8 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twenty-two tracks have reached A2, and every track has now reached A1", () => {
-    const { lessons, curricula: paths, spine } = loadEverything();
+  it("shows seventeen tracks have reached A2, and every track has now reached A1", () => {
+    const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
     // rather than counting them — "no track is at A2" has become a list, and listing it
@@ -271,6 +275,13 @@ describe("corpus level summary", () => {
     // writing chapter, so the list is 21 and the ceiling for everyone else is A2.
     // Japanese joins with chapters 138-142, one chapter per A2 spine node, so
     // the list is 22: every track but Spanish reaches A2 and stops there.
+    // Italian leaves it with chapters 263-272, which realize the five B1 spine
+    // nodes, so the list is 21. `reach` only touches B1; attained stays A2.
+    // Portuguese leaves it with chapters 259-268, which realize the five B1
+    // spine nodes, so the list is 20. French leaves it with chapters 258-267,
+    // the same five nodes, so the list is 19. German leaves it with chapters
+    // 252-261, the same five nodes, so the list is 18. Latin leaves it with
+    // chapters 281-290, the same five nodes, so the list is 17.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -281,23 +292,18 @@ describe("corpus level summary", () => {
       // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
       // never reached. Both are one character each.
       "chinese",
-      "french",
-      "german",
       "gujarati",
       "hindi",
-      "italian",
       // Japanese joins with chapters 138-142: what I do, negation and
       // questions, the past, the future and practical texts, the five A2 spine
       // nodes. `reach` only TOUCHES A2; attained stays A1 until the A2
       // vocabulary and verb counts are met.
       "japanese",
       "kannada",
-      "latin",
       "malayalam",
       "marathi",
       "marwadi",
       "persian",
-      "portuguese",
       "punjabi",
       "russian",
       "sanskrit",
@@ -305,12 +311,16 @@ describe("corpus level summary", () => {
       "telugu",
       "urdu",
     ]);
-    // Exactly one track now exceeds A2, and naming it is stronger than a blanket
-    // "nothing does" -- it says which rung was climbed and by whom.
+    // Six tracks now exceed A2, and naming them is stronger than a blanket
+    // "nothing does" -- it says which rung was climbed and by whom. Italian joins
+    // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
+    // core, chapters 259-268, French with its B1 core, chapters 258-267,
+    // German with its B1 core, chapters 252-261, and Latin with its B1 core,
+    // chapters 281-290.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["spanish"]);
+    ).toEqual(["french", "german", "italian", "latin", "portuguese", "spanish"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes
@@ -338,7 +348,7 @@ describe("corpus level summary", () => {
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {
-    const { lessons, curricula: paths, spine } = loadEverything();
+    const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const ramp = lessonsUpToLevel(lessons, paths, spine, "A1");
     // The whole point: this is a FILTER over the one corpus, not a second corpus.
     // +4, measured as a set difference against the pre-change corpus rather than inferred

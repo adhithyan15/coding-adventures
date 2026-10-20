@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-484-GESSO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a fracture: the X-ray, the cast and the crutches.",
+  "prerequisites": []
+}

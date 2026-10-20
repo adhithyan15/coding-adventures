@@ -14,7 +14,8 @@ romanization: "kathakaḷi"
 concept_tag: ML-VASTU290-KATHAKALI
 prerequisites: [ML-C289-ammayiyappan, ML-C290-onakkoti]
 sounds: []
-roots: []
+roots: [sanskrit-katha, dravidian-kali-play]
+etymology_hook: "kathakaḷi: Sanskrit kathā 'story' (CDIAL 2704) + native kaḷi 'play' (DEDR 1374)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C290-onakkoti]
 <!-- hl-knowledge: introduces=[ML-LEX-C290-VASTU290-02]; assesses=[] -->
 
 **കഥകളി** — *kathakaḷi* — "Kathakali, the dance-drama".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഥകളി** (*kathakaḷi*) is "story play": Sanskrit *kathā*, "story" (CDIAL 2704), and native *kaḷi*, "play" (DEDR 1374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-433-CAMERA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-433-CAMERA"
+  ],
+  "after": []
+}

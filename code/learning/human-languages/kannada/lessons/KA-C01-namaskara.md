@@ -12,6 +12,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [kannada-inherent-a, virama, ottakshara-conjunct]
 roots: [namas, kṛ]
+etymology_hook: "namaskāra ← Sanskrit namaskāra 'adoration': namas 'a bow' (CDIAL 6958) + kāra 'a making' (CDIAL 6960)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,7 @@ Kannada stacks one consonant on another.
 *kṛ*, “to do”): literally **“the making of a bow.”** Kannada borrowed the whole
 word. Tamil instead kept its native greeting, *vaṇakkam*.
 
+Sanskrit *namaskāra* is listed in CDIAL 6960, and *namas*, "a bow, adoration", in CDIAL 6958.
 
 ## Across the family — the same idea, five ways
 <!-- hl-knowledge: introduces=[KA-ETYMON-C01-NAMASKARA-03]; assesses=[] -->

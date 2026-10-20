@@ -14,7 +14,8 @@ romanization: "nakal"
 concept_tag: TA-PORUL272-NAKAL
 prerequisites: [TA-C272-vinnappam, TA-C272-pukaippatam]
 sounds: []
-roots: []
+roots: [arabic-naql]
+etymology_hook: "நகல் ← Arabic naql 'copy, transcript', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C272-pukaippatam]
 <!-- hl-knowledge: introduces=[TA-LEX-C272-PORUL272-05]; assesses=[] -->
 
 **நகல்** — *nakal* — "a copy, a photocopy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நகல்** (*nakal*) is a loan from Arabic *naql*, "copy, transcript", which reached Tamil through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

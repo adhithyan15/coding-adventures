@@ -8,22 +8,22 @@ type: word
 headword: но
 gloss: "but — the flat contradiction, one of two words English hides under a single but"
 concept_tag: RU-JOIN-BUT
-romanization: no
+romanization: 'no'
 prerequisites: [RU-C16-tozhe]
 sounds: []
-roots: [pie-uncertain]
-etymology_hook: "но goes back to a bare Slavic particle, and the histories do not agree on where that came from — one of the few joining words with no secure English cousin"
+roots: [slavic-nu]
+etymology_hook: "но ← Old Russian nŭ; Vasmer finds it probably kin to Gothic nu 'now', so English now is a likely cousin"
 duration:
   max_seconds: 250
 requires:
   knowledge: [RU-LEX-I-01, RU-LEX-TOZHE-01, RU-LEX-LYUBIT, RU-LEX-KOFE]
 introduces:
- knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN]
+ knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NU]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-TOZHE-01, RU-GRAMMAR-TOZHE-NE-01, RU-LEX-I-01, RU-ETYMON-I-POINTING-STEM, RU-GRAMMAR-L-EPENTHESIS, RU-ETYMON-LYUBIT-LOVE, RU-LEX-LYUBIT, RU-ETYMON-KOFE-ROUTE, RU-LEX-KOFE, RU-SCRIPT-FE]
+  knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-TOZHE-01, RU-GRAMMAR-TOZHE-NE-01, RU-LEX-I-01, RU-ETYMON-I-POINTING-STEM, RU-GRAMMAR-L-EPENTHESIS, RU-ETYMON-LYUBIT-LOVE, RU-LEX-LYUBIT, RU-ETYMON-KOFE-ROUTE, RU-LEX-KOFE, RU-SCRIPT-FE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,13 +63,13 @@ the first joining word in the book that has asked for one — **и** did not.
 **но** contradicts. Whatever the first half led you to expect, the second half
 denies it, and nothing softer is meant.
 
-## The word, taken apart — the one with no cousin
-<!-- hl-knowledge: introduces=[RU-ETYMON-NO-NO-COUSIN]; assesses=[RU-LEX-NO-01] -->
+## The word, taken apart — a probable cousin of now
+<!-- hl-knowledge: introduces=[RU-ETYMON-NO-NU]; assesses=[RU-LEX-NO-01] -->
 
-Almost every word this book has taken apart has handed you an English relative.
-**но** does not. It goes back to a bare Slavic particle, written in the
-oldest manuscripts with a short vowel Russian has since dropped altogether, and
-the etymologists disagree about where even that came from.
+**но** goes back to Old Russian *nŭ*, a bare Slavic particle. Vasmer finds it
+probably related to an ancient word for "now": Lithuanian, Sanskrit and Gothic
+*nu*. So English **now** is a likely cousin. Vasmer also reports a less likely
+account, so the link is probable, not proven.
 
 That is worth saying out loud rather than papering over: a language's oldest,
 smallest, most-used words are often the ones whose history is least secure,
@@ -85,9 +85,9 @@ because they are too short to leave much evidence behind.
 - [YOU BUILD: two things you do, the second one denied, with **но не**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-TOZHE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-TOZHE-01] -->
 
 [PAUSE 3s] Say "but." (That is **но**.) Does a comma go in front of it?
-(**Yes** — always.) Did **и** want one? (**No**.) Does **но** have a secure
-English cousin? (**No** — the histories disagree.) And one look back: how do you
-say "me neither"? (**я тоже не** plus the verb.)
+(**Yes** — always.) Did **и** want one? (**No**.) Does **но** have an
+English cousin? (**Probably** — *now*, on Vasmer's preferred account.) And one
+look back: how do you say "me neither"? (**я тоже не** plus the verb.)

@@ -13,7 +13,8 @@ gloss: "a diet"
 concept_tag: IT-SAL152-DIETA
 prerequisites: [IT-C151-osso, IT-C152-visita]
 sounds: []
-roots: []
+roots: [diaeta-latin]
+etymology_hook: "dieta ← Latin diaeta, from Greek diaita 'a way of life' — English diet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C152-visita]
 <!-- hl-knowledge: introduces=[IT-LEX-C152-SAL152-02]; assesses=[] -->
 
 **la dieta** — "a diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dieta** ← Latin *diaeta*, "a way of living", from Greek *diaita*, "a way of life" — a learned borrowing. EtymDB 2.1 has no row for *dieta*; it derives Spanish *dieta* from *diaeta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

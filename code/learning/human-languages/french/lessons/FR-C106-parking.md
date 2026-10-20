@@ -14,6 +14,7 @@ concept_tag: FR-TRAJET58-PARKING
 prerequisites: [FR-C106-metro, FR-C106-taxi]
 sounds: []
 roots: []
+etymology_hook: "parking ← English parking — a borrowing English itself does not use this way"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C106-taxi]
 <!-- hl-knowledge: introduces=[FR-LEX-C106-TRAJET58-04]; assesses=[] -->
 
 **le parking** — "a car park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parking** ← English *parking* — borrowed in the 20th century; English itself says *car park*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

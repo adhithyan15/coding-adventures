@@ -1,0 +1,11 @@
+{
+  "id": "SA-C267-homework-plan",
+  "pathSegment": "SA-PATH-267-SCHOOL267",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-267-SCHOOL267",
+      "order": 2
+    }
+  ]
+}

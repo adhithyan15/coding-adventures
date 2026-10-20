@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Ladle, Frying pan, Vessel, Bottle, Small umbrella",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:54cc80cc1ee30f79",
+  "sourceHash": "fnv1a64:0a345fffbd544557",
   "lessons": [
     {
       "id": "SA-C119-darvi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0fefecbe502d2a3",
+      "sourceHash": "fnv1a64:a95e0c51646aded7",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "darvī \"a ladle\" is old, in the Rigveda: MW explains it as \"the wooden one\", and CDIAL 6206 refers it to dru \"tree, wood\". MW sets that word beside Greek drys \"oak\" and English tree."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3f5d6bf464a7be0",
+      "sourceHash": "fnv1a64:1e630929b52c7379",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kaṭāha \"a frying pan, a cauldron with handles\" appears from the Mahābhārata on, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi kaṛāhī \"frying pan\" (CDIAL 2638)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5611bbbca41d8c21",
+      "sourceHash": "fnv1a64:e6af2b61a0eb1c59",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pātra comes from the root √pā \"drink\" with the tool suffix -tra (CDIAL 8055): \"the thing to drink from\". It is inherited from Indo-European, a cousin of Latin pōculum \"cup\" (EtymDB), and lives on as Punjabi pātar \"vessel\" (CDIAL 8055)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f186d5b83132084",
+      "sourceHash": "fnv1a64:27d5fa35c72a5148",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kūpī is a feminine of kūpa \"a hole, a hollow, a well\" (MW), and its sense \"flask, bottle\" comes from a late dictionary. MW compares Greek kypē \"hollow\"; kūpa itself lives on as Gujarati kuvo \"small well\" (CDIAL 3400)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0069945bd4a7e00",
+      "sourceHash": "fnv1a64:f350b0843160589e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chatrikā is chattra \"a parasol\" with the small-thing suffix -ikā, and chattra comes from the root √chad \"cover\" (CDIAL 4972). It lives on as Hindi chātā and Punjabi chatrī \"umbrella\" (CDIAL 4972)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

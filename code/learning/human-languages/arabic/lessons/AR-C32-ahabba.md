@@ -6,13 +6,13 @@ sequence: 850
 chapter: 32
 type: word
 headword: أحبّ
-gloss: "he loved" — the chapter's payoff, closing the ladder of four verb shapes, and the root behind the ḥabībī of every second Arabic song
+gloss: '"he loved" — the chapter''s payoff, closing the ladder of four verb shapes, and the root behind the ḥabībī of every second Arabic song'
 concept_tag: VERB-LIKE-LOVE
 romanization: ʾaḥabba
 prerequisites: [AR-C32-saada]
 sounds: [haa-pharyngeal, shadda, alif-hamza, rtl-known-letters]
 roots: [h-b-b]
-etymology_hook: "أحبّ (ʾaḥabba, 'he loved') is root ح-ب-ب under أَفْعَلَ, Form IV, whose أَ prefix makes a root bring about its own idea; the family is حُبّ (ḥubb, 'love'), حَبيب (ḥabīb, 'beloved') with its feminine حَبيبة and the 'my' ending of ismī giving ḥabībī, and مَحْبوب (maḥbūb, 'well-liked') on the done-to shape of maktūb; Hebrew's usual verb for loving, אָהַב (ahav), is NOT a relative, while חָבִיב (ḥaviv, 'dear') is exactly ḥabīb, and no English word descends from the root at all"
+etymology_hook: "aḥabba: Form IV of the root ḥ-b-b 'to love' (Lane); Hebrew ḥāvīv 'dear' is a cousin"
 duration:
   max_seconds: 240
 requires:

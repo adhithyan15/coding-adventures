@@ -11,8 +11,8 @@ gloss: slowly; without rushing
 concept_tag: JA-MANNER-YUKKURI
 prerequisites: [JA-W10-shi]
 sounds: [mora, geminate]
-roots: []
-etymology_hook: The small tsu records a held closure before ku, so the spelling preserves the very timing contrast the word asks the speaker to slow down.
+roots: [japanese-yukkuri]
+etymology_hook: "yukkuri: a native mimetic word (JMdict), no kanji; inherited, not borrowed"
 duration:
   max_seconds: 175
 requires:
@@ -46,6 +46,11 @@ reviews_of: [JA-C10-sukoshi, JA-W09-ku, JA-W03-ri, JA-W10-shi]
 Do not squeeze the middle. The small **っ** holds one beat of closure before
 *ku*. The spelling is exposure today; this lesson earns the sound and practical
 job without pretending the two new shapes are already readable.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆっくり** (*yukkuri*) is a native mimetic word, one of the Japanese words that picture a manner or a feeling in sound; JMdict marks it as mimetic, and it has no kanji. It is inherited, not borrowed, and its older origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YUKKURI] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Os imprevistos",
+  "label": "ch:pt-os-imprevistos",
+  "canDo": "I can talk about the unexpected: what is predictable or not, what to foresee, and the alternatives.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C371-alternativa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can talk about the unexpected: what is predictable or not, what to foresee, and the alternatives.",
+    "assesses": [
+      "PT-LEX-C371-IMPREVISTO-03",
+      "PT-LEX-C371-IMPREVISTO-04",
+      "PT-LEX-C371-IMPREVISTO-05"
+    ]
+  }
+}

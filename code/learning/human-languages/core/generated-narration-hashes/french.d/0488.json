@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:2fd0b5c6a01e76fa",
+  "lessonIds": [
+    "FR-C488-calin",
+    "FR-C488-caliner",
+    "FR-C488-complicite",
+    "FR-C488-chuchoter",
+    "FR-C488-confier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch488.txt",
+  "json": "french/narration/ch488.json",
+  "textHash": "fnv1a64:4001ae6ebd045a69",
+  "jsonHash": "fnv1a64:74a2c6e0da1a8eac",
+  "findings": []
+}

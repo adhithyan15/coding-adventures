@@ -14,7 +14,8 @@ romanization: "dōsa"
 concept_tag: TE-THINGS119-DOSA
 prerequisites: [TE-C119-tene, TE-C119-idli]
 sounds: []
-roots: []
+roots: [dravidian-dosai]
+etymology_hook: "dōsa: Dravidian, one word with Tamil tōcai and Kannada dōse (DEDR 3542), which compares Sanskrit dośā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C119-idli]
 <!-- hl-knowledge: introduces=[TE-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **దోశ** — *dōsa* — "a dosa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దోశ** (*dōsa*) is a Dravidian word, one with Tamil *tōcai* and Kannada *dōse*, "rice cake" (DEDR 3542). DEDR compares Sanskrit *dhosaka* and *dośā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

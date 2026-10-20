@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C298-banda",
+    "language": "italian",
+    "chapter": 298,
+    "sequence": 17380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:faa3c546fa512eda"
+  },
+  "findings": []
+}

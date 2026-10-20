@@ -14,7 +14,8 @@ romanization: "pahinṇā"
 concept_tag: PA-VERB-PAHINNA
 prerequisites: [PA-C61-dassna, PA-C62-guauna]
 sounds: []
-roots: []
+roots: [indo-aryan-pinahati]
+etymology_hook: "pahinṇā ← *pinahati 'ties on', a reconstructed form; a tadbhava (CDIAL 8198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C62-guauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C62-VERBS62-02]; assesses=[] -->
 
 **ਪਹਿਨਣਾ** — *pahinṇā* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਹਿਨਣਾ** (*pahinṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pinahati*, "ties on", a form CDIAL reconstructs from its descendants (CDIAL 8198). It grew out of Sanskrit *pinahya*, "having dressed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

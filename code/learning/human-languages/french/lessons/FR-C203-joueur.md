@@ -13,7 +13,8 @@ gloss: "a player"
 concept_tag: FR-CHOSES203-JOUEUR
 prerequisites: [FR-C203-defaite, FR-C203-championnat]
 sounds: []
-roots: []
+roots: [iocari-latin]
+etymology_hook: "joueur — jouer 'to play' + -eur 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C203-championnat]
 <!-- hl-knowledge: introduces=[FR-LEX-C203-CHOSES203-03]; assesses=[] -->
 
 **le joueur** — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**joueur** — *jouer*, "to play", with *-eur*, "one who". *Jouer* ← Vulgar Latin *iocāre*, "to joke" (EtymDB 2.1), and *-eur* ← Latin *-or*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bachche"
 concept_tag: FA-FAMILY33-BACHCHE
 prerequisites: [FA-C33-shohar, FA-C33-hamsar]
 sounds: []
-roots: []
+roots: [persian-bachche]
+etymology_hook: "bachche ← Middle Persian wačag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C33-hamsar]
 <!-- hl-knowledge: introduces=[FA-LEX-C33-FAMILY33-04]; assesses=[] -->
 
 **بچه** — *bachche* — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bachche* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wačag*, "child, young animal" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

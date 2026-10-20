@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 75,
-  "sourceHash": "fnv1a64:de859d8a638e4daa",
+  "sourceHash": "fnv1a64:c690cc2e304498e4",
   "lessonIds": [
     "PA-C75-ret",
     "PA-C75-khet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch75.txt",
   "json": "punjabi/narration/ch75.json",
-  "textHash": "fnv1a64:c44ac708b18ef2c5",
-  "jsonHash": "fnv1a64:0bde7d853972e564",
+  "textHash": "fnv1a64:cb1efdd1c5436944",
+  "jsonHash": "fnv1a64:e5a99232bdc3a824",
   "findings": []
 }

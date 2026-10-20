@@ -14,7 +14,8 @@ romanization: "āvu"
 concept_tag: TE-THINGS122-AVU
 prerequisites: [TE-C122-jalapatam, TE-C122-divi]
 sounds: []
-roots: []
+roots: [dravidian-aa-cow]
+etymology_hook: "āvu: native Dravidian, one word with Tamil ā and Kannada āvu (DEDR 334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C122-divi]
 <!-- hl-knowledge: introduces=[TE-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **ఆవు** — *āvu* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆవు** (*āvu*) is native Dravidian, one word with Tamil *ā* and Kannada *āvu* (DEDR 334). DEDR lists Telugu *āvu*, "cow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

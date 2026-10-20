@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for here, then the Gujarati for there.
 You'll want to know: શકવું.
 શકવું (śakvũ) — "to be able to, can".
 
+The word, taken apart.
+શકવું (śakvũ) is inherited from Sanskrit śaknoti, "is able" (CDIAL 12252). CDIAL notes that its ś- was put back from Sanskrit; the older Gujarati form had s-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for there, then the Gujarati for to be able
 
 You'll want to know: પાસે.
 પાસે (pāse) — "with, in one's possession".
+
+The word, taken apart.
+પાસે (pāse) is a tadbhava. CDIAL lists it under Sanskrit pārśva, "side", whose form pārśve meant "near" (CDIAL 8118).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to be able to, then the Gujarati for wi
 You'll want to know: તાકાત.
 તાકાત (tākāt) — "strength".
 
+The word, taken apart.
+તાકાત (tākāt) is a loan from Arabic ṭāqa, "power, ability", which reached Gujarati through Persian. Its Arabic root is ṭ-w-q (Lane). Persian made ṭāqat of it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for with, then the Gujarati for strength.
 You'll want to know: શક્તિ.
 શક્તિ (śakti) — "power".
 
+The word, taken apart.
+શક્તિ (śakti) is Sanskrit śakti, "power", taken over whole as a learned loan, a tatsama (CDIAL 12250).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for strength, then the Gujarati for power.
 
 You'll want to know: હક.
 હક (hak) — "a right".
+
+The word, taken apart.
+હક (hak) is a loan from Arabic ḥaqq, "truth, a right", which reached Gujarati through Persian. Its Arabic root is ḥ-q-q (Lane).
 
 What you've built.
 One more word for this chapter.

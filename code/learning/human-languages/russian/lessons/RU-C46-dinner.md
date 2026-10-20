@@ -14,7 +14,8 @@ romanization: "úzhin"
 concept_tag: RU-MEALS-DINNER
 prerequisites: [RU-C46-breakfast, RU-C46-lunch]
 sounds: []
-roots: []
+roots: [slavic-jugu]
+etymology_hook: "ужин is built on юг 'south', first 'the midday meal', as south is where the noon sun stands"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C46-lunch]
 <!-- hl-knowledge: introduces=[RU-LEX-C46-MEALS-03]; assesses=[] -->
 
 **ужин** (*úzhin*) — "dinner, supper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ужин** — built on Proto-Slavic *\*jugŭ*, "south, noon", so it first meant "the midday meal" (Vasmer); Old Russian *ужина* was an afternoon meal. Latin *merīdiēs* is both "noon" and "south" in the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

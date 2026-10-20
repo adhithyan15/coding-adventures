@@ -14,7 +14,8 @@ romanization: "iñjanīru"
 concept_tag: TE-PANI312-INJANIRU
 prerequisites: [TE-C312-sinima, TE-C312-siksakudu]
 sounds: []
-roots: []
+roots: [english-engineer]
+etymology_hook: "iñjanīru ← English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C312-siksakudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C312-PANI312-05]; assesses=[] -->
 
 **ఇంజనీరు** — *iñjanīru* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంజనీరు** (*iñjanīru*) is a loan from English *engineer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:c44ec16346ffe2cb",
+  "lessonIds": [
+    "IT-C306-salvataggio",
+    "IT-C306-bagnino",
+    "IT-C306-naufragio",
+    "IT-C306-disperso",
+    "IT-C306-sopravvivere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch306.txt",
+  "json": "italian/narration/ch306.json",
+  "textHash": "fnv1a64:73b554168db2b1d3",
+  "jsonHash": "fnv1a64:97f744f59ca2ec52",
+  "findings": []
+}

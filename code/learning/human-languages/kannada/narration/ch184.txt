@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a ladle, then the Kannada for a bucket.
 You'll want to know: ಸೌತೆಕಾಯಿ.
 ಸೌತೆಕಾಯಿ — sautekāyi — "a cucumber".
 
+The word, taken apart.
+ಸೌತೆಕಾಯಿ (sautekāyi) is native Dravidian: saute, "cucumber", which DEDR 2399 lists, and kāyi, "unripe fruit" (DEDR 1459). DEDR 1459 compares a reconstructed Indo-Aryan kacca, "raw, unripe" (CDIAL 2613).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a bucket, then the Kannada for a cucumbe
 
 You'll want to know: ಬೆಂಡೆಕಾಯಿ.
 ಬೆಂಡೆಕಾಯಿ — beṇḍekāyi — "okra, lady's finger".
+
+The word, taken apart.
+ಬೆಂಡೆಕಾಯಿ (beṇḍekāyi) is beṇḍe, "okra", usually traced to Sanskrit bhiṇḍā, "okra" (CDIAL 9492), and native kāyi, "unripe fruit" (DEDR 1459).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a cucumber, then the Kannada for okra.
 You'll want to know: ಹುರುಳಿಕಾಯಿ.
 ಹುರುಳಿಕಾಯಿ — huruḷikāyi — "green beans".
 
+The word, taken apart.
+ಹುರುಳಿಕಾಯಿ (huruḷikāyi) is huruḷi, "horse gram", whose origin is uncertain, and native kāyi, "unripe fruit, pod" (DEDR 1459): green bean pods. DEDR 1459 compares a reconstructed Indo-Aryan kacca, "raw, unripe" (CDIAL 2613).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for okra, then the Kannada for green beans.
 You'll want to know: ಸೊಪ್ಪು.
 ಸೊಪ್ಪು — soppu — "leafy greens".
 
+The word, taken apart.
+ಸೊಪ್ಪು (soppu) is native Dravidian, one word with Malayalam cappu (DEDR 2673). DEDR lists sappu, soppu, "green leaves, greens".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for green beans, then the Kannada for leafy 
 
 You'll want to know: ಎಳನೀರು.
 ಎಳನೀರು — eḷanīru — "tender coconut water".
+
+The word, taken apart.
+ಎಳನೀರು (eḷanīru) is native Dravidian, built on eḷa, "tender, young", and DEDR 513 lists eḷa-nīr, "water of an unripe coconut", itself, with nīru, "water"; the entry also has Tamil iḷa and Malayalam iḷa.
 
 What you've built.
 One more word for this chapter.

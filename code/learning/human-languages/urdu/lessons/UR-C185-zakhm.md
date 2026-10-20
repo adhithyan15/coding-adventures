@@ -14,7 +14,8 @@ romanization: "zakhm"
 concept_tag: UR-SEHAT185-ZAKHM
 prerequisites: [UR-C185-nuskha, UR-C185-injekshan]
 sounds: []
-roots: []
+roots: [persian-zakhm]
+etymology_hook: "zakhm: usually traced to Persian zakhm 'a wound'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C185-injekshan]
 <!-- hl-knowledge: introduces=[UR-LEX-C185-SEHAT185-04]; assesses=[] -->
 
 **زخم** — *zakhm* — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زخم** (*zakhm*) is a loan, usually traced to Persian *zakhm*, "a wound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

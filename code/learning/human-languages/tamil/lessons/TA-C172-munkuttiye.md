@@ -14,7 +14,8 @@ romanization: "muṉkūṭṭiyē"
 concept_tag: TA-NERAM172-MUNKUTTIYE
 prerequisites: [TA-C172-inriravu, TA-C172-titirenru]
 sounds: []
-roots: []
+roots: [dravidian-mun-front, dravidian-kuudu-join]
+etymology_hook: "முன்கூட்டியே — native: muṉ 'before' (DEDR 5020) + kūṭṭi, from kūṭu 'to come together' (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C172-titirenru]
 <!-- hl-knowledge: introduces=[TA-LEX-C172-NERAM172-04]; assesses=[] -->
 
 **முன்கூட்டியே** — *muṉkūṭṭiyē* — "in advance, beforehand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முன்கூட்டியே** (*muṉkūṭṭiyē*) is native: *muṉ*, "before" (DEDR 5020), and *kūṭṭi*, "having gathered", from *kūṭu*, "to come together" (DEDR 1882).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

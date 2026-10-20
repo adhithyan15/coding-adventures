@@ -11,7 +11,8 @@ romanization: "mabbu"
 concept_tag: TE-NOUN-CLOUD
 prerequisites: [TE-C53-star]
 sounds: []
-roots: []
+roots: [dravidian-mabbu-cloud]
+etymology_hook: "mabbu: native Dravidian, one word with Tamil mappu and Kannada mabbu (DEDR 4728)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C53-star]
 It stretched, the way weather words do. మబ్బు also describes a dull, heavy, half-asleep feeling, and a person who is slow to catch on. English went the same way with *cloudy* and *foggy*, from opposite ends of the earth and with no contact at all. When two unrelated languages reach for the same picture, the picture is doing the work rather than the borrowing.
 
 With that, the sky is furnished.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మబ్బు** (*mabbu*) is native Dravidian, one word with Tamil *mappu* and Kannada *mabbu* (DEDR 4728). DEDR also lists Telugu *mrabbu*, "cloud".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

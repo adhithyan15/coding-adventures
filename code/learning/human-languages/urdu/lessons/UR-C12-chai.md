@@ -12,7 +12,7 @@ concept_tag: UR-TEA
 prerequisites: [UR-C12-pani, UR-C08-pasand]
 sounds: [rtl, hamza-ye, long-a]
 roots: [chinese-cha, persian-chay]
-etymology_hook: chāy is borrowed from Classical Persian chāy, which traces to Northern Chinese chá, carried overland through Central Asia into Persian before reaching Urdu; tea that instead reached Europe by sea kept a different southern-Chinese form, which is why English says tea and not chai -- one drink, two words, depending on whether it travelled by land or by sea.
+etymology_hook: "chāy: usually traced to Persian chāy 'tea', which came overland from Northern Chinese chá"
 duration:
   max_seconds: 270
 requires:

@@ -13,7 +13,8 @@ gloss: "the senate house"
 concept_tag: LA-RES270-CURIA
 prerequisites: [LA-C270-circus, LA-C270-basilica]
 sounds: []
-roots: []
+roots: [curia-latin, vir-latin]
+etymology_hook: "cūria 'senate house' — perhaps *co-viria 'a gathering of men'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C270-basilica]
 <!-- hl-knowledge: introduces=[LA-LEX-C270-RES270-03]; assesses=[] -->
 
 **cūria, cūriae** — "the senate house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cūria** is often explained as *\*co-viria*, "a gathering of men" (EtymDB 2.1), from *co-*, "together", and *vir*, "a man", but this is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

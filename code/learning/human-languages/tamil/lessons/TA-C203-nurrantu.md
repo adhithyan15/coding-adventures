@@ -14,7 +14,8 @@ romanization: "nūṟṟāṇṭu"
 concept_tag: TA-NERAM203-NURRANTU
 prerequisites: [TA-C202-tipavali, TA-C202-puttantu]
 sounds: []
-roots: []
+roots: [dravidian-nuuru-hundred, dravidian-aandu-year]
+etymology_hook: "நூற்றாண்டு — native: nūṟu 'hundred' (DEDR 3729) + āṇṭu 'year'; Malayalam nūṟṟ-āṇṭu is the same"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C202-puttantu]
 <!-- hl-knowledge: introduces=[TA-LEX-C203-NERAM203-01]; assesses=[] -->
 
 **நூற்றாண்டு** — *nūṟṟāṇṭu* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நூற்றாண்டு** (*nūṟṟāṇṭu*) is native: *nūṟu*, "hundred" (DEDR 3729), and *āṇṭu*, "year" (DEDR 5153). DEDR lists Malayalam *nūṟṟ-āṇṭu*, "100 years", built the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

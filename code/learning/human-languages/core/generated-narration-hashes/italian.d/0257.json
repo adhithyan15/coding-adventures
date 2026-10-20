@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 257,
-  "sourceHash": "fnv1a64:41f7131e934281ef",
+  "sourceHash": "fnv1a64:fa5185add4dd5a93",
   "lessonIds": [
     "IT-C257-metallo",
     "IT-C257-mattone",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch257.txt",
   "json": "italian/narration/ch257.json",
-  "textHash": "fnv1a64:d018912ef10ef6c5",
-  "jsonHash": "fnv1a64:328e230f5fce3806",
+  "textHash": "fnv1a64:335c81fbe64c574a",
+  "jsonHash": "fnv1a64:f0fc1265cb41a989",
   "findings": []
 }

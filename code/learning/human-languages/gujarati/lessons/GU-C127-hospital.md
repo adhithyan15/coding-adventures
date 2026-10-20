@@ -14,7 +14,8 @@ romanization: "hospiṭal"
 concept_tag: GU-THINGS127-HOSPITAL
 prerequisites: [GU-C127-vahan, GU-C127-musaphar]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "hospiṭal ← English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C127-musaphar]
 <!-- hl-knowledge: introduces=[GU-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **હોસ્પિટલ** (*hospiṭal*) — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હોસ્પિટલ** (*hospiṭal*) is a loan from English *hospital*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

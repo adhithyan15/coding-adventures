@@ -15,6 +15,7 @@ concept_tag: HI-THG265-PATANG
 prerequisites: [HI-C264-khilauna, HI-C264-guriya]
 sounds: []
 roots: []
+etymology_hook: "patang: usually traced to Sanskrit pataṅga 'bird, insect' (CDIAL 7721), whose Hindi heir there is patiṅgā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C264-guriya]
 <!-- hl-knowledge: introduces=[HI-LEX-C265-THG265-01]; assesses=[] -->
 
 **पतंग** — *patang* — "a kite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पतंग** (*patang*) is usually traced to Sanskrit *pataṅga*, "bird; winged insect". CDIAL lists that word, with Hindi *patiṅgā*, "grasshopper", as its inherited form (CDIAL 7721), but not *patang*, "kite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

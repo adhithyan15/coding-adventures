@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C518-intonato",
+    "language": "italian",
+    "chapter": 518,
+    "sequence": 29000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c52d519118f5f223"
+  },
+  "findings": []
+}

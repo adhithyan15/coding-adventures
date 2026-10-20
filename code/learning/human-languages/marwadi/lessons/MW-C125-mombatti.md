@@ -14,7 +14,8 @@ romanization: "mombattī"
 concept_tag: MW-THINGS125-MOMBATTI
 prerequisites: [MW-C125-kainchi, MW-C125-lalten]
 sounds: []
-roots: []
+roots: [persian-mom, sanskrit-varti]
+etymology_hook: "mombattī: mom 'wax', usually traced to Persian, + battī 'wick' ← Sanskrit varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C125-lalten]
 <!-- hl-knowledge: introduces=[MW-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **मोमबत्ती** — *mombattī* — "a candle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोमबत्ती** (*mombattī*) is a wax wick: *mom*, "wax", usually traced to Persian *mom*, with *battī*, "wick", which CDIAL lists as Hindi *battī* under Sanskrit *varti*, "wick" (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pepe"
 concept_tag: BN-THINGS115-PEPE
 prerequisites: [BN-C115-narkel, BN-C115-anaros]
 sounds: []
-roots: []
+roots: [portuguese-papaia]
+etymology_hook: "pepe ← Portuguese papaia 'papaya'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C115-anaros]
 <!-- hl-knowledge: introduces=[BN-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **পেঁপে** — *pepe* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেঁপে** (*pepe*) is a loan from Portuguese *papaia*, "papaya". Portuguese took the word from a Caribbean language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "komód"
 concept_tag: RU-VESHCH159-KOMOD
 prerequisites: [RU-C159-mebel, RU-C159-kreslo]
 sounds: []
-roots: []
+roots: [commodus-latin]
+etymology_hook: "комод ← French commode 'a chest of drawers', from commode 'convenient'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C159-kreslo]
 <!-- hl-knowledge: introduces=[RU-LEX-C159-VESHCH159-05]; assesses=[] -->
 
 **комод** (*komód*) — "a chest of drawers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**комод** comes from French *commode*, "a chest of drawers", from *commode*, "convenient", perhaps through German *Kommode* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

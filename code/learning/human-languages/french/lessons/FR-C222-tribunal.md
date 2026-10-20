@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES222-TRIBUNAL
 prerequisites: [FR-C222-gouvernement, FR-C222-loi]
 sounds: []
 roots: []
+etymology_hook: "tribunal ← Latin tribunal 'the raised seat of the tribunes'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C222-loi]
 <!-- hl-knowledge: introduces=[FR-LEX-C222-CHOSES222-04]; assesses=[] -->
 
 **le tribunal** — "a court".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tribunal** ← Latin *tribunal*, "the raised seat of the tribunes" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

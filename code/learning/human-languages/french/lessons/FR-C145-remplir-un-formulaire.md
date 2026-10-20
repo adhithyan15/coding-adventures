@@ -13,7 +13,8 @@ gloss: "to fill in a form"
 concept_tag: FR-VERB-REMPLIR-UN-FORMULAIRE
 prerequisites: [FR-C144-continuer, FR-C145-signer]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "remplir un formulaire — remplir, from Latin implere 'to fill', + a form, Latin formularium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C145-signer]
 <!-- hl-knowledge: introduces=[FR-LEX-C145-VERBES145-02]; assesses=[] -->
 
 **remplir un formulaire** — "to fill in a form".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**remplir un formulaire** — *remplir*, "to fill", is *re-* and Old French *emplir*, ← Latin *implere* (EtymDB 2.1); *un*, "a"; *formulaire*, "a form", ← Latin *formularium* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

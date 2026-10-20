@@ -14,6 +14,7 @@ concept_tag: PT-COISAS245-TECLADO
 prerequisites: [PT-C245-publicidade, PT-C245-ecra]
 sounds: []
 roots: []
+etymology_hook: "teclado — built from the key word + -ado; the key word's origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C245-ecra]
 <!-- hl-knowledge: introduces=[PT-LEX-C245-COISAS245-05]; assesses=[] -->
 
 **o teclado** — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**teclado** is built from the word for a key, as on a piano, and *-ado*. The key word's origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

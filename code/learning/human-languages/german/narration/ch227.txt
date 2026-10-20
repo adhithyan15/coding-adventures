@@ -12,6 +12,9 @@ Before the new one: say the German for a description, then the German for a visi
 You'll want to know: die Bewerbung.
 die Bewerbung — "an application".
 
+The word, taken apart.
+Bewerbung is bewerben, "to apply", + -ung. The verb is built on Old High German werban (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for a visit, then the German for an applicati
 
 You'll want to know: die Beziehung.
 die Beziehung — "a relationship".
+
+The word, taken apart.
+Beziehung is be- + ziehen, "to pull, to draw", + -ung (EtymDB 2.1): what draws two people or things together.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for an application, then the German for a rel
 You'll want to know: der Eindruck.
 der Eindruck — "an impression".
 
+The word, taken apart.
+Eindruck from Middle High German īndruc (EtymDB 2.1): ein-, "in", + the word for "a press, a pressing": what is pressed into the mind, after Latin impressiō.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a relationship, then the German for an im
 You'll want to know: der Eintritt.
 der Eintritt — "admission, entry".
 
+The word, taken apart.
+Eintritt comes from the verb "to step in" (EtymDB 2.1): ein-, "in", + the word for "a step", from Old High German tretan, English tread.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for an impression, then the German for admiss
 
 You'll want to know: die Eintrittskarte.
 die Eintrittskarte — "an admission ticket".
+
+The word, taken apart.
+Eintrittskarte is Eintritt, "entry", + -s- + Karte, "card": a card that lets you step in. Karte goes back to Latin charta, "paper", itself from Greek (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

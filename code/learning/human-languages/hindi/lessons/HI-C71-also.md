@@ -14,7 +14,8 @@ romanization: "bhī"
 concept_tag: HI-WORD-ALSO
 prerequisites: [HI-C71-today, HI-C70-rest, HI-C69-station, HI-C69-ticket]
 sounds: []
-roots: []
+roots: [sanskrit-api]
+etymology_hook: "bhī ← Sanskrit api 'also, even', a tadbhava (CDIAL 485)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,11 @@ first and a Hindi ear hears nothing.
 Watch out for one collision. You already own **अभी**, "right now", and भी is
 sitting inside it — but they are separate words with separate jobs, the way
 **अब** and **अभी** were. The eye will confuse them long before the ear does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भी** (*bhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *api*, "also, even" (CDIAL 485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS167-MARCA
 prerequisites: [PT-C167-cesto, PT-C167-lista]
 sounds: []
 roots: []
+etymology_hook: "marca ← a Germanic word for a sign or boundary — English mark is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C167-lista]
 <!-- hl-knowledge: introduces=[PT-LEX-C167-COISAS167-04]; assesses=[] -->
 
 **a marca** — "a brand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marca** ← a Germanic word for a sign or a boundary — borrowed. English *mark* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

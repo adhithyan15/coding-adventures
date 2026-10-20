@@ -14,7 +14,8 @@ romanization: "putrī"
 concept_tag: SA-PEOPLE-DAUGHTER
 prerequisites: [SA-C88-friend, SA-C88-son]
 sounds: []
-roots: []
+roots: [sanskrit-putra]
+etymology_hook: "putrī 'daughter', the feminine of putra 'son' (MW; CDIAL 8271)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C88-son]
 
 **पुत्री** (*putrī*) — "a daughter", **पुत्रः** ending in a long **ी**: the everyday word beside
 **दुहिता**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Putrī* is the feminine of *putra*, "son", built with the ending *-ī* (MW, CDIAL
+8271); see the lesson on *putra* for its doubtful origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taḷḷu"
 concept_tag: KA-VERB-TALLU
 prerequisites: [KA-C153-tere, KA-C153-tumbu]
 sounds: []
-roots: []
+roots: [dravidian-tallu-push]
+etymology_hook: "taḷḷu: native Dravidian, one word with Tamil taḷḷu (DEDR 3135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C153-tumbu]
 <!-- hl-knowledge: introduces=[KA-LEX-C153-ACT153-03]; assesses=[] -->
 
 **ತಳ್ಳು** — *taḷḷu* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಳ್ಳು** (*taḷḷu*) is native Dravidian, one word with Tamil *taḷḷu* (DEDR 3135). DEDR lists *taḷḷu* itself, "to push".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

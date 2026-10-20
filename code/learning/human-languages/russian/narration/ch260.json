@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 260,
+  "title": "Writing --- Four Lines And The Comma You Cannot Hear",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7099300c1e801828",
+  "lessons": [
+    {
+      "id": "RU-W260-four-lines",
+      "sequence": 15900,
+      "title": "Four lines, and the comma you cannot hear",
+      "headword": "потому что",
+      "romanization": "potomú shto",
+      "gloss": "four lines to one reader, and the comma that marks a join the ear never hears",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2dbb4d77f8252f0f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson asked for writing finished on time. This one asks for writing that holds together."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Connected writing is not longer writing. Four short lines can be connected; one long line can fail to be. What makes it connected is that a sentence stops standing on its own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You hold four joiners. и adds. но denies. а stands one thing beside another. потому что (potomú shto) gives the reason."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And here is the Russian thing to notice. Said aloud, a join is just a word. Written down, three of these four carry a mark: a comma before но, before а, and before потому что (potomú shto) — before потому; at this level, never inside the pair."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "и between two halves about the same person takes none."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the ear never hears the comma, and the examiner always sees it. It is the one piece of this lesson a reader can mark wrong without any argument."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four lines by hand to the person you picked."
+            },
+            {
+              "kind": "speech",
+              "text": "At least one must use и, joining two things the same person does. At least one must use но or а. At least one must use потому что (potomú shto) — both words, spelled out."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. This lesson adds no vocabulary; the whole exercise is the joining."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover your first line and read the second alone. Does it still make sense without the first? If it does, you wrote a list — which is where you were one lesson ago."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then find every joiner and look just in front of it. A comma before но, а and потому; none before an и that joins two things one person does. Each comma's tail below the line."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

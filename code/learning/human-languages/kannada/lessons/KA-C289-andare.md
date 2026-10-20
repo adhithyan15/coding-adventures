@@ -14,7 +14,8 @@ romanization: "andare"
 concept_tag: KA-KARANA289-ANDARE
 prerequisites: [KA-C288-hegu, KA-C289-hegadaru]
 sounds: []
-roots: []
+roots: [dravidian-en-say]
+etymology_hook: "andare: native, 'if one says', from an 'to say' (DEDR 868)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C289-hegadaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C289-KARANA289-02]; assesses=[] -->
 
 **ಅಂದರೆ** — *andare* — "that is to say, meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂದರೆ** (*andare*) is native Dravidian: the "if" form of *an*, "to say" (DEDR 868). "If one says" came to mean "that is to say".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

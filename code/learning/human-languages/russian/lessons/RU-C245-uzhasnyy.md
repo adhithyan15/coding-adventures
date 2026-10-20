@@ -14,7 +14,8 @@ romanization: "uzhásnyy"
 concept_tag: RU-KACH245-UZHASNYY
 prerequisites: [RU-C245-smeshnoy, RU-C245-prekrasnyy]
 sounds: []
-roots: []
+roots: [slavic-gasiti]
+etymology_hook: "ужасный is from ужас 'horror'; Vasmer calls ужас hard and possibly linked with гасить 'to quench'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C245-prekrasnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C245-KACH245-04]; assesses=[] -->
 
 **ужасный** (*uzhásnyy*) — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ужасный** is *ужас*, "horror", with *-ный*. Vasmer calls *ужас* "a difficult word" and thinks it possibly related to *гасить*, "to put out", and Greek *sbénnymi*, "I quench": the terror that chokes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

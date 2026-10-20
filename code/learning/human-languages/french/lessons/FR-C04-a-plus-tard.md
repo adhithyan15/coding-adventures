@@ -14,7 +14,7 @@ roots: [plus-latin, tarde-latin]
 etymology_hook: "à plus tard = 'to more late'; tard ← Latin tarde 'late' — the same word as Spanish tarde"
 reviews_of: [FR-C04-au-revoir]
 duration:
-  max_seconds: 232
+  max_seconds: 249
 requires:
   knowledge: [FR-LEX-AUREVOIR-01]
 introduces:
@@ -79,8 +79,8 @@ French's soft goodbyes are all **à** + a time word — mirror this against Span
 | French | Spanish | "until / to …" |
 |---|---|---|
 | **à plus tard** / à plus | hasta luego | later |
-| **à bientôt** | hasta pronto | soon |
-| **à demain** | hasta mañana | tomorrow |
+| **à** + "soon" (next lesson) | hasta pronto | soon |
+| **à** + "tomorrow" (the lesson after) | hasta mañana | tomorrow |
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-APLUSTARD-03] -->
@@ -96,4 +96,4 @@ French's soft goodbyes are all **à** + a time word — mirror this against Span
 [PAUSE 3s] What does *à plus tard* literally mean? ("To more late.") What Spanish
 word is *tard* identical to at the root, and what does each mean now? (*tarde* —
 French "late", Spanish "afternoon".) What preposition carries French's soft
-goodbyes, like Spanish *hasta*? (*à*.) Next: **à bientôt**.
+goodbyes, like Spanish *hasta*? (*à*.) Next: "see you soon."

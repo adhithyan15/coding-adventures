@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a cooking pot, then the Marwadi for a wa
 You'll want to know: मटको.
 मटको — maṭko — "a large clay pot".
 
+The word, taken apart.
+मटको (maṭko) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mṛdā, "earth, clay". CDIAL gives no Marwari form in this entry (CDIAL 10291); the match is through Hindi maṭkā. CDIAL explains the -k- as an added suffix: a clay jar.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a water pot, then the Marwadi for a larg
 
 You'll want to know: लोटो.
 लोटो — loṭo — "a small water vessel".
+
+The word, taken apart.
+लोटो (loṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from loṭṭa, "waterpot", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 11133); the match is through Hindi loṭā and Gujarati loṭo.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a large clay pot, then the Marwadi for a
 You'll want to know: गिलास.
 गिलास — gilās — "a glass".
 
+The word, taken apart.
+गिलास (gilās) is a loan from English glass.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a small water vessel, then the Marwadi f
 You'll want to know: बाल्टी.
 बाल्टी — bālṭī — "a bucket".
 
+The word, taken apart.
+बाल्टी (bālṭī) is a loan from Portuguese balde, "bucket".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a glass, then the Marwadi for a bucket.
 
 You'll want to know: बुहारी.
 बुहारी — buhārī — "a broom".
+
+The word, taken apart.
+बुहारी (buhārī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bahukāra, "effecting much". CDIAL gives no Marwari form in this entry (CDIAL 9188); the match is through Hindi buhārū. Sanskrit bahukarī already meant "broom"; CDIAL asks whether "sweeper" began as a joking title.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "known, famous"
 concept_tag: LA-QUAL183-NOTUS
 prerequisites: [LA-C182-inanis, LA-C182-gravis]
 sounds: []
-roots: []
+roots: [notus-latin, noscere-latin]
+etymology_hook: "nōtus 'known' — the participle of nōscō 'to get to know'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C182-gravis]
 <!-- hl-knowledge: introduces=[LA-LEX-C183-QUAL183-01]; assesses=[] -->
 
 **nōtus, nōta, nōtum** — "known, famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nōtus** is the past participle of *nōscō*, "to get to know" (Lewis & Short): known. *nōscō*, older *gnōscō*, is usually traced to Proto-Indo-European *\*gneh3-*, "to know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

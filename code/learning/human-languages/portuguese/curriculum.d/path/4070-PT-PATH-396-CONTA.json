@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-396-CONTA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-396-CONTA"
+  ],
+  "after": []
+}

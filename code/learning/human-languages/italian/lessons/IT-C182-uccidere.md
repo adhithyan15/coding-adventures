@@ -13,7 +13,8 @@ gloss: "to kill"
 concept_tag: IT-VERB-UCCIDERE
 prerequisites: [IT-C181-scappare, IT-C181-scoprire]
 sounds: []
-roots: []
+roots: [occidere-latin]
+etymology_hook: "uccidere ← Latin occidere 'to strike down, to kill' — from ob- + caedere 'to cut'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C181-scoprire]
 <!-- hl-knowledge: introduces=[IT-LEX-C182-VERBI182-01]; assesses=[] -->
 
 **uccidere** — "to kill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**uccidere** ← Latin *occidere*, "to strike down, to kill" — inherited. EtymDB 2.1 has no row for *uccidere*; it derives Romanian *ucide* and Catalan *occir* from *occidere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

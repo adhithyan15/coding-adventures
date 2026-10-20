@@ -11,8 +11,8 @@ gloss: belly; stomach area
 concept_tag: JA-BODY-BELLY
 prerequisites: [JA-R12-mixed-scripts]
 sounds: [mora]
-roots: []
-etymology_hook: Three known signs form the everyday body-area word without introducing a kanji.
+roots: [japanese-naka-middle]
+etymology_hook: "onaka: native, polite o- + naka 'middle, inside'; written 腹 'belly' for its meaning"
 duration:
   max_seconds: 205
 requires:
@@ -45,6 +45,11 @@ Ask for slower speech.
 > **おなか** — *o-na-ka* — belly; stomach area
 
 Keep three morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おなか** (*onaka*) is native: the polite prefix *o-* and *naka*, "middle, inside". JMdict writes it with the character for "belly", read *naka* for its meaning. It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA] -->

@@ -14,7 +14,8 @@ romanization: "muhandis"
 concept_tag: AR-AMAL280-MUHANDIS
 prerequisites: [AR-C279-ghira, AR-C280-amil2]
 sounds: []
-roots: []
+roots: [persian-andaz]
+etymology_hook: "muhandis: from handasa, derived from Persian andāz 'measuring', arabicized (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C280-amil2]
 <!-- hl-knowledge: introduces=[AR-LEX-C280-AMAL280-02]; assesses=[] -->
 
 **مهندس** — *muhandis* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مهندس** (*muhandis*) is built on *handasa*, "geometry". Lane's sources derive it from *hindāz*, arabicized from Persian *andāz*, "measuring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

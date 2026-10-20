@@ -14,7 +14,8 @@ romanization: "iṟukkamāṉa"
 concept_tag: TA-GUNAM209-IRUKKAMANA
 prerequisites: [TA-C209-nirainta, TA-C209-kaliyana]
 sounds: []
-roots: []
+roots: [dravidian-iruku-tighten]
+etymology_hook: "இறுக்கமான — native Dravidian (DEDR 524); Malayalam iṟukuka 'to become tight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C209-kaliyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C209-GUNAM209-04]; assesses=[] -->
 
 **இறுக்கமான** — *iṟukkamāṉa* — "tight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இறுக்கமான** (*iṟukkamāṉa*) is native Dravidian. DEDR 524 lists Malayalam *iṟukuka*, "to become tight". It is *iṟukkam*, "tightness", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

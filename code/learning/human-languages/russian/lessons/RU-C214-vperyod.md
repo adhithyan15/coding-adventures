@@ -14,7 +14,8 @@ romanization: "vperyód"
 concept_tag: RU-MESTO214-VPERYOD
 prerequisites: [RU-C214-otsyuda, RU-C214-nazad]
 sounds: []
-roots: []
+roots: [slavic-perdu]
+etymology_hook: "вперёд is в 'into' + перёд 'the front': to the front"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C214-nazad]
 <!-- hl-knowledge: introduces=[RU-LEX-C214-MESTO214-03]; assesses=[] -->
 
 **вперёд** (*vperyód*) — "forward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вперёд** is *в*, "into", with *перёд*, "the front", Proto-Slavic *\*perdŭ*, which Vasmer relates to *пере-*, "across, before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

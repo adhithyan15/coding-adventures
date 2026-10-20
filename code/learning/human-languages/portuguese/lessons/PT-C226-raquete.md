@@ -14,6 +14,7 @@ concept_tag: PT-COISAS226-RAQUETE
 prerequisites: [PT-C225-energia, PT-C225-eletricidade]
 sounds: []
 roots: []
+etymology_hook: "raquete ← French raquette, perhaps from Arabic rāḥa 'palm of the hand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C225-eletricidade]
 <!-- hl-knowledge: introduces=[PT-LEX-C226-COISAS226-01]; assesses=[] -->
 
 **a raquete** — "a racket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**raquete** ← French *raquette* (EtymDB 2.1) — borrowed. The French word may come from Arabic *rāḥa*, "palm of the hand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

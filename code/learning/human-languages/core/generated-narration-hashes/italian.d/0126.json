@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 126,
-  "sourceHash": "fnv1a64:a4ffe2fdb3d897cd",
+  "sourceHash": "fnv1a64:ce0a4203c2d0cbff",
   "lessonIds": [
     "IT-C126-noioso",
     "IT-C126-divertente",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch126.txt",
   "json": "italian/narration/ch126.json",
-  "textHash": "fnv1a64:d581a216f84568a4",
-  "jsonHash": "fnv1a64:6118085f41a559e2",
+  "textHash": "fnv1a64:ea58cff724391272",
+  "jsonHash": "fnv1a64:13a1ea09270e3db7",
   "findings": []
 }

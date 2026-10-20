@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="100" viewBox="0 0 180 100" role="img" aria-label="A person departing">
+  <title>A person departing</title>
+  <g fill="none" stroke="#202020" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="65" cy="24" r="11"/>
+    <path d="M65 35v34m0-22-20-13m20 13 19-18M65 69 49 90m16-21 18 21"/>
+    <path d="M105 48h48m-13-13 13 13-13 13"/>
+  </g>
+</svg>

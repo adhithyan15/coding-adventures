@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C295-avouer",
+    "language": "french",
+    "chapter": 295,
+    "sequence": 16880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1afe6459e908579b"
+  },
+  "findings": []
+}

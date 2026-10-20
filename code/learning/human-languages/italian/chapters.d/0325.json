@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Nel regno lontano",
+  "label": "ch:it-nel-regno-lontano",
+  "canDo": "I can tell a royal tale: the prince, the princess, the queen, the kingdom and how they reigned.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C325-regnare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can tell a royal tale: the prince, the princess, the queen, the kingdom and how they reigned.",
+    "assesses": [
+      "IT-LEX-C325-REGNO-03",
+      "IT-LEX-C325-REGNO-04",
+      "IT-LEX-C325-REGNO-05"
+    ]
+  }
+}

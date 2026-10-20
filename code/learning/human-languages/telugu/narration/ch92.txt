@@ -13,6 +13,9 @@ You'll want to know: జలుబు.
 జలుబు (jalubu) — "a cold", the kind with a runny nose.
 నాకు జలుబు (jalubu) చేసింది — "I have caught a cold", literally "a cold has done to me". Telugu keeps this apart from చలి, the cold of the weather.
 
+The word, taken apart.
+జలుబు (jalubu) is native Dravidian, one word with Tamil caḷi, "catarrh, mucus" (DEDR 2409).
+
 What you've built.
 The illness, next to the weather word you already have.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for have you eaten, then the Telugu for a col
 You'll want to know: మందు.
 మందు (mandu) — "medicine".
 మందు (mandu) వేసుకోండి — "please take the medicine". Telugu puts on a medicine, where English takes it.
+
+The word, taken apart.
+మందు (mandu) is native Dravidian, one word with Tamil maruntu, Kannada maddu and Malayalam marunnu (DEDR 4719).
 
 What you've built.
 The cure, and the verb Telugu uses for taking it.
@@ -73,6 +79,9 @@ You'll want to know: ఆసుపత్రి.
 ఆసుపత్రి (āsupatri) — "a hospital".
 ఆసుపత్రి (āsupatri) ఎక్కడ? — "where is the hospital?", with the ఎక్కడ you already ask places with.
 
+The word, taken apart.
+ఆసుపత్రి (āsupatri) is usually traced to English hospital, reshaped. Neither DEDR nor CDIAL records it.
+
 What you've built.
 A place to ask the way to when it matters most.
 
@@ -103,6 +112,9 @@ You'll want to know: గాయం.
 గాయం (gāyaṁ) — "a wound, an injury".
 గాయం (gāyaṁ) అయింది — "I have been hurt", literally "a wound has happened". Like a wedding, an injury is something that happens.
 
+The word, taken apart.
+గాయం (gāyaṁ) comes from Sanskrit ghāta, "blow, bruise", reshaped to Telugu sounds: a tadbhava (CDIAL 4460). Prakrit ghāya, "wound", in the same entry, shows the same loss of the t.
+
 What you've built.
 A way to say you are hurt.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for a hospital, then the Telugu for a wound.
 You'll want to know: నీరసం.
 నీరసం (nīrasaṁ) — "weakness, lethargy", the drained feeling after a fever.
 నాకు నీరసంగా ఉంది — "I feel weak", in the frame of అలసటగా and దాహంగా.
+
+The word, taken apart.
+నీరసం (nīrasaṁ) is Sanskrit nīrasa, "sapless, tasteless", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 7556). The sense "weakness" is the one Telugu gives it.
 
 What you've built.
 A cold, medicine, a hospital, a wound, weakness: enough for a visit to the doctor.

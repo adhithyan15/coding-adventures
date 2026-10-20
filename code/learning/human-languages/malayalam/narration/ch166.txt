@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for spicy, then the Malayalam for sour.
 You'll want to know: ഭാരമുള്ള.
 ഭാരമുള്ള — bhāramuḷḷa — "heavy".
 
+The word, taken apart.
+ഭാരമുള്ള (bhāramuḷḷa) joins Sanskrit bhāra, "burden, weight" (CDIAL 9459), to native -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Count eighth to eleventh. (Eṭṭāṁ, ompatāṁ, pattāṁ, patinonnāṁ.) 
 You'll want to know: വേഗമുള്ള.
 വേഗമുള്ള — vēgamuḷḷa — "fast".
 
+The word, taken apart.
+വേഗമുള്ള (vēgamuḷḷa) joins Sanskrit vēga, "speed" (CDIAL 12089), to native -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -72,6 +78,9 @@ Before the new one: say the Malayalam for heavy, then the Malayalam for fast.
 You'll want to know: കട്ടിയുള്ള.
 കട്ടിയുള്ള — kaṭṭiyuḷḷa — "thick".
 
+The word, taken apart.
+കട്ടിയുള്ള (kaṭṭiyuḷḷa) is native Dravidian, "having solidity": kaṭṭi, "what is condensed, solid" (DEDR 1148, with Tamil kaṭṭu), with -uḷḷa, "that has" (DEDR 697). DEDR 1148 compares Sanskrit kaṭhina, "hard" (CDIAL 2650).
+
 What you've built.
 One more word for this chapter.
 
@@ -100,6 +109,9 @@ Before the new one: say the Malayalam for fast, then the Malayalam for thick.
 
 You'll want to know: മൃദുവായ.
 മൃദുവായ — mṛduvāya — "soft".
+
+The word, taken apart.
+മൃദുവായ (mṛduvāya) joins Sanskrit mṛdu, "soft" (CDIAL 10292), to native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -131,6 +143,9 @@ Say the written "because." (Entukoṇṭennāl.)
 
 You'll want to know: കഠിനമായ.
 കഠിനമായ — kaṭhinamāya — "hard, difficult".
+
+The word, taken apart.
+കഠിനമായ (kaṭhinamāya) joins Sanskrit kaṭhina, "hard, stiff" (CDIAL 2650), to native āya, "having become" (DEDR 333). CDIAL notes that the Sanskrit word itself may come from Dravidian. DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

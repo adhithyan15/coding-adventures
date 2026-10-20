@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Water, Tea, Milk, Bread",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f3fa9503de7831ff",
+  "sourceHash": "fnv1a64:75b16f63bd24785a",
   "lessons": [
     {
       "id": "UR-C12-pani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4350d7a47befb57",
+      "sourceHash": "fnv1a64:4c7d340c73b488f2",
       "notice": null,
       "blocks": [
         {
@@ -76,7 +76,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pānī continues Sanskrit pānīya, \"water, drink,\" built on pā-, \"to drink,\" from Proto-Indo-European peh₃-. English water is unrelated — it comes from an entirely different PIE root. But peh₃- itself did reach English, by a different door: Latin potare, \"to drink,\" gave English potion and, by way of a sense narrowed to \"a poisoned drink,\" poison. پانی is, underneath, \"the drinkable thing\" — the same idea English kept for what you drink, not for the substance itself."
+              "text": "pānī continues Sanskrit pānīya, \"water, drink\" (CDIAL 8082), built on pā-, \"to drink,\" from Proto-Indo-European peh₃-. English water is unrelated — it comes from an entirely different PIE root. But peh₃- itself did reach English, by a different door: Latin potare, \"to drink,\" gave English potion and, by way of a sense narrowed to \"a poisoned drink,\" poison. پانی is, underneath, \"the drinkable thing\" — the same idea English kept for what you drink, not for the substance itself."
             }
           ]
         },
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d3406052f624e177",
+      "sourceHash": "fnv1a64:b8071d93ba38c654",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2b416fc057b0a6ed",
+      "sourceHash": "fnv1a64:36b3607f54a85afd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -387,7 +387,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dūdh continues Sanskrit dugdhá, literally \"milked,\" from Proto-Indo-European dʰewgʰ-, \"to be fit, to yield, to produce.\" That root also gives Sanskrit duh-, \"to milk\" — the verb sitting directly under this noun."
+              "text": "dūdh continues Sanskrit dugdhá, literally \"milked\" (CDIAL 6391), from Proto-Indo-European dʰewgʰ-, \"to be fit, to yield, to produce.\" That root also gives Sanskrit duh-, \"to milk\" — the verb sitting directly under this noun."
             },
             {
               "kind": "speech",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:435307591ba1b573",
+      "sourceHash": "fnv1a64:c2fd01c3b11c7faf",
       "notice": null,
       "blocks": [
         {
@@ -539,7 +539,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "roṭī continues Sauraseni Prakrit roṭṭa-, from Sanskrit roṭikā, \"a kind of bread.\" That word is built inside Sanskrit itself, on a root meaning \"to strike, to crush\" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and paṛhnā hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one."
+              "text": "roṭī goes back to a form CDIAL reconstructs as roṭṭa, \"bread\"; late Sanskrit has roṭikā (CDIAL 10837). One view relates it to Sanskrit roṭate, \"strikes against\" — the pounding and rolling that turns grain into flatbread. The trail stops there: no proposed Proto-Indo-European ancestor, no English cousin. کان and paṛhnā hit the same honest wall earlier in this book. Not every word gets a Greek or Latin relative, and saying so plainly is better than inventing one."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "horatu"
 concept_tag: KA-KARANA288-HORATU
 prerequisites: [KA-C288-allade, KA-C288-iddakkiddante]
 sounds: []
-roots: []
+roots: [dravidian-pura-outside]
+etymology_hook: "horatu: native Dravidian, one word with Tamil puṟam and Telugu peṟa (DEDR 4333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C288-iddakkiddante]
 <!-- hl-knowledge: introduces=[KA-LEX-C288-KARANA288-03]; assesses=[] -->
 
 **ಹೊರತು** — *horatu* — "except".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊರತು** (*horatu*) is native Dravidian, one word with Tamil *puṟam*, Telugu *peṟa* and Malayalam *puṟam* (DEDR 4333). DEDR lists older *hoṟatu*, "that is outside, excepted; except, without".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 52,
-  "sourceHash": "fnv1a64:2f409163a028fe19",
+  "sourceHash": "fnv1a64:d8df1e62f7a5f2d0",
   "lessonIds": [
     "JA-C52-shiroi",
     "JA-C52-kuroi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch52.txt",
   "json": "japanese/narration/ch52.json",
-  "textHash": "fnv1a64:340921a6680b5fb8",
-  "jsonHash": "fnv1a64:6f559aa38f7bd5cf",
+  "textHash": "fnv1a64:529989736d51589b",
+  "jsonHash": "fnv1a64:e6110dbb6d6f8760",
   "findings": []
 }

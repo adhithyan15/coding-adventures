@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 103,
-  "sourceHash": "fnv1a64:1cadfecf08909848",
+  "sourceHash": "fnv1a64:ed11cbb017b6ea17",
   "lessonIds": [
     "MR-C103-mungi",
     "MR-C103-badak",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch103.txt",
   "json": "marathi/narration/ch103.json",
-  "textHash": "fnv1a64:ba16809107282558",
-  "jsonHash": "fnv1a64:8b7e82804ff64cb7",
+  "textHash": "fnv1a64:910ba25fa57ba734",
+  "jsonHash": "fnv1a64:211a446b0b7f9d04",
   "findings": []
 }

@@ -12,6 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [TA-C02-peyar]
 sounds: [long-ii, ngal]
 roots: [nii-dravidian]
+etymology_hook: "நீ — native Dravidian (DEDR 3684), Malayalam nī, Telugu nīvu; நீங்கள் is its plural form (DEDR 3688)"
 reviews_of: [TA-C02-en-peyar]
 duration:
   max_seconds: 180

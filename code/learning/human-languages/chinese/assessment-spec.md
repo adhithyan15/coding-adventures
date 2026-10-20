@@ -5,8 +5,8 @@
 **Basis:** project-defined CEFR ladder aligned to GF0025-2021 and the changing
 HSK 3.0 examination system
 
-**Status:** target specified; task inventories, mocks, calibration, and human
-validation remain backlog
+**Status:** target specified; pre-A1 task shape and two project mock forms
+authored; later mocks, calibration, and human validation remain backlog
 
 This specification names the assessment that the Mandarin Chinese book must
 eventually prepare a book-only learner to pass. It is deliberately dated because
@@ -15,8 +15,9 @@ advanced five-skill exam, while HSK 3.0 Levels 1–6 are still being globally
 trialled in 2026.
 
 The checked-in [assessment.json](assessment.json) is the machine-readable
-contract. Its future paths are requirements, not evidence that the corresponding
-task inventory, rubric, answer key, mock, or validation study exists.
+contract. The pre-A1 mock paths now resolve to project-authored papers,
+rubrics, keys, and manifests. Other future paths remain requirements, not
+evidence that their artifacts or any human validation study exist.
 
 ## What is official, and what is not
 

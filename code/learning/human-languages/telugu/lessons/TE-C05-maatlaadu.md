@@ -12,6 +12,7 @@ concept_tag: TE-VERB-MATLADU
 prerequisites: [TE-C03-nenu]
 sounds: [retroflex-tl, long-aa]
 roots: [maata-word-dravidian]
+etymology_hook: "māṭlāḍu: native māṭa 'word' + āḍu; DEDR 4834 lists māṭal-āḍu 'to speak'"
 duration:
   max_seconds: 150
 requires:
@@ -45,7 +46,7 @@ how Telugu builds "I do X."
 <!-- hl-knowledge: introduces=[TE-ETYMON-C05-MAATLAADU-02]; assesses=[] -->
 
 **మాట్లాడు** (*māṭlāḍu*, "to speak, to talk") is native Dravidian, built on
-**మాట** (*māṭa*, "word, speech"). To say "**I speak**," Telugu adds a two-part
+**మాట** (*māṭa*, "word, speech"; DEDR 4834). To say "**I speak**," Telugu adds a two-part
 ending to the stem — tense + person:
 
 > *māṭlāḍ-* (speak) + *-t-* (present/future) + *-ānu* ("I") → **మాట్లాడతాను**

@@ -13,7 +13,8 @@ gloss: "to set out"
 concept_tag: LA-VERB-PROFICISCOR
 prerequisites: [LA-C235-loquor, LA-C235-sequor]
 sounds: []
-roots: []
+roots: [proficisci-latin, facere-latin]
+etymology_hook: "proficīscor 'to set out' — built on prōficiō 'to make headway'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C235-sequor]
 <!-- hl-knowledge: introduces=[LA-LEX-C235-ACT235-04]; assesses=[] -->
 
 **proficīscor, proficīscī** — "to set out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proficīscor** is built on *prōficiō*, "to make headway" (EtymDB 2.1), from *prō*, "forward", and *faciō*, "to make", with *-scor*, the ending of verbs of becoming: to put oneself forward, to set out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

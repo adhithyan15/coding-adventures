@@ -1,0 +1,11 @@
+{
+  "id": "ES-C650-tranvia",
+  "pathSegment": "ES-PATH-650-LINEA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-650-LINEA",
+      "order": 1
+    }
+  ]
+}

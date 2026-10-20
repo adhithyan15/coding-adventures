@@ -14,7 +14,8 @@ romanization: "daṇḍaḥ"
 concept_tag: SA-THG220-DANDAH
 prerequisites: [SA-C220-tula, SA-C220-manadandah]
 sounds: []
-roots: []
+roots: [sanskrit-danda]
+etymology_hook: "daṇḍa 'stick': MW relates it to Greek dendron 'tree'; CDIAL 6128 thinks it probably non-Aryan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C220-manadandah]
 <!-- hl-knowledge: introduces=[SA-LEX-C220-THG220-03]; assesses=[] -->
 
 **दण्डः** — *daṇḍaḥ* — "a stick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daṇḍa* is a Rigvedic word for "stick, club" (CDIAL 6128). MW relates it to Greek *dendron*, "tree", and to Sanskrit *dāru*, "wood", but CDIAL thinks it probably non-Aryan and finds no support for the Greek comparison, so the origin is not settled. It later also meant "punishment", the stick that rules.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

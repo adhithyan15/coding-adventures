@@ -14,7 +14,8 @@ romanization: "tandurust"
 concept_tag: UR-SIFAT248-TANDURUST
 prerequisites: [UR-C248-zinda, UR-C248-murda]
 sounds: []
-roots: []
+roots: [persian-tandurust]
+etymology_hook: "tandurust: usually traced to Persian tandurust 'healthy, sound of body'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C248-murda]
 <!-- hl-knowledge: introduces=[UR-LEX-C248-SIFAT248-04]; assesses=[] -->
 
 **تندرست** — *tandurust* — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تندرست** (*tandurust*) is a loan, usually traced to Persian *tandurust*, "healthy, sound of body". It is built from *tan*, "body", and *durust*, "sound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

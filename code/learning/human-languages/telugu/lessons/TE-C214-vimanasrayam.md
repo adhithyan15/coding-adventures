@@ -14,7 +14,8 @@ romanization: "vimānāśrayaṁ"
 concept_tag: TE-STHALAM214-VIMANASRAYAM
 prerequisites: [TE-C213-monna, TE-C214-bastandu]
 sounds: []
-roots: []
+roots: [sanskrit-vimana, sanskrit-ashraya]
+etymology_hook: "vimānāśrayaṁ: Sanskrit vimāna 'car of the gods' (CDIAL 11823) + āśraya 'resting place' (CDIAL 1466)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C214-bastandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C214-STHALAM214-02]; assesses=[] -->
 
 **విమానాశ్రయం** — *vimānāśrayaṁ* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విమానాశ్రయం** (*vimānāśrayaṁ*) is Sanskrit: *vimāna*, "car of the gods", now "aeroplane" (CDIAL 11823), and *āśraya*, "resting place, refuge" (CDIAL 1466), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: family members; family
 concept_tag: ZH-FAMILY-MEMBERS
 prerequisites: [ZH-C12-jia]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: Home plus person makes the people of the home; both spoken pieces are already known before the compound arrives.
+roots: [middle-chinese-kae, middle-chinese-nyin]
+etymology_hook: "jiārén 'family': built from Middle Chinese kae 'dwelling' and nyin 'person'"
 duration:
   max_seconds: 140
 requires:
@@ -43,6 +43,8 @@ reviews_of: [ZH-C12-jia, ZH-C12-ren, ZH-C12-erzi, ZH-C12-nuer]
 
 You already own both sounds: *jiā* + *rén*. The compound names the people of
 the home. Say it once from the meaning before looking at either character.
+
+*Jiārén* is built from Middle Chinese *kae*, "dwelling", and *nyin*, "person".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIAREN-01] -->

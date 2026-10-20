@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 204,
-  "sourceHash": "fnv1a64:e462456b0702a6b3",
+  "sourceHash": "fnv1a64:122f278bdbdfb863",
   "lessonIds": [
     "PT-C204-queimar",
     "PT-C204-deitar-fora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch204.txt",
   "json": "portuguese/narration/ch204.json",
-  "textHash": "fnv1a64:b5ffa377b41c1085",
-  "jsonHash": "fnv1a64:8ad8522df5e1cd6f",
+  "textHash": "fnv1a64:b90464ed3ef1063e",
+  "jsonHash": "fnv1a64:9106d390fd1c9d3f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "mosaḷe"
 concept_tag: KA-VASTU297-MOSALE
 prerequisites: [KA-C297-jenunona, KA-C297-gubbacci]
 sounds: []
-roots: []
+roots: [dravidian-mutalai-crocodile]
+etymology_hook: "mosaḷe: native Dravidian, one word with Tamil mutalai and Telugu mosali (DEDR 4952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C297-gubbacci]
 <!-- hl-knowledge: introduces=[KA-LEX-C297-VASTU297-03]; assesses=[] -->
 
 **ಮೊಸಳೆ** — *mosaḷe* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಸಳೆ** (*mosaḷe*) is native Dravidian, one word with Tamil *mutalai*, Telugu *mosali* and Malayalam *mutala* (DEDR 4952). DEDR lists *mosaḷe*, *masaḷe*, "crocodile". DEDR 4952 compares Sanskrit *mācala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -144,7 +144,7 @@ language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
 language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
 language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: -ge.
 language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. the dative: -ikku.
-One construction across four languages, with four suffixes that are visibly the same suffix — -ku / -ukku / -ge / -ikku. The Dravidian family showing its bones, just as blanc/bianco/branco did for Romance.
+One construction across four languages, with four suffixes that are the same suffix — -ku / -ukku / -ge / -ikku. Native Dravidian bones, like vaccu, "comes" (DEDR 5270) — as blanc/bianco/branco were for Romance.
 
 Guided Practice.
 [pause 1 second]

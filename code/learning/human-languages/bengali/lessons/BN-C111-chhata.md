@@ -14,7 +14,8 @@ romanization: "chhātā"
 concept_tag: BN-THINGS111-CHHATA
 prerequisites: [BN-C111-haturi, BN-C111-kurul]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chhātā ← Sanskrit chattra 'parasol', a tadbhava (CDIAL 4972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C111-kurul]
 <!-- hl-knowledge: introduces=[BN-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **ছাতা** — *chhātā* — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাতা** (*chhātā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chattra*, "parasol" (CDIAL 4972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

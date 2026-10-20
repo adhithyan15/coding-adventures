@@ -141,14 +141,16 @@ describe("acSweep", () => {
       `
 .measure ac outSwing PP V(out) FROM=10 TO=1000
 .meas ac outFinal FINAL V(out)
+.measure ac outAt FIND V(out) AT=550
 .end
 `,
     );
 
     expect(formatMeasurementTable(measurements)).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
-        "outSwing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n" +
-        "outFinal\tac\tV(out)\tlast\t\t\t5.000000e-01\n",
+      "outSwing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n" +
+      "outFinal\tac\tV(out)\tlast\t\t\t5.000000e-01\n" +
+      "outAt\tac\tV(out)\tfind\t5.500000e+02\t5.500000e+02\t1.250000e+00\n",
     );
   });
 

@@ -13,7 +13,8 @@ gloss: "to switch on, to light"
 concept_tag: FR-VERB-ALLUMER
 prerequisites: [FR-C142-lannonce, FR-C142-la-facture]
 sounds: []
-roots: []
+roots: [lumen-latin]
+etymology_hook: "allumer ← Vulgar Latin *alluminare, from lumen 'light' — English illuminate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C142-la-facture]
 <!-- hl-knowledge: introduces=[FR-LEX-C143-VERBES143-01]; assesses=[] -->
 
 **allumer** — "to switch on, to light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**allumer** ← Old French *allumer* (EtymDB 2.1) ← Vulgar Latin *\*alluminare*, from Latin *lumen*, "light" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bird"
 concept_tag: LA-ANIMALIA2-AVIS
 prerequisites: [LA-C90-capra, LA-C90-porcus]
 sounds: []
-roots: []
+roots: [avis-latin]
+etymology_hook: "avis 'bird' — inherited, usually traced to PIE *h2ewis 'bird'; auspex was a bird-watching priest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C90-porcus]
 <!-- hl-knowledge: introduces=[LA-LEX-C91-ANIMALIA2-01]; assesses=[] -->
 
 **avis, avis** — "a bird". English *aviation*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avis** is inherited, usually traced to Proto-Indo-European *\*h2ewis*, "bird" (EtymDB 2.1). *auspex*, "a bird-watcher", the priest who read omens from birds, is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

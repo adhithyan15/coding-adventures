@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the environment, then the Marathi for po
 You'll want to know: व्यायामशाळा.
 व्यायामशाळा — vyāyāmśāḷā — "a gym".
 
+The word, taken apart.
+व्यायामशाळा (vyāyāmśāḷā) is a compound of Sanskrit parts: vyāyāma, "exertion, exercise", and śālā, "hall" (CDIAL 12414), with Marathi ळ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for pollution, then the Marathi for a gym.
 
 You'll want to know: क्रिकेट.
 क्रिकेट — krikeṭ — "cricket".
+
+The word, taken apart.
+क्रिकेट (krikeṭ) is a loan from English cricket.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a gym, then the Marathi for cricket.
 You'll want to know: विजय.
 विजय — vijay — "a victory".
 
+The word, taken apart.
+विजय (vijay) is Sanskrit vijaya, "victory", a tatsama built on ji, "to win", the root of जिंकणे. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for cricket, then the Marathi for a victory.
 You'll want to know: पराभव.
 पराभव — parābhav — "a defeat".
 
+The word, taken apart.
+पराभव (parābhav) is Sanskrit parābhava, "defeat, overthrow", a tatsama: parā, "away", and bhū, "to be". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a victory, then the Marathi for a defeat
 
 You'll want to know: स्पर्धा.
 स्पर्धा — spardhā — "a competition".
+
+The word, taken apart.
+स्पर्धा (spardhā) is Sanskrit spardhā, "rivalry, emulation", a tatsama. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

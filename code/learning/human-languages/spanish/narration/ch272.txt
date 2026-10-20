@@ -19,6 +19,7 @@ The word, taken apart.
 es que… — literally "it is that…", and functionally almost never that.
 Asked to do something you cannot do, a Spanish speaker very often begins es que… and then gives a circumstance rather than an answer. ¿Vienes? — Es que mañana trabajo. Nothing in that sentence is a refusal. Every listener hears one.
 The words supply a reason; the refusal is left for you to work out. That gap between what is said and what is meant has a name in linguistics — an implicature — and Spanish leans on it harder than English does.
+Es is Latin est, "is"; que goes back to Latin quid, "what".
 
 What you've built.
 This is the first thing in the book you cannot translate word by word and still understand. It is that tomorrow I work is not English, and even repaired to it's just that I work tomorrow it loses the refusal.
@@ -129,7 +130,7 @@ MI-ra, stress the first syllable. see reference.
 
 The word, taken apart.
 mira — "look."
-It is the command form of mirar, "to look" — Latin mirari, "to wonder at, to marry at", which also gave English miracle, admire and mirror.
+It is the command form of mirar, "to look" — Latin mirari, "to wonder at, to marvel at", which also gave English miracle, admire and mirror.
 But dropped at the start of a sentence it has stopped being a command. Nobody is being asked to look at anything. Mira, no es así — "look, it isn't like that" — uses it to mark what follows as a correction, an intimacy, or an impatience, depending on the voice.
 Spanish is full of these: oye, venga, bueno, hombre. Every one of them started as a word with a meaning and became a signal about the sentence around it.
 

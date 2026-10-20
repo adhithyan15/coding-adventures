@@ -14,7 +14,8 @@ romanization: "haṁsaḥ"
 concept_tag: SA-BEAST-HAMSA
 prerequisites: [SA-C48-monkey, SA-C46-heat, SA-C47-floor]
 sounds: []
-roots: []
+roots: [sanskrit-hamsa]
+etymology_hook: "haṃsa 'goose' is inherited: MW compares Latin ānser, Greek khēn and English goose (CDIAL 13937)"
 duration:
   max_seconds: 210
 requires:

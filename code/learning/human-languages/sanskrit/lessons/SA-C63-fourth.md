@@ -14,7 +14,8 @@ romanization: "caturthaḥ"
 concept_tag: SA-ORDINAL-FOURTH
 prerequisites: [SA-C63-sixth, SA-C62-eighth, SA-C53-yah, SA-C43-trust, SA-C06-numbers-1-5]
 sounds: []
-roots: []
+roots: [sanskrit-caturtha]
+etymology_hook: "caturtha 'fourth' ← catur 'four' + -tha; MW compares Greek tetartos and Latin quartus"
 duration:
   max_seconds: 215
 requires:

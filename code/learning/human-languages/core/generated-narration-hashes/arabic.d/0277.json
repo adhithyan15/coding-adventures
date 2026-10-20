@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 277,
-  "sourceHash": "fnv1a64:593f92174e9c643c",
+  "sourceHash": "fnv1a64:9da6b78c5215e24b",
   "lessonIds": [
     "AR-C277-kura",
     "AR-C277-mubara",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch277.txt",
   "json": "arabic/narration/ch277.json",
-  "textHash": "fnv1a64:a8cd755f8f46a9e1",
-  "jsonHash": "fnv1a64:04a12ac80200d276",
+  "textHash": "fnv1a64:73d7c39d72ffcbb5",
+  "jsonHash": "fnv1a64:8264b1c0e0ee35d3",
   "findings": []
 }

@@ -6,7 +6,7 @@ sequence: 560
 chapter: 28
 type: word
 headword: మధ్యాహ్నం
-gloss: "afternoon" — the same word already met meaning precisely "noon" (TE-C17), confirmed via a directly-fetched source to also cover "the time between noon and evening" in modern usage — the same kind of semantic widening already found for Hindi's दोपहर and, more thinly, Kannada's మధ్యాహ్న
+gloss: '"afternoon" — the same word already met meaning precisely "noon" (TE-C17), confirmed via a directly-fetched source to also cover "the time between noon and evening" in modern usage — the same kind of semantic widening already found for Hindi''s दोपहर and, more thinly, Kannada''s మధ్యాహ్న'
 romanization: "madhyāhnam"
 concept_tag: TIME-AFTERNOON
 prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C27-sayantram]
@@ -54,7 +54,7 @@ same kind of stretch).
 ## The word, taken apart - A more precise word exists too — a thin but real comparison
 <!-- hl-knowledge: introduces=[TE-ETYMON-C28-MADHYAHNAM-WIDENED-02]; assesses=[] -->
 
-Telugu also has **అపరాహ్నం** (**aparāhnam**), from the same classical
+Telugu also has **అపరాహ్నం** (**aparāhnam**), a tatsama from the same classical
 **five-part Sanskrit day division** already found behind Kannada's
 **అపరాహ్న** — *prāta/udaya* (sunrise), *saṅgava*, *madhyāhna* (noon),
 *aparāhna* ("later afternoon" specifically), *sāyāhna* (evening). Be

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C397-iusiurandum",
+  "pathSegment": "LA-PATH-397-PACTUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-397-PACTUM",
+      "order": 0
+    }
+  ]
+}

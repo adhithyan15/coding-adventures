@@ -13,7 +13,8 @@ gloss: "a match (game)"
 concept_tag: IT-LAV173-PARTITA
 prerequisites: [IT-C173-scienza, IT-C173-arte]
 sounds: []
-roots: []
+roots: [partire-latin]
+etymology_hook: "partita — from partire 'to divide': a share, then a game — English party is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C173-arte]
 <!-- hl-knowledge: introduces=[IT-LEX-C173-LAV173-05]; assesses=[] -->
 
 **la partita** — "a match (game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partita** is the past participle of *partire* in its old sense "to divide, to share out", used as a noun: a share, a game. *partire* ← Latin *partire*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tokui"
 concept_tag: JA-CAN95-TOKUI
 prerequisites: [JA-C94-ai, JA-C95-kanou]
 sounds: []
-roots: []
+roots: [middle-chinese-tok, middle-chinese-ih]
+etymology_hook: "tokui: Sino-Japanese 得 'obtain' + 意 'thought', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C95-kanou]
 <!-- hl-knowledge: introduces=[JA-LEX-C95-CAN95-02]; assesses=[] -->
 
 **とくい** — *tokui* — "good at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とくい** (*tokui*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *toku*, "obtain, gain" (Middle Chinese *tok*) and *i*, "thought, mind" (*'iH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

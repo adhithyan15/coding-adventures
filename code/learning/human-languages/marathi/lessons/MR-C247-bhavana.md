@@ -14,7 +14,8 @@ romanization: "bhāvanā"
 concept_tag: MR-VASTU247-BHAVANA
 prerequisites: [MR-C247-grhapath, MR-C247-siksan]
 sounds: []
-roots: []
+roots: [sanskrit-bhavana]
+etymology_hook: "bhāvanā: Sanskrit bhāvanā 'imagining, feeling', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C247-siksan]
 <!-- hl-knowledge: introduces=[MR-LEX-C247-VASTU247-05]; assesses=[] -->
 
 **भावना** — *bhāvanā* — "a feeling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भावना** (*bhāvanā*) is Sanskrit *bhāvanā*, "imagining, feeling", a tatsama built on *bhū*, "to be" (CDIAL 9476).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

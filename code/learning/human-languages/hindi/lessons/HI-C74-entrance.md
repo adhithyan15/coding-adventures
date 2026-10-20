@@ -14,7 +14,8 @@ romanization: "pravesh"
 concept_tag: HI-NOUN-ENTRANCE
 prerequisites: [HI-C74-closed, HI-C72-price, HI-C73-bill]
 sounds: []
-roots: []
+roots: [sanskrit-pravesha]
+etymology_hook: "pravesh ← Sanskrit praveśa 'entering', a tatsama, on praviśati 'enters' (CDIAL 8803)"
 duration:
   max_seconds: 240
 requires:

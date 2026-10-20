@@ -12,6 +12,7 @@ concept_tag: MR-WORD-PUNHA
 prerequisites: [MR-C01-yeto]
 sounds: [halant-conjunct, matra-aa]
 roots: [punar]
+etymology_hook: "punhā: usually traced to Sanskrit punar 'again, back'; CDIAL lists only Marathi paṇ under it (CDIAL 8273)"
 reviews_of: [MR-C01-yeto]
 duration:
   max_seconds: 200
@@ -48,10 +49,7 @@ joined by a *halant* to ह *ha* with the long-*ā* stroke) → **पुन्�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-PUNHA, MR-ETYMON-PUNHA-PUNAR]; assesses=[] -->
 
-**पुन्हा** (*punhā*, "again") comes from Sanskrit **पुनर्** (*punar*, "again,
-back"). That *punar* is a genuine Indo-European cousin of Latin **re-** in the
-sense of "back/again," and it echoes in Hindi *phir* and the *puna-* of
-*punarjanma* ("rebirth"). To say a thing *punhā* is to send it round once more.
+**पुन्हा** (*punhā*, "again") is usually traced to Sanskrit **पुनर्** (*punar*, "again, back"), the *puna-* of *punarjanma* ("rebirth"). CDIAL lists Marathi *paṇ*, "also, but", under *punar*, but not *punhā* (CDIAL 8273). To say a thing *punhā* is to send it round once more.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-YETO-YETE-01] -->

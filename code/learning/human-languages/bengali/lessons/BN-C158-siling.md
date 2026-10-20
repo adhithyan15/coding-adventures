@@ -14,7 +14,8 @@ romanization: "siling"
 concept_tag: BN-JAYGA158-SILING
 prerequisites: [BN-C158-durgo, BN-C158-minar]
 sounds: []
-roots: []
+roots: [english-ceiling]
+etymology_hook: "siling ← English ceiling"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C158-minar]
 <!-- hl-knowledge: introduces=[BN-LEX-C158-JAYGA158-05]; assesses=[] -->
 
 **সিলিং** — *siling* — "a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিলিং** (*siling*) is a loan from English *ceiling*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

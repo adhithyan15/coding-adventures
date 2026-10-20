@@ -14,7 +14,8 @@ romanization: "maṇamakaḷ"
 concept_tag: TA-PORUL217-MANAMAKAL
 prerequisites: [TA-C216-cittu, TA-C216-varaipatam]
 sounds: []
-roots: []
+roots: [dravidian-manam-union, proto-dravidian-makal-daughter]
+etymology_hook: "மணமகள் — native: maṇam 'marriage' (DEDR 4667) + makaḷ 'woman' (DEDR 4616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C216-varaipatam]
 <!-- hl-knowledge: introduces=[TA-LEX-C217-PORUL217-01]; assesses=[] -->
 
 **மணமகள்** — *maṇamakaḷ* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மணமகள்** (*maṇamakaḷ*) is native: *maṇam*, "marriage" (DEDR 4667), and *makaḷ*, "daughter, woman" (DEDR 4616, which compares Sanskrit *mālikā*, "daughter").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

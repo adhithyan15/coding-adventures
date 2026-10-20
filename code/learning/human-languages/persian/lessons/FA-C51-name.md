@@ -14,7 +14,8 @@ romanization: "nâme"
 concept_tag: FA-SCHOOL51-NAME
 prerequisites: [FA-C50-kalame, FA-C50-bazi]
 sounds: []
-roots: []
+roots: [persian-nama]
+etymology_hook: "nâme: inherited, usually traced to Middle Persian nāmag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C50-bazi]
 <!-- hl-knowledge: introduces=[FA-LEX-C51-SCHOOL51-01]; assesses=[] -->
 
 **نامه** — *nâme* — "a letter (post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâme* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *nāmag*, "letter, book". It is usually explained as built on *nâm*, "name".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

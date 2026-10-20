@@ -14,7 +14,8 @@ romanization: "muriṅṅakka"
 concept_tag: ML-VASTU259-MURINNAKKA
 prerequisites: [ML-C259-pavaykka, ML-C259-ventaykka]
 sounds: []
-roots: []
+roots: [dravidian-murungai-moringa]
+etymology_hook: "muriṅṅakka: native Dravidian, muriṅṅa 'moringa' (DEDR 4982) + kāy 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C259-ventaykka]
 <!-- hl-knowledge: introduces=[ML-LEX-C259-VASTU259-03]; assesses=[] -->
 
 **മുരിങ്ങക്ക** — *muriṅṅakka* — "a drumstick (the vegetable)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുരിങ്ങക്ക** (*muriṅṅakka*) is native Dravidian: *muriṅṅa*, the moringa tree (DEDR 4982, with Tamil *muruṅkai*), with the ending for an unripe fruit. DEDR 4982 compares Sanskrit *muraṅgī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

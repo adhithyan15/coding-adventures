@@ -14,7 +14,8 @@ romanization: "edâre"
 concept_tag: FA-TOWN71-EDARE
 prerequisites: [FA-C71-masjed, FA-C71-hotel]
 sounds: []
-roots: []
+roots: [arabic-idara]
+etymology_hook: "edâre ← Arabic idāra 'administration', root d-w-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C71-hotel]
 <!-- hl-knowledge: introduces=[FA-LEX-C71-TOWN71-04]; assesses=[] -->
 
 **اداره** — *edâre* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*edâre* is borrowed from Arabic *idāra*, "administration". Its Arabic root is *d-w-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

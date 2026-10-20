@@ -6,13 +6,13 @@ sequence: 910
 chapter: 34
 type: word
 headword: لحم
-gloss: "meat" — one Semitic root that Arabic settled on meat and Hebrew settled on bread, with Bethlehem sitting on the seam between them
+gloss: '"meat" — one Semitic root that Arabic settled on meat and Hebrew settled on bread, with Bethlehem sitting on the seam between them'
 concept_tag: AR-FOOD-MEAT
 romanization: laḥm
 prerequisites: [AR-C34-milh, AR-W07-hook-family-ha-kha]
 sounds: [haa-pharyngeal, rtl-known-letters]
 roots: [l-h-m]
-etymology_hook: "لَحْم (laḥm, 'meat') and Hebrew לֶחֶם (leḥem, 'bread') are the same Semitic root ل-ح-م, which named the staple food and let each people fill it with whatever their staple was; the town Arabic calls بيت لحم (Bayt Laḥm) is the town Hebrew calls בֵּית לֶחֶם (Bēt Leḥem) and English calls Bethlehem, so the seam runs straight through a place name English already owns, while خبز (khubz) shows Arabic naming bread from its own root خ-ب-ز instead"
+etymology_hook: "laḥm 'meat': root l-ḥ-m (Lane); Hebrew leḥem 'bread' is the same word, as in Bethlehem"
 duration:
   max_seconds: 240
 requires:
@@ -61,7 +61,7 @@ neither *ḥalīb*'s open opening nor *milḥ*'s tailed ending.
 Now the twin, and it is the best one in this book. Hebrew's **לֶחֶם**
 (*leḥem*) is the same root — and it means **bread**.
 
-Neither language changed the meaning. The old Semitic root named **the staple
+The usual explanation: the old Semitic root named **the staple
 food**, and each people filled it with whatever theirs was: meat where herds
 mattered, bread where grain did.
 

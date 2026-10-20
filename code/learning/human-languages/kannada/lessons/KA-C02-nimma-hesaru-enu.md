@@ -11,7 +11,8 @@ romanization: "nimma hesaru ēnu?"
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [KA-C02-enu, KA-C02-niinu-niivu, KA-C02-hesaru]
 sounds: []
-roots: []
+roots: [yaa-dravidian, niin-dravidian, pesar-dravidian]
+etymology_hook: "nimma hesaru ēnu: three native words, 'your' (DEDR 3688), 'name' (DEDR 4410), 'what' (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C02-enu, KA-C02-niinu-niivu, KA-C02-nanna-hesaru]
 > **ನಿಮ್ಮ ಹೆಸರು ಏನು?** = literally "**your name what?**" = "what's your name?"
 
 Three words, **no verb** — the zero copula holds for questions too.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಮ್ಮ ಹೆಸರು ಏನು?** (*nimma hesaru ēnu?*) is three native Dravidian words: *nimma*, "your" (DEDR 3688), *hesaru*, "name" (DEDR 4410), and *ēnu*, "what" (DEDR 5151).
 
 ## Grammar Lens: answer, and the familiar version
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C02-NIMMA-HESARU-ENU-02]; assesses=[] -->

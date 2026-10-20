@@ -14,7 +14,8 @@ romanization: "muqābil"
 concept_tag: AR-MAKAN172-MUQABIL
 prerequisites: [AR-C172-maqha, AR-C172-ittijah]
 sounds: []
-roots: []
+roots: [q-b-l]
+etymology_hook: "muqābil: built on the root q-b-l, 'to face' (Lane); muqābil is the Form III participle, 'facing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C172-ittijah]
 <!-- hl-knowledge: introduces=[AR-LEX-C172-MAKAN172-05]; assesses=[] -->
 
 **مقابل** — *muqābil* — "opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقابل** (*muqābil*) is built on the native Arabic root *q-b-l*, "to face" (Lane). *Muqābil* is the Form III participle, "facing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

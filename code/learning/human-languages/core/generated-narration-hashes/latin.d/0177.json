@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 177,
-  "sourceHash": "fnv1a64:0da80fe4ea833c54",
+  "sourceHash": "fnv1a64:4d079d715f01dd99",
   "lessonIds": [
     "LA-C177-longe",
     "LA-C177-alibi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch177.txt",
   "json": "latin/narration/ch177.json",
-  "textHash": "fnv1a64:59502ea0fb9b311c",
-  "jsonHash": "fnv1a64:f30abc14af50c827",
+  "textHash": "fnv1a64:ddfb64110ee8114d",
+  "jsonHash": "fnv1a64:43d2af6e3e11d2b6",
   "findings": []
 }

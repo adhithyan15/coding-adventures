@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "And, Or, and Neither",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ef22d6db9bbc8e99",
+  "sourceHash": "fnv1a64:5e3f70b9ab0c6b50",
   "lessons": [
     {
       "id": "PA-C38-ate",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4d757484549c5a7",
+      "sourceHash": "fnv1a64:8fcbac3d994be3fe",
       "notice": null,
       "blocks": [
         {
@@ -68,6 +68,10 @@
             {
               "kind": "speech",
               "text": "It has a shorter twin. In ordinary speech Punjabi very often says just ਤੇ, and the two are the same word — ਅਤੇ (ate) is the fuller, more written form. That matters here for an odd reason: the short ਤੇ is also a syllable this book drills in its script lessons, so a search of the corpus for and kept finding the drill and never the conjunction. The word looked present and was absent."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists the short te, \"and\", under Sanskrit tathāpi, \"even so, nevertheless\" (CDIAL 5647); it has no entry for the fuller ate."
             }
           ]
         },
@@ -143,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f16016fca5cc527",
+      "sourceHash": "fnv1a64:6a51dee53b3ff67c",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +204,10 @@
             {
               "kind": "speech",
               "text": "That is a two-clause sentence, and it is the first one this book has been able to make. Until now the longest thing the track taught was a single clause of four slots."
+            },
+            {
+              "kind": "speech",
+              "text": "Ate goes with its short twin te, which CDIAL lists under Sanskrit tathāpi, \"even so, nevertheless\" (CDIAL 5647); it has no entry for ate itself."
             }
           ]
         },
@@ -369,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d1c7d0587313217",
+      "sourceHash": "fnv1a64:a3d566351287cd89",
       "notice": null,
       "blocks": [
         {
@@ -427,6 +435,10 @@
             {
               "kind": "speech",
               "text": "This is the word a shopkeeper uses on you, and the one you need to answer with."
+            },
+            {
+              "kind": "speech",
+              "text": "Where jāṁ comes from is not settled: CDIAL has no entry for it in this sense."
             }
           ]
         },
@@ -502,7 +514,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc31bcb6fdeb17ab",
+      "sourceHash": "fnv1a64:5c1d2fc7885dd29b",
       "notice": null,
       "blocks": [
         {
@@ -551,6 +563,10 @@
             {
               "kind": "speech",
               "text": "That is worth noticing against ਅਤੇ (ate) and ਜਾਂ (jāṁ), which stand between. This is the first joining pattern in the book that goes in front of both halves."
+            },
+            {
+              "kind": "speech",
+              "text": "Nā is inherited: CDIAL lists Punjabi na, \"not\", under Sanskrit na (CDIAL 6906)."
             }
           ]
         },

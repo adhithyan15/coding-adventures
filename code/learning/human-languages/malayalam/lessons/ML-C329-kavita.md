@@ -14,7 +14,8 @@ romanization: "kavita"
 concept_tag: ML-VASTU329-KAVITA
 prerequisites: [ML-C328-manvetti, ML-C329-lekhanam]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kavita ← Sanskrit kavitā 'poetry', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C329-lekhanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C329-VASTU329-02]; assesses=[] -->
 
 **കവിത** — *kavita* — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കവിത** (*kavita*) ← Sanskrit *kavitā*, "poetry", taken over whole as a tatsama. It is built on *kavi*, "poet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

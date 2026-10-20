@@ -11,7 +11,8 @@ romanization: "vāḻttu"
 concept_tag: TA-COURTESY-GOOD-WISH
 prerequisites: [TA-C49-gladness, TA-C47-perhaps, TA-C48-later]
 sounds: []
-roots: []
+roots: [vaazh-live-dravidian]
+etymology_hook: "வாழ்த்து — native Dravidian (DEDR 5372); Malayalam vāḻttuka 'to bless'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C49-gladness]
 Straight off *vāḻ*, 'to live, to flourish', which you had early. To give somebody a *vāḻttu* is to wish them a life — not luck, not success, but the thing itself.
 
 *vāḻttukkaḷ* is what a Tamil speaker says where English says "congratulations", and it is the kinder sentence of the two: flourishing, offered in the plural, rather than a nod at what you managed to pull off.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வாழ்த்து** (*vāḻttu*) is native Dravidian. DEDR 5372 lists Malayalam *vāḻttuka*, "to bless". It is the noun of *vāḻ*, "to live": a good wish says "may you live well".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

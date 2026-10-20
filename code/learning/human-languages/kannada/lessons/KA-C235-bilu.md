@@ -14,7 +14,8 @@ romanization: "bīḷu"
 concept_tag: KA-VERB-BILU
 prerequisites: [KA-C234-pali, KA-C234-mungada]
 sounds: []
-roots: []
+roots: [dravidian-viizh-fall]
+etymology_hook: "bīḷu: native Dravidian, one word with Tamil vīḻ (DEDR 5430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C234-mungada]
 <!-- hl-knowledge: introduces=[KA-LEX-C235-KRIYE235-01]; assesses=[] -->
 
 **ಬೀಳು** — *bīḷu* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೀಳು** (*bīḷu*) is native Dravidian, one word with Tamil *vīḻ* (DEDR 5430). DEDR gives the older Kannada *bīḻ*, "to fall": the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

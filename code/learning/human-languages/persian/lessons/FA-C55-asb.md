@@ -14,7 +14,8 @@ romanization: "asb"
 concept_tag: FA-ANIMALS55-ASB
 prerequisites: [FA-C54-sag, FA-C54-gorbe]
 sounds: []
-roots: []
+roots: [persian-asb]
+etymology_hook: "asb: inherited, usually traced to Middle Persian asp"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C54-gorbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C55-ANIMALS55-01]; assesses=[] -->
 
 **اسب** — *asb* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*asb* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *asp*, "horse". Latin *equus* is the same Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

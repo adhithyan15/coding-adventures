@@ -1,0 +1,18 @@
+{
+  "id": "SA-A1-S-06",
+  "category": "Vākya — the sentence",
+  "label": "word order is free, because the endings carry the roles",
+  "probe": [
+    "SA-GRAMMAR-C16-NOUN-FAMILIES",
+    "SA-GRAMMAR-SANDHI-JOINS-WORDS"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-SV-06"
+  ],
+  "note": "Sanskrit's answer to the proxy's word-order flexibility point is much stronger than Spanish's, and it follows from the case system rather than from style."
+}

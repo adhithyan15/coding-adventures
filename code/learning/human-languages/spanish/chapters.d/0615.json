@@ -1,0 +1,19 @@
+{
+  "chapter": 615,
+  "title": "Planes",
+  "label": "ch:es-planes",
+  "canDo": "I can describe a plan, its purpose and what I intend to do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-R615-repaso-608-615",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 615: I can describe a plan, its purpose and what I intend to do.",
+    "assesses": [
+      "ES-LEX-C615-PLAN-03",
+      "ES-LEX-C615-PLAN-04",
+      "ES-LEX-C615-PLAN-05"
+    ]
+  }
+}

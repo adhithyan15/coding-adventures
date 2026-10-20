@@ -13,7 +13,8 @@ gloss: "to organise"
 concept_tag: PT-VERB-ORGANIZAR
 prerequisites: [PT-C136-o-plano, PT-C136-planear]
 sounds: []
-roots: []
+roots: [organum-latin]
+etymology_hook: "organizar ← French organiser, from Medieval Latin organizare, from organum"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C136-planear]
 <!-- hl-knowledge: introduces=[PT-LEX-C136-FUT136-05]; assesses=[] -->
 
 **organizar** — "to organise". A regular **-ar** verb, so its one-word future follows **falar**: **Organizarei tudo.** — "I will organise everything." In everyday speech: **Vou organizar tudo.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**organizar** ← French *organiser* (EtymDB 2.1) — borrowed. Behind it is Medieval Latin *organizare*, from Latin *organum*, "tool, instrument".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

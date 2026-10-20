@@ -14,7 +14,8 @@ romanization: "pāṇṟŭ"
 concept_tag: ML-THINGS156-PANRU
 prerequisites: [ML-C155-granthasala, ML-C155-sarttu, ML-C34-ishtam]
 sounds: []
-roots: []
+roots: [english-pants]
+etymology_hook: "pāṇṟŭ ← English pants"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C155-sarttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C156-THINGS156-01]; assesses=[] -->
 
 **പാന്റ്** — *pāṇṟŭ* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാന്റ്** (*pāṇṟŭ*) ← English *pants*, short for *pantaloons*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

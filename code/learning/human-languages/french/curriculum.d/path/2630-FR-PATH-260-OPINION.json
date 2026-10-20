@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-260-OPINION",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-260-OPINION"
+  ],
+  "after": []
+}

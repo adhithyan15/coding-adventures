@@ -14,7 +14,8 @@ romanization: "nashara"
 concept_tag: AR-VERB-NASHARA
 prerequisites: [AR-C258-sharaka, AR-C258-ikhtalafa]
 sounds: []
-roots: []
+roots: [n-sh-r]
+etymology_hook: "nashara: built on the root n-sh-r, 'to spread out' (Lane); nashara is 'to spread out', to publish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C258-ikhtalafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C259-ACT259-01]; assesses=[] -->
 
 **نشر** — *nashara* — "to publish, to post".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نشر** (*nashara*) is built on the native Arabic root *n-sh-r*, "to spread out" (Lane). *Nashara* is "to spread out", to publish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

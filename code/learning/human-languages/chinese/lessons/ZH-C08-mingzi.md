@@ -11,8 +11,8 @@ gloss: name — literally the characters a name is made of
 concept_tag: WORD-NAME
 prerequisites: [ZH-W08-zi]
 sounds: [tone-2, tone-neutral]
-roots: []
-etymology_hook: 名字 is "name" plus "character", which is exactly what a Chinese name is — a small number of characters, chosen one at a time.
+roots: [middle-chinese-mjieng, middle-chinese-dzih]
+etymology_hook: "míngzi: 'name' + 'character', two words inherited from Middle Chinese mjieng and dziH"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +50,9 @@ So the word is **"name-character"**, and that is not a stretched hook. A Chinese
 personal name *is* a small number of characters, usually two or three, each
 chosen deliberately for what it means. The word for "name" says what a name is
 made of.
+
+Both are inherited from Middle Chinese: *mjieng*, "name", and *dziH*, "written
+character" (Guangyun, in Baxter's transcription).
 
 ## Sounds you'll need — the second syllable goes light again
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-NEUTRAL, ZH-LEX-MINGZI] -->

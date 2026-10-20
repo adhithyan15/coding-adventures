@@ -14,7 +14,8 @@ romanization: "lāyakāt"
 concept_tag: GU-CAN104-LAYAKAT
 prerequisites: [GU-C104-tev, GU-C104-adat]
 sounds: []
-roots: []
+roots: [arabic-layiq]
+etymology_hook: "lāyakāt: usually traced to Persian liyāqat 'fitness, worth', from Arabic (root l-y-q, Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C104-adat]
 <!-- hl-knowledge: introduces=[GU-LEX-C104-CAN104-04]; assesses=[] -->
 
 **લાયકાત** (*lāyakāt*) — "a qualification".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લાયકાત** (*lāyakāt*) is a loan, usually traced to Persian *liyāqat*, "fitness, worth", from Arabic, beside *lāyak*, "fit". The Arabic root is *l-y-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

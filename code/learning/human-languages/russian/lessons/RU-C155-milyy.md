@@ -14,7 +14,8 @@ romanization: "mílyy"
 concept_tag: RU-KACH155-MILYY
 prerequisites: [RU-C154-khotya, RU-C154-inache]
 sounds: []
-roots: []
+roots: [slavic-milu]
+etymology_hook: "милый ← Proto-Slavic *milŭ; Lithuanian mielas 'dear' and Latin mitis 'mild' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C154-inache]
 <!-- hl-knowledge: introduces=[RU-LEX-C155-KACH155-01]; assesses=[] -->
 
 **милый** (*mílyy*) — "nice, sweet (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**милый** ← Proto-Slavic *\*milŭ* — inherited. Vasmer relates it to Lithuanian *míelas*, "dear", *méilė*, "love", Sanskrit *máyas*, "delight", and Latin *mītis*, "gentle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-TURN-CARNE
 prerequisites: [ES-C451-apuntar, ES-C406-documento]
 sounds: [accent-acute, stress-final, nasal-n]
 roots: [quaternum-latin]
+etymology_hook: "carné ← French carnet 'a notebook', from Latin quaternum 'a set of four'"
 duration:
   max_seconds: 275
 requires:

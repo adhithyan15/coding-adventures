@@ -14,7 +14,8 @@ romanization: "hāth"
 concept_tag: UR-BODY38-HATH
 prerequisites: [UR-C32-dusra-tisra, UR-C32-chautha]
 sounds: []
-roots: []
+roots: [hasta-sanskrit]
+etymology_hook: "hāth ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C32-chautha]
 <!-- hl-knowledge: introduces=[UR-LEX-C38-BODY38-01]; assesses=[] -->
 
 **ہاتھ** — *hāth* — "a hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہاتھ** (*hāth*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand" (CDIAL 14024).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rezyumé"
 concept_tag: RU-RABOTA172-REZYUME
 prerequisites: [RU-C171-soldat, RU-C171-stroitel]
 sounds: []
-roots: []
+roots: [resumere]
+etymology_hook: "резюме ← French résumé 'a summary', from résumer, Latin resumere 'to take up again'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C171-stroitel]
 <!-- hl-knowledge: introduces=[RU-LEX-C172-RABOTA172-01]; assesses=[] -->
 
 **резюме** (*rezyumé*) — "a CV".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**резюме** comes from French *résumé*, "a summary", from *résumer*, "to sum up", Latin *resūmere*, "to take up again".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:a1033dfa5dc6844a",
+  "lessonIds": [
+    "GE-C274-geruecht",
+    "GE-C274-quelle",
+    "GE-C274-behaupten",
+    "GE-C274-behauptung",
+    "GE-C274-bestaetigen"
+  ],
+  "tex": "german/book/chapters/ch274-ein-gerucht.tex"
+}

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 149,
-  "sourceHash": "fnv1a64:321d89244019f61f",
+  "sourceHash": "fnv1a64:ab8745f690ed1bb0",
   "lessonIds": [
     "FA-C149-hadar-dadan",
     "FA-C149-sarfejuyi-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch149.txt",
   "json": "persian/narration/ch149.json",
-  "textHash": "fnv1a64:3e7b14fd468b0d2b",
-  "jsonHash": "fnv1a64:3c92ca37e39c9067",
+  "textHash": "fnv1a64:46738a79bc55db88",
+  "jsonHash": "fnv1a64:771428ba9507d584",
   "findings": []
 }

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:88b8c102f668fbdf",
+  "lessonIds": [
+    "GE-C439-stadtteil",
+    "GE-C439-viertel",
+    "GE-C439-vorort",
+    "GE-C439-polizeirevier",
+    "GE-C439-kaserne"
+  ],
+  "tex": "german/book/chapters/ch439-stadtteile.tex"
+}

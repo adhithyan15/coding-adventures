@@ -14,7 +14,8 @@ romanization: "vakṣaḥ"
 concept_tag: SA-THINGS117-VAKSAH
 prerequisites: [SA-C116-manibandhah, SA-C117-angusthah]
 sounds: []
-roots: []
+roots: [sanskrit-vakshas]
+etymology_hook: "vakṣaḥ = vakṣas 'breast, chest' (RV), final s said as ḥ (MW); Kashmiri wach 'chest' (CDIAL 11188)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C117-angusthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **वक्षः** — *vakṣaḥ* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vakṣaḥ* is *vakṣas* "breast, chest", already in the Rigveda, with the final *s* said as *ḥ* at the end of a phrase (MW). MW lists it under √vakṣ "grow, increase" without deriving it, so its source is uncertain; Kashmiri kept it as *wach* "chest" (CDIAL 11188).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

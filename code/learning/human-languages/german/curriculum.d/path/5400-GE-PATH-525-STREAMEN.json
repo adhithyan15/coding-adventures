@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-525-STREAMEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-525-STREAMEN"
+  ],
+  "after": []
+}

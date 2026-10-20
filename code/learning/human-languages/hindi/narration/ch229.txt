@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to press, then the Hindi for to turn.
 You'll want to know: मोड़ना.
 मोड़ना — moṛnā — "to bend, to turn".
 
+The word, taken apart.
+मोड़ना (moṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mōṭati, a verb known from the Sanskrit grammarians' root-lists, which CDIAL gives as the second form in its entry for muṭati, "twists" (CDIAL 10186). The plain muṭati gave Hindi the intransitive muṛnā, "to be turned".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to turn, then the Hindi for to bend.
 
 You'll want to know: समेटना.
 समेटना — sameṭnā — "to gather up".
+
+The word, taken apart.
+समेटना (sameṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁveṣṭayati, "wraps up" (CDIAL 13026). CDIAL notes an unexplained loss of aspiration.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to bend, then the Hindi for to gather up.
 You'll want to know: फैलाना.
 फैलाना — phailānā — "to spread (something)".
 
+The word, taken apart.
+फैलाना (phailānā) is the causing form of phailnā, "to spread". CDIAL lists phailnā in two places: under a reconstructed praghirati, "flows forth" (CDIAL 8486), and under Sanskrit prathita, "spread out" (CDIAL 8651).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to gather up, then the Hindi for to spread
 You'll want to know: फैलना.
 फैलना — phailnā — "to spread".
 
+The word, taken apart.
+फैलना (phailnā) is inherited, but CDIAL lists it in two places: under a reconstructed praghirati, "flows forth" (CDIAL 8486), and under Sanskrit prathita, "spread out" (CDIAL 8651).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to spread, then the Hindi for to spread.
 
 You'll want to know: छूटना.
 छूटना — chūṭnā — "to be left behind, to be missed".
+
+The word, taken apart.
+छूटना (chūṭnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣuṭyate, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707).
 
 What you've built.
 One more word for this chapter.

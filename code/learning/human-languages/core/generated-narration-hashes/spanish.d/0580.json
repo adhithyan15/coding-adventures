@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 580,
+  "sourceHash": "fnv1a64:bd88b23fb087f466",
+  "lessonIds": [
+    "ES-C580-motivo",
+    "ES-C580-a-raiz-de",
+    "ES-C580-ya-que",
+    "ES-C580-puesto-que",
+    "ES-C580-dado-que"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch580.txt",
+  "json": "spanish/narration/ch580.json",
+  "textHash": "fnv1a64:0eec7229ed2ddcc5",
+  "jsonHash": "fnv1a64:260a9986555c99c9",
+  "findings": []
+}

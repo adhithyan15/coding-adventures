@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:coding-adventures:starlark-opcode-provider-v1",
+  "title": "STP01 standalone opcode-provider corpus",
+  "description": "Structural schema. STP01 validator additionally rejects duplicate keys, nonfinite constants, float/bool integer representations, invalid UTF-8/scalars and exact normative table drift, and enforces byte/depth work limits.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "opcodes",
+    "decode",
+    "operators",
+    "unknown_lookups"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "profile": {
+      "const": "standalone-provider-v1"
+    },
+    "opcodes": {
+      "type": "array",
+      "minItems": 61,
+      "maxItems": 61,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "symbol",
+          "byte",
+          "category"
+        ],
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+          },
+          "byte": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "category": {
+            "enum": [
+              "stack",
+              "variable",
+              "arithmetic",
+              "comparison",
+              "control_flow",
+              "function",
+              "collection",
+              "subscript_attribute",
+              "iteration",
+              "module",
+              "io",
+              "vm_control"
+            ]
+          }
+        }
+      }
+    },
+    "decode": {
+      "type": "array",
+      "minItems": 256,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "byte",
+          "symbol",
+          "category"
+        ],
+        "properties": {
+          "byte": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "symbol": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "category": {
+            "anyOf": [
+              {
+                "enum": [
+                  "stack",
+                  "variable",
+                  "arithmetic",
+                  "comparison",
+                  "control_flow",
+                  "function",
+                  "collection",
+                  "subscript_attribute",
+                  "iteration",
+                  "module",
+                  "io",
+                  "vm_control"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "operators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binary",
+        "compare",
+        "augmented_assign",
+        "unary"
+      ],
+      "properties": {
+        "binary": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operator",
+              "symbol"
+            ],
+            "properties": {
+              "operator": {
+                "type": "string",
+                "maxLength": 32,
+                "pattern": "^[^\ud800-\udfff]*$"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+              }
+            }
+          }
+        },
+        "compare": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operator",
+              "symbol"
+            ],
+            "properties": {
+              "operator": {
+                "type": "string",
+                "maxLength": 32,
+                "pattern": "^[^\ud800-\udfff]*$"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+              }
+            }
+          }
+        },
+        "augmented_assign": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operator",
+              "symbol"
+            ],
+            "properties": {
+              "operator": {
+                "type": "string",
+                "maxLength": 32,
+                "pattern": "^[^\ud800-\udfff]*$"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+              }
+            }
+          }
+        },
+        "unary": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operator",
+              "symbol"
+            ],
+            "properties": {
+              "operator": {
+                "type": "string",
+                "maxLength": 32,
+                "pattern": "^[^\ud800-\udfff]*$"
+              },
+              "symbol": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "unknown_lookups": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "group",
+          "operator",
+          "symbol"
+        ],
+        "properties": {
+          "group": {
+            "enum": [
+              "binary",
+              "compare",
+              "augmented_assign",
+              "unary"
+            ]
+          },
+          "operator": {
+            "type": "string",
+            "maxLength": 32,
+            "pattern": "^[^\ud800-\udfff]*$"
+          },
+          "symbol": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  }
+}

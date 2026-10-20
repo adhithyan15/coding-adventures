@@ -1,0 +1,27 @@
+{
+  "chapter": 265,
+  "title": "A gentle order at a meal",
+  "label": "ch:sa-gentle-meal-order",
+  "canDo": "I can politely ask for a familiar food or drink in a restaurant.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C265-restaurant-order-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 265 by independently choosing a familiar item and making a polite request.",
+    "assesses": [
+      "SA-LEX-C97-LOC97-02",
+      "SA-LEX-C160-THG160-01",
+      "SA-LEX-KHADATI-EAT",
+      "SA-LEX-C29-COURTESY-01",
+      "SA-PRON-DATIVE-ME-01",
+      "SA-LEX-C72-HOUSEWORK-05",
+      "SA-LEX-ANNAM-FOOD",
+      "SA-LEX-PANIYAM-WATER",
+      "SA-LEX-KSHIRAM-MILK",
+      "SA-GRAMMAR-C265-DADATU-01",
+      "SA-PATTERN-C265-POLITE-ORDER-02"
+    ]
+  }
+}

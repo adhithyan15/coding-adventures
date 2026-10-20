@@ -1,0 +1,11 @@
+{
+  "id": "IT-C332-affettare",
+  "pathSegment": "IT-PATH-332-TAGLIERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-332-TAGLIERE",
+      "order": 1
+    }
+  ]
+}

@@ -11,7 +11,8 @@ romanization: "akkaḍa"
 concept_tag: TE-DEIXIS-THERE
 prerequisites: [TE-C41-here]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "akkaḍa: native Dravidian, on the far-pointing base a- 'that' (DEDR 1), which lists akkaḍa itself"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: [TE-C41-here]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **ఇక్కడ** *ikkaḍa*, which you will meet just now. The two of them
+Its partner is **ఇక్కడ** *ikkaḍa*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అక్కడ** (*akkaḍa*) is native Dravidian, built on the far-pointing base *a-*, "that". DEDR 1 lists *akkaḍa*, "that place, there", itself.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-04] -->

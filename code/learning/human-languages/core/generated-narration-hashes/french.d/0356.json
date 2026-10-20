@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:43bb2b954540cc57",
+  "lessonIds": [
+    "FR-C356-emploi",
+    "FR-C356-chomage",
+    "FR-C356-chomeur",
+    "FR-C356-embaucher",
+    "FR-C356-recruter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch356.txt",
+  "json": "french/narration/ch356.json",
+  "textHash": "fnv1a64:73f6029e8b298859",
+  "jsonHash": "fnv1a64:be80d38222ae5da3",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "kopar"
 concept_tag: MR-THINGS145-KOPAR
 prerequisites: [MR-C145-jibh, MR-C145-hanuvati]
 sounds: []
-roots: []
+roots: [sanskrit-kurpara]
+etymology_hook: "kopar ← Sanskrit kūrpara 'elbow', a tadbhava (CDIAL 3413)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C145-hanuvati]
 <!-- hl-knowledge: introduces=[MR-LEX-C145-THINGS145-04]; assesses=[] -->
 
 **कोपर** — *kopar* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोपर** (*kopar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūrpara*, "elbow" (CDIAL 3413).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

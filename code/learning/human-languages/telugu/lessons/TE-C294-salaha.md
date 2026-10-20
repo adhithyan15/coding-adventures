@@ -14,7 +14,8 @@ romanization: "salahā"
 concept_tag: TE-KARANAM294-SALAHA
 prerequisites: [TE-C293-pancayati, TE-C293-ataka]
 sounds: []
-roots: []
+roots: [arabic-salah]
+etymology_hook: "salahā ← Arabic ṣalāḥ 'counsel', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C293-ataka]
 <!-- hl-knowledge: introduces=[TE-LEX-C294-KARANAM294-01]; assesses=[] -->
 
 **సలహా** — *salahā* — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సలహా** (*salahā*) is a loan from Arabic *ṣalāḥ*, "counsel, good advice", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

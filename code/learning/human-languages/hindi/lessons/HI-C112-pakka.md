@@ -14,7 +14,8 @@ romanization: "pakkā"
 concept_tag: HI-RIGHT-SURE
 prerequisites: [HI-C112-sahi, HI-C112-galat]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakkā ← Sanskrit pakva 'cooked, ripe'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C112-galat]
 **पक्का** (*pakkā*) — "sure, certain", and of a thing, "firm, ripe".
 
 **पक्का?** — "for sure?". **पक्का!** — "definitely!".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पक्का** (*pakkā*) goes back to Sanskrit *pakva*, "cooked, ripe" (CDIAL 7621). CDIAL marks the Hindi form as taken over from Punjabi; "firm, sure" grew out of "ripe, mature".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

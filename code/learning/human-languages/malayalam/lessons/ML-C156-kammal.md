@@ -14,7 +14,8 @@ romanization: "kammal"
 concept_tag: ML-THINGS156-KAMMAL
 prerequisites: [ML-C155-sarttu, ML-C156-panru]
 sounds: []
-roots: []
+roots: [dravidian-kammal-earring]
+etymology_hook: "kammal: native Dravidian, one word with Tamil kammal and Telugu kamma (DEDR 1245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C156-panru]
 <!-- hl-knowledge: introduces=[ML-LEX-C156-THINGS156-02]; assesses=[] -->
 
 **കമ്മൽ** — *kammal* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കമ്മൽ** (*kammal*) is native Dravidian, one word with Tamil *kammal* and Telugu *kamma* (DEDR 1245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

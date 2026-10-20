@@ -14,7 +14,8 @@ romanization: "taḷḷuka"
 concept_tag: ML-VERB-TALLUKA
 prerequisites: [ML-C181-katakkuka, ML-C181-valikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tallu-push]
+etymology_hook: "taḷḷuka: native Dravidian, one word with Tamil taḷḷu and Kannada taḷḷu (DEDR 3135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C181-valikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C181-KRIYA181-05]; assesses=[] -->
 
 **തള്ളുക** — *taḷḷuka* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തള്ളുക** (*taḷḷuka*) is native Dravidian, one word with Tamil *taḷḷu* and Kannada *taḷḷu* (DEDR 3135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

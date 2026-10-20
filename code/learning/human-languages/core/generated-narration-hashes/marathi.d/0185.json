@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 185,
-  "sourceHash": "fnv1a64:1cd2b0028f0fc2a6",
+  "sourceHash": "fnv1a64:92807797ed492758",
   "lessonIds": [
     "MR-C185-vyayamsala",
     "MR-C185-kriket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch185.txt",
   "json": "marathi/narration/ch185.json",
-  "textHash": "fnv1a64:f176018874af2494",
-  "jsonHash": "fnv1a64:fab83b5fdbe0b594",
+  "textHash": "fnv1a64:09ad57a516079854",
+  "jsonHash": "fnv1a64:0ba075f021ec499e",
   "findings": []
 }

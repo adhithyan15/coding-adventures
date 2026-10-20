@@ -14,7 +14,8 @@ romanization: "chashidan"
 concept_tag: FA-VERB-CHASHIDAN
 prerequisites: [FA-C134-zadan, FA-C134-tarsidan]
 sounds: []
-roots: []
+roots: [persian-chashidan]
+etymology_hook: "chashidan: inherited, usually traced to Middle Persian čašīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C134-tarsidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C134-ACT134-03]; assesses=[] -->
 
 **چشیدن** — *chashidan* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chashidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *čašīdan*, "to taste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

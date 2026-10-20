@@ -14,7 +14,8 @@ romanization: "rastā"
 concept_tag: MR-TOWN113-RASTA
 prerequisites: [MR-C112-pudhe, MR-C113-dukan]
 sounds: []
-roots: []
+roots: [persian-rasta]
+etymology_hook: "rastā: usually traced to Persian rāsta 'straight; a road'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C113-dukan]
 <!-- hl-knowledge: introduces=[MR-LEX-C113-TOWN113-02]; assesses=[] -->
 
 **रस्ता** — *rastā* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रस्ता** (*rastā*) is a loan, usually traced to Persian *rāsta*, "straight; a road".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tāp"
 concept_tag: MR-BODY72-TAP
 prerequisites: [MR-C72-gudgha, MR-C72-doke]
 sounds: []
-roots: []
+roots: [sanskrit-tapa]
+etymology_hook: "tāp ← Sanskrit tāpa 'heat; pain', a tatsama; the inherited Marathi form is tāv (CDIAL 5767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C72-doke]
 <!-- hl-knowledge: introduces=[MR-LEX-C72-BODY72-04]; assesses=[] -->
 
 **ताप** — *tāp* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताप** (*tāp*) is Sanskrit *tāpa*, "heat, glow", also "pain", a tatsama (CDIAL 5767). CDIAL lists the inherited Marathi form as *tāv*, "heating to red heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

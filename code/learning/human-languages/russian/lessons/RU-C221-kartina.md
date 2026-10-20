@@ -14,7 +14,8 @@ romanization: "kartína"
 concept_tag: RU-VESHCH221-KARTINA
 prerequisites: [RU-C221-kukla, RU-C221-vaza]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "картина ← Italian cartina 'fine paper', from carta 'paper', or built in Russian on карта"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C221-vaza]
 <!-- hl-knowledge: introduces=[RU-LEX-C221-VESHCH221-05]; assesses=[] -->
 
 **картина** (*kartína*) — "a painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**картина** — from Peter the Great's time; Vasmer takes it from Italian *cartina*, "fine paper", from *carta*, "paper"; Preobrazhensky saw a Russian derivative of *карта*, "a map".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C770-probador",
+    "language": "spanish",
+    "chapter": 770,
+    "sequence": 28510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9598e0d8c897e07"
+  },
+  "findings": []
+}

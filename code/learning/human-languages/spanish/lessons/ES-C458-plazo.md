@@ -11,6 +11,7 @@ concept_tag: ES-TERM-PLAZO
 prerequisites: [ES-C457-sintesis-guardia, ES-C321-placer, ES-C343-fecha]
 sounds: [pl-cluster, z-as-th-or-s, stress-penultimate]
 roots: [placere-latin]
+etymology_hook: "plazo ← Latin placitum 'a thing agreed', from placere 'to please' — English plea"
 duration:
   max_seconds: 275
 requires:

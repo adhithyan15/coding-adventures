@@ -11,6 +11,7 @@ concept_tag: ATTRIBUTION-CITE
 prerequisites: [ES-C276-asonancia]
 sounds: [vowel-e, vowel-o]
 roots: [secundum]
+etymology_hook: "según ← Latin secundum 'following' — English second; both from sequi 'to follow'"
 duration:
   max_seconds: 240
 requires:
@@ -51,8 +52,8 @@ reviews_of: [ES-C276-asonancia]
 
 **según** — "according to."
 
-Latin **secundum**, "following, next along" — the same word as English **second**
-and, through it, **sequence**. To say *según* is literally to say *following* —
+Latin **secundum**, "following, next along" — the same word as English **second**;
+both come from *sequi*, "to follow", the root of **sequence**. To say *según* is literally to say *following* —
 *following García, the number is higher.*
 
 You already have the opposite move: *en mi opinión* marks a claim as **yours**.

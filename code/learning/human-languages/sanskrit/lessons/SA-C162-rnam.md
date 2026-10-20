@@ -14,7 +14,8 @@ romanization: "ṛṇam"
 concept_tag: SA-THG162-RNAM
 prerequisites: [SA-C161-kundalam, SA-C162-vetanam]
 sounds: []
-roots: []
+roots: [sanskrit-rna]
+etymology_hook: "ṛṇa 'debt' (RV), inherited from Indo-Iranian (EtymDB); MW compares Latin reus; Hindi rin (CDIAL 2451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C162-vetanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C162-THG162-02]; assesses=[] -->
 
 **ऋणम्** — *ṛṇam* — "a debt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ṛṇa* "a debt" is old, in the Rigveda, and is inherited from Indo-Iranian, with an Avestan cousin (EtymDB); MW compares Latin *reus* "liable". It lives on as Hindi and Punjabi *rin* "debt" (CDIAL 2451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

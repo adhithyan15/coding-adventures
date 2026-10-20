@@ -14,7 +14,8 @@ romanization: "pāṭalaḥ"
 concept_tag: SA-QUAL131-PATALAH
 prerequisites: [SA-C131-krsnah, SA-C131-dhusarah]
 sounds: []
-roots: []
+roots: [sanskrit-patala]
+etymology_hook: "pāṭala 'pale red, pink'; MW and CDIAL 8033 give no derivation, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C131-dhusarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C131-QUAL131-03]; assesses=[] -->
 
 **पाटलः** — *pāṭalaḥ* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāṭala* "pale red, pink" also names the trumpet-flower tree (MW). Neither MW nor CDIAL 8033 gives a derivation, so its origin is uncertain; DEDR 4075 compares Dravidian names for that tree.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

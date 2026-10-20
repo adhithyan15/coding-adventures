@@ -14,7 +14,8 @@ romanization: "maitoshi"
 concept_tag: JA-TIME75-MAITOSHI
 prerequisites: [JA-C74-tochuu, JA-C74-han]
 sounds: []
-roots: []
+roots: [middle-chinese-mwojx, japanese-toshi-year]
+etymology_hook: "maitoshi: Sino-Japanese mai 毎 'every' + native toshi 'year'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C74-han]
 <!-- hl-knowledge: introduces=[JA-LEX-C75-TIME75-01]; assesses=[] -->
 
 **まいとし** — *maitoshi* — "every year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まいとし** (*maitoshi*) mixes the two layers: *mai*, "every", borrowed from Chinese (Middle Chinese *mwojX*), and native *toshi*, "year", read as a kun'yomi; *mainen*, with the Sino-Japanese *nen*, means the same (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

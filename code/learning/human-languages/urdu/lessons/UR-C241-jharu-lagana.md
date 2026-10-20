@@ -14,7 +14,8 @@ romanization: "jhāṛū lagānā"
 concept_tag: UR-VERB-JHARU-LAGANA
 prerequisites: [UR-C241-bona, UR-C241-ugana]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati, sanskrit-lagyati]
+etymology_hook: "jhāṛū 'broom' (CDIAL 5328) + lagānā, the causing form of lagnā 'to be attached' (CDIAL 10895)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C241-ugana]
 <!-- hl-knowledge: introduces=[UR-LEX-C241-ACT241-04]; assesses=[] -->
 
 **جھاڑو لگانا** — *jhāṛū lagānā* — "to sweep".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھاڑو لگانا** (*jhāṛū lagānā*) is "to apply the broom". *jhāṛū* is built on *jhāṛnā*, "to sweep", which CDIAL lists under *\*jhāṭayati*, "shakes down" (CDIAL 5328); *lagānā* is the causing form of *lagnā*, "to be attached", which CDIAL lists under Sanskrit *lagyati* (CDIAL 10895).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

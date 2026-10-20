@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C328-flammeum",
+    "language": "latin",
+    "chapter": 328,
+    "sequence": 17690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0237f6356a0c349"
+  },
+  "findings": []
+}

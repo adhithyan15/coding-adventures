@@ -13,7 +13,8 @@ gloss: "failure"
 concept_tag: IT-COSE164-FALLIMENTO
 prerequisites: [IT-C164-sposa, IT-C164-vedovo]
 sounds: []
-roots: []
+roots: [fallere-latin]
+etymology_hook: "fallimento — fallire 'to fail' + -mento; Latin fallere 'to deceive' — English fail, fallible"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C164-vedovo]
 <!-- hl-knowledge: introduces=[IT-LEX-C164-COSE164-05]; assesses=[] -->
 
 **il fallimento** — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fallimento** — built from *fallire*, "to fail, to go bankrupt", with *-mento*. *fallire* ← Vulgar Latin *fallire*, from Latin *fallere*, "to deceive, to fail". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

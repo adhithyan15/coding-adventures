@@ -11,6 +11,7 @@ concept_tag: TIME-DAY
 prerequisites: [PT-C01-o-a]
 sounds: []
 roots: [dies]
+etymology_hook: "dia ← Latin dies 'day' — English diary and diurnal share it"
 reviews_of: [PT-C01-o-a]
 duration:
   max_seconds: 120

@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-ADV-02",
+  "category": "Avyaya — the indeclinable and the adverb",
+  "label": "time deictics: now, today, yesterday, tomorrow, the day after",
+  "probe": [
+    "SA-LEX-C28-LEAVE-01",
+    "SA-LEX-C17-TIME-03",
+    "SA-LEX-C17-TIME-04",
+    "SA-LEX-SHVAH",
+    "SA-LEX-C28-LEAVE-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADV-02",
+    "A1-NG4-02"
+  ],
+  "note": "idānīm, adya, hyaḥ, śvaḥ and paraśvaḥ. The set is unusually complete — Sanskrit gives the day after tomorrow its own word, and chapter 4 teaches śvaḥ inside the leave-taking that needs it."
+}

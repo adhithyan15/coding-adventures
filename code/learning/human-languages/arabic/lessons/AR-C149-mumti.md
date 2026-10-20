@@ -14,7 +14,8 @@ romanization: "mumtiʿ"
 concept_tag: AR-QUAL149-MUMTI
 prerequisites: [AR-C149-aniq, AR-C149-gharib]
 sounds: []
-roots: []
+roots: [m-t-ʿ]
+etymology_hook: "mumtiʿ: built on the root m-t-ʿ, 'to enjoy, to give enjoyment' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C149-gharib]
 <!-- hl-knowledge: introduces=[AR-LEX-C149-QUAL149-05]; assesses=[] -->
 
 **ممتع** — *mumtiʿ* — "enjoyable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممتع** (*mumtiʿ*) is built on the native Arabic root *m-t-ʿ*, "to enjoy, to give enjoyment" (Lane). *Mumtiʿ* is the Form IV participle, "giving enjoyment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

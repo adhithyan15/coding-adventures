@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 639,
+  "sourceHash": "fnv1a64:d4e989160377e7d4",
+  "lessonIds": [
+    "ES-C639-obtener",
+    "ES-C639-abandonar",
+    "ES-C639-rendirse",
+    "ES-C639-asumir",
+    "ES-C639-exitoso",
+    "ES-R639-repaso-632-639",
+    "ES-R639-repaso-final-639",
+    "ES-R639-repaso-por-que-y-si"
+  ],
+  "tex": "spanish/book/chapters/ch639-si-todo-sale-bien.tex"
+}

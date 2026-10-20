@@ -14,7 +14,8 @@ romanization: "kirāyedār"
 concept_tag: HI-THG271-KIRAYEDAR
 prerequisites: [HI-C271-bima, HI-C271-byaj]
 sounds: []
-roots: []
+roots: [arabic-kira]
+etymology_hook: "kirāyedār: kirāyā 'rent', from Arabic kirāʾ 'hire' (Lane), + Persian -dār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C271-byaj]
 <!-- hl-knowledge: introduces=[HI-LEX-C271-THG271-04]; assesses=[] -->
 
 **किरायेदार** — *kirāyedār* — "a tenant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किरायेदार** (*kirāyedār*) is *kirāyā*, "rent", from Arabic *kirāʾ*, "hire", through Persian (Lane, root *k-r-y*), with the Persian ending *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

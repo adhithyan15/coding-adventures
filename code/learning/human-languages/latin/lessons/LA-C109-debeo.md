@@ -13,7 +13,8 @@ gloss: "to have to, must; to owe"
 concept_tag: LA-VERB-DEBEO
 prerequisites: [LA-C109-queo, LA-C109-audeo]
 sounds: []
-roots: []
+roots: [debere-latin, habere-latin]
+etymology_hook: "dēbeō 'to owe, must' — dē 'away from' + habeō 'to have'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C109-audeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C109-CAN109-03]; assesses=[] -->
 
 **dēbeō, dēbēre** — "to have to, must; to owe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēbeō** is contracted from *dē*, "away from", and *habeō*, "to have" (Lewis & Short): to have what belongs to someone else, so to owe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

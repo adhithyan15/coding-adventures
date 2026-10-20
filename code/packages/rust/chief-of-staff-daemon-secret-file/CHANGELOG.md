@@ -6,6 +6,24 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- **Windows forms** of `open_owner_only_secret`,
+  `read_owner_only_secret_from` and `check_owner_only_directory` (D18S
+  P2.8b-1); they refused there before. A key file passes the policy
+  `read_owner_only_secret` already enforces (the user owns it; a protected
+  DACL with exactly the user's allow ACE), opened through held ancestors,
+  sharing read only, never through a reparse point; the broker checks it
+  again on the inherited handle and reads exactly the key from offset 0. A
+  secret directory passes if the user, SYSTEM or Administrators own it and
+  every allow ACE names one of those three (CREATOR OWNER too,
+  inherit-only). The current user is read from the token pseudo-handle, an
+  access check a confined broker could otherwise fail. Native tests on
+  windows-2025 for each, and their refusals.
+- `write_test_secret(path, bytes)`, behind a new `test-support` feature:
+  the crate's own test writer (Unix mode 0600; Windows: the user as owner
+  and a protected DACL with only the user's ACE), for other crates' tests
+  that feed secrets to a loader built on this one. The CLI's vault tests
+  needed it on windows-2025, where no portable `std` call sets that DACL.
+  Production builds never enable the feature.
 - `check_owner_only_directory` (D18S P2.6d-3): a no-follow walk to a
   directory owned by the effective user with nothing granted to group or
   others. The launcher runs it on every directory holding secrets before

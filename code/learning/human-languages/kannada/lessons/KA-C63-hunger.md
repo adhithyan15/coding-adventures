@@ -11,7 +11,8 @@ romanization: "hasivu"
 concept_tag: KA-NOUN-HUNGER
 prerequisites: [KA-C62-umbrella, KA-C61-curd]
 sounds: []
-roots: []
+roots: [dravidian-paci-hunger]
+etymology_hook: "hasivu: native Dravidian, one word with Tamil paci (DEDR 3825)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C62-umbrella]
 That is the whole design. Hunger happens to you in Kannada rather than being something you have, and the sentence is built to say so.
 
 It begins like ಹಸು and has nothing to do with cows. Two words can share an opening and share no history at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಸಿವು** (*hasivu*) is native Dravidian, one word with Tamil *paci* (DEDR 3825). DEDR gives the older Kannada *pasi*, *pasivu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

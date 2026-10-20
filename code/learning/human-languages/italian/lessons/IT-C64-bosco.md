@@ -14,6 +14,7 @@ concept_tag: IT-NATURA1-BOSCO
 prerequisites: [IT-C64-foglia, IT-C64-montagna]
 sounds: []
 roots: []
+etymology_hook: "bosco ← Late Latin busca; nothing further back is recorded"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C64-montagna]
 <!-- hl-knowledge: introduces=[IT-LEX-C64-NATURA1-05]; assesses=[] -->
 
 **il bosco** — "a wood, a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bosco** ← Late Latin *busca* — inherited. EtymDB 2.1 records nothing further back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

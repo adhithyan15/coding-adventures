@@ -1,0 +1,11 @@
+{
+  "id": "LA-C346-immortalis",
+  "pathSegment": "LA-PATH-346-DEUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-346-DEUS",
+      "order": 4
+    }
+  ]
+}

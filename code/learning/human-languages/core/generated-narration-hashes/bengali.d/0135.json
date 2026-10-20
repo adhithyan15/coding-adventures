@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 135,
-  "sourceHash": "fnv1a64:7112eee1eb37dd0c",
+  "sourceHash": "fnv1a64:05f346f5187dc270",
   "lessonIds": [
     "BN-C135-bhije",
     "BN-C135-shukno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch135.txt",
   "json": "bengali/narration/ch135.json",
-  "textHash": "fnv1a64:9d81e0eafb04339d",
-  "jsonHash": "fnv1a64:349484c0107370c2",
+  "textHash": "fnv1a64:3a57aec6ca93a20e",
+  "jsonHash": "fnv1a64:40af8b9d66be508c",
   "findings": []
 }

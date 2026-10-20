@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **The in-daemon channel operations are removed** (D18S P2.6d-2c;
+  #13980). Each agent's channel keys live only in its own broker, which
+  answers its receive, publish and acknowledge itself.
+  - Removed: `ChannelKeyAuthority`, `ExactChannelKeyAuthority`,
+    `OriginatorChannelKeys`, `ChannelKeyAuthorityError`,
+    `ChannelKeyRegistrationError`, and the service's delivery ledger.
+  - `AuthorityBackedHostDataPlaneService` serves model operations only. A
+    channel request that reaches it is answered `Unauthorized`; in
+    production none can, because the supervisor refuses to launch a host
+    bound to a channel without a broker.
+  - `new(models)` and `with_model_tools(models, tools)` take no storage,
+    key authority or metadata source any more.
+  - The channel crates are dev-dependencies only.
 - Add `CompositeModelToolDispatcher`, several `ModelToolDispatcher`s behind one,
   routed by tool name. The service composed exactly one dispatcher, which is
   what made smart home *the* model tool surface rather than one agent among

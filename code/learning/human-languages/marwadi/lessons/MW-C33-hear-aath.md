@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-EIGHT
 prerequisites: [MW-C33-saat]
 sounds: [long-aa, retroflex-tth]
 roots: [sanskrit-ashta]
-etymology_hook: Chapter 2 isolated aa for aabhaar; eight is the second word in the book to need it standing alone.
+etymology_hook: "āṭh ← Sanskrit aṣṭā 'eight', a tadbhava (CDIAL 941, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -52,6 +52,11 @@ does that.
 
 The closing consonant is retroflex: the tongue curls back, as in **ठंडी**. Do
 not close it at the teeth, or seven and eight begin to sound alike.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āṭh* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭā*, "eight". CDIAL lists Marwari *āṭh* under it (CDIAL 941). English *eight* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-AATH-01, MW-LEX-SAAT-01, MW-LEX-CHHA-SIX-01] -->

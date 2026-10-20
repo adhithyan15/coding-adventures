@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C471-timidezza",
+    "language": "italian",
+    "chapter": 471,
+    "sequence": 26600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fccf106b93d20d4"
+  },
+  "findings": []
+}

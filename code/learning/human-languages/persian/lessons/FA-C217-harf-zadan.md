@@ -14,7 +14,8 @@ romanization: "harf zadan"
 concept_tag: FA-VERB-HARF-ZADAN
 prerequisites: [FA-C216-barqkar, FA-C216-khayyat]
 sounds: []
-roots: []
+roots: [arabic-harf]
+etymology_hook: "harf ← Arabic ḥarf 'letter, word', root ḥ-r-f (Lane), + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C216-khayyat]
 <!-- hl-knowledge: introduces=[FA-LEX-C217-KONESH217-01]; assesses=[] -->
 
 **حرف زدن** — *harf zadan* — "to speak, to talk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*harf zadan* pairs *harf*, borrowed from Arabic *ḥarf*, "letter, word" (root *ḥ-r-f*, Lane), with the Persian verb *zadan*, "to strike". *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:45bc6a42eaaf3b55",
+  "lessonIds": [
+    "ES-C541-fase",
+    "ES-C541-transcurso",
+    "ES-C541-duracion",
+    "ES-C541-prolongarse",
+    "ES-C541-transcurrir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch541.txt",
+  "json": "spanish/narration/ch541.json",
+  "textHash": "fnv1a64:78901dfd039860d8",
+  "jsonHash": "fnv1a64:457138ec6faf12c6",
+  "findings": []
+}

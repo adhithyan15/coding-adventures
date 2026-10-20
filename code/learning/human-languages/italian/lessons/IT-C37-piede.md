@@ -13,7 +13,8 @@ gloss: "a foot"
 concept_tag: IT-CORPO1-PIEDE
 prerequisites: [IT-C37-braccio, IT-C37-gamba]
 sounds: []
-roots: []
+roots: [pes-latin]
+etymology_hook: "piede ← Latin pes, pedis 'foot' — English pedal and pedestrian share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C37-gamba]
 <!-- hl-knowledge: introduces=[IT-LEX-C37-CORPO1-03]; assesses=[] -->
 
 **il piede** — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piede** ← Latin *pes, pedis*, "foot" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

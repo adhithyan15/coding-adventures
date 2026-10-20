@@ -13,7 +13,8 @@ gloss: "to fall"
 concept_tag: LA-VERB-CADO
 prerequisites: [LA-C77-mitto, LA-C77-maneo]
 sounds: []
-roots: []
+roots: [cadere-latin]
+etymology_hook: "cadō 'to fall' — inherited, usually traced to PIE *kad- 'to fall'; English cadence, accident"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C77-maneo]
 <!-- hl-knowledge: introduces=[LA-LEX-C77-VERBA3-03]; assesses=[] -->
 
 **cadō, cadere** — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cadō** is inherited, usually traced to Proto-Indo-European *\*kad-*, "to fall" (EtymDB 2.1). English *cadence*, *case* and *accident* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

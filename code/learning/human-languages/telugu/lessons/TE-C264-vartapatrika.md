@@ -14,7 +14,8 @@ romanization: "vārtāpatrika"
 concept_tag: TE-VASTUVU264-VARTAPATRIKA
 prerequisites: [TE-C264-visa, TE-C264-samanu]
 sounds: []
-roots: []
+roots: [sanskrit-varta, sanskrit-patra]
+etymology_hook: "vārtāpatrika: Sanskrit vārttā 'tidings' (CDIAL 11564) + patrikā 'leaf, letter' (cf. pattra, CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C264-samanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C264-VASTUVU264-04]; assesses=[] -->
 
 **వార్తాపత్రిక** — *vārtāpatrika* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వార్తాపత్రిక** (*vārtāpatrika*) is Sanskrit: *vārttā*, "tidings" (CDIAL 11564), and *patrikā*, "a leaf, a letter", from *pattra*, "leaf of a book" (CDIAL 7733): "news-sheet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

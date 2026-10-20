@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-ADJ-06",
+  "category": "Viśeṣaṇa — the adjective",
+  "label": "degree: intensifying an adjective",
+  "probe": [
+    "SA-LEX-C42-REPLY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-06"
+  ],
+  "note": "bahu ('much, many') is the nearest thing the track teaches to Spanish muy, and chapter 42 introduces it as a quantity word rather than as a degree modifier on an adjective. The absolute superlative in -tama is not taught. Counted covered on the exponent, not on the construction."
+}

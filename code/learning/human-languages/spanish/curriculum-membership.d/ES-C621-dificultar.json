@@ -1,0 +1,11 @@
+{
+  "id": "ES-C621-dificultar",
+  "pathSegment": "ES-PATH-621-IMPIDE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-621-IMPIDE",
+      "order": 2
+    }
+  ]
+}

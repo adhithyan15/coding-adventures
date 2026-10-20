@@ -11,7 +11,8 @@ romanization: "udyōgaṁ"
 concept_tag: TE-ABOUT-JOB
 prerequisites: [TE-C88-person, TE-C88-relative]
 sounds: []
-roots: []
+roots: [sanskrit-udyoga]
+etymology_hook: "udyōgaṁ ← Sanskrit udyoga 'exertion', a tatsama (CDIAL 2055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C88-relative]
 
 **మీ ఉద్యోగం ఏమిటి?** — "what is your job?". It is built exactly like **మీ పేరు ఏమిటి?**, with
 the job where the name was.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉద్యోగం** (*udyōgaṁ*) is Sanskrit *udyoga*, "exertion", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 2055). The sense "job" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tiddu"
 concept_tag: KA-VERB-TIDDU
 prerequisites: [KA-C161-kaydirisu, KA-C161-raddu-madu]
 sounds: []
-roots: []
+roots: [dravidian-tiruttu-correct]
+etymology_hook: "tiddu: native Dravidian, one word with Telugu diddu (DEDR 3251)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C161-raddu-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C162-KRIYE162-01]; assesses=[] -->
 
 **ತಿದ್ದು** — *tiddu* — "to correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಿದ್ದು** (*tiddu*) is native Dravidian, one word with Telugu *diddu* (DEDR 3251). DEDR lists *tirdu*, *tiddu*, "to make straight, correct".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

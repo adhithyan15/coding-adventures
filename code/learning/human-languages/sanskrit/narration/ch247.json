@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Arrow, Sword, Armour, Flag, Drum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5771ca54b0f09fb5",
+  "sourceHash": "fnv1a64:d8418c9b33884145",
   "lessons": [
     {
       "id": "SA-C247-banah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74906ff69b612e30",
+      "sourceHash": "fnv1a64:3331d913b61f2b7e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bāṇa is a reed-shaft and so an arrow, already in the Rigveda (CDIAL 9203). Its origin is uncertain: CDIAL reports proposed Austroasiatic sources without accepting one. It lives on as Hindi bān, \"arrow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:add13a18b7733ff5",
+      "sourceHash": "fnv1a64:19c1e413d3612699",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khaḍga is a sword, and also the rhinoceros (MW). MW suggests, with a question mark, a root √khaḍ for √khaṇḍ, \"to break\", so its origin is uncertain; CDIAL 3786 takes the rhinoceros word as non-Aryan. Bengali khāg means \"sword\" (CDIAL 3787)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8479635864e17f8",
+      "sourceHash": "fnv1a64:79de0b2364368894",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kavaca is a coat of mail or jacket, in the Śatapatha Brāhmaṇa. CDIAL 2957 follows Mayrhofer in taking it from Dravidian, while MW suggests a root √ku. MW also gives it for a mystical syllable used as an amulet."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f37f319e12fe673d",
+      "sourceHash": "fnv1a64:dd01edcb337fb247",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhvaja is a banner or flag, and also a flag-staff, already in the Rigveda (CDIAL 6897). MW takes it from a short form dhvaj, \"banner\", which it derives, with a question mark, from √dhū, \"to shake\", and √aj, \"to drive\", so its origin is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c0c2bc38dd2726e",
+      "sourceHash": "fnv1a64:6a99634cd9744978",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paṭaha is a kettledrum or war-drum (MW). Its origin is disputed: CDIAL 7696 lists a Munda source and a Dravidian one, both with a question mark, and calls a third derivation, from prahṛta, \"struck\", very doubtful. Bengali paṛā, \"drum\", comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "mahyam"
 concept_tag: SA-PRON-DATIVE-ME
 prerequisites: [SA-C57-icchati, SA-C03-aham, SA-C04-punar-darshanaya]
 sounds: []
-roots: []
+roots: [ma-first-person]
+etymology_hook: "mahyam 'to me', the dative on the first-person base ma- (MW); MW compares Latin mē and mihi"
 duration:
   max_seconds: 255
 requires:
@@ -62,6 +63,12 @@ the same — *I* and *me* share no letters either, for the same reason.
 On its own **मह्यम्** is not much. In the next lesson it becomes the whole point,
 because Sanskrit's ordinary way of saying that you like something puts **you** in
 this case and the thing you like in the subject.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mahyam* is the dative of *aham*, built on the first-person base *ma-* (MW). It is
+inherited: MW compares Latin *mē*, "me", and *mihi*, "to me".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

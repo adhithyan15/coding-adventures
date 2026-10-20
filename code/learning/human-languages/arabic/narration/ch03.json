@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:40706d5aba5281a6",
+  "sourceHash": "fnv1a64:160ca762deffc33f",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1c0f472dc7a88b5",
+      "sourceHash": "fnv1a64:46bd8ac39f4e49df",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حاج (ḥājj) is built on the native Arabic root ḥ-j-j, \"to repair to, to make the pilgrimage\" (Lane). Lane's ḥājj is one who repairs to Mecca for the pilgrimage."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -464,157 +475,6 @@
       ]
     },
     {
-      "id": "AR-W09-khayr-bikhayr",
-      "sequence": 290,
-      "title": "خير (khayr, bi-khayr) and بخير (bi-khayr) — writing \"good,\" and how you say you're well",
-      "headword": "خير",
-      "romanization": "khayr, bi-khayr",
-      "gloss": "assembling خير (khayr, \"good/well\") and بخير (bi-khayr, \"well\") — the answer to \"how are you?\"",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:51150a65ec1d038e",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — Assemble خير — right to left",
-          "Script — Then بخير — \"(I'm) well\"",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Assemble خير — right to left, Script — Then بخير — \"(I'm) well\" and Guided Practice."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Everything comes together. With خ (Lesson 7), ي (Lesson 5), and ر (Lesson 8), you can now write خير (khayr, bi-khayr) (khayr, \"good\") — the word hiding in every \"good morning\" you've greeted with — and then بخير (bi-khayr, \"well\"), the everyday answer to \"how are you?\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — Assemble خير — right to left",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Write it starting on the right, moving left:"
-            },
-            {
-              "kind": "speech",
-              "text": "خ (khāʾ) — the hook-body with one dot above, reaching left into…"
-            },
-            {
-              "kind": "speech",
-              "text": "ي (yāʾ) — joined in the middle (its two dots below), flowing into…"
-            },
-            {
-              "kind": "speech",
-              "text": "ر (rā) — the little down-curve. Remember Lesson 8: rā is a non-joiner, so it simply ends the word — but yāʾ does join into it from the right."
-            },
-            {
-              "kind": "speech",
-              "text": "Read back, right to left: خ, ي, ر = kh, ī, r = خير (khayr, bi-khayr), \"good.\" (The root kh–y–r means \"good, best, choice\" across Semitic — the same three consonants carry the meaning, vowels laid on top, just like Arabic always works.)"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "Script — Then بخير — \"(I'm) well\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Glue بـ (bi-, \"in / with\") onto the front — bāʾ from Lesson 3, its one dot below — and it joins straight into the khāʾ:"
-            },
-            {
-              "kind": "speech",
-              "text": "بخير = bāʾ, khāʾ, yāʾ, rā = bi-khayr, literally \"in goodness\" — what you say when someone asks kayfa ḥāluk? (\"how are you?\"). \"Al-ḥamdu lillāh, bi-khayr\" — \"Praise God, (I'm) well.\""
-            },
-            {
-              "kind": "speech",
-              "text": "You have now written a real reply in a real conversation, in your own hand."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "خير (khayr, bi-khayr), right to left — \"khāʾ (dot above), yāʾ, rā — lift\"",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **خير**, right to left — \"khāʾ (dot above), yāʾ, rā — lift\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "بخير (bi-khayr) — add bi- on the right: \"bāʾ joins into khāʾ\"",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **بخير** — add *bi-* on the right: \"bāʾ joins into khāʾ\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"the root kh-y-r = good; bi-khayr = 'in goodness' = 'I'm well'\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"the root **kh-y-r** = good; *bi-khayr* = 'in goodness' = 'I'm well'\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Spell خير (khayr, bi-khayr) letter by letter, right to left. (khāʾ, yāʾ, rā — \"good.\") Which letter ends it, and does anything join after it? (rā — no, it's a non-joiner; the pen lifts.) What does بخير (bi-khayr) literally mean, and when do you say it? (\"In goodness\" — the answer to \"how are you?\", kayfa ḥāluk?.) You can now hand-write a greeting and its reply — the Arabic script is yours."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "AR-C03-kayfa",
       "sequence": 300,
       "title": "كيف (kayfa) — \"how\"",
@@ -627,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a272073b1c14a56",
+      "sourceHash": "fnv1a64:d53335e671d6379f",
       "notice": null,
       "blocks": [
         {
@@ -702,6 +562,10 @@
             {
               "kind": "speech",
               "text": "So the abstract noun for \"quality\" is built straight from the word \"how.\" Arabic does this constantly: take a word, run it through a pattern, get a concept."
+            },
+            {
+              "kind": "speech",
+              "text": "Kayfa itself is inherited, not built on a three-letter root: Lane notes that verbs such as kayyafa were later formed from it by analogy."
             }
           ]
         },
@@ -777,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e18d4422368b989",
+      "sourceHash": "fnv1a64:e46c5cdadc33313b",
       "notice": null,
       "blocks": [
         {
@@ -920,7 +784,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a25e4ef4183d839a",
+      "sourceHash": "fnv1a64:335e83b62fa00053",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1008,6 +872,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كيف حالك (kayfa ḥāluka) is built from kayfa, \"how\", an inherited question word, and ḥāluka, \"your state\": ḥāl, on the native root ḥ-w-l, \"to turn, to change\" (Lane), with -ka, \"your\"."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1056,7 +931,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1087,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f09091348a3caecf",
+      "sourceHash": "fnv1a64:c55e777776d001b2",
       "notice": null,
       "blocks": [
         {
@@ -1103,7 +978,7 @@
             },
             {
               "kind": "speech",
-              "text": "The answer to kayfa ḥāluka? — and you have already written this word by hand. Nothing here is new; it is two old pieces stuck together."
+              "text": "The answer to kayfa ḥāluka? — and nothing here is new; it is two old pieces stuck together. Before this chapter ends you will write it by hand."
             }
           ]
         },
@@ -1114,7 +989,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them from the writing set, where you assembled خير (khayr, bi-khayr) and then بخير (bi-khayr) letter by letter. Right to left: ب, خ, ي, ر."
+              "text": "(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them a letter you have already written. The chapter's last writing lesson joins them into خير (khayr, bi-khayr) and then بخير (bi-khayr), letter by letter. Right to left: ب, خ, ي, ر."
             }
           ]
         },
@@ -1169,6 +1044,17 @@
         },
         {
           "index": 5,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بخير (bi-khayr) is built from bi-, \"in, with\", an inherited Semitic preposition that Hebrew has as bə-, and khayr, \"good\", on the native root kh-y-r (Lane): \"in goodness\"."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1217,7 +1103,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1248,7 +1134,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42cc5817c8d4c682",
+      "sourceHash": "fnv1a64:d18121f4282411b9",
       "notice": null,
       "blocks": [
         {
@@ -1423,6 +1309,157 @@
             {
               "kind": "speech",
               "text": "What does الحمد لله (al-ḥamdu lillāh) literally say? (\"The praise [is] to God.\") What root is ḥamd from? (ḥ–m–d, \"to praise\".) Which two names come out of that root? (Aḥmad and Muḥammad — \"the much-praised.\") What is allāh made of? (al- + ilāh = \"the god\"; cousin of Hebrew El.) Next: practice the whole exchange."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W09-khayr-bikhayr",
+      "sequence": 345,
+      "title": "خير (khayr, bi-khayr) and بخير (bi-khayr) — writing \"good,\" and how you say you're well",
+      "headword": "خير",
+      "romanization": "khayr, bi-khayr",
+      "gloss": "assembling خير (khayr, \"good/well\") and بخير (bi-khayr, \"well\") — the answer to \"how are you?\"",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4813fd90e8618b19",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — Assemble خير — right to left",
+          "Script — Then بخير — \"(I'm) well\"",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Assemble خير — right to left, Script — Then بخير — \"(I'm) well\" and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything comes together. With خ (Lesson 7), ي (Lesson 5), and ر (Lesson 8), you can now write خير (khayr, bi-khayr) (khayr, \"good\") — the word hiding in every \"good morning\" you've greeted with — and then بخير (bi-khayr, \"well\"), the everyday answer to \"how are you?\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — Assemble خير — right to left",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write it starting on the right, moving left:"
+            },
+            {
+              "kind": "speech",
+              "text": "خ (khāʾ) — the hook-body with one dot above, reaching left into…"
+            },
+            {
+              "kind": "speech",
+              "text": "ي (yāʾ) — joined in the middle (its two dots below), flowing into…"
+            },
+            {
+              "kind": "speech",
+              "text": "ر (rā) — the little down-curve. Remember Lesson 8: rā is a non-joiner, so it simply ends the word — but yāʾ does join into it from the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Read back, right to left: خ, ي, ر = kh, ī, r = خير (khayr, bi-khayr), \"good.\" (The root kh–y–r means \"good, best, choice\" across Semitic — the same three consonants carry the meaning, vowels laid on top, just like Arabic always works.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — Then بخير — \"(I'm) well\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Glue بـ (bi-, \"in / with\") onto the front — bāʾ from Lesson 3, its one dot below — and it joins straight into the khāʾ:"
+            },
+            {
+              "kind": "speech",
+              "text": "بخير = bāʾ, khāʾ, yāʾ, rā = bi-khayr, literally \"in goodness\" — what you say when someone asks kayfa ḥāluk? (\"how are you?\"). \"Al-ḥamdu lillāh, bi-khayr\" — \"Praise God, (I'm) well.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You have now written a real reply in a real conversation, in your own hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "خير (khayr, bi-khayr), right to left — \"khāʾ (dot above), yāʾ, rā — lift\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **خير**, right to left — \"khāʾ (dot above), yāʾ, rā — lift\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "بخير (bi-khayr) — add bi- on the right: \"bāʾ joins into khāʾ\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **بخير** — add *bi-* on the right: \"bāʾ joins into khāʾ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"the root kh-y-r = good; bi-khayr = 'in goodness' = 'I'm well'\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"the root **kh-y-r** = good; *bi-khayr* = 'in goodness' = 'I'm well'\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spell خير (khayr, bi-khayr) letter by letter, right to left. (khāʾ, yāʾ, rā — \"good.\") Which letter ends it, and does anything join after it? (rā — no, it's a non-joiner; the pen lifts.) What does بخير (bi-khayr) literally mean, and when do you say it? (\"In goodness\" — the answer to \"how are you?\", kayfa ḥāluk?.) You can now hand-write a greeting and its reply — the Arabic script is yours."
             }
           ]
         }

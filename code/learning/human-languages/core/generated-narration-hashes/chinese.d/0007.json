@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 7,
-  "sourceHash": "fnv1a64:58f8967272263fe8",
+  "sourceHash": "fnv1a64:0cb2f7a4cc383402",
   "lessonIds": [
     "ZH-W07-zao",
     "ZH-W07-shang",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch07.txt",
   "json": "chinese/narration/ch07.json",
-  "textHash": "fnv1a64:9ec88c8465cea0ea",
-  "jsonHash": "fnv1a64:cad58fe3794b3f21",
+  "textHash": "fnv1a64:2b22455a54118433",
+  "jsonHash": "fnv1a64:c7e39d9c10be2947",
   "findings": []
 }

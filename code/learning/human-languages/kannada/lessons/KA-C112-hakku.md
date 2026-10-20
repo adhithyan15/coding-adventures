@@ -14,7 +14,8 @@ romanization: "hakku"
 concept_tag: KA-CAN112-HAKKU
 prerequisites: [KA-C112-samarthya, KA-C112-kausalya]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hakku ← Arabic ḥaqq 'right, truth', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C112-kausalya]
 <!-- hl-knowledge: introduces=[KA-LEX-C112-CAN112-03]; assesses=[] -->
 
 **ಹಕ್ಕು** — *hakku* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಕ್ಕು** (*hakku*) is a loan from Arabic *ḥaqq*, "right, truth", which came through Persian and Hindustani. Kannada adds *-u* at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

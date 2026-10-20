@@ -13,7 +13,8 @@ gloss: "thick; fat"
 concept_tag: GE-ADJ4-DICK
 prerequisites: [GE-C92-sauber, GE-C92-schmutzig]
 sounds: []
-roots: []
+roots: [germanic-thekuz]
+etymology_hook: "dick ← Proto-Germanic *þekuz 'thick' — the same word as English thick"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C92-schmutzig]
 <!-- hl-knowledge: introduces=[GE-LEX-C92-ADJ4-03]; assesses=[] -->
 
 **dick** — "thick; fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dick** ← Proto-Germanic *\*þekuz*, "thick" — inherited, the same word as English *thick*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

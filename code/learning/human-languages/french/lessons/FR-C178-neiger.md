@@ -13,7 +13,8 @@ gloss: "to snow"
 concept_tag: FR-VERB-NEIGER
 prerequisites: [FR-C177-proteger, FR-C177-sauver]
 sounds: []
-roots: []
+roots: [nix-latin]
+etymology_hook: "neiger ← Vulgar Latin *nivicare, from nix, nivis 'snow' — the verb behind neige"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C177-sauver]
 <!-- hl-knowledge: introduces=[FR-LEX-C178-VERBES178-01]; assesses=[] -->
 
 **neiger** — "to snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neiger** ← Vulgar Latin *\*nivicare*, from Latin *nix*, *nivis*, "snow" — inherited; *neige* was made from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

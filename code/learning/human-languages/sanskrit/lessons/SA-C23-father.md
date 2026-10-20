@@ -14,7 +14,8 @@ romanization: "pitā"
 concept_tag: SA-NOUN-FATHER
 prerequisites: [SA-C22-burn, SA-C21-dance, SA-C22-hear, SA-C19-number-family]
 sounds: []
-roots: []
+roots: [sanskrit-pitr]
+etymology_hook: "pitṛ 'father' is inherited: MW compares Latin pater, Greek patēr and English father (CDIAL 8179)"
 duration:
   max_seconds: 210
 requires:

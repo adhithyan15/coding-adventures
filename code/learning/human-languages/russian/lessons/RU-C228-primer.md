@@ -14,7 +14,8 @@ romanization: "primér"
 concept_tag: RU-VESHCH228-PRIMER
 prerequisites: [RU-C228-oshibka, RU-C228-pravilo]
 sounds: []
-roots: []
+roots: [slavic-mera]
+etymology_hook: "пример is при- + мер, from мера 'a measure': what you measure by"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C228-pravilo]
 <!-- hl-knowledge: introduces=[RU-LEX-C228-VESHCH228-03]; assesses=[] -->
 
 **пример** (*primér*) — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пример** is *при-*, "by, against", with *мер*, from *мера*, "a measure": something to measure against. Vasmer relates *мера* to Latin *mētior*, "I measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gabbilaṁ"
 concept_tag: TE-VASTUVU228-GABBILAM
 prerequisites: [TE-C228-pita, TE-C228-telu]
 sounds: []
-roots: []
+roots: [dravidian-kapate-bat]
+etymology_hook: "gabbilaṁ: native Dravidian; DEDR 1216 lists gabbilamu 'bat' with Kannada gabbilāyi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C228-telu]
 <!-- hl-knowledge: introduces=[TE-LEX-C228-VASTUVU228-03]; assesses=[] -->
 
 **గబ్బిలం** — *gabbilaṁ* — "a bat (animal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గబ్బిలం** (*gabbilaṁ*) is native Dravidian. DEDR 1216 lists *gabbilamu*, "bat", with Kannada *gabbilāyi* and *kapaṭe*, "bat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

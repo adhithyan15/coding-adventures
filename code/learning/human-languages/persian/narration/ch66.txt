@@ -12,6 +12,9 @@ Before the new one: say the Persian for tomorrow, then the Persian for now.
 You'll want to know: همیشه.
 همیشه — hamishe — "always".
 
+The word, taken apart.
+hamishe is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian hamēšag, "always".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for now, then the Persian for always.
 
 You'll want to know: گاهی.
 گاهی — gâhi — "sometimes".
+
+The word, taken apart.
+gâhi is gâh, "time, place", with the ending -i, "a": "a time", so "sometimes". gâh is native and usually traced to Middle Persian gāh.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for always, then the Persian for sometimes.
 You'll want to know: زود.
 زود — zud — "early".
 
+The word, taken apart.
+zud is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian zūd, "quick".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for sometimes, then the Persian for early.
 You'll want to know: دیر.
 دیر — dir — "late".
 
+The word, taken apart.
+dir is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian dēr, "long, late". Old Persian darga-, "long", is usually given as its older form. (EtymDB also lists a word for "monastery" spelled the same, which is unrelated.)
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for early, then the Persian for late.
 
 You'll want to know: قبل.
 قبل — ghabl — "before".
+
+The word, taken apart.
+ghabl is borrowed from Arabic qabl, "before". Its Arabic root is q-b-l (Lane).
 
 What you've built.
 One more word for this chapter.

@@ -6,7 +6,7 @@ sequence: 521
 chapter: 18
 type: grammar
 headword: habla
-gloss: "he speaks," "she speaks" — and the form usted takes, which is why it matters twice
+gloss: '"he speaks," "she speaks" — and the form usted takes, which is why it matters twice'
 concept_tag: ES-GRAMMAR-AR-PRESENT
 prerequisites: [ES-C06-hablas]
 sounds: []

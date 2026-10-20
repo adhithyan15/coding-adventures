@@ -11,7 +11,8 @@ gloss: take care (kāḷjī ghyā)
 concept_tag: MR-PHRASE-TAKE-CARE
 prerequisites: [MR-C04-udya-bhetu]
 sounds: [retroflex-la]
-roots: []
+roots: [sanskrit-kaleyaka, sanskrit-grbhayati]
+etymology_hook: "kāḷjī: as Gujarati kāḷjī 'care', listed with kāḷīj 'liver' under kālēyaka (CDIAL 3103); ghyā ← gṛbhāyati"
 reviews_of: [MR-C02-tu-tumhi]
 duration:
   max_seconds: 240
@@ -54,6 +55,11 @@ everyday Marathi words. **का** + **ळ** + **जी** → *kāḷjī*. Then 
 **काळजी** (*kāḷjī*, "care, concern") + **घ्या** (*ghyā*, "take," the respectful
 imperative) → **काळजी घ्या** — "take care." To a friend, the familiar imperative:
 **काळजी घे** (*kāḷjī ghe*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काळजी** matches Gujarati *kāḷjī*, "care, anxiety", which CDIAL lists beside Marathi *kāḷīj*, "liver, heart", under Sanskrit *kālēyaka*, "liver" (CDIAL 3103). **घ्या** is a form of **घेणे**, "to take", which CDIAL lists under Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-IMPERATIVE-REGISTER]; assesses=[MR-LEX-TU-TUMHI, MR-GRAMMAR-RESPECT-BY-PLURAL] -->

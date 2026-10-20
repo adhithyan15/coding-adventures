@@ -14,7 +14,8 @@ romanization: "ghalā"
 concept_tag: AR-VERB-GHALA
 prerequisites: [AR-C254-qala, AR-C254-shawa]
 sounds: []
-roots: []
+roots: [gh-l-y]
+etymology_hook: "ghalā: built on the root gh-l-y, 'to boil' (Lane); ghalā is the plain verb, 'it boiled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C254-shawa]
 <!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-03]; assesses=[] -->
 
 **غلى** — *ghalā* — "to boil (of a liquid, intransitive)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غلى** (*ghalā*) is built on the native Arabic root *gh-l-y*, "to boil" (Lane). *Ghalā* is the plain verb, "it boiled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

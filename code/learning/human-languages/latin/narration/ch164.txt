@@ -12,6 +12,9 @@ Before the new one: say the Latin for to decide, then the Latin for to foresee.
 You'll want to know: titulus, titulī.
 titulus, titulī — "a notice, a label; a title". A shop or house could carry one by its door. The famous Pompeian doorway warning is a mosaic, but it reads like one: Cavē canem. — "Beware of the dog." English title comes from it.
 
+The word, taken apart.
+titulus has no sure origin; no proposal is generally accepted.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ You'll want to know: īnscrīptiō, īnscrīptiōnis.
 [once you have stopped driving — read: the stone]
 The stone says SPQR, which is Senātus Populusque Rōmānus, "the Senate and People of Rome". It is in + scrībō: writing cut into something.
 
+The word, taken apart.
+īnscrīptiō is built on īnscrībō, "to write on" (Lewis & Short), with -tiō, an ending for an act or its result. scrībō, "to write", is probably related to Greek skariphos, "a scratch, a sketch".
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Latin for a notice, then the Latin for an inscriptio
 
 You'll want to know: pretium, pretiī.
 pretium, pretiī — "a price". Quantī cōnstat? — "How much does it cost?" English price and precious come from it.
+
+The word, taken apart.
+pretium is probably inherited, from a form built on Proto-Indo-European per-, "back, in return" (EtymDB 2.1): what one gives in return.
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ vēnālis, vēnāle — "for sale".
 [once you have stopped driving — read: the sign]
 The sign says Domus vēnālis. — "House for sale." It comes from vēnum, "sale", like vendō, "to sell".
 
+The word, taken apart.
+vēnālis is built on vēnum, "sale" (EtymDB 2.1), with -ālis, "belonging to": for sale. vēnum is usually traced to Proto-Indo-European wesno-, "price"; English venal, "bribable", comes from vēnālis.
+
 What you've built.
 One more word for this chapter.
 
@@ -130,7 +142,12 @@ Warm-up.
 Before the new one: say the Latin for a price, then the Latin for for sale.
 
 You'll want to know: merx, mercis.
-merx, mercis — "goods, merchandise". What a shop sells: mercēs in the plural. That is not the same word as mercēs, mercēdis, "wages". English merchant and commerce come from it.
+merx, mercis — "goods, merchandise". What a shop sells is usually said in the plural:
+merc- (the stem, as in mercis) + -ēs (the plural ending) becomes mercēs.
+English merchant and commerce come from this word.
+
+The word, taken apart.
+merx has no sure origin. Lewis & Short tie it to mereō, "to earn"; others think it may be a loan, perhaps from Etruscan. English market comes from its family.
 
 What you've built.
 One more word for this chapter.

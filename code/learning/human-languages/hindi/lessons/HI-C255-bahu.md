@@ -14,7 +14,8 @@ romanization: "bahū"
 concept_tag: HI-THG255-BAHU
 prerequisites: [HI-C254-sas, HI-C254-sasur]
 sounds: []
-roots: []
+roots: [sanskrit-vadhu]
+etymology_hook: "bahū ← Sanskrit vadhū 'bride, young wife', a tadbhava (CDIAL 11250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C254-sasur]
 <!-- hl-knowledge: introduces=[HI-LEX-C255-THG255-01]; assesses=[] -->
 
 **बहू** — *bahū* — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बहू** (*bahū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vadhū*, "bride, young wife" (CDIAL 11250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

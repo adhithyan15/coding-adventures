@@ -13,7 +13,8 @@ gloss: "a cup"
 concept_tag: LA-DOMUS2-POCULUM
 prerequisites: [LA-C83-tectum, LA-C83-lucerna]
 sounds: []
-roots: []
+roots: [poculum-latin]
+etymology_hook: "pōculum 'cup' — inherited, usually traced to PIE *peh3tlom 'drinking cup'; kin to pōtō 'to drink'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C83-lucerna]
 <!-- hl-knowledge: introduces=[LA-LEX-C83-DOMUS2-04]; assesses=[] -->
 
 **pōculum, pōculī** — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pōculum** is inherited, usually traced through Proto-Italic *\*pōtlom*, "drinking cup", to Proto-Indo-European *\*peh3tlom*, "a thing to drink from" (EtymDB 2.1). *pōtō*, "to drink", belongs to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

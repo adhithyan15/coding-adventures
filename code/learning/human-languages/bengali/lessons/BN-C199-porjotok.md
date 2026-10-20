@@ -14,7 +14,8 @@ romanization: "pôrjôṭôk"
 concept_tag: BN-JINIS199-PORJOTOK
 prerequisites: [BN-C198-pltphorm, BN-C199-nagorik]
 sounds: []
-roots: []
+roots: [sanskrit-paryataka]
+etymology_hook: "pôrjôṭôk ← Sanskrit paryaṭaka 'wanderer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C199-nagorik]
 <!-- hl-knowledge: introduces=[BN-LEX-C199-JINIS199-02]; assesses=[] -->
 
 **পর্যটক** — *pôrjôṭôk* — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পর্যটক** (*pôrjôṭôk*) is Sanskrit *paryaṭaka*, "wanderer", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bank account"
 concept_tag: GE-THING157-KONTO
 prerequisites: [GE-C157-tablette, GE-C157-versicherung]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "Konto ← Italian conto 'account, reckoning' — borrowed, like English count and account"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C157-versicherung]
 <!-- hl-knowledge: introduces=[GE-LEX-C157-THING157-03]; assesses=[] -->
 
 **das Konto** — "a bank account".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Konto** ← Italian *conto*, "calculation, account" (EtymDB 2.1), from Latin *computāre*, "to reckon" — borrowed. English *count* and *account* share the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

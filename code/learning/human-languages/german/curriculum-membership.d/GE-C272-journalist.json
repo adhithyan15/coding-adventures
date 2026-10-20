@@ -1,0 +1,11 @@
+{
+  "id": "GE-C272-journalist",
+  "pathSegment": "GE-PATH-272-SENDUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-272-SENDUNG",
+      "order": 3
+    }
+  ]
+}

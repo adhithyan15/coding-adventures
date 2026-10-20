@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-717-SUFRIR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-717-SUFRIR"
+  ],
+  "after": []
+}

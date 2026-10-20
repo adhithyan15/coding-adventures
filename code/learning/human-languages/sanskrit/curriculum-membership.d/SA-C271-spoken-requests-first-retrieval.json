@@ -1,0 +1,11 @@
+{
+  "id": "SA-C271-spoken-requests-first-retrieval",
+  "pathSegment": "SA-PATH-271-REQUEST271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-271-REQUEST271",
+      "order": 2
+    }
+  ]
+}

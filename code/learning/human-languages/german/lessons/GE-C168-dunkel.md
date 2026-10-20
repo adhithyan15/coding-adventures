@@ -14,6 +14,7 @@ concept_tag: GE-QUAL168-DUNKEL
 prerequisites: [GE-C168-unmoeglich, GE-C168-hell]
 sounds: []
 roots: []
+etymology_hook: "dunkel ← Old High German tunkal 'dark' — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C168-hell]
 <!-- hl-knowledge: introduces=[GE-LEX-C168-QUAL168-03]; assesses=[] -->
 
 **dunkel** — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dunkel** ← Middle High German *tunkel* ← Old High German *tunkal*, "dark" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

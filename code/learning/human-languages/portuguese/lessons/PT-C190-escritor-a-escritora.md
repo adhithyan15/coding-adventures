@@ -13,7 +13,8 @@ gloss: "a writer"
 concept_tag: PT-COISAS190-ESCRITOR-A-ESCRITORA
 prerequisites: [PT-C190-atriz, PT-C190-poema]
 sounds: []
-roots: []
+roots: [scribere-latin]
+etymology_hook: "escritor ← Latin scriptor 'writer', from scribere 'to write' — English script"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C190-poema]
 <!-- hl-knowledge: introduces=[PT-LEX-C190-COISAS190-03]; assesses=[] -->
 
 **o escritor / a escritora** — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**escritor** ← Latin *scriptor*, "writer" (EtymDB 2.1) — inherited. Old Portuguese wrote *escriptor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 467,
   "title": "El huerto comunitario",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:21473c93421be13f",
+  "sourceHash": "fnv1a64:035f20f3ea5d5677",
   "lessons": [
     {
       "id": "ES-C467-producir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cf9fcbf28839168",
+      "sourceHash": "fnv1a64:c92cf80f56265201",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pro-, forward, plus ducere, to lead — the ducere already under reducir and under la ducha."
+              "text": "Producir from Latin prōdūcere (EtymDB 2.1): pro-, forward, plus ducere, to lead — the ducere already under reducir and under la ducha."
             },
             {
               "kind": "speech",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98dbe8ba9d3068c6",
+      "sourceHash": "fnv1a64:5bda7855e0ca9e42",
       "notice": null,
       "blocks": [
         {
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7203a28619b7f4de",
+      "sourceHash": "fnv1a64:9861c139957a3dab",
       "notice": null,
       "blocks": [
         {
@@ -535,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfaf9588e4d9232e",
+      "sourceHash": "fnv1a64:a7910bc287065afb",
       "notice": null,
       "blocks": [
         {
@@ -581,7 +581,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have the whole of this already. El objeto was ob-, before or against, plus iacere, to throw — a thing thrown before you, put in your way. That lesson listed the family: object, project, inject, eject, subject, all of them throws."
+              "text": "You have the whole of this already. El objeto, from Latin obiectum, was ob-, before or against, plus iacere, to throw — a thing thrown before you, put in your way. That lesson listed the family: object, project, inject, eject, subject, all of them throws."
             },
             {
               "kind": "speech",

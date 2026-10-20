@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6c60c0799a681209",
+  "sourceHash": "fnv1a64:0a0efbd575c272eb",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbf6a0d868425c6c",
+      "sourceHash": "fnv1a64:0626d8c4f1b5c5f6",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाँ comes from Sanskrit ām, \"yes\", with an h- that CDIAL calls emphatic or taken from the verb \"to be\" (CDIAL 1235). The polite जी is from jīva, \"long live!\" (CDIAL 5240)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know — Saying it politely",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -114,7 +125,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -126,7 +137,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: नहीं (nahīṃ), no."
+              "text": "How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: the word for no."
             }
           ]
         }

@@ -14,7 +14,8 @@ romanization: "kitāb"
 concept_tag: UR-HOME61-KITAB
 prerequisites: [UR-C60-kata, UR-C61-botal]
 sounds: []
-roots: []
+roots: [arabic-ktb]
+etymology_hook: "kitāb ← Arabic kitāb 'book, writing', through Persian (Lane, root k-t-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C61-botal]
 <!-- hl-knowledge: introduces=[UR-LEX-C61-HOME61-02]; assesses=[] -->
 
 **کتاب** — *kitāb* — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کتاب** (*kitāb*) is a loan from Arabic *kitāb*, "book, writing", which reached Urdu through Persian. Its Arabic root is *k-t-b* (Lane). The same root gives *kātib*, "scribe", and *maktab*, "school, office".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

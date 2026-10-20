@@ -14,7 +14,8 @@ romanization: "praveś"
 concept_tag: MR-VASTU240-PRAVES
 prerequisites: [MR-C239-satya, MR-C239-niyam]
 sounds: []
-roots: []
+roots: [sanskrit-pravesha]
+etymology_hook: "praveś: Sanskrit praveśa 'entering', a tatsama, on praviśati 'enters' (CDIAL 8803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C239-niyam]
 <!-- hl-knowledge: introduces=[MR-LEX-C240-VASTU240-01]; assesses=[] -->
 
 **प्रवेश** — *praveś* — "entry, admission".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रवेश** (*praveś*) is Sanskrit *praveśa*, "entering", a tatsama built on *praviśati*, "enters" (CDIAL 8803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

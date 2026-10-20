@@ -11,7 +11,8 @@ romanization: "ēṉ illai?"
 concept_tag: TA-SURE-WHY-NOT
 prerequisites: [TA-C97-definitely, TA-C97-thatshow]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, il]
+etymology_hook: "ஏன் இல்லை — native: ēṉ 'why' (DEDR 5151) + illai 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C97-thatshow]
 **ஏன் இல்லை?** (*ēṉ illai?*) — "why not?".
 
 **ஏன்** is "why"; with **இல்லை**, "why not?" — as a question, or as a cheerful yes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஏன் இல்லை?** (*ēṉ illai?*) is native: *ēṉ*, "why" (DEDR 5151), and *illai*, "not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

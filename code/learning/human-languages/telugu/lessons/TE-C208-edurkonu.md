@@ -14,7 +14,8 @@ romanization: "edurkonu"
 concept_tag: TE-VERB-EDURKONU
 prerequisites: [TE-C208-canipovu, TE-C208-puttu]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite]
+etymology_hook: "edurkonu: native eduru 'the front, to oppose' (DEDR 795) + konu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C208-puttu]
 <!-- hl-knowledge: introduces=[TE-LEX-C208-KRIYA208-05]; assesses=[] -->
 
 **ఎదుర్కొను** — *edurkonu* — "to confront, to face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎదుర్కొను** (*edurkonu*) is native Dravidian: *eduru*, "the front; to oppose", one word with Tamil *etir*, "that which is opposite" (DEDR 795), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

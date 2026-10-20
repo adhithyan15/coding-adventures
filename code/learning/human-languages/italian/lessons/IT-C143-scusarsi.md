@@ -13,7 +13,8 @@ gloss: "to apologise"
 concept_tag: IT-VERB-SCUSARSI
 prerequisites: [IT-C143-discutere, IT-C143-litigare]
 sounds: []
-roots: []
+roots: [excusare-latin]
+etymology_hook: "scusarsi ← Latin excusare 'to excuse' + -si 'oneself' — English excuse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C143-litigare]
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-04]; assesses=[] -->
 
 **scusarsi** — "to apologise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scusarsi** ← Latin *excusare*, "to excuse", with *-si*, "oneself" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

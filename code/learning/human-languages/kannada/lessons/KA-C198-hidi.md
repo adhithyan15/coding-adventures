@@ -14,7 +14,8 @@ romanization: "hiḍi"
 concept_tag: KA-VERB-HIDI
 prerequisites: [KA-C198-taru, KA-C198-oyyu]
 sounds: []
-roots: []
+roots: [dravidian-pidi-seize]
+etymology_hook: "hiḍi: native Dravidian, one word with Tamil piṭi (DEDR 4148)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C198-oyyu]
 <!-- hl-knowledge: introduces=[KA-LEX-C198-KRIYE198-04]; assesses=[] -->
 
 **ಹಿಡಿ** — *hiḍi* — "to hold, to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಡಿ** (*hiḍi*) is native Dravidian, one word with Tamil *piṭi* (DEDR 4148). DEDR gives the older Kannada *piḍi*, "to seize, hold": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

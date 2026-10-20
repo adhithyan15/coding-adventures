@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 571,
+  "sourceHash": "fnv1a64:aaeb73beaa725625",
+  "lessonIds": [
+    "ES-C571-inventor",
+    "ES-C571-descubrimiento",
+    "ES-C571-invento",
+    "ES-C571-origen",
+    "ES-C571-desarrollo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch571.txt",
+  "json": "spanish/narration/ch571.json",
+  "textHash": "fnv1a64:bf74ef35b5cebe55",
+  "jsonHash": "fnv1a64:eab2e59c0c77cc53",
+  "findings": []
+}

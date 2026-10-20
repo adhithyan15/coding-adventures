@@ -1,0 +1,11 @@
+{
+  "id": "IT-C320-giostra",
+  "pathSegment": "IT-PATH-320-FIERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-320-FIERA",
+      "order": 2
+    }
+  ]
+}

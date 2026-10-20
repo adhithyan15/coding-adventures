@@ -13,7 +13,8 @@ gloss: "to count"
 concept_tag: FR-VERB-COMPTER
 prerequisites: [FR-C66-dessiner, FR-C66-peindre]
 sounds: []
-roots: []
+roots: [computare-latin]
+etymology_hook: "compter ← Latin computare 'to reckon' — English count and compute share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C66-peindre]
 <!-- hl-knowledge: introduces=[FR-LEX-C66-VERBES18-03]; assesses=[] -->
 
 **compter** — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**compter** ← Latin *computare*, "to reckon" — inherited. (EtymDB 2.1) Old French wrote it *conter*; the *mp* was put back later to recall the Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

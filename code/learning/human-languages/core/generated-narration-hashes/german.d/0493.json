@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:409d97e0a601099e",
+  "lessonIds": [
+    "GE-C493-zuneigung",
+    "GE-C493-umarmung",
+    "GE-C493-zaertlich",
+    "GE-C493-geborgenheit",
+    "GE-C493-zusammenhalt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch493.txt",
+  "json": "german/narration/ch493.json",
+  "textHash": "fnv1a64:ac4e711fb8e6e9cd",
+  "jsonHash": "fnv1a64:872eab10721f3e50",
+  "findings": []
+}

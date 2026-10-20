@@ -14,7 +14,8 @@ romanization: "gāy"
 concept_tag: HI-NOUN-COW
 prerequisites: [HI-S138-letter-ga, HI-C53-lip, HI-C52-rice, HI-C53-shoulder]
 sounds: []
-roots: []
+roots: [sanskrit-go]
+etymology_hook: "gāy ← Sanskrit gāvī 'cow', a form of go (CDIAL 4147)"
 duration:
   max_seconds: 210
 requires:

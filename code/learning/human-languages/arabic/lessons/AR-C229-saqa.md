@@ -14,7 +14,8 @@ romanization: "saqā"
 concept_tag: AR-VERB-SAQA
 prerequisites: [AR-C229-rabata, AR-C229-fakka]
 sounds: []
-roots: []
+roots: [s-q-y]
+etymology_hook: "saqā: built on the root s-q-y, 'to give to drink' (Lane); saqā is the plain verb, 'he watered'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C229-fakka]
 <!-- hl-knowledge: introduces=[AR-LEX-C229-ACT229-03]; assesses=[] -->
 
 **سقى** — *saqā* — "to water (plants)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سقى** (*saqā*) is built on the native Arabic root *s-q-y*, "to give to drink" (Lane). *Saqā* is the plain verb, "he watered".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "comfortable"
 concept_tag: GE-QUAL167-BEQUEM
 prerequisites: [GE-C166-moeglichkeit, GE-C166-nachmittag]
 sounds: []
-roots: []
+roots: [kwemana-germanic]
+etymology_hook: "bequem ← Middle High German bequæme 'fitting' — built on the verb 'to come': what comes in handy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C166-nachmittag]
 <!-- hl-knowledge: introduces=[GE-LEX-C167-QUAL167-01]; assesses=[] -->
 
 **bequem** — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bequem** ← Middle High German *bequæme*, "fitting, suitable" (EtymDB 2.1) — inherited, built on the root of *kommen*: what comes in handy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cillara"
 concept_tag: TE-PANI235-CILLARA
 prerequisites: [TE-C234-kodavali, TE-C235-notu]
 sounds: []
-roots: []
+roots: [dravidian-cillarai-change]
+etymology_hook: "cillara: native Dravidian, one word with Tamil cillaṟai and Kannada cillaṟe (DEDR 2574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C235-notu]
 <!-- hl-knowledge: introduces=[TE-LEX-C235-PANI235-02]; assesses=[] -->
 
 **చిల్లర** — *cillara* — "loose change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిల్లర** (*cillara*) is native Dravidian, one word with Tamil *cillaṟai* and Kannada *cillaṟe* (DEDR 2574). DEDR lists Telugu *cillara*, "small, sundry; change".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

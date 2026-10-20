@@ -14,7 +14,8 @@ romanization: "miniṭ"
 concept_tag: GU-TIME-MINUTE
 prerequisites: [GU-C79-time, GU-C80-hour]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "miniṭ ← English minute"
 duration:
   max_seconds: 200
 requires:

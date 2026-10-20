@@ -14,7 +14,8 @@ romanization: "mibrāh"
 concept_tag: AR-AMAL253-MIBRAH
 prerequisites: [AR-C253-tijara, AR-C253-mistara]
 sounds: []
-roots: []
+roots: [b-r-y]
+etymology_hook: "mibrāh: built on the root b-r-y, 'to pare (a reed pen)' (Lane); mibrāh is an instrument noun, 'a thing for paring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C253-mistara]
 <!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-03]; assesses=[] -->
 
 **مبراة** — *mibrāh* — "a pencil sharpener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مبراة** (*mibrāh*) is built on the native Arabic root *b-r-y*, "to pare (a reed pen)" (Lane). *Mibrāh* is an instrument noun, "a thing for paring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

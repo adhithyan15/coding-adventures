@@ -14,7 +14,8 @@ romanization: "malam"
 concept_tag: MR-AAROGYA229-MALAM
 prerequisites: [MR-C228-nahise-hone, MR-C229-goli]
 sounds: []
-roots: []
+roots: [arabic-marham]
+etymology_hook: "malam: usually traced, through Persian, to Arabic marham 'ointment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C229-goli]
 <!-- hl-knowledge: introduces=[MR-LEX-C229-AAROGYA229-02]; assesses=[] -->
 
 **मलम** — *malam* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मलम** (*malam*) is a loan, usually traced through Persian to Arabic *marham*, "ointment", with **ल** for the *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vayasu"
 concept_tag: TE-NAMES-AGE
 prerequisites: [TE-C96-surname, TE-C96-nickname]
 sounds: []
-roots: []
+roots: [sanskrit-vayas-vigor-age]
+etymology_hook: "vayasu ← Sanskrit vayas 'prime of life, age', a tatsama (CDIAL 11305)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C96-nickname]
 
 You have asked it already, inside **నీ వయసెంత?**. Now the word stands alone: **మీ వయసు ఎంత?** —
 "what is your age?", the respectful form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వయసు** (*vayasu*) is Sanskrit *vayas*, "prime of life, age", taken over whole as a learned loan, a tatsama, with Telugu's added *-u* (CDIAL 11305).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

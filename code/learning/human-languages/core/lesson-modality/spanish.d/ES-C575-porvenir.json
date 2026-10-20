@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C575-porvenir",
+    "language": "spanish",
+    "chapter": 575,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fef74b441bebaca"
+  },
+  "findings": []
+}

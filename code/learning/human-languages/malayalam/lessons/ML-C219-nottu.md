@@ -14,7 +14,8 @@ romanization: "nōṭṭŭ"
 concept_tag: ML-JOLI219-NOTTU
 prerequisites: [ML-C218-mattanna, ML-C219-nanayam]
 sounds: []
-roots: []
+roots: [english-note]
+etymology_hook: "nōṭṭŭ ← English note, as in banknote"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C219-nanayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C219-JOLI219-02]; assesses=[] -->
 
 **നോട്ട്** — *nōṭṭŭ* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നോട്ട്** (*nōṭṭŭ*) ← English *note*, as in *banknote*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

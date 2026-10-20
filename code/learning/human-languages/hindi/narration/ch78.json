@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Today, and How Much",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:df436b4f4efb560f",
+  "sourceHash": "fnv1a64:ecdc57d26bcb9a95",
   "lessons": [
     {
       "id": "HI-C71-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c89a9cf1c98882de",
+      "sourceHash": "fnv1a64:b0e41c7c3cf91311",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आज (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, \"today\" (CDIAL 242)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -150,7 +161,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -181,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99e6ea5025251b0c",
+      "sourceHash": "fnv1a64:919e3b603de3ca7c",
       "notice": null,
       "blocks": [
         {
@@ -239,6 +250,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भी (bhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from api, \"also, even\" (CDIAL 485)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -249,7 +271,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -316,7 +338,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -347,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e84a096d4cd341a5",
+      "sourceHash": "fnv1a64:cd1c447e0a5e51de",
       "notice": null,
       "blocks": [
         {

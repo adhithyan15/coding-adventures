@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:75db96a4258a575f",
+  "lessonIds": [
+    "FR-C359-cadre",
+    "FR-C359-tache",
+    "FR-C359-delai",
+    "FR-C359-prolongation",
+    "FR-C359-livraison"
+  ],
+  "tex": "french/book/chapters/ch359-au-bureau.tex"
+}

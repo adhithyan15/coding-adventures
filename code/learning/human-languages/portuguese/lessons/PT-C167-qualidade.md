@@ -13,7 +13,8 @@ gloss: "quality"
 concept_tag: PT-COISAS167-QUALIDADE
 prerequisites: [PT-C167-lista, PT-C167-marca]
 sounds: []
-roots: []
+roots: [qualis]
+etymology_hook: "qualidade ← Latin qualitas, from qualis 'of what kind' — English quality"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C167-marca]
 <!-- hl-knowledge: introduces=[PT-LEX-C167-COISAS167-05]; assesses=[] -->
 
 **a qualidade** — "quality".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**qualidade** ← Latin *qualitas, qualitatis*, "quality" (EtymDB 2.1), from *qualis*, "of what kind" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

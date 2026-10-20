@@ -14,7 +14,8 @@ romanization: "sajjala"
 concept_tag: AR-VERB-SAJJALA
 prerequisites: [AR-C162-nasakha, AR-C162-intaqala]
 sounds: []
-roots: []
+roots: [greek-sigillion]
+etymology_hook: "sajjala: from sijill 'a written record' (Lane), usually traced to Greek sigillion, Latin sigillum"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C162-intaqala]
 <!-- hl-knowledge: introduces=[AR-LEX-C162-ACT162-04]; assesses=[] -->
 
 **سجل** — *sajjala* — "to register, to record".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سجل** (*sajjala*) is a Form II verb made from *sijill*, "a written record, a deed", which Lane lists under *s-j-l*. *Sijill* is usually traced to Greek *sigillion*, from Latin *sigillum*, "seal"; Lane gives no foreign source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

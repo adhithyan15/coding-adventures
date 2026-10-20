@@ -14,6 +14,7 @@ concept_tag: IT-VERB-RISPARMIARE
 prerequisites: [IT-C204-prenotare, IT-C204-spendere]
 sounds: []
 roots: []
+etymology_hook: "risparmiare — ri- + an old verb from Germanic 'to spare' — English spare is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C204-spendere]
 <!-- hl-knowledge: introduces=[IT-LEX-C204-VERBI204-04]; assesses=[] -->
 
 **risparmiare** — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**risparmiare** — *ri-* plus an old verb *sparmiare*, "to spare", which came from a Germanic word. English *spare* is its cousin. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

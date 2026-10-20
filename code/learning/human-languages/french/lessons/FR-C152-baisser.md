@@ -14,6 +14,7 @@ concept_tag: FR-VERB-BAISSER
 prerequisites: [FR-C152-avancer, FR-C152-reculer]
 sounds: []
 roots: []
+etymology_hook: "baisser ← Vulgar Latin *bassiare, from bassus 'low' — English base and bass"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C152-reculer]
 <!-- hl-knowledge: introduces=[FR-LEX-C152-VERBES152-05]; assesses=[] -->
 
 **baisser** — "to lower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**baisser** ← Vulgar Latin *\*bassiare*, from Late Latin *bassus*, "low" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

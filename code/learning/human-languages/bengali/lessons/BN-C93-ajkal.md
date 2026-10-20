@@ -14,7 +14,8 @@ romanization: "ājkāl"
 concept_tag: BN-TIME93-AJKAL
 prerequisites: [BN-C93-sekend, BN-C93-shuru]
 sounds: []
-roots: []
+roots: [sanskrit-adya, sanskrit-kalya]
+etymology_hook: "ājkāl: āj 'today' ← adya (CDIAL 242) + kāl ← kalya 'dawn' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C93-shuru]
 <!-- hl-knowledge: introduces=[BN-LEX-C93-TIME93-05]; assesses=[] -->
 
 **আজকাল** — *ājkāl* — "nowadays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আজকাল** (*ājkāl*) is *āj*, "today", from Sanskrit *adya* (CDIAL 242), + *kāl*, "tomorrow, yesterday", from Sanskrit *kalya*, "dawn" (CDIAL 3104): "today and tomorrow", so "these days".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

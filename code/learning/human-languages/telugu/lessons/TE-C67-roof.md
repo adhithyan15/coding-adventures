@@ -11,7 +11,8 @@ romanization: "kappu"
 concept_tag: TE-NOUN-ROOF
 prerequisites: [TE-C67-wall]
 sounds: []
-roots: []
+roots: [dravidian-kappu-cover]
+etymology_hook: "kappu: native Dravidian, one word with Tamil kappu 'to overspread' (DEDR 1221)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C67-wall]
 Village roofs were గడ్డి over beams for centuries and are tile or concrete now. The material changed and the word did not, which is usually a sign of a very old one.
 
 To be under somebody's కప్పు is to be their guest, and it binds the person underneath as much as the person above. నమస్కారం comes first, and everything else follows it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కప్పు** (*kappu*) is native Dravidian, from the verb *kappu*, "to cover", one word with Tamil *kappu*, "to overspread", and Kannada *kappu*, "to cover" (DEDR 1221). DEDR compares Sanskrit *kavaca*, "armour" (CDIAL 2957), which CDIAL takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to prepare"
 concept_tag: LA-VERB-PARO
 prerequisites: [LA-C100-pugno, LA-C100-navigo]
 sounds: []
-roots: []
+roots: [parare-latin]
+etymology_hook: "parō 'to prepare' — probably kin to pariō 'to bring forth', from PIE *per- 'to procure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C100-navigo]
 <!-- hl-knowledge: introduces=[LA-LEX-C100-VERBA6-03]; assesses=[] -->
 
 **parō, parāre** — "to prepare". English *prepare*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parō** is probably related to *pariō*, "to bring forth, to procure", and is traced to a Proto-Indo-European root *\*per-*, "to produce, to procure" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

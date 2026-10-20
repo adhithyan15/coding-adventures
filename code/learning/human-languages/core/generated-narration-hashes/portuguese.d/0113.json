@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 113,
-  "sourceHash": "fnv1a64:029016804183b228",
+  "sourceHash": "fnv1a64:7267e6bb085c5916",
   "lessonIds": [
     "PT-C113-palavra",
     "PT-C113-quadro",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch113.txt",
   "json": "portuguese/narration/ch113.json",
-  "textHash": "fnv1a64:e5e45748cd812605",
-  "jsonHash": "fnv1a64:11563c2c9788111a",
+  "textHash": "fnv1a64:c52c28aef1fe4c3c",
+  "jsonHash": "fnv1a64:581d8fe59b86b6b6",
   "findings": []
 }

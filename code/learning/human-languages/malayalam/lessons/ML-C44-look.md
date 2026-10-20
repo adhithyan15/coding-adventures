@@ -11,7 +11,8 @@ romanization: "nōkkū"
 concept_tag: ML-VERB-LOOK
 prerequisites: [ML-C42-big]
 sounds: []
-roots: []
+roots: [dravidian-nokku-look]
+etymology_hook: "nōkkū: native Dravidian, one word with Tamil nōkku and Kannada nōḍu (DEDR 3794)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: []
 **നോക്കൂ** (*nōkkū*) — "look".
 
 The same *nōkk-* stem as Kannada's *nōḍu*, with Malayalam's courteous long *ū* on the end.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നോക്കൂ** (*nōkkū*) is native Dravidian, one word with Tamil *nōkku* and Kannada *nōḍu* (DEDR 3794).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

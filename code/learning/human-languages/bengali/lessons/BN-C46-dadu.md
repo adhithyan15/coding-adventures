@@ -14,7 +14,8 @@ romanization: "dādu"
 concept_tag: BN-FAMILY46-DADU
 prerequisites: [BN-C45-chhele, BN-C45-meye]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādu: a pet form of dādā 'grandfather' ← *dādda 'elderly relative' (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C45-meye]
 <!-- hl-knowledge: introduces=[BN-LEX-C46-FAMILY46-01]; assesses=[] -->
 
 **দাদু** — *dādu* — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাদু** (*dādu*) is a pet form of *dādā*, "grandfather", which CDIAL lists under *\*dādda*, "father or other elderly relative", a form it reconstructs (CDIAL 6261).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

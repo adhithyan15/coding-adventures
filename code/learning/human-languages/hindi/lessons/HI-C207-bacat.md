@@ -14,7 +14,8 @@ romanization: "bacat"
 concept_tag: HI-THG207-BACAT
 prerequisites: [HI-C207-qarz, HI-C207-kamai]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bacat: from bacnā 'to escape, be saved' (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C207-kamai]
 <!-- hl-knowledge: introduces=[HI-LEX-C207-THG207-04]; assesses=[] -->
 
 **बचत** — *bacat* — "savings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचत** (*bacat*) is the noun of *bacnā*, "to be saved": what you save. CDIAL lists *bacnā* under Sanskrit *vañcati*, "moves", whose forms meant "escapes from" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

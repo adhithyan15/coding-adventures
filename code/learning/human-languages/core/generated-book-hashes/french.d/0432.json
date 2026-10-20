@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:07b708a11e0d6bc0",
+  "lessonIds": [
+    "FR-C432-gerant",
+    "FR-C432-desagrement",
+    "FR-C432-signaler",
+    "FR-C432-menage",
+    "FR-C432-defectueux"
+  ],
+  "tex": "french/book/chapters/ch432-parler-au-gerant.tex"
+}

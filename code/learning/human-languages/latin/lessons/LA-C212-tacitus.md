@@ -13,7 +13,8 @@ gloss: "silent"
 concept_tag: LA-QUAL212-TACITUS
 prerequisites: [LA-C212-anxius, LA-C212-placidus]
 sounds: []
-roots: []
+roots: [tacitus-latin, tacere-latin]
+etymology_hook: "tacitus 'silent' — the participle of taceō 'to be silent'; English tacit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C212-placidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C212-QUAL212-05]; assesses=[] -->
 
 **tacitus, tacita, tacitum** — "silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tacitus** is the past participle of *taceō*, "to be silent" (Lewis & Short): passed over in silence, then silent. English *tacit* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

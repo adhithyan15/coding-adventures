@@ -14,7 +14,8 @@ romanization: "shigoto"
 concept_tag: JA-THINGS112-SHIGOTO
 prerequisites: [JA-C112-daiku, JA-C112-kashu]
 sounds: []
-roots: []
+roots: [japanese-suru, japanese-koto]
+etymology_hook: "shigoto: native shi 'doing' (suru) + koto 'matter', voiced"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C112-kashu]
 <!-- hl-knowledge: introduces=[JA-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **しごと** — *shigoto* — "work, a job".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しごと** (*shigoto*) is native: *shi*, the stem of *suru*, "to do", and *koto*, "matter", voiced to *goto*: a matter of doing (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

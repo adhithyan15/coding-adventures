@@ -14,7 +14,8 @@ romanization: "tīyani"
 concept_tag: TE-QUAL141-TIYANI
 prerequisites: [TE-C140-bangaru, TE-C140-padaina]
 sounds: []
-roots: []
+roots: [dravidian-tiim-sweet]
+etymology_hook: "tīyani: native Dravidian, one word with Tamil tīm 'sweet' (DEDR 3268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C140-padaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C141-QUAL141-01]; assesses=[] -->
 
 **తీయని** — *tīyani* — "sweet (of taste)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తీయని** (*tīyani*) is native Dravidian, one word with Tamil *tīm*, "sweet" (DEDR 3268), which lists Telugu *tiyyani*, "sweet". DEDR compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for homework, then the Sanskrit for an answ
 You'll want to know: प्रशिक्षणम्.
 प्रशिक्षणम् — praśikṣaṇam — "training".
 
+The word, taken apart.
+praśikṣaṇa is built on pra- and śikṣaṇa, "learning; teaching, instruction" (MW), from śikṣ, the desiderative of √śak, "to be able". MW does not list praśikṣaṇa, so the word for training is a modern coinage.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an answer, then the Sanskrit for traini
 
 You'll want to know: सम्मेलनम्.
 सम्मेलनम् — sammelanam — "a conference".
+
+The word, taken apart.
+sammelana is built on sam, "together", and the root √mil, "to meet" (MW): "mingling or meeting together". The same root gives melaka, "fair", which you have already met, and Hindi milnā, "to meet" (CDIAL 10133).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for training, then the Sanskrit for a confe
 You'll want to know: निर्णयः.
 निर्णयः — nirṇayaḥ — "a decision".
 
+The word, taken apart.
+nirṇaya is built on nis, "out", and the root √nī, "to lead" (MW). The verb means "to carry off" and then "to find out, settle, decide", and the noun means "complete ascertainment, decision".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a conference, then the Sanskrit for a d
 You'll want to know: विचारः.
 विचारः — vicāraḥ — "a thought, an idea".
 
+The word, taken apart.
+vicāra is built on vi-, "apart, about", and the root √car, "to move" (MW): first "mode of acting", then "pondering, deliberation" (CDIAL 11683). Thought is the mind moving to and fro.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a decision, then the Sanskrit for a tho
 
 You'll want to know: मतम्.
 मतम् — matam — "an opinion".
+
+The word, taken apart.
+mata is the past participle of the root √man, "to think" (MW): "what is thought", an opinion. MW compares √man with Latin meminisse, "to remember", and monēre, "to remind". The same root gives manas, "mind".
 
 What you've built.
 One more word for this chapter.

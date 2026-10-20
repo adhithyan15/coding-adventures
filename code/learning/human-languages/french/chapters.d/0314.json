@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Les funérailles",
+  "label": "ch:fr-les-funerailles",
+  "canDo": "I can talk about a death and a funeral: passing away, burying, the burial, the funeral and the cemetery.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C314-cimetiere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about a death and a funeral: passing away, burying, the burial, the funeral and the cemetery.",
+    "assesses": [
+      "FR-LEX-C314-FUNERAILLES-03",
+      "FR-LEX-C314-FUNERAILLES-04",
+      "FR-LEX-C314-FUNERAILLES-05"
+    ]
+  }
+}

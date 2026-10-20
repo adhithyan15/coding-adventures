@@ -281,7 +281,7 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("forme-release-platform", final_gate)
         self.assertIn("forme-release-verdict", final_gate)
 
-    def test_neutral_geometry_oracles_run_in_unconditional_contracts_step(self) -> None:
+    def test_neutral_oracles_run_in_unconditional_contracts_step(self) -> None:
         body = self._job_body("contracts")
         self.assertIn("\n    steps:\n", body)
         job_header = body.split("\n    steps:\n", 1)[0]
@@ -297,6 +297,10 @@ class CIGateRegistryTests(unittest.TestCase):
             "python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'",
             "python3 code/scripts/bezier2d_flattening_conformance.py",
             "python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'",
+            "python3 code/scripts/starlark_opcode_provider_conformance.py",
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_starlark_opcode_provider_conformance.py'",
+            "python3 code/scripts/compiler_ir_conformance.py",
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_compiler_ir_conformance.py'",
         )
         lines = step.split("        run: |\n", 1)[1].splitlines()
         self.assertNotRegex(

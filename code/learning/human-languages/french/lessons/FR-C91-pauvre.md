@@ -13,7 +13,8 @@ gloss: "poor"
 concept_tag: FR-ADJ43-PAUVRE
 prerequisites: [FR-C91-faible, FR-C91-riche]
 sounds: []
-roots: []
+roots: [pauper-latin]
+etymology_hook: "pauvre ← Latin pauper 'poor' — English pauper and poverty share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C91-riche]
 <!-- hl-knowledge: introduces=[FR-LEX-C91-ADJ43-04]; assesses=[] -->
 
 **pauvre** — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pauvre** ← Old French *povre* ← Latin *pauper*, "poor" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

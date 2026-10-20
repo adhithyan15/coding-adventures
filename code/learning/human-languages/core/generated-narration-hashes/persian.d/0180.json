@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 180,
-  "sourceHash": "fnv1a64:2d621ac98802dcff",
+  "sourceHash": "fnv1a64:c4c28ee846ce56b7",
   "lessonIds": [
     "FA-C180-makhlut-kardan",
     "FA-C180-ham-zadan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch180.txt",
   "json": "persian/narration/ch180.json",
-  "textHash": "fnv1a64:d64ae64643456e12",
-  "jsonHash": "fnv1a64:5fdba4868830d262",
+  "textHash": "fnv1a64:e71140ec75507c8e",
+  "jsonHash": "fnv1a64:cfcdbfa915fc92ae",
   "findings": []
 }

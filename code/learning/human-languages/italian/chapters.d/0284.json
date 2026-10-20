@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Sul posto",
+  "label": "ch:it-sul-posto",
+  "canDo": "I can report what people saw and said: an inquiry, a reportage, a testimony, and passing on the news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C284-riferire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can report what people saw and said: an inquiry, a reportage, a testimony, and passing on the news.",
+    "assesses": [
+      "IT-LEX-C284-INCHIESTA-03",
+      "IT-LEX-C284-INCHIESTA-04",
+      "IT-LEX-C284-INCHIESTA-05"
+    ]
+  }
+}

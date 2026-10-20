@@ -14,7 +14,8 @@ romanization: "bhīṛbhāṛ"
 concept_tag: HI-QUAL239-BHIRBHAR
 prerequisites: [HI-C239-dhudhla, HI-C239-sunsan]
 sounds: []
-roots: []
+roots: [indo-aryan-bhit]
+etymology_hook: "bhīṛ 'crowd' ← *bhiṭ 'meet, throng' (CDIAL 9490), with a rhyming bhāṛ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C239-sunsan]
 <!-- hl-knowledge: introduces=[HI-LEX-C239-QUAL239-04]; assesses=[] -->
 
 **भीड़भाड़** — *bhīṛbhāṛ* — "crowded, bustle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भीड़भाड़** (*bhīṛbhāṛ*) is *bhīṛ*, "crowd", which CDIAL lists under a reconstructed *\*bhiṭ*, "meet, throng" (CDIAL 9490), with a rhyming partner *bhāṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

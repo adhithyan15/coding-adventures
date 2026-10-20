@@ -11,7 +11,8 @@ romanization: "muggu"
 concept_tag: TE-NOUN-MUGGU
 prerequisites: [TE-C52-chair]
 sounds: []
-roots: []
+roots: [telugu-muggu-design]
+etymology_hook: "muggu: origin uncertain; DEDR and CDIAL list no word of this shape in this sense"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C52-chair]
 ముగ్గు is the design put on the ground outside the door, in rice flour, before the sun is up. It is walked over all day and drawn again the next morning.
 
 The flour is the point. It is laid where ants and birds will find it, so the welcome begins by feeding something smaller than a guest. Tamil calls the same act கோலம், Kannada ರಂಗೋಲಿ. The word is local; the practice is not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ముగ్గు** (*muggu*) is uncertain. DEDR lists no word of this shape in this sense, and CDIAL has nothing for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

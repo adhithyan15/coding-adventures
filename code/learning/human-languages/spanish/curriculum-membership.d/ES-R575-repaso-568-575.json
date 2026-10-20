@@ -1,0 +1,11 @@
+{
+  "id": "ES-R575-repaso-568-575",
+  "pathSegment": "ES-PATH-575-PASADO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-575-PASADO",
+      "order": 5
+    }
+  ]
+}

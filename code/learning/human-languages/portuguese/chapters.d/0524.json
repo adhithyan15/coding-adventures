@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Versos e rimas",
+  "label": "ch:pt-versos-e-rimas",
+  "canDo": "I can talk about poetry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C524-declamar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about poetry.",
+    "assesses": [
+      "PT-LEX-C524-POESIA-03",
+      "PT-LEX-C524-POESIA-04",
+      "PT-LEX-C524-POESIA-05"
+    ]
+  }
+}

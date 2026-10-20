@@ -14,7 +14,8 @@ romanization: "bēḷe"
 concept_tag: KA-VASTU257-BELE
 prerequisites: [KA-C257-mettilu, KA-C257-hittu]
 sounds: []
-roots: []
+roots: [dravidian-bele-split-pulse]
+etymology_hook: "bēḷe: native Dravidian (DEDR 4444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C257-hittu]
 <!-- hl-knowledge: introduces=[KA-LEX-C257-VASTU257-04]; assesses=[] -->
 
 **ಬೇಳೆ** — *bēḷe* — "lentils, dal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೇಳೆ** (*bēḷe*) is native Dravidian (DEDR 4444). DEDR lists *bēḷe*, "split pulse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

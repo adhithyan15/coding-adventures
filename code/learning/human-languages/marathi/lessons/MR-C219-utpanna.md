@@ -14,7 +14,8 @@ romanization: "utpanna"
 concept_tag: MR-VASTU219-UTPANNA
 prerequisites: [MR-C218-dav, MR-C219-dar]
 sounds: []
-roots: []
+roots: [sanskrit-utpanna]
+etymology_hook: "utpanna: Sanskrit utpanna 'arisen, produced', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C219-dar]
 <!-- hl-knowledge: introduces=[MR-LEX-C219-VASTU219-02]; assesses=[] -->
 
 **उत्पन्न** — *utpanna* — "income".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उत्पन्न** (*utpanna*) is Sanskrit *utpanna*, "arisen, produced", a tatsama: *ud*, "up", and *pad*, "to go"; CDIAL lists it under *utpadyate*, "arises" (CDIAL 1814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

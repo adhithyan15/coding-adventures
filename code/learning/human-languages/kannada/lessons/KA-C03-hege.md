@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [KA-C02-enu, KA-C01-sari, KA-C02-hesaru, KA-C02-nanna]
 sounds: [long-e]
 roots: [e-interrogative-dravidian]
+etymology_hook: "hēge: native Dravidian; DEDR 5151 lists hēge 'how' on the question base ē-/yā-"
 duration:
   max_seconds: 180
 requires:
@@ -39,8 +40,7 @@ Kannada's question family.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*(Skim if you read Kannada.)* **ಹೇ** (*hē*, *ha* + the long-*ē* sign) + **ಗೆ**
-(*ge*) → **ಹೇಗೆ** (*hēge*).
+*(Skim if you read Kannada.)* **ಹೇ** (*hē*, *ha* + the long-*ē* sign) + **ಗೆ** (*ge*) → **ಹೇಗೆ** (*hēge*).
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02]; assesses=[] -->
@@ -50,6 +50,8 @@ you met in *ēnu*. Kannada gathers its questions here: *ēnu* (what), *hēge* (h
 *yāru* (who), *elli* (where), *yāvāga* (when), *yāke* (why). It is the same
 Dravidian question-root heading Tamil's *eppaṭi* and Telugu's *elā* — a family
 far older than the Sanskrit words Kannada, like its sisters, borrows so readily.
+
+DEDR 5151 lists *hēge* itself, "in what manner, how", among the Kannada question words.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-HEGE-01, KA-ETYMON-C03-HEGE-02, KA-LEX-C01-SARI-01, KA-GRAMMAR-C01-SARI-02, KA-LEX-C02-HESARU-01, KA-ETYMON-C02-HESARU-02, KA-ETYMON-C02-HESARU-03, KA-LEX-C02-NANNA-01, KA-ETYMON-C02-NANNA-02] -->

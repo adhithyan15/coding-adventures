@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 112,
-  "sourceHash": "fnv1a64:f1ea8ed02c8303b7",
+  "sourceHash": "fnv1a64:f27339ed306b7345",
   "lessonIds": [
     "MW-C112-jarurat",
     "MW-C112-lalach",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch112.txt",
   "json": "marwadi/narration/ch112.json",
-  "textHash": "fnv1a64:f0680470cf6972b2",
-  "jsonHash": "fnv1a64:5513dc609709232e",
+  "textHash": "fnv1a64:38a340a26e0e4d80",
+  "jsonHash": "fnv1a64:a7a870f2dbecab84",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 156,
-  "sourceHash": "fnv1a64:3f5a4a3b0daaedf5",
+  "sourceHash": "fnv1a64:f33233da052d1a7a",
   "lessonIds": [
     "PT-C156-anterior",
     "PT-C156-seguinte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch156.txt",
   "json": "portuguese/narration/ch156.json",
-  "textHash": "fnv1a64:8272a027862cdca3",
-  "jsonHash": "fnv1a64:cece8bf9c1960f0e",
+  "textHash": "fnv1a64:c59ba5089e375257",
+  "jsonHash": "fnv1a64:6169eb14687cda8f",
   "findings": []
 }

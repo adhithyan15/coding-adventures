@@ -14,7 +14,8 @@ romanization: "karṣati"
 concept_tag: SA-VERB-KARSATI
 prerequisites: [SA-C137-jvalati, SA-C138-vikrinati]
 sounds: []
-roots: []
+roots: [sanskrit-karshati]
+etymology_hook: "karṣati 'pulls, ploughs' ← √kṛṣ 'drag' (CDIAL 2908), inherited from Indo-European; Persian kešidan 'pull' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C138-vikrinati]
 <!-- hl-knowledge: introduces=[SA-LEX-C138-ACT138-02]; assesses=[] -->
 
 **कर्षति** — *karṣati* — "pulls, ploughs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*karṣati* comes from the root √kṛṣ "draw, drag, plough" (CDIAL 2908), inherited from Indo-European (EtymDB); Persian *kešidan* "to pull" is a cousin. Pali kept it as *kassate* "ploughs" (CDIAL 2908), and *kṛṣi* "farming" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

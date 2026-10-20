@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 262,
-  "sourceHash": "fnv1a64:4dd32d717bbd966e",
+  "sourceHash": "fnv1a64:21376beb633324e3",
   "lessonIds": [
     "HI-C262-barhai",
     "HI-C262-mochi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch262.txt",
   "json": "hindi/narration/ch262.json",
-  "textHash": "fnv1a64:82ad8990f0bf84f3",
-  "jsonHash": "fnv1a64:8596ad1349f46ed8",
+  "textHash": "fnv1a64:43c9ef94df9947cc",
+  "jsonHash": "fnv1a64:b77f10aa23780dca",
   "findings": []
 }

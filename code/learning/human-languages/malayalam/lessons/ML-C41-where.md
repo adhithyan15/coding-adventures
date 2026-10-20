@@ -11,7 +11,8 @@ romanization: "eviṭe"
 concept_tag: ML-DEIXIS-WHERE
 prerequisites: [ML-C41-who, ML-C39-chaaya, ML-C39-kaapi]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "eviṭe: native Dravidian, the asking base + the 'place' tail of iviṭe and aviṭe (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -40,18 +41,24 @@ reviews_of: [ML-C41-who]
 
 **എവിടെ** — *eviṭe* — where? — asking about a place.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no place: it asks your listener to
+point one out.
 
-Its partner is **ആര്** *ārŭ*, which you will meet just now. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partners are **ഇവിടെ** *iviṭe* and **അവിടെ** *aviṭe*, which you have
+already met. The three differ by one sound at the front — **e-** for ask — and
+that is not a coincidence. It is the whole system, and the last lesson of this
+chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എവിടെ** (*eviṭe*) is native Dravidian: the old asking base with the same "place" tail as *iviṭe* and *aviṭe*. DEDR 5151 gathers the asking words, with Tamil *yāṇṭu*, "where".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-06, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "എവിടെ" three times, picturing something different each time]
+- [YOU SAY: "എവിടെ" three times, asking about a different place each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU READ: **ചായ**]
 - [YOU RECALL: say *kāppi*]

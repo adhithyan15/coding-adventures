@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 69,
-  "sourceHash": "fnv1a64:ca7761f3b58843af",
+  "sourceHash": "fnv1a64:0cfa0eaf12d51325",
   "lessonIds": [
     "MW-C69-taro",
     "MW-C69-suraj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch69.txt",
   "json": "marwadi/narration/ch69.json",
-  "textHash": "fnv1a64:3cea983997009906",
-  "jsonHash": "fnv1a64:08ea94743646061d",
+  "textHash": "fnv1a64:72d01f81f5533b2c",
+  "jsonHash": "fnv1a64:13ee4aa61f774852",
   "findings": []
 }

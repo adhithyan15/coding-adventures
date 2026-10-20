@@ -14,7 +14,8 @@ romanization: "vāṭikā"
 concept_tag: SA-THG164-VATIKA
 prerequisites: [SA-C163-upaharah, SA-C164-pranganam]
 sounds: []
-roots: []
+roots: [sanskrit-vatika]
+etymology_hook: "vāṭikā ← vāṭa 'enclosure' + -ikā 'small': 'a small enclosure, a garden'; Bengali bāṛi (CDIAL 11480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C164-pranganam]
 <!-- hl-knowledge: introduces=[SA-LEX-C164-THG164-02]; assesses=[] -->
 
 **वाटिका** — *vāṭikā* — "a small garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vāṭikā* is *vāṭa* "an enclosure, a fenced plot" with the small-thing suffix *-ikā*: "a little enclosure, a garden". It lives on as Hindi *bāṛī* "enclosure" and Bengali *bāṛi* (CDIAL 11480).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

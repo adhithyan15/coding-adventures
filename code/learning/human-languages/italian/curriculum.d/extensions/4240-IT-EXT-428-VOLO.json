@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-428-VOLO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a flight: taking off, landing, turbulence, fastening my belt and the window seat.",
+  "prerequisites": []
+}

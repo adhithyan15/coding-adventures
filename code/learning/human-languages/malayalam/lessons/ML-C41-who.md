@@ -11,7 +11,8 @@ romanization: "ārŭ"
 concept_tag: ML-DEIXIS-WHO
 prerequisites: [ML-C41-there, ML-C38-nenchu]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "ārŭ: native Dravidian, the question stem yā- worn down; Tamil yār, ār (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -40,23 +41,30 @@ reviews_of: [ML-C41-there]
 
 **ആര്** — *ārŭ* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **എവിടെ** *eviṭe*, which you will meet in a moment. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+*ārŭ* opens with a long **ā-**. Do not hear it as the short **a-** of far that
+**അത്** *atŭ* and **അവിടെ** *aviṭe* share: it has nothing to do with distance.
+Tamil, next door, says *yār*; Malayalam's word is the same one with its first
+*y-* worn away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആര്** (*ārŭ*) is native Dravidian, the question stem *yā-* worn down to *ā-*. DEDR 5151 lists it with Tamil *yār*, *ār* and Kannada *yār*, *ār*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ആര്" three times, picturing something different each time]
+- [YOU SAY: "ആര്" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *neñcŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05] -->
 
-[PAUSE 3s] What is *ārŭ*? (who? — asking about a person.) What sound does it start with, and does
-that sound mean near, far, or a question? (**e-** — ask.)
+[PAUSE 3s] What is *ārŭ*? (who? — asking about a person.) Does its long ā- mean far, like the
+short a- of *atŭ*? (**No** — it is the same word as Tamil's *yār*, its y- worn away; it asks
+about a person.)

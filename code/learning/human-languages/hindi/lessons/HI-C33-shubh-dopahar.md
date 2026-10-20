@@ -9,15 +9,15 @@ sequence: 850
 chapter: 33
 type: phrase
 headword: शुभ दोपहर
-gloss: "good afternoon" (shubh dopahar) — uses दोपहर in its modern, widened "afternoon" sense (HI-C30), not the narrow etymological "noon"; the rarest of this arc's three शुभ+noun greetings in actual casual use, with नमस्ते/नमस्कार covering the afternoon in practice
+gloss: '"good afternoon" (shubh dopahar) — uses दोपहर in its modern, widened "afternoon" sense (HI-C30), not the narrow etymological "noon"; the rarest of this arc''s three शुभ+noun greetings in actual casual use, with नमस्ते/नमस्कार covering the afternoon in practice'
 romanization: "shubh dopahar"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [HI-S145-letter-sha, HI-C30-dopahar-widened, HI-C32-evening-register]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]
-roots: [su-good, do-two, pahar-traditional-watch]
-etymology_hook: "शुभ दोपहर (shubh dopahar, 'good afternoon') pairs शुभ with दोपहर IN ITS WIDENED MODERN SENSE (HI-C30's 'the whole afternoon,' not the narrow etymological 'exactly noon') — but of this arc's three शुभ+timeword greetings, this is the one described as most clearly rare/uncommon in actual spoken use, more so than सुप्रभात or शुभ संध्या; sources describe it as formal/written only, with casual alternatives like आपका दोपहर शुभ हो ('may your afternoon be good') existing but still uncommon, and नमस्ते/नमस्कार doing the real everyday work, all day including afternoon"
+roots: [su-good, do-two, pahar-traditional-watch, sanskrit-shubha]
+etymology_hook: "shubh ← Sanskrit śubha 'bright, auspicious', a tatsama (CDIAL 12532); dopahar: do 'two' + pahar 'a watch'"
 duration:
-  max_seconds: 262
+  max_seconds: 273
 requires:
   knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02, HI-CONCEPT-C32-EVENING-REGISTER-01, HI-SCRIPT-RECOG-145]
 introduces:
@@ -50,6 +50,8 @@ from last lesson: "the afternoon" generally, not the narrow etymological
 "exactly noon." Good news for consistency: this greeting confirms
 दोपहर's widened meaning is the one people actually reach for here —
 nobody uses शुभ दोपहर to mean "good [precise instant of] noon."
+
+**शुभ** is Sanskrit *śubha*, "bright, auspicious", a tatsama (CDIAL 12532).
 
 ## You'll want to know — Be honest: the rarest of the three, not just another formal phrase
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C33-SHUBH-DOPAHAR-02]; assesses=[] -->

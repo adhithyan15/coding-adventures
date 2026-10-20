@@ -14,7 +14,8 @@ romanization: "eduru"
 concept_tag: KA-STHALA249-EDURU
 prerequisites: [KA-C249-pascima, KA-C249-daksina]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite]
+etymology_hook: "eduru: native Dravidian, one word with Tamil etir and Telugu eduru (DEDR 795)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C249-daksina]
 <!-- hl-knowledge: introduces=[KA-LEX-C249-STHALA249-04]; assesses=[] -->
 
 **ಎದುರು** — *eduru* — "opposite, facing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎದುರು** (*eduru*) is native Dravidian, one word with Tamil *etir*, Telugu *eduru* and Malayalam *etir* (DEDR 795). DEDR lists Kannada *iduru*, *edur*, "that which is opposite, the front".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vrach"
 concept_tag: RU-HEALTH1-DOCTOR
 prerequisites: [RU-C32-illness, RU-C32-medicine]
 sounds: []
-roots: []
+roots: [slavic-vorch]
+etymology_hook: "врач is Church Slavonic, first 'a charmer'; Vasmer ties it to врать 'to talk nonsense'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C32-medicine]
 <!-- hl-knowledge: introduces=[RU-LEX-C32-HEALTH1-04]; assesses=[] -->
 
 **врач** (*vrach*) — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**врач** — a Church Slavonic word, Old Church Slavonic *vračĭ*; its *-ра-*, where East Slavic would say *-оро-*, marks it. Vasmer derives it from the root of *врать*, "to talk nonsense", and *ворчать*, "to grumble", so the first sense was "charmer, healer by spells"; Bulgarian *врач* still means "sorcerer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

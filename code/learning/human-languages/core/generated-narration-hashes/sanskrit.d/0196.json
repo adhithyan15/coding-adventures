@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 196,
-  "sourceHash": "fnv1a64:356793e1e88c1b14",
+  "sourceHash": "fnv1a64:37621bdd4b71af03",
   "lessonIds": [
     "SA-C196-tamram",
     "SA-C196-pasanah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch196.txt",
   "json": "sanskrit/narration/ch196.json",
-  "textHash": "fnv1a64:c9694160094c7627",
-  "jsonHash": "fnv1a64:e303a66dd5289dea",
+  "textHash": "fnv1a64:c771df967725ee8f",
+  "jsonHash": "fnv1a64:58e262ac0e3eae06",
   "findings": []
 }

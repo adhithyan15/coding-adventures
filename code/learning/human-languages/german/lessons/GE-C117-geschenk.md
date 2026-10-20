@@ -14,6 +14,7 @@ concept_tag: GE-DINGE117-GESCHENK
 prerequisites: [GE-C117-ring, GE-C117-kette]
 sounds: []
 roots: []
+etymology_hook: "Geschenk — from the verb 'to give as a present', first 'to pour out a drink for someone'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C117-kette]
 <!-- hl-knowledge: introduces=[GE-LEX-C117-DINGE117-04]; assesses=[] -->
 
 **das Geschenk** — "a present".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Geschenk** is *ge-* + the stem of the verb "to give as a present", which first meant "to pour out a drink for someone". A present began as a drink poured for a guest. *Schenken* ← Old High German *scenken*, "to pour, to give drink" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

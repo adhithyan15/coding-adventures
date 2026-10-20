@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C777-enchufar",
+    "language": "spanish",
+    "chapter": 777,
+    "sequence": 28890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bbe308fa9fefdb0"
+  },
+  "findings": []
+}

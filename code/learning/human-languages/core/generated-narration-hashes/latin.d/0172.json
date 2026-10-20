@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 172,
-  "sourceHash": "fnv1a64:c02dd55c416cae4b",
+  "sourceHash": "fnv1a64:bf58e6fea024285b",
   "lessonIds": [
     "LA-C172-sero",
     "LA-C172-meto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch172.txt",
   "json": "latin/narration/ch172.json",
-  "textHash": "fnv1a64:c9e67a412354a4ac",
-  "jsonHash": "fnv1a64:04e0c9c7f67c2976",
+  "textHash": "fnv1a64:72ca6dc8fa5909bc",
+  "jsonHash": "fnv1a64:7e264392b60f9ef6",
   "findings": []
 }

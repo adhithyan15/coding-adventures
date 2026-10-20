@@ -13,7 +13,8 @@ gloss: "a granddaughter"
 concept_tag: GE-THING164-ENKELIN
 prerequisites: [GE-C164-nachbarin, GE-C164-cousine]
 sounds: []
-roots: []
+roots: [germanic-ano]
+etymology_hook: "Enkelin — Enkel 'grandson' + -in; Enkel was once 'little grandfather'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C164-cousine]
 <!-- hl-knowledge: introduces=[GE-LEX-C164-THING164-03]; assesses=[] -->
 
 **die Enkelin** — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Enkelin** is *Enkel* + *-in*, the ending that names a woman or girl. *Enkel* ← Old High German *eniklīn*, "little grandfather". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

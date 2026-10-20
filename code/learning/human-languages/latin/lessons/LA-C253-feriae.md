@@ -13,7 +13,8 @@ gloss: "holidays"
 concept_tag: LA-RES253-FERIAE
 prerequisites: [LA-C252-candelabrum, LA-C252-tabella]
 sounds: []
-roots: []
+roots: [feriae-latin, festus-latin]
+etymology_hook: "fēriae 'holidays' — older fēsiae, kin to fēstus 'festive'; English fair comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C252-tabella]
 <!-- hl-knowledge: introduces=[LA-LEX-C253-RES253-01]; assesses=[] -->
 
 **fēriae, fēriārum** — "holidays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fēriae** comes from an older *fēsiae* (Lewis & Short), from the same root as *fēstus*, "festive". Both are usually traced to Proto-Indo-European *\*dheh1s-*, "god, sacred" (EtymDB 2.1). English *fair*, a market, comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mīṭh"
 concept_tag: MR-FOOD86-MITH
 prerequisites: [MR-C86-gajar, MR-C86-sakhar]
 sounds: []
-roots: []
+roots: [sanskrit-mrshta]
+etymology_hook: "mīṭh 'salt': CDIAL lists it under Sanskrit mṛṣṭa 'prepared, savoury', miṣṭa 'sweet' (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C86-sakhar]
 <!-- hl-knowledge: introduces=[MR-LEX-C86-FOOD86-05]; assesses=[] -->
 
 **मीठ** — *mīṭh* — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मीठ** (*mīṭh*) is inherited. CDIAL lists Marathi *mīṭh*, "salt", under Sanskrit *mṛṣṭa*, "prepared, savoury", which also had a form *miṣṭa*, "dainty, sweet" (CDIAL 10299).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

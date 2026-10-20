@@ -14,7 +14,8 @@ romanization: "maṟakkuka"
 concept_tag: ML-VERB-MARAKKUKA
 prerequisites: [ML-C174-tirayuka, ML-C174-kantettuka]
 sounds: []
-roots: []
+roots: [dravidian-mara-forget]
+etymology_hook: "maṟakkuka: native Dravidian, one word with Kannada maṟe and Telugu maṟacu (DEDR 4760)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C174-kantettuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C174-ACT174-05]; assesses=[] -->
 
 **മറക്കുക** — *maṟakkuka* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മറക്കുക** (*maṟakkuka*) is native Dravidian, one word with Kannada *maṟe* and Telugu *maṟacu* (DEDR 4760).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

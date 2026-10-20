@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 200,
-  "sourceHash": "fnv1a64:689953c8ceaab28e",
+  "sourceHash": "fnv1a64:3e7f097a7d419aa4",
   "lessonIds": [
     "MR-C200-snayu",
     "MR-C200-jakham",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch200.txt",
   "json": "marathi/narration/ch200.json",
-  "textHash": "fnv1a64:16c01be54652aa07",
-  "jsonHash": "fnv1a64:1f6f4a264d189e86",
+  "textHash": "fnv1a64:08e8d99cb75003f3",
+  "jsonHash": "fnv1a64:7a31333aa63a4d80",
   "findings": []
 }

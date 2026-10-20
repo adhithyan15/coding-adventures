@@ -15,6 +15,7 @@ concept_tag: FA-PLACE69-CHAP
 prerequisites: [FA-C69-anja, FA-C69-rast]
 sounds: []
 roots: []
+etymology_hook: "chap: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C69-rast]
 <!-- hl-knowledge: introduces=[FA-LEX-C69-PLACE69-04]; assesses=[] -->
 
 **چپ** — *chap* — "left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chap* is a native Persian word whose origin is not settled; EtymDB links it to an Indo-European root for "bending", but that link is not secure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

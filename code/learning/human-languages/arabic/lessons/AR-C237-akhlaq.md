@@ -14,7 +14,8 @@ romanization: "akhlāq"
 concept_tag: AR-SABAB237-AKHLAQ
 prerequisites: [AR-C237-karam, AR-C237-shuur]
 sounds: []
-roots: []
+roots: [kh-l-q]
+etymology_hook: "akhlāq: built on the root kh-l-q, 'to create' (Lane); akhlāq is the plural of khuluq, 'natural disposition'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C237-shuur]
 <!-- hl-knowledge: introduces=[AR-LEX-C237-SABAB237-04]; assesses=[] -->
 
 **أخلاق** — *akhlāq* — "morals, manners".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أخلاق** (*akhlāq*) is built on the native Arabic root *kh-l-q*, "to create; natural disposition" (Lane). *Akhlāq* is the plural of *khuluq*, "natural disposition".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

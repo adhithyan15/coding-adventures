@@ -13,7 +13,8 @@ gloss: "to jump"
 concept_tag: IT-VERB-SALTARE
 prerequisites: [IT-C140-accendere, IT-C140-spegnere]
 sounds: []
-roots: []
+roots: [saltare-latin]
+etymology_hook: "saltare ← Latin saltare 'to leap, to dance' — English somersault shares the root"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C140-spegnere]
 <!-- hl-knowledge: introduces=[IT-LEX-C140-VERBI140-03]; assesses=[] -->
 
 **saltare** — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saltare** ← Latin *saltare*, "to leap, to dance" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

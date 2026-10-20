@@ -14,7 +14,8 @@ romanization: "māñjar"
 concept_tag: MR-NATURE99-MANJAR
 prerequisites: [MR-C99-akash, MR-C99-kutra]
 sounds: []
-roots: []
+roots: [sanskrit-marjara]
+etymology_hook: "māñjar ← Sanskrit mārjāra 'cat', a tadbhava (CDIAL 10082)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C99-kutra]
 <!-- hl-knowledge: introduces=[MR-LEX-C99-NATURE99-05]; assesses=[] -->
 
 **मांजर** — *māñjar* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मांजर** (*māñjar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārjāra*, "cat" (CDIAL 10082).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

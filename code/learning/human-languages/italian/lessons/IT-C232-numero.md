@@ -13,7 +13,8 @@ gloss: "a number"
 concept_tag: IT-LAV232-NUMERO
 prerequisites: [IT-C231-giocatore, IT-C231-allenatore]
 sounds: []
-roots: []
+roots: [numerus-latin]
+etymology_hook: "numero ← Latin numerus 'a number', a learned word — English number is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C231-allenatore]
 <!-- hl-knowledge: introduces=[IT-LEX-C232-LAV232-01]; assesses=[] -->
 
 **il numero** — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**numero** ← Latin *numerus*, "a number" — a learned borrowing; the same Latin word, passed down by speech, gave the old word *novero*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

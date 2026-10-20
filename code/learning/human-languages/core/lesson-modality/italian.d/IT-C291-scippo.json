@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C291-scippo",
+    "language": "italian",
+    "chapter": 291,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:669c2b5d0bebbb68"
+  },
+  "findings": []
+}

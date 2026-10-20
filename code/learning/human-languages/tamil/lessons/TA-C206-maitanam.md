@@ -14,7 +14,8 @@ romanization: "maitāṉam"
 concept_tag: TA-IDAM206-MAITANAM
 prerequisites: [TA-C206-macuti, TA-C206-kutam]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "மைதானம் ← Persian maidān 'open ground', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C206-kutam]
 <!-- hl-knowledge: introduces=[TA-LEX-C206-IDAM206-04]; assesses=[] -->
 
 **மைதானம்** — *maitāṉam* — "a playground, a sports ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மைதானம்** (*maitāṉam*) is a loan from Persian *maidān*, "open ground", through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "grāhaka"
 concept_tag: KA-KELASA194-GRAHAKA
 prerequisites: [KA-C193-trikona, KA-C194-sambala]
 sounds: []
-roots: []
+roots: [sanskrit-grahaka]
+etymology_hook: "grāhaka ← Sanskrit grāhaka 'one who takes, a buyer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C194-sambala]
 <!-- hl-knowledge: introduces=[KA-LEX-C194-KELASA194-02]; assesses=[] -->
 
 **ಗ್ರಾಹಕ** — *grāhaka* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗ್ರಾಹಕ** (*grāhaka*) is Sanskrit *grāhaka*, "one who takes, a taker", taken over whole: the customer is the one who takes the goods.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

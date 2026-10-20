@@ -13,7 +13,8 @@ gloss: "to measure"
 concept_tag: FR-VERB-MESURER
 prerequisites: [FR-C234-remplir, FR-C234-vider]
 sounds: []
-roots: []
+roots: [mensura-latin]
+etymology_hook: "mesurer ← Late Latin mensurare, from mensura 'a measure' — English measure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C234-vider]
 <!-- hl-knowledge: introduces=[FR-LEX-C234-VERBES234-03]; assesses=[] -->
 
 **mesurer** — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mesurer** ← Late Latin *mensurare*, from *mensura*, "a measure" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

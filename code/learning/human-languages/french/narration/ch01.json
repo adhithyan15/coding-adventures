@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2dffb08bd4802276",
+  "sourceHash": "fnv1a64:d88cd54d53d43415",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f5a42852e39d3a94",
+      "sourceHash": "fnv1a64:5f0420a4f2d00dc5",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -95,7 +95,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Salut is strictly informal — friends, family, peers — and it doubles as \"bye.\" For anyone you'd show respect to, or a first meeting, you reach past it for bonjour (coming in a few lessons), exactly as Spanish reaches past hola for buenos días."
+              "text": "Salut is strictly informal — friends, family, peers — and it doubles as \"bye.\" For anyone you'd show respect to, or a first meeting, you reach past it for the formal greeting (a few lessons on), exactly as Spanish reaches past hola for buenos días."
             }
           ]
         },
@@ -569,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da4b000df388ab41",
+      "sourceHash": "fnv1a64:cb3f824762fc8fb9",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
             },
             {
               "kind": "speech",
-              "text": "Using it alone: \"Comment ça va?\" (how's it going?) becomes \"Bien.\" (\"Well / good.\") Intensified: \"très bien\" (\"very well\")."
+              "text": "Using it alone: asked \"how's it going?\", you can answer with one word: \"Bien.\" (\"Well / good.\")"
             }
           ]
         },
@@ -630,7 +630,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bien is the adverb (\"well\" — how something is done). The adjective \"good\" (describing a thing) is a different word, bon — the next lesson. This is the same well vs. good split as English, and the same bien vs. bueno split as Spanish; French's adjective is bon, from Latin bonus."
+              "text": "bien is the adverb (\"well\" — how something is done). The adjective \"good\" (describing a thing) is a different word — the next lesson. This is the same well vs. good split as English, and the same bien vs. bueno split as Spanish; French's adjective comes from Latin bonus."
             }
           ]
         },
@@ -657,15 +657,6 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"très bien\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"très bien\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "\"bien\" then English \"benefit\", \"benevolent\"",
               "spoken": true,
               "scored": false,
@@ -687,7 +678,7 @@
             },
             {
               "kind": "speech",
-              "text": "French bien and Spanish bien come from the same Latin word — which one? (bene, \"well.\") Adverb or adjective? (Adverb — \"good\" the adjective is bon, next.)"
+              "text": "French bien and Spanish bien come from the same Latin word — which one? (bene, \"well.\") Adverb or adjective? (Adverb — \"good\" the adjective is a different word, next.)"
             }
           ]
         }
@@ -706,7 +697,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4e13e4b77577a90",
+      "sourceHash": "fnv1a64:01bc7f739de418b6",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +713,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the word that starts bonjour and bonsoir. Learn it alone first — including the trick that its two forms sound completely different even though they look nearly the same."
+              "text": "This is the word that starts French's \"good day\" and \"good evening.\" Learn it alone first — including the trick that its two forms sound completely different even though they look nearly the same."
             }
           ]
         },
@@ -767,7 +758,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Like every Romance adjective, bon agrees with its noun's gender and number — bon (masc.), bonne (fem.), bons (masc. pl.), bonnes (fem. pl.). This is Latin's legacy: adjectives change their ending to match the noun (Spanish runs the same machine on bueno / buena). You'll watch it in the next few lessons: bon jour (masc.) but bonne nuit (fem.)."
+              "text": "Like every Romance adjective, bon agrees with its noun's gender and number — bon (masc.), bonne (fem.), bons (masc. pl.), bonnes (fem. pl.). This is Latin's legacy: adjectives change their ending to match the noun (Spanish runs the same machine on bueno / buena). You'll watch it in the next few lessons: the day greeting takes bon, the night one bonne."
             }
           ]
         },
@@ -834,7 +825,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78acbaf69094afa8",
+      "sourceHash": "fnv1a64:235c3bf9fc6c619c",
       "notice": null,
       "blocks": [
         {
@@ -918,11 +909,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le jour\" (masc.), \"la nuit\" (fem.) — the nouns are coming",
+              "instruction": "\"le\" (masc.), \"la\" (fem.), \"les\" (plural) — the nouns that wear them are coming",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le jour\" (masc.), \"la nuit\" (fem.) — the nouns are coming]"
+              "source": "[YOU SAY: \"le\" (masc.), \"la\" (fem.), \"les\" (plural) — the nouns that wear them are coming]"
             }
           ]
         },
@@ -958,7 +949,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:354827c3f5b2d9d5",
+      "sourceHash": "fnv1a64:6e6d9c43f18d4659",
       "notice": null,
       "blocks": [
         {
@@ -1000,7 +991,7 @@
             },
             {
               "kind": "speech",
-              "text": "vowel-ou — ou = oo. So jour = zhoor. see reference."
+              "text": "vowel-ou — the letters o-u say oo. So jour = zhoor. see reference."
             }
           ]
         },
@@ -1126,7 +1117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab5e82e76e696dc9",
+      "sourceHash": "fnv1a64:bcec675f2f81fefd",
       "notice": null,
       "blocks": [
         {
@@ -1164,7 +1155,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bonjour = bon (\"good\") + jour (\"day\") = \"good day.\" One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work."
+              "text": "bonjour = bon (\"good\") + jour (\"day\") = \"good day.\" One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work. Both are inherited: bon from Latin bonus, jour from Latin diurnum, \"daytime\" (EtymDB 2.1)."
             }
           ]
         },
@@ -1179,7 +1170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Culturally, bonjour carries weight far beyond \"hello\": in France, opening almost any interaction — a shop, a bus, a desk — without a bonjour reads as rude. It's the formal, all-purpose daytime greeting (switch to bonsoir in the evening), and the polite default where salut would be too casual."
+              "text": "Culturally, bonjour carries weight far beyond \"hello\": in France, opening almost any interaction — a shop, a bus, a desk — without a bonjour reads as rude. It's the formal, all-purpose daytime greeting (the evening has its own, two lessons on), and the polite default where salut would be too casual."
             }
           ]
         },
@@ -1395,7 +1386,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:266ef53e0228c479",
+      "sourceHash": "fnv1a64:329c25bf7f3bc60d",
       "notice": null,
       "blocks": [
         {
@@ -1433,7 +1424,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bonsoir = bon (\"good\") + soir (\"evening\") = \"good evening.\" bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr."
+              "text": "bonsoir = bon (\"good\") + soir (\"evening\") = \"good evening.\" bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr. Soir from Latin sērō, \"late\", from sērus (EtymDB 2.1)."
             }
           ]
         },
@@ -1814,7 +1805,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:31a9ae3ad418723f",
+      "sourceHash": "fnv1a64:26a9957b6a6d472f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1921,11 +1912,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer \"how are you\" in one word — bien, then très bien",
+              "instruction": "answer \"how are you\" in one word — bien",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer \"how are you\" in one word — *bien*, then *très bien*]"
+              "source": "[YOU SAY: answer \"how are you\" in one word — *bien*]"
             },
             {
               "kind": "repeat",
@@ -1962,7 +1953,7 @@
             },
             {
               "kind": "speech",
-              "text": "French bonjour is singular; the Spanish morning greeting is plural — name it. (Buenos días.) Next chapter: introducing yourself — je m'appelle… — and French's own formal/informal \"you,\" tu vs vous."
+              "text": "French bonjour is singular; the Spanish morning greeting is plural — name it. (Buenos días.) Next chapter: introducing yourself — \"my name is…\" — and French's own two words for \"you,\" one familiar and one formal."
             }
           ]
         }

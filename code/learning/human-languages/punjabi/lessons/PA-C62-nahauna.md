@@ -14,7 +14,8 @@ romanization: "nahāuṇā"
 concept_tag: PA-VERB-NAHAUNA
 prerequisites: [PA-C62-guauna, PA-C62-pahinna]
 sounds: []
-roots: []
+roots: [sanskrit-snapayati]
+etymology_hook: "nahāuṇā: CDIAL lists Punjabi nhāuṇā under Sanskrit snāpayati 'causes to bathe, washes' (CDIAL 13791)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C62-pahinna]
 <!-- hl-knowledge: introduces=[PA-LEX-C62-VERBS62-03]; assesses=[] -->
 
 **ਨਹਾਉਣਾ** — *nahāuṇā* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਹਾਉਣਾ** (*nahāuṇā*) is inherited. CDIAL lists it, as *nhāuṇā*, under Sanskrit *snāpayati*, "causes to bathe, washes" (CDIAL 13791).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

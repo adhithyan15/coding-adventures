@@ -14,7 +14,8 @@ romanization: "jūn"
 concept_tag: UR-VAQT188-JUN
 prerequisites: [UR-C188-aprail, UR-C188-mai]
 sounds: []
-roots: []
+roots: [english-june]
+etymology_hook: "jūn ← English June"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C188-mai]
 <!-- hl-knowledge: introduces=[UR-LEX-C188-VAQT188-03]; assesses=[] -->
 
 **جون** — *jūn* — "June".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جون** (*jūn*) is a loan from English *June*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

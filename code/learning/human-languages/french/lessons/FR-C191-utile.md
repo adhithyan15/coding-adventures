@@ -13,7 +13,8 @@ gloss: "useful"
 concept_tag: FR-QUAL191-UTILE
 prerequisites: [FR-C191-complique-compliquee, FR-C191-necessaire]
 sounds: []
-roots: []
+roots: [utilis-latin]
+etymology_hook: "utile ← Latin utilis 'useful' — English utility"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C191-necessaire]
 <!-- hl-knowledge: introduces=[FR-LEX-C191-QUAL191-04]; assesses=[] -->
 
 **utile** — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**utile** ← Latin *utilis*, "useful", from *uti*, "to use" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

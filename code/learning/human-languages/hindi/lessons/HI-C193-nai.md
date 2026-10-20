@@ -14,7 +14,8 @@ romanization: "nāī"
 concept_tag: HI-THG193-NAI
 prerequisites: [HI-C193-sipahi, HI-C193-darzi]
 sounds: []
-roots: []
+roots: [sanskrit-napita]
+etymology_hook: "nāī ← Sanskrit nāpita 'barber'; CDIAL files the by-form nāū under snāpaka 'bath attendant' (13792)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C193-darzi]
 <!-- hl-knowledge: introduces=[HI-LEX-C193-THG193-05]; assesses=[] -->
 
 **नाई** — *nāī* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाई** (*nāī*) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it, as a dialect form, under Sanskrit *nāpita*, "barber". The by-form *nāū*, "barber", sits in the same entry under a second word, *snāpaka*, "bath attendant", built on *snā-*, "to bathe" (CDIAL 13792).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

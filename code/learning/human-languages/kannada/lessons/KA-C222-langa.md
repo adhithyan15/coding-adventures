@@ -14,7 +14,8 @@ romanization: "laṅga"
 concept_tag: KA-VASTU222-LANGA
 prerequisites: [KA-C221-capati, KA-C222-pyant]
 sounds: []
-roots: []
+roots: [hindustani-lahanga]
+etymology_hook: "laṅga: usually traced to Hindustani lahaṅgā 'long skirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C222-pyant]
 <!-- hl-knowledge: introduces=[KA-LEX-C222-VASTU222-02]; assesses=[] -->
 
 **ಲಂಗ** — *laṅga* — "a long skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಲಂಗ** (*laṅga*) is usually traced to Hindustani *lahaṅgā*, "a long skirt", but no source settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

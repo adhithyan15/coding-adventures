@@ -19,7 +19,7 @@ long-a — the a of sagen is long and open, the vowel of English father, not the
 ge-prefix — the -gen at the end is unstressed and swallowed, a soft gn more than a full syllable. The same mumble will open every participle in this chapter, so it is worth getting comfortable now.
 
 The word, taken apart.
-Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:
+Sagen is the same word as English say. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:
 [a table of 3 rows, read aloud]
 sagen means say.
 Tag means day.
@@ -54,6 +54,9 @@ gesagt — "said."
 Hear where it grew. Sag- is still sitting in the middle, untouched. In front of it a ge- has appeared; behind it the -en has gone and a -t has taken its place:
 sagen — ge-sag-t.
 That is the word English calls a past participle: the form that goes with have in I have said. German's has a hat on as well as boots.
+
+The word, taken apart.
+gesagt is ge- + the stem of sagen + -t. sagen from Old High German sagēn from Proto-Germanic sagjaną, the same verb as English say. (EtymDB 2.1).
 
 Sounds you'll need.
 ge-prefix — unstressed, almost swallowed: guh, never gay. The stress stays on sagt, exactly where it was in sagen.
@@ -116,6 +119,9 @@ gemacht — "made," and also "done."
 Machen gives up its -en, leaving mach-. The wrap goes round it and out comes gemacht. No stem was harmed: the a is the same a, and the ch is the same ch.
 German uses this one participle where English chooses between two different words. Ich habe das gemacht is "I made that" and "I did that" alike; German never had to pick.
 
+The word, taken apart.
+gemacht is ge- + the stem of machen + -t. machen is the same verb as English make, which EtymDB 2.1 traces to Proto-Germanic makōną.
+
 Sounds you'll need.
 ch-ach — after a, o or u, German ch is the scrape at the back of the throat, the sound in Bach and in Nacht. It sits in the middle of gemacht untouched.
 final-t — and the t on the end is crisp: guh-MAHKHT, three consonants landing together at the finish.
@@ -146,6 +152,9 @@ Third time through the recipe, and this one describes what you have been doing s
 You'll want to know: gelernt.
 gelernt — "learned."
 Lernen loses its -en, leaving lern-; the wrap closes round it. The English cousin is doing the very same job with the very same stem — learn, learned — and differs only in where the marking sits. German puts a piece at each end; English puts both pieces at the back.
+
+The word, taken apart.
+gelernt is ge- + the stem of lernen + -t. lernen from Middle High German lernen from Old High German lernēn (EtymDB 2.1), a cousin of English learn.
 
 Sounds you'll need.
 r-uvular-german — the r inside gelernt is made at the back of the mouth and, before a consonant, is barely a consonant at all: it colours the vowel more than it rolls. Guh-LEHRNT, with the r almost swallowed.
@@ -188,7 +197,7 @@ English kept the same word and only the old meaning:
 [a table of 2 rows, read aloud]
 German gewohnt means lived; accustomed.
 English wont means accustomed, as in he was wont to sing.
-Two languages split one word between them — Germany took the address and England took the habit.
+Two languages split one word between them — Germany took the address and England took the habit. Wohnen from Old High German wonēn from Proto-Germanic wunjaną, "to be wont; to dwell" (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

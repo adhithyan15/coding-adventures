@@ -14,7 +14,8 @@ romanization: "bāhar"
 concept_tag: UR-TIME78-BAHAR
 prerequisites: [UR-C78-qarib, UR-C78-andar]
 sounds: []
-roots: []
+roots: [indo-aryan-bahira]
+etymology_hook: "bāhar ← *bāhira 'external', a reconstructed form; a tadbhava (CDIAL 9226)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C78-andar]
 <!-- hl-knowledge: introduces=[UR-LEX-C78-TIME78-05]; assesses=[] -->
 
 **باہر** — *bāhar* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باہر** (*bāhar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāhira*, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

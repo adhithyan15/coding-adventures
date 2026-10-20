@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 36,
-  "sourceHash": "fnv1a64:2597188fc2db6c2f",
+  "sourceHash": "fnv1a64:740c0e1187c6a7f4",
   "lessonIds": [
     "RU-C36-children",
     "RU-C36-child",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch36.txt",
   "json": "russian/narration/ch36.json",
-  "textHash": "fnv1a64:9e59c56f068e7c70",
-  "jsonHash": "fnv1a64:cbe05e9754e85139",
+  "textHash": "fnv1a64:1f957a4a816639e2",
+  "jsonHash": "fnv1a64:99e50637af3e339c",
   "findings": []
 }

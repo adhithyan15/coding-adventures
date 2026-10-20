@@ -14,7 +14,8 @@ romanization: "vennela"
 concept_tag: TE-VASTUVU267-VENNELA
 prerequisites: [TE-C267-varada, TE-C267-karuvu]
 sounds: []
-roots: []
+roots: [dravidian-vel-white, dravidian-nilaa-moon]
+etymology_hook: "vennela: native Dravidian; DEDR 3754 lists ven nela 'moonlight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C267-karuvu]
 <!-- hl-knowledge: introduces=[TE-LEX-C267-VASTUVU267-04]; assesses=[] -->
 
 **వెన్నెల** — *vennela* — "moonlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెన్నెల** (*vennela*) is native Dravidian. DEDR 3754 lists *ven nela*, "moonlight": *ven-*, "white", and *nela*, "moon", one word with Tamil *nilā*, "moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

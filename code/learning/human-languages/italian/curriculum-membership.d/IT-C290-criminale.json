@@ -1,0 +1,11 @@
+{
+  "id": "IT-C290-criminale",
+  "pathSegment": "IT-PATH-290-DELITTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-290-DELITTO",
+      "order": 2
+    }
+  ]
+}

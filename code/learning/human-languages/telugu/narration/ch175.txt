@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a cave, then the Telugu for a valley.
 You'll want to know: గుంపు.
 గుంపు — gumpu — "a crowd".
 
+The word, taken apart.
+గుంపు (gumpu) is native Dravidian. DEDR 1741 lists gumpu, "a crowd, group", beside gumi, "crowd", with Tamil kumi, "to be heaped up, crowd together".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a valley, then the Telugu for a crowd.
 
 You'll want to know: ప్రపంచం.
 ప్రపంచం — prapañcaṁ — "the world".
+
+The word, taken apart.
+ప్రపంచం (prapañcaṁ) is Sanskrit prapañca, "expansion; the visible world", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a crowd, then the Telugu for the world.
 You'll want to know: భూకంపం.
 భూకంపం — bhūkampaṁ — "an earthquake".
 
+The word, taken apart.
+భూకంపం (bhūkampaṁ) is Sanskrit: bhū, "world; ground" (CDIAL 9546), and kampa, "tremor" (CDIAL 2765), with the Telugu ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for the world, then the Telugu for an earthqu
 You'll want to know: దుమ్ము.
 దుమ్ము — dummu — "dust".
 
+The word, taken apart.
+దుమ్ము (dummu) is native Dravidian. DEDR 3332 lists dummu, "dust", with Tamil tumpu, "dust", and Kannada dumbu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an earthquake, then the Telugu for dust.
 
 You'll want to know: పొగ.
 పొగ — poga — "smoke".
+
+The word, taken apart.
+పొగ (poga) is native Dravidian, one word with Tamil pukai and Kannada poge (DEDR 4240). DEDR lists Telugu poga, "smoke, fume".
 
 What you've built.
 One more word for this chapter.

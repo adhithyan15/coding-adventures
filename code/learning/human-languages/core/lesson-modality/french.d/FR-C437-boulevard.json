@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C437-boulevard",
+    "language": "french",
+    "chapter": 437,
+    "sequence": 24220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c1d23a6f4adc205"
+  },
+  "findings": []
+}

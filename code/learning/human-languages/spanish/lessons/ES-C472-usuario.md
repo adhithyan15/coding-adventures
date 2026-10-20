@@ -11,6 +11,7 @@ concept_tag: ES-ASK-USUARIO
 prerequisites: [ES-C471-sintesis-curso, ES-C385-usar, ES-C353-biblioteca]
 sounds: [s-clear, stress-penultimate, diphthong-ua]
 roots: [usare-latin]
+etymology_hook: "usuario — usar + -ario; Latin usus 'use', from uti 'to use' — English use, usual"
 duration:
   max_seconds: 270
 requires:

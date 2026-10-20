@@ -13,7 +13,8 @@ gloss: "trousers"
 concept_tag: PT-ROUPA1-CALCAS
 prerequisites: [PT-C77-camisa, PT-C77-vestido]
 sounds: []
-roots: []
+roots: [calceus-latin]
+etymology_hook: "calças ← Late Latin calcea 'hose', from calceus 'shoe' — Italian calze are its cousins"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C77-vestido]
 <!-- hl-knowledge: introduces=[PT-LEX-C77-ROUPA1-04]; assesses=[] -->
 
 **as calças** — "trousers". Plural in form, like English "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calças** ← Late Latin *calcea*, "hose" (EtymDB 2.1), from Latin *calceus*, "shoe" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

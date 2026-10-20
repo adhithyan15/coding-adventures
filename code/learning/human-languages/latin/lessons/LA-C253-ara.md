@@ -13,7 +13,8 @@ gloss: "an altar"
 concept_tag: LA-RES253-ARA
 prerequisites: [LA-C253-convivium, LA-C253-sacrificium]
 sounds: []
-roots: []
+roots: [ara-latin]
+etymology_hook: "āra 'altar' — from older āsa (Oscan aasa), usually traced to PIE *h2eHs- 'to burn'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C253-sacrificium]
 <!-- hl-knowledge: introduces=[LA-LEX-C253-RES253-04]; assesses=[] -->
 
 **āra, ārae** — "an altar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**āra** comes from an older *āsa*, as Oscan *aasa*, "altar", shows (Lewis & Short); it is usually traced to Proto-Indo-European *\*h2eHs-*, "to burn, a hearth" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

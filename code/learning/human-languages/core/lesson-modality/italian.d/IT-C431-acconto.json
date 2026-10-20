@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C431-acconto",
+    "language": "italian",
+    "chapter": 431,
+    "sequence": 24440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ade7d40b0ec49409"
+  },
+  "findings": []
+}

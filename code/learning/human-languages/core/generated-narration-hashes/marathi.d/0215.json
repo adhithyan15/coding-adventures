@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 215,
-  "sourceHash": "fnv1a64:a84671e471ee559d",
+  "sourceHash": "fnv1a64:04f56dd6805d8ef4",
   "lessonIds": [
     "MR-C215-kheladu",
     "MR-C215-prasiksak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch215.txt",
   "json": "marathi/narration/ch215.json",
-  "textHash": "fnv1a64:274d40eb236dcfd0",
-  "jsonHash": "fnv1a64:252dbec928c7ce0a",
+  "textHash": "fnv1a64:a8437ca44ec66dc8",
+  "jsonHash": "fnv1a64:dc10974e891648fe",
   "findings": []
 }

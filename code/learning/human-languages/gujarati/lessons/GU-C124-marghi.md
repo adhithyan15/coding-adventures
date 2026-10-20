@@ -14,7 +14,8 @@ romanization: "marghī"
 concept_tag: GU-THINGS124-MARGHI
 prerequisites: [GU-C124-patangiyu, GU-C124-khiskoli]
 sounds: []
-roots: []
+roots: [persian-murgh]
+etymology_hook: "marghī: usually traced to Persian murgh 'bird, fowl'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C124-khiskoli]
 <!-- hl-knowledge: introduces=[GU-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **મરઘી** (*marghī*) — "a hen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મરઘી** (*marghī*) is a loan, usually traced to Persian *murgh*, "bird, fowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 182,
-  "sourceHash": "fnv1a64:c4703a2fd4cb3ebe",
+  "sourceHash": "fnv1a64:4b6e824204c6b6fb",
   "lessonIds": [
     "KA-C182-jipuna",
     "KA-C182-hathamari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch182.txt",
   "json": "kannada/narration/ch182.json",
-  "textHash": "fnv1a64:af96a65fef642729",
-  "jsonHash": "fnv1a64:158925362ab4c578",
+  "textHash": "fnv1a64:4806cff2630bc000",
+  "jsonHash": "fnv1a64:0c6d647c65b76183",
   "findings": []
 }

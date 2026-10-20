@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a village, then the Marathi for clothes.
 You'll want to know: सदरा.
 सदरा — sadrā — "a shirt".
 
+The word, taken apart.
+The origin of सदरा (sadrā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for clothes, then the Marathi for a shirt.
 
 You'll want to know: साडी.
 साडी — sāḍī — "a sari".
+
+The word, taken apart.
+साडी (sāḍī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śāṭī, "strip of cloth, garment" (CDIAL 12381). CDIAL glosses the Marathi word "the sari given to the bride at a wedding".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a shirt, then the Marathi for a sari.
 You'll want to know: मोजा.
 मोजा — mojā — "a sock".
 
+The word, taken apart.
+मोजा (mojā) is a loan, usually traced to Persian mōza, "sock, stocking".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a sari, then the Marathi for a sock.
 You'll want to know: खिसा.
 खिसा — khisā — "a pocket".
 
+The word, taken apart.
+खिसा (khisā) is a loan, usually traced to Persian kīsa, "purse, pouch". Marathi uses it for a pocket.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a sock, then the Marathi for a pocket.
 
 You'll want to know: अंगठी.
 अंगठी — aṅgṭhī — "a ring".
+
+The word, taken apart.
+अंगठी (aṅgṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from aṅguṣṭhiya, "of the thumb", a form CDIAL reconstructs from its descendants (CDIAL 138). It is built on aṅguṣṭha, "thumb".
 
 What you've built.
 One more word for this chapter.

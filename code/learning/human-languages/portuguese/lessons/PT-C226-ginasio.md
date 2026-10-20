@@ -13,7 +13,8 @@ gloss: "a gym"
 concept_tag: PT-COISAS226-GINASIO
 prerequisites: [PT-C225-eletricidade, PT-C226-raquete]
 sounds: []
-roots: []
+roots: [gymnasium-latin]
+etymology_hook: "ginásio ← Latin gymnasium, from Greek gymnasion, from gymnos 'naked'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C226-raquete]
 <!-- hl-knowledge: introduces=[PT-LEX-C226-COISAS226-02]; assesses=[] -->
 
 **o ginásio** — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ginásio** ← Latin *gymnasium*, "school for exercise" (EtymDB 2.1) — a learned borrowing from Latin. Latin took it from Greek *gymnasion*; Greek athletes trained naked.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

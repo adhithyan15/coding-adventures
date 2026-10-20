@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-577-DEFIENDE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-577-DEFIENDE"
+  ],
+  "after": []
+}

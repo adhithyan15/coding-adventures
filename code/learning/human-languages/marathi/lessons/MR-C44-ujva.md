@@ -12,6 +12,7 @@ concept_tag: MR-LEX-UJVA
 prerequisites: [MR-R43-how-far, MR-C12-dola]
 sounds: [standalone-vowel-u, matra-aa]
 roots: [sanskrit-rju]
+etymology_hook: "ujvā ← Sanskrit ṛju 'straight, honest', which CDIAL lists with Marathi ujū 'straight' (CDIAL 2448)"
 duration:
   max_seconds: 220
 requires:

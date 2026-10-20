@@ -13,7 +13,8 @@ gloss: "inside, within"
 concept_tag: LA-LOCUS-INTRA
 prerequisites: [LA-C102-supra, LA-C102-infra]
 sounds: []
-roots: []
+roots: [intra-latin, inter-latin]
+etymology_hook: "intrā 'inside' — contracted from interā (parte) 'on the inner side'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C102-infra]
 <!-- hl-knowledge: introduces=[LA-LEX-C102-LOCUS-04]; assesses=[] -->
 
 **intrā** — "inside, within".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intrā** is contracted from *interā*, "on the inner side", with *parte*, "side", understood (Lewis & Short); it belongs with *inter*, "between".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

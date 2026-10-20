@@ -14,7 +14,8 @@ romanization: "kūvo"
 concept_tag: GU-WATER-WELL
 prerequisites: [GU-C65-sea, GU-C65-lake]
 sounds: []
-roots: []
+roots: [sanskrit-kupa]
+etymology_hook: "kūvo ← Sanskrit kūpa 'hole, hollow; pit, well', a tadbhava (CDIAL 3400)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C65-lake]
 <!-- hl-knowledge: introduces=[GU-LEX-C65-WATER-03]; assesses=[] -->
 
 **કૂવો** (*kūvo*) — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કૂવો** (*kūvo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūpa*, "hole, hollow; pit, well" (CDIAL 3400).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

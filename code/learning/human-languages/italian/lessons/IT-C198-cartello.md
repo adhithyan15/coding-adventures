@@ -13,7 +13,8 @@ gloss: "a sign"
 concept_tag: IT-COSE198-CARTELLO
 prerequisites: [IT-C198-busta-paga, IT-C198-etichetta]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "cartello — carta 'card' + -ello: a card put up — English cartel is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C198-etichetta]
 <!-- hl-knowledge: introduces=[IT-LEX-C198-COSE198-04]; assesses=[] -->
 
 **il cartello** — "a sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cartello** — built from *carta*, "paper, card", with *-ello*: a card put up for all to read. *carta* ← Latin *charta*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

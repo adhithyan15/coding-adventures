@@ -11,7 +11,8 @@ romanization: "upakāraṁ"
 concept_tag: ML-NOUN-FAVOUR
 prerequisites: [ML-C51-gratitude, ML-C49-enough]
 sounds: []
-roots: []
+roots: [sanskrit-upakara]
+etymology_hook: "upakāraṁ ← Sanskrit upakāra 'help, service', a tatsama (CDIAL 2141)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C51-gratitude]
 The word carries a polite adverb with it in daily speech, an 'as a kindness' shaped much like the ദയവായി this book taught for 'please'. Both are courtesies built by turning a noun sideways into an adverb, which is a habit worth noticing rather than learning one word at a time.
 
 Kannada has ಉಪಕಾರ (*upakāra*), the same word once more.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപകാരം** (*upakāraṁ*) ← Sanskrit *upakāra*, "help, service", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 2141). Its parts are *upa*, "near", and *kāra*, "a doing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vitamín"
 concept_tag: RU-ZDOROV180-VITAMIN
 prerequisites: [RU-C180-son, RU-C180-diyeta]
 sounds: []
-roots: []
+roots: [vita]
+etymology_hook: "витамин is an international coinage: Latin vita 'life' + amine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C180-diyeta]
 <!-- hl-knowledge: introduces=[RU-LEX-C180-ZDOROV180-04]; assesses=[] -->
 
 **витамин** (*vitamín*) — "a vitamin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**витамин** is an international coinage of 1912: Latin *vīta*, "life", with *amine*, a chemical name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

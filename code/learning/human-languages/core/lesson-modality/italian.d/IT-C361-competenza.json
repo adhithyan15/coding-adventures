@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C361-competenza",
+    "language": "italian",
+    "chapter": 361,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c933e83544762d6"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "ālasyam"
 concept_tag: SA-WEL151-ALASYAM
 prerequisites: [SA-C151-utsahah, SA-C151-dhairyam]
 sounds: []
-roots: []
+roots: [sanskrit-alasya]
+etymology_hook: "ālasya 'sloth' ← alasa 'lazy' with lengthened vowel (CDIAL 1371); Hindi ālsī 'lazy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C151-dhairyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C151-WEL151-03]; assesses=[] -->
 
 **आलस्यम्** — *ālasyam* — "laziness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ālasya* is built from *alasa* "lazy" with the first vowel lengthened (CDIAL 1371): "laziness, sloth". It lives on as Hindi *ālsī* "lazy" (CDIAL 1371).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

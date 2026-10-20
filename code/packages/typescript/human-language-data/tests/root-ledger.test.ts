@@ -5,12 +5,19 @@
 // three times. That number is the finding, so it is pinned rather than skipped.
 
 import { readFileSync, readdirSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { buildRootLedger, renderRootLedger } from "../src/root-ledger.js";
+import { measureEtymologyCoverage, type EtymologyGap } from "../src/etymology-coverage.js";
 import { loadChapterPolicy, loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
+import { loadEtymologyGapPinOwners } from "./etymology-gap-pin-owners.js";
+
+const etymologyGapPinModules = import.meta.glob(
+  "./etymology-gap-pin-owners/*.owner.ts",
+  { eager: true },
+);
 
 function lesson(
   id: string,
@@ -179,9 +186,175 @@ describe("renderRootLedger", () => {
   });
 });
 
+/**
+ * Etymology coverage per track (HL24 §9): AN EXACT PIN THAT MAY ONLY BE LOWERED.
+ *
+ * Two counts per track, over the lessons that introduce a word (a `-LEX-`
+ * atom, or `type: word` / `phrase`): those with no `etymology_hook`, and
+ * those whose body shows the reader no origin statement. See
+ * src/etymology-coverage.ts for both rules and their measured misses.
+ *
+ * Pinned EXACTLY, like FORWARD_REFERENCE_CEILINGS in continuity.test.ts and
+ * for the same reason: a ceiling leaves slack under it once debt is paid, and
+ * the next lesson could spend that slack unnoticed. So:
+ *
+ *   - a count that RISES fails and names the newest offending lessons. The
+ *     fix is in the lesson -- say where the word comes from, from a cited
+ *     source, or say plainly that the origin is unknown or disputed. Never
+ *     invent one, and never raise the pin.
+ *   - a count that FALLS fails too, asking for the pin to be lowered in the
+ *     same change, so the cleared debt cannot be re-spent.
+ *
+ * The rule is for every NEW word, so a new word lesson must carry both a hook
+ * and visible etymology to leave these numbers where they are.
+ *
+ * Measured when the gate was added: 25,682 word-introducing lessons; 22,744
+ * without a hook, 22,378 without visible etymology, 21,697 with neither.
+ * Spanish, the pilot, is the only track where most words have both. Chinese
+ * has a hook on every word lesson -- its hooks take the character apart --
+ * and 62 lessons whose body never does.
+ */
+const etymologyGapPinOwnerDirectory = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "etymology-gap-pin-owners",
+);
+
+/**
+ * Empty etymology blocks per track (HL24 §9.4): AN EXACT PIN THAT MAY ONLY BE LOWERED.
+ *
+ * A word lesson counted visible above only because a "taken apart" block or
+ * an origin heading is there, while nothing in the lesson says where the word
+ * came from: the block takes apart a sentence, or lists the word's parts and
+ * stops. `hasEmptyEtymologyBlock` in src/etymology-coverage.ts; its loose
+ * origin signals, their measured rescues and their known misses are in the
+ * module comment.
+ *
+ * Disjoint from `withoutVisible` above: a lesson is in one count or the
+ * other, never both. Same ratchet, same two directions. A rise names the
+ * newest lessons; the fix is a sentence in the block saying where the word
+ * comes from (from a cited source, or "unknown"/"disputed" stated plainly),
+ * never a raised pin. A fall asks for the pin to be lowered with it.
+ *
+ * Measured when the pin was added: 475 of 25,682 word lessons, of 4,782
+ * whose visible etymology rested on structure alone with no rule-3 origin
+ * statement anywhere; the loose signals read 4,307 of those as origins.
+ * Spanish's etymology pass (#17455) landed before this pin and filled 40 of
+ * its 88, so the pins start at 435. A later pass gave 293 empty blocks in
+ * twelve tracks an origin sentence (or reworded one a signal could not read),
+ * taking those twelve pins to 0.
+ */
+const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
+  arabic: 0,
+  bengali: 0,
+  chinese: 0,
+  french: 0,
+  german: 0,
+  gujarati: 0,
+  hindi: 0,
+  italian: 0,
+  japanese: 0,
+  kannada: 0,
+  latin: 0,
+  malayalam: 0,
+  marathi: 0,
+  marwadi: 0,
+  persian: 0,
+  portuguese: 0,
+  punjabi: 0,
+  russian: 0,
+  sanskrit: 0,
+  spanish: 0,
+  tamil: 0,
+  telugu: 0,
+  urdu: 0,
+};
+
+/**
+ * How many offending lessons a rise names. A track's whole gap list runs to
+ * a thousand ids, which buries the one that moved; new lessons are usually
+ * appended, so the latest in reading order come first.
+ */
+const NEWEST_GAPS_SHOWN = 40;
+
 describe("the committed corpus", () => {
   const { lessons } = loadEverything();
   const minReuse = loadChapterPolicy().rootLedgerMinReuse ?? 3;
+  // Measured once, here, where the corpus is already loaded: one linear pass,
+  // well under a second, rather than a second whole-corpus load in its own file.
+  const etymology = measureEtymologyCoverage(lessons);
+  const etymologyGapPinOwners = loadEtymologyGapPinOwners(
+    etymologyGapPinOwnerDirectory,
+    etymologyGapPinModules,
+    etymology.tracks.map((track) => track.language),
+  );
+
+  it("pins etymology coverage for every track, and no track that is gone", () => {
+    expect(Object.keys(etymologyGapPinOwners).sort()).toEqual(
+      etymology.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, pin] of Object.entries(etymologyGapPinOwners)) {
+    const kinds = [
+      { key: "withoutHook", label: "word lessons without an etymology_hook", missing: (gap: EtymologyGap) => gap.missingHook },
+      { key: "withoutVisible", label: "word lessons without visible etymology", missing: (gap: EtymologyGap) => gap.missingVisible },
+    ] as const;
+    for (const kind of kinds) {
+      const pinned = pin[kind.key];
+      it(`holds ${language}'s ${kind.label} at exactly ${pinned} (a pin that may only be lowered)`, () => {
+        const found = etymology.gaps.filter((gap) => gap.language === language && kind.missing(gap));
+        // Two directions, two fixes, as in continuity.test.ts. A rise is a
+        // lesson that arrived without its etymology: name it. A fall is
+        // progress the table has not recorded: lower the pin.
+        const newest = [...found]
+          .sort((a, b) => b.position - a.position)
+          .slice(0, NEWEST_GAPS_SHOWN)
+          .map((gap) => gap.lessonId)
+          .join(", ");
+        const message =
+          found.length > pinned
+            ? `${language} has ${found.length} ${kind.label}, above its pin of ${pinned}. ` +
+              `Every new word says where it comes from (HL24 §9) -- from a cited source, or ` +
+              `"unknown"/"disputed" stated plainly; never invented. Fix the lessons, not the pin. ` +
+              `Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)}, latest first: ${newest}`
+            : `${language} has ${found.length} ${kind.label}, below its pin of ${pinned}. ` +
+              `Lower ${language}.owner.ts's ${kind.key} to ${found.length} in this change.`;
+        expect(found.length, message).toBe(pinned);
+      });
+    }
+  }
+
+  it("pins empty etymology blocks for every track, and no track that is gone", () => {
+    expect(Object.keys(EMPTY_ETYMOLOGY_BLOCK_PINS).sort()).toEqual(
+      etymology.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, pinned] of Object.entries(EMPTY_ETYMOLOGY_BLOCK_PINS)) {
+    it(`holds ${language}'s word lessons with an empty etymology block at exactly ${pinned} (a pin that may only be lowered)`, () => {
+      const found = etymology.gaps.filter((gap) => gap.language === language && gap.emptyEtymologyBlock);
+      // The per-track count and the gap list are one measurement; if they
+      // ever disagree, the pin would be checking the wrong thing.
+      expect(found.length).toBe(
+        etymology.tracks.find((track) => track.language === language)?.wordLessonsWithEmptyEtymologyBlock,
+      );
+      const newest = [...found]
+        .sort((a, b) => b.position - a.position)
+        .slice(0, NEWEST_GAPS_SHOWN)
+        .map((gap) => gap.lessonId)
+        .join(", ");
+      const message =
+        found.length > pinned
+          ? `${language} has ${found.length} word lessons whose "taken apart" block or origin heading never ` +
+            `says where the word comes from, above its pin of ${pinned}. Say it in the block (HL24 §9.4) -- ` +
+            `from a cited source, or "unknown"/"disputed" stated plainly; never invented. Fix the lessons, ` +
+            `not the pin. Newest ${Math.min(found.length, NEWEST_GAPS_SHOWN)}, latest first: ${newest}`
+          : `${language} has ${found.length} word lessons with an empty etymology block, below its pin of ` +
+            `${pinned}. The pin may only fall: lower EMPTY_ETYMOLOGY_BLOCK_PINS.${language} to ` +
+            `${found.length} in this change.`;
+      expect(found.length, message).toBe(pinned);
+    });
+  }
 
   it("uses the policy's configured minimum rather than a constant", () => {
     expect(minReuse).toBe(3);

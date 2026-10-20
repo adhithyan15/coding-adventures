@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C603-desigualdad",
+    "language": "spanish",
+    "chapter": 603,
+    "sequence": 19900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04cdf83260adb4b2"
+  },
+  "findings": []
+}

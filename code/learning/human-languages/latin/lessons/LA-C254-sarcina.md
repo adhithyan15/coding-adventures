@@ -13,7 +13,8 @@ gloss: "a pack, a bundle"
 concept_tag: LA-RES254-SARCINA
 prerequisites: [LA-C253-ara, LA-C253-dea]
 sounds: []
-roots: []
+roots: [sarcina-latin, sarcire-latin]
+etymology_hook: "sarcina 'pack' — kin to sarciō 'to patch, to mend'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C253-dea]
 <!-- hl-knowledge: introduces=[LA-LEX-C254-RES254-01]; assesses=[] -->
 
 **sarcina, sarcinae** — "a pack, a bundle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sarcina** belongs with *sarciō*, "to patch, to mend": a bundle tied together. The pair is usually traced to Proto-Indo-European *\*serk-*, "to mend, to make whole" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

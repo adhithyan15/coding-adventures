@@ -13,7 +13,8 @@ gloss: "to put out"
 concept_tag: LA-VERB-EXSTINGUO
 prerequisites: [LA-C164-merx, LA-C165-accendo]
 sounds: []
-roots: []
+roots: [exstinguere-latin]
+etymology_hook: "exstinguō 'to put out' — ex 'out' + stinguō 'to quench'; English extinguish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C165-accendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C165-ACT165-02]; assesses=[] -->
 
 **exstinguō, exstinguere** — "to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exstinguō** is *ex*, "out", with *stinguō*, "to quench, to put out": to put out entirely. English *extinguish* and *extinct* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "vivasāyi"
 concept_tag: TA-ROLE-FARMER
 prerequisites: [TA-C46-doctor, TA-C44-salt, TA-C45-tooth]
 sounds: []
-roots: []
+roots: [sanskrit-vyavasaya]
+etymology_hook: "விவசாயி ← Sanskrit vyavasāya 'effort, undertaking', narrowed in Tamil to farming, + -i 'the one who'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C46-doctor]
 The ending is *-i*, which Tamil hangs on somebody by their work rather than by their sex, so the one word covers a man and a woman alike.
 
 The stem is borrowed. The inherited word is உழவன் (*uḻavaṉ*), built straight on *uḻu*, 'to plough', and it carries an older weight — Tamil poetry praises the *uḻavaṉ*, while a form at an office asks for the *vivasāyi*. Two words, one occupation, two registers.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விவசாயி** (*vivasāyi*) is built on *vivasāyam*, "farming", a loan from Sanskrit *vyavasāya*, "effort, undertaking", with *-i* for the person who does it. In Tamil the word narrowed from any undertaking to the work of the fields.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

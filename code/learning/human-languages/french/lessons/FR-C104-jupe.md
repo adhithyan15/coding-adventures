@@ -14,6 +14,7 @@ concept_tag: FR-HABITS56-JUPE
 prerequisites: [FR-C104-chapeau, FR-C104-manteau]
 sounds: []
 roots: []
+etymology_hook: "jupe ← Italian giubba, from Arabic jubba 'a long garment' — English jumper is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C104-manteau]
 <!-- hl-knowledge: introduces=[FR-LEX-C104-HABITS56-05]; assesses=[] -->
 
 **la jupe** — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**jupe** ← Italian *giubba*, from Arabic *jubba*, "a long garment" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

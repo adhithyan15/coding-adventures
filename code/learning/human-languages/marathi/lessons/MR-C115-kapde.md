@@ -14,7 +14,8 @@ romanization: "kapḍe"
 concept_tag: MR-TOWN115-KAPDE
 prerequisites: [MR-C115-bajar, MR-C115-gav]
 sounds: []
-roots: []
+roots: [sanskrit-karpata]
+etymology_hook: "kapḍe: plural of kapḍā, like kāpaḍ 'cloth' ← Sanskrit karpaṭa 'rag', perhaps Austroasiatic (CDIAL 2871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C115-gav]
 <!-- hl-knowledge: introduces=[MR-LEX-C115-TOWN115-05]; assesses=[] -->
 
 **कपडे** — *kapḍe* — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कपडे** (*kapḍe*) is the plural of *kapḍā*, "cloth", which goes back, like Marathi *kāpaḍ*, "cloth", to Sanskrit *karpaṭa*, "patched garment, rag" (CDIAL 2871). CDIAL reports Przyluski's view that the Sanskrit word comes from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

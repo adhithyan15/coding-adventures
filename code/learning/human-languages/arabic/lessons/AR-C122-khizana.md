@@ -14,7 +14,8 @@ romanization: "khizāna"
 concept_tag: AR-THINGS122-KHIZANA
 prerequisites: [AR-C121-zatar, AR-C121-kammun]
 sounds: []
-roots: []
+roots: [kh-z-n]
+etymology_hook: "khizāna: built on the root kh-z-n, 'to store, to lay up' (Lane); khizāna is a store-place"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C121-kammun]
 <!-- hl-knowledge: introduces=[AR-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **خزانة** — *khizāna* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خزانة** (*khizāna*) is built on the native Arabic root *kh-z-n*, "to store, to lay up" (Lane). *Khizāna* is a store-place; English *magazine* comes from *makhāzin*, "storehouses", on the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

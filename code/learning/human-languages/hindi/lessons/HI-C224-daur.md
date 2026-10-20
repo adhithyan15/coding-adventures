@@ -14,7 +14,8 @@ romanization: "dauṛ"
 concept_tag: HI-THG224-DAUR
 prerequisites: [HI-C224-har, HI-C224-tim]
 sounds: []
-roots: []
+roots: [sanskrit-dravati]
+etymology_hook: "dauṛ ← Sanskrit dravati 'runs', a tadbhava (CDIAL 6624)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C224-tim]
 <!-- hl-knowledge: introduces=[HI-LEX-C224-THG224-05]; assesses=[] -->
 
 **दौड़** — *dauṛ* — "a race, running".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दौड़** (*dauṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dravati*, "runs" (CDIAL 6624). *dauṛ* is the noun of *dauṛnā*, "to run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

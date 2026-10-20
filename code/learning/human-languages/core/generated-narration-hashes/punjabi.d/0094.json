@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 94,
-  "sourceHash": "fnv1a64:f646abd44558f5c4",
+  "sourceHash": "fnv1a64:9e78d75a18e7d147",
   "lessonIds": [
     "PA-C94-pagg",
     "PA-C94-jutti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch94.txt",
   "json": "punjabi/narration/ch94.json",
-  "textHash": "fnv1a64:fc4291553c344b13",
-  "jsonHash": "fnv1a64:e8fa2d833ad22f5b",
+  "textHash": "fnv1a64:e82cd5fb7e512c9c",
+  "jsonHash": "fnv1a64:cc8d183a82083e56",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "To bend, To gather up, To spread, To spread, To be left behind",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c440f09c5003a491",
+  "sourceHash": "fnv1a64:0405812a0e190ff4",
   "lessons": [
     {
       "id": "HI-C229-morna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c045d73b5599904e",
+      "sourceHash": "fnv1a64:de425db7ea0e96c9",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोड़ना (moṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mōṭati, a verb known from the Sanskrit grammarians' root-lists, which CDIAL gives as the second form in its entry for muṭati, \"twists\" (CDIAL 10186). The plain muṭati gave Hindi the intransitive muṛnā, \"to be turned\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f820e4b2774da3e",
+      "sourceHash": "fnv1a64:1f23caf52c6926cc",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समेटना (sameṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁveṣṭayati, \"wraps up\" (CDIAL 13026). CDIAL notes an unexplained loss of aspiration."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1127af64b50012c5",
+      "sourceHash": "fnv1a64:c989327b555fc95d",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फैलाना (phailānā) is the causing form of phailnā, \"to spread\". CDIAL lists phailnā in two places: under a reconstructed praghirati, \"flows forth\" (CDIAL 8486), and under Sanskrit prathita, \"spread out\" (CDIAL 8651)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5012d559a2089b76",
+      "sourceHash": "fnv1a64:79152d562ae6dd21",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फैलना (phailnā) is inherited, but CDIAL lists it in two places: under a reconstructed praghirati, \"flows forth\" (CDIAL 8486), and under Sanskrit prathita, \"spread out\" (CDIAL 8651)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abbd9f9ee1608cff",
+      "sourceHash": "fnv1a64:879f7dd5084aeefb",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छूटना (chūṭnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣuṭyate, \"is released\", a form CDIAL reconstructs from its descendants (CDIAL 3707)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

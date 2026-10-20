@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 139,
-  "sourceHash": "fnv1a64:7a320f873cab5c32",
+  "sourceHash": "fnv1a64:972aa91a4660aa1e",
   "lessonIds": [
     "GE-C139-beginnen",
     "GE-C139-besuchen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch139.txt",
   "json": "german/narration/ch139.json",
-  "textHash": "fnv1a64:3e4c12bc4ea98912",
-  "jsonHash": "fnv1a64:53a8afc487a85cc9",
+  "textHash": "fnv1a64:e2131482733d402a",
+  "jsonHash": "fnv1a64:3afadd7df44f8cc1",
   "findings": []
 }

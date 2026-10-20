@@ -14,7 +14,8 @@ romanization: "kōḷējŭ"
 concept_tag: ML-JOLI299-KOLEJU
 prerequisites: [ML-C299-sarkkar, ML-C299-niyamam]
 sounds: []
-roots: []
+roots: [english-college]
+etymology_hook: "kōḷējŭ ← English college"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C299-niyamam]
 <!-- hl-knowledge: introduces=[ML-LEX-C299-JOLI299-04]; assesses=[] -->
 
 **കോളേജ്** — *kōḷējŭ* — "a college".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോളേജ്** (*kōḷējŭ*) ← English *college*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

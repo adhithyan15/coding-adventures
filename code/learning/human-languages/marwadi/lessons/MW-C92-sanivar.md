@@ -14,7 +14,8 @@ romanization: "sanivār"
 concept_tag: MW-TIME92-SANIVAR
 prerequisites: [MW-C91-guruvar, MW-C91-sukarvar]
 sounds: []
-roots: []
+roots: [sanskrit-shani, sanskrit-vara-day]
+etymology_hook: "sanivār: Sanskrit śani 'Saturn' + vāra 'day of the week' (CDIAL 11547), with s for ś"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C91-sukarvar]
 <!-- hl-knowledge: introduces=[MW-LEX-C92-TIME92-01]; assesses=[] -->
 
 **सनिवार** — *sanivār* — "Saturday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सनिवार** (*sanivār*) is a Sanskrit compound: *śani*, "the planet Saturn", and *vāra*, "day of the week" (CDIAL 11547). Marwadi says the *ś* as *s*; CDIAL has no entry for *śani*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

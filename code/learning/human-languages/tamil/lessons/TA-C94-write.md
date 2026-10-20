@@ -11,7 +11,8 @@ romanization: "eḻutuṅkaḷ"
 concept_tag: TA-LOST-WRITE
 prerequisites: [TA-C93-didnthear, TA-C94-dontunderstand]
 sounds: []
-roots: []
+roots: [dravidian-ezhutu-write]
+etymology_hook: "எழுதுங்கள் — native Dravidian (DEDR 853); Malayalam eḻutuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C94-dontunderstand]
 
 It shares its root with **எழுத்து**, "a letter of the script". **இங்கே எழுதுங்கள்** — "please
 write it here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எழுதுங்கள்** (*eḻutuṅkaḷ*) is native Dravidian. DEDR 853 lists Malayalam *eḻutuka*. The ending *-uṅkaḷ* makes it a polite request.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

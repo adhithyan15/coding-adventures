@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Seventeen to Twenty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:141492a78657d17e",
+  "sourceHash": "fnv1a64:b910f4c35ae3a600",
   "lessons": [
     {
       "id": "MR-C58-satra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:539bf3d731c6d76a",
+      "sourceHash": "fnv1a64:e4e3e38ebfe0d039",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f2dd57ecc1bac9c",
+      "sourceHash": "fnv1a64:6970475d1122800b",
       "notice": null,
       "blocks": [
         {
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfca5d4a9c1c63be",
+      "sourceHash": "fnv1a64:21930ee274db4f35",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:786305201c0d1a96",
+      "sourceHash": "fnv1a64:fd69f74d5afe19c5",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +480,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकोणीस (ekoṇīs) is a tadbhava of Sanskrit ekonaviṁśati, \"nineteen\": eka, \"one\", ūna, \"less\", and viṁśati, \"twenty\" (CDIAL 2499)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -539,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

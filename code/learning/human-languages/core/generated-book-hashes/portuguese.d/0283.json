@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:bc866efb4cd57890",
+  "lessonIds": [
+    "PT-C283-boato",
+    "PT-C283-rumor",
+    "PT-C283-desmentir",
+    "PT-C283-desmentido",
+    "PT-C283-porta-voz"
+  ],
+  "tex": "portuguese/book/chapters/ch283-boatos-e-desmentidos.tex"
+}

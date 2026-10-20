@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 202,
-  "sourceHash": "fnv1a64:54d9d6a0f5772809",
+  "sourceHash": "fnv1a64:b2e2bdc2de00e572",
   "lessonIds": [
     "MR-C202-sima",
     "MR-C202-prades",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch202.txt",
   "json": "marathi/narration/ch202.json",
-  "textHash": "fnv1a64:ef97cc79e66295e8",
-  "jsonHash": "fnv1a64:602dd52251838eaf",
+  "textHash": "fnv1a64:ba339901d3d0ee55",
+  "jsonHash": "fnv1a64:eff77b05286862dd",
   "findings": []
 }

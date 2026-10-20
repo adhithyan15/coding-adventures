@@ -14,7 +14,8 @@ romanization: "rājdhānī"
 concept_tag: HI-THG200-RAJDHANI
 prerequisites: [HI-C200-tvaca, HI-C200-rajya]
 sounds: []
-roots: []
+roots: [sanskrit-rajan, sanskrit-dhani]
+etymology_hook: "rājdhānī: Sanskrit rājadhānī 'royal seat', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C200-rajya]
 <!-- hl-knowledge: introduces=[HI-LEX-C200-THG200-03]; assesses=[] -->
 
 **राजधानी** — *rājdhānī* — "a capital city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राजधानी** (*rājdhānī*) is Sanskrit *rājadhānī*, "a king's seat", from *rāja-*, "king", and *dhānī*, "a holder, a seat", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

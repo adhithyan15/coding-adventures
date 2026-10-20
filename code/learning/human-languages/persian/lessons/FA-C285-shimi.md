@@ -14,7 +14,8 @@ romanization: "shimi"
 concept_tag: FA-KAR285-SHIMI
 prerequisites: [FA-C284-hesabdar, FA-C285-fizik]
 sounds: []
-roots: []
+roots: [french-chimie]
+etymology_hook: "shimi ← French chimie 'chemistry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C285-fizik]
 <!-- hl-knowledge: introduces=[FA-LEX-C285-KAR285-02]; assesses=[] -->
 
 **شیمی** — *shimi* — "chemistry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shimi* is borrowed from French *chimie*, "chemistry" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

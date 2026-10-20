@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:bec19c3235bb6a45",
+  "lessonIds": [
+    "LA-C299-narratio",
+    "LA-C299-commemoro",
+    "LA-C299-memoro",
+    "LA-C299-refero",
+    "LA-C299-inquam"
+  ],
+  "tex": "latin/book/chapters/ch299-narratio.tex"
+}

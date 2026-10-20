@@ -14,7 +14,8 @@ romanization: "plemyánnik"
 concept_tag: RU-VESHCH254-PLEMYANNIK
 prerequisites: [RU-C254-devushka, RU-C254-roditeli]
 sounds: []
-roots: []
+roots: [slavic-plemen]
+etymology_hook: "племянник is from племя 'a tribe, kin'; Vasmer relates племя to плод 'fruit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C254-roditeli]
 <!-- hl-knowledge: introduces=[RU-LEX-C254-VESHCH254-05]; assesses=[] -->
 
 **племянник** (*plemyánnik*) — "a nephew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**племянник** is built on *племя*, "a tribe, kin". Vasmer derives *племя* from *\*pled-men-*, related to *плод*, "fruit, offspring"; Trubachev proposed another root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

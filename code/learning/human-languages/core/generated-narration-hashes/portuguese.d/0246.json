@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 246,
-  "sourceHash": "fnv1a64:28ebd7d62d14087b",
+  "sourceHash": "fnv1a64:69b8e2f4fa01564f",
   "lessonIds": [
     "PT-C246-mecanico",
     "PT-C246-eletricista",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch246.txt",
   "json": "portuguese/narration/ch246.json",
-  "textHash": "fnv1a64:5c265217b2969b73",
-  "jsonHash": "fnv1a64:dac100f37b44ca62",
+  "textHash": "fnv1a64:985b9209b34b3abd",
+  "jsonHash": "fnv1a64:ec32580a1b1e7f76",
   "findings": []
 }

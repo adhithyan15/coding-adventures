@@ -13,7 +13,8 @@ gloss: "to land"
 concept_tag: GE-VERB-LANDEN
 prerequisites: [GE-C182-klettern, GE-C182-kuemmern]
 sounds: []
-roots: []
+roots: [germanic-landa]
+etymology_hook: "landen ← Middle Low German landen, borrowed from Low German — the verb of the word for 'land', English land"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C182-kuemmern]
 <!-- hl-knowledge: introduces=[GE-LEX-C182-VERB182-04]; assesses=[] -->
 
 **landen** — "to land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**landen** was borrowed from Middle Low German *landen* (EtymDB 2.1), the verb of the word for "land", Proto-Germanic *\*landą*, the same as English *land*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

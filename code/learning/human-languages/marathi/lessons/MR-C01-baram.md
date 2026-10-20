@@ -12,6 +12,7 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [MR-C01-ho]
 sounds: [anusvara-nasal]
 roots: []
+etymology_hook: "baraṁ: origin not settled; neither CDIAL nor DEDR has an entry for barā 'good, well'"
 duration:
   max_seconds: 120
 requires:
@@ -48,9 +49,7 @@ dot **ं**, a light nasal) → **baraṃ**. That dot on top nasalises the vowel
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARAM-01] -->
 
 **बरं** (*baraṃ*, "okay, fine, good, all right") is the oil of everyday Marathi
-talk — a soft "sure, fine." Its neutral form is *bare*. A genuinely Marathi
-word, not a Sanskrit loan — the kind of small, high-frequency word that gives a
-language its everyday texture.
+talk — a soft "sure, fine." Its neutral form is *bare*. Its origin is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARAM-01, MR-LEX-HO-01] -->

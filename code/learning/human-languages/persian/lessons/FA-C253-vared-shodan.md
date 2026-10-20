@@ -14,7 +14,8 @@ romanization: "vâred shodan"
 concept_tag: FA-VERB-VARED-SHODAN
 prerequisites: [FA-C252-roftegar, FA-C253-piyade-shodan]
 sounds: []
-roots: []
+roots: [arabic-warid]
+etymology_hook: "vâred ← Arabic wārid 'arriving, coming in', root w-r-d (Lane), + Persian shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C253-piyade-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C253-KONESH253-02]; assesses=[] -->
 
 **وارد شدن** — *vâred shodan* — "to enter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vâred shodan* pairs *vâred*, borrowed from Arabic *wārid*, "arriving, coming in" (root *w-r-d*, Lane), with the Persian verb *shodan*, "to become". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

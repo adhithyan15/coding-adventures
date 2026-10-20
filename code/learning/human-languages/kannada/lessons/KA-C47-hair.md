@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-HAIR
 prerequisites: [KA-C47-tooth, KA-C45-grandmother]
 sounds: []
 roots: []
+etymology_hook: "kūdalu: native Dravidian, one word with Tamil kūntal (DEDR 1892), which compares Sanskrit kuntala"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [KA-C47-tooth]
 Look at what it finishes on. ಕಾಲು, ಹಲ್ಲು, ಕಣ್ಣು and ಹಣ್ಣು all end on a small *-u* as well. Kannada dislikes leaving a word standing on a bare consonant and sets a light vowel behind it — a prop, carrying no meaning of its own. Tamil tolerates the bare consonant and writes பல் and கால் with nothing after them at all.
 
 Careful Kannada also has ಕೇಶ (*kēśa*), straight from Sanskrit, for the barber's signboard and the poem.
+
+DEDR 1892 lists Kannada *kūdal* with Tamil *kūntal*. DEDR 1892 compares Sanskrit *kuntala*, "hair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

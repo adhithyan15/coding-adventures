@@ -13,7 +13,8 @@ gloss: "pollution"
 concept_tag: PT-COISAS225-POLUICAO
 prerequisites: [PT-C224-planta, PT-C225-ambiente]
 sounds: []
-roots: []
+roots: [polluere-latin]
+etymology_hook: "poluição ← Latin pollutio 'a defiling', from polluere — English pollution"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C225-ambiente]
 <!-- hl-knowledge: introduces=[PT-LEX-C225-COISAS225-02]; assesses=[] -->
 
 **a poluição** — "pollution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**poluição** ← Latin *pollutio, pollutionis*, "a defiling" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

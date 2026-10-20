@@ -14,7 +14,8 @@ romanization: "mutalai"
 concept_tag: TA-PORUL218-MUTALAI
 prerequisites: [TA-C218-ottakaccivinki, TA-C218-varikkutirai]
 sounds: []
-roots: []
+roots: [dravidian-mutalai-crocodile]
+etymology_hook: "முதலை — native Dravidian (DEDR 4952); Malayalam mutala, Kannada mosaḷe, Telugu mosali"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C218-varikkutirai]
 <!-- hl-knowledge: introduces=[TA-LEX-C218-PORUL218-03]; assesses=[] -->
 
 **முதலை** — *mutalai* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முதலை** (*mutalai*) is native Dravidian. DEDR 4952 lists Malayalam *mutala*, Kannada *mosaḷe* and Telugu *mosali*. The entry compares Sanskrit (lexicons) *mācala*, "crocodile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "oḷakh karūn deṇe"
 concept_tag: MR-VERB-OLAKH-KARUN-DENE
 prerequisites: [MR-C196-ghadi-karne, MR-C196-tayari-karne]
 sounds: []
-roots: []
+roots: [sanskrit-upalaksha, sanskrit-dadati]
+etymology_hook: "oḷakh ← upalakṣa 'distinguishing' (CDIAL 2224); karūn deṇe 'do and give'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C196-tayari-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C196-ACT196-04]; assesses=[] -->
 
 **ओळख करून देणे** — *oḷakh karūn deṇe* — "to introduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओळख**, "acquaintance", CDIAL lists under Sanskrit *upalakṣa*, "distinguishing", from *lakṣ*, "to mark" (CDIAL 2224). **करून देणे** is "to do for someone": **देणे** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

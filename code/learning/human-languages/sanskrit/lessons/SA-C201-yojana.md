@@ -14,7 +14,8 @@ romanization: "yojanā"
 concept_tag: SA-WRK201-YOJANA
 prerequisites: [SA-C200-carca, SA-C200-vivadah]
 sounds: []
-roots: []
+roots: [sanskrit-yojana]
+etymology_hook: "yojanā ← root √yuj 'yoke, join': 'joining, arrangement', so a plan (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C200-vivadah]
 <!-- hl-knowledge: introduces=[SA-LEX-C201-WRK201-01]; assesses=[] -->
 
 **योजना** — *yojanā* — "a plan, a scheme".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yojanā* is built on the root √yuj, "to yoke, join" (MW), the root of *yuga* and *yoga*. A plan is an arrangement of parts joined together. MW compares √yuj with Latin *iungere*, "to join", and English *yoke*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

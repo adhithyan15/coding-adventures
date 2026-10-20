@@ -14,7 +14,8 @@ romanization: "ghāṇ"
 concept_tag: MR-ADJ105-GHAN
 prerequisites: [MR-C105-shrimant, MR-C105-garib]
 sounds: []
-roots: []
+roots: [sanskrit-ghrana]
+etymology_hook: "ghāṇ ← Sanskrit ghrāṇa 'smelling, smell', a tadbhava (CDIAL 4531)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C105-garib]
 <!-- hl-knowledge: introduces=[MR-LEX-C105-ADJ105-05]; assesses=[] -->
 
 **घाण** — *ghāṇ* — "dirt; dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घाण** (*ghāṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghrāṇa*, "smelling, smell" (CDIAL 4531). CDIAL glosses the Marathi word "stink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

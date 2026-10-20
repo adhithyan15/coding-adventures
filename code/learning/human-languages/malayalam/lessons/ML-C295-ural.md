@@ -14,7 +14,8 @@ romanization: "ural"
 concept_tag: ML-VASTU295-URAL
 prerequisites: [ML-C295-miksi, ML-C295-ammi]
 sounds: []
-roots: []
+roots: [dravidian-ural-mortar]
+etymology_hook: "ural: native Dravidian, one word with Tamil ural and Kannada oral (DEDR 651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C295-ammi]
 <!-- hl-knowledge: introduces=[ML-LEX-C295-VASTU295-04]; assesses=[] -->
 
 **ഉരൽ** — *ural* — "a mortar (for pounding)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരൽ** (*ural*) is native Dravidian, one word with Tamil *ural*, Kannada *oral* and Telugu *rōlu* (DEDR 651).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

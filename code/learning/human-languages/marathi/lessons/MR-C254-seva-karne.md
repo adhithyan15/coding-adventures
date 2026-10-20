@@ -14,7 +14,8 @@ romanization: "sevā karṇe"
 concept_tag: MR-VERB-SEVA-KARNE
 prerequisites: [MR-C254-corne, MR-C254-sodhun-kadhne]
 sounds: []
-roots: []
+roots: [sanskrit-seva, sanskrit-karoti]
+etymology_hook: "sevā: Sanskrit sevā 'attendance, homage', a tatsama (CDIAL 13595); karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C254-sodhun-kadhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C254-ACT254-03]; assesses=[] -->
 
 **सेवा करणे** — *sevā karṇe* — "to serve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सेवा** is Sanskrit *sevā*, "attendance on, homage", a tatsama (CDIAL 13595). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

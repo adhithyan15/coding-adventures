@@ -14,7 +14,8 @@ romanization: "ḥawla"
 concept_tag: AR-LOC105-HAWLA
 prerequisites: [AR-C105-makhraj, AR-C105-mustaqim]
 sounds: []
-roots: []
+roots: [h-w-l]
+etymology_hook: "ḥawla: built on the root ḥ-w-l, 'to turn, to change' (Lane); ḥawla is 'around', what turns about a thing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C105-mustaqim]
 <!-- hl-knowledge: introduces=[AR-LEX-C105-LOC105-04]; assesses=[] -->
 
 **حول** — *ḥawla* — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حول** (*ḥawla*) is built on the native Arabic root *ḥ-w-l*, "to turn, to change" (Lane). *Ḥawla* is "around", what turns about a thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

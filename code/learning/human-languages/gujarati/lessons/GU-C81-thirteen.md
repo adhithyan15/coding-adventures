@@ -14,7 +14,8 @@ romanization: "ter"
 concept_tag: GU-NUM1-THIRTEEN
 prerequisites: [GU-C81-eleven, GU-C81-twelve]
 sounds: []
-roots: []
+roots: [sanskrit-trayodasha]
+etymology_hook: "ter ← *trayedaśa, CDIAL's variant of Sanskrit trayodaśa 'thirteen'; a tadbhava (CDIAL 6001)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C81-twelve]
 <!-- hl-knowledge: introduces=[GU-LEX-C81-NUM1-03]; assesses=[] -->
 
 **તેર** (*ter*) — "thirteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તેર** (*ter*) is a tadbhava. CDIAL lists it under *\*trayedaśa*, a variant of Sanskrit *trayodaśa*, "thirteen" (CDIAL 6001).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

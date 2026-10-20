@@ -11,7 +11,8 @@ romanization: "kṣēmavē"
 concept_tag: KA-GREET-WELL
 prerequisites: [KA-C96-longtime, KA-C96-hello]
 sounds: []
-roots: []
+roots: [sanskrit-kshema]
+etymology_hook: "kṣēmavē: Sanskrit kṣema 'ease, well-being' (CDIAL 3745) + the question ending -ē"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C96-hello]
 
 **ಕ್ಷೇಮವೇ?** (*kṣēmavē?*) — "are you well?", a formal, warm question.
 **ಕ್ಷೇಮ** (*kṣēma*) is "welfare"; **‑ಏ** makes it a question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕ್ಷೇಮವೇ** (*kṣēmavē*) is *kṣēma*, "well-being", from Sanskrit *kṣema*, "ease, happiness" (CDIAL 3745), with *-ē*, the ending that asks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Foot, Head, Hair, Tooth, Throat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2e671b6debcd026",
+  "sourceHash": "fnv1a64:59ee31aa49fca376",
   "lessons": [
     {
       "id": "MW-C44-pag",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f097e1aab88d1c5",
+      "sourceHash": "fnv1a64:795fcd7b3065e9f4",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पग (pag) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from padga, \"afoot; footsoldier\". CDIAL lists Old Marwari paga under it (CDIAL 7766). It is built on pad, \"foot\", the same ancient word as English foot."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc8ab11e65e14682",
+      "sourceHash": "fnv1a64:43ff9be3d00b4adf",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माथो (mātho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from masta, \"head\". CDIAL lists Marwari mātho under it (CDIAL 9926). Sanskrit also had mastaka, \"head, skull\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa363f8852e7e1d",
+      "sourceHash": "fnv1a64:00e8943be8f24df5",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाळ (bāḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāla, \"hair of tail, tail, hair\". CDIAL gives no Marwari form in this entry (CDIAL 11572); the match is through Hindi bāl and Gujarati vāḷ. Marwadi, like Gujarati, says the l curled back."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00db283cec036f01",
+      "sourceHash": "fnv1a64:fbba7890bdbbabc2",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दांत (dānt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from danta, \"tooth\". CDIAL lists Marwari dā̃t under it (CDIAL 6152). English tooth and Latin dens are the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c5a7e9ce9988fc8",
+      "sourceHash": "fnv1a64:a7885c532f317f2b",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गळो (gaḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, \"throat, neck\". CDIAL lists Marwari gaḷo under it (CDIAL 4070)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

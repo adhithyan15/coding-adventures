@@ -1,0 +1,11 @@
+{
+  "id": "IT-C390-illegale",
+  "pathSegment": "IT-PATH-390-LEGALE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-390-LEGALE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C327-rainha",
+    "language": "portuguese",
+    "chapter": 327,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d1597f30d647c1d"
+  },
+  "findings": []
+}

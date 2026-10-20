@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:b8aa6da101c6deb5",
+  "lessonIds": [
+    "LA-C536-blandus",
+    "LA-C536-blanditia",
+    "LA-C536-suavis",
+    "LA-C536-deliciae",
+    "LA-C536-donum",
+    "LA-R536-review-529-536"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch536.txt",
+  "json": "latin/narration/ch536.json",
+  "textHash": "fnv1a64:b06105fd66ce65d0",
+  "jsonHash": "fnv1a64:7472eeafa7c4fe17",
+  "findings": []
+}

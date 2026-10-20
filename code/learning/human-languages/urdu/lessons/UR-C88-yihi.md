@@ -14,7 +14,8 @@ romanization: "yihī"
 concept_tag: UR-DEF88-YIHI
 prerequisites: [UR-C87-pyar, UR-C87-mausiqi]
 sounds: []
-roots: []
+roots: [sanskrit-esha]
+etymology_hook: "yihī: yih 'this' (CDIAL 2530) with the emphatic -hī, 'this and no other'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C87-mausiqi]
 <!-- hl-knowledge: introduces=[UR-LEX-C88-DEF88-01]; assesses=[] -->
 
 **یہی** — *yihī* — "this very one".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**یہی** (*yihī*) is *yih*, "this", with the emphatic *-hī*: "this one and no other". CDIAL lists Hindi *yah*, "this", under Sanskrit *eṣa*, "this" (CDIAL 2530).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

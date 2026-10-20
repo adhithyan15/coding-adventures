@@ -14,7 +14,8 @@ romanization: "gariṭe"
 concept_tag: TE-VASTUVU224-GARITE
 prerequisites: [TE-C223-cindaravandara, TE-C223-moratu]
 sounds: []
-roots: []
+roots: [dravidian-karandi-spoon]
+etymology_hook: "gariṭe: native Dravidian; DEDR 1267 lists gariṭe 'spoon, ladle' with Tamil karaṇṭi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C223-moratu]
 <!-- hl-knowledge: introduces=[TE-LEX-C224-VASTUVU224-01]; assesses=[] -->
 
 **గరిటె** — *gariṭe* — "a ladle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గరిటె** (*gariṭe*) is native Dravidian. DEDR 1267 lists a nasalised *gariṭe*, "spoon, ladle", with Tamil *karaṇṭi* and Malayalam *karaṇṭi*, "spoon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

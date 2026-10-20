@@ -14,7 +14,8 @@ romanization: "nikaḻcci"
 concept_tag: TA-PORUL220-NIKALCCI
 prerequisites: [TA-C220-kemara, TA-C220-vanoli]
 sounds: []
-roots: []
+roots: [dravidian-nikazh-happen]
+etymology_hook: "நிகழ்ச்சி — native Dravidian (DEDR 3661); Kannada negaḻ 'to undertake'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C220-vanoli]
 <!-- hl-knowledge: introduces=[TA-LEX-C220-PORUL220-04]; assesses=[] -->
 
 **நிகழ்ச்சி** — *nikaḻcci* — "a programme, an event".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிகழ்ச்சி** (*nikaḻcci*) is native Dravidian. DEDR 3661 lists Kannada *negaḻ*, "to undertake". It is the noun of *nikaḻ*, "to happen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

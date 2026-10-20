@@ -13,7 +13,8 @@ gloss: "a living room"
 concept_tag: GE-THING161-WOHNZIMMER
 prerequisites: [GE-C161-haus, GE-C161-schlafzimmer]
 sounds: []
-roots: []
+roots: [wonen-germanic, germanic-timra]
+etymology_hook: "Wohnzimmer — wohnen 'to live' + Zimmer 'room': a living room"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C161-schlafzimmer]
 <!-- hl-knowledge: introduces=[GE-LEX-C161-THING161-03]; assesses=[] -->
 
 **das Wohnzimmer** — "a living room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wohnzimmer** is *wohnen*, "to live", + *Zimmer*, "room" (EtymDB 2.1): the room you live in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

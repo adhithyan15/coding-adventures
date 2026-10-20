@@ -14,7 +14,8 @@ romanization: "uppinakāyi"
 concept_tag: KA-THINGS122-UPPINAKAYI
 prerequisites: [KA-C121-sambaru, KA-C122-palya]
 sounds: []
-roots: []
+roots: [dravidian-uppu-salt, dravidian-kaay-unripe]
+etymology_hook: "uppinakāyi: native uppu 'salt' (DEDR 2674) + kāyi 'unripe fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C122-palya]
 <!-- hl-knowledge: introduces=[KA-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **ಉಪ್ಪಿನಕಾಯಿ** — *uppinakāyi* — "a pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಪ್ಪಿನಕಾಯಿ** (*uppinakāyi*) is native Dravidian: *uppina*, "of salt", from *uppu*, "salt" (DEDR 2674), and *kāyi*, "unripe fruit" (DEDR 1459): fruit kept in salt. DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

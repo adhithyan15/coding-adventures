@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 199,
-  "sourceHash": "fnv1a64:60818c5eea0832ba",
+  "sourceHash": "fnv1a64:c79a8d54814daabd",
   "lessonIds": [
     "SA-C199-vakyam",
     "SA-C199-bhasa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch199.txt",
   "json": "sanskrit/narration/ch199.json",
-  "textHash": "fnv1a64:545e1cfe3b46f479",
-  "jsonHash": "fnv1a64:b40d393d9e63caff",
+  "textHash": "fnv1a64:576c687d4c73b372",
+  "jsonHash": "fnv1a64:2d38296dfc31eae8",
   "findings": []
 }

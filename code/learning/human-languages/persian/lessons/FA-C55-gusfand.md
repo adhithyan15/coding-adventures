@@ -14,7 +14,8 @@ romanization: "gusfand"
 concept_tag: FA-ANIMALS55-GUSFAND
 prerequisites: [FA-C55-gav, FA-C55-boz]
 sounds: []
-roots: []
+roots: [persian-gusfand]
+etymology_hook: "gusfand ← Middle Persian gōspand (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C55-boz]
 <!-- hl-knowledge: introduces=[FA-LEX-C55-ANIMALS55-04]; assesses=[] -->
 
 **گوسفند** — *gusfand* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gusfand* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gōspand*, "sheep, small cattle" (EtymDB). EtymDB traces it to an Avestan phrase meaning "beneficent cattle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

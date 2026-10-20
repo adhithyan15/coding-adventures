@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C361-formazione",
+    "language": "italian",
+    "chapter": 361,
+    "sequence": 20750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bf2710c24aed1c5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C364-stereotype",
+    "language": "french",
+    "chapter": 364,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c27c92e67ff8e93"
+  },
+  "findings": []
+}

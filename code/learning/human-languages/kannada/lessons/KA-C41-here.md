@@ -11,7 +11,8 @@ romanization: "illi"
 concept_tag: KA-DEIXIS-HERE
 prerequisites: [KA-C41-that, KA-C37-moogu]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "illi: native Dravidian, the near-pointing base i- + a place ending; DEDR 410 lists illi"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: [KA-C41-that]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **ಅಲ್ಲಿ** *alli*, which you will meet in a moment. The two of them
+Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಲ್ಲಿ** (*illi*) is native Dravidian: the near-pointing base *i-* with an ending for place. DEDR 410 lists *illi* itself, "in this place, here".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-03, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02] -->

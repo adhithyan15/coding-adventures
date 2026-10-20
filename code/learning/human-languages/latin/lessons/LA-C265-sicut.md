@@ -13,7 +13,8 @@ gloss: "even as, in the same way as"
 concept_tag: LA-CAUSA265-SICUT
 prerequisites: [LA-C264-sursum, LA-C264-deorsum]
 sounds: []
-roots: []
+roots: [sicut-latin, sic-latin, ut-latin]
+etymology_hook: "sīcut 'even as' — sīc 'so' + ut 'as'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C264-deorsum]
 <!-- hl-knowledge: introduces=[LA-LEX-C265-CAUSA265-01]; assesses=[] -->
 
 **sīcut** — "even as, in the same way as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sīcut** is *sīc*, "so", with *ut*, "as" (Lewis & Short): even as.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

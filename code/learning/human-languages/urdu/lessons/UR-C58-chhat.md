@@ -14,7 +14,8 @@ romanization: "chhat"
 concept_tag: UR-HOME58-CHHAT
 prerequisites: [UR-C58-kursi, UR-C58-divar]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti]
+etymology_hook: "chhat ← *chatti 'covering', on chad- 'to cover', the root of chattra 'parasol' (CDIAL 4971)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C58-divar]
 <!-- hl-knowledge: introduces=[UR-LEX-C58-HOME58-04]; assesses=[] -->
 
 **چھت** — *chhat* — "a roof; a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھت** (*chhat*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chatti*, "covering", a form CDIAL reconstructs from its descendants (CDIAL 4971). It is built on *chad-*, "to cover", the root of *chattra*, "parasol".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

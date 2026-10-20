@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-CO-02",
+  "category": "Samuccaya — coordination",
+  "label": "negative coordination: neither … nor",
+  "probe": [
+    "SA-JOIN-NA-NA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-CO-02"
+  ],
+  "note": "Closed by SA-C52-na-na, which builds the construction out of the `na` the track has taught since chapter 1 rather than introducing a new word: doubled, once before each item, it denies both."
+}

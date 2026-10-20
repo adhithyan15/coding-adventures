@@ -1407,14 +1407,62 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Built-in `sqrt` may likewise map that one positive bounded exponential;
   nested exponentials and user-declared overrides remain conservative.
+  Built-in `sqrt` may also map a runtime conditional when every branch retains
+  a proven nonnegative bounded runtime-real sign root; unrestricted,
+  non-runtime-real, nested-exponential, and overridden branches remain
+  conservative.
+  Built-in `ln` may map a runtime conditional when every branch is one built-in
+  exponential over a proven bounded runtime-real sign root; missing, nested,
+  non-runtime-real, and overridden exponential branches remain conservative.
+  Built-in `ln` may also map a runtime conditional when every branch is exactly
+  two built-in exponentials over a proven bounded runtime-real sign root;
+  missing, deeper, non-runtime-real, and overridden branches remain
+  conservative.
+  The same exact two-exponential proof now applies to a direct sign-rooted
+  operand; unrestricted roots and overrides remain conservative.
+  The direct proof extends to exactly three exponentials, whose complete
+  sign-rooted tower remains finite. Exactly four exponentials are also accepted
+  over a proven nonpositive unit sign root, whose narrower tower remains finite;
+  a positive-capable fourth layer or a fifth nonpositive layer would overflow
+  binary64 before `ln` and therefore remains conservative.
+  The same bounded proof extends to exactly three built-in exponentials per
+  branch. It also extends to exactly four built-in exponentials per branch when
+  every root is proven nonpositive; positive-capable, missing, deeper,
+  non-runtime-real, and overridden branches remain conservative.
+  Across every bounded conditional family above, branch roots may be unaliased
+  local real snapshots carrying runtime-real provenance across assignment;
+  globals, captured locals, and by-name aliases remain conservative across a
+  selector call.
   Additional built-in `sqrt` calls may wrap that positive bounded result while
   preserving the same finite proof.
   Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
   already nonnegative and bounded; signed and nested-exponential forms stay
   conservative.
-  Provenance-backed local and other real-name branches remain conservative
-  across selector calls. Unary plus
-  and unary minus preserve the same runtime-real proof. Additive composition,
+  Unaliased local runtime-real snapshots may cross a procedure-call selector
+  through unary signs, additive or multiplicative composition, and powers with
+  finite static operands and pure supported standard-function transforms.
+  The exact bounded `entier(sign(...))` transform also crosses that selector;
+  finite specialisation may carry the same unaliased local-rooted proof through
+  a real name formal. Unary signs may wrap that exact name actual while
+  preserving the proof, and additive composition may include finite static
+  terms; that additive form may in turn be multiplied or divided by finite
+  static terms, then used as the sole dynamic base of a power chain with finite
+  static exponents. Up to six supported built-in numeric standard functions,
+  including integer-valued `sign`, may wrap that powered exact name actual.
+  One additional built-in `entier` may wrap a supported bounded transform rooted
+  in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
+  `entier` operands remain conservative.
+  The bounded sign-rooted transform may include whole-number additive offsets
+  whose checked total stays within `2^53 - 1` units, so `sign(x) ± offset`
+  remains an exact binary64 integer on every path. This single budget replaced
+  a hand-enumerated cap that had grown from one to forty-four units in
+  forty-four separate changes without protecting any additional property: the
+  outer runtime-real selector rule already accepts finite static terms of any
+  size. The budget is preserved through parentheses and supported
+  standard-function wrappers and applied independently to each runtime
+  conditional path. Fractional, oversized and dynamic offsets remain
+  conservative.
+  Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

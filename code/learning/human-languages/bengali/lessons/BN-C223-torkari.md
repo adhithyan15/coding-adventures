@@ -14,7 +14,8 @@ romanization: "tôrkāri"
 concept_tag: BN-JINIS223-TORKARI
 prerequisites: [BN-C223-churi, BN-C223-khabar]
 sounds: []
-roots: []
+roots: [persian-tarkari]
+etymology_hook: "tôrkāri: usually traced to Persian tarkārī 'vegetables'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C223-khabar]
 <!-- hl-knowledge: introduces=[BN-LEX-C223-JINIS223-03]; assesses=[] -->
 
 **তরকারি** — *tôrkāri* — "a vegetable curry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তরকারি** (*tôrkāri*) is a loan, usually traced to Persian *tarkārī*, "vegetables".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṣṭiccŭ"
 concept_tag: ML-KARANAM317-KASTICCU
 prerequisites: [ML-C317-verute, ML-C317-ottum]
 sounds: []
-roots: []
+roots: [sanskrit-kashta]
+etymology_hook: "kaṣṭiccŭ: from Sanskrit kaṣṭa 'difficult' (CDIAL 2978) + a Malayalam verb form: 'with difficulty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C317-ottum]
 <!-- hl-knowledge: introduces=[ML-LEX-C317-KARANAM317-05]; assesses=[] -->
 
 **കഷ്ടിച്ച്** — *kaṣṭiccŭ* — "barely, hardly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഷ്ടിച്ച്** (*kaṣṭiccŭ*) is a Malayalam verb form built on Sanskrit *kaṣṭa*, "bad, difficult" (CDIAL 2978): "with difficulty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

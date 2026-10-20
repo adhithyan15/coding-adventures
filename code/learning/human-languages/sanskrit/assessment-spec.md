@@ -4,8 +4,10 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** source-artifact contract active; implemented evidence is represented
+by `assessment.json` and the level-owned files checked in under `task-shapes/`
+and `mocks/`. File presence does not claim qualified recordings, calibration,
+standard setting, independent human review, book-only validation, or readiness.
 
 This specification names the assessment that the complete Sanskrit book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -13,11 +15,13 @@ qualification, and it does not claim that the current book is exam-ready. The
 learner-facing name at each rung is **Coding Adventures Sanskrit <Level>
 Assessment — project-defined equivalent**.
 
-No `assessment.json` is checked in for Sanskrit yet, and that omission is
-deliberate. The machine-readable contract names required artifacts by path, and
-the artifact gate treats a path that leads nowhere as an error rather than as a
-promise. The contract is written after the inventories, mocks, rubrics and
-answer keys it points at, not before them.
+`assessment.json` is now active as the machine-readable source-artifact
+contract. It was deliberately withheld until every task shape, rubric, and
+answer key it names existed; the artifact gate still treats a path that leads
+nowhere as an error rather than as a promise. Source masters are not qualified
+recordings, independent human review, standard setting, or book-only
+validation. Activating the contract records existing source files and does not
+claim that those files alone have closed any evidence gap.
 
 ## Why a classical language gets a speaking paper
 

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C432-pernottamento",
+  "pathSegment": "IT-PATH-432-ALLOGGIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-432-ALLOGGIO",
+      "order": 2
+    }
+  ]
+}

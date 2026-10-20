@@ -14,7 +14,8 @@ romanization: "heyvân"
 concept_tag: FA-CHIZ171-HEYVAN
 prerequisites: [FA-C171-narges, FA-C171-goldan]
 sounds: []
-roots: []
+roots: [arabic-hayawan]
+etymology_hook: "heyvân ← Arabic ḥayawān 'animal, living being', root ḥ-y-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C171-goldan]
 <!-- hl-knowledge: introduces=[FA-LEX-C171-CHIZ171-03]; assesses=[] -->
 
 **حیوان** — *heyvân* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*heyvân* is borrowed from Arabic *ḥayawān*, "animal, living being". Its Arabic root is *ḥ-y-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

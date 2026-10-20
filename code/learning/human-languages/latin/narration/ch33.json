@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Evening",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cd27825902c28142",
+  "sourceHash": "fnv1a64:ed75e26b2d9ceea5",
   "lessons": [
     {
       "id": "LA-C33-vesper",
@@ -244,7 +244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6edba26550a2b055",
+      "sourceHash": "fnv1a64:089d7c9e62bc2675",
       "notice": null,
       "blocks": [
         {

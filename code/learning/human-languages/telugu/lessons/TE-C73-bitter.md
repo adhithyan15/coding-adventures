@@ -11,7 +11,8 @@ romanization: "cēdu"
 concept_tag: TE-NOUN-BITTER
 prerequisites: [TE-C73-sour]
 sounds: []
-roots: []
+roots: [dravidian-kaya-bitter]
+etymology_hook: "cēdu: native Dravidian; DEDR 1249 lists it with Tamil kaya 'to be bitter'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C73-sour]
 It is inherited, and Telugu does not treat it as a fault. Bitter is eaten deliberately at the opening of the year and at the opening of a meal, on the understanding that it does you good.
 
 It carries over into speech unchanged. చేదు news is bad news, and a చేదు truth is one you are told anyway.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చేదు** (*cēdu*) is native Dravidian. DEDR 1249 lists the Telugu word for "bitterness; bitter" with Tamil *kaya*, "to be bitter", and Kannada *kay*, "bitterness". DEDR compares Sanskrit *kaṣāya*, "astringent" (CDIAL 2974), which CDIAL thinks points to a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

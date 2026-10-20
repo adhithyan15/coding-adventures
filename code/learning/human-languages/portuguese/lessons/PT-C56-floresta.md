@@ -14,6 +14,7 @@ concept_tag: PT-NATUREZA1-FLORESTA
 prerequisites: [PT-C56-folha, PT-C56-montanha]
 sounds: []
 roots: []
+etymology_hook: "floresta ← Old French forest, reshaped after flor — English forest is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C56-montanha]
 <!-- hl-knowledge: introduces=[PT-LEX-C56-NATUREZA1-05]; assesses=[] -->
 
 **a floresta** — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**floresta** ← Old French *forest* — borrowed, and reshaped after *flor*. EtymDB 2.1 traces it only to Old Portuguese *foresta*; it derives Old French *forest* from Medieval Latin *forestis*, "open wood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

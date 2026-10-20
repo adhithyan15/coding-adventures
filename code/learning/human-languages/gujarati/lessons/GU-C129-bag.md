@@ -14,7 +14,8 @@ romanization: "bāg"
 concept_tag: GU-THINGS129-BAG
 prerequisites: [GU-C128-cok, GU-C129-gali]
 sounds: []
-roots: []
+roots: [persian-bagh]
+etymology_hook: "bāg: usually traced to Persian bāgh 'garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C129-gali]
 <!-- hl-knowledge: introduces=[GU-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **બાગ** (*bāg*) — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બાગ** (*bāg*) is a loan, usually traced to Persian *bāgh*, "garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

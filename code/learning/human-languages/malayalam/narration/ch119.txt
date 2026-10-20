@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for mist, then the Malayalam for thunder a
 You'll want to know: പതുക്കെ.
 പതുക്കെ (patukke) — "slowly". പതുക്കെ പറയൂ (patukke paṟayū) — "please say it slowly".
 
+The word, taken apart.
+പതുക്കെ (patukke) is native Dravidian, from the verb "to crouch, move stealthily"; DEDR 3912 lists the root with Tamil patuṅku and Kannada padugu.
+
 What you've built.
 The most useful request a learner can make.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for thunder and lightning, then the Malaya
 
 You'll want to know: ഒന്നുകൂടി.
 ഒന്നുകൂടി (onnukūṭi) — "once more", ഒന്ന് (onnŭ), "one", with കൂടി, "also, more". ഒന്നുകൂടി പറയൂ — "say it once more".
+
+The word, taken apart.
+ഒന്നുകൂടി (onnukūṭi) is native Dravidian: onnŭ, "one" (DEDR 990), with kūṭi, "joined, also", from the verb "to come together" (DEDR 1882, with Tamil kūṭu).
 
 What you've built.
 One, and more.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for slowly, then the Malayalam for once mo
 You'll want to know: ഉറക്കെ.
 ഉറക്കെ (uṟakke) — "loudly, aloud". കുറച്ച് ഉറക്കെ — "a little louder", with കുറച്ച്, "a little".
 
+The word, taken apart.
+ഉറക്കെ (uṟakke) is native Dravidian: DEDR 721 lists Malayalam uṟakkē, "strongly, firmly, aloud", under the verb "to be firm", with Tamil uṟai, "to become firm", and Telugu oṟapu, "firmness".
+
 What you've built.
 A second way of saying how.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for once more, then the Malayalam for loud
 You'll want to know: അർത്ഥം.
 അർത്ഥം (arthaṁ) — "meaning". ഇതിന്റെ അർത്ഥം എന്താണ്? — "what is the meaning of this?", with എന്താണ്, "what is".
 
+The word, taken apart.
+അർത്ഥം (arthaṁ) from Sanskrit artha, "aim, thing, meaning", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 638).
+
 What you've built.
 The question behind every new word.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for loudly, then the Malayalam for meaning
 
 You'll want to know: കാത്തിരിക്കൂ.
 കാത്തിരിക്കൂ (kāttirikkū) — "please wait". The ending ‑ഊ (-ū) makes a polite request, as in പറയൂ.
+
+The word, taken apart.
+കാത്തിരിക്കൂ (kāttirikkū) is native Dravidian, "sit watching": a form of the verb "to guard, watch, wait" (DEDR 1416, with Tamil kā) joined to the verb "to sit, to be" (DEDR 480, with Tamil iru), in its request form.
 
 What you've built.
 A polite request ending you know.

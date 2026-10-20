@@ -11,7 +11,8 @@ romanization: "kāttiruṅkaḷ"
 concept_tag: TA-AGAIN-WAIT
 prerequisites: [TA-C92-loudly, TA-C92-oneminute]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard, dravidian-iru-be]
+etymology_hook: "காத்திருங்கள் — native: kā 'to watch, wait' (DEDR 1416) + iru 'to be' (DEDR 480)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C92-oneminute]
 **காத்திருங்கள்** (*kāttiruṅkaḷ*) — "please wait".
 
 **காத்திருங்கள், ஒரு நிமிடம்** — "please wait, one minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காத்திருங்கள்** (*kāttiruṅkaḷ*) is native: *kā*, "to watch, to wait" (DEDR 1416; Malayalam *kākkuka*), and *iru*, "to be" (DEDR 480): "be waiting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to find out, to experience"
 concept_tag: GE-VERB-ERFAHREN
 prerequisites: [GE-C248-entdecken, GE-C248-entschuldigen]
 sounds: []
-roots: []
+roots: [farana-germanic]
+etymology_hook: "erfahren ← Old High German irfaran 'to travel through, to explore' — er- + fahren"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C248-entschuldigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C248-VERB248-05]; assesses=[] -->
 
 **erfahren** — "to find out, to experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**erfahren** ← Old High German *irfaran*, "to travel through, to explore" (EtymDB 2.1): *er-* + *fahren*. What you find out on the way, you have experienced.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

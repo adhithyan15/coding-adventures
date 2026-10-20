@@ -14,7 +14,8 @@ romanization: "kālapaṭṭika"
 concept_tag: TE-CADUVU156-KALAPATTIKA
 prerequisites: [TE-C155-ashincu, TE-C155-edurucudu]
 sounds: []
-roots: []
+roots: [sanskrit-kaala-time, sanskrit-pattika]
+etymology_hook: "kālapaṭṭika: Sanskrit kāla 'time' (CDIAL 3084) + paṭṭikā 'slab, tablet' (CDIAL 7699)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [TE-C155-edurucudu]
 
 The board says **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* —
 "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాలపట్టిక** (*kālapaṭṭika*) is Sanskrit: *kāla*, "time" (CDIAL 3084), and *paṭṭikā*, "a slab, tablet" (CDIAL 7699), with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: excuse me; I am sorry
 concept_tag: COURTESY-SORRY
 prerequisites: [JA-C08-sayounara]
 sounds: [mora, japanese-s]
-roots: []
-etymology_hook: The polite negative shape of sumu, to be settled or finished, became a way to mark that the social account is not yet settled.
+roots: [japanese-sumu-end]
+etymology_hook: "sumimasen: native sumu 'to be settled, finish' + polite negative -masen: 'it is not settled'"
 duration:
   max_seconds: 175
 requires:
@@ -53,6 +53,11 @@ need help with what was just said.”
 Its shape is useful, not a literal translation burden. It is related to *sumu*,
 “to be settled or finished,” in a polite negative form: the small social debt is
 not yet settled. Keep the practical job first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すみません** (*sumimasen*) is a native verb in its polite negative: *sumi*, from *sumu*, "to come to an end, be settled" (JMdict writes it with a character meaning "finish"), with *-masen*, "does not". It is inherited, not borrowed: "it is not settled", said of a debt of thanks or of trouble.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN] -->

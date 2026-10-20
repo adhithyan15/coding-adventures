@@ -13,7 +13,8 @@ gloss: "the environment"
 concept_tag: GE-THING241-UMWELT
 prerequisites: [GE-C240-ueberraschung, GE-C240-umgebung]
 sounds: []
-roots: []
+roots: [germanic-weraldiz]
+etymology_hook: "Umwelt — um- 'around' + Welt 'world': the world around us"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C240-umgebung]
 <!-- hl-knowledge: introduces=[GE-LEX-C241-THING241-01]; assesses=[] -->
 
 **die Umwelt** — "the environment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Umwelt** is *um-*, "around", + *Welt*, "world": the world around us. *Welt* was first "the age of man". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

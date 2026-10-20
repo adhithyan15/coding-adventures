@@ -11,9 +11,10 @@ romanization: "hālū illa, nīrū illa"
 concept_tag: KA-CONJ-NEITHER
 prerequisites: [KA-C68-is-not, KA-C67-and-too, KA-C52-rangoli, KA-C47-hair, KA-C47-tooth, KA-C47-leg, KA-C66-paddy]
 sounds: []
-roots: []
+roots: [dravidian-paal-milk, dravidian-niir-water, il]
+etymology_hook: "hālū illa, nīrū illa: native hālu 'milk' (DEDR 4096), nīru 'water' (DEDR 3690), illa 'is not' (DEDR 2559)"
 duration:
-  max_seconds: 210
+  max_seconds: 235
 requires:
   knowledge: [KA-LEX-C68-DENY-01, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C01-ILLA-01]
 introduces:
@@ -50,6 +51,11 @@ Kannada marks the pair with the ending and lets each half deny itself.
 
 You can hear the shape in the shorter version a shopkeeper would actually use:
 **ಹಾಲೂ ನೀರೂ ಇಲ್ಲ** — the ending on both, the denial once at the end.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಲೂ ಇಲ್ಲ, ನೀರೂ ಇಲ್ಲ** (*hālū illa, nīrū illa*) is native Dravidian throughout: *hālu*, "milk" (DEDR 4096, older Kannada *pāl*), and *nīru*, "water" (DEDR 3690), each with *-ū*, "even", and *illa*, "is not" (DEDR 2559, with Tamil *illai*). DEDR 4096 compares, with a query, Sanskrit *pālana*. DEDR 3690 compares Sanskrit *nīra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

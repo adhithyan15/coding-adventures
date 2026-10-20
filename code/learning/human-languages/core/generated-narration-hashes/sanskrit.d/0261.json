@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:a69bdffc1df55c76",
+  "lessonIds": [
+    "SA-C261-avam",
+    "SA-C261-yuvam",
+    "SA-C261-dual-object-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch261.txt",
+  "json": "sanskrit/narration/ch261.json",
+  "textHash": "fnv1a64:5e78098c209c8014",
+  "jsonHash": "fnv1a64:709e55d5e7f351ab",
+  "findings": []
+}

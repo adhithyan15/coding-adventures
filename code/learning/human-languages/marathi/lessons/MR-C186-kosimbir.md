@@ -15,6 +15,7 @@ concept_tag: MR-VASTU186-KOSIMBIR
 prerequisites: [MR-C186-papad, MR-C186-catni]
 sounds: []
 roots: []
+etymology_hook: "kośimbīr 'salad': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C186-catni]
 <!-- hl-knowledge: introduces=[MR-LEX-C186-VASTU186-03]; assesses=[] -->
 
 **कोशिंबीर** — *kośimbīr* — "a salad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कोशिंबीर** (*kośimbīr*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḥazīn"
 concept_tag: AR-HEALTH54-HAZIN
 prerequisites: [AR-C54-ju, AR-C54-said]
 sounds: []
-roots: []
+roots: [ḥ-z-n]
+etymology_hook: "ḥazīn: built on the root ḥ-z-n, 'to grieve, to be sad' (Lane); ḥazīn is the faʿīl adjective, 'grieving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C54-said]
 <!-- hl-knowledge: introduces=[AR-LEX-C54-HEALTH54-03]; assesses=[] -->
 
 **حزين** — *ḥazīn* — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حزين** (*ḥazīn*) is built on the native Arabic root *ḥ-z-n*, "to grieve, to be sad" (Lane). *Ḥazīn* is the *faʿīl* adjective, "grieving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

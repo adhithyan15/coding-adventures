@@ -13,7 +13,8 @@ gloss: "a ring"
 concept_tag: PT-COISAS100-ANEL
 prerequisites: [PT-C100-selo, PT-C100-carteira]
 sounds: []
-roots: []
+roots: [anellus-latin]
+etymology_hook: "anel ← Latin anellus 'little ring', a small form of anulus 'ring'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C100-carteira]
 <!-- hl-knowledge: introduces=[PT-LEX-C100-COISAS100-05]; assesses=[] -->
 
 **o anel** — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anel** ← Latin *anellus*, "little ring" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

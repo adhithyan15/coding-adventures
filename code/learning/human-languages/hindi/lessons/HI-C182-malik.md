@@ -14,7 +14,8 @@ romanization: "mālik"
 concept_tag: HI-THG182-MALIK
 prerequisites: [HI-C182-sit, HI-C182-tankhvah]
 sounds: []
-roots: []
+roots: [arabic-malik]
+etymology_hook: "mālik ← Arabic mālik 'owner', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C182-tankhvah]
 <!-- hl-knowledge: introduces=[HI-LEX-C182-THG182-04]; assesses=[] -->
 
 **मालिक** — *mālik* — "an owner, a boss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मालिक** (*mālik*) is a loan from Arabic *mālik*, "owner", which reached Hindi through Persian. Its Arabic root is *m-l-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "music"
 concept_tag: GE-DINGE-MUSIK
 prerequisites: [GE-C102-antwort, GE-C102-arbeit]
 sounds: []
-roots: []
+roots: [musica-latin]
+etymology_hook: "Musik ← Latin mūsica ← Greek mousikḗ 'the art of the Muses' — borrowed, like English music"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C102-arbeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C102-DINGE-05]; assesses=[] -->
 
 **die Musik** — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Musik** ← Latin *mūsica* ← Greek *mousikḗ*, "the art of the Muses" (EtymDB 2.1) — borrowed, like English *music*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

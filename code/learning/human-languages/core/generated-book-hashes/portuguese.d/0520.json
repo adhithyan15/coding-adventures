@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:22b07dd03e99fab6",
+  "lessonIds": [
+    "PT-C520-cenario",
+    "PT-C520-encenar",
+    "PT-C520-encenacao",
+    "PT-C520-estreia",
+    "PT-C520-estrear"
+  ],
+  "tex": "portuguese/book/chapters/ch520-estreias.tex"
+}

@@ -14,7 +14,8 @@ romanization: "thālī"
 concept_tag: UR-THINGS109-THALI
 prerequisites: [UR-C109-chulha, UR-C109-bartan]
 sounds: []
-roots: []
+roots: [sanskrit-sthali]
+etymology_hook: "thālī ← Sanskrit sthālī 'earthen dish', a tadbhava (CDIAL 13766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C109-bartan]
 <!-- hl-knowledge: introduces=[UR-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **تھالی** — *thālī* — "a plate, a platter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تھالی** (*thālī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthālī*, "earthen dish" (CDIAL 13766).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-VERB-VERABREDEN
 prerequisites: [GE-C189-uebersetzen, GE-C189-umarmen]
 sounds: []
 roots: []
+etymology_hook: "verabreden — ver- + ab- + the verb 'to speak': to agree on something by talking it over"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C189-umarmen]
 <!-- hl-knowledge: introduces=[GE-LEX-C189-VERB189-03]; assesses=[] -->
 
 **verabreden** — "to arrange (sich verabreden: to make a date)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verabreden** is *ver-* + *ab-* + the verb "to speak", Old High German *redōn* (EtymDB 2.1): to settle something by talking it over.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

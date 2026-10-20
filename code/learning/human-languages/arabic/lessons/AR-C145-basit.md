@@ -14,7 +14,8 @@ romanization: "basīṭ"
 concept_tag: AR-QUAL145-BASIT
 prerequisites: [AR-C145-malih, AR-C145-fakhm]
 sounds: []
-roots: []
+roots: [b-s-ṭ]
+etymology_hook: "basīṭ: built on the root b-s-ṭ, 'to spread out' (Lane); basīṭ is 'spread out, plain', hence 'simple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C145-fakhm]
 <!-- hl-knowledge: introduces=[AR-LEX-C145-QUAL145-03]; assesses=[] -->
 
 **بسيط** — *basīṭ* — "simple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بسيط** (*basīṭ*) is built on the native Arabic root *b-s-ṭ*, "to spread out" (Lane). *Basīṭ* is "spread out, plain", hence "simple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

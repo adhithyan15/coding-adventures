@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:346545b205e3ab2c",
+  "sourceHash": "fnv1a64:7235eb2b6bb57801",
   "lessonIds": [
     "MW-C60-khad",
     "MW-C60-lun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch60.txt",
   "json": "marwadi/narration/ch60.json",
-  "textHash": "fnv1a64:683590ef028b3ce7",
-  "jsonHash": "fnv1a64:cbb004480c3c297f",
+  "textHash": "fnv1a64:eb9c7efe3d57cb38",
+  "jsonHash": "fnv1a64:8add90e0c1e03031",
   "findings": []
 }

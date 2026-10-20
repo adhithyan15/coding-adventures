@@ -12,6 +12,9 @@ Before the new one: say the Marathi for patience, restraint, then the Marathi fo
 You'll want to know: क्वचित.
 क्वचित — kvacit — "rarely".
 
+The word, taken apart.
+क्वचित (kvacit) is Sanskrit kvacit, "somewhere, at times", a tatsama: kva, "where", with -cit, "some-". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for luck, fate, then the Marathi for rarely.
 
 You'll want to know: मग.
 मग — mag — "then, after that".
+
+The word, taken apart.
+मग (mag) is inherited. CDIAL lists Marathi mag, "then, after", as an adverbial use of Sanskrit mārga, "track, road" (CDIAL 10071).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for rarely, then the Marathi for then.
 You'll want to know: शेवटी.
 शेवटी — śevṭī — "finally, in the end".
 
+The word, taken apart.
+The origin of शेवटी (śevṭī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for then, then the Marathi for finally.
 You'll want to know: अजून.
 अजून — ajūn — "still, yet".
 
+The word, taken apart.
+अजून (ajūn) is a tadbhava, a word inherited and reshaped by sound change. It comes from adyāhnaḥ, "this very day", a form CDIAL reconstructs from its descendants (CDIAL 244). It is adya, "today", and ahnaḥ, "of the day". CDIAL glosses the Marathi word "even now".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for finally, then the Marathi for still.
 
 You'll want to know: अचानक.
 अचानक — acānak — "suddenly".
+
+The word, taken apart.
+The origin of अचानक (acānak) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

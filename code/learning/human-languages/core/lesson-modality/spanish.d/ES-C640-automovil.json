@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C640-automovil",
+    "language": "spanish",
+    "chapter": 640,
+    "sequence": 21810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:715ab3bf4d1c01ec"
+  },
+  "findings": []
+}

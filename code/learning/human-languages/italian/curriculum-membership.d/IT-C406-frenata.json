@@ -1,0 +1,11 @@
+{
+  "id": "IT-C406-frenata",
+  "pathSegment": "IT-PATH-406-GUIDA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-406-GUIDA",
+      "order": 2
+    }
+  ]
+}

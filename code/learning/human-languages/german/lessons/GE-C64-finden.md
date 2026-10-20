@@ -13,7 +13,8 @@ gloss: "to find"
 concept_tag: GE-VERB-FINDEN
 prerequisites: [GE-C64-spielen, GE-C64-wissen]
 sounds: []
-roots: []
+roots: [germanic-finthana]
+etymology_hook: "finden ← Old High German findan ← Proto-Germanic *finþaną — the same verb as English find"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C64-wissen]
 <!-- hl-knowledge: introduces=[GE-LEX-C64-VERBEN1-04]; assesses=[] -->
 
 **finden** — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**finden** ← Old High German *findan* ← Proto-Germanic *\*finþaną*, "to come upon" — inherited, the same verb as English *find*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

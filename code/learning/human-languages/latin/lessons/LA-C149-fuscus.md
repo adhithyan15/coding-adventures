@@ -13,7 +13,8 @@ gloss: "dark, dusky"
 concept_tag: LA-QUAL149-FUSCUS
 prerequisites: [LA-C148-quietus, LA-C148-purpureus]
 sounds: []
-roots: []
+roots: [fuscus-latin]
+etymology_hook: "fuscus 'dark' — probably from PIE *dhewh2- 'smoke': smoky"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C148-purpureus]
 <!-- hl-knowledge: introduces=[LA-LEX-C149-QUAL149-01]; assesses=[] -->
 
 **fuscus, fusca, fuscum** — "dark, dusky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fuscus** is probably inherited, from a Proto-Indo-European root *\*dhewh2-*, "smoke, dust" (EtymDB 2.1): smoky, so dark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

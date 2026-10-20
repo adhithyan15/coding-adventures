@@ -14,7 +14,8 @@ romanization: "vīthī"
 concept_tag: SA-LOC95-VITHI
 prerequisites: [SA-C95-sarvatra, SA-C95-anyatra]
 sounds: []
-roots: []
+roots: [sanskrit-vithi]
+etymology_hook: "vīthī 'row, street', perhaps from √vī (MW); the source is uncertain; Punjabi vīhī 'street' (CDIAL 12050)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C95-anyatra]
 <!-- hl-knowledge: introduces=[SA-LEX-C95-LOC95-05]; assesses=[] -->
 
 **वीथी** — *vīthī* — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW suggests *vīthī* "a row, a street" comes from the root √vī "go, approach", but marks it "perhaps", so the source is uncertain. It lives on as Punjabi *vīhī* "street" (CDIAL 12050).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

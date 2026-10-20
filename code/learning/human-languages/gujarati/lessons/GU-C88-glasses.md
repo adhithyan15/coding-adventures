@@ -14,7 +14,8 @@ romanization: "caśmā̃"
 concept_tag: GU-CARRY-GLASSES
 prerequisites: [GU-C87-cap, GU-C87-umbrella]
 sounds: []
-roots: []
+roots: [persian-chashma]
+etymology_hook: "caśmāṁ: usually traced to Persian chashma 'spring', built on chashm 'eye'; 'spectacles' is the Indian sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C87-umbrella]
 <!-- hl-knowledge: introduces=[GU-LEX-C88-CARRY-01]; assesses=[] -->
 
 **ચશ્માં** (*caśmā̃*) — "glasses, spectacles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચશ્માં** (*caśmāṁ*) is a loan, usually traced to Persian *chashma*, "spring, fountain", built on *chashm*, "eye". The sense "spectacles" grew up in India.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

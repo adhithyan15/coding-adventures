@@ -14,7 +14,8 @@ romanization: "cunāv"
 concept_tag: HI-THG218-CUNAV
 prerequisites: [HI-C218-kanun, HI-C218-adalat]
 sounds: []
-roots: []
+roots: [sanskrit-cinoti]
+etymology_hook: "cunāv: the noun of cunnā 'to choose', from Sanskrit cinoti 'heaps up, collects' (CDIAL 4814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C218-adalat]
 <!-- hl-knowledge: introduces=[HI-LEX-C218-THG218-05]; assesses=[] -->
 
 **चुनाव** — *cunāv* — "an election".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चुनाव** (*cunāv*) is the noun of *cunnā*, "to choose, pick", which comes from Sanskrit *cinoti*, "heaps up, collects" (CDIAL 4814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

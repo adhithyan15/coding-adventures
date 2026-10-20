@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 286,
-  "sourceHash": "fnv1a64:f70227bb74afc376",
+  "sourceHash": "fnv1a64:e1390f49d77daa0c",
   "lessonIds": [
     "FA-C286-khoshkshuyi",
     "FA-C286-pishkhan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch286.txt",
   "json": "persian/narration/ch286.json",
-  "textHash": "fnv1a64:04707d5ec2a46222",
-  "jsonHash": "fnv1a64:7f4680687bd6ab99",
+  "textHash": "fnv1a64:4d9222c60a186158",
+  "jsonHash": "fnv1a64:0b4dc1b5a988dfa5",
   "findings": []
 }

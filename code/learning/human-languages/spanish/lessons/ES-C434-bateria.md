@@ -11,6 +11,7 @@ concept_tag: ES-REF-BATERIA
 prerequisites: [ES-C434-pieza, ES-C432-tuberia]
 sounds: []
 roots: []
+etymology_hook: "batería ← French batterie, built on battre 'to beat': guns striking together"
 duration:
   max_seconds: 250
 requires:
@@ -58,7 +59,7 @@ battery of guns, a set of things striking together.
 | la estantería | in Spanish, from *estante* |
 | la batería | in French, from *battre* |
 
-So the resemblance is real but it is **inherited**, not made here. That is the
+So the resemblance is real but it is **borrowed**, not made here. That is the
 honest shape of the rule you have been building for three chapters: look for
 the join, and accept that sometimes the join happened in another language and
 the pieces never entered this one.

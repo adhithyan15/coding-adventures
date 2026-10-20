@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:356b22777ca20b2a",
+  "lessonIds": [
+    "LA-C367-cum",
+    "LA-C367-ne",
+    "LA-C367-quin",
+    "LA-C367-quominus",
+    "LA-C367-tamquam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch367.txt",
+  "json": "latin/narration/ch367.json",
+  "textHash": "fnv1a64:00ba765cd649226e",
+  "jsonHash": "fnv1a64:129ccd147bf8714f",
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Hic, Iste, Ille, Is, Ibi",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb18d36882e1eb29",
+  "sourceHash": "fnv1a64:b780709bcd461acf",
   "lessons": [
     {
       "id": "LA-C50-hic",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff25379cd2a45aaa",
+      "sourceHash": "fnv1a64:27ac5564d59218a6",
       "notice": null,
       "blocks": [
         {
@@ -120,6 +120,10 @@
             },
             {
               "kind": "speech",
+              "text": "Hic itself is inherited, usually traced to a Proto-Indo-European pointing word for \"this, here\" (EtymDB 2.1)."
+            },
+            {
+              "kind": "speech",
               "text": "English ad hoc is hoc, \"for this\"; a hic jacet is what an old gravestone says: \"here lies.\""
             }
           ]
@@ -187,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74d110b3577273e9",
+      "sourceHash": "fnv1a64:3c30e35d82fc8857",
       "notice": null,
       "blocks": [
         {
@@ -280,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then the words moved. Spanish este (\"this\") is from iste, not from hic — the middle term slid down into the near slot when hic dropped out, and ipse slid in behind it to make ese. So Spanish still points three ways and does it with a different three words, which is a good demonstration that a SYSTEM can outlive every word in it."
+              "text": "Then the words moved. Spanish este (\"this\") is from iste, not from hic — the middle term slid down into the near slot when hic dropped out, and ipse slid in behind it to make ese. So Spanish still points three ways and does it with a different three words, which is a good demonstration that a SYSTEM can outlive every word in it. Iste itself is built from is, \"he, that\", with a pointing ending -te (EtymDB 2.1)."
             }
           ]
         },
@@ -347,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dd801958ece3671",
+      "sourceHash": "fnv1a64:deb8cb7a6c41aae1",
       "notice": null,
       "blocks": [
         {
@@ -455,6 +459,10 @@
             {
               "kind": "speech",
               "text": "The same word became the definite article and the third-person pronoun in every Romance language. Your very first lesson taught you that Latin's endings carry what other languages carry in extra words; here is the reverse motion, a demonstrative flattening into an extra word."
+            },
+            {
+              "kind": "speech",
+              "text": "Ille goes back to Old Latin olle (Lewis & Short, EtymDB 2.1); beyond that its origin is uncertain."
             }
           ]
         },
@@ -681,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96ea43858f4af38c",
+      "sourceHash": "fnv1a64:8b60b36c1290e164",
       "notice": null,
       "blocks": [
         {
@@ -770,7 +778,7 @@
             },
             {
               "kind": "speech",
-              "text": "Liber hīc est. Amīcus ibi est. — The book is here. The friend is there."
+              "text": "Canis hīc est. Fēlēs ibi est. — The dog is here. The cat is there."
             },
             {
               "kind": "speech",
@@ -778,7 +786,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ibi survives into Italian ivi and, worn down almost to nothing, into the French y of il y a — \"there is.\" A single letter of modern French is this Latin word."
+              "text": "Ibi survives into Italian ivi and, worn down almost to nothing, into the French y of il y a — \"there is.\" A single letter of modern French is this Latin word. Ibi is built on the pronoun stem of is, \"he, that\" (Lewis & Short)."
             }
           ]
         },
@@ -826,7 +834,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the book is here\" and \"the friend is there.\" (Liber hīc est. Amīcus ibi est.) What separates the pronoun hic from the adverb hīc? (Vowel length — the macron.)"
+              "text": "Say \"the dog is here\" and \"the cat is there.\" (Canis hīc est. Fēlēs ibi est.) What separates the pronoun hic from the adverb hīc? (Vowel length — the macron.)"
             }
           ]
         }

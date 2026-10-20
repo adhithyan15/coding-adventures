@@ -1,0 +1,11 @@
+{
+  "id": "IT-C331-dose",
+  "pathSegment": "IT-PATH-331-RICETTA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-331-RICETTA",
+      "order": 1
+    }
+  ]
+}

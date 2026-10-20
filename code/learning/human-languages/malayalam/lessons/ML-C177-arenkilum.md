@@ -14,7 +14,8 @@ romanization: "āreṅkiluṁ"
 concept_tag: ML-NISHEDHAM177-ARENKILUM
 prerequisites: [ML-C177-orikkalum, ML-C177-eviteyum]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, dravidian-en-say]
+etymology_hook: "āreṅkiluṁ: native Dravidian, ār 'who' (DEDR 5151) + a form of 'to say' meaning 'if' (DEDR 868) + -uṁ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C177-eviteyum]
 <!-- hl-knowledge: introduces=[ML-LEX-C177-NISHEDHAM177-04]; assesses=[] -->
 
 **ആരെങ്കിലും** — *āreṅkiluṁ* — "anyone, someone". A yes-or-no question ends in **-ഓ** (*-ō*): **ഉണ്ട്** becomes **ഉണ്ടോ**. **അവിടെ ആരെങ്കിലും ഉണ്ടോ?** — *aviṭe āreṅkiluṁ uṇṭō?* — "Is anyone there?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആരെങ്കിലും** (*āreṅkiluṁ*) is native Dravidian: *ārŭ*, "who" (DEDR 5151), then a conditional form meaning "if", from the verb "to say" (DEDR 868, with Tamil *eṉ*), and *-uṁ*: "whoever it may be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

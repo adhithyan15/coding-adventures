@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 110,
-  "sourceHash": "fnv1a64:11ad11427bbbd823",
+  "sourceHash": "fnv1a64:510381641295f0ef",
   "lessonIds": [
     "GU-C110-peti",
     "GU-C110-barni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch110.txt",
   "json": "gujarati/narration/ch110.json",
-  "textHash": "fnv1a64:4ec28bdd50457bd8",
-  "jsonHash": "fnv1a64:07209e54e9fb21e0",
+  "textHash": "fnv1a64:4660ca179b2c98ce",
+  "jsonHash": "fnv1a64:2f1a114d78274356",
   "findings": []
 }

@@ -10,7 +10,7 @@ gloss: the hour-word and Sanskrit gem-word are likely homophones, then maṇi te
 romanization: "maṇi / maṇi"
 prerequisites: [TA-C18-mani, TA-S08-pulli, TA-W06-write-illai]
 sounds: [tamil-retroflex-nna, tamil-vowel-sign-i]
-roots: [tamil-mani-bell, sanskrit-mani-gem]
+roots: [dravidian-mani-bell, sanskrit-mani-gem]
 duration:
   max_seconds: 240
 requires:
@@ -43,16 +43,17 @@ jewel." On that analysis, bell/hour and gem are **homophones**: one likely
 native, one borrowed, identical on the page. Context separates clock time from a
 jewel or personal name.
 
-Malayalam dictionaries analyze their cognate differently, treating bell/hour
-and gem as one Sanskrit-derived word. Closely related languages do not always
-settle the same etymological question in the same way.
+The comparative Dravidian dictionary lists the bell/hour word with Malayalam
+*maṇi*, "little bells, gong, hour", and Kota, Toda and Tulu bell words (DEDR
+4672). It adds a query about a source in Sanskrit *maṇi*, "jewel", and leaves
+it open.
 
 ## Grammar Lens: Tell the time
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-MANI-HOMOPHONE-TIME-02]; assesses=[] -->
 
-> **ஒரு மணி.** — one o'clock, literally "one hour/bell"
+> **இரண்டு மணி.** — two o'clock, literally "two hour/bell"
 >
-> **இரண்டு மணி.** — two o'clock
+> **மூன்று மணி.** — three o'clock
 
 The number comes first; *maṇi* supplies the clock unit.
 
@@ -60,8 +61,8 @@ The number comes first; *maṇi* supplies the clock unit.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-01, TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-GRAMMAR-MANI-HOMOPHONE-TIME-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "oru maṇi" — one o'clock]
 - [YOU SAY: "iraṇṭu maṇi" — two o'clock]
+- [YOU SAY: "mūṉṟu maṇi" — three o'clock]
 - [YOU CHOOSE BY CONTEXT: clock → hour · jewelry/name → gem]
 
 ## Script — the puḷḷi and இல்லை

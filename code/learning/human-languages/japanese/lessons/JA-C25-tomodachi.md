@@ -14,7 +14,8 @@ romanization: "tomodachi"
 concept_tag: JA-FAMILY25-TOMODACHI
 prerequisites: [JA-C24-musuko, JA-C24-musume]
 sounds: []
-roots: []
+roots: [japanese-tomo-friend, japanese-tachi-plural]
+etymology_hook: "tomodachi: native tomo 'companion' + plural -tachi (voiced); once 'companions'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C24-musume]
 <!-- hl-knowledge: introduces=[JA-LEX-C25-FAMILY25-01]; assesses=[] -->
 
 **ともだち** — *tomodachi* — "a friend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ともだち** (*tomodachi*) is a native compound, inherited rather than borrowed: *tomo*, "companion", with *-dachi*, the plural ending *-tachi* voiced, so it was once a plural, "companions" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

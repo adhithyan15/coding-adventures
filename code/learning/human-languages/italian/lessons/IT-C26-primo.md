@@ -11,7 +11,7 @@ concept_tag: IT-ORDINAL-PRIMO
 prerequisites: [IT-C25-gola, IT-C22-caffe, IT-C05-abitare, IT-C06-numeri-1-5, IT-C01-ciao, IT-C01-buono]
 sounds: [stress-first]
 roots: []
-etymology_hook: "primo is Latin primus, and it is already in this book: primavera was glossed as the first green and the word behind that gloss was never given; il primo piano is the floor ABOVE the ground floor, because Italian starts counting where the stairs start"
+etymology_hook: "primo is Latin primus, and it is already in this book: primavera was glossed as the first spring and the word behind that gloss was never given; il primo piano is the floor ABOVE the ground floor, because Italian starts counting where the stairs start"
 duration:
   max_seconds: 250
 requires:
@@ -59,7 +59,7 @@ does and changes its ending with what it counts.
 <!-- hl-knowledge: introduces=[IT-ETYMON-PRIMO-03]; assesses=[] -->
 
 This book has used *primo* once, and hidden it. The seasons lesson glossed
-**primavera** as "the **first** green" — *prima vera*, the first spring — and the
+**primavera** as "the **first** spring" — Latin *prīma vēra* — and the
 word behind that gloss was never given. Now it is.
 
 One thing to know before you use it. **Il primo piano** is not the ground floor.

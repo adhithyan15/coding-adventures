@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 250,
-  "sourceHash": "fnv1a64:cef9c991e82e5bf1",
+  "sourceHash": "fnv1a64:db7b0d2648dfbd36",
   "lessonIds": [
     "FR-C250-etranger",
     "FR-C250-touriste",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch250.txt",
   "json": "french/narration/ch250.json",
-  "textHash": "fnv1a64:06fb8a9d844ed942",
-  "jsonHash": "fnv1a64:9a533526acf8d75a",
+  "textHash": "fnv1a64:1f5289fd0acb8d04",
+  "jsonHash": "fnv1a64:a436068555b72c1b",
   "findings": []
 }

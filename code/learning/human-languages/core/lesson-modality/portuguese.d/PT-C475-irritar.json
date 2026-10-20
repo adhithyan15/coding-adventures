@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C475-irritar",
+    "language": "portuguese",
+    "chapter": 475,
+    "sequence": 26420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2412dcfcf0cacfc"
+  },
+  "findings": []
+}

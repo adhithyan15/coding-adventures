@@ -14,7 +14,8 @@ romanization: "dérevo"
 concept_tag: RU-NATURE1-TREE
 prerequisites: [RU-C54-ticket, RU-C54-map]
 sounds: []
-roots: []
+roots: [pie-deru]
+etymology_hook: "дерево ← Proto-Slavic *dervo; Greek drys 'oak' and English tree are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C54-map]
 <!-- hl-knowledge: introduces=[RU-LEX-C55-NATURE1-01]; assesses=[] -->
 
 **дерево** (*dérevo*) — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дерево** ← Proto-Slavic *\*dervo* — inherited. Vasmer lists Lithuanian *dervà*, "pine", Greek *dóry*, "wood, spear", *drŷs*, "oak", and Sanskrit *dāru*, "wood"; Trubachev adds Gothic *triu*, so English *tree* is a cousin, from PIE *\*dóru*, "tree, wood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

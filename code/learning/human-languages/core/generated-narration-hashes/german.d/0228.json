@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 228,
-  "sourceHash": "fnv1a64:f675c7028626fd6b",
+  "sourceHash": "fnv1a64:724cd4b468b4932d",
   "lessonIds": [
     "GE-C228-entscheidung",
     "GE-C228-erinnerung",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch228.txt",
   "json": "german/narration/ch228.json",
-  "textHash": "fnv1a64:f698bb704087edcd",
-  "jsonHash": "fnv1a64:f265901d00157574",
+  "textHash": "fnv1a64:7f0de47f14a62e19",
+  "jsonHash": "fnv1a64:7764bc5aee9ca9ef",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "saṭṭai"
 concept_tag: TA-NOUN-SHIRT
 prerequisites: [TA-C66-whichway-recall, TA-C66-up, TA-C66-down]
 sounds: []
-roots: []
+roots: [dravidian-sattai-jacket]
+etymology_hook: "சட்டை — native Dravidian (DEDR 2310); Malayalam caṭṭa, Kannada caṭṭe, Telugu caṭṭa"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ for a சட்டை and you get a garment.
 
 Say the middle hard. The doubled **ட்ட** in சட்டை is the same doubled ட you already hear in
 பெட்டி (*peṭṭi*), a box — and it is what keeps this word *saṭṭai* rather than a softer *saḍai*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சட்டை** (*saṭṭai*) is native Dravidian. DEDR 2310 lists Malayalam *caṭṭa*, Kannada *caṭṭe* and Telugu *caṭṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

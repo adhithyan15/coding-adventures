@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-FEVER
 prerequisites: [KA-C63-sleep, KA-C61-oil]
 sounds: []
 roots: []
+etymology_hook: "jvara ← Sanskrit jvara 'fever', taken over whole (CDIAL 5303)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C63-sleep]
 ಜ್ವರ came in from Sanskrit whole, cluster and all, and Kannada did not smooth this one — which tells you it arrived through books and doctors rather than through kitchens.
 
 It is the word you hand a ವೈದ್ಯ first. ನನಗೆ ಜ್ವರ, with the same three pieces as the last two lessons, and you have said the most useful sentence in the chapter.
+
+CDIAL 5303 lists Sanskrit *jvara*, "fever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

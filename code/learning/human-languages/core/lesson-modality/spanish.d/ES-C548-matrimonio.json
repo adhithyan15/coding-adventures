@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C548-matrimonio",
+    "language": "spanish",
+    "chapter": 548,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4feaf6ce39f7757b"
+  },
+  "findings": []
+}

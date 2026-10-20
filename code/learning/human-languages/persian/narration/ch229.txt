@@ -12,6 +12,9 @@ Before the new one: say the Persian for the turn of the year, then the Persian f
 You'll want to know: مدت.
 مدت — moddat — "a period, a length of time".
 
+The word, taken apart.
+moddat is borrowed from Arabic mudda, "period, space of time". Its Arabic root is m-d-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for birth, then the Persian for a period.
 
 You'll want to know: تقویم.
 تقویم — taqvim — "a calendar".
+
+The word, taken apart.
+taqvim is borrowed from Arabic taqwīm, "setting right, calendar". Its Arabic root is q-w-m (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a period, then the Persian for a calenda
 You'll want to know: لحظه.
 لحظه — lahze — "a moment".
 
+The word, taken apart.
+lahze is borrowed from Arabic laḥẓa, "glance, moment". Its Arabic root is l-ḥ-ẓ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a calendar, then the Persian for a momen
 You'll want to know: دیگر.
 دیگر — digar — "any more; other".
 
+The word, taken apart.
+digar is native Persian, usually traced to Middle Persian dudīgar, "second, other"; EtymDB takes it back to the Indo-European word for "two".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a moment, then the Persian for any more.
 
 You'll want to know: سحر.
 سحر — sahar — "dawn".
+
+The word, taken apart.
+sahar is borrowed from Arabic saḥar, "the last part of the night, before dawn". Its Arabic root is s-ḥ-r (Lane). The same Arabic root gives sehr, "magic" (EtymDB lists both).
 
 What you've built.
 One more word for this chapter.

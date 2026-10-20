@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:110cfbc55ac899f1",
+  "lessonIds": [
+    "PA-C177-noun-gender",
+    "PA-C177-adjective-position",
+    "PA-C177-adjective-agreement",
+    "PA-C177-bahut",
+    "PA-C177-noun-phrase"
+  ],
+  "tex": "punjabi/book/chapters/ch177-a-good-boy-and-a-very-good-girl.tex"
+}

@@ -13,7 +13,8 @@ gloss: "a holiday"
 concept_tag: GE-FREIZEIT-URLAUB
 prerequisites: [GE-C103-farbe, GE-C103-reise]
 sounds: []
-roots: []
+roots: [germanic-galaubijana]
+etymology_hook: "Urlaub ← Middle High German urloup 'permission to leave' — a holiday was leave granted"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C103-reise]
 <!-- hl-knowledge: introduces=[GE-LEX-C103-FREIZEIT-05]; assesses=[] -->
 
 **der Urlaub** — "a holiday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Urlaub** ← Middle High German *urloup*, "permission, leave to go" (EtymDB 2.1) — built from *ur-*, "out", and a word for "permission". A holiday is leave granted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

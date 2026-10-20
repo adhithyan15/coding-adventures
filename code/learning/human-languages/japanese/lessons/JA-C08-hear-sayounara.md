@@ -11,8 +11,8 @@ gloss: goodbye; one farewell used at a parting
 concept_tag: FAREWELL
 prerequisites: [JA-C01-practice]
 sounds: [mora, long-o]
-roots: []
-etymology_hook: Learn the five beats and the social job before the three new signs reach the page.
+roots: [japanese-sayo, japanese-nara]
+etymology_hook: "sayōnara: sayō 'so, like that' + nara 'if' (from nari) — 'if that is so'"
 duration:
   max_seconds: 150
 requires:
@@ -53,6 +53,11 @@ then say the expression once. Its writing waits for the next four tiny sessions.
 This is **one** Japanese farewell, not a universal line for every departure.
 Relationship and situation can call for other expressions; those will receive
 their own lessons rather than being smuggled into this one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sayōnara* began as a phrase: *sayō*, "so, like that", and *nara*, "if", from the old copula *nari*, so "if that is how it is" (JMdict). *Sa*, "so", is native and *yō*, "manner", was borrowed from Chinese.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAYOUNARA, JA-SAYOUNARA-HEARD-01] -->

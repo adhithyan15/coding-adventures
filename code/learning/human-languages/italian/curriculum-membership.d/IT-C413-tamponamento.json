@@ -1,0 +1,11 @@
+{
+  "id": "IT-C413-tamponamento",
+  "pathSegment": "IT-PATH-413-INGORGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-413-INGORGO",
+      "order": 1
+    }
+  ]
+}

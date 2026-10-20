@@ -14,7 +14,8 @@ romanization: "búlka"
 concept_tag: RU-VESHCH222-BULKA
 prerequisites: [RU-C222-blyudo, RU-C222-menyu]
 sounds: []
-roots: []
+roots: [slavic-bulka]
+etymology_hook: "булка: perhaps from Polish bułka, from Italian or French 'a ball'; Vasmer allows a native link with булава 'a mace'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C222-menyu]
 <!-- hl-knowledge: introduces=[RU-LEX-C222-VESHCH222-04]; assesses=[] -->
 
 **булка** (*búlka*) — "a bun, a roll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**булка** — not found in older texts in this sense, so a loan from Polish *bułka*, and the Polish from Italian *bulla* or French *boule*, "a ball", has been assumed. Vasmer finds no evidence in the sounds for a loan and allows a native link with *булава*, "a mace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

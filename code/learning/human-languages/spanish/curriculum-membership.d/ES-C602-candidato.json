@@ -1,0 +1,11 @@
+{
+  "id": "ES-C602-candidato",
+  "pathSegment": "ES-PATH-602-VOTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-602-VOTO",
+      "order": 2
+    }
+  ]
+}

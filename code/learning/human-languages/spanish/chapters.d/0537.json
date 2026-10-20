@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Desde entonces",
+  "label": "ch:es-desde-entonces",
+  "canDo": "I can say what has happened since then, what happened until then, the next day, a short time ago and the day before yesterday.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C537-anteayer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say what has happened since then, what happened until then, the next day, a short time ago and the day before yesterday.",
+    "assesses": [
+      "ES-LEX-C537-ENTONCES-03",
+      "ES-LEX-C537-ENTONCES-04",
+      "ES-LEX-C537-ENTONCES-05"
+    ]
+  }
+}

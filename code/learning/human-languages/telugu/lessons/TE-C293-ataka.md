@@ -14,7 +14,8 @@ romanization: "aṭaka"
 concept_tag: TE-STHALAM293-ATAKA
 prerequisites: [TE-C293-carci, TE-C293-pancayati]
 sounds: []
-roots: []
+roots: [sanskrit-atta-tower]
+etymology_hook: "aṭaka: DEDR 93 lists aṭuka 'loft', unsure whether Indo-Aryan or Dravidian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C293-pancayati]
 <!-- hl-knowledge: introduces=[TE-LEX-C293-STHALAM293-05]; assesses=[] -->
 
 **అటక** — *aṭaka* — "a loft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 93 lists **అటక** (*aṭaka*) as *aṭuka*, "loft under the roof", with Tamil *aṭṭam*, "upper story", and notes doubt whether the word is Indo-Aryan or Dravidian in origin; CDIAL 180 has Sanskrit *aṭṭa*, "tower", which it calls non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

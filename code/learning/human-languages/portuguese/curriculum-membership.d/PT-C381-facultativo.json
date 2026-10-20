@@ -1,0 +1,11 @@
+{
+  "id": "PT-C381-facultativo",
+  "pathSegment": "PT-PATH-381-NORMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-381-NORMA",
+      "order": 3
+    }
+  ]
+}

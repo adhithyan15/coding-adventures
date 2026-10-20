@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 154,
-  "sourceHash": "fnv1a64:5410b2aa5c7428c7",
+  "sourceHash": "fnv1a64:f0a8475ce0a6e7fc",
   "lessonIds": [
     "RU-C154-poetomu",
     "RU-C154-tak-kak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch154.txt",
   "json": "russian/narration/ch154.json",
-  "textHash": "fnv1a64:1ca052569b0c11a9",
-  "jsonHash": "fnv1a64:a94c763d7b9dbf6e",
+  "textHash": "fnv1a64:8c08861b4450a6c7",
+  "jsonHash": "fnv1a64:af885ee4dc472694",
   "findings": []
 }

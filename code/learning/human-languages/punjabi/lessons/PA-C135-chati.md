@@ -14,7 +14,8 @@ romanization: "chātī"
 concept_tag: PA-THINGS135-CHATI
 prerequisites: [PA-C134-mucch, PA-C135-gardan]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti-chest]
+etymology_hook: "chātī ← *chātti 'chest, breast', a reconstructed form; a tadbhava (CDIAL 5014)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C135-gardan]
 <!-- hl-knowledge: introduces=[PA-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **ਛਾਤੀ** — *chātī* — "a chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛਾਤੀ** (*chātī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chātti*, "chest, breast", a form CDIAL reconstructs from its descendants (CDIAL 5014).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

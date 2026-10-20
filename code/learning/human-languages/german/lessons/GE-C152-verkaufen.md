@@ -13,7 +13,8 @@ gloss: "to sell"
 concept_tag: GE-VERB-VERKAUFEN
 prerequisites: [GE-C152-unterschreiben, GE-C152-verdienen]
 sounds: []
-roots: []
+roots: [caupo-latin]
+etymology_hook: "verkaufen — ver- 'away' + kaufen 'to buy': to sell is to buy away"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C152-verdienen]
 <!-- hl-knowledge: introduces=[GE-LEX-C152-VERB152-03]; assesses=[] -->
 
 **verkaufen** — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verkaufen** is *ver-*, "away", + *kaufen*, "to buy": what you sell goes away from you. EtymDB 2.1 lists it beside Dutch *verkopen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

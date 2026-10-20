@@ -13,7 +13,8 @@ gloss: "a hat"
 concept_tag: PT-ROUPA2-CHAPEU
 prerequisites: [PT-C77-calcas, PT-C77-sapatos]
 sounds: []
-roots: []
+roots: [cappa-latin]
+etymology_hook: "chapéu ← Old French chapel 'hat', from Late Latin cappa 'hooded cloak' — English chaplet"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C77-sapatos]
 <!-- hl-knowledge: introduces=[PT-LEX-C78-ROUPA2-01]; assesses=[] -->
 
 **o chapéu** — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chapéu** ← Old French *chapel*, "hat" — borrowed. Behind it is Vulgar Latin *\*cappellus*, from Late Latin *cappa*, "hooded cloak" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

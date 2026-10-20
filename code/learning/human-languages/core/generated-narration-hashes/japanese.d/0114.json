@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 114,
-  "sourceHash": "fnv1a64:e34b27379d562ca2",
+  "sourceHash": "fnv1a64:b23a95b4907bad2f",
   "lessonIds": [
     "JA-C114-hakusai",
     "JA-C114-ninniku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch114.txt",
   "json": "japanese/narration/ch114.json",
-  "textHash": "fnv1a64:d62feae986891b2d",
-  "jsonHash": "fnv1a64:0175a4d5002d6fa9",
+  "textHash": "fnv1a64:af28faf28a816535",
+  "jsonHash": "fnv1a64:23f08766fd87d0f3",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a ravine, then the Bengali for a waterfa
 You'll want to know: বরং.
 বরং — bôrông — "rather".
 
+The word, taken apart.
+বরং (bôrông) is Sanskrit varam, "better than", taken over whole as a learned loan, a tatsama (CDIAL 11308). It is the adverb of vara, "choice, boon", whose inherited form bar, "boon", CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a waterfall, then the Bengali for rather
 
 You'll want to know: হয়তো.
 হয়তো — hôyto — "perhaps".
+
+The word, taken apart.
+হয়তো (hôyto) is hôy, "is", a form of hôoyā, "to be", from Sanskrit bhavati, "becomes, is" (CDIAL 9416), + the particle -to, "indeed": "it may be so". CDIAL's addenda move hôy there from asti, "is" (CDIAL 977).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for rather, then the Bengali for perhaps.
 You'll want to know: নিশ্চয়ই.
 নিশ্চয়ই — nishchôyi — "certainly".
 
+The word, taken apart.
+নিশ্চয়ই (nishchôyi) is Sanskrit niścaya, "certainty", taken over whole, + the stressing ending -i, "indeed".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for perhaps, then the Bengali for certainly.
 You'll want to know: দুর্ভাগ্যবশত.
 দুর্ভাগ্যবশত — durbhāgyôbôshôtô — "unfortunately".
 
+The word, taken apart.
+দুর্ভাগ্যবশত (durbhāgyôbôshôtô) is built from Sanskrit durbhāgya, "ill luck", and vaśataḥ, "by force of", both taken over whole: "by force of ill luck".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for certainly, then the Bengali for unfortun
 
 You'll want to know: ফলাফল.
 ফলাফল — phôlāphôl — "a result".
+
+The word, taken apart.
+ফলাফল (phôlāphôl) is Sanskrit phala, "fruit, result", + aphala, "no result", both taken over whole: "result or no result". CDIAL lists the inherited Bengali phal, "fruit" (CDIAL 9051).
 
 What you've built.
 One more word for this chapter.

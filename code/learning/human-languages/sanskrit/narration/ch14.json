@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e72681f443373a0",
+  "sourceHash": "fnv1a64:9700271fbdad5659",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56b7c0e2088e2efe",
+      "sourceHash": "fnv1a64:5c294e7e9aeca0af",
       "notice": null,
       "blocks": [
         {
@@ -54,12 +54,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is तत् tat, which you will meet in a moment. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson, and it is this same word with the e- taken off. So the e- at the front is what brings the thing near — and the last lesson of this chapter shows the pattern it belongs to."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Etat is usually analysed as the pointing pronoun tad \"that\" with e- in front. It is inherited: MW compares Avestan aēta and Old Persian aita, both \"this\". Its masculine eṣa lives on as Hindi yah, \"this\" (CDIAL 2530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,7 +101,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -102,7 +113,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (a- — near.)"
+              "text": "What is etat? (this one — the thing near me.) What sound does it start with, and does that sound mean near, far, or a question? (e- — near.)"
             }
           ]
         }
@@ -302,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:098b4f4568bb74b7",
+      "sourceHash": "fnv1a64:930101a811ebc8ba",
       "notice": null,
       "blocks": [
         {
@@ -337,12 +348,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is एतत् etat, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is एतत् etat, which you have just met: the same word with an e- in front. Take the e- away and t- leads, and t- is far. The last lesson of this chapter shows the pattern it belongs to."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tat (stem tad) is an inherited pointing pronoun. MW compares Greek to \"the\" and Gothic thata, the cousin of English that (CDIAL 5612)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -373,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -404,7 +426,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fa51570f16bb193",
+      "sourceHash": "fnv1a64:562f10c2823c728b",
       "notice": null,
       "blocks": [
         {
@@ -449,12 +471,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is तत्र tatra, which you will meet in a moment. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes shortly. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Atra is built from the pronoun base a- \"this\" with the place ending -tra, the ending you will meet again in tatra and kutra (MW, CDIAL 228)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -485,7 +518,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -717,7 +750,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5772d91944b0c8e7",
+      "sourceHash": "fnv1a64:e847291f2da0d960",
       "notice": null,
       "blocks": [
         {
@@ -752,12 +785,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is अत्र atra, which you will meet just now. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is अत्र atra, which you have just met. The two of them differ by one sound at the front — t- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tatra is built from the far pronoun base ta-, the base of tat, with the place ending -tra (MW). CDIAL 5643 traces Marathi's word for \"there\" to it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -788,7 +832,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -819,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c15d1debcfbc776",
+      "sourceHash": "fnv1a64:545277bd2039e716",
       "notice": null,
       "blocks": [
         {
@@ -850,11 +894,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner is कुत्र kutra, which you will meet in a moment. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes in the next lesson, and it opens with the same k-. Sanskrit asks with k-, where the far words you know, तत् tat and तत्र tatra, open with t-. It is the same old question sound that became the qu- of Latin quis and the wh- of English who."
             }
           ]
         },
@@ -872,11 +916,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कः (kaḥ)\" three times, picturing something different each time",
+              "instruction": "\"कः (kaḥ)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कः\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"कः\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -1090,7 +1134,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c6c2252cc2d27c6",
+      "sourceHash": "fnv1a64:54fa6d757c889eb6",
       "notice": null,
       "blocks": [
         {
@@ -1121,16 +1165,27 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is कः kaḥ, which you will meet just now. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is कः kaḥ, which you have just met: both open with k-, the asking sound. Its other partners, अत्र atra and तत्र tatra, differ from it only at the front. That is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kutra is built from the question base ku-, a side form of ka-, with the place ending -tra of atra and tatra (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1143,11 +1198,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कुत्र (kutra)\" three times, picturing something different each time",
+              "instruction": "\"कुत्र (kutra)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कुत्र\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"कुत्र\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -1161,7 +1216,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1192,7 +1247,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75112cae5f05dd92",
+      "sourceHash": "fnv1a64:0a9f7b684e4e92c2",
       "notice": null,
       "blocks": [
         {
@@ -1219,7 +1274,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You did not learn six words. You learned three beginnings and reused them."
+              "text": "You did not learn six unrelated words. Five of them hang on three beginnings; the sixth, etat, is tat with an e- in front."
             },
             {
               "kind": "table",
@@ -1245,7 +1300,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same three beginnings run the thing-words too: एतत् etat and तत् tat start exactly like the first two rows. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with."
+              "text": "The thing-words share one of these beginnings, not both: तत् tat starts with the far t- of tatra, but एतत् etat does not start with a-. It is tat with an e- in front: \"that one\", brought near. This chapter did not teach you the matching question word for things — that one arrives later, and when it does you will already know what it has to start with."
             },
             {
               "kind": "speech",
@@ -1306,7 +1361,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which beginning means near? (a-) Far? (t-) And which one turns the word into a question? (k-)."
+              "text": "For places, which beginning means near? (a-, atra) Far? (t-) And which one turns the word into a question? (k-)."
             }
           ]
         }

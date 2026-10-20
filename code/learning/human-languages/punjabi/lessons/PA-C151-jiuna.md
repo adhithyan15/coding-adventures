@@ -14,7 +14,8 @@ romanization: "jīuṇā"
 concept_tag: PA-VERB-JIUNA
 prerequisites: [PA-C150-calauna, PA-C151-kahina]
 sounds: []
-roots: []
+roots: [sanskrit-jivati]
+etymology_hook: "jīuṇā ← Sanskrit jīvati 'is alive', a tadbhava (CDIAL 5241)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C151-kahina]
 <!-- hl-knowledge: introduces=[PA-LEX-C151-ACT151-02]; assesses=[] -->
 
 **ਜੀਉਣਾ** — *jīuṇā* — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਜੀਉਣਾ** (*jīuṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīvati*, "is alive" (CDIAL 5241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

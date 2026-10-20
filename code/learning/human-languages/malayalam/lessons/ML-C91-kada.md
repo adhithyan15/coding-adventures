@@ -11,7 +11,8 @@ romanization: "kaṭa"
 concept_tag: ML-NOUN-SHOP
 prerequisites: [ML-R90-participle-recall, ML-C05-taamasikkuka]
 sounds: []
-roots: []
+roots: [dravidian-katai-shop]
+etymology_hook: "kaṭa: native Dravidian, one word with Tamil kaṭai (DEDR 1142)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +53,11 @@ because the word ends in **അ**:
 
 Nothing about that join is new. **It is the same choice the owner-ending makes**,
 decided by the same thing — the last sound of the noun.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കട** (*kaṭa*) is native Dravidian, one word with Tamil *kaṭai* (DEDR 1142). Its first sense is "market".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-SHOP-01, ML-CONCEPT-C05-POSTPOSITION-IL-01] -->

@@ -14,7 +14,8 @@ romanization: "pākīṭ"
 concept_tag: MR-VASTU212-PAKIT
 prerequisites: [MR-C211-sakyata, MR-C212-arj]
 sounds: []
-roots: []
+roots: [english-packet]
+etymology_hook: "pākīṭ ← English packet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C212-arj]
 <!-- hl-knowledge: introduces=[MR-LEX-C212-VASTU212-02]; assesses=[] -->
 
 **पाकीट** — *pākīṭ* — "an envelope; a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाकीट** (*pākīṭ*) is a loan from English *packet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

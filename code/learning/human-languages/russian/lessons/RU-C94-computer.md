@@ -14,7 +14,8 @@ romanization: "kompyúter"
 concept_tag: RU-THINGS94-COMPUTER
 prerequisites: [RU-C92-rug, RU-C94-television]
 sounds: []
-roots: []
+roots: [english-computer]
+etymology_hook: "компьютер ← English computer, from Latin computare 'to reckon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C94-television]
 <!-- hl-knowledge: introduces=[RU-LEX-C94-THINGS94-02]; assesses=[] -->
 
 **компьютер** (*kompyúter*) — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**компьютер** comes from English *computer*, from Latin *computāre*, "to reckon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cakravākaḥ"
 concept_tag: SA-THG254-CAKRAVAKAH
 prerequisites: [SA-C253-godha, SA-C253-nakrah]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "cakravāka 'ruddy goose', a Rigvedic bird (CDIAL 4551); first part cakra 'wheel'; Hindi cakwā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C253-nakrah]
 <!-- hl-knowledge: introduces=[SA-LEX-C254-THG254-01]; assesses=[] -->
 
 **चक्रवाकः** — *cakravākaḥ* — "a ruddy goose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cakravāka* is the ruddy goose, already in the Rigveda (CDIAL 4551). MW lists it as a compound of *cakra*, "wheel", but does not explain the second part or the name. Poets made the pair a symbol of lovers parted at night, and Hindi *cakwā* continues it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

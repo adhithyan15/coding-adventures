@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C428-deboucher",
+    "language": "french",
+    "chapter": 428,
+    "sequence": 23770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fadc6a4d3c901e1"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "lambā"
 concept_tag: HI-ADJ-TALL
 prerequisites: [HI-C41-adjective-system, HI-C11-kaalaa-safed, HI-C80-aasaan-mushkil]
 sounds: []
-roots: []
+roots: [sanskrit-lamba]
+etymology_hook: "lambā ← Sanskrit lamba 'pendent', already 'long' in Sanskrit compounds (CDIAL 10951)"
 duration:
   max_seconds: 240
 requires:
@@ -59,16 +60,8 @@ there.
 began as *what dangles* — and a thing that dangles is measured by how far down
 it reaches.
 
-That root travelled. Latin **limbus** is a hanging border or hem, and English
-took it twice:
-
-| word | the hanging thing |
-|---|---|
-| **limb** | what hangs off the trunk |
-| **limbo** | the *edge*, the hem of things |
-
-So **लंबा** and English **limb** are the same old idea about hanging, arrived at
-from opposite ends of a continent.
+CDIAL glosses the Sanskrit word "pendent", and notes that Sanskrit already used
+it for "long" in compounds (CDIAL 10951).
 
 ## Grammar Lens: this one ends in -आ, so it bends
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-01, HI-CONCEPT-C11-KAALAA-SAFED-01, HI-GRAMMAR-C41-ADJ-SYSTEM] -->
@@ -94,9 +87,7 @@ them moves. Nothing has to be memorised — listen for the last sound.
 [PAUSE 1s]
 - [YOU SAY: "लंबा" — *lambā*, tall]
 - [YOU SAY: the form you would use about a woman (*lambī*)]
-- [YOU SAY: "लंबा रास्ता" — a long road, the same word doing the other job]
-- [YOU SAY: which English word for an arm or a leg comes from the same root
-  (*limb*)]
+- [YOU SAY: "लंबा दिन" — a long day, the same word doing the other job]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-01, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-498-CONVIVIO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-498-CONVIVIO"
+  ],
+  "after": []
+}

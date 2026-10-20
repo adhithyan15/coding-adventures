@@ -14,7 +14,8 @@ romanization: "klubníka"
 concept_tag: RU-THINGS104-STRAWBERRIES
 prerequisites: [RU-C104-beef, RU-C104-vegetables]
 sounds: []
-roots: []
+roots: [slavic-klubu]
+etymology_hook: "клубника is built on клуб 'a ball, a clump'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C104-vegetables]
 <!-- hl-knowledge: introduces=[RU-LEX-C104-THINGS104-03]; assesses=[] -->
 
 **клубника** (*klubníka*) — "strawberries".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**клубника** is built on *клуб*, "a ball, a clump" (Vasmer), the root of *клубок*, "a ball of thread": a name for the round garden strawberry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

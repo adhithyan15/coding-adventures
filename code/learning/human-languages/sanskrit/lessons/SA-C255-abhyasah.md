@@ -14,7 +14,8 @@ romanization: "abhyāsaḥ"
 concept_tag: SA-SCH255-ABHYASAH
 prerequisites: [SA-C255-siksa, SA-C255-jnanam]
 sounds: []
-roots: []
+roots: [sanskrit-abhyasa]
+etymology_hook: "abhyāsa ← abhi + √as 'throw': 'adding, repetition', then 'practice' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C255-jnanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C255-SCH255-03]; assesses=[] -->
 
 **अभ्यासः** — *abhyāsaḥ* — "practice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abhyāsa* is built on *abhi*, "towards", and the root √as, "to throw" (MW): "throwing towards, adding", and then "repetition" and "practice". Practice is doing a thing again and again; Hindi took the word as *abhyās*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

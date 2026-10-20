@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-429-SCHIMMEL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-429-SCHIMMEL"
+  ],
+  "after": []
+}

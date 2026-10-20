@@ -14,7 +14,8 @@ romanization: "ḥāja"
 concept_tag: AR-WANT114-HAJA
 prerequisites: [AR-C114-hadaf, AR-C114-khutta]
 sounds: []
-roots: []
+roots: [ḥ-w-j]
+etymology_hook: "ḥāja: built on the root ḥ-w-j, 'to need' (Lane); ḥāja is the noun, 'a need'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C114-khutta]
 <!-- hl-knowledge: introduces=[AR-LEX-C114-WANT114-03]; assesses=[] -->
 
 **حاجة** — *ḥāja* — "a need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حاجة** (*ḥāja*) is built on the native Arabic root *ḥ-w-j*, "to need" (Lane). *Ḥāja* is the noun, "a need".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

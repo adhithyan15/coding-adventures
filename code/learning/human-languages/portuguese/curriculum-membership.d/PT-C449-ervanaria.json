@@ -1,0 +1,11 @@
+{
+  "id": "PT-C449-ervanaria",
+  "pathSegment": "PT-PATH-449-LOJAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-449-LOJAS",
+      "order": 3
+    }
+  ]
+}

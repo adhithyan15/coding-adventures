@@ -15,6 +15,7 @@ concept_tag: GU-DEF99-DAREK
 prerequisites: [GU-C99-avu, GU-C99-evu]
 sounds: []
 roots: []
+etymology_hook: "darek 'every': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C99-evu]
 <!-- hl-knowledge: introduces=[GU-LEX-C99-DEF99-04]; assesses=[] -->
 
 **દરેક** (*darek*) — "every, each".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **દરેક** (*darek*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

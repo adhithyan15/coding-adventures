@@ -12,6 +12,9 @@ Before the new one: say the Latin for rare, thin, then the Latin for frequent, c
 You'll want to know: hodiernus, hodierna, hodiernum.
 hodiernus, hodierna, hodiernum — "today's".
 
+The word, taken apart.
+hodiernus is built on hodiē, "today" (Lewis & Short), with -ernus, an ending for time: of today.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for frequent, crowded, then the Latin for toda
 
 You'll want to know: hesternus, hesterna, hesternum.
 hesternus, hesterna, hesternum — "yesterday's".
+
+The word, taken apart.
+hesternus is built on the old stem hes-, "yesterday", the stem behind herī, "yesterday" (Lewis & Short), with -ternus, an ending for time.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for today's, then the Latin for yesterday's.
 You'll want to know: crāstinus, crāstina, crāstinum.
 crāstinus, crāstina, crāstinum — "tomorrow's".
 
+The word, taken apart.
+crāstinus is built on crās, "tomorrow" (Lewis & Short), with -tinus, an ending for time. Where crās comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for yesterday's, then the Latin for tomorrow's
 You'll want to know: vērus, vēra, vērum.
 vērus, vēra, vērum — "true, real".
 
+The word, taken apart.
+vērus is inherited, usually traced to Proto-Indo-European weh1ros, "true" (EtymDB 2.1); German wahr, "true", is a cousin. Lewis & Short still called it doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for tomorrow's, then the Latin for true.
 
 You'll want to know: incertus, incerta, incertum.
 incertus, incerta, incertum — "uncertain".
+
+The word, taken apart.
+incertus is in-, "not", with certus, "sure" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

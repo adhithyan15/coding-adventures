@@ -1,0 +1,11 @@
+{
+  "id": "SA-C266-market-transaction-retrieval",
+  "pathSegment": "SA-PATH-266-MARKET266",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-266-MARKET266",
+      "order": 5
+    }
+  ]
+}

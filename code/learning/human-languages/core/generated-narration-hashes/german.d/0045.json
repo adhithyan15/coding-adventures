@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 45,
-  "sourceHash": "fnv1a64:aa10db5a790d016d",
+  "sourceHash": "fnv1a64:84239c64c45c51bc",
   "lessonIds": [
     "GE-C32-kein",
     "GE-C32-keine",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "german/narration/ch45.txt",
   "json": "german/narration/ch45.json",
-  "textHash": "fnv1a64:f4f1331979fbc1c3",
-  "jsonHash": "fnv1a64:9dc721c2d355f08d",
+  "textHash": "fnv1a64:5eede94e955c842d",
+  "jsonHash": "fnv1a64:b830217c3cb35283",
   "findings": []
 }

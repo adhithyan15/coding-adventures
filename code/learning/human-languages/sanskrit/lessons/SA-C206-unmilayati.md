@@ -14,7 +14,8 @@ romanization: "unmīlayati"
 concept_tag: SA-VERB-UNMILAYATI
 prerequisites: [SA-C206-khelati, SA-C206-nimilayati]
 sounds: []
-roots: []
+roots: [sanskrit-milati-close]
+etymology_hook: "unmīlayati ← ud 'up' + causative of √mīl 'close the eyes': 'opens the eyes' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C206-nimilayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C206-ACT206-05]; assesses=[] -->
 
 **उन्मीलयति** — *unmīlayati* — "opens (the eyes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*unmīlayati* is built on *ud*, "up", and the causative of the root √mīl, "to close the eyes" (MW). *Ud* turns closing into opening, the mirror image of *nimīlayati*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 162,
-  "sourceHash": "fnv1a64:f67daefb93af0d65",
+  "sourceHash": "fnv1a64:ef9d8caa0f6cfb76",
   "lessonIds": [
     "TA-C162-kata",
     "TA-C162-tanku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch162.txt",
   "json": "tamil/narration/ch162.json",
-  "textHash": "fnv1a64:44e1334a0675334a",
-  "jsonHash": "fnv1a64:c5dff2b61407b42d",
+  "textHash": "fnv1a64:8616184c033d2e84",
+  "jsonHash": "fnv1a64:96c68c74a77aed97",
   "findings": []
 }

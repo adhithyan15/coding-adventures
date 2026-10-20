@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 215,
-  "sourceHash": "fnv1a64:804368abf82404de",
+  "sourceHash": "fnv1a64:ced00a92a4c331d1",
   "lessonIds": [
     "UR-C215-kam-karna",
     "UR-C215-pichha-karna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch215.txt",
   "json": "urdu/narration/ch215.json",
-  "textHash": "fnv1a64:36de49823965152f",
-  "jsonHash": "fnv1a64:c9eff2da2747cfe3",
+  "textHash": "fnv1a64:9f80ade1ecbe30f0",
+  "jsonHash": "fnv1a64:f31171358d139187",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "surakṣā"
 concept_tag: MR-VASTU265-SURAKSA
 prerequisites: [MR-C265-parvangi, MR-C265-bandi]
 sounds: []
-roots: []
+roots: [sanskrit-suraksha]
+etymology_hook: "surakṣā: Sanskrit su- 'well' + rakṣā 'protection'; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C265-bandi]
 <!-- hl-knowledge: introduces=[MR-LEX-C265-VASTU265-03]; assesses=[] -->
 
 **सुरक्षा** — *surakṣā* — "safety, security".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुरक्षा** (*surakṣā*) is Sanskrit *su-*, "well", and *rakṣā*, "protection", a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

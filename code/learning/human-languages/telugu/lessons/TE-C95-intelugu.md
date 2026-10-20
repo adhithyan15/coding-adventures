@@ -11,7 +11,8 @@ romanization: "telugulō"
 concept_tag: TE-ASK-IN-TELUGU
 prerequisites: [TE-C94-need, TE-C94-introduction]
 sounds: []
-roots: []
+roots: [telugu, dravidian-ul-inside]
+etymology_hook: "telugulō: native telugu (DEDR 3426) + -lō 'in', from lō 'inside' (DEDR 698)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C94-introduction]
 
 It is **తెలుగు** with **-లో**, "in", the ending you met on **ఉండు**. Any language takes it:
 **ఇంగ్లీషులో**, "in English".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెలుగులో** (*telugulō*) is native Dravidian: *telugu*, the language's name, which DEDR 3426 lists as *teluṅgu*, and *-lō*, "in", which DEDR 698 lists as *lō*, "inside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

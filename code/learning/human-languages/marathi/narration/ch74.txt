@@ -12,6 +12,9 @@ Before the new one: say the Marathi for hunger, then the Marathi for happy.
 You'll want to know: दुःखी.
 दुःखी — duḥkhī — "sad".
 
+The word, taken apart.
+दुःखी (duḥkhī) is Sanskrit duḥkhin, "in pain, unhappy", a tatsama built on duḥkha, "difficulty, pain" (CDIAL 6375).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for happy, then the Marathi for sad.
 
 You'll want to know: वडील.
 वडील — vaḍīl — "a father".
+
+The word, taken apart.
+वडील (vaḍīl) is inherited. CDIAL lists Marathi vaḍīl, "an elder", under Sanskrit vaḍra, "big", a word known from the old word-lists, and doubts a link with vṛddha, "grown" (CDIAL 11225).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for sad, then the Marathi for a father.
 You'll want to know: आई.
 आई — āī — "a mother".
 
+The word, taken apart.
+आई (āī) goes back to āī, "mother, aunt", which CDIAL calls probably a nursery word (CDIAL 997). DEDR compares it with Dravidian words for "mother" such as Tamil āy and Kannada āyi (DEDR 364).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a father, then the Marathi for a mother.
 You'll want to know: मुलगा.
 मुलगा — mulgā — "a son; a boy".
 
+The word, taken apart.
+The origin of मुलगा (mulgā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a mother, then the Marathi for a son; a 
 
 You'll want to know: मुलगी.
 मुलगी — mulgī — "a daughter; a girl".
+
+The word, taken apart.
+मुलगी (mulgī) is the feminine of मुलगा (mulgā), "boy". Its origin is not settled: neither CDIAL nor DEDR has an entry for it.
 
 What you've built.
 One more word for this chapter.

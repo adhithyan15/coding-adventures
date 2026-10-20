@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 108,
-  "sourceHash": "fnv1a64:d408bde98a372db0",
+  "sourceHash": "fnv1a64:ae1949db5b76235b",
   "lessonIds": [
     "MR-C108-kala",
     "MR-C108-pandhra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch108.txt",
   "json": "marathi/narration/ch108.json",
-  "textHash": "fnv1a64:6761cb07d607f1c1",
-  "jsonHash": "fnv1a64:0efa5d2df7985b59",
+  "textHash": "fnv1a64:44f7a84a97dc7645",
+  "jsonHash": "fnv1a64:e776766e0188540f",
   "findings": []
 }

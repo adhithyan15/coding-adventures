@@ -14,7 +14,8 @@ romanization: "bishrām neoyā"
 concept_tag: BN-VERB-BISHRAM-NEOYA
 prerequisites: [BN-C149-satar-kata, BN-C149-pichhle-pora]
 sounds: []
-roots: []
+roots: [sanskrit-vishrama, sanskrit-nayati]
+etymology_hook: "bishrām neoyā: bishrām 'rest', Sanskrit viśrāma, + neoyā 'to take' ← nayati 'leads' (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C149-pichhle-pora]
 <!-- hl-knowledge: introduces=[BN-LEX-C149-ACT149-03]; assesses=[] -->
 
 **বিশ্রাম নেওয়া** — *bishrām neoyā* — "to rest".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিশ্রাম নেওয়া** (*bishrām neoyā*) is *bishrām*, "rest", Sanskrit *viśrāma* taken over whole, + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

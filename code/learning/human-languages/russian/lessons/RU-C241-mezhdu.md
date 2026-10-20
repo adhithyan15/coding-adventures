@@ -14,7 +14,8 @@ romanization: "mézhdu"
 concept_tag: RU-MESTO241-MEZHDU
 prerequisites: [RU-C241-dvor, RU-C241-naprotiv]
 sounds: []
-roots: []
+roots: [pie-medhyo]
+etymology_hook: "между is Church Slavonic, beside native межу, from межа 'a boundary'; Latin medius is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C241-naprotiv]
 <!-- hl-knowledge: introduces=[RU-LEX-C241-MESTO241-05]; assesses=[] -->
 
 **между** (*mézhdu*) — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**между** — taken from Church Slavonic, says Vasmer, beside native *межу*, from *межа*, "a boundary strip". Vasmer relates *межа* to Sanskrit *mádhya-*, Greek *mésos* and Latin *medius*, "middle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

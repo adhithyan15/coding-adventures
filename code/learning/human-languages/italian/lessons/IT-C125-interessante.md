@@ -13,7 +13,8 @@ gloss: "interesting"
 concept_tag: IT-QUALITA125-INTERESSANTE
 prerequisites: [IT-C125-famoso, IT-C125-importante]
 sounds: []
-roots: []
+roots: [interesse-latin]
+etymology_hook: "interessante — 'concerning', from Latin interest 'it concerns' — English interesting"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C125-importante]
 <!-- hl-knowledge: introduces=[IT-LEX-C125-QUALITA125-05]; assesses=[] -->
 
 **interessante** — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interessante** — built from the verb *interessare*, "to concern", with *-ante*, "-ing". The verb goes back to Latin *interesse*, "to be between", whose form *interest* meant "it concerns, it matters" (Lewis & Short). EtymDB 2.1 has no row for its origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "stri"
 concept_tag: BN-FAMILY47-STRI
 prerequisites: [BN-C47-pishi, BN-C47-shbami]
 sounds: []
-roots: []
+roots: [sanskrit-stri]
+etymology_hook: "stri ← Sanskrit strī 'woman, wife', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C47-shbami]
 <!-- hl-knowledge: introduces=[BN-LEX-C47-FAMILY47-03]; assesses=[] -->
 
 **স্ত্রী** — *stri* — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্ত্রী** (*stri*) is Sanskrit *strī*, "woman, wife", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

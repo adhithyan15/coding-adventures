@@ -13,7 +13,8 @@ gloss: "a valley"
 concept_tag: LA-TERRA-VALLIS
 prerequisites: [LA-C88-harena, LA-C88-collis]
 sounds: []
-roots: []
+roots: [vallis-latin]
+etymology_hook: "vallis 'valley' — origin unknown; no proposal is generally accepted"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C88-collis]
 <!-- hl-knowledge: introduces=[LA-LEX-C88-TERRA-04]; assesses=[] -->
 
 **vallis, vallis** — "a valley". English *valley*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vallis** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an onion"
 concept_tag: PT-LEGUMES-CEBOLA
 prerequisites: [PT-C46-batata, PT-C46-tomate]
 sounds: []
-roots: []
+roots: [cepa-latin]
+etymology_hook: "cebola ← Late Latin cepulla 'little onion', from cepa — English chive shares cepa"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C46-tomate]
 <!-- hl-knowledge: introduces=[PT-LEX-C46-LEGUMES-03]; assesses=[] -->
 
 **a cebola** — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cebola** ← Late Latin *cepulla*, "little onion", from Latin *cepa*, "onion" — inherited. EtymDB 2.1 has no ancestor row for *cebola*; it derives Spanish *cebolla* from *cepulla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

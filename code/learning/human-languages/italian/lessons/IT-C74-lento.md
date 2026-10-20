@@ -13,7 +13,8 @@ gloss: "slow"
 concept_tag: IT-AGG3-LENTO
 prerequisites: [IT-C73-freddo, IT-C74-veloce]
 sounds: []
-roots: []
+roots: [lentus-latin]
+etymology_hook: "lento ← Latin lentus 'slow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C74-veloce]
 <!-- hl-knowledge: introduces=[IT-LEX-C74-AGG3-02]; assesses=[] -->
 
 **lento** — "slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lento** ← Latin *lentus*, "slow, pliant" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

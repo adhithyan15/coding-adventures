@@ -12,6 +12,9 @@ Before the new one: say the Telugu for grain, then the Telugu for wheat.
 You'll want to know: మిరియాలు.
 మిరియాలు — miriyālu — "black pepper".
 
+The word, taken apart.
+మిరియాలు (miriyālu) comes from Sanskrit marica, "peppercorn", reshaped to Telugu sounds: a tadbhava (CDIAL 9875). CDIAL itself takes the Sanskrit word from an Austroasiatic language.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for wheat, then the Telugu for black pepper.
 
 You'll want to know: జీలకర్ర.
 జీలకర్ర — jīlakarra — "cumin".
+
+The word, taken apart.
+జీలకర్ర (jīlakarra) is usually traced to Sanskrit jīraka, "cumin seed" (CDIAL 5234), reshaped to Telugu sounds.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for black pepper, then the Telugu for cumin.
 You'll want to know: చింతపండు.
 చింతపండు — cintapaṇḍu — "tamarind".
 
+The word, taken apart.
+చింతపండు (cintapaṇḍu) is native Dravidian: cinta, "tamarind", one word with Tamil cintam (DEDR 2529), and paṇḍu, "fruit" (DEDR 4004). DEDR compares Sanskrit ciñcā, "tamarind", which CDIAL 4792 traces to Munda, with the first, and Sanskrit phala, "fruit" (CDIAL 9051), with the second.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for cumin, then the Telugu for tamarind.
 You'll want to know: నిమ్మకాయ.
 నిమ్మకాయ — nimmakāya — "a lemon".
 
+The word, taken apart.
+నిమ్మకాయ (nimmakāya) is nimma, from Sanskrit nimbū, "lime" (CDIAL 7247), which CDIAL takes from an Austroasiatic language, and native kāya, "unripe fruit" (DEDR 1459). DEDR compares the Indo-Aryan kacca, "raw" (CDIAL 2613), with kāya.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for tamarind, then the Telugu for a lemon.
 
 You'll want to know: ద్రాక్ష.
 ద్రాక్ష — drākṣa — "grapes".
+
+The word, taken apart.
+ద్రాక్ష (drākṣa) is Sanskrit drākṣā, "vine, grape", taken over whole as a learned loan, a tatsama, with the final -ā shortened (CDIAL 6628).
 
 What you've built.
 One more word for this chapter.

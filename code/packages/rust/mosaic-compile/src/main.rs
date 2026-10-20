@@ -1396,30 +1396,12 @@ fn run_pipeline(
             // Android (Jetpack Compose) and Desktop / iOS / Web
             // (Compose Multiplatform) from the same `.kt` output.
             //
-            // #16930: the Compose pipeline takes no `EmitOptions` yet (#14704),
-            // so it cannot render a story's fixture values or write a project
-            // shell. It used to ignore both silently, so a `--strict-fixtures`
-            // story passed while showing nothing of its fixture. Until #14704
-            // lands, say so: strict mode refuses, and otherwise both flags warn.
-            if fixtures.path.is_some() {
-                if fixtures.strict {
-                    eprintln!(
-                        "mosaic-compile: the compose pipeline cannot render --fixtures yet (#14704); \
-                         refusing under --strict-fixtures"
-                    );
-                    process::exit(1);
-                }
-                eprintln!(
-                    "mosaic-compile: warning: the compose pipeline ignores --fixtures (#14704); \
-                     the output shows no story values"
-                );
-            }
-            if emit_project {
-                eprintln!(
-                    "mosaic-compile: warning: the compose pipeline has no --emit-project shell \
-                     (#14704); writing the component only"
-                );
-            }
+            // EM-6 (#14704): `--fixtures` reach the `--emit-project` shell,
+            // as on every other pipeline backend (#14459). The shell is the
+            // permissive desktop project `pkg --emit-project` writes, built by
+            // the same generator. The values are computed even without the
+            // shell, so `--strict-fixtures` refuses a value that cannot apply.
+            let slot_values = pipeline_slot_values(fixtures, ListFixtures::Json);
             let result = mosaic_emit_compose::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1434,6 +1416,44 @@ fn run_pipeline(
                 .unwrap_or_else(|| format!("{}.kt", result.component_name));
             write_file_or_die(&out, &result.output);
             eprintln!("Written: {out}");
+
+            if emit_project {
+                let base = std::path::Path::new(&out)
+                    .parent()
+                    .filter(|p| !p.as_os_str().is_empty())
+                    .map(std::path::Path::to_path_buf);
+                for (relative, contents) in
+                    mosaic_package_artifact_builder::compose_pipeline_project_files(
+                        &result.component_name,
+                        &result.output,
+                        &mosmodel_out.component.slots,
+                        &slot_values,
+                    )
+                    .unwrap_or_else(|e| {
+                        eprintln!("mosaic-compile: compose project shell error: {e}");
+                        process::exit(1);
+                    })
+                {
+                    let path = match &base {
+                        Some(dir) => dir.join(&relative),
+                        None => std::path::PathBuf::from(&relative),
+                    };
+                    if let Some(parent) = path.parent() {
+                        if !parent.as_os_str().is_empty() {
+                            if let Err(e) = std::fs::create_dir_all(parent) {
+                                eprintln!(
+                                    "mosaic-compile: failed to create {}: {e}",
+                                    parent.display()
+                                );
+                                process::exit(1);
+                            }
+                        }
+                    }
+                    let path = path.to_string_lossy().into_owned();
+                    write_file_or_die(&path, &contents);
+                    eprintln!("Written: {path}");
+                }
+            }
         }
         _ => {
             eprintln!("mosaic-compile: unsupported pipeline backend '{backend}'");
@@ -1656,6 +1676,22 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
                 "mosaic-compile pkg: built {} component(s)",
                 result.components_built.len()
             );
+            // UI90 §4 step 1: a v1 package compiles as before and is told,
+            // in one line, how far it is from v2. The full list is printed
+            // when MOSAIC_STYLE_FINDINGS=1, so CI logs stay readable.
+            if !result.style_findings.is_empty() {
+                eprintln!(
+                    "mosaic-compile pkg: mosstyle v{}: {} warning(s) against the v2 property \
+                     table (UI90 §3.1); set MOSAIC_STYLE_FINDINGS=1 to list them",
+                    result.style_version,
+                    result.style_findings.len()
+                );
+                if std::env::var_os("MOSAIC_STYLE_FINDINGS").is_some_and(|v| v == "1") {
+                    for finding in &result.style_findings {
+                        eprintln!("  {finding}");
+                    }
+                }
+            }
         }
         Err(e) => {
             eprintln!("mosaic-compile pkg: {e}");
@@ -1901,6 +1937,23 @@ fn split_package_search_path(value: &str, windows: bool) -> Vec<PathBuf> {
 
 #[cfg(test)]
 mod tests {
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in five). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     // --- --package-search-path splitting (#16931) ----------------------
 
     #[test]
@@ -2064,12 +2117,9 @@ mod tests {
     fn registry_registers_sibling_exports() {
         let tmp = std::env::temp_dir().join(format!(
             "self-ref-test-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
+            unique_nonce()
         ));
-        std::fs::create_dir_all(&tmp).unwrap();
+        std::fs::create_dir(&tmp).unwrap();
         let mpath = tmp.join("mosaic-package.toml");
         std::fs::write(
             &mpath,
@@ -2115,12 +2165,9 @@ version = "1"
     fn registry_is_none_when_only_export_is_current_component() {
         let tmp = std::env::temp_dir().join(format!(
             "self-ref-test2-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
+            unique_nonce()
         ));
-        std::fs::create_dir_all(&tmp).unwrap();
+        std::fs::create_dir(&tmp).unwrap();
         let mpath = tmp.join("mosaic-package.toml");
         std::fs::write(
             &mpath,
@@ -2166,12 +2213,9 @@ version = "1"
     fn unique_tmpdir(label: &str) -> std::path::PathBuf {
         let p = std::env::temp_dir().join(format!(
             "ui30-resolve-{label}-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
+            unique_nonce()
         ));
-        std::fs::create_dir_all(&p).unwrap();
+        std::fs::create_dir(&p).unwrap();
         p
     }
 

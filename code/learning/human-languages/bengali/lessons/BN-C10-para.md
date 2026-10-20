@@ -14,7 +14,8 @@ gloss: "a neighbourhood"
 concept_tag: BN-ANCHOR-PARA
 prerequisites: [BN-W04-o-indep, BN-C10-ojon]
 sounds: []
-roots: []
+roots: [sanskrit-pataka]
+etymology_hook: "pāṛā ← Sanskrit pāṭaka 'quarter of a town', perhaps from Dravidian (CDIAL 8031); also under padra (CDIAL 7780)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *pāṛā*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **়**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **পাড়া** (*pāṛā*) under Sanskrit *pāṭaka*, "quarter of a town or village", a word it notes may come from Dravidian (CDIAL 8031). It also gives *pāṛā* under *padra*, "village", itself probably Dravidian (CDIAL 7780), so the two sources are not cleanly separated.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-ANCHOR-PARA] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 21,
-  "sourceHash": "fnv1a64:42ec0d40f08d26a3",
+  "sourceHash": "fnv1a64:8c6dc00c3346604a",
   "lessonIds": [
     "RU-C21-izvinite",
     "RU-C21-prostite",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch21.txt",
   "json": "russian/narration/ch21.json",
-  "textHash": "fnv1a64:61beac0494047fff",
-  "jsonHash": "fnv1a64:535ae0631f2ca7c6",
+  "textHash": "fnv1a64:bff3ea3af900633e",
+  "jsonHash": "fnv1a64:9c2f74a4e02435d1",
   "findings": []
 }

@@ -13,7 +13,8 @@ gloss: "to kiss"
 concept_tag: FR-VERB-EMBRASSER
 prerequisites: [FR-C174-reunion, FR-C174-contrat]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "embrasser — em- + bras 'arm': to take in the arms — English embrace"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C174-contrat]
 <!-- hl-knowledge: introduces=[FR-LEX-C175-VERBES175-01]; assesses=[] -->
 
 **embrasser** — "to kiss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**embrasser** — built from *em-*, "into", and *bras*, "arm": to take into the arms, now to kiss.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

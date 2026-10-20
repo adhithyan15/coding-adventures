@@ -13,7 +13,8 @@ gloss: "a wheel"
 concept_tag: PT-COISAS223-RODA
 prerequisites: [PT-C223-lugar, PT-C223-volante]
 sounds: []
-roots: []
+roots: [rota-latin]
+etymology_hook: "roda ← Latin rota 'wheel' — English rotate shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C223-volante]
 <!-- hl-knowledge: introduces=[PT-LEX-C223-COISAS223-05]; assesses=[] -->
 
 **a roda** — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**roda** ← Latin *rota*, "wheel" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

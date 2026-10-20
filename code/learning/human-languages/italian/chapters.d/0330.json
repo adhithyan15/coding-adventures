@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Sotto la terra",
+  "label": "ch:it-sotto-la-terra",
+  "canDo": "I can talk about the past under the ground: the age, the Middle Ages, ruins, digs and the archaeologist.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C330-archeologo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can talk about the past under the ground: the age, the Middle Ages, ruins, digs and the archaeologist.",
+    "assesses": [
+      "IT-LEX-C330-SCAVI-03",
+      "IT-LEX-C330-SCAVI-04",
+      "IT-LEX-C330-SCAVI-05"
+    ]
+  }
+}

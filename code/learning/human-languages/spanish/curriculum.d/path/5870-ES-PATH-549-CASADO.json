@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-549-CASADO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-549-CASADO"
+  ],
+  "after": []
+}

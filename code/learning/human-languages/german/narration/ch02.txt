@@ -103,6 +103,9 @@ Warm-up.
 [pause 2 seconds]
 You have the verb and you have the people. heißen is the form a dictionary prints; it is not the form you say. Put a person in front of it and the tail of the word moves.
 
+The word, taken apart.
+heißen from Old High German heizzan, "to call, to command" from Proto-Germanic haitaną — inherited. (EtymDB 2.1) The old English word hight, "called", comes from the same verb.
+
 Grammar Lens: one verb, changing its ending.
 heißen is the dictionary (infinitive) form. German swaps the ending for each person:
 ich heiße — I am called.
@@ -198,6 +201,9 @@ You'll want to know: wie heißen Sie?
 wie (how) + heißen Sie ("are you [formal] called").
 wie heißen Sie? = literally "how are you called?" = the polite "what's your name?"
 
+The phrase, taken apart.
+wie heißen Sie is built from wie, "how", heißen, "to be called", and Sie. heißen from Old High German heizzan from Proto-Germanic haitaną, "to call, to command" (EtymDB 2.1). The polite Sie is the word for "they", capitalised.
+
 Grammar Lens: verb in second place.
 German likes the verb in the second slot of a sentence:
 Wie (1) heißen (2) Sie?
@@ -263,7 +269,7 @@ the same froh in Frohe Weihnachten ("Merry Christmas"), and a cousin of English 
 So freut mich says, warmly, "this makes me glad."
 
 Grammar Lens: "it gladdens me".
-German literally says "[it] gladdens me" — the meeting is what does the gladdening, and you (mich) are on the receiving end. Two common variants: sehr erfreut ("much pleased") and the plain angenehm ("pleasant / agreeable"), both usable as "pleased to meet you."
+German literally says "[it] gladdens me" — the meeting is what does the gladdening, and you (mich) are on the receiving end. A common variant is the plain angenehm ("pleasant / agreeable"), also usable as "pleased to meet you."
 
 Guided Practice.
 [pause 1 second]
@@ -271,7 +277,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the root — froh ("glad"), as in Frohe Weihnachten]
 [pause 8 seconds for the answer]
-[your turn — say: a variant — "sehr erfreut" or "angenehm"]
+[your turn — say: the variant — "angenehm"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

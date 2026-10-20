@@ -11,7 +11,8 @@ romanization: "tappakuṇḍā"
 concept_tag: TE-WORD-CERTAINLY
 prerequisites: [TE-C49-enough]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip]
+etymology_hook: "tappakuṇḍā: native tappu 'to miss, fail' (DEDR 3071), one word with Tamil tappu, + -kuṇḍā 'without'"
 duration:
   max_seconds: 210
 requires:
@@ -40,9 +41,14 @@ reviews_of: [TE-C49-enough]
 
 **తప్పకుండా** (*tappakuṇḍā*) — "certainly, without fail".
 
-Take it apart: తప్పు, "to miss, to slip, to go wrong", plus **-కుండా**, the ending meaning "without doing". తప్పకుండా is *without missing*.
+Take it apart: **తప్పు** + **-కుండా** → **తప్పకుండా**. The first piece means "to miss, to slip, to go wrong"; the second is the ending meaning "without doing". So తప్పకుండా is *without missing*.
 
 The ending is worth having on its own, because it attaches to any verb stem: *ceppakuṇḍā*, without telling; *tinakuṇḍā*, without eating. One suffix, and every verb you own gains a negative.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తప్పకుండా** (*tappakuṇḍā*) is native Dravidian: *tappu*, "to miss, to fail", which DEDR 3071 lists with Tamil *tappu*, "to err", and Kannada *tappu*, "to slip", followed by the ending *-kuṇḍā*, "without".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

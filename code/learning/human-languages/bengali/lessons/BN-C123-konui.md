@@ -14,7 +14,8 @@ romanization: "kônui"
 concept_tag: BN-THINGS123-KONUI
 prerequisites: [BN-C122-kochchhop, BN-C123-beral]
 sounds: []
-roots: []
+roots: [sanskrit-kaphoni]
+etymology_hook: "kônui ← Sanskrit kaphoṇi 'elbow', probably from Munda (CDIAL 2757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C123-beral]
 <!-- hl-knowledge: introduces=[BN-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **কনুই** — *kônui* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কনুই** (*kônui*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaphoṇi*, "elbow" (CDIAL 2757). CDIAL thinks the word more probably Munda than Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

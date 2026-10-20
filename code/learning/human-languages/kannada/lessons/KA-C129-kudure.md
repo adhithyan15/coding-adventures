@@ -14,7 +14,8 @@ romanization: "kudure"
 concept_tag: KA-THINGS129-KUDURE
 prerequisites: [KA-C128-dvipa, KA-C129-surya]
 sounds: []
-roots: []
+roots: [dravidian-kutirai-horse]
+etymology_hook: "kudure: native Dravidian, one word with Tamil kutirai and Telugu kudira (DEDR 1711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C129-surya]
 <!-- hl-knowledge: introduces=[KA-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **ಕುದುರೆ** — *kudure* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುದುರೆ** (*kudure*) is native Dravidian, one word with Tamil *kutirai* and Telugu *kudira* (DEDR 1711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

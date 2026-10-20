@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "Fortunately, Unfortunately, Reason, Result, Although",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b3033e53408d4d1a",
+  "sourceHash": "fnv1a64:546c39ba21fc500a",
   "lessons": [
     {
       "id": "UR-C220-khush-qismati-se",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de8727a57756bf33",
+      "sourceHash": "fnv1a64:c50b69c353dcf2a4",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوش قسمتی سے (khush qismatī se) is \"with good fortune\". khush, \"happy\", is usually traced to Persian khush; qismat, \"fate\", is Arabic qisma, \"a share, a lot\", which reached Urdu through Persian (Lane, root q-s-m); -ī makes a noun, and se, \"with\", is the inherited postposition CDIAL lists under Sanskrit sahita, \"together with\" (CDIAL 13310)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45265a24a59ef060",
+      "sourceHash": "fnv1a64:816e831c1071e1fc",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بد قسمتی سے (bad qismatī se) is \"with bad fortune\". bad, \"bad\", is usually traced to Persian bad; qismat, \"fate\", is Arabic qisma, \"a share, a lot\", which reached Urdu through Persian (Lane, root q-s-m); -ī makes a noun, and se, \"with\", is the inherited postposition CDIAL lists under Sanskrit sahita, \"together with\" (CDIAL 13310)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57339e82993a19cb",
+      "sourceHash": "fnv1a64:397498ec8e694014",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وجہ (vajah) is a loan from Arabic wajh, \"face; a way, an aspect\", which reached Urdu through Persian. Its Arabic root is w-j-h (Lane). Urdu uses it for a reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f698dd347919a63",
+      "sourceHash": "fnv1a64:bb4f469ab29f0e3e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نتیجہ (natījā) is a loan from Arabic natīja, \"result, outcome\", which reached Urdu through Persian. Its Arabic root is n-t-j (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20b9d84530c251f1",
+      "sourceHash": "fnv1a64:6f9108d68169297a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حالانکہ (hālāṅki) is \"the state being that\". It joins Arabic ḥāl, \"state, condition\" (Lane, root ḥ-w-l), with Persian ān, \"that\", and ki, \"that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 359,
+  "title": "Weighing a Question",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4ccc1cae9e986c24",
+  "lessons": [
+    {
+      "id": "LA-C359-pondero",
+      "sequence": 19300,
+      "title": "ponderō, ponderāre — to weigh (up), to ponder",
+      "headword": "ponderō, ponderāre",
+      "romanization": "ponderō, ponderāre",
+      "gloss": "to weigh (up), to ponder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c855e4571e37205",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for agreement, then the Latin for a dispute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ponderō, ponderāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ponderō, ponderāre — \"to weigh (up), to ponder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Verba eius dīligenter ponderāvī. I weighed his words carefully."
+            },
+            {
+              "kind": "speech",
+              "text": "ponderō, ponderāre, ponderāvī, ponderātum. Built on pondus, a weight: you weigh words as a merchant weighs goods. English ponder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ponderō is built on pondus, ponderis \"a weight\" (Lewis & Short; EtymDB lists ponderō \"to weigh\"). English ponder comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ponderō, ponderāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ponderō, ponderāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ponderō, ponderāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ponderō, ponderāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ponderō, ponderāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ponderō, ponderāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for agreement, then the Latin for a dispute, then say ponderō, ponderāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for agreement, then the Latin for a dispute, then say *ponderō, ponderāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ponderō, ponderāre mean? (\"To weigh (up), to ponder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C359-delibero",
+      "sequence": 19310,
+      "title": "dēlīberō, dēlīberāre — to deliberate, to think over",
+      "headword": "dēlīberō, dēlīberāre",
+      "romanization": "dēlīberō, dēlīberāre",
+      "gloss": "to deliberate, to think over",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a42bc3f80e268887",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a dispute, then the Latin for to weigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēlīberō, dēlīberāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēlīberō, dēlīberāre — \"to deliberate, to think over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Diū dēlīberāvimus; tandem cōnstituimus. We deliberated for a long time; at last we decided."
+            },
+            {
+              "kind": "speech",
+              "text": "dēlīberō, dēlīberāre, dēlīberāvī, dēlīberātum. Dē rē dēlīberāre, to think a matter over. English deliberate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēlīberō is built from dē and a verb made on lībra \"a balance, a pair of scales\" (EtymDB; Lewis & Short): to weigh a decision on the scales. English deliberate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēlīberō, dēlīberāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēlīberō, dēlīberāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēlīberō, dēlīberāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēlīberō, dēlīberāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēlīberō, dēlīberāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēlīberō, dēlīberāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a dispute, then the Latin for to weigh, then say dēlīberō, dēlīberāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a dispute, then the Latin for to weigh, then say *dēlīberō, dēlīberāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēlīberō, dēlīberāre mean? (\"To deliberate, to think over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C359-dubitatio",
+      "sequence": 19320,
+      "title": "dubitātiō, dubitātiōnis — doubt, hesitation",
+      "headword": "dubitātiō, dubitātiōnis",
+      "romanization": "dubitātiō, dubitātiōnis",
+      "gloss": "doubt, hesitation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:783f8b321f20b8e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to weigh, then the Latin for to deliberate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dubitātiō, dubitātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dubitātiō, dubitātiōnis — \"doubt, hesitation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sine ūllā dubitātiōne tibi crēdō. I believe you without any doubt."
+            },
+            {
+              "kind": "speech",
+              "text": "dubitātiō, dubitātiōnis f., the noun of dubitō, to doubt. Sine dubitātiōne, without hesitation. English doubt comes through French from dubitāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dubitātiō is the noun built on dubitō \"to doubt\" (EtymDB), which belongs with dubius \"wavering between two\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dubitātiō, dubitātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dubitātiō, dubitātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dubitātiō, dubitātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dubitātiō, dubitātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dubitātiō, dubitātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dubitātiō, dubitātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to weigh, then the Latin for to deliberate, then say dubitātiō, dubitātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to weigh, then the Latin for to deliberate, then say *dubitātiō, dubitātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dubitātiō, dubitātiōnis mean? (\"Doubt, hesitation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C359-probabilis",
+      "sequence": 19330,
+      "title": "probābilis, probābile — likely, credible; worth approving",
+      "headword": "probābilis, probābile",
+      "romanization": "probābilis, probābile",
+      "gloss": "likely, credible; worth approving",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbf8d9ead00a7e29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to deliberate, then the Latin for doubt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: probābilis, probābile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "probābilis, probābile — \"likely, credible; worth approving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tua causa mihi probābilis vidētur. Your case seems credible to me."
+            },
+            {
+              "kind": "speech",
+              "text": "probābilis, probābile: two endings. Built on probō, to approve, to test: a thing you can approve. For a view that is likely but not certain. English probable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "probābilis is built on probō \"to approve, to test\" (EtymDB; Lewis & Short), which comes from probus \"good, upright\". English probable comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "probābilis, probābile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *probābilis, probābile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "probābilis, probābile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *probābilis, probābile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with probābilis, probābile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *probābilis, probābile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to deliberate, then the Latin for doubt, then say probābilis, probābile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to deliberate, then the Latin for doubt, then say *probābilis, probābile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does probābilis, probābile mean? (\"Likely, credible; worth approving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C359-verisimilis",
+      "sequence": 19340,
+      "title": "vērisimilis, vērisimile — probable, like the truth",
+      "headword": "vērisimilis, vērisimile",
+      "romanization": "vērisimilis, vērisimile",
+      "gloss": "probable, like the truth",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de454c14c8483194",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for doubt, then the Latin for likely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vērisimilis, vērisimile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vērisimilis, vērisimile — \"probable, like the truth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nōn est vērisimile eum hoc fēcisse. It is not likely that he did this."
+            },
+            {
+              "kind": "speech",
+              "text": "vērisimilis, vērisimile, also written as two words, vērī similis, like the truth. Vērisimile est + accusative and infinitive. English verisimilitude."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vērisimilis grew out of the phrase vērī similis \"like the truth\" (Lewis & Short), from vērus \"true\" and similis \"like\". English verisimilitude comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vērisimilis, vērisimile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vērisimilis, vērisimile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vērisimilis, vērisimile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vērisimilis, vērisimile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vērisimilis, vērisimile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vērisimilis, vērisimile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for doubt, then the Latin for likely, then say vērisimilis, vērisimile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for doubt, then the Latin for likely, then say *vērisimilis, vērisimile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vērisimilis, vērisimile mean? (\"Probable, like the truth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

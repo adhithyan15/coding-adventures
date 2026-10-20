@@ -14,7 +14,8 @@ romanization: "koṇī"
 concept_tag: GU-THINGS126-KONI
 prerequisites: [GU-C126-pith, GU-C126-kamar]
 sounds: []
-roots: []
+roots: [sanskrit-kaphoni]
+etymology_hook: "koṇī ← Sanskrit kaphoṇi 'elbow', probably from Munda; a tadbhava (CDIAL 2757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C126-kamar]
 <!-- hl-knowledge: introduces=[GU-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **કોણી** (*koṇī*) — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કોણી** (*koṇī*) is a tadbhava of the lexical Sanskrit *kaphoṇi*, "elbow" (CDIAL 2757). CDIAL reports that the Sanskrit word is more likely from Munda than from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

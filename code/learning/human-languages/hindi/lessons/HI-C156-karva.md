@@ -14,7 +14,8 @@ romanization: "kaṛvā"
 concept_tag: HI-QUAL156-KARVA
 prerequisites: [HI-C156-dhima, HI-C156-khatta]
 sounds: []
-roots: []
+roots: [sanskrit-katuka]
+etymology_hook: "kaṛvā ← Sanskrit kaṭuka 'pungent, bitter', a tadbhava (CDIAL 2641)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C156-khatta]
 <!-- hl-knowledge: introduces=[HI-LEX-C156-QUAL156-03]; assesses=[] -->
 
 **कड़वा** — *kaṛvā* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कड़वा** (*kaṛvā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭuka*, "pungent, bitter" (CDIAL 2641). CDIAL lists the Hindi form as *kaṛuā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

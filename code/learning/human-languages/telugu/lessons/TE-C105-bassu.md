@@ -14,7 +14,8 @@ romanization: "bassu"
 concept_tag: TE-LOC105-BASSU
 prerequisites: [TE-C104-malupu, TE-C105-stesan]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bassu ← English bus, short for Latin omnibus 'for all'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C105-stesan]
 <!-- hl-knowledge: introduces=[TE-LEX-C105-LOC105-02]; assesses=[] -->
 
 **బస్సు** — *bassu* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బస్సు** (*bassu*) is a loan from English *bus*, itself short for Latin *omnibus*, "for all", with a doubled *-ss-* and Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

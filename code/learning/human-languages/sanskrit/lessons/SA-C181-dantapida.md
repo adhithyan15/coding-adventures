@@ -14,7 +14,8 @@ romanization: "dantapīḍā"
 concept_tag: SA-WEL181-DANTAPIDA
 prerequisites: [SA-C180-panditah, SA-C180-vidvan]
 sounds: []
-roots: []
+roots: [danta-sanskrit, sanskrit-pida]
+etymology_hook: "dantapīḍā = danta 'tooth' + pīḍā 'pain', from √pīḍ 'press'; pīḍā gives Hindi pīṛ (CDIAL 8227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C180-vidvan]
 <!-- hl-knowledge: introduces=[SA-LEX-C181-WEL181-01]; assesses=[] -->
 
 **दन्तपीडा** — *dantapīḍā* — "a toothache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dantapīḍā* is a compound of *danta*, "tooth", and *pīḍā*, "pain", built on the root √pīḍ, "to press, squeeze" (MW). *Danta* is the source of the Hindi word for tooth (CDIAL 6152), and *pīḍā* lives on as Hindi *pīṛ*, "pain" (CDIAL 8227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

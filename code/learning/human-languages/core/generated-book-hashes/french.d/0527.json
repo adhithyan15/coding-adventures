@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:f333da1b61a9e063",
+  "lessonIds": [
+    "FR-C527-fer-a-repasser",
+    "FR-C527-froisse",
+    "FR-C527-tremper",
+    "FR-C527-penderie",
+    "FR-C527-accrocher"
+  ],
+  "tex": "french/book/chapters/ch527-repasser-et-ranger.tex"
+}

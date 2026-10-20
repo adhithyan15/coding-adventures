@@ -14,7 +14,8 @@ romanization: "konna"
 concept_tag: JA-DEF83-KONNA
 prerequisites: [JA-C83-ano, JA-C83-dono]
 sounds: []
-roots: []
+roots: [japanese-ko-this]
+etymology_hook: "konna: native, on ko- 'near me'; usually explained as from kono yō na 'of this kind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C83-dono]
 <!-- hl-knowledge: introduces=[JA-LEX-C83-DEF83-04]; assesses=[] -->
 
 **こんな** — *konna* — "this kind of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こんな** (*konna*) is native, built on *ko-*, the root that points near the speaker; it is usually explained as a shortening of *kono yō na*, "of this kind". It is inherited rather than borrowed and has no kanji (JMdict).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

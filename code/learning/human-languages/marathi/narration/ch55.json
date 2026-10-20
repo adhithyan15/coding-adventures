@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Six, Seven, Eight, Nine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f5af0d5855d2e05",
+  "sourceHash": "fnv1a64:a0ba913197b5ae6b",
   "lessons": [
     {
       "id": "MR-C55-saha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d05375df80f3942",
+      "sourceHash": "fnv1a64:328b0061ac8bcebb",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcbf9e3a09f911e7",
+      "sourceHash": "fnv1a64:f0cf80d172fa3dce",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b416e2f5f806c7a",
+      "sourceHash": "fnv1a64:81902dc27d086931",
       "notice": null,
       "blocks": [
         {
@@ -441,14 +441,14 @@
       "title": "नऊ (naū) — nine",
       "headword": "नऊ",
       "romanization": "naū",
-      "gloss": "nine — the same word as new, in Sanskrit and in English both",
+      "gloss": "nine — kin to English nine, and not the Sanskrit look-alike that means new",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69a0bd5af06f8fc1",
+      "sourceHash": "fnv1a64:041d6cb020d13576",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +479,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit नव (nava) — Latin novem, English nine. And नव also meant new, in Sanskrit exactly as novem and novus are a pair in Latin. Nine is the new number: the one that starts the count over after eight."
+              "text": "Sanskrit नव (nava), \"nine\" — Latin novem, English nine (CDIAL 6984). Sanskrit has a second नव, \"new,\" like Latin novus and English new, but CDIAL gives it a separate entry (6983): the two only sound alike."
             }
           ]
         },

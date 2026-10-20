@@ -14,7 +14,8 @@ romanization: "navala"
 concept_tag: TE-VASTUVU189-NAVALA
 prerequisites: [TE-C189-patakam, TE-C189-abhiruci]
 sounds: []
-roots: []
+roots: [telugu-navala-novel]
+etymology_hook: "navala: origin not settled; it looks built on Sanskrit nava 'new' (CDIAL 6983)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C189-abhiruci]
 <!-- hl-knowledge: introduces=[TE-LEX-C189-VASTUVU189-05]; assesses=[] -->
 
 **నవల** — *navala* — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **నవల** (*navala*) is not settled. It looks built on Sanskrit *nava*, "new, young" (CDIAL 6983), but neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

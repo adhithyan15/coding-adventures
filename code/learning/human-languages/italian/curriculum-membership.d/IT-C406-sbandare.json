@@ -1,0 +1,11 @@
+{
+  "id": "IT-C406-sbandare",
+  "pathSegment": "IT-PATH-406-GUIDA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-406-GUIDA",
+      "order": 4
+    }
+  ]
+}

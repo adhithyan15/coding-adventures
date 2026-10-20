@@ -14,7 +14,8 @@ romanization: "ādhunika"
 concept_tag: KA-GUNA181-ADHUNIKA
 prerequisites: [KA-C181-visesa, KA-C181-accumeccina]
 sounds: []
-roots: []
+roots: [sanskrit-adhunika]
+etymology_hook: "ādhunika ← Sanskrit ādhunika 'of the present time', from adhunā 'now'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C181-accumeccina]
 <!-- hl-knowledge: introduces=[KA-LEX-C181-GUNA181-04]; assesses=[] -->
 
 **ಆಧುನಿಕ** — *ādhunika* — "modern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಧುನಿಕ** (*ādhunika*) is Sanskrit *ādhunika*, "of the present time", from *adhunā*, "now", taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

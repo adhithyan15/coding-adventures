@@ -283,7 +283,7 @@ describe("the write side", () => {
     expect(runRootSlugSplitsCli(["--write", "--allow-new"], root)).toBe(0);
   });
 
-  it("refuses to write through a SYMLINK, as the read side already refuses to read one", () => {
+  it("refuses to write through a SYMLINK, as the read side already refuses to read one", (ctx) => {
     // `readLedgerFile` refuses a symlinked ledger, so without this the two
     // halves of one CLI disagree about the same path and --write follows a link
     // the checker would have rejected. shard.ts: "a guard living only inside
@@ -292,9 +292,11 @@ describe("the write side", () => {
     const elsewhere = join(root, "elsewhere.json");
     writeFileSync(elsewhere, "{}\n");
     try {
-      symlinkSync(elsewhere, join(root, "core", "root-slug-split-baseline.json"));
-    } catch {
-      return; // A platform without symlink permission proves nothing either way.
+      symlinkSync(elsewhere, join(root, "core", "root-slug-split-baseline.json"), "file");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
     }
     expect(() => runRootSlugSplitsCli(["--write"], root)).toThrow(/must be a real regular file/);
   });
@@ -335,10 +337,39 @@ describe("the live corpus", () => {
     // bare-vs-tagged entries wrapping a shape entry, and the shape entries are
     // what went away.
     //
+    // 82 -> 78. The Spanish etymology review read both sides of four pairs and
+    // moved the bare Spanish slugs onto the tagged spelling the corpus already
+    // used: dicere (ES-C277-es-decir), habitare (ES-C268-habitacion and the new
+    // ES-C507-habitante), merces (ES-C03-usted-origin) and sperare
+    // (ES-C269-espero). Each pair was the same Latin word.
+    //
+    // 78 -> 77: `ananda` against `ananda-sanskrit`. The bare slug's only user
+    // was MR-C02-anand, whose आनंद is Sanskrit *ānanda* exactly as in the five
+    // lessons tagging it `ananda-sanskrit`, so the Marathi etymology review
+    // moved it onto the tagged slug.
+    //
+    // 77 -> 76: `s-l-m` against `semitic-s-l-m`. Both spelled the one Arabic
+    // root s-l-m 'to be safe' (Lane): the bare slug on AR-C01's salām and
+    // AR-C192's istalama, the tagged one on AR-C04's salāma and the AR-W00/W12
+    // writing lessons that spell the same greeting. The etymology-hygiene pass
+    // moved the six tagged Arabic lessons onto the bare slug that Arabic,
+    // Persian and Urdu already share, so the split is gone.
+    //
+    // 76 -> 75: `ne` against `pie-ne`. The bare slug's only users were
+    // RU-C01-net, whose hook traces не to PIE *ne, and RU-C16-ni-ni, whose ни
+    // is that не. HI-C07-nahin and GE-C18-nein tag the same PIE *ne `pie-ne`.
+    // The etymology cleanup moved the two Russian lessons onto the tagged slug.
+    //
+    // 75 -> 74: `ne-negative` against `pie-ne-negative`. Each had one user, and
+    // both named the same PIE *ne: LA-C01-ita-non's nōn is "ne-oenum", the
+    // ancient negative ne- it sets beside Sanskrit na, and PA-C31-na's hook
+    // traces nā through Sanskrit na to PIE *ne. Both lessons now use `pie-ne`,
+    // the slug the Hindi, German and Russian negators already share.
+    //
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(82);
-    expect(findRootSlugSplits()).toHaveLength(82);
+    expect(baselineFile.splits).toHaveLength(74);
+    expect(findRootSlugSplits()).toHaveLength(74);
     expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

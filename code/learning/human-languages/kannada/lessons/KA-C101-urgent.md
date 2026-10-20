@@ -11,7 +11,8 @@ romanization: "turtu"
 concept_tag: KA-DO-URGENT
 prerequisites: [KA-C101-stop, KA-C101-call]
 sounds: []
-roots: []
+roots: [persian-turt]
+etymology_hook: "turtu ← Persian turt 'quick, prompt', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C101-call]
 **ತುರ್ತು** (*turtu*) — "urgent, an emergency".
 
 **ತುರ್ತು!** — "it's urgent!"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುರ್ತು** (*turtu*) is a loan from Persian *turt*, "quick, prompt", through Hindustani. What must be done quickly is urgent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

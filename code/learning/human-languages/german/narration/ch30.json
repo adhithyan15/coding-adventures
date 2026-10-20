@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Head and Hand",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:465dbbbd84982301",
+  "sourceHash": "fnv1a64:b5ea6bd4653c1e13",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebb8bddc5527f4a6",
+      "sourceHash": "fnv1a64:757135cc7b89f6e5",
       "notice": null,
       "blocks": [
         {
@@ -66,6 +66,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kopf from Old High German kopf, \"drinking vessel\" (EtymDB 2.1) — usually traced to Late Latin cuppa, \"cup\", so a borrowing whose sense moved from bowl to head."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need: Make the -pf sequence",
           "segments": [
@@ -80,7 +91,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "grammar",
           "title": "Grammar Lens: Kopf + Schmerzen",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -148,7 +159,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -527,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:542e3aa2402318b7",
+      "sourceHash": "fnv1a64:28968077e7e7b36b",
       "notice": null,
       "blocks": [
         {
@@ -628,11 +639,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"",
+              "instruction": "the Germanic match — \"Hand\" beside English \"hand\", one word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"]"
+              "source": "[YOU SAY: the Germanic match — \"Hand\" beside English \"hand\", one word]"
             },
             {
               "kind": "prompt",

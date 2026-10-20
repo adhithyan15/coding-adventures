@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Sicher unterwegs",
+  "label": "ch:ge-sicher-unterwegs",
+  "canDo": "I can talk about safety in the car: the horn, hooting, the seat belt, buckling up and the front-seat passenger.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C401-beifahrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about safety in the car: the horn, hooting, the seat belt, buckling up and the front-seat passenger.",
+    "assesses": [
+      "GE-LEX-C401-GURT-03",
+      "GE-LEX-C401-GURT-04",
+      "GE-LEX-C401-GURT-05"
+    ]
+  }
+}

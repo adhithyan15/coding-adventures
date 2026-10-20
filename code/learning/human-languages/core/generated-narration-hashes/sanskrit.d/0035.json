@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 35,
-  "sourceHash": "fnv1a64:01b5830fb4efa00d",
+  "sourceHash": "fnv1a64:a7f4f9f817d72eb0",
   "lessonIds": [
     "SA-C35-milk",
     "SA-C35-honey",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch35.txt",
   "json": "sanskrit/narration/ch35.json",
-  "textHash": "fnv1a64:0abe2c0f5878fe40",
-  "jsonHash": "fnv1a64:b972b3baff8bc81d",
+  "textHash": "fnv1a64:20818941fb2ea4c7",
+  "jsonHash": "fnv1a64:b500a4f92de95630",
   "findings": []
 }

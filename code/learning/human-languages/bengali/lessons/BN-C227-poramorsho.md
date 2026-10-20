@@ -14,7 +14,8 @@ romanization: "pôrāmôrshô"
 concept_tag: BN-JINIS227-PORAMORSHO
 prerequisites: [BN-C227-boyos, BN-C227-nombor]
 sounds: []
-roots: []
+roots: [sanskrit-paramarsha]
+etymology_hook: "pôrāmôrshô ← Sanskrit parāmarśa 'consideration', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C227-nombor]
 <!-- hl-knowledge: introduces=[BN-LEX-C227-JINIS227-04]; assesses=[] -->
 
 **পরামর্শ** — *pôrāmôrshô* — "advice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরামর্শ** (*pôrāmôrshô*) is Sanskrit *parāmarśa*, "consideration", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

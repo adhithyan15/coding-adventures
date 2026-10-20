@@ -1,0 +1,11 @@
+{
+  "id": "GE-C467-erroeten",
+  "pathSegment": "GE-PATH-467-SCHAM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-467-SCHAM",
+      "order": 4
+    }
+  ]
+}

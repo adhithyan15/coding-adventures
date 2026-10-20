@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 173,
-  "sourceHash": "fnv1a64:09c7bf96dca5d7e2",
+  "sourceHash": "fnv1a64:78265ac8dca3d2ff",
   "lessonIds": [
     "PT-C173-salvar",
     "PT-C173-nascer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch173.txt",
   "json": "portuguese/narration/ch173.json",
-  "textHash": "fnv1a64:cc5da046940441cb",
-  "jsonHash": "fnv1a64:4b7351ec226ade92",
+  "textHash": "fnv1a64:8b03b37d9457768d",
+  "jsonHash": "fnv1a64:128fb29f79606928",
   "findings": []
 }

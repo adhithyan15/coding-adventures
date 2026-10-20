@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Zu schnell",
+  "label": "ch:ge-zu-schnell",
+  "canDo": "I can talk about speeding: racing along, the speed camera, getting caught, the fine and the penalty ticket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C407-strafzettel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about speeding: racing along, the speed camera, getting caught, the fine and the penalty ticket.",
+    "assesses": [
+      "GE-LEX-C407-BLITZER-03",
+      "GE-LEX-C407-BLITZER-04",
+      "GE-LEX-C407-BLITZER-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-RG-01",
+  "category": "Register — which Sanskrit is being taught",
+  "label": "WHICH SANSKRIT: the course teaches a spoken register, and the exam ladder behind it does not",
+  "probe": [
+    "SA-GRAMMAR-POLITENESS-BY-PERSON",
+    "SA-PATTERN-HOW-ARE-YOU",
+    "SA-PATTERN-I-AM-WELL"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-EXAM-LEVELS",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific, and the first point a reader should look at. core/exam-levels.json records Sanskrit as basis 'editorial' with the caveat that this project teaches it AS A LIVING SPOKEN LANGUAGE so CEFR can-do descriptors apply, while 'a traditional syllabus is ordered by grammar and text rather than by communicative function, so the two ladders are not parallel'. That is load-bearing: every functional point in this file measures the spoken-revival register that Samskrita Bharati teaches, and NONE of it measures the traditional pariksha, which would ask for declension tables and a text. bhavān katham asti? and kuśalī asmi are spoken-revival forms; a classical text would not use them conversationally. A coverage number here is not progress toward a traditional examination and cannot become one."
+}

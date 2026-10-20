@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "The Gods of the Week",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:fcd5032c5b1c20ed",
+  "sourceHash": "fnv1a64:2373365800a201bf",
   "lessons": [
     {
       "id": "GE-C07-tag-muster",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:701f9544c1d88845",
+      "sourceHash": "fnv1a64:4f972704c7900e16",
       "notice": null,
       "blocks": [
         {
@@ -184,6 +184,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mond from Old High German māno from Proto-Germanic mēnô, \"moon\" — inherited, the same word as English moon. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -198,7 +209,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -247,7 +258,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -278,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fad26897458e32e5",
+      "sourceHash": "fnv1a64:a3c7312631b4386b",
       "notice": null,
       "blocks": [
         {
@@ -319,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Montag from Middle High German mōntac (EtymDB 2.1): Mond + Tag, \"moon's day\", built the same way as English Monday."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +389,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -533,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:beae3fb4068c0bd3",
+      "sourceHash": "fnv1a64:c7062c7f0ec2e816",
       "notice": null,
       "blocks": [
         {
@@ -574,6 +596,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Donner from Middle High German doner (EtymDB 2.1), from Proto-Germanic þunraz, \"thunder\" — inherited, the same word as English thunder and the god's name Thor."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -588,7 +621,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -637,7 +670,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -807,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6429150d1548c7b9",
+      "sourceHash": "fnv1a64:6740d39e68b119b7",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +886,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The goddess is Frija — Frigg in the Norse — and she stood in for Venus. English named the day for her too: Friday."
+              "text": "The goddess is Frija — Frigg in the Norse — and she stood in for Venus. English named the day for her too: Friday. Freitag from Old High German frīatag, \"Frija's day\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",
@@ -951,7 +984,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afd2c632d91e6c9a",
+      "sourceHash": "fnv1a64:b67346fddf8e62c7",
       "notice": null,
       "blocks": [
         {
@@ -992,6 +1025,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mittwoch from Middle High German mittewoche from Old High German mittawehha, \"middle of the week\" (EtymDB 2.1) — built from \"mid\" and \"week\", the same pair as English midweek."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -1006,7 +1050,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -1025,7 +1069,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1074,7 +1118,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

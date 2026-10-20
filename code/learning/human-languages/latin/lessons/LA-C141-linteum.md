@@ -13,7 +13,8 @@ gloss: "a linen cloth, a towel"
 concept_tag: LA-THINGS141-LINTEUM
 prerequisites: [LA-C140-filum, LA-C140-lana]
 sounds: []
-roots: []
+roots: [linteum-latin, linum-latin]
+etymology_hook: "linteum 'linen cloth' — from linteus 'of linen', from līnum 'flax'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C140-lana]
 <!-- hl-knowledge: introduces=[LA-LEX-C141-THINGS141-01]; assesses=[] -->
 
 **linteum, linteī** — "a linen cloth, a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**linteum** comes from *līnum*, "flax" (Lewis & Short), through *linteus*, "made of linen". English *linen* and *line* belong to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

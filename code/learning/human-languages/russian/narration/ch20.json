@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "The Verb That Takes Another Verb",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8c2994684e6a7878",
+  "sourceHash": "fnv1a64:5f8059d4239164e9",
   "lessons": [
     {
       "id": "RU-C20-khotet",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9196b45879d8410",
+      "sourceHash": "fnv1a64:be34dc079eb5b977",
       "notice": null,
       "blocks": [
         {
@@ -719,7 +719,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bff21aa75a38534f",
+      "sourceHash": "fnv1a64:38de8b6ced3315bd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -775,7 +775,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stress the first syllable; the о at the end is unstressed and says a, so the word comes out NÁ-da."
+              "text": "Stress the first syllable; the о at the end is unstressed and says a, so the word comes out NÁ-da. It is worn down from Old Russian nadobě, a form of надоба, \"need\", built on доба, \"a time, a season\" (Vasmer)."
             },
             {
               "kind": "speech",
@@ -802,11 +802,11 @@
             },
             {
               "kind": "speech",
-              "text": "Russian is allowed. надо (náda) is an impersonal word: the obligation is stated and left hanging in the air, belonging to nobody in particular. This is the same freedom you met when the present tense of быть turned out to be missing altogether — Russian is content to leave out what it does not need."
+              "text": "Russian is allowed. надо (náda) is an impersonal word: the obligation is stated and left hanging in the air, belonging to nobody in particular. This is the same freedom you met when the present tense of быть turned out to be missing altogether."
             },
             {
               "kind": "speech",
-              "text": "Naming the person who must do it needs a case this book has not opened yet, so for now the impersonal form is the whole of it — and it is genuinely useful on its own."
+              "text": "Naming the person who must do it needs a case this book has not opened yet, so for now the impersonal form is the whole of it."
             }
           ]
         },

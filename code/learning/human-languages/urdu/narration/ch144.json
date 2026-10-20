@@ -4,7 +4,7 @@
   "chapter": 144,
   "title": "Recently, Already, the Past, Last, To Happen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:db609579e263a62c",
+  "sourceHash": "fnv1a64:6e0875e2495e7c9a",
   "lessons": [
     {
       "id": "UR-C144-hal-hi-mein",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c72b7c60a4524037",
+      "sourceHash": "fnv1a64:b67e7b37a493473d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حال ہی میں (hāl hī meṅ) is \"in the very present state\". hāl is a loan from Arabic ḥāl, \"state, condition\", through Persian (Lane, root ḥ-w-l); hī is the emphatic \"very\"; and meṅ, \"in\", comes from Sanskrit madhye, \"in the middle\" (CDIAL 9804)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54ac9da33d61d2be",
+      "sourceHash": "fnv1a64:a01a658cbee3c41b",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پہلے سے (pehle se) joins pehle, \"first, before\", and se, \"from\". pehle is the adverb of pahlā, which CDIAL lists under prathilla, a variant of a reconstructed prathila, \"first\" (CDIAL 8652). CDIAL lists se under Sanskrit sahita, \"together with\" (CDIAL 13310), and sama, \"equal\", has also been suggested (CDIAL 13173)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:556c15bc5416fb89",
+      "sourceHash": "fnv1a64:72d42ef15e14ca13",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماضی (māzī) is a loan from Arabic māḍī, \"past, gone by\", which reached Urdu through Persian. Its Arabic root is m-ḍ-y (Lane). Grammar books use it for the past tense."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea185258913da5cd",
+      "sourceHash": "fnv1a64:a1b215d8ec4a0dcc",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گزشتہ (guzashtā) is a loan, usually traced to Persian guzashta, \"passed, gone by\". It is the past participle of guzashtan, \"to pass\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3d89371f7ca6e72",
+      "sourceHash": "fnv1a64:0e70ae4f744db84f",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیش آنا (pesh ānā) is \"to come to the front\". pesh, \"front, before\", is usually traced to Persian pesh; ānā, \"to come\", comes from Sanskrit āpayati, \"causes to reach\" (CDIAL 1200)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

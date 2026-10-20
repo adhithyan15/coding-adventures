@@ -1,0 +1,11 @@
+{
+  "id": "PT-C262-devia",
+  "pathSegment": "PT-PATH-262-EXPLICAR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-262-EXPLICAR",
+      "order": 0
+    }
+  ]
+}

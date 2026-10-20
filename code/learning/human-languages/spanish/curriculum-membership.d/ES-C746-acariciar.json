@@ -1,0 +1,11 @@
+{
+  "id": "ES-C746-acariciar",
+  "pathSegment": "ES-PATH-746-ENGANO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-746-ENGANO",
+      "order": 0
+    }
+  ]
+}

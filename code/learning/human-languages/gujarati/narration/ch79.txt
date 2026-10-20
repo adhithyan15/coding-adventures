@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for Thursday, then the Gujarati for Friday.
 You'll want to know: શનિવાર.
 શનિવાર (śanivār) — "Saturday".
 
+The word, taken apart.
+શનિવાર (śanivār) is a Sanskrit compound, a tatsama: śani, "the planet Saturn", and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for the weekend, tomorrow and yesterday.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for Friday, then the Gujarati for Saturday.
 
 You'll want to know: રવિવાર.
 રવિવાર (ravivār) — "Sunday".
+
+The word, taken apart.
+રવિવાર (ravivār) is a Sanskrit compound, a tatsama: ravi, "the sun", and vāra, "day of the week" (CDIAL 10646, 11547).
 
 What you've built.
 One more word for the weekend, tomorrow and yesterday.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for Saturday, then the Gujarati for Sunday.
 You'll want to know: આવતીકાલ.
 આવતીકાલ (āvtīkāl) — "tomorrow". Literally "the coming કાલ".
 
+The word, taken apart.
+આવતીકાલ (āvtīkāl) is "the coming kāl": āvtī, from āvvũ, "to come" (CDIAL 1200), and kāl, which CDIAL lists under Sanskrit kalya, "dawn; tomorrow" (CDIAL 3104).
+
 What you've built.
 One more word for the weekend, tomorrow and yesterday.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for Sunday, then the Gujarati for tomorrow.
 You'll want to know: ગઈકાલ.
 ગઈકાલ (gaīkāl) — "yesterday". Literally "the gone કાલ".
 
+The word, taken apart.
+ગઈકાલ (gaīkāl) is "the gone kāl": gaī, "gone", whose Old Gujarati form gayaü CDIAL lists under Sanskrit gata, "gone" (CDIAL 4008), and kāl, from kalya, "dawn; tomorrow" (CDIAL 3104).
+
 What you've built.
 One more word for the weekend, tomorrow and yesterday.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for tomorrow, then the Gujarati for yesterd
 
 You'll want to know: સમય.
 સમય (samay) — "time".
+
+The word, taken apart.
+સમય (samay) is Sanskrit samaya, "meeting; agreement; time", taken over whole as a learned loan, a tatsama (CDIAL 13185). CDIAL lists the inherited Gujarati form as samo, "time, season".
 
 What you've built.
 One more word for the weekend, tomorrow and yesterday.

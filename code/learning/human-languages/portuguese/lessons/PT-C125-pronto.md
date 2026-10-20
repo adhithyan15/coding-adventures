@@ -13,7 +13,8 @@ gloss: "ready"
 concept_tag: PT-QUALIDADES125-PRONTO
 prerequisites: [PT-C124-certo, PT-C124-errado]
 sounds: []
-roots: []
+roots: [promptus-latin]
+etymology_hook: "pronto ← Latin promptus 'brought out, ready' — English prompt shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C124-errado]
 <!-- hl-knowledge: introduces=[PT-LEX-C125-QUALIDADES125-01]; assesses=[] -->
 
 **pronto** — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pronto** ← Latin *promptus*, "brought out, ready" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

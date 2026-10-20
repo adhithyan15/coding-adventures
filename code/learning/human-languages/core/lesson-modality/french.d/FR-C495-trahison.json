@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C495-trahison",
+    "language": "french",
+    "chapter": 495,
+    "sequence": 27220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7934325859921b75"
+  },
+  "findings": []
+}

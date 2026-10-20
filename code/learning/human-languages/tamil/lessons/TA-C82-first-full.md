@@ -11,7 +11,8 @@ gloss: "first, with the ending on it — the exception is the stem, not the rule
 concept_tag: TA-ORDINAL-FIRST-FULL
 prerequisites: [TA-C82-second, TA-C80-price, TA-C77-quotative, TA-C66-inside]
 sounds: []
-roots: []
+roots: [dravidian-mutal-beginning, tamil-aaku-become]
+etymology_hook: "முதலாவது — native: mutal 'first' (DEDR 4950) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 215
 requires:
@@ -57,6 +58,11 @@ The **stem** is the exception. The **ending** is not.
 
 Both forms are current: **முதல் நாள்** and **முதலாவது நாள்** are both the first
 day, and **முதல்** is the shorter and commoner of the two in front of a noun.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**முதலாவது** (*mutalāvadu*) is native: *mutal*, "first" (DEDR 4950), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C82-ORDINAL-05, TA-LEX-C82-ORDINAL-01, TA-LEX-C82-ORDINAL-03] -->

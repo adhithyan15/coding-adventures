@@ -15,6 +15,7 @@ concept_tag: MR-PLACE112-MAGE
 prerequisites: [MR-C112-at, MR-C112-baher]
 sounds: []
 roots: []
+etymology_hook: "māge 'behind': origin not settled; māg 'track' ← mārga (CDIAL 10071) is a possible lead"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C112-baher]
 <!-- hl-knowledge: introduces=[MR-LEX-C112-PLACE112-04]; assesses=[] -->
 
 **मागे** — *māge* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मागे** (*māge*) is not settled. Neither CDIAL nor DEDR has an entry for it. Marathi *māg*, "road, track", which CDIAL lists under Sanskrit *mārga*, "track" (CDIAL 10071), is a possible lead, but no source links the two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

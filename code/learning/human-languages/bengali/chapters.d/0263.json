@@ -1,0 +1,21 @@
+{
+  "chapter": 263,
+  "title": "A connected A2 message",
+  "label": "ch:bn-a-connected-a2-message",
+  "canDo": "I can plan and write a connected 70–90 word Bengali message in Bengali script for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-W263-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 263 by writing a model-free 70–90 word connected Bengali message for a named reader and practical purpose.",
+    "assesses": [
+      "BN-LEX-C17-AR-01",
+      "BN-LEX-C18-KINTU-01",
+      "BN-LEX-C18-KENONA-01",
+      "BN-LEX-C91-TIME91-01",
+      "BN-LEX-C26-KOTHAY-01"
+    ]
+  }
+}

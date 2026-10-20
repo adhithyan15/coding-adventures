@@ -15,6 +15,7 @@ concept_tag: MW-PLACE82-ATHAI
 prerequisites: [MW-C81-barai, MW-C81-niche]
 sounds: []
 roots: []
+etymology_hook: "aṭhai 'here': not settled; CDIAL has no entry; Sanskrit atra 'here' (CDIAL 228) is a lead"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C81-niche]
 <!-- hl-knowledge: introduces=[MW-LEX-C82-PLACE82-01]; assesses=[] -->
 
 **अठै** — *aṭhai* — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **अठै** (*aṭhai*) is not settled; CDIAL has no entry for it. A likely relative is Sanskrit *atra*, "here", under which CDIAL lists Gujarati *atre* (CDIAL 228), but that entry does not explain the *ṭh* of **अठै** (*aṭhai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

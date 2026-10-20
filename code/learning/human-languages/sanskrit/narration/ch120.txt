@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a bottle, a flask, then the Sanskrit fo
 You'll want to know: मुद्रा.
 मुद्रा — mudrā — "a coin, a seal".
 
+The word, taken apart.
+mudrā "a seal, a signet-ring", and later a coin, is probably borrowed from Iranian (CDIAL 10203, after EWA). It lives on as Punjabi mundī "ring" (CDIAL 10203).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a small umbrella, then the Sanskrit for
 
 You'll want to know: पत्रालयः.
 पत्रालयः — patrālayaḥ — "a post office".
+
+The word, taken apart.
+patrālaya is built from patra "a leaf, a letter" (MW) and ālaya "dwelling, house": "the house of letters". The pairing for a post office is modern.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a coin, then the Sanskrit for a post of
 You'll want to know: लेखः.
 लेखः — lekhaḥ — "a letter, an article".
 
+The word, taken apart.
+lekha "a line, a stroke", then "a writing, a letter", comes from the root √likh "scratch, write" (CDIAL 11101): writing began as scratching. MW compares √likh with Greek ereikō "tear".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a post office, then the Sanskrit for a 
 You'll want to know: ग्रन्थः.
 ग्रन्थः — granthaḥ — "a book, a text".
 
+The word, taken apart.
+grantha comes from the root √granth "tie, string together" (CDIAL 4350): it first meant "a knot", and later "a book", a composition strung together. Sinhala kept it as gata "book" (CDIAL 4350).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a letter, then the Sanskrit for a book.
 
 You'll want to know: चित्रम्.
 चित्रम् — citram — "a picture".
+
+The word, taken apart.
+citra comes from the root √cit "perceive, appear" (CDIAL 4803): it first meant "conspicuous, bright, many-coloured", and as a noun "a picture" (MW). Pali kept it as citta "picture" (CDIAL 4803).
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a muscle"
 concept_tag: PT-SAUDE180-MUSCULO
 prerequisites: [PT-C179-baixar, PT-C179-defender]
 sounds: []
-roots: []
+roots: [mus-latin]
+etymology_hook: "músculo ← Latin musculus 'little mouse': a flexing muscle looked like one"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C179-defender]
 <!-- hl-knowledge: introduces=[PT-LEX-C180-SAUDE180-01]; assesses=[] -->
 
 **o músculo** — "a muscle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**músculo** ← Latin *musculus*, "little mouse" (EtymDB 2.1) — a learned borrowing from Latin. A flexing muscle looked like a little mouse.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

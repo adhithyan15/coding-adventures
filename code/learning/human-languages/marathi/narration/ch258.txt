@@ -12,6 +12,9 @@ Before the new one: say the Marathi for trust, then the Marathi for courage.
 You'll want to know: हल्ली.
 हल्ली — hallī — "nowadays".
 
+The word, taken apart.
+The origin of हल्ली (hallī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for courage, then the Marathi for nowadays.
 
 You'll want to know: शतक.
 शतक — śatak — "a century".
+
+The word, taken apart.
+शतक (śatak) is Sanskrit śataka, "consisting of a hundred", a tatsama built on śata, "hundred". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for nowadays, then the Marathi for a century
 You'll want to know: युग.
 युग — yug — "an era, an age".
 
+The word, taken apart.
+युग (yug) is Sanskrit yuga, "yoke; couple", taken over whole as a learned loan, a tatsama (CDIAL 10482). Sanskrit yuga also meant "an age of the world". CDIAL lists the inherited Marathi form as jūṁ, "yoke".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a century, then the Marathi for an era.
 You'll want to know: रात्रभर.
 रात्रभर — rātrabhar — "all night".
 
+The word, taken apart.
+रात्रभर (rātrabhar) is Sanskrit rātra, "night", with -bhar, "full", from bharṇẽ, "to fill" (CDIAL 9397): "the night full".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an era, then the Marathi for all night.
 
 You'll want to know: दिवसभर.
 दिवसभर — divasbhar — "all day".
+
+The word, taken apart.
+दिवसभर (divasbhar) is divas, "day", from Sanskrit divasa (CDIAL 6333), with -bhar, "full", from bharṇẽ, "to fill" (CDIAL 9397).
 
 What you've built.
 One more word for this chapter.

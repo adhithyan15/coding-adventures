@@ -13,7 +13,8 @@ gloss: "a newcomer"
 concept_tag: LA-RES220-ADVENA
 prerequisites: [LA-C220-ancilla, LA-C220-libertus]
 sounds: []
-roots: []
+roots: [advena-latin, venire-latin]
+etymology_hook: "advena 'newcomer' — built on adveniō 'to arrive'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C220-libertus]
 <!-- hl-knowledge: introduces=[LA-LEX-C220-RES220-03]; assesses=[] -->
 
 **advena, advenae** — "a newcomer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**advena** is built on *adveniō*, "to arrive" (Lewis & Short), from *ad*, "to", and *veniō*, "to come": one who has come.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

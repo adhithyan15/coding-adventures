@@ -14,7 +14,8 @@ romanization: "māmaṉār"
 concept_tag: TA-PORUL186-MAMANAR
 prerequisites: [TA-C185-ceyti, TA-C185-minnancal]
 sounds: []
-roots: []
+roots: [dravidian-maama-uncle]
+etymology_hook: "மாமனார் — native Dravidian (DEDR 4813); Telugu māma 'father-in-law'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C185-minnancal]
 <!-- hl-knowledge: introduces=[TA-LEX-C186-PORUL186-01]; assesses=[] -->
 
 **மாமனார்** — *māmaṉār* — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**மாமனார்** (*māmaṉār*) is native Dravidian. DEDR 4813 lists Telugu *māma*, "father-in-law". The entry glosses *māmaṉ* "maternal uncle, father-in-law", and compares Sanskrit *māma*, "maternal uncle"; *-ār* is respectful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

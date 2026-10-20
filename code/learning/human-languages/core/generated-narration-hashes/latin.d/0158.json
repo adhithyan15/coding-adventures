@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 158,
-  "sourceHash": "fnv1a64:7555da45b3a08398",
+  "sourceHash": "fnv1a64:c4bd5a48d8f05e86",
   "lessonIds": [
     "LA-C158-cresco",
     "LA-C158-festino",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch158.txt",
   "json": "latin/narration/ch158.json",
-  "textHash": "fnv1a64:5b2128650f6dd785",
-  "jsonHash": "fnv1a64:1011c744b150707a",
+  "textHash": "fnv1a64:13f32c6ea58922ca",
+  "jsonHash": "fnv1a64:11a442a08f01f3e5",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "vijay"
 concept_tag: MR-VASTU185-VIJAY
 prerequisites: [MR-C185-vyayamsala, MR-C185-kriket]
 sounds: []
-roots: []
+roots: [sanskrit-vijaya]
+etymology_hook: "vijay: Sanskrit vijaya 'victory', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C185-kriket]
 <!-- hl-knowledge: introduces=[MR-LEX-C185-VASTU185-03]; assesses=[] -->
 
 **विजय** — *vijay* — "a victory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विजय** (*vijay*) is Sanskrit *vijaya*, "victory", a tatsama built on *ji*, "to win", the root of **जिंकणे**. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

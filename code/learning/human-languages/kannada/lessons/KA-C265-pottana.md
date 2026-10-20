@@ -14,7 +14,8 @@ romanization: "poṭṭaṇa"
 concept_tag: KA-VASTU265-POTTANA
 prerequisites: [KA-C265-bindige, KA-C265-jadi]
 sounds: []
-roots: []
+roots: [sanskrit-pottala-bundle]
+etymology_hook: "poṭṭaṇa: origin uncertain; compare Sanskrit pōṭṭala 'bundle' (CDIAL 8396)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C265-jadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C265-VASTU265-04]; assesses=[] -->
 
 **ಪೊಟ್ಟಣ** — *poṭṭaṇa* — "a packet, a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಪೊಟ್ಟಣ** (*poṭṭaṇa*) comes from is uncertain. It looks like Sanskrit *pōṭṭala*, "a bundle" (CDIAL 8396), whose northern forms include Hindi *poṭlī*, but no source records the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

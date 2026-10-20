@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e82f01fe7e48a93f",
+  "sourceHash": "fnv1a64:e65e19cbbb6ffb03",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c875a2c807423606",
+      "sourceHash": "fnv1a64:6e865a774045fbb3",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दोपहर (dopahar) = \"noon, midday\" — literally \"two (do) + pahar.\" A पहर (pahar, from Sanskrit prahara) is a traditional Indian unit of time, roughly three hours long, with the day traditionally divided into eight pahars (four for daytime, four for night), counted from sunrise. Noon falls right around the end of the second daytime pahar after sunrise — so do-pahar, \"two pahars [in],\" became the everyday word for midday. (This traditional pahar-based account is the standard one, though — as with any folk-timekeeping etymology this old — treat the exact number of pahars as the general shape of the story rather than a precisely dated fact.)"
+              "text": "दोपहर (dopahar) = \"noon, midday\" — literally \"two (do) + pahar.\" A पहर (pahar, from Sanskrit prahara, \"a watch\"; CDIAL 8900 wonders whether prahara is Persian pahra, \"watch\", put into Sanskrit form) is a traditional Indian unit of time, roughly three hours long, with the day traditionally divided into eight pahars (four for daytime, four for night), counted from sunrise. Noon falls right around the end of the second daytime pahar after sunrise — so do-pahar, \"two pahars [in],\" became the everyday word for midday. (This traditional pahar-based account is the standard one, though — as with any folk-timekeeping etymology this old — treat the exact number of pahars as the general shape of the story rather than a precisely dated fact.)"
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आधी रात (ādhī rāt) = \"midnight,\" literally \"half night\" — आधी (ādhī, the feminine form of आधा, ādhā, \"half\") + रात (rāt, \"night\"). No erosion, no double meaning — structurally identical to Latin's media nox and Spanish's medianoche."
+              "text": "आधी रात (ādhī rāt) = \"midnight,\" literally \"half night\" — आधी (ādhī, \"half,\" in the form it takes before a feminine noun) + रात (rāt, \"night\"). No erosion, no double meaning — structurally identical to Latin's media nox and Spanish's medianoche."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does दोपहर literally mean, and what's a pahar? (\"Two pahars\" — a pahar being a traditional 3-hour time-unit, with noon falling around the end of the second one after sunrise.) What does आधी रात literally mean? (\"Half night\" — ādhī \"half\" + rāt \"night,\" fully transparent, just like Latin's media nox.)"
+              "text": "What does दोपहर literally mean, and what's a pahar? (\"Two pahars\" — a pahar being a traditional 3-hour time-unit, with noon falling around the end of the second one after sunrise.) What does आधी रात literally mean? (\"Half night\" — ādhī \"half\" + rāt \"night,\" fully transparent, like Latin's media nox.)"
             }
           ]
         }

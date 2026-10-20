@@ -18,6 +18,7 @@ The word, taken apart.
 बुरा मत मानो — burā mat māno — "don't take it badly."
 Literally: do not consider it bad. It is what a speaker adds after saying something blunt, and it is closer to English "no offence" than to any apology. You will hear it long before you need to produce it, so recognising it is worth more right now than being able to build it.
 A second everyday one: बुरा लगना — burā lagnā, "to feel hurt," literally to strike one as bad. Hindi describes being offended as something the remark does, not something you do.
+बुरा (burā) comes from a reconstructed bura, "defective" (CDIAL 9289).
 
 Grammar Lens: a pair that behaves identically.
 [a table of 2 rows, read aloud]
@@ -38,7 +39,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does बुरा (burā) मत मानो literally say? (Do not consider it bad.) Does बुरा (burā) bend? (Yes — it ends in -आ.) And मोटा, from the last chapter? (Also yes — same ending, same behaviour.)
+What does Hindi's "no offence" literally say? (Do not consider it bad.) Does बुरा (burā) bend? (Yes — it ends in -आ.) And मोटा, from the last chapter? (Also yes — same ending, same behaviour.)
 
 
 Lesson 2 of 8.
@@ -136,7 +137,7 @@ Say मेहनती (mehnatī). You saw an ending build a person out of a nou
 
 You'll want to know: शर्मीला.
 शर्मीला (śarmīlā) — "shy, bashful."
-Built from शरम / शर्म (śaram), "shame, modesty," plus the ending -ईला.
+Built from a noun and an ending: शरम / शर्म (śaram, "shame, modesty") + -ईला becomes शर्मीला (śarmīlā).
 
 The word, taken apart.
 The ending -ईला is not the same as the -ई of mehnatī, and the difference is exactly the difference this chapter is about.
@@ -146,7 +147,7 @@ noun: शरम — shame. with -ईला: शर्मीला (śarmīlā) �
 noun: रंग — colour. with -ईला: रंगीला — colourful, flamboyant.
 noun: नशा — intoxication. with -ईला: नशीला — intoxicating.
 That is why शर्मीला is the right word for an exam question about character. Someone can feel shame at a moment; a śarmīlā person is one for whom it is a standing trait. This is settled character, not mood — the distinction the whole chapter turns on.
-शर्म itself is Persian, and it is the same word as English shame: both descend from the same ancient root for covering oneself.
+शर्म itself came into Hindi from Persian šarm. It only sounds like English shame: the English word is Germanic, and no shared root is established.
 
 Grammar Lens: back to the bending shape.
 [a table of 3 rows, read aloud]

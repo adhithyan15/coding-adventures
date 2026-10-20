@@ -14,7 +14,8 @@ romanization: "rāytā"
 concept_tag: UR-CHIZ200-RAYTA
 prerequisites: [UR-C200-qorma, UR-C200-achar]
 sounds: []
-roots: []
+roots: [indo-aryan-rajikatiktaka]
+etymology_hook: "rāytā ← *rājikātiktaka 'mustard pickle', a reconstructed form; a tadbhava (CDIAL 10689)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C200-achar]
 <!-- hl-knowledge: introduces=[UR-LEX-C200-CHIZ200-04]; assesses=[] -->
 
 **رائتہ** — *rāytā* — "raita".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رائتہ** (*rāytā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rājikātiktaka*, "mustard pickle", a form CDIAL reconstructs from its descendants (CDIAL 10689). It is built from *rājikā*, "mustard", and *tikta*, "bitter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

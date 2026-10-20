@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Not One, Not a Scrap",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:aa10db5a790d016d",
+  "sourceHash": "fnv1a64:84239c64c45c51bc",
   "lessons": [
     {
       "id": "GE-C32-kein",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c22061322ab1ee26",
+      "sourceHash": "fnv1a64:37b49dd6ad859dc6",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kein is Old High German nihein, which is ni (\"not\") plus ein (\"one\"). Not one. The ni- wore down to nothing over a thousand years and left the k that had crept in beside it, and the modern word no longer looks like its own parts."
+              "text": "kein comes from Old High German nihein, which is ni (\"not\") plus ein (\"one\"). Not one. The ni- wore down to nothing over a thousand years and left the k that had crept in beside it, and the modern word no longer looks like its own parts."
             },
             {
               "kind": "speech",
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87d7051c8a4b8a17",
+      "sourceHash": "fnv1a64:9d0da765cfb246c8",
       "notice": null,
       "blocks": [
         {
@@ -263,6 +263,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "keine is a form of kein, which grew from Old High German nihein, \"not one\": a negative fused onto the word for \"one\", later worn down to kein."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one word cancels the whole family",
           "segments": [
@@ -285,7 +296,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -361,7 +372,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -392,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0f00c13e8901699",
+      "sourceHash": "fnv1a64:b4be51ed025fd18d",
       "notice": null,
       "blocks": [
         {
@@ -433,6 +444,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "keinen is a form of kein, which grew from Old High German nihein, \"not one\": the word for \"one\" with a negative fused on the front."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: three shapes, and the one that moves",
           "segments": [
@@ -466,7 +488,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -533,7 +555,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

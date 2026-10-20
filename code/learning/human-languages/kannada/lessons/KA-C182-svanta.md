@@ -14,7 +14,8 @@ romanization: "svanta"
 concept_tag: KA-GUNA182-SVANTA
 prerequisites: [KA-C182-koleta, KA-C182-magida]
 sounds: []
-roots: []
+roots: [sanskrit-sva]
+etymology_hook: "svanta: usually traced to Sanskrit sva 'own'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C182-magida]
 <!-- hl-knowledge: introduces=[KA-LEX-C182-GUNA182-05]; assesses=[] -->
 
 **ಸ್ವಂತ** — *svanta* — "one's own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ವಂತ** (*svanta*) is usually traced to Sanskrit *sva*, "one's own" (CDIAL 13893), but no source settles the form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

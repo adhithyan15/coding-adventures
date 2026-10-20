@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 95,
-  "sourceHash": "fnv1a64:955fc50786f0d9d7",
+  "sourceHash": "fnv1a64:6132383de4d8c0ee",
   "lessonIds": [
     "PT-C95-toalha",
     "PT-C95-sabonete",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch95.txt",
   "json": "portuguese/narration/ch95.json",
-  "textHash": "fnv1a64:ed191ada60628e4e",
-  "jsonHash": "fnv1a64:a769f2468350571e",
+  "textHash": "fnv1a64:9a23f0500d1fd15c",
+  "jsonHash": "fnv1a64:d4efbe73d4e76734",
   "findings": []
 }

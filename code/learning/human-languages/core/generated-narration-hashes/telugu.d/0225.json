@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 225,
-  "sourceHash": "fnv1a64:2d646b5caca84ddb",
+  "sourceHash": "fnv1a64:5f1678b3b4c8a540",
   "lessonIds": [
     "TE-C225-akukura",
     "TE-C225-palakura",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch225.txt",
   "json": "telugu/narration/ch225.json",
-  "textHash": "fnv1a64:e3c25f7dd908ecc8",
-  "jsonHash": "fnv1a64:a836982d4aa43eab",
+  "textHash": "fnv1a64:c3dd1e85f4f51d8b",
+  "jsonHash": "fnv1a64:0c10a4217b4a2a64",
   "findings": []
 }

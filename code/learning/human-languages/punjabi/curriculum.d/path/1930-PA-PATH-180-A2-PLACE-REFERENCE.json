@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-180-A2-PLACE-REFERENCE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-180-A2-PLACE-REFERENCE"
+  ],
+  "after": []
+}

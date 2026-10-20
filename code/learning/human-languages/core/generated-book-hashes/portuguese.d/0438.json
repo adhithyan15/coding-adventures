@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:6bbc0fad754171ef",
+  "lessonIds": [
+    "PT-C438-subida",
+    "PT-C438-descida",
+    "PT-C438-ladeira",
+    "PT-C438-ladear",
+    "PT-C438-desembocar"
+  ],
+  "tex": "portuguese/book/chapters/ch438-subir-e-descer.tex"
+}

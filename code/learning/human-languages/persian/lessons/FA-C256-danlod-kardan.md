@@ -14,7 +14,8 @@ romanization: "dânlod kardan"
 concept_tag: FA-VERB-DANLOD-KARDAN
 prerequisites: [FA-C255-gaz-gereftan, FA-C255-javidan]
 sounds: []
-roots: []
+roots: [english-download, pie-kwer]
+etymology_hook: "dânlod ← English download, + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C255-javidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C256-KONESH256-01]; assesses=[] -->
 
 **دانلود کردن** — *dânlod kardan* — "to download".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dânlod kardan* pairs *dânlod*, borrowed from English *download*, with the Persian verb *kardan*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

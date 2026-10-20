@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:5616bb333111ac42",
+  "lessonIds": [
+    "FR-C341-malentendu",
+    "FR-C341-clarifier",
+    "FR-C341-preciser",
+    "FR-C341-precision",
+    "FR-C341-eclaircir",
+    "FR-R341-revision-334-341"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch341.txt",
+  "json": "french/narration/ch341.json",
+  "textHash": "fnv1a64:9a2c9343fc89b5d5",
+  "jsonHash": "fnv1a64:ff855737da30821e",
+  "findings": []
+}

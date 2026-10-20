@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:b6d4fb94af652318",
+  "lessonIds": [
+    "FR-C506-match-nul",
+    "FR-C506-classement",
+    "FR-C506-eliminer",
+    "FR-C506-qualifier",
+    "FR-C506-vainqueur"
+  ],
+  "tex": "french/book/chapters/ch506-le-resultat.tex"
+}

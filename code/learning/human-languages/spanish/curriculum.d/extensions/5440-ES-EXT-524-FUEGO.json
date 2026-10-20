@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-524-FUEGO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a fire: what burned, the alarm, and the people who were evacuated.",
+  "prerequisites": []
+}

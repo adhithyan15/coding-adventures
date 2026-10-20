@@ -11,8 +11,8 @@ gloss: in agreement, of one mind — the word that lets a learner agree, and, wi
 concept_tag: BN-FUNC-AGREE
 prerequisites: [BN-C18-kintu, BN-C16-noy, BN-C06-numbers-1-5]
 sounds: []
-roots: []
-etymology_hook: "একমত is এক ('one') plus মত ('opinion, view'), a Sanskrit compound the reader can take apart with vocabulary already in the book: the numeral was taught in chapter twelve, and the shape 'one-minded' is the same one English reaches for in unanimous, from Latin unus animus"
+roots: [sanskrit-eka, sanskrit-mata]
+etymology_hook: "একমত: Sanskrit ēka 'one' (CDIAL 2462) + mata 'opinion', a tatsama; English unanimous is 'one-minded' too"
 duration:
   max_seconds: 235
 requires:
@@ -49,6 +49,11 @@ It does not say *I agree*, and nothing else here does either.
 The word is two words: **এক**, "one", which chapter twelve counted, and **মত**,
 "opinion". *Of one mind.* English builds the same picture out of Latin when it
 says *unanimous* — *ūnus animus*, one spirit.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ek* goes back to Sanskrit *ēka*, "one" (CDIAL 2462), and *môt* is Sanskrit *mata*, "opinion", taken over whole as a tatsama.
 
 ## Grammar Lens: agreeing needs no verb, and disagreeing needs no new word
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C18-EKMOT-01, BN-GRAMMAR-C16-NOY-01, BN-LEX-C18-KINTU-01] -->

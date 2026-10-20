@@ -13,7 +13,8 @@ gloss: "next to"
 concept_tag: PT-LUGARES89-AO-LADO
 prerequisites: [PT-C89-em-frente, PT-C89-atras]
 sounds: []
-roots: []
+roots: [latus-latin]
+etymology_hook: "ao lado: lado ← Latin latus 'side' — English lateral shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C89-atras]
 <!-- hl-knowledge: introduces=[PT-LEX-C89-LUGARES89-03]; assesses=[] -->
 
 **ao lado** — "next to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ao lado** is "at the side": *ao* is *a* + *o*, and *lado* ← Latin *latus*, "side" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

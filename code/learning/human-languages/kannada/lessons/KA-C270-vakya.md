@@ -14,7 +14,8 @@ romanization: "vākya"
 concept_tag: KA-KELASA270-VAKYA
 prerequisites: [KA-C270-bhugola, KA-C270-pada]
 sounds: []
-roots: []
+roots: [sanskrit-vakya]
+etymology_hook: "vākya ← Sanskrit vākya 'speech, words', a tatsama (CDIAL 11468)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C270-pada]
 <!-- hl-knowledge: introduces=[KA-LEX-C270-KELASA270-03]; assesses=[] -->
 
 **ವಾಕ್ಯ** — *vākya* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾಕ್ಯ** (*vākya*) is Sanskrit *vākya*, "speech, words", taken over whole as a learned loan, a tatsama (CDIAL 11468).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

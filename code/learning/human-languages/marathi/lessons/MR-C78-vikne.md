@@ -14,7 +14,8 @@ romanization: "vikṇe"
 concept_tag: MR-VERB-VIKNE
 prerequisites: [MR-C78-dhavne, MR-C78-khelne]
 sounds: []
-roots: []
+roots: [sanskrit-vikriyate]
+etymology_hook: "vikṇe ← Sanskrit vikrīyate 'is sold', a tadbhava (CDIAL 11642)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C78-khelne]
 <!-- hl-knowledge: introduces=[MR-LEX-C78-VERBS78-03]; assesses=[] -->
 
 **विकणे** — *vikṇe* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विकणे** (*vikṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vikrīyate*, "is sold" (CDIAL 11642). CDIAL notes that the Marathi verb moved from "to be sold" to "to sell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

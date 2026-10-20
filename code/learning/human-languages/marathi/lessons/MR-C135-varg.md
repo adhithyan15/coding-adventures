@@ -14,7 +14,8 @@ romanization: "varg"
 concept_tag: MR-THINGS135-VARG
 prerequisites: [MR-C135-daptar, MR-C135-pariksa]
 sounds: []
-roots: []
+roots: [sanskrit-varga]
+etymology_hook: "varg ← Sanskrit varga 'class, group', a tatsama (CDIAL 11331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C135-pariksa]
 <!-- hl-knowledge: introduces=[MR-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **वर्ग** — *varg* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वर्ग** (*varg*) is Sanskrit *varga*, "class, group", taken over whole as a learned loan, a tatsama (CDIAL 11331).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

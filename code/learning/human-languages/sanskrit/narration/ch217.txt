@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for wise, then the Sanskrit for intelligent
 You'll want to know: रक्तः.
 रक्तः — raktaḥ — "red".
 
+The word, taken apart.
+rakta is the past participle of the root √rañj, "to be coloured, dyed" (MW): "dyed", then "red", then "blood" (CDIAL 10539). It lives on as Hindi rātā, "dyed, red".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for intelligent, then the Sanskrit for red.
 
 You'll want to know: अरुणः.
 अरुणः — aruṇaḥ — "reddish, dawn-red".
+
+The word, taken apart.
+aruṇa is the Rigvedic colour of dawn, "reddish, tawny" (CDIAL 616). MW takes it from the root √ṛ, while CDIAL suggests, with a question mark, a stem aru-, so the derivation is not settled. Hindi keeps it as arun.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for red, then the Sanskrit for reddish.
 You'll want to know: कपिलः.
 कपिलः — kapilaḥ — "tawny, brown".
 
+The word, taken apart.
+kapila is a Rigvedic colour word, "brown, tawny, reddish" (CDIAL 2750). MW says it is more probably connected with kapi, "monkey": monkey-coloured. Gujarati koḷũ, "reddish brown", comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for reddish, then the Sanskrit for tawny.
 You'll want to know: समः.
 समः — samaḥ — "equal, even".
 
+The word, taken apart.
+sama is an inherited Indo-European word for "equal, level" (CDIAL 13173). MW compares Greek homos, Latin similis and English same.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for tawny, then the Sanskrit for equal.
 
 You'll want to know: विषमः.
 विषमः — viṣamaḥ — "uneven, odd".
+
+The word, taken apart.
+viṣama is built on vi-, "apart", and sama, "even, equal" (MW): "uneven, unequal", and so "odd", "difficult" (CDIAL 11972). The s of sama turns to ṣ after vi-.
 
 What you've built.
 One more word for this chapter.

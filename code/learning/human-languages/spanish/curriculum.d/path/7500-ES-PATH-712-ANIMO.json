@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-712-ANIMO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-712-ANIMO"
+  ],
+  "after": []
+}

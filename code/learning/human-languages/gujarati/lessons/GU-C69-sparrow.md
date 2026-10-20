@@ -15,6 +15,7 @@ concept_tag: GU-SKY-SPARROW
 prerequisites: [GU-C69-parrot, GU-C69-peacock]
 sounds: []
 roots: []
+etymology_hook: "caklī 'sparrow': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C69-peacock]
 <!-- hl-knowledge: introduces=[GU-LEX-C69-SKY-04]; assesses=[] -->
 
 **ચકલી** (*caklī*) — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ચકલી** (*caklī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it lists other Gujarati bird words, such as *ciḍiyũ*, "bird", under Sanskrit *caṭaka*, "sparrow" (CDIAL 4571).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

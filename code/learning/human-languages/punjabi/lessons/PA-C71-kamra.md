@@ -14,7 +14,8 @@ romanization: "kamrā"
 concept_tag: PA-HOME71-KAMRA
 prerequisites: [PA-C70-darvaza, PA-C70-rasoi]
 sounds: []
-roots: []
+roots: [portuguese-camara]
+etymology_hook: "kamrā: usually traced to Portuguese câmara 'room', from Latin camera 'vaulted chamber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C70-rasoi]
 <!-- hl-knowledge: introduces=[PA-LEX-C71-HOME71-01]; assesses=[] -->
 
 **ਕਮਰਾ** — *kamrā* — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਮਰਾ** (*kamrā*) is a loan, usually traced to Portuguese *câmara*, "room", from Latin *camera*, "vaulted chamber".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

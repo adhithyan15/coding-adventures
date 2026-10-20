@@ -14,7 +14,8 @@ romanization: "tiraippaṭam"
 concept_tag: TA-PORUL220-TIRAIPPATAM
 prerequisites: [TA-C220-vanoli, TA-C220-nikalcci]
 sounds: []
-roots: []
+roots: [dravidian-tirai-curtain, sanskrit-pata]
+etymology_hook: "திரைப்படம் — native tirai 'screen' (DEDR 3244) + paṭam 'picture' ← Sanskrit paṭa (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C220-nikalcci]
 <!-- hl-knowledge: introduces=[TA-LEX-C220-PORUL220-05]; assesses=[] -->
 
 **திரைப்படம்** — *tiraippaṭam* — "a film, a movie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திரைப்படம்** (*tiraippaṭam*) is native *tirai*, "screen" (DEDR 3244), and *paṭam*, "picture", from Sanskrit *paṭa* (CDIAL 7692): "the screen picture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

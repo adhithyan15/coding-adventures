@@ -14,7 +14,8 @@ romanization: "het"
 concept_tag: MW-LIKE113-HET
 prerequisites: [MW-C113-pasand, MW-C113-sauk]
 sounds: []
-roots: []
+roots: [sanskrit-hita]
+etymology_hook: "het 'affection': not settled; often linked with Sanskrit hita 'kindly', in CDIAL only 'placed' (CDIAL 14091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C113-sauk]
 <!-- hl-knowledge: introduces=[MW-LEX-C113-LIKE113-04]; assesses=[] -->
 
 **हेत** — *het* — "affection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **हेत** (*het*) is not settled. It is often linked with Sanskrit *hita*, "beneficial, kindly", but CDIAL lists *hita* only in the sense "placed" (CDIAL 14091) and gives no Marwari or Hindi form like **हेत** (*het*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

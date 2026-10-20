@@ -14,7 +14,8 @@ romanization: "vṛttiḥ"
 concept_tag: SA-WRK170-VRTTIH
 prerequisites: [SA-C170-karma, SA-C170-udyogah]
 sounds: []
-roots: []
+roots: [sanskrit-vrtti-conduct]
+etymology_hook: "vṛtti 'mode of life, livelihood' ← √vṛt 'turn, proceed' (CDIAL 12070), cousin of Latin vertere (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C170-udyogah]
 <!-- hl-knowledge: introduces=[SA-LEX-C170-WRK170-04]; assesses=[] -->
 
 **वृत्तिः** — *vṛttiḥ* — "a livelihood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vṛtti* comes from the root √vṛt "turn, proceed, live" (CDIAL 12070): "the way one goes on", a mode of life, a livelihood. MW sets √vṛt beside Latin *vertere* "turn" and the English *-ward* of *toward*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

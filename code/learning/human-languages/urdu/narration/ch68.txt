@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a horse, then the Urdu for a cow.
 You'll want to know: بکری.
 بکری — bakrī — "a goat".
 
+The word, taken apart.
+بکری (bakrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from barkara, "kid, goat" (CDIAL 9153).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a cow, then the Urdu for a goat.
 
 You'll want to know: بھیڑ.
 بھیڑ — bheṛ — "a sheep".
+
+The word, taken apart.
+بھیڑ (bheṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bheḍra, "ram" (CDIAL 9606). CDIAL takes the word, after Przyluski, from an Austroasiatic language.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a goat, then the Urdu for a sheep.
 You'll want to know: پرندہ.
 پرندہ — parindā — "a bird".
 
+The word, taken apart.
+پرندہ (parindā) is a loan, usually traced to Persian parinda, "bird, a flying thing". It is built on parīdan, "to fly".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a sheep, then the Urdu for a bird.
 You'll want to know: چوہا.
 چوہا — chūhā — "a mouse".
 
+The word, taken apart.
+چوہا (chūhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cūha, "rat, mouse", a form CDIAL reconstructs from its descendants (CDIAL 4899).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a bird, then the Urdu for a mouse.
 
 You'll want to know: شیر.
 شیر — sher — "a lion, a tiger".
+
+The word, taken apart.
+شیر (sher) is a loan, usually traced to Persian sher, "lion, tiger".
 
 What you've built.
 One more word for this chapter.

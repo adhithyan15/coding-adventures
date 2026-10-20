@@ -14,7 +14,8 @@ romanization: "vēdika"
 concept_tag: TE-STHALAM255-VEDIKA
 prerequisites: [TE-C255-myuziyam, TE-C255-vyayamasala]
 sounds: []
-roots: []
+roots: [sanskrit-vedi]
+etymology_hook: "vēdika ← Sanskrit vēdikā 'raised piece of ground serving as an altar', a tatsama (CDIAL 12107)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C255-vyayamasala]
 <!-- hl-knowledge: introduces=[TE-LEX-C255-STHALAM255-03]; assesses=[] -->
 
 **వేదిక** — *vēdika* — "a stage, a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేదిక** (*vēdika*) is Sanskrit *vēdikā*, "raised piece of ground serving as an altar", taken over whole as a learned loan, a tatsama, with the final *-ā* shortened (CDIAL 12107).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

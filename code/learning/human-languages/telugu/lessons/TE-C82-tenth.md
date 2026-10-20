@@ -11,7 +11,8 @@ romanization: "padava"
 concept_tag: TE-ORDINAL-TENTH
 prerequisites: [TE-C82-ninth, TE-C81-fifth, TE-C70-spider, TE-C73-sweet, TE-C41-there, TE-C41-who]
 sounds: [telugu-da]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "padava: native padi 'ten' (DEDR 3918), one word with Tamil pattu, + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -56,6 +57,11 @@ That is the ten. Say them in order — *modaṭi, reṇḍava, mūḍava, nālug
 ārava, ēḍava, enimidava, tommidava, padava* — and count what you actually had to
 learn: **one word and one ending**. Latin needed ten separate words for the same
 stretch, and English still does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పదవ** (*padava*) is native Dravidian: *padi*, "ten", one word with Tamil *pattu* (DEDR 3918), with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C82-ORDINAL-05] -->

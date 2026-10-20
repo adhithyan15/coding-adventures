@@ -13,7 +13,8 @@ gloss: "an aeroplane"
 concept_tag: GE-STADT1-FLUGZEUG
 prerequisites: [GE-C96-markt, GE-C96-bahnhof]
 sounds: []
-roots: []
+roots: [germanic-fleugana]
+etymology_hook: "Flugzeug — the word for 'flight' + the word for 'gear, stuff': flying gear"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C96-bahnhof]
 <!-- hl-knowledge: introduces=[GE-LEX-C96-STADT1-04]; assesses=[] -->
 
 **das Flugzeug** — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Flugzeug** is built from the word for "flight", Old High German *flug* ← Proto-Germanic *\*flugiz*, and the word for "gear, stuff", Old High German *giziug* (EtymDB 2.1): a flying device.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

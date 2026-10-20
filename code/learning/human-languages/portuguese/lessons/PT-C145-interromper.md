@@ -13,7 +13,8 @@ gloss: "to interrupt"
 concept_tag: PT-VERB-INTERROMPER
 prerequisites: [PT-C145-perseguir, PT-C145-insistir]
 sounds: []
-roots: []
+roots: [rumpere-latin]
+etymology_hook: "interromper ← Latin interrumpere 'to break in between' — English interrupt"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C145-insistir]
 <!-- hl-knowledge: introduces=[PT-LEX-C145-VERBOS145-04]; assesses=[] -->
 
 **interromper** — "to interrupt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**interromper** ← Latin *interrumpere*, "to break in between" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

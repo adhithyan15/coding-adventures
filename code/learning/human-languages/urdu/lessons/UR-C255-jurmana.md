@@ -14,7 +14,8 @@ romanization: "jurmānā"
 concept_tag: UR-CHIZ255-JURMANA
 prerequisites: [UR-C255-pletfarm, UR-C255-traifik]
 sounds: []
-roots: []
+roots: [persian-jurmana, arabic-jurm]
+etymology_hook: "jurmānā: usually traced to Persian jurmāna 'a fine', built on Arabic jurm 'crime' (Lane, root j-r-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C255-traifik]
 <!-- hl-knowledge: introduces=[UR-LEX-C255-CHIZ255-03]; assesses=[] -->
 
 **جرمانہ** — *jurmānā* — "a penalty, a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جرمانہ** (*jurmānā*) is usually traced to Persian *jurmāna*, "a fine", built on Arabic *jurm*, "a crime, a sin" (Lane, root *j-r-m*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

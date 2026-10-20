@@ -13,7 +13,8 @@ gloss: "an example"
 concept_tag: IT-COSE252-ESEMPIO
 prerequisites: [IT-C251-fidanzato, IT-C252-differenza]
 sounds: []
-roots: []
+roots: [exemplum]
+etymology_hook: "esempio ← Latin exemplum 'a sample', a learned word; its spoken twin is scempio — English example"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C252-differenza]
 <!-- hl-knowledge: introduces=[IT-LEX-C252-COSE252-02]; assesses=[] -->
 
 **l'esempio** — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**esempio** ← Latin *exemplum*, "a sample, a model" — a learned borrowing. The same Latin word, passed down by speech in its sense "a warning example, a penalty", gave *scempio*, "havoc". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aciṅkamāṉa"
 concept_tag: TA-GUNAM212-ACINKAMANA
 prerequisites: [TA-C212-peruntanmaiyana, TA-C212-olukkamana]
 sounds: []
-roots: []
+roots: [tamil-asingam-ugly]
+etymology_hook: "அசிங்கமான — origin uncertain; aciṅkam 'ugliness' has no DEDR entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C212-olukkamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C212-GUNAM212-05]; assesses=[] -->
 
 **அசிங்கமான** — *aciṅkamāṉa* — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **அசிங்கமான** (*aciṅkamāṉa*) is uncertain. *Aciṅkam*, "ugliness", has no entry in DEDR, and its source is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

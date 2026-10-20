@@ -14,7 +14,8 @@ romanization: "likh dījie"
 concept_tag: HI-ASK-WRITE-DOWN
 prerequisites: [HI-C111-dikhaie, HI-C111-sunai]
 sounds: []
-roots: []
+roots: [sanskrit-likhati, sanskrit-dadati]
+etymology_hook: "likh ← Sanskrit likhati 'scratches, writes' (CDIAL 11048); dījie, from denā 'to give' (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C111-sunai]
 **लिख दीजिए** (*likh dījie*) — "please write it down (for me)".
 
 **लिखना** is "to write"; **दीजिए** adds "for me", as in **एक चाय दीजिए**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लिख दीजिए** (*likh dījie*) is *likh*, "write", from Sanskrit *likhati*, "scratches, writes" (CDIAL 11048), with *dījie*, the respectful command of *denā*, "to give" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

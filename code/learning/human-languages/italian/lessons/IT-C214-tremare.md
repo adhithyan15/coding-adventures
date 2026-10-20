@@ -13,7 +13,8 @@ gloss: "to tremble"
 concept_tag: IT-VERB-TREMARE
 prerequisites: [IT-C214-suggerire, IT-C214-tossire]
 sounds: []
-roots: []
+roots: [tremere-latin]
+etymology_hook: "tremare ← Vulgar Latin tremare — English tremble is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C214-tossire]
 <!-- hl-knowledge: introduces=[IT-LEX-C214-VERBI214-03]; assesses=[] -->
 
 **tremare** — "to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tremare** ← Vulgar Latin *tremare*, "to tremble" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

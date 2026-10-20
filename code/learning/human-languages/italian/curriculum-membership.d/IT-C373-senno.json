@@ -1,0 +1,11 @@
+{
+  "id": "IT-C373-senno",
+  "pathSegment": "IT-PATH-373-PURCHE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-373-PURCHE",
+      "order": 3
+    }
+  ]
+}

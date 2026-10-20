@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a neighbour, then the Urdu for a guest.
 You'll want to know: استاد.
 استاد — ustād — "a teacher".
 
+The word, taken apart.
+استاد (ustād) is a loan, usually traced to Persian ustād, "master, teacher".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a guest, then the Urdu for a teacher.
 
 You'll want to know: کھانا.
 کھانا — khānā — "to eat; food".
+
+The word, taken apart.
+کھانا (khānā) is two inherited words that met in one shape. The verb "to eat" comes from Sanskrit khādati, "chews, eats" (CDIAL 3865), and the noun "food" from khādana, "eating, food" (CDIAL 3867).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a teacher, then the Urdu for to eat; food.
 You'll want to know: پینا.
 پینا — pīnā — "to drink".
 
+The word, taken apart.
+پینا (pīnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pibati, "drinks" (CDIAL 8209).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to eat; food, then the Urdu for to drink.
 You'll want to know: دیکھنا.
 دیکھنا — dekhnā — "to see, to look".
 
+The word, taken apart.
+دیکھنا (dekhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dekṣati, "sees", a form CDIAL reconstructs from its descendants (CDIAL 6507). It is a variant CDIAL reconstructs beside dṛkṣati.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to drink, then the Urdu for to see.
 
 You'll want to know: سننا.
 سننا — sunnā — "to hear, to listen".
+
+The word, taken apart.
+سننا (sunnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛṇoti, "hears" (CDIAL 12598).
 
 What you've built.
 One more word for this chapter.

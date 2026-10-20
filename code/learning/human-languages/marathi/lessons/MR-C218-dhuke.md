@@ -15,6 +15,7 @@ concept_tag: MR-VASTU218-DHUKE
 prerequisites: [MR-C218-mhais, MR-C218-bakri]
 sounds: []
 roots: []
+etymology_hook: "dhuke 'fog': origin not settled; CDIAL has dhumẽ 'fog' under dhūmra 'smoke-coloured' (CDIAL 6861), but no dhuke"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C218-bakri]
 <!-- hl-knowledge: introduces=[MR-LEX-C218-VASTU218-04]; assesses=[] -->
 
 **धुके** — *dhuke* — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **धुके** (*dhuke*) is not settled. CDIAL lists a Marathi *dhumẽ*, "fog", under Sanskrit *dhūmra*, "smoke-coloured" (CDIAL 6861), but has no entry for **धुके**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

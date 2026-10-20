@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 127,
-  "sourceHash": "fnv1a64:4aadf1685d8d7590",
+  "sourceHash": "fnv1a64:0fdabf0e1f52c1f3",
   "lessonIds": [
     "MW-C127-khilo",
     "MW-C127-hathoro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch127.txt",
   "json": "marwadi/narration/ch127.json",
-  "textHash": "fnv1a64:04938add6d746b17",
-  "jsonHash": "fnv1a64:4018fa8ec09fe6e3",
+  "textHash": "fnv1a64:cd35955cad174102",
+  "jsonHash": "fnv1a64:150a031c3e04abfc",
   "findings": []
 }

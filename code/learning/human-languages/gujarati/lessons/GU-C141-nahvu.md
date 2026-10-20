@@ -14,7 +14,8 @@ romanization: "nāhvũ"
 concept_tag: GU-VERB-NAHVU
 prerequisites: [GU-C140-phekvu, GU-C141-jagvu]
 sounds: []
-roots: []
+roots: [sanskrit-snati]
+etymology_hook: "nāhvũ ← Sanskrit snāti 'bathes', a tadbhava (CDIAL 13786)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C141-jagvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C141-ACT141-02]; assesses=[] -->
 
 **નાહવું** (*nāhvũ*) — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નાહવું** (*nāhvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *snāti*, "bathes" (CDIAL 13786).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

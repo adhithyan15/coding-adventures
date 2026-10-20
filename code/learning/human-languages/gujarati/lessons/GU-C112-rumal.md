@@ -14,7 +14,8 @@ romanization: "rūmāl"
 concept_tag: GU-THINGS112-RUMAL
 prerequisites: [GU-C112-but, GU-C112-patto]
 sounds: []
-roots: []
+roots: [persian-rumal]
+etymology_hook: "rūmāl: usually traced to Persian rūmāl 'handkerchief'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C112-patto]
 <!-- hl-knowledge: introduces=[GU-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **રૂમાલ** (*rūmāl*) — "a handkerchief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રૂમાલ** (*rūmāl*) is a loan, usually traced to Persian *rūmāl*, "handkerchief".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,9 +10,9 @@ gloss: of the, from the — the second and last of Spanish's forced contractions
 concept_tag: ES-CONTRACTION-DEL
 prerequisites: [ES-C61-al]
 sounds: []
-roots: []
+roots: [de-latin, ille]
 teaches_cells: []
-etymology_hook: "de + el squeezes exactly as a + el does, and then the list stops: Spanish has two obligatory contractions and no others, which is a rare thing to be able to say about a grammar rule"
+etymology_hook: "del — de 'of, from' (Latin de) + el 'the' (Latin ille), squeezed into one word"
 duration:
   max_seconds: 265
 requires:
@@ -49,6 +49,11 @@ chapter forty-eight.
 [PAUSE 2s] Same rule, same force. And notice what *del* is doing in that
 phrase: Spanish has no apostrophe-s, so *of the* is how it says whose something
 is. *Del profesor* — of the teacher.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**del** is two Latin words: *de*, "from, down from", which Latin already had, and *el*, from *ille*, "that one".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-CONTRACTION-ONLY-TWO]; assesses=[ES-GRAMMAR-CONTRACTION-OBLIGATORY] -->

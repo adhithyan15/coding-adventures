@@ -13,7 +13,8 @@ gloss: "to be missing, to fail"
 concept_tag: LA-VERB-DESUM
 prerequisites: [LA-C231-fingo, LA-C231-queror]
 sounds: []
-roots: []
+roots: [desum-latin, esse-latin]
+etymology_hook: "dēsum 'to be missing' — dē 'away' + sum 'to be'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C231-queror]
 <!-- hl-knowledge: introduces=[LA-LEX-C231-ACT231-05]; assesses=[] -->
 
 **dēsum, deesse** — "to be missing, to fail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēsum** is *dē*, "away from", with *sum*, "to be": to be away, to be missing. *Sum* is inherited from Proto-Indo-European *\*h₁es-*, "to be" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 58,
-  "sourceHash": "fnv1a64:c9450161563d94d8",
+  "sourceHash": "fnv1a64:2d411abd72e94eba",
   "lessonIds": [
     "AR-C58-qama",
     "AR-C58-masha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch58.txt",
   "json": "arabic/narration/ch58.json",
-  "textHash": "fnv1a64:b1ad9c79e8231e2f",
-  "jsonHash": "fnv1a64:da9e622c5a508782",
+  "textHash": "fnv1a64:48f1031c848e5d70",
+  "jsonHash": "fnv1a64:038842ffe04c8a12",
   "findings": []
 }

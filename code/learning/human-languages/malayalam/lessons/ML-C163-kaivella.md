@@ -14,7 +14,8 @@ romanization: "kaiveḷḷa"
 concept_tag: ML-THINGS163-KAIVELLA
 prerequisites: [ML-C162-munna, ML-C163-purikam, ML-C24-rathri]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, dravidian-vel-white]
+etymology_hook: "kaiveḷḷa: native Dravidian, 'the hand's white': kai (DEDR 2023) + veḷḷa 'white' (DEDR 5496)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C163-purikam]
 <!-- hl-knowledge: introduces=[ML-LEX-C163-THINGS163-02]; assesses=[] -->
 
 **കൈവെള്ള** — *kaiveḷḷa* — "a palm (of the hand)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൈവെള്ള** (*kaiveḷḷa*) is native Dravidian, "the white of the hand": *kai*, "hand" (DEDR 2023), and *veḷḷa*, "white" (DEDR 5496, with Tamil *veḷ*). The palm is the paler side of the hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

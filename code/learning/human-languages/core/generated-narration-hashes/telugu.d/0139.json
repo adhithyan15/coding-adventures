@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 139,
-  "sourceHash": "fnv1a64:21248bbc6ce6701c",
+  "sourceHash": "fnv1a64:c80d87e1d7ad6259",
   "lessonIds": [
     "TE-C139-tadi",
     "TE-C139-podi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch139.txt",
   "json": "telugu/narration/ch139.json",
-  "textHash": "fnv1a64:effd47eff605d194",
-  "jsonHash": "fnv1a64:7b09bb0fe8ecbf47",
+  "textHash": "fnv1a64:764193b4f7b9d1ce",
+  "jsonHash": "fnv1a64:e04e13dcbe6684fa",
   "findings": []
 }

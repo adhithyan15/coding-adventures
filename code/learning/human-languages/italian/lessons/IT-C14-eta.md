@@ -35,7 +35,7 @@ reviews_of: [IT-C14-avere, IT-C12-numeri-17-20, IT-C09-mesi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Italian states age with **avere**, not *essere*. And the silent **h**
+[PAUSE 2s] Italian states age with **avere**, "to have," not with a be-verb. And the silent **h**
 from last lesson stops being trivia here — it becomes the difference between two
 real sentences.
 
@@ -45,7 +45,7 @@ real sentences.
 > **Quanti anni hai?** — "How many years do you **have**?"
 > **Ho venti anni.** — "I **have** twenty years."
 
-*Essere* is wrong here. *Sono venti anni* does not mean "I am twenty."
+A be-verb is wrong here. Italian does not say "I am twenty"; it says "I have twenty."
 
 ## The word, taken apart: anno
 <!-- hl-knowledge: introduces=[IT-ETYMON-ETA-03]; assesses=[] -->
@@ -83,7 +83,7 @@ precisely why Italian kept a letter it never pronounces.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-GRAMMAR-NUMERI-17-20-02, IT-NOTICE-NUMERI-17-20-03, IT-LEX-ETA-02, IT-ETYMON-ETA-03, IT-GRAMMAR-ETA-04] -->
 
-[PAUSE 3s] Which verb does Italian use for age? (***Avere***, never *essere*.)
+[PAUSE 3s] Which verb does Italian use for age? (***Avere***, never a be-verb.)
 What does *ho venti anni* literally say? ("I **have** twenty years.") Where does
 *anno* come from? (Latin ***annus*** → *annual/anniversary*.) What separates
 *hanno* from *anno*? (**Only the silent h** — they sound identical.)

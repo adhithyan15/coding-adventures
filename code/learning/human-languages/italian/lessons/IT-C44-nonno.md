@@ -13,7 +13,8 @@ gloss: "a grandfather"
 concept_tag: IT-FAMIGLIA1-NONNO
 prerequisites: [IT-C44-figlio, IT-C44-figlia]
 sounds: []
-roots: []
+roots: [nonnus-latin]
+etymology_hook: "nonno ← Late Latin nonnus 'monk, tutor, old man' — the male twin of nonna"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C44-figlia]
 <!-- hl-knowledge: introduces=[IT-LEX-C44-FAMIGLIA1-03]; assesses=[] -->
 
 **il nonno** — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nonno** ← Late Latin *nonnus*, "monk; tutor; an old man" — inherited. EtymDB 2.1 has no row for *nonno*; it derives Venetian *nono*, "grandfather", from *nonnus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

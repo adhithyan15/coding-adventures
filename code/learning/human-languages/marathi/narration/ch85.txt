@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to fall, then the Marathi for meat.
 You'll want to know: मासा.
 मासा — māsā — "a fish".
 
+The word, taken apart.
+मासा (māsā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsya, "fish" (CDIAL 9758).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for meat, then the Marathi for a fish.
 
 You'll want to know: भात.
 भात — bhāt — "cooked rice".
+
+The word, taken apart.
+भात (bhāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhakta, "meal, food; boiled rice" (CDIAL 9331). It is the past participle of bhaj, "to share out": a portion.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a fish, then the Marathi for cooked rice
 You'll want to know: डाळ.
 डाळ — ḍāḷ — "lentils".
 
+The word, taken apart.
+डाळ (ḍāḷ) is a tadbhava of Sanskrit dāla, "a kind of grain, split peas" (CDIAL 6309). CDIAL asks whether it is the same word as dāla, "tearing, splitting".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for cooked rice, then the Marathi for lentil
 You'll want to know: फळ.
 फळ — phaḷ — "a fruit".
 
+The word, taken apart.
+फळ (phaḷ) is a tadbhava of Sanskrit phala, "fruit" (CDIAL 9051). CDIAL compares Tamil paṛam, "ripe fruit", and Telugu paṇḍu, "to ripen".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for lentils, then the Marathi for a fruit.
 
 You'll want to know: सफरचंद.
 सफरचंद — safarchand — "an apple".
+
+The word, taken apart.
+The origin of सफरचंद (safarchand) is not settled. It is often linked with Persian safarjal, "quince", from Arabic, but CDIAL has no entry for it and no source here confirms the link.
 
 What you've built.
 One more word for this chapter.

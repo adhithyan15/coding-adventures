@@ -13,7 +13,8 @@ gloss: "an accountant"
 concept_tag: IT-COSE195-COMMERCIALISTA
 prerequisites: [IT-C194-romanzo, IT-C195-pilota]
 sounds: []
-roots: []
+roots: [commercium-latin]
+etymology_hook: "commercialista — from commercio 'trade' ← Latin commercium, com- + merx 'goods'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C195-pilota]
 <!-- hl-knowledge: introduces=[IT-LEX-C195-COSE195-02]; assesses=[] -->
 
 **il commercialista** — "an accountant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commercialista** — built from *commerciale*, "of trade", with *-ista*. *commercio*, "trade" ← Latin *commercium*, from *com-*, "with", and *merx*, "goods". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

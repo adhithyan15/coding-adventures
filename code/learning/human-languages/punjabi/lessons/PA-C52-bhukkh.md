@@ -14,7 +14,8 @@ romanization: "bhukkh"
 concept_tag: PA-HEALTH52-BHUKKH
 prerequisites: [PA-C52-davai, PA-C52-pias]
 sounds: []
-roots: []
+roots: [sanskrit-bubhuksha]
+etymology_hook: "bhukkh ← Sanskrit bubhukṣā 'desire to eat, hunger', a tadbhava (CDIAL 9286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C52-pias]
 <!-- hl-knowledge: introduces=[PA-LEX-C52-HEALTH52-04]; assesses=[] -->
 
 **ਭੁੱਖ** — *bhukkh* — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭੁੱਖ** (*bhukkh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bubhukṣā*, "desire to eat, hunger" (CDIAL 9286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

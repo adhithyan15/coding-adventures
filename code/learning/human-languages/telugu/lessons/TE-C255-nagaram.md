@@ -14,7 +14,8 @@ romanization: "nagaraṁ"
 concept_tag: TE-STHALAM255-NAGARAM
 prerequisites: [TE-C255-vyayamasala, TE-C255-vedika]
 sounds: []
-roots: []
+roots: [sanskrit-nagara]
+etymology_hook: "nagaraṁ ← Sanskrit nagara 'town', a tatsama (CDIAL 6924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C255-vedika]
 <!-- hl-knowledge: introduces=[TE-LEX-C255-STHALAM255-04]; assesses=[] -->
 
 **నగరం** — *nagaraṁ* — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నగరం** (*nagaraṁ*) is Sanskrit *nagara*, "town", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 6924). DEDR 3568 compares Tamil *nakar*, "house, town", with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ gloss: small — the opposite of मोठा, and an adjective that refuses to 
 concept_tag: MR-LEX-LAHAAN
 prerequisites: [MR-R49-big, MR-C24-mhanne]
 sounds: [inherent-a, matra-aa]
-roots: [sanskrit-laghu]
+roots: [sanskrit-shlakshna]
+etymology_hook: "lahān ← Sanskrit ślakṣṇa 'smooth, soft', in the word-lists 'thin, small'; a tadbhava (CDIAL 12732)"
 duration:
   max_seconds: 220
 requires:
@@ -58,10 +59,7 @@ It also does the work English splits between *small* and *young*: **लहान
 is a younger brother, not a short one. Marathi treats age and size as the same
 scale for people.
 
-Its history is a good one. Sanskrit **लघु** (*laghu*) meant "**light, slight,
-small**" — the same ancient word as Latin *levis* and English *light*. The
-Marathi form wore **लघु** down to **लहान** over two thousand years, and the
-meaning barely moved.
+Its history is a good one. CDIAL traces **लहान** not to **लघु** (*laghu*, "light") but to Sanskrit *ślakṣṇa*, "smooth, soft, tender", which the old word-lists also gloss "thin, small" (CDIAL 12732). Two thousand years wore it down to **लहान**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-LAHAAN, MR-LEX-MOTHA, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-KHOLI, MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN] -->

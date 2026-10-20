@@ -14,7 +14,8 @@ romanization: "thaṇḍ"
 concept_tag: MR-ADJ104-THAND
 prerequisites: [MR-C103-vait, MR-C104-garam]
 sounds: []
-roots: []
+roots: [sanskrit-stabdha]
+etymology_hook: "thaṇḍ: CDIAL lists it under Sanskrit stabdha 'stiff, solidified', via *thaṇḍha (CDIAL 13676); DEDR compares Ta. taṇ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C104-garam]
 <!-- hl-knowledge: introduces=[MR-LEX-C104-ADJ104-02]; assesses=[] -->
 
 **थंड** — *thaṇḍ* — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थंड** (*thaṇḍ*) is inherited. CDIAL lists it under Sanskrit *stabdha*, "stiff; solidified (as water)", through a form *\*thaṇḍha*, which it says was influenced by another word (CDIAL 13676). DEDR compares Tamil *taṇ*, "cold, cool" (DEDR 3045).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

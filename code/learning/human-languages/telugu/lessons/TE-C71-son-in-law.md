@@ -11,7 +11,8 @@ romanization: "alluḍu"
 concept_tag: TE-NOUN-SON-IN-LAW
 prerequisites: [TE-C71-sister-in-law]
 sounds: []
-roots: []
+roots: [dravidian-aliya-soninlaw]
+etymology_hook: "alluḍu: native Dravidian, one word with Kannada aḷiya and Malayalam aḷiyan (DEDR 2410)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C71-sister-in-law]
 He is treated as a guest for life. An అల్లుడు on a visit is fed first, seated first and asked after first, and the household's own people wait their turn.
 
 Which is what the chapter has been building to: మామ, అత్త, బావ, మరదలు, అల్లుడు. Ask each of them how they are and you have done the whole visit properly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అల్లుడు** (*alluḍu*) is native Dravidian, one word with Kannada *aḷiya*, "son-in-law", and Malayalam *aḷiyan*, "wife's brother" (DEDR 2410).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

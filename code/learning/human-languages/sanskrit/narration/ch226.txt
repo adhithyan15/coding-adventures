@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a bower, then the Sanskrit for a meadow
 You'll want to know: ग्रहः.
 ग्रहः — grahaḥ — "a planet".
 
+The word, taken apart.
+graha is built on the root √grah, "to seize" (MW), which you met in gṛhṇāti: a planet is a "seizer", believed to grip people's fortunes. In the Rigveda it means "as much as can be taken" (CDIAL 4363), and Punjabi garauh is "the influence of the planets".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a meadow, then the Sanskrit for a plane
 
 You'll want to know: धूमकेतुः.
 धूमकेतुः — dhūmaketuḥ — "a comet".
+
+The word, taken apart.
+dhūmaketu is a compound of dhūma, "smoke", and ketu, "bright sign, banner" (MW): a star with a banner of smoke. MW compares dhūma with Latin fūmus, "smoke", and dhūma lives on as the Hindi word for smoke (CDIAL 6849).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a planet, then the Sanskrit for a comet
 You'll want to know: पशुः.
 पशुः — paśuḥ — "an animal".
 
+The word, taken apart.
+paśu is a Rigvedic word for a domestic or sacrificial animal (CDIAL 7984). It is inherited from Indo-European: MW compares Latin pecu, "cattle", and English fee, from the time when wealth was counted in livestock. Hindi pasū means "animal".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a comet, then the Sanskrit for an anima
 You'll want to know: जन्तुः.
 जन्तुः — jantuḥ — "a creature".
 
+The word, taken apart.
+jantu is built on the root √jan, "to be born, beget" (MW): first "offspring", then any creature (CDIAL 5110). MW compares √jan with Latin gignere, "to beget", and Greek gignomai, "I become".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for an animal, then the Sanskrit for a crea
 
 You'll want to know: पक्षी.
 पक्षी — pakṣī — "a winged creature, a bird".
+
+The word, taken apart.
+pakṣī is the nominative of pakṣin, "winged", built on pakṣa, "wing", with -in, "having" (MW): a bird is the winged one. It lives on as Gujarati and Punjabi paṅkhī, "bird" (CDIAL 7636).
 
 What you've built.
 One more word for this chapter.

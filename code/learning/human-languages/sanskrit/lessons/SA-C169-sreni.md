@@ -14,7 +14,8 @@ romanization: "śreṇī"
 concept_tag: SA-SCH169-SRENI
 prerequisites: [SA-C169-parinamah, SA-C169-ankah]
 sounds: []
-roots: []
+roots: [sanskrit-shreni]
+etymology_hook: "śreṇī 'line, row' (RV), which grammarians derive from √śri 'lean on' (MW; CDIAL 12718 queries it)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C169-ankah]
 <!-- hl-knowledge: introduces=[SA-LEX-C169-SCH169-03]; assesses=[] -->
 
 **श्रेणी** — *śreṇī* — "a row, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śreṇī*, also *śreṇi*, "a line, a row, a series" is old, in the Rigveda. The grammarians derive it from the root √śri "lean on, attach" (MW), and CDIAL 12718 suggests the same with a query, so its origin is not settled. "Grade" is its school use today.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

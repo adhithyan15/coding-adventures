@@ -51,10 +51,11 @@ a word far enough back that saying it is work.
 
 **sed** — "**but**."
 
-You have met it once already without being told. The *propediem tē vidēbō* lesson quoted Cicero's own
-letter: *"**Sed**, ut spērō, propediem tē vidēbō"* — "**But**, as I hope, I shall
-see you before long." That was a real sentence by a real Roman, and this is the
-word that opened it.
+You have met its sentence already. The *propediem tē vidēbō* lesson quoted Cicero's own
+letter, trimmed to *"…ut spērō, propediem tē vidēbō"*. In the letter the line opens
+with this word: *"**Sed**, ut spērō, propediem tē vidēbō"* — "**But**, as I hope, I
+shall see you before long." A real sentence by a real Roman, and now you have its
+first word too.
 
 **Sed** joins two statements and marks the second as a correction or a contrast:
 
@@ -64,6 +65,9 @@ Here is the strange part. *Sed* is one of the commonest words in surviving Latin
 prose and **not one Romance language kept it**. Spanish and Italian took *magis*
 ("more") for *mas* and *ma*; French took *mais* from the same *magis*; Portuguese
 *mas* likewise. A word Cicero could not write a page without vanished completely.
+
+Where *sed* came from is uncertain; Lewis & Short thinks it most likely an old
+ablative of the reflexive stem *se-*, "by itself, apart".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C48-DENY-01, LA-LEX-C48-DENY-02, LA-LEX-C48-DENY-03, LA-LEX-C48-DENY-04] -->

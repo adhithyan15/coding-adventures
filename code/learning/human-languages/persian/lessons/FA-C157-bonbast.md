@@ -14,7 +14,8 @@ romanization: "bonbast"
 concept_tag: FA-MAKAN157-BONBAST
 prerequisites: [FA-C156-qanat, FA-C156-dokkan]
 sounds: []
-roots: []
+roots: [persian-bastan]
+etymology_hook: "bonbast: Persian bon 'end' + bast 'closed' (bastan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C156-dokkan]
 <!-- hl-knowledge: introduces=[FA-LEX-C157-MAKAN157-01]; assesses=[] -->
 
 **بنبست** — *bonbast* — "a dead end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bonbast* is *bon*, "end, bottom", with *bast*, "closed" (from *bastan*, "to close"): a closed end. Both are native Persian; *bastan* is usually traced to Middle Persian *bastan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caṭṇī"
 concept_tag: MR-VASTU186-CATNI
 prerequisites: [MR-C185-spardha, MR-C186-papad]
 sounds: []
-roots: []
+roots: [indo-aryan-catt]
+etymology_hook: "caṭṇī: not in CDIAL; often tied to cāṭṇe 'to lick', which CDIAL lists under *caṭṭ 'lick' (CDIAL 4573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C186-papad]
 <!-- hl-knowledge: introduces=[MR-LEX-C186-VASTU186-02]; assesses=[] -->
 
 **चटणी** — *caṭṇī* — "a chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **चटणी** (*caṭṇī*). It is often tied to the verb "to lick", Hindi *cāṭnā*, which CDIAL lists under a reconstructed *\*caṭṭ-*, "lick, taste" (CDIAL 4573), but no source settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

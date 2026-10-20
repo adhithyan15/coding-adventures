@@ -14,7 +14,8 @@ romanization: "shemordan"
 concept_tag: FA-VERB-SHEMORDAN
 prerequisites: [FA-C38-avardan, FA-C38-ferestadan]
 sounds: []
-roots: []
+roots: [persian-shemordan]
+etymology_hook: "shemordan: inherited, usually traced to Middle Persian ōšmurdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C38-ferestadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C38-VERBS38-05]; assesses=[] -->
 
 **شمردن** — *shemordan* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shemordan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ōšmurdan*, "to count, to recite". EtymDB links it to the Indo-European root *\*(s)mer-*, "to remember".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

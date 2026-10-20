@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Afterwards, Monday, Tuesday, Thursday, Friday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c0f8ee90ee57c88",
+  "sourceHash": "fnv1a64:add3c01fb26d3443",
   "lessons": [
     {
       "id": "MW-C91-pachhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5940bef171d756b1",
+      "sourceHash": "fnv1a64:5427cccf92b9e41c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछै (pachhai) is a tadbhava, a word inherited and reshaped by sound change. It comes from paśca, \"hinder part\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari pāchaï under it (CDIAL 7990). CDIAL says this form was drawn from Sanskrit paścāt, \"behind, afterwards\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:947933d11e103b23",
+      "sourceHash": "fnv1a64:1cdd41030529db65",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सोमवार (somvār) is a Sanskrit compound, a tatsama: soma, \"the moon\" (CDIAL 13608), and vāra, \"day of the week\", whose inherited Old Marwari form is bāra, \"turn, time\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:518b5cca98a9704b",
+      "sourceHash": "fnv1a64:775e8a055c15d4aa",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मंगळवार (maṅgaḷvār) is a Sanskrit compound: maṅgala, \"the planet Mars\" (CDIAL 9706), and vāra, \"day of the week\" (CDIAL 11547). Marwadi says the l curled back."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b06c28b5c1cafcc",
+      "sourceHash": "fnv1a64:0913aa96715a6950",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुरुवार (guruvār) is a Sanskrit compound, a tatsama: guru, \"heavy\", also the name of the planet Jupiter (CDIAL 4209), and vāra, \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:511dcaf95fd3901e",
+      "sourceHash": "fnv1a64:7942b187cf7914a9",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुकरवार (sukarvār) is a Sanskrit compound, lightly reshaped, a semi-tatsama: śukra, \"bright\", also the planet Venus (CDIAL 12506), and vāra, \"day of the week\" (CDIAL 11547). Marwadi says the ś as s and splits the kr with a vowel."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

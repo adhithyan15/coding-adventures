@@ -1,0 +1,11 @@
+{
+  "id": "ES-C676-mirador",
+  "pathSegment": "ES-PATH-676-TURISMO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-676-TURISMO",
+      "order": 1
+    }
+  ]
+}

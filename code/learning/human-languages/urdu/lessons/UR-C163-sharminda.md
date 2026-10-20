@@ -14,7 +14,8 @@ romanization: "sharmindā"
 concept_tag: UR-SIFAT163-SHARMINDA
 prerequisites: [UR-C163-azad, UR-C163-pak]
 sounds: []
-roots: []
+roots: [persian-sharminda]
+etymology_hook: "sharmindā: usually traced to Persian sharminda 'ashamed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C163-pak]
 <!-- hl-knowledge: introduces=[UR-LEX-C163-SIFAT163-05]; assesses=[] -->
 
 **شرمندہ** — *sharmindā* — "embarrassed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرمندہ** (*sharmindā*) is a loan, usually traced to Persian *sharminda*, "ashamed". It is built on *sharm*, "shame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,5 +1,4 @@
-import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,10 +13,8 @@ import {
 import {
   defaultCurriculumRoot,
   loadAuthoredLanguageCurricula,
-  loadLanguageCurricula,
+  loadTrackLanguageCurriculum,
 } from "../src/loader.js";
-
-const DIGEST_DIR = fileURLToPath(new URL("./curriculum-digests/", import.meta.url));
 
 const roots: string[] = [];
 afterEach(() => {
@@ -66,57 +63,43 @@ function authored(): AuthoredLanguageCurriculum {
   };
 }
 
+const realRoot = defaultCurriculumRoot();
+const realTracks = readdirSync(realRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && (
+    existsSync(join(realRoot, entry.name, "curriculum.json")) ||
+    existsSync(join(realRoot, entry.name, "curriculum.d"))
+  ))
+  .map((entry) => entry.name)
+  .sort();
+
 describe("direct curriculum lesson owners", () => {
-  // ONE PIN PER TRACK, ONE FILE PER PIN (HL-C442).
-  //
-  // This used to pin a single SHA-256 and a single lesson count over the whole
-  // live graph. Both moved whenever ANY track gained a lesson, so every content
-  // PR on every track edited the same two lines and any two of them in flight
-  // conflicted -- the shared-hot-file problem HL21-HL40 removed everywhere else,
-  // still present in the test that guards that work. The history of every move
-  // (7204 -> 7572) lives in git, in this file's log.
-  //
-  // Now each track's own graph is pinned in `curriculum-digests/<track>.json`.
-  // A PR that adds Telugu lessons edits telugu.json and nothing else, and the
-  // diff of that file IS the attribution: which track moved, and by how many
-  // lessons. After a deliberate change, rewrite the pins with
-  //
-  //     UPDATE_CURRICULUM_DIGESTS=1 npx vitest run tests/curriculum-membership-shards.test.ts
-  //
-  // and say in the commit why the count moved. The set of pin files must equal
-  // the set of tracks, so a new or removed track cannot slip past either.
-  it("pins each track's curriculum graph in its own file", () => {
-    const curricula = loadLanguageCurricula(defaultCurriculumRoot());
-    const actual = new Map(
-      curricula.map((curriculum) => [
-        curriculum.language,
-        {
-          digest: createHash("sha256").update(JSON.stringify(curriculum)).digest("hex"),
-          lessons: curriculum.path.flatMap((path) => path.lessons).length,
-        },
-      ]),
-    );
-    if (process.env.UPDATE_CURRICULUM_DIGESTS === "1") {
-      mkdirSync(DIGEST_DIR, { recursive: true });
-      for (const name of readdirSync(DIGEST_DIR)) {
-        if (name.endsWith(".json") && !actual.has(name.slice(0, -".json".length))) {
-          rmSync(join(DIGEST_DIR, name));
-        }
-      }
-      for (const [language, pin] of actual) {
-        writeFileSync(join(DIGEST_DIR, `${language}.json`), `${JSON.stringify(pin, null, 2)}\n`);
-      }
-    }
-    const pinned = readdirSync(DIGEST_DIR)
-      .filter((name) => name.endsWith(".json"))
-      .map((name) => name.slice(0, -".json".length))
-      .sort();
-    expect(pinned).toEqual([...actual.keys()].sort());
-    for (const [language, pin] of actual) {
-      const expected = JSON.parse(readFileSync(join(DIGEST_DIR, `${language}.json`), "utf8"));
-      expect(pin, `${language}: rewrite curriculum-digests/${language}.json and say why it moved`)
-        .toEqual(expected);
-    }
+  // The canonical membership shards are already direct owners in git. A
+  // tracked hash of their assembled graph is derived state, and every lesson
+  // addition in one track used to rewrite that track's single aggregate pin.
+  // Prove the useful property directly instead: repeated assembly is stable,
+  // every loaded lesson is uniquely owned, and the loader's fail-closed checks
+  // below remain the authority for malformed ownership.
+  it("covers every real authored track", () => {
+    expect(realTracks.length).toBeGreaterThan(0);
+    expect(loadAuthoredLanguageCurricula(realRoot).map((track) => track.language))
+      .toEqual(realTracks);
+  });
+
+  for (const language of realTracks) {
+    it(`${language}: assembles deterministically from unique direct owners`, () => {
+      const first = loadTrackLanguageCurriculum(language, realRoot);
+      const second = loadTrackLanguageCurriculum(language, realRoot);
+      expect(first).toBeDefined();
+      expect(second).toEqual(first);
+      const lessons = first!.path.flatMap((path) => path.lessons);
+      expect(new Set(lessons).size, `${language}: duplicate lesson owner`)
+        .toBe(lessons.length);
+    });
+  }
+
+  it("does not reintroduce mutable whole-track digest snapshots", () => {
+    const retired = fileURLToPath(new URL("./curriculum-digests/", import.meta.url));
+    expect(existsSync(retired)).toBe(false);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {
@@ -141,6 +124,23 @@ describe("direct curriculum lesson owners", () => {
       }, null, 2)}\n`,
     );
     expect(readCurriculumMembershipOwners(root, "toy").owners).toHaveLength(1);
+  });
+
+  it("rejects a shard directory beside a direct owner before reading it", () => {
+    const root = fixture();
+    writeFileSync(
+      join(root, "toy", "curriculum-membership.d", "TOY-L1.json"),
+      `${JSON.stringify({
+        id: "TOY-L1",
+        pathSegment: "TOY-PATH-1",
+        pathOrder: 0,
+        extensions: [],
+      }, null, 2)}\n`,
+    );
+    mkdirSync(join(root, "toy", "curriculum-membership.d", "TOY-L1.d"));
+    expect(() => readCurriculumMembershipOwners(root, "toy")).toThrow(
+      /must be a real direct-child regular file/,
+    );
   });
 
   it("rejects aggregate lesson-array resurrection", () => {

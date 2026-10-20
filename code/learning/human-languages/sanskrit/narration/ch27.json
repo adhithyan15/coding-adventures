@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:de781f1e24db2537",
+  "sourceHash": "fnv1a64:33e5dbdead4970da",
   "lessons": [
     {
       "id": "SA-C27-so-be-it",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bca53d8fb497653c",
+      "sourceHash": "fnv1a64:43f8d602efbc5e6d",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Astu is the third-person command form of the root √as, \"to be\" (MW), the same root as asti. That root is inherited: MW compares Greek esti and Latin est."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -324,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9a6871dc578ecaf",
+      "sourceHash": "fnv1a64:0e14b45d538546f2",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +376,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sādhu is built on the root √sādh, \"to go straight to a goal, succeed\" (MW): first \"straight, hitting the mark\", then \"good\", and as a cry, \"well done\" (CDIAL 13337)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -375,7 +397,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -433,7 +455,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -464,7 +486,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90be21d3d551b9aa",
+      "sourceHash": "fnv1a64:d9f41b86144ce80d",
       "notice": null,
       "blocks": [
         {
@@ -499,23 +521,34 @@
             },
             {
               "kind": "speech",
-              "text": "Set beside it a small word you have not been given yet and will hear constantly — alam can also mean able, equal to the task. So the same two syllables cover \"that will do\" and \"that is up to it\", which is roughly the distance English travels between enough and sufficient. No secure cousin outside India, so this one sits with केशः."
+              "text": "Set beside it a small word you have not been given yet and will hear constantly — alam can also mean able, equal to the task. So the same two syllables cover \"that will do\" and \"that is up to it\", which is roughly the distance English travels between enough and sufficient. Its deeper history is not settled, so this one sits with केशः."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "A one-word answer, and a second word with no travel history."
+              "text": "Alam is the later form of Vedic aram, \"fittingly, enough\" (MW). MW sets Greek ara beside aram, but its deeper origin is not settled."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A one-word answer, and a second word with an unsettled history."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -573,7 +606,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -604,7 +637,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b92262c2a091758",
+      "sourceHash": "fnv1a64:31096909836e3c5f",
       "notice": null,
       "blocks": [
         {
@@ -645,6 +678,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Satya is built on sat, \"being, real\", the present participle of the root √as \"to be\" (MW). It lives on as Hindi saccā, \"true\" (CDIAL 13112)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -655,7 +699,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -713,7 +757,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -744,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8d53a37b3773549",
+      "sourceHash": "fnv1a64:577e45b7a641ef1d",
       "notice": null,
       "blocks": [
         {
@@ -785,6 +829,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Evam is an old adverb, built on the pronoun base e- and probably connected with eva, \"exactly so\" (MW, CDIAL 2527)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -795,7 +850,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -853,7 +908,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

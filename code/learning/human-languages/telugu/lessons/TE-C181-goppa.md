@@ -14,7 +14,8 @@ romanization: "goppa"
 concept_tag: TE-GUNAM181-GOPPA
 prerequisites: [TE-C180-gulabi-rangu, TE-C180-narinja-rangu]
 sounds: []
-roots: []
+roots: [telugu-goppa-great]
+etymology_hook: "goppa: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'great'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C180-narinja-rangu]
 <!-- hl-knowledge: introduces=[TE-LEX-C181-GUNAM181-01]; assesses=[] -->
 
 **గొప్ప** — *goppa* — "great, eminent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **గొప్ప** (*goppa*) is uncertain. DEDR and CDIAL list no word of this shape meaning "great".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

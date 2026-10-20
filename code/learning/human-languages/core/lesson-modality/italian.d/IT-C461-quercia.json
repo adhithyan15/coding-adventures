@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C461-quercia",
+    "language": "italian",
+    "chapter": 461,
+    "sequence": 25970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bdf5a87cfebd667"
+  },
+  "findings": []
+}

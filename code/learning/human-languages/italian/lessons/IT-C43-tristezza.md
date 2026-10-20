@@ -13,7 +13,8 @@ gloss: "sadness"
 concept_tag: IT-EMOZIONI-TRISTEZZA
 prerequisites: [IT-C43-paura, IT-C43-rabbia]
 sounds: []
-roots: []
+roots: [tristitia-latin]
+etymology_hook: "tristezza ← Latin tristitia 'sadness', from tristis 'sad'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C43-rabbia]
 <!-- hl-knowledge: introduces=[IT-LEX-C43-EMOZIONI-03]; assesses=[] -->
 
 **la tristezza** — "sadness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tristezza** ← Latin *tristitia*, "sadness", from *tristis*, "sad" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

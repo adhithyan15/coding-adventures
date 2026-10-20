@@ -15,6 +15,7 @@ concept_tag: MR-VASTU178-KAPPA
 prerequisites: [MR-C178-sajja, MR-C178-ghanta]
 sounds: []
 roots: []
+etymology_hook: "kappā 'compartment, shelf': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C178-ghanta]
 <!-- hl-knowledge: introduces=[MR-LEX-C178-VASTU178-05]; assesses=[] -->
 
 **कप्पा** — *kappā* — "a compartment, a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कप्पा** (*kappā*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

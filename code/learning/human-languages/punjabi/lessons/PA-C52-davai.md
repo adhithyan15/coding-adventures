@@ -14,7 +14,8 @@ romanization: "davāī"
 concept_tag: PA-HEALTH52-DAVAI
 prerequisites: [PA-C51-bimar, PA-C52-darad]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "davāī: built on davā ← Arabic dawāʾ 'remedy, medicine', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C52-darad]
 <!-- hl-knowledge: introduces=[PA-LEX-C52-HEALTH52-02]; assesses=[] -->
 
 **ਦਵਾਈ** — *davāī* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਵਾਈ** (*davāī*) is built on *davā*, a loan from Arabic *dawāʾ*, "remedy, medicine", which reached Punjabi through Persian. Its Arabic root is *d-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

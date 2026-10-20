@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C429-cabide",
+    "language": "portuguese",
+    "chapter": 429,
+    "sequence": 24060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62b2d3a0b7faa110"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "prakṣālayati"
 concept_tag: SA-VERB-WASH
 prerequisites: [SA-C72-cooks, SA-C72-sleeps]
 sounds: []
-roots: []
+roots: [sanskrit-prakshalayati]
+etymology_hook: "prakṣālayati 'washes' ← pra + the root √kṣal 'wash'; it lives on as Hindi pakhālnā (CDIAL 8456)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C72-sleeps]
 
 **प्रक्षालयति** (*prakṣālayati*) — "(he, she) washes". **हस्तौ प्रक्षालयति** — "washes the
 hands", before food.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Prakṣālayati* is built from *pra* and the root √kṣal, "to wash" (MW). It lives on
+as Hindi *pakhālnā*, "to wash" (CDIAL 8456).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

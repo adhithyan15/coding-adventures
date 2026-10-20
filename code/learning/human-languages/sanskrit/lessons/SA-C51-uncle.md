@@ -14,7 +14,8 @@ romanization: "mātulaḥ"
 concept_tag: SA-KIN-MATULA
 prerequisites: [SA-C51-grandmother, SA-C49-oh, SA-C50-verse]
 sounds: []
-roots: []
+roots: [sanskrit-matula]
+etymology_hook: "mātula 'mother's brother' ← mātṛ 'mother' (MW; CDIAL 10009)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C51-grandmother]
 Sanskrit has no single word covering both uncles, and this is the one for the mother's side, with माता standing plainly inside it. The line drawn by पितामहः and मातामही is drawn here too.
 
 Latin drew it in the same place: *avunculus* was the mother's brother, and it is the word English wore down into *uncle*. Two languages, one distinction, one border apart. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mātula* is built from *mātṛ*, "mother" (MW, CDIAL 10009). It lives on as Marathi
+*māvḷā*, "mother's brother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

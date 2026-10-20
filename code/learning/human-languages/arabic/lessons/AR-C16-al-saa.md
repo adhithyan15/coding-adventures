@@ -12,7 +12,7 @@ concept_tag: AR-TIME-HOUR
 prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl]
 sounds: [arabic-ain, teh-marbuta]
 roots: [aramaic-shaata-hour]
-etymology_hook: "ساعة (sāʿa, 'hour') is a loanword from Aramaic شָׁעְתָא/ܫܳܥܬܳܐ (šāʿəṯā) — the same Semitic root behind Hebrew's שָׁעָה (šāʿā), borrowed into Arabic long before Islam; ساعة does triple duty for 'hour,' 'clock,' and 'a while, a moment'"
+etymology_hook: "as-sāʿa: Aramaic šāʿtā 'hour, moment' is the same word, and Nöldeke held the Arabic to be a loan from it"
 duration:
   max_seconds: 240
 requires:
@@ -37,7 +37,7 @@ reviews_of: [AR-C15-ad-duhr-muntasaf-al-layl]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Arabic's word for "hour" isn't native Arabic at all — it's a very old
+[PAUSE 2s] Arabic's word for "hour" is very probably an old
 borrowing, and it still carries three meanings at once.
 
 ## Why it's said this way — ساعة
@@ -45,12 +45,11 @@ borrowing, and it still carries three meanings at once.
 
 **ساعة** (*sāʿa*) = "**hour**" — but also "**clock/watch**" (as an object) and
 "**a while, a moment**" (as in "wait a *sāʿa*"). According to the historical
-linguist Theodor Nöldeke, Arabic **ساعة** was borrowed from **Aramaic** **شָׁעְתָא**
-(*šāʿəṯā*) — the same Semitic root that gives Hebrew its word for hour, **שָׁעָה**
-(*šāʿā*). This borrowing happened long before Islam, deep in Arabic's pre-Islamic
-contact with Aramaic-speaking communities — so unlike some of the religiously-tied
-vocabulary you've seen (like *aẓ-ẓuhr*), *sāʿa* is simply an old, everyday loanword,
-carrying no special religious weight.
+linguist Theodor Nöldeke, Arabic **ساعة** was borrowed from **Aramaic**
+*šāʿəṯā* — the same Semitic root that gives Hebrew its word for hour, **שָׁעָה**
+(*šāʿā*). Lane files it under *s-w-ʿ* as native, so the loan is likely, not
+certain. Unlike some religiously-tied vocabulary you've seen (like *aẓ-ẓuhr*),
+*sāʿa* is an old, everyday word, carrying no special religious weight.
 
 ## Grammar Lens: كم الساعة؟ — "how much is the hour?"
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C16-AL-SAA-02]; assesses=[] -->

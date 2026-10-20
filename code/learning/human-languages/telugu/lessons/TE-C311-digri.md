@@ -14,7 +14,8 @@ romanization: "ḍigrī"
 concept_tag: TE-PANI311-DIGRI
 prerequisites: [TE-C311-kalasala, TE-C311-visvavidyalayam]
 sounds: []
-roots: []
+roots: [english-degree]
+etymology_hook: "ḍigrī ← English degree"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C311-visvavidyalayam]
 <!-- hl-knowledge: introduces=[TE-LEX-C311-PANI311-03]; assesses=[] -->
 
 **డిగ్రీ** — *ḍigrī* — "a degree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**డిగ్రీ** (*ḍigrī*) is a loan from English *degree*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

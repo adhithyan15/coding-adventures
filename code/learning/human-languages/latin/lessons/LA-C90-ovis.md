@@ -13,7 +13,8 @@ gloss: "a sheep"
 concept_tag: LA-ANIMALIA1-OVIS
 prerequisites: [LA-C90-equus, LA-C90-bos]
 sounds: []
-roots: []
+roots: [ovis-latin]
+etymology_hook: "ovis 'sheep' — inherited, usually traced to PIE *h2owis 'sheep'; English ewe is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C90-bos]
 <!-- hl-knowledge: introduces=[LA-LEX-C90-ANIMALIA1-03]; assesses=[] -->
 
 **ovis, ovis** — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ovis** is inherited, usually traced to Proto-Indo-European *\*h2owis*, "sheep" (EtymDB 2.1). English *ewe* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

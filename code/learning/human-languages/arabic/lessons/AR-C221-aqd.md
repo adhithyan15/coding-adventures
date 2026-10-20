@@ -14,7 +14,8 @@ romanization: "ʿaqd"
 concept_tag: AR-AMAL221-AQD
 prerequisites: [AR-C221-taqrir, AR-C221-ijtima]
 sounds: []
-roots: []
+roots: [ʿ-q-d]
+etymology_hook: "ʿaqd: built on the root ʿ-q-d, 'to tie a knot' (Lane); ʿaqd is a tie, a binding: a contract"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C221-ijtima]
 <!-- hl-knowledge: introduces=[AR-LEX-C221-AMAL221-03]; assesses=[] -->
 
 **عقد** — *ʿaqd* — "a contract".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عقد** (*ʿaqd*) is built on the native Arabic root *ʿ-q-d*, "to tie a knot" (Lane). *ʿAqd* is a tie, a binding: a contract.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

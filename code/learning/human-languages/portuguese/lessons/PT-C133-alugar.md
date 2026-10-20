@@ -13,7 +13,8 @@ gloss: "to rent"
 concept_tag: PT-VERB-ALUGAR
 prerequisites: [PT-C132-subir, PT-C133-descer]
 sounds: []
-roots: []
+roots: [locus-latin]
+etymology_hook: "alugar ← Latin allocare 'to place, to let out', from locus 'place' — English allocate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C133-descer]
 <!-- hl-knowledge: introduces=[PT-LEX-C133-VERBOS133-02]; assesses=[] -->
 
 **alugar** — "to rent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alugar** ← Latin *allocare*, "to place, to let out" (EtymDB 2.1), from *locus*, "place" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

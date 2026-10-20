@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C525-zocken",
+    "language": "german",
+    "chapter": 525,
+    "sequence": 28050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3c4f0579978ccc9"
+  },
+  "findings": []
+}

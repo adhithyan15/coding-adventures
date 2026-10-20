@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C697-llovizna",
+    "language": "spanish",
+    "chapter": 697,
+    "sequence": 24750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00c36e3da2b8edd6"
+  },
+  "findings": []
+}

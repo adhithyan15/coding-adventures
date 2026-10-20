@@ -13,7 +13,8 @@ gloss: "a cause"
 concept_tag: GE-THING241-URSACHE
 prerequisites: [GE-C241-unterricht, GE-C241-unterschied]
 sounds: []
-roots: []
+roots: [germanic-sako]
+etymology_hook: "Ursache — ur- 'original' + Sache 'matter': the original matter, the cause"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C241-unterschied]
 <!-- hl-knowledge: introduces=[GE-LEX-C241-THING241-04]; assesses=[] -->
 
 **die Ursache** — "a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ursache** is *ur-*, "original, first", + *Sache*, "matter" ← Old High German *sahha* (EtymDB 2.1): the first matter, the cause.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

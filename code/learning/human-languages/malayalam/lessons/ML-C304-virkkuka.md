@@ -14,7 +14,8 @@ romanization: "vīrkkuka"
 concept_tag: ML-VERB-VIRKKUKA
 prerequisites: [ML-C304-tummuka, ML-C304-viraykkuka]
 sounds: []
-roots: []
+roots: [dravidian-vingu-swell]
+etymology_hook: "vīrkkuka: native Dravidian, one word with Tamil vīṅku and Kannada bīgu (DEDR 5448)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C304-viraykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C304-KRIYA304-04]; assesses=[] -->
 
 **വീർക്കുക** — *vīrkkuka* — "to swell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വീർക്കുക** (*vīrkkuka*) is native Dravidian, one word with Tamil *vīṅku*, Kannada *bīgu* and Telugu *vīgu* (DEDR 5448).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

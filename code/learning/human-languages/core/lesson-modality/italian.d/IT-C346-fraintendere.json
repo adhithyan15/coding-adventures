@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C346-fraintendere",
+    "language": "italian",
+    "chapter": 346,
+    "sequence": 19960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba8a36d871bf5dce"
+  },
+  "findings": []
+}

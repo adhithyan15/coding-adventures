@@ -13,7 +13,8 @@ gloss: "a rumour"
 concept_tag: LA-RES194-RUMOR
 prerequisites: [LA-C194-sermo, LA-C194-oratio]
 sounds: []
-roots: []
+roots: [rumor-latin]
+etymology_hook: "rūmor 'rumour' — perhaps from PIE *rewH- 'to roar'; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C194-oratio]
 <!-- hl-knowledge: introduces=[LA-LEX-C194-RES194-04]; assesses=[] -->
 
 **rūmor, rūmōris** — "a rumour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rūmor** is often traced to a Proto-Indo-European root *\*rewH-*, "to roar, to shout", but the link is not certain. Lewis & Short put *raucus*, "hoarse", in the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

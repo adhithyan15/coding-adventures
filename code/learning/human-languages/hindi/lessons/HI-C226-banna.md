@@ -14,7 +14,8 @@ romanization: "bannā"
 concept_tag: HI-VERB-BANNA
 prerequisites: [HI-C226-bigarna, HI-C226-banana]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "bannā ← Sanskrit vanati 'desires, gains, makes ready', a tadbhava (CDIAL 11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C226-banana]
 <!-- hl-knowledge: introduces=[HI-LEX-C226-ACT226-04]; assesses=[] -->
 
 **बनना** — *bannā* — "to be made, to become".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बनना** (*bannā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vanati*, "desires, gains, makes ready" (CDIAL 11260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

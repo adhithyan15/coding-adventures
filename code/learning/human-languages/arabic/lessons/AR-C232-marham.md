@@ -14,7 +14,8 @@ romanization: "marham"
 concept_tag: AR-SIHHA232-MARHAM
 prerequisites: [AR-C231-mumarrid, AR-C232-duwar]
 sounds: []
-roots: []
+roots: [r-h-m]
+etymology_hook: "marham: Lane's sources dispute it: Persian marham, or native, from rihma 'soft rain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C232-duwar]
 <!-- hl-knowledge: introduces=[AR-LEX-C232-SIHHA232-02]; assesses=[] -->
 
 **مرهم** — *marham* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مرهم** (*marham*) is disputed in Lane's sources: one calls it arabicized from Persian *marham*, and others derive it from *rihma*, "soft rain", for its softness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

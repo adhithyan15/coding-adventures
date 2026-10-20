@@ -14,7 +14,8 @@ romanization: "bonā"
 concept_tag: HI-VERB-BONA
 prerequisites: [HI-C227-palna, HI-C227-cirna]
 sounds: []
-roots: []
+roots: [sanskrit-vapati]
+etymology_hook: "bonā ← Sanskrit vapati 'scatters, sows'; CDIAL marks bonā as taken from Gujarati (CDIAL 11282)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C227-cirna]
 <!-- hl-knowledge: introduces=[HI-LEX-C227-ACT227-05]; assesses=[] -->
 
 **बोना** — *bonā* — "to sow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बोना** (*bonā*) goes back to Sanskrit *vapati*, "scatters, sows" (CDIAL 11282). CDIAL marks the Hindi form as taken over from Gujarati.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

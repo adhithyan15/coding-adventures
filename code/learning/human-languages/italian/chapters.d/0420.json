@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Ritardi e rimborsi",
+  "label": "ch:it-ritardi-e-rimborsi",
+  "canDo": "I can deal with delays: the departures board, running late, putting things back, a refund and refunding.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R420-ripasso-413-420",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can deal with delays: the departures board, running late, putting things back, a refund and refunding.",
+    "assesses": [
+      "IT-LEX-C420-RITARDO-03",
+      "IT-LEX-C420-RITARDO-04",
+      "IT-LEX-C420-RITARDO-05"
+    ]
+  }
+}

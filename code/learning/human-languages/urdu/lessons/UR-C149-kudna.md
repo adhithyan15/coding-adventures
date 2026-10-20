@@ -14,7 +14,8 @@ romanization: "kūdnā"
 concept_tag: UR-VERB-KUDNA
 prerequisites: [UR-C149-ghumna, UR-C149-sair-karna]
 sounds: []
-roots: []
+roots: [sanskrit-kurdati]
+etymology_hook: "kūdnā ← Sanskrit kūrdati 'leaps, jumps', a tadbhava (CDIAL 3412)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C149-sair-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C149-ACT149-04]; assesses=[] -->
 
 **کودنا** — *kūdnā* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کودنا** (*kūdnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūrdati*, "leaps, jumps" (CDIAL 3412). CDIAL takes the Sanskrit verb as probably borrowed from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

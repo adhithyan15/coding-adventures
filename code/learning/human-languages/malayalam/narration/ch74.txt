@@ -21,6 +21,9 @@ the dictionary form: കാണുക kāṇuka. the -ആൻ (-āṉ) form: ക�
 Nothing else in the word changes. The piece in front of the ending — the stem — stays exactly as it was, so a verb you can say you can already swap.
 This is the ending Malayalam builds two separate things on, and the next two lessons are those two things. Getting the swap into your hand now makes both of them free.
 
+The word, taken apart.
+-ആൻ (-āṉ) is a native Dravidian verb ending, part of Malayalam's own grammar rather than a loan. DEDR is a dictionary of roots and does not list endings, so no entry number goes with it.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: vāyikkuka … vāyikkāṉ]
@@ -53,6 +56,9 @@ English puts the purpose after the verb and often needs a word for it — I am g
 [a table of 2 rows, read aloud]
 കാണാൻ വന്നു kāṇāṉ vannu, came in order to see.
 പറയാൻ വന്നു paṟayāṉ vannu, came in order to say.
+
+The word, taken apart.
+വായിക്കാൻ പോകുന്നു (vāyikkāṉ pōkunnu) joins two verbs. vāyikkuka, "to read", is built on Sanskrit vācayati, "makes to speak, reads" (CDIAL 11471), with the Sanskrit c softened to y; pōkuka, "to go", is native Dravidian (DEDR 4572, with Tamil pō).
 
 Grammar Lens: the order is the meaning.
 Malayalam has put the important verb last all along — the quotative chapter said the same thing about a reported sentence, where the saying came at the end. This is that habit again. The reason goes in front, the event goes at the back, and the reader hears what you did last.
@@ -93,6 +99,9 @@ Ability arrives at you in Malayalam. It is not something you do. The knowing cha
 എനിക്ക് മലയാളം അറിയാം, Malayalam is known to me.
 എനിക്ക് വായിക്കാൻ കഴിയും (kaḻiyuṁ), reading is possible to me.
 English makes both of these an action with I at the front — I know, I can. Malayalam puts the person in the dative and lets the ability be the subject.
+
+The word, taken apart.
+കഴിയും (kaḻiyuṁ) is native Dravidian, a form of the verb "to be possible, able"; DEDR 1357 lists the root with Tamil kaḻi.
 
 Grammar Lens: one ending, two jobs.
 The -ആൻ (-āṉ) form has now done both of the things this chapter promised:

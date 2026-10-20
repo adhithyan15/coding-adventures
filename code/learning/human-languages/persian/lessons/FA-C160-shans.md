@@ -14,7 +14,8 @@ romanization: "shâns"
 concept_tag: FA-CHERA160-SHANS
 prerequisites: [FA-C160-qasd, FA-C160-ettefaq]
 sounds: []
-roots: []
+roots: [french-chance]
+etymology_hook: "shâns ← French chance 'chance, luck'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C160-ettefaq]
 <!-- hl-knowledge: introduces=[FA-LEX-C160-CHERA160-05]; assesses=[] -->
 
 **شانس** — *shâns* — "luck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâns* is borrowed from French *chance*, "chance, luck" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

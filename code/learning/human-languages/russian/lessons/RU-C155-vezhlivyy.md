@@ -14,7 +14,8 @@ romanization: "vézhlivyy"
 concept_tag: RU-KACH155-VEZHLIVYY
 prerequisites: [RU-C155-glupyy, RU-C155-lenivyy]
 sounds: []
-roots: []
+roots: [pie-weid]
+etymology_hook: "вежливый is from Old Russian вежа 'knowledge', from ведать 'to know': first 'well-informed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C155-lenivyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C155-KACH155-05]; assesses=[] -->
 
 **вежливый** (*vézhlivyy*) — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вежливый** — Old Russian *вежливой* also meant "experienced, knowing"; it is built on *\*vědja*, from *ведать*, "to know" (Vasmer). Polite was first "knowing how to behave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

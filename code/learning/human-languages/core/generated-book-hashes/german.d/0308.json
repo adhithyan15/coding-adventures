@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:3bf751225901a8db",
+  "lessonIds": [
+    "GE-C308-anstossen",
+    "GE-C308-sekt",
+    "GE-C308-jubeln",
+    "GE-C308-beifall",
+    "GE-C308-applaudieren"
+  ],
+  "tex": "german/book/chapters/ch308-prost.tex"
+}

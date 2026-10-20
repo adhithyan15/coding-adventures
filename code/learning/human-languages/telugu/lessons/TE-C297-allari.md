@@ -14,7 +14,8 @@ romanization: "allari"
 concept_tag: TE-GUNAM297-ALLARI
 prerequisites: [TE-C297-pisinari, TE-C297-curukaina]
 sounds: []
-roots: []
+roots: [dravidian-ala-suffer]
+etymology_hook: "allari: native Dravidian; DEDR 236 lists allari 'tumult, confusion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C297-curukaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C297-GUNAM297-04]; assesses=[] -->
 
 **అల్లరి** — *allari* — "naughty; mischief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అల్లరి** (*allari*) is native Dravidian. DEDR 236 lists *allari*, "tumult, confusion, quarrel", with Tamil *ala*, "to suffer, be in distress". DEDR thinks Sanskrit *alasa*, "lazy", came from this Dravidian group.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Krieg und Frieden",
+  "label": "ch:ge-krieg-und-frieden",
+  "canDo": "I can tell about history: war, peace, a battle, to defeat and a defeat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C318-niederlage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can tell about history: war, peace, a battle, to defeat and a defeat.",
+    "assesses": [
+      "GE-LEX-C318-KRIEG-03",
+      "GE-LEX-C318-KRIEG-04",
+      "GE-LEX-C318-KRIEG-05"
+    ]
+  }
+}

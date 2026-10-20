@@ -47,7 +47,7 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say these, and every one of them has ത somewhere inside it:
 
-- **അതെ** — yes (athe — "that [is so]")
+- **അതെ** — yes (ate — "that [is so]")
 - **എന്ത്** — what
 - **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 - **താമസിക്കുക** *tāmasikkuka* — to live, to stay

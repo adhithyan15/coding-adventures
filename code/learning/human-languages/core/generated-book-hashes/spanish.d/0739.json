@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 739,
+  "sourceHash": "fnv1a64:d1e0ea9235d4cf18",
+  "lessonIds": [
+    "ES-C739-curar",
+    "ES-C739-mejorarse",
+    "ES-C739-recuperacion",
+    "ES-C739-operar",
+    "ES-C739-cirugia"
+  ],
+  "tex": "spanish/book/chapters/ch739-curarse.tex"
+}

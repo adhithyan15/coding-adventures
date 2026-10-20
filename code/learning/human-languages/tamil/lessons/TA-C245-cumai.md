@@ -14,7 +14,8 @@ romanization: "cumai"
 concept_tag: TA-PORUL245-CUMAI
 prerequisites: [TA-C244-avanam, TA-C244-katavuccittu]
 sounds: []
-roots: []
+roots: [dravidian-cuma-carry]
+etymology_hook: "சுமை — native Dravidian (DEDR 2677); Malayalam cuma 'burden, load'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C244-katavuccittu]
 <!-- hl-knowledge: introduces=[TA-LEX-C245-PORUL245-01]; assesses=[] -->
 
 **சுமை** — *cumai* — "a load, a burden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுமை** (*cumai*) is native Dravidian. DEDR 2677 lists Malayalam *cuma*, "burden, load". It is the noun of *cuma*, "to bear, to carry a load".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "reká"
 concept_tag: RU-NATURE2-RIVER
 prerequisites: [RU-C56-mountain, RU-C56-forest]
 sounds: []
-roots: []
+roots: [slavic-reka]
+etymology_hook: "река ← Proto-Slavic *rěka; Sanskrit rīyate 'begins to flow' and the Rhine's name are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C56-forest]
 <!-- hl-knowledge: introduces=[RU-LEX-C56-NATURE2-03]; assesses=[] -->
 
 **река** (*reká*) — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**река** ← Proto-Slavic *\*rěka* — inherited, from a root "to flow". Vasmer lists Sanskrit *rīyate*, "begins to flow", Latin *rīvus*, "a stream", and Gaulish *Rēnos*, the Rhine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

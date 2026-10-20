@@ -14,7 +14,8 @@ romanization: "kāpī"
 concept_tag: UR-THINGS113-KAPI
 prerequisites: [UR-C113-khat, UR-C113-pensil, UR-C33-words, UR-C33-pehla-sabaq]
 sounds: []
-roots: []
+roots: [english-copy]
+etymology_hook: "kāpī ← English copy"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [UR-C113-pensil]
 <!-- hl-knowledge: introduces=[UR-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **کاپی** — *kāpī* — "an exercise book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کاپی** (*kāpī*) is a loan from English *copy*. Urdu took it from English *copy*, as in *copybook*, for an exercise book.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

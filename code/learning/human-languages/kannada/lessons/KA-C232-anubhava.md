@@ -14,7 +14,8 @@ romanization: "anubhava"
 concept_tag: KA-KELASA232-ANUBHAVA
 prerequisites: [KA-C232-vime, KA-C232-salu]
 sounds: []
-roots: []
+roots: [sanskrit-anubhava]
+etymology_hook: "anubhava ← Sanskrit anubhava 'experience, perception', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C232-salu]
 <!-- hl-knowledge: introduces=[KA-LEX-C232-KELASA232-04]; assesses=[] -->
 
 **ಅನುಭವ** — *anubhava* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅನುಭವ** (*anubhava*) is Sanskrit *anubhava*, "experience, perception", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "piṇḍu"
 concept_tag: TE-VERB-PINDU
 prerequisites: [TE-C158-vippu, TE-C158-kolucu]
 sounds: []
-roots: []
+roots: [dravidian-pizhi-wring]
+etymology_hook: "piṇḍu: native Dravidian; DEDR 4183 lists piṇḍu 'to squeeze' with Tamil piḻi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C158-kolucu]
 <!-- hl-knowledge: introduces=[TE-LEX-C159-KRIYA159-01]; assesses=[] -->
 
 **పిండు** — *piṇḍu* — "to squeeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిండు** (*piṇḍu*) is native Dravidian. DEDR 4183 lists *piṇḍu*, "to squeeze, press", with Tamil *piḻi* and Kannada *piḻi*, "to squeeze out". DEDR compares Sanskrit *piṇyāka*, "oilcake" (CDIAL 8174).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

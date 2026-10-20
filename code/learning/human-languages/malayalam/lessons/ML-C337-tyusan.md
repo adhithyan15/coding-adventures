@@ -14,7 +14,8 @@ romanization: "ṭyūṣan"
 concept_tag: ML-JOLI337-TYUSAN
 prerequisites: [ML-C337-upanyasam, ML-C337-prinsippal]
 sounds: []
-roots: []
+roots: [english-tuition]
+etymology_hook: "ṭyūṣan ← English tuition"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C337-prinsippal]
 <!-- hl-knowledge: introduces=[ML-LEX-C337-JOLI337-05]; assesses=[] -->
 
 **ട്യൂഷൻ** — *ṭyūṣan* — "tuition, private coaching".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ട്യൂഷൻ** (*ṭyūṣan*) ← English *tuition*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

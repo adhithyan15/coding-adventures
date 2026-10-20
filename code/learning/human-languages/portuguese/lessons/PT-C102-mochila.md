@@ -14,6 +14,7 @@ concept_tag: PT-COISAS102-MOCHILA
 prerequisites: [PT-C101-calendario, PT-C101-mensagem]
 sounds: []
 roots: []
+etymology_hook: "mochila ← Spanish mochila, from Basque motxil 'errand boy': the bag he carried"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C101-mensagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C102-COISAS102-01]; assesses=[] -->
 
 **a mochila** — "a rucksack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mochila** ← Spanish *mochila*, "rucksack" (EtymDB 2.1) — borrowed. The Spanish word is built on Basque *motxil*, "errand boy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

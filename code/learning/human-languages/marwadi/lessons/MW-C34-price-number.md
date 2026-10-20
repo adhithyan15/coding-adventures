@@ -11,8 +11,8 @@ gloss: the question and its answer, both on the page, with no new sign
 concept_tag: MW-FUNCTION-PRICE-NUMBER-WRITTEN
 prerequisites: [MW-C34-hear-price-number]
 sounds: [mixed]
-roots: []
-etymology_hook: The whole answer turn is a word the hand made two lessons ago.
+roots: [sanskrit-vimshati]
+etymology_hook: "ye kitṇe kū hai, bīs: bīs 'twenty' ← Sanskrit viṃśati, Old Marwari bīsa (CDIAL 11616)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +48,11 @@ ago. Putting them on one line adds no sign at all.
 
 Note the danda after the answer. A price is a complete turn even at one word
 long, and Devanagari closes it the same way it closes a sentence.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In the question and its answer, the new piece is **बीस** (*bīs*), "twenty", which CDIAL lists as Old Marwari *bīsa* under Sanskrit *viṃśati*, "twenty" (CDIAL 11616). The question words have their own lessons: *kitṇe* from *\*kiyatta*, "how great" (CDIAL 3167), and *hai*, "is" (CDIAL 1031).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-NUMBER-01, MW-SCRIPT-DAS-01, MW-SCRIPT-BEES-01, MW-SCRIPT-SO-01] -->

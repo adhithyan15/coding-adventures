@@ -14,7 +14,8 @@ romanization: "māthai"
 concept_tag: MW-LOC96-MATHAI
 prerequisites: [MW-C96-agai, MW-C96-larai]
 sounds: []
-roots: []
+roots: [sanskrit-masta]
+etymology_hook: "māthai ← Sanskrit masta 'head', a tadbhava (CDIAL 9926, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C96-larai]
 <!-- hl-knowledge: introduces=[MW-LEX-C96-LOC96-05]; assesses=[] -->
 
 **माथै** — *māthai* — "on top of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माथै** (*māthai*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *masta*, "head". CDIAL lists Marwari *mātho* under it (CDIAL 9926). **माथै** (*māthai*) is a form of *mātho*, "head": "at the head of", so "on top of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

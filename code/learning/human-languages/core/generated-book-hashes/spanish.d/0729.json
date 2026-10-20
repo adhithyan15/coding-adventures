@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 729,
+  "sourceHash": "fnv1a64:e6e0db17febbd4f0",
+  "lessonIds": [
+    "ES-C729-terco",
+    "ES-C729-perezoso",
+    "ES-C729-pereza",
+    "ES-C729-entrometido",
+    "ES-C729-curiosidad"
+  ],
+  "tex": "spanish/book/chapters/ch729-defectos-de-cada-dia.tex"
+}

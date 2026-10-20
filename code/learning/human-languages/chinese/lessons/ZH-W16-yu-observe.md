@@ -12,7 +12,7 @@ gloss: language or speech, observed and traced in nine strokes
 prerequisites: [ZH-R16-identity-1]
 sounds: [tone-3]
 roots: []
-etymology_hook: The familiar speech radical 讠stands beside 五 over 口: speech made into language.
+etymology_hook: 'The familiar speech radical 讠stands beside 五 over 口: speech made into language.'
 duration:
   max_seconds: 170
 requires:

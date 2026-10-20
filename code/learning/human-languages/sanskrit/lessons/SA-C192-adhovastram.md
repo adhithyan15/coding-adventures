@@ -14,7 +14,8 @@ romanization: "adhovastram"
 concept_tag: SA-THG192-ADHOVASTRAM
 prerequisites: [SA-C192-harah, SA-C192-mukutam]
 sounds: []
-roots: []
+roots: [sanskrit-vastra]
+etymology_hook: "adhovastra = adhas 'below' + vastra 'garment', from √vas 'wear' (MW); MW compares Latin vestis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C192-mukutam]
 <!-- hl-knowledge: introduces=[SA-LEX-C192-THG192-03]; assesses=[] -->
 
 **अधोवस्त्रम्** — *adhovastram* — "a lower garment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adhovastra* is a compound of *adhas*, "below", and *vastra*, "garment", built on the root √vas, "to wear" (MW). MW compares √vas with Latin *vestis*, "garment", and English *wear*; MW does not list this compound itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

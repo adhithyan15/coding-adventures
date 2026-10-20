@@ -1,0 +1,11 @@
+{
+  "id": "PT-C378-decorar",
+  "pathSegment": "PT-PATH-378-REVER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-378-REVER",
+      "order": 3
+    }
+  ]
+}

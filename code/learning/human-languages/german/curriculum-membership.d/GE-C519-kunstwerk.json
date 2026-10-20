@@ -1,0 +1,11 @@
+{
+  "id": "GE-C519-kunstwerk",
+  "pathSegment": "GE-PATH-519-GALERIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-519-GALERIE",
+      "order": 4
+    }
+  ]
+}

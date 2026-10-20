@@ -14,7 +14,8 @@ romanization: "ahvāl"
 concept_tag: MR-VASTU221-AHVAL
 prerequisites: [MR-C220-gham, MR-C220-asru]
 sounds: []
-roots: []
+roots: [arabic-ahwal]
+etymology_hook: "ahvāl: usually traced, through Persian, to Arabic aḥwāl 'states', plural of ḥāl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C220-asru]
 <!-- hl-knowledge: introduces=[MR-LEX-C221-VASTU221-01]; assesses=[] -->
 
 **अहवाल** — *ahvāl* — "a report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अहवाल** (*ahvāl*) is a loan, usually traced through Persian to Arabic *aḥwāl*, "states, conditions", the plural of *ḥāl*, "state"; its root is *ḥ-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "satyam"
 concept_tag: SA-REPLY-TRUE
 prerequisites: [SA-C27-enough, SA-C25-tooth, SA-C26-guest]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "satya 'true' ← sat 'being, real', participle of √as 'be' (MW); Hindi saccā (CDIAL 13112)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C27-enough]
 **सत्यम्** answers a claim: *true*. As a noun it is *the truth*, and it is the word on the national emblem of India — *satyam eva jayate*, "truth alone conquers".
 
 Look at what it is made of. *Sat-* is the being-form of that same root *as* you met in अस्ति and अस्तु: *what is*. Add an ending and truth is simply **the state of being what is**. English has a cousin, well hidden: *sooth*, as in *soothsayer* — a truth-sayer — and *forsooth*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Satya* is built on *sat*, "being, real", the present participle of the root √as
+"to be" (MW). It lives on as Hindi *saccā*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

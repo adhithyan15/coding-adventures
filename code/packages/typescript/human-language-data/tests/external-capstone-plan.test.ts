@@ -29,6 +29,7 @@ function build(complete: boolean) {
       },
     },
     assessmentContracts: [language],
+    assessmentPrerequisites: [],
     taskShapes: TASK_SHAPE_LEVELS.map((level) => ({ language, level })),
     inventories: CERTIFIABLE_LEVELS.map((level) => ({ language, level })),
     externalCapstones: [{

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C151-ar-choice",
+  "pathSegment": "MW-PATH-151-JOINING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-151-JOINING",
+      "order": 1
+    }
+  ]
+}

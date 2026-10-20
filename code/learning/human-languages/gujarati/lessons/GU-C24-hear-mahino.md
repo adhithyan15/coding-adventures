@@ -11,8 +11,8 @@ gloss: month, the span above the day
 concept_tag: GU-TIME-MONTH-HEARD
 prerequisites: [GU-C24-hear-divas]
 sounds: [ma, ha, short-i, o-sign]
-roots: []
-etymology_hook: One step up from the day, so the two spans can be told apart while the smaller one is still fresh.
+roots: [persian-mahina]
+etymology_hook: "mahino: usually traced to Persian māhīna 'monthly', built on māh 'moon, month'"
 duration:
   max_seconds: 120
 requires:
@@ -40,6 +40,11 @@ reviews_of: [GU-C24-hear-divas, GU-C24-raat]
 [PAUSE 3s] Say the word for **day**, and say how many signs wrote *rāt*. Now
 listen twice: **mahino**. It means **month** — the span that holds many a
 *divas*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મહિનો** (*mahino*) is a loan, usually traced to Persian *māhīna*, "monthly". It is built on Persian *māh*, "moon, month".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MAHINO-01, GU-LEX-DIVAS-01] -->

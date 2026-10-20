@@ -14,7 +14,8 @@ romanization: "āegā"
 concept_tag: HI-FUTURE-THIRD
 prerequisites: [HI-C88-aaunga, HI-C40-that]
 sounds: []
-roots: []
+roots: [sanskrit-apayati, sanskrit-gata]
+etymology_hook: "āegā: ā- 'come', listed by CDIAL under āpayati (CDIAL 1200); the -gā is usually traced to gata 'gone'"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ The **-गा** has not moved. It is the piece in front of it that changed, from
 So the future has the same division of labour the present had: **one slot for
 who, one slot for when.** Learning the tense is learning that the two slots are
 separate.
+
+The **-गा** is usually traced to Sanskrit *gata*, "gone".
 
 ## Grammar Lens: the form a paper prints
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-03, HI-LEX-C88-FUT-02] -->

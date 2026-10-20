@@ -14,7 +14,8 @@ romanization: "nontā"
 concept_tag: BN-QUAL134-NONTA
 prerequisites: [BN-C134-bete, BN-C134-jhal]
 sounds: []
-roots: []
+roots: [sanskrit-lavana]
+etymology_hook: "nontā: non 'salt' + -tā; non ← Sanskrit lavaṇa 'salt' (CDIAL 10978)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C134-jhal]
 <!-- hl-knowledge: introduces=[BN-LEX-C134-QUAL134-03]; assesses=[] -->
 
 **নোনতা** — *nontā* — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নোনতা** (*nontā*) is *non*, "salt", with the ending *-tā*. The word for salt goes back to Sanskrit *lavaṇa*, "salt": CDIAL lists Oriya *nuṇa* under it (CDIAL 10978), and Bengali *alonā*, "not salty", under *alavaṇa*, "not salty" (CDIAL 707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,9 @@ Native Dravidian, built on pin, the piece meaning behind or at the back. What si
 Kerala also leans on it as a filler, the so... a speaker puts in front of a sentence to buy a second before starting it.
 After śari, it turns an agreement into a continuation: right, and then.
 
+The word, taken apart.
+പിന്നെ (pinne) is native Dravidian, built on pin, "behind, after"; DEDR 4205 lists the root with Tamil piṉ.
+
 What you've built.
 The first of five small words that join one thing to the next.
 
@@ -47,6 +50,9 @@ Native Dravidian, built on uṭan, meaning along with — what happens beside a 
 So the two words you now have divide the near future between them. Pinne leaves a gap; ഉടനെ (uṭane) closes it.
 In Kerala speech it also softens a refusal: not now, but not far off either.
 
+The word, taken apart.
+ഉടനെ (uṭane) is native Dravidian, built on uṭan, "together with, at once"; DEDR 945 lists the root with Tamil uṭaṉ.
+
 What you've built.
 Two.
 
@@ -77,6 +83,9 @@ You'll want to know: ചിലപ്പോൾ.
 Two pieces, and you can take them apart by ear: cila, some or a few, and pōḷ, the when-piece.
 That tail is the same one closing ippōḷ, the now-word. One says at this time, the other says at some times, and the shared ending is the reason the two rhyme.
 It is the word a Malayali reaches for when hedging: not a denial, only a fence around a claim.
+
+The word, taken apart.
+ചിലപ്പോൾ (cilappōḷ) is native Dravidian, "some times": cila, "some" (DEDR 1571, with Tamil cila), joined to a word for "time" (DEDR 4559, with Tamil pōtu), the same word that ends ippōḷ.
 
 What you've built.
 Three.
@@ -110,6 +119,9 @@ Sanskrit mātra, a measure, from the root mā, to measure. The Greek metron behi
 Set after a word it fences that word off: this much, and nothing beyond it.
 Beside kuṟaccŭ, which says a small amount, മാത്രം (mātraṁ) says an exact amount and shuts the door.
 
+The word, taken apart.
+മാത്രം (mātraṁ) from Sanskrit mātrā, "measure", taken over whole as a tatsama (CDIAL 10023). At the end of a Sanskrit compound -mātra already meant "only so much".
+
 What you've built.
 Four.
 
@@ -140,6 +152,9 @@ You'll want to know: എന്നാൽ.
 Built out of the saying-piece enn-, the one behind reported speech, and a tail meaning by or through: roughly, by that having been said.
 English arrives at almost the same phrase from the other end with that said, which is a small comfort — the shape is already familiar even though the pieces are not.
 So the word grants the previous sentence before it turns on it, which is a gentler move than a flat contradiction.
+
+The word, taken apart.
+എന്നാൽ (ennāl) is native Dravidian, a conditional form of the verb "to say, to sound" (DEDR 868, with Tamil eṉ): roughly "if one says that".
 
 What you've built.
 Five, and a sentence can now go on, hurry, hedge, stop short or turn.

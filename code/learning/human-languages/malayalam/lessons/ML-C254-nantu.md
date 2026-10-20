@@ -14,7 +14,8 @@ romanization: "ñaṇṭŭ"
 concept_tag: ML-VASTU254-NANTU
 prerequisites: [ML-C254-kuruvi, ML-C254-annan]
 sounds: []
-roots: []
+roots: [dravidian-nandu-crab]
+etymology_hook: "ñaṇṭŭ: native Dravidian, one word with Tamil ñaṇṭu and Kannada eṇḍrakāyi (DEDR 2901)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C254-annan]
 <!-- hl-knowledge: introduces=[ML-LEX-C254-VASTU254-03]; assesses=[] -->
 
 **ഞണ്ട്** — *ñaṇṭŭ* — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഞണ്ട്** (*ñaṇṭŭ*) is native Dravidian, one word with Tamil *ñaṇṭu*, Kannada *eṇḍrakāyi* and Telugu *eṇḍri* (DEDR 2901).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

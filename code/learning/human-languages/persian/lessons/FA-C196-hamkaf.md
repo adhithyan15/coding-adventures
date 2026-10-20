@@ -14,7 +14,8 @@ romanization: "hamkaf"
 concept_tag: FA-MAKAN196-HAMKAF
 prerequisites: [FA-C196-atraf, FA-C196-labe]
 sounds: []
-roots: []
+roots: [persian-ham, arabic-kaff]
+etymology_hook: "hamkaf: Persian ham- 'same' + kaf, usually taken as Arabic kaff 'palm' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C196-labe]
 <!-- hl-knowledge: introduces=[FA-LEX-C196-MAKAN196-05]; assesses=[] -->
 
 **همکف** — *hamkaf* — "the ground floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamkaf* is *ham-*, "same", with *kaf*, "floor": level with the floor. *ham-* is native Persian; *kaf* is usually taken as Arabic *kaff*, "palm, flat of the hand" (root *k-f-f*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

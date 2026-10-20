@@ -12,6 +12,9 @@ Before the new one: say the Bengali for the midday hours, then the Bengali for t
 You'll want to know: ইচ্ছা.
 ইচ্ছা — ichchhā — "a wish".
 
+The word, taken apart.
+ইচ্ছা (ichchhā) is Sanskrit icchā, "wish", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for the morning hours, then the Bengali for 
 
 You'll want to know: আশা.
 আশা — āshā — "hope".
+
+The word, taken apart.
+আশা (āshā) is Sanskrit āśā, "wish, expectation", taken over whole as a learned loan, a tatsama (CDIAL 1456). The word inherited from it is ās, "hope", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a wish, then the Bengali for hope.
 You'll want to know: স্বপ্ন.
 স্বপ্ন — shôpnô — "a dream".
 
+The word, taken apart.
+স্বপ্ন (shôpnô) is Sanskrit svapna, "sleep, dream", taken over whole as a learned loan, a tatsama. Old Bengali had an inherited suina, "dream", which CDIAL lists under supna, "dream" (CDIAL 13481).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for hope, then the Bengali for a dream.
 You'll want to know: দরকার.
 দরকার — dôrkār — "a need".
 
+The word, taken apart.
+দরকার (dôrkār) is a loan, usually traced to Persian darkār, "needed, wanted". It is dar, "in", + kār, "work".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a dream, then the Bengali for a need.
 
 You'll want to know: প্রয়োজন.
 প্রয়োজন — prôyojôn — "a necessity".
+
+The word, taken apart.
+প্রয়োজন (prôyojôn) is Sanskrit prayojana, "occasion, purpose, need", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

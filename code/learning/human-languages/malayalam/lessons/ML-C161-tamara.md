@@ -14,7 +14,8 @@ romanization: "tāmara"
 concept_tag: ML-THINGS161-TAMARA
 prerequisites: [ML-C161-vala2, ML-C161-mulla, ML-C18-mani]
 sounds: []
-roots: []
+roots: [dravidian-tamarai-lotus]
+etymology_hook: "tāmara: native Dravidian, one word with Tamil tāmarai and Kannada tāmare (DEDR 3163)"
 duration:
   max_seconds: 200
 requires:
@@ -38,12 +39,17 @@ reviews_of: [ML-C161-mulla]
 
 [PAUSE 2s] Before the new one: say the Malayalam for a banana plant, then the Malayalam for jasmine.
 
-[PAUSE 1s] *Maṇi*: a bell, or an hour? (Both; Tamil dictionaries treat them as two look-alike words.)
+[PAUSE 1s] *Maṇi*: a bell, or an hour? (Both: the hour is named after the bell that strikes it.)
 
 ## You'll want to know: താമര
 <!-- hl-knowledge: introduces=[ML-LEX-C161-THINGS161-05]; assesses=[] -->
 
 **താമര** — *tāmara* — "a lotus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താമര** (*tāmara*) is native Dravidian, one word with Tamil *tāmarai*, Kannada *tāmare* and Telugu *tāmara* (DEDR 3163). DEDR 3163 compares Sanskrit *tāmarasa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

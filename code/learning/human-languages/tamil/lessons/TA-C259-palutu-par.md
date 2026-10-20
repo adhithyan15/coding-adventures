@@ -14,7 +14,8 @@ romanization: "paḻutu pār"
 concept_tag: TA-VERB-PALUTU-PAR
 prerequisites: [TA-C259-nati, TA-C259-raci]
 sounds: []
-roots: []
+roots: [dravidian-paazh-ruin, dravidian-paar-see]
+etymology_hook: "பழுது பார் — native: paḻutu 'damage' (DEDR 4110) + pār 'to see to' (DEDR 4091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C259-raci]
 <!-- hl-knowledge: introduces=[TA-LEX-C259-ACT259-04]; assesses=[] -->
 
 **பழுது பார்** — *paḻutu pār* — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பழுது பார்** (*paḻutu pār*) is native: *paḻutu*, "damage" (DEDR 4110), and *pār*, "to see to" (DEDR 4091): "see to the damage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

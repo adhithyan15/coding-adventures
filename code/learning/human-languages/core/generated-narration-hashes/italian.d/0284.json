@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:4f386c746da2be20",
+  "lessonIds": [
+    "IT-C284-inchiesta",
+    "IT-C284-reportage",
+    "IT-C284-testimonianza",
+    "IT-C284-testimoniare",
+    "IT-C284-riferire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch284.txt",
+  "json": "italian/narration/ch284.json",
+  "textHash": "fnv1a64:322ba9b759a33869",
+  "jsonHash": "fnv1a64:567d4776bcd47722",
+  "findings": []
+}

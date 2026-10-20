@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 180,
-  "sourceHash": "fnv1a64:c3bbc146bc42e0d8",
+  "sourceHash": "fnv1a64:2f8eb9f5b4d77468",
   "lessonIds": [
     "HI-C180-dava",
     "HI-C180-mariz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch180.txt",
   "json": "hindi/narration/ch180.json",
-  "textHash": "fnv1a64:91dde3f0785a6b81",
-  "jsonHash": "fnv1a64:7e8a50b45f337531",
+  "textHash": "fnv1a64:4ef60ff7a30343fc",
+  "jsonHash": "fnv1a64:a8e72dea16d7aabe",
   "findings": []
 }

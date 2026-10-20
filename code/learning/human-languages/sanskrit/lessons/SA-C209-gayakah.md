@@ -14,7 +14,8 @@ romanization: "gāyakaḥ"
 concept_tag: SA-PPL209-GAYAKAH
 prerequisites: [SA-C208-prativesi, SA-C209-kavih]
 sounds: []
-roots: []
+roots: [sanskrit-gayaka, sanskrit-gayati]
+etymology_hook: "gāyaka ← root √gai 'sing' + agent -aka (MW); gāyati gives Gujarati gāvũ (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C209-kavih]
 <!-- hl-knowledge: introduces=[SA-LEX-C209-PPL209-02]; assesses=[] -->
 
 **गायकः** — *gāyakaḥ* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gāyaka* is built on the root √gai, "to sing", with the agent suffix *-aka* (MW): "one who sings". The verb *gāyati* lives on as Gujarati *gāvũ*, "sings" (CDIAL 4135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

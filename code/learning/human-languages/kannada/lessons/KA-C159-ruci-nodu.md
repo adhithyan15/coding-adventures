@@ -14,7 +14,8 @@ romanization: "ruci nōḍu"
 concept_tag: KA-VERB-RUCI-NODU
 prerequisites: [KA-C159-are, KA-C159-badisu]
 sounds: []
-roots: []
+roots: [sanskrit-ruci, dravidian-nookku-look]
+etymology_hook: "ruci nōḍu: Sanskrit ruci 'light, taste' (CDIAL 10762) + native nōḍu 'to look' (DEDR 3794)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C159-badisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C159-KRIYE159-04]; assesses=[] -->
 
 **ರುಚಿ ನೋಡು** — *ruci nōḍu* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರುಚಿ ನೋಡು** (*ruci nōḍu*) is *ruci*, "taste", from Sanskrit *ruci*, "light, beauty; relish" (CDIAL 10762), and *nōḍu*, "to look" (DEDR 3794), native. To taste is to "look at the taste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

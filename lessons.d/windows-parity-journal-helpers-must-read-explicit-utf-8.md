@@ -1,0 +1,22 @@
+---
+category: Python
+---
+
+# Windows parity journal helpers must read explicit UTF-8
+
+A one-off PR-tracking helper used Path.read_text() on the UTF-8 parity journal.
+Python 3.10 on Windows selected cp1252 and rejected an existing Unicode byte
+before making a change. Read and write repository JSON with encoding="utf-8"
+explicitly (utf-8-sig only for externally BOM-prefixed receipts), and stop shell
+follow-up mutations when the helper fails. Check lesson categories before using
+`lessons.py new`; the attempted generic tooling category was not registered.
+
+A cleanup comparison also caught silent UTF-8-to-cp1252 mojibake in the roadmap
+helper. Restore the preserved UTF-8 prefix and keep only the intended new suffix;
+use explicit encoding for every text read, including read-modify-write helpers.
+When displaying Unicode through Windows Python, configure stdout to UTF-8 too.
+
+Checking only the roadmap missed five historical journal strings corrupted by the
+same default-encoding read. Compare every unchanged item field against the
+preserved UTF-8 snapshot, restore only proven byte-decoding changes, and scan
+the journal explicitly: the CI guard defaults to code/ and does not include it.

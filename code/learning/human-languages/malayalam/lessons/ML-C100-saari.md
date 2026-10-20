@@ -11,7 +11,8 @@ romanization: "sāri"
 concept_tag: ML-SARI
 prerequisites: [ML-C100-mundu, ML-C42-old]
 sounds: []
-roots: []
+roots: [sanskrit-shati]
+etymology_hook: "sāri ← Sanskrit śāṭī 'strip of cloth, garment' (CDIAL 12381), through Prakrit and Hindustani"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,8 @@ The **യ** in **സാരിയാണ്** is the one **കളി** and **ഭ�
 you were given then: **ഇ** calls for it.
 
 **പഴയ** behaves as **പുതിയ** did — in front, unchanged.
+
+**Where the word comes from.** It goes back to Sanskrit *śāṭī*, "a strip of cloth, a garment" (CDIAL 12381), worn down through Prakrit; English *sari* is the same word, borrowed through Hindustani.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C100-SARI-01, ML-LEX-C100-MUNDU-01, ML-LEX-C41-DEIXIS-01] -->

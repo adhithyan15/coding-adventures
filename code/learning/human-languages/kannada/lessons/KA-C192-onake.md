@@ -14,7 +14,8 @@ romanization: "onake"
 concept_tag: KA-VASTU192-ONAKE
 prerequisites: [KA-C191-kriket, KA-C192-oralu]
 sounds: []
-roots: []
+roots: [dravidian-ulakkai-pestle]
+etymology_hook: "onake: native Dravidian, one word with Tamil ulakkai (DEDR 672)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C192-oralu]
 <!-- hl-knowledge: introduces=[KA-LEX-C192-VASTU192-02]; assesses=[] -->
 
 **ಒನಕೆ** — *onake* — "a pestle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒನಕೆ** (*onake*) is native Dravidian, one word with Tamil *ulakkai* (DEDR 672). DEDR lists *olake*, *onake*, "wooden pestle". DEDR 672 compares, with a query, Sanskrit *ulūkhala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

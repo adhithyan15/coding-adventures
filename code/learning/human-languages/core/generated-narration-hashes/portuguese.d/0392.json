@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:3712885dffeebca3",
+  "lessonIds": [
+    "PT-C392-investir",
+    "PT-C392-investimento",
+    "PT-C392-juro",
+    "PT-C392-taxa",
+    "PT-C392-inflacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch392.txt",
+  "json": "portuguese/narration/ch392.json",
+  "textHash": "fnv1a64:7fbea3cf9845679c",
+  "jsonHash": "fnv1a64:8d36e8ce31664412",
+  "findings": []
+}

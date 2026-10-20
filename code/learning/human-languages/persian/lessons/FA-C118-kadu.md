@@ -14,7 +14,8 @@ romanization: "kadu"
 concept_tag: FA-THINGS118-KADU
 prerequisites: [FA-C118-kishmish, FA-C118-alu]
 sounds: []
-roots: []
+roots: [persian-kadu]
+etymology_hook: "kadu: inherited, usually traced to Middle Persian kadūg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C118-alu]
 <!-- hl-knowledge: introduces=[FA-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **کدو** — *kadu* — "a squash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kadu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kadūg*, "gourd".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

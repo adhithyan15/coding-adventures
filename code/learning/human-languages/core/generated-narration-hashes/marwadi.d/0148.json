@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 148,
-  "sourceHash": "fnv1a64:940fc5e14971d57a",
+  "sourceHash": "fnv1a64:38a611ba2cef643b",
   "lessonIds": [
     "MW-C148-buro",
     "MW-C148-jaruri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch148.txt",
   "json": "marwadi/narration/ch148.json",
-  "textHash": "fnv1a64:7034ba639335be8e",
-  "jsonHash": "fnv1a64:08e4e723ab73867b",
+  "textHash": "fnv1a64:c7c765ecd6e556e8",
+  "jsonHash": "fnv1a64:92d05889c6ce1b7c",
   "findings": []
 }

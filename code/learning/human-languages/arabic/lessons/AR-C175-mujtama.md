@@ -14,7 +14,8 @@ romanization: "mujtamaʿ"
 concept_tag: AR-SABAB175-MUJTAMA
 prerequisites: [AR-C174-kay, AR-C175-sadaqa]
 sounds: []
-roots: []
+roots: [jamaa-gather]
+etymology_hook: "mujtamaʿ: built on the root j-m-ʿ, 'to gather' (Lane); mujtamaʿ is the Form VIII noun of place, 'where people gather'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C175-sadaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C175-SABAB175-02]; assesses=[] -->
 
 **مجتمع** — *mujtamaʿ* — "society".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مجتمع** (*mujtamaʿ*) is built on the native Arabic root *j-m-ʿ*, "to gather" (Lane). *Mujtamaʿ* is the Form VIII noun of place, "where people gather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

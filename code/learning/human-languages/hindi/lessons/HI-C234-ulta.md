@@ -14,7 +14,8 @@ romanization: "ulṭā"
 concept_tag: HI-LOC234-ULTA
 prerequisites: [HI-C234-baya, HI-C234-sidha]
 sounds: []
-roots: []
+roots: [indo-aryan-ullatati]
+etymology_hook: "ulṭā: from ulaṭnā 'to be overturned', listed under *ullaṭati 'turns over' (CDIAL 2368)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C234-sidha]
 <!-- hl-knowledge: introduces=[HI-LEX-C234-LOC234-03]; assesses=[] -->
 
 **उल्टा** — *ulṭā* — "upside down, reversed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उल्टा** (*ulṭā*) belongs with *ulaṭnā*, "to be overturned", which CDIAL lists under a reconstructed *\*ullaṭati*, "turns over" (CDIAL 2368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

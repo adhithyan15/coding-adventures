@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C691-agricultor",
+    "language": "spanish",
+    "chapter": 691,
+    "sequence": 24410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:695a81c31dd4a7f5"
+  },
+  "findings": []
+}

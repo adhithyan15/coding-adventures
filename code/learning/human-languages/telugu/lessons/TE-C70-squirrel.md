@@ -11,7 +11,8 @@ romanization: "uḍuta"
 concept_tag: TE-NOUN-SQUIRREL
 prerequisites: [TE-C70-mosquito]
 sounds: []
-roots: []
+roots: [dravidian-udute-squirrel]
+etymology_hook: "uḍuta: native Dravidian, one word with Kannada uḍute (DEDR 590)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C70-mosquito]
 It is inherited. The three stripes down its back carry a story that every Telugu household can tell, and the animal is let alone because of it.
 
 An ఉడుత's help is a set phrase for a small contribution offered honestly. Whoever says it is calling their own share tiny and means to give it anyway.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉడుత** (*uḍuta*) is native Dravidian, one word with Kannada *uḍute* (DEDR 590). DEDR lists Telugu *uḍuta*, "squirrel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

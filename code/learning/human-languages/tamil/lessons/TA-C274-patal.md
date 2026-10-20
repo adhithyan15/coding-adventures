@@ -14,7 +14,8 @@ romanization: "pāṭal"
 concept_tag: TA-PORUL274-PATAL
 prerequisites: [TA-C273-maittunan, TA-C274-icai]
 sounds: []
-roots: []
+roots: [dravidian-paadu-sing]
+etymology_hook: "பாடல் — native Dravidian (DEDR 4065); Malayalam pāṭuka 'to sing', Kannada pāḍu, Telugu pāḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C274-icai]
 <!-- hl-knowledge: introduces=[TA-LEX-C274-PORUL274-02]; assesses=[] -->
 
 **பாடல்** — *pāṭal* — "a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாடல்** (*pāṭal*) is native Dravidian. DEDR 4065 lists Malayalam *pāṭuka*, "to sing", Kannada *pāḍu* and Telugu *pāḍu*. It is the noun of *pāṭu*, "to sing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhūḷu"
 concept_tag: KA-VASTU224-DHULU
 prerequisites: [KA-C223-cek, KA-C224-hoge]
 sounds: []
-roots: []
+roots: [sanskrit-dhuli]
+etymology_hook: "dhūḷu ← Sanskrit dhūli 'dust, powder', reshaped as a tadbhava (CDIAL 6835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C224-hoge]
 <!-- hl-knowledge: introduces=[KA-LEX-C224-VASTU224-02]; assesses=[] -->
 
 **ಧೂಳು** — *dhūḷu* — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಧೂಳು** (*dhūḷu*) comes from Sanskrit *dhūli*, "dust, powder", reshaped to Kannada sounds: a tadbhava (CDIAL 6835). Kannada turned the *l* into *ḷ* and ends in *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

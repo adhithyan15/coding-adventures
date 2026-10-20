@@ -14,7 +14,8 @@ romanization: "machhlī"
 concept_tag: HI-NOUN-FISH
 prerequisites: [HI-C54-horse, HI-C52-oil, HI-C53-forehead]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "machlī ← Sanskrit matsya 'fish', with an added -l-; a tadbhava (CDIAL 9758)"
 duration:
   max_seconds: 210
 requires:

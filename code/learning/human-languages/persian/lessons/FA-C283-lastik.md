@@ -14,7 +14,8 @@ romanization: "lâstik"
 concept_tag: FA-CHIZ283-LASTIK
 prerequisites: [FA-C282-dastgire, FA-C283-shen]
 sounds: []
-roots: []
+roots: [french-elastique]
+etymology_hook: "lâstik: a loan, usually traced to French élastique 'elastic'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C283-shen]
 <!-- hl-knowledge: introduces=[FA-LEX-C283-CHIZ283-02]; assesses=[] -->
 
 **لاستیک** — *lâstik* — "rubber; a tyre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lâstik* is a loan, usually traced to French *élastique*, "elastic".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

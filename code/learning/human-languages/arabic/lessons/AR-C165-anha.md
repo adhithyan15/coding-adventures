@@ -14,7 +14,8 @@ romanization: "anhā"
 concept_tag: AR-VERB-ANHA
 prerequisites: [AR-C165-intaha, AR-C165-istamarra]
 sounds: []
-roots: []
+roots: [n-h-y]
+etymology_hook: "anhā: built on the root n-h-y, 'to reach an end' (Lane); anhā is Form IV, 'to bring to an end'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C165-istamarra]
 <!-- hl-knowledge: introduces=[AR-LEX-C165-ACT165-05]; assesses=[] -->
 
 **أنهى** — *anhā* — "to finish (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أنهى** (*anhā*) is built on the native Arabic root *n-h-y*, "to reach an end; to forbid" (Lane). *Anhā* is Form IV, "to bring to an end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

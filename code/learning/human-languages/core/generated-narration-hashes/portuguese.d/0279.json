@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:ecc14391b039e1e7",
+  "lessonIds": [
+    "PT-C279-imprensa",
+    "PT-C279-reportagem",
+    "PT-C279-reporter",
+    "PT-C279-correspondente",
+    "PT-C279-manchete"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch279.txt",
+  "json": "portuguese/narration/ch279.json",
+  "textHash": "fnv1a64:277c5b704c4a1129",
+  "jsonHash": "fnv1a64:2deb7f529958927b",
+  "findings": []
+}

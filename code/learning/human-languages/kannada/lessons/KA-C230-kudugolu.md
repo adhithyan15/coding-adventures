@@ -14,7 +14,8 @@ romanization: "kuḍugōlu"
 concept_tag: KA-VASTU230-KUDUGOLU
 prerequisites: [KA-C230-sutkes, KA-C230-guddali]
 sounds: []
-roots: []
+roots: [dravidian-kudu-crooked, dravidian-kol-stick]
+etymology_hook: "kuḍugōlu: usually 'the crooked stick': kuḍu 'crooked' (DEDR 2054) + kōlu 'stick' (DEDR 2237)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C230-guddali]
 <!-- hl-knowledge: introduces=[KA-LEX-C230-VASTU230-05]; assesses=[] -->
 
 **ಕುಡುಗೋಲು** — *kuḍugōlu* — "a sickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಡುಗೋಲು** (*kuḍugōlu*) is native Dravidian, usually explained as "the crooked stick": *kuḍu*, "crooked, bent" (DEDR 2054), and *kōlu*, "stick" (DEDR 2237).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

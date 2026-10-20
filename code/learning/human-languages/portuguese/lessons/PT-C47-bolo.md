@@ -13,7 +13,8 @@ gloss: "a cake"
 concept_tag: PT-REFEICOES-BOLO
 prerequisites: [PT-C46-cenoura, PT-C46-feijao]
 sounds: []
-roots: []
+roots: [bulla]
+etymology_hook: "bolo — from the word for a ball, which ← Old Provençal bola, from Latin bulla 'bubble'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C46-feijao]
 <!-- hl-knowledge: introduces=[PT-LEX-C47-REFEICOES-01]; assesses=[] -->
 
 **o bolo** — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bolo** is a masculine of the word for a ball (EtymDB 2.1). That word came through Old Provençal *bola* from Latin *bulla*, "bubble, knob" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

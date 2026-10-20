@@ -13,7 +13,8 @@ gloss: "a writing tablet, a board"
 concept_tag: LA-RES1-TABULA
 prerequisites: [LA-C84-charta, LA-C84-stilus]
 sounds: []
-roots: []
+roots: [tabula-latin]
+etymology_hook: "tabula 'tablet, board' — origin uncertain; perhaps kin to taberna 'booth'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C84-stilus]
 <!-- hl-knowledge: introduces=[LA-LEX-C84-RES1-04]; assesses=[] -->
 
 **tabula, tabulae** — "a writing tablet, a board". English *table*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tabula** has no sure origin. Lewis & Short connect it with *taberna*, "a booth, a shop", but the link is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

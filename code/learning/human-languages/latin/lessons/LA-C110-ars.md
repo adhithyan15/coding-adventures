@@ -13,7 +13,8 @@ gloss: "a skill, a craft"
 concept_tag: LA-CAN110-ARS
 prerequisites: [LA-C109-potestas, LA-C110-facultas]
 sounds: []
-roots: []
+roots: [ars-latin]
+etymology_hook: "ars 'skill' — inherited, usually traced to PIE *h2rtis 'fitting'; kin to arma 'tools'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C110-facultas]
 <!-- hl-knowledge: introduces=[LA-LEX-C110-CAN110-02]; assesses=[] -->
 
 **ars, artis** — "a skill, a craft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ars** is inherited, usually traced to Proto-Indo-European *\*h2rtis*, "skill, a fitting together" (EtymDB 2.1), from a root for fitting that also gave *arma*, "tools, weapons" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

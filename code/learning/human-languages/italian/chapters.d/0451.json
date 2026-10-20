@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Due passi in città",
+  "label": "ch:it-due-passi-in-citta",
+  "canDo": "I can talk about strolling round a town: the seafront, mooching about, browsing, peeking and the shop window.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C451-vetrina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can talk about strolling round a town: the seafront, mooching about, browsing, peeking and the shop window.",
+    "assesses": [
+      "IT-LEX-C451-PASSEGGIATA-03",
+      "IT-LEX-C451-PASSEGGIATA-04",
+      "IT-LEX-C451-PASSEGGIATA-05"
+    ]
+  }
+}

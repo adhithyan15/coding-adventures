@@ -14,7 +14,8 @@ romanization: "uraykkuka"
 concept_tag: ML-VERB-URAYKKUKA
 prerequisites: [ML-C309-olivakkuka, ML-C310-tennuka]
 sounds: []
-roots: []
+roots: [dravidian-urai-rub]
+etymology_hook: "uraykkuka: native Dravidian, one word with Tamil urai and Kannada urdu (DEDR 665)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C310-tennuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C310-KRIYA310-02]; assesses=[] -->
 
 **ഉരയ്ക്കുക** — *uraykkuka* — "to scrub, to rub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉരയ്ക്കുക** (*uraykkuka*) is native Dravidian, one word with Tamil *urai*, Kannada *urdu* and Telugu *ora* (DEDR 665). DEDR 665 compares Sanskrit *uñch*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

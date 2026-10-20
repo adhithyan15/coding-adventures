@@ -4,7 +4,7 @@
   "chapter": 400,
   "title": "Five Words for Making a Journey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d6c11750a11db3e7",
+  "sourceHash": "fnv1a64:7bf15f0be2a47004",
   "lessons": [
     {
       "id": "ES-C400-tren",
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1597fbc810d31ecb",
+      "sourceHash": "fnv1a64:bf38785feb409aaf",
       "notice": null,
       "blocks": [
         {
@@ -552,7 +552,7 @@
             },
             {
               "kind": "speech",
-              "text": "The dictionary keeps two nouns spelled abono apart. One belongs to abonar in the sense of paying or improving soil, so it can mean a payment or fertilizer. The other belongs to abonarse, \"to subscribe.\" It names the right a subscriber acquires and the document or set of tickets that proves that right."
+              "text": "The dictionary keeps two nouns spelled abono apart. One belongs to abonar in the sense of paying or improving soil, so it can mean a payment or fertilizer. The other belongs to abonarse, \"to subscribe.\" It names the right a subscriber acquires and the document or set of tickets that proves that right. EtymDB 2.1 traces abonar to Latin bonus, \"good\", for the soil sense, and records nothing for the other."
             },
             {
               "kind": "speech",

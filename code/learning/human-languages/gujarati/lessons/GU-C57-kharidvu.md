@@ -14,7 +14,8 @@ romanization: "kharīdvũ"
 concept_tag: GU-VERB-KHARIDVU
 prerequisites: [GU-C56-saambhalvu, GU-C56-shikhvu]
 sounds: []
-roots: []
+roots: [persian-kharidan]
+etymology_hook: "kharīdvũ: usually traced to Persian kharīdan 'to buy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C56-shikhvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C57-MARKET-01]; assesses=[] -->
 
 **ખરીદવું** (*kharīdvũ*) — "to buy". What you do at the **બજાર**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખરીદવું** (*kharīdvũ*) is a loan, usually traced to Persian *kharīdan*, "to buy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

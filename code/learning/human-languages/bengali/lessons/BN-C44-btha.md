@@ -14,7 +14,8 @@ romanization: "bæthā"
 concept_tag: BN-BODY44-BTHA
 prerequisites: [BN-C44-jbor, BN-C44-haspatal]
 sounds: []
-roots: []
+roots: [sanskrit-vyatha]
+etymology_hook: "bæthā ← Sanskrit vyathā 'pain, distress', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C44-haspatal]
 <!-- hl-knowledge: introduces=[BN-LEX-C44-BODY44-04]; assesses=[] -->
 
 **ব্যথা** — *bæthā* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যথা** (*bæthā*) is Sanskrit *vyathā*, "pain, distress", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

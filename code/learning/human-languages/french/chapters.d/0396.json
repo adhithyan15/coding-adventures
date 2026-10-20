@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Installer un logiciel",
+  "label": "ch:fr-installer-un-logiciel",
+  "canDo": "I can install and remove software, talk about the device it runs on and about updates.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C396-mise-a-jour",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can install and remove software, talk about the device it runs on and about updates.",
+    "assesses": [
+      "FR-LEX-C396-LOGICIEL-03",
+      "FR-LEX-C396-LOGICIEL-04",
+      "FR-LEX-C396-LOGICIEL-05"
+    ]
+  }
+}

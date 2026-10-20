@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to sing; a song, then the Marathi for to
 You'll want to know: विसरणे.
 विसरणे — visarṇe — "to forget".
 
+The word, taken apart.
+विसरणे (visarṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vismarati, "forgets" (CDIAL 12021). It is vi-, "away", and smṛ, "to remember".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to dance, then the Marathi for to forget
 
 You'll want to know: पाठवणे.
 पाठवणे — pāṭhavṇe — "to send".
+
+The word, taken apart.
+पाठवणे (pāṭhavṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prasthāpayati, "puts aside, sends", built on sthā, "to stand" (CDIAL 8607).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to forget, then the Marathi for to send.
 You'll want to know: मोजणे.
 मोजणे — mojṇe — "to count".
 
+The word, taken apart.
+मोजणे (mojṇe) is listed by CDIAL under Sanskrit meya, "to be measured", from mā, "to measure", beside Marathi mejṇẽ, "to measure". CDIAL leaves the -o- of मोजणे unexplained (CDIAL 10329).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to send, then the Marathi for to count.
 You'll want to know: पकडणे.
 पकडणे — pakaḍṇe — "to catch".
 
+The word, taken apart.
+पकडणे (pakaḍṇe) comes from a reconstructed pakkaḍ-, "seize" (CDIAL 7619). CDIAL calls its link with Sanskrit pragṛhṇāti, "holds", obscure and doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to count, then the Marathi for to catch.
 
 You'll want to know: कापणे.
 कापणे — kāpṇe — "to cut".
+
+The word, taken apart.
+कापणे (kāpṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kalpayati, "sets in order; trims, cuts" (CDIAL 2944).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "prakaṭana"
 concept_tag: TE-CADUVU156-PRAKATANA
 prerequisites: [TE-C156-sucana, TE-C156-adde]
 sounds: []
-roots: []
+roots: [sanskrit-prakatana]
+etymology_hook: "prakaṭana ← Sanskrit prakaṭana 'bringing to light', a tatsama (CDIAL 8429)"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,11 @@ reviews_of: [TE-C156-adde]
 [YOU READ: the advert]
 
 The advert says **ఇల్లు అద్దెకు ఉంది** — *illu addeku undi* — "House for rent."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రకటన** (*prakaṭana*) is Sanskrit *prakaṭana*, "bringing to light", taken over whole as a learned loan, a tatsama (CDIAL 8429). The sense "announcement" grows out of it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

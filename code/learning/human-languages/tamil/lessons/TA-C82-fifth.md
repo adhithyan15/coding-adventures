@@ -11,7 +11,8 @@ gloss: "fifth — the ending working on a number you already count with"
 concept_tag: TA-ORDINAL-FIFTH
 prerequisites: [TA-C82-fourth, TA-C82-first, TA-C78-why, TA-C66-left]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, tamil-aaku-become]
+etymology_hook: "ஐந்தாவது — native: aintu 'five' (DEDR 2826) + the ordinal -āvatu, from ā 'to become' (DEDR 333)"
 duration:
   max_seconds: 225
 requires:
@@ -53,6 +54,11 @@ Nothing in this chapter was a word you had to learn.
 
 **இடது பக்கம் முதல் பாதை** is now sayable in its useful half: **முதல் பாதை**,
 the first road, with **இடது** for which side of the street.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஐந்தாவது** (*aindāvadu*) is native: *aintu*, "five" (DEDR 2826), with the ordinal ending *-āvatu*, from *ā*, "to become" (DEDR 333).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C82-ORDINAL-08, TA-LEX-C82-ORDINAL-07, TA-LEX-C82-ORDINAL-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 182,
-  "sourceHash": "fnv1a64:4fa19e58a4b95dc0",
+  "sourceHash": "fnv1a64:f31418be4648d2d6",
   "lessonIds": [
     "RU-C182-teper",
     "RU-C182-kanikuly",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch182.txt",
   "json": "russian/narration/ch182.json",
-  "textHash": "fnv1a64:ae6a2c35734c68ed",
-  "jsonHash": "fnv1a64:5e24cc7d32cb22d2",
+  "textHash": "fnv1a64:62183185267fb443",
+  "jsonHash": "fnv1a64:9bd7732cfd5e7dd8",
   "findings": []
 }

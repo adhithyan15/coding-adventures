@@ -13,7 +13,8 @@ gloss: "conversation, speech"
 concept_tag: LA-RES194-SERMO
 prerequisites: [LA-C193-monile, LA-C194-sententia]
 sounds: []
-roots: []
+roots: [sermo-latin]
+etymology_hook: "sermō 'speech' — often linked with serō 'to string together'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C194-sententia]
 <!-- hl-knowledge: introduces=[LA-LEX-C194-RES194-02]; assesses=[] -->
 
 **sermō, sermōnis** — "conversation, speech".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sermō** is often linked with *serō*, "to join, to string together" (Lewis & Short): talk as words strung together. The link is likely but not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

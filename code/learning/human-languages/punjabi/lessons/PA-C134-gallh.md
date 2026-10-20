@@ -14,7 +14,8 @@ romanization: "gallh"
 concept_tag: PA-THINGS134-GALLH
 prerequisites: [PA-C133-ullu, PA-C133-ka]
 sounds: []
-roots: []
+roots: [sanskrit-galla]
+etymology_hook: "gallh ← Sanskrit galla 'cheek', perhaps from Dravidian; a tadbhava (CDIAL 4089)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C133-ka]
 <!-- hl-knowledge: introduces=[PA-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **ਗੱਲ੍ਹ** — *gallh* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੱਲ੍ਹ** (*gallh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *galla*, "cheek" (CDIAL 4089). CDIAL cites Mayrhofer for a Dravidian source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

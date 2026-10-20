@@ -1,0 +1,11 @@
+{
+  "id": "LA-C327-matrimonium",
+  "pathSegment": "LA-PATH-327-SPONSA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-327-SPONSA",
+      "order": 4
+    }
+  ]
+}

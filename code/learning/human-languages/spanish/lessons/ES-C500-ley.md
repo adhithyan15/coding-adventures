@@ -10,7 +10,8 @@ gloss: "the law"
 concept_tag: ES-REF-LEY
 prerequisites: [ES-C500-molestar, ES-C500-prohibir]
 sounds: []
-roots: []
+roots: [lex-latin]
+etymology_hook: "ley ← Latin lex, legem 'law' — inherited, its -g- lost — English legal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C500-prohibir]
 > Es la ley.
 >
 > *It is the law.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ley** ← Latin *lex*, *legem*, "law" (EtymDB 2.1) — inherited: the *-g-* between vowels fell away.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

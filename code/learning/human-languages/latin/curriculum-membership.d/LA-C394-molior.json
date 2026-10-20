@@ -1,0 +1,11 @@
+{
+  "id": "LA-C394-molior",
+  "pathSegment": "LA-PATH-394-APPARO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-394-APPARO",
+      "order": 3
+    }
+  ]
+}

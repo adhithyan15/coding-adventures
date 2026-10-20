@@ -14,7 +14,8 @@ romanization: "tathāpi"
 concept_tag: SA-WHY154-TATHAPI
 prerequisites: [SA-C154-yadi, SA-C154-cet]
 sounds: []
-roots: []
+roots: [sanskrit-tathapi]
+etymology_hook: "tathāpi ← tathā 'so, thus' + api 'even': 'even so' (CDIAL 5647); Punjabi te 'and' comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C154-cet]
 <!-- hl-knowledge: introduces=[SA-LEX-C154-WHY154-03]; assesses=[] -->
 
 **तथापि** — *tathāpi* — "even so, still".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tathāpi* is built from *tathā* "so, thus", on the pronoun base *ta-* "that", and *api* "even, also" (CDIAL 5647): "even so, nevertheless". CDIAL 5647 traces Punjabi *te* "and" to it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

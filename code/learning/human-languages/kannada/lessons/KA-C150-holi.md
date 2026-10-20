@@ -14,7 +14,8 @@ romanization: "holi"
 concept_tag: KA-VERB-HOLI
 prerequisites: [KA-C150-gudisu, KA-C150-kattu]
 sounds: []
-roots: []
+roots: [dravidian-pol-sew]
+etymology_hook: "holi: native Dravidian, one word with Tamil pollam (DEDR 4554)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C150-kattu]
 <!-- hl-knowledge: introduces=[KA-LEX-C150-ACT150-05]; assesses=[] -->
 
 **ಹೊಲಿ** — *holi* — "to sew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಲಿ** (*holi*) is native Dravidian, one word with Tamil *pollam* (DEDR 4554). DEDR lists *pol* and *holi*, "to sew": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

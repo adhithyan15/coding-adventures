@@ -13,7 +13,8 @@ gloss: "a century"
 concept_tag: IT-TEMPO131-SECOLO
 prerequisites: [IT-C131-fine-settimana, IT-C131-data]
 sounds: []
-roots: []
+roots: [saeculum-latin]
+etymology_hook: "secolo ← Latin saeculum 'an age', a learned word — English secular shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C131-data]
 <!-- hl-knowledge: introduces=[IT-LEX-C131-TEMPO131-03]; assesses=[] -->
 
 **il secolo** — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**secolo** ← Latin *saeculum*, "an age, a generation" — a learned borrowing. EtymDB 2.1 has no row for *secolo*; it derives Portuguese *século*, borrowed the same way, from *saeculum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

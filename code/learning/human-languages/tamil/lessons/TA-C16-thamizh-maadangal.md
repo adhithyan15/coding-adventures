@@ -12,9 +12,9 @@ concept_tag: TA-MONTHS
 prerequisites: [TA-C15-thanneer-arisi]
 sounds: [tamil-vowel-sign-ai, tamil-retroflex-lla]
 roots: [tamil-solar-calendar-nakshatra]
-etymology_hook: "The Tamil solar calendar's twelve months are named for nakshatras (lunar-mansion star groups) the MOON sits near on the full-moon day within that month — a THIRD calendar system, alongside the Gregorian and the pan-Indian Hindu lunisolar calendar, still governing Tamil New Year and Pongal today"
+etymology_hook: "Most Tamil month names are Sanskrit star names in Tamil dress: Chithirai ← Citrā, Kārthigai ← Kṛttikā"
 duration:
-  max_seconds: 267
+  max_seconds: 288
 requires:
   knowledge: [TA-LEX-THANNEER-ARISI-01]
 introduces:
@@ -52,6 +52,11 @@ Samvat–style) calendar. Its months are traditionally tied to **nakshatras**
 the **moon** sits near on the **full-moon (pournami) day** that falls
 within that month — the moon's position, not the sun's, and tied to that
 month's full moon specifically, not simply the month's start.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Most of the twelve names are Sanskrit star names in Tamil dress: *Chithirai* from *Citrā*, *Vaikāsi* from *Viśākhā*, *Kārthigai* from *Kṛttikā*, *Māsi* from *Māgha*. Tamil gave them its own sounds and endings.
 
 ## Why it's said this way: Be honest: this is a THIRD calendar, not a variant of the others
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-THAMIZH-MAADANGAL-02]; assesses=[] -->

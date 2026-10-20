@@ -14,7 +14,8 @@ romanization: "ʿashāʾ"
 concept_tag: AR-THINGS119-ASHA
 prerequisites: [AR-C119-wishah, AR-C119-ghada]
 sounds: []
-roots: []
+roots: [ʿ-sh-w]
+etymology_hook: "ʿashāʾ: built on the root ʿ-sh-w, 'the evening' (Lane); ʿashāʾ is the evening meal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C119-ghada]
 <!-- hl-knowledge: introduces=[AR-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **عشاء** — *ʿashāʾ* — "dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عشاء** (*ʿashāʾ*) is built on the native Arabic root *ʿ-sh-w*, "the evening" (Lane). *ʿAshāʾ* is the evening meal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

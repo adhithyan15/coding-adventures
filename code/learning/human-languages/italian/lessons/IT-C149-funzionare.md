@@ -13,7 +13,8 @@ gloss: "to function, to work"
 concept_tag: IT-VERB-FUNZIONARE
 prerequisites: [IT-C149-fissare, IT-C149-frenare]
 sounds: []
-roots: []
+roots: [functio-latin]
+etymology_hook: "funzionare — from funzione ← Latin functio 'performance' — English function"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C149-frenare]
 <!-- hl-knowledge: introduces=[IT-LEX-C149-VERBI149-04]; assesses=[] -->
 
 **funzionare** — "to function, to work".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**funzionare** — built from *funzione*, "a function", which ← Latin *functio*, "performance" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

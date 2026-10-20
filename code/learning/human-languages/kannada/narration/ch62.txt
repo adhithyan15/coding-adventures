@@ -14,6 +14,9 @@ You'll want to know: ನೂಲು.
 ನೂಲು (nūlu) is inherited, and it is the stuff ಬಟ್ಟೆ is made of. Everything worn in the cloth chapter began here.
 The same shape does double duty: ನೂಲು (nūlu) is the thread and it is equally the spinning of it, so one word covers the material and the making. Kannada does that often, and you will start to expect it.
 
+The word, taken apart.
+ನೂಲು (nūlu) is native Dravidian, one word with Tamil nūl (DEDR 3726).
+
 What you've built.
 The first of five things a household makes or keeps.
 
@@ -45,6 +48,9 @@ You'll want to know: ಸೂಜಿ.
 ಸೂಜಿ (sūji) is what the ನೂಲು (nūlu) is put through. It is a borrowing from the north, and it arrived early enough that nothing about it feels foreign now.
 It is also the hand of a clock. A ಗಂಟೆ has two ಸೂಜಿ (sūji) on its face, and Kannada saw the resemblance before anybody thought to give the hands a separate name.
 
+The word, taken apart.
+ಸೂಜಿ (sūji) comes from Sanskrit sūcī, "needle", reshaped to Kannada sounds: a tadbhava (CDIAL 13551).
+
 What you've built.
 Two.
 
@@ -74,6 +80,9 @@ You'll want to know: ಹಗ್ಗ.
 ಹಗ್ಗ (hagga) — "a rope".
 ಹಗ್ಗ (hagga) is ನೂಲು (nūlu) grown up: strands laid together until the result will hold weight. Native, with nothing borrowed anywhere in it.
 In a ಹಳ್ಳಿ yard it is the thing at the end of which the ಹಸು stands. Twist it thinner and it ties a ಬುಟ್ಟಿ shut; twist it thicker and it draws water out of a ಕೆರೆ.
+
+The word, taken apart.
+ಹಗ್ಗ (hagga) is a loan from Indo-Aryan. DEDR files it in its appendix of such loans (DEDR App. 2) and links it to Sanskrit pragraha, "bridle, thong" (CDIAL 8478), with Kannada agga beside hagga.
 
 What you've built.
 Three.
@@ -106,6 +115,9 @@ You'll want to know: ಪೊರಕೆ.
 ಪೊರಕೆ (porake) is a bundle of stiff ribs tied at one end — no handle, so it is used bent over, in short strokes.
 It is the first object of the day. The ground outside the ಬಾಗಿಲು is swept with a ಪೊರಕೆ (porake) before the ರಂಗೋಲಿ is set out on it, because the pattern needs clean ground to sit on. Sweeping, then drawing: that order is fixed.
 
+The word, taken apart.
+ಪೊರಕೆ (porake) is native Dravidian, one word with Tamil perukku and Telugu poraka (DEDR 4415).
+
 What you've built.
 Four.
 
@@ -136,6 +148,9 @@ You'll want to know: ಕೊಡೆ.
 ಕೊಡೆ (koḍe) works twice over in Karnataka: it keeps the ಮಳೆಗಾಲ off you, and it keeps the ಬಿಸಿಲು off you in the months on either side of it. In a Kannada street both uses are ordinary.
 Say it carefully. ಕೊಡೆ (koḍe) and the ಕೊಡು you already know start with the same two letters, and they are separate items — one is a thing, the other is what you do with it, and joining them would be inventing a story. Kannada gives you plenty of real ones; this is not one.
 Put ದಯವಿಟ್ಟು in front of any of this chapter's five and you have asked for it properly.
+
+The word, taken apart.
+ಕೊಡೆ (koḍe) is native Dravidian, one word with Tamil kuṭai and Telugu goḍugu (DEDR 1663). DEDR 1663 compares Sanskrit utkūṭa.
 
 What you've built.
 Five: ನೂಲು (nūlu), ಸೂಜಿ (sūji), ಹಗ್ಗ (hagga), ಪೊರಕೆ (porake), ಕೊಡೆ (koḍe). Enough to ask a household politely for the thing you need.

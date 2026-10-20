@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 140,
-  "sourceHash": "fnv1a64:148906b4ba93dc56",
+  "sourceHash": "fnv1a64:fa697771de92222c",
   "lessonIds": [
     "PT-C140-discutir",
     "PT-C140-prometer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch140.txt",
   "json": "portuguese/narration/ch140.json",
-  "textHash": "fnv1a64:969cefc50f68c098",
-  "jsonHash": "fnv1a64:b3939f15f31cf29d",
+  "textHash": "fnv1a64:7cbee5a0092e13f0",
+  "jsonHash": "fnv1a64:29baf1a6da33a7d0",
   "findings": []
 }

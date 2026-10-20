@@ -14,7 +14,8 @@ romanization: "mottāniki"
 concept_tag: TE-KARANAM294-MOTTANIKI
 prerequisites: [TE-C294-annattu, TE-C294-dadapu]
 sounds: []
-roots: []
+roots: [dravidian-mottam-total]
+etymology_hook: "mottāniki: native mottamu 'total' (DEDR 5119) + -āniki 'to the'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C294-dadapu]
 <!-- hl-knowledge: introduces=[TE-LEX-C294-KARANAM294-05]; assesses=[] -->
 
 **మొత్తానికి** — *mottāniki* — "all in all, in short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొత్తానికి** (*mottāniki*) is native Dravidian: *mottamu*, "total, whole", one word with Tamil *mottam* (DEDR 5119), with *-āniki*, "to the": "to the whole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

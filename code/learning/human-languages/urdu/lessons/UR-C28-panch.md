@@ -12,7 +12,7 @@ concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [UR-C28-char]
 sounds: [rtl, long-a, nasal-vowel]
 roots: [sanskrit-panca, pie-penkwe]
-etymology_hook: "paanch continues Sanskrit panca from Proto-Indo-European *penkwe -- Greek pente, Latin quinque, English five -- and it is the panch of Punjab, the land of five waters."
+etymology_hook: "pānch ← Sanskrit pañca 'five' (CDIAL 7655), from PIE *pénkʷe; the panj of Punjab is its Persian cousin"
 duration:
   max_seconds: 275
 requires:
@@ -50,7 +50,7 @@ as a full *n* of its own — the behaviour this book named several chapters ago.
 ## The word, taken apart — five waters
 <!-- hl-knowledge: introduces=[UR-ETYMON-PANCH-FIVE-PIE]; assesses=[UR-LEX-PANCH] -->
 
-**پانچ** continues Sanskrit *pañca*, from Indo-European \**pénkʷe*,
+**پانچ** continues Sanskrit *pañca* (CDIAL 7655), from Indo-European \**pénkʷe*,
 "five." Greek **pénte**, Latin **quīnque** and English **five** are the same
 word.
 

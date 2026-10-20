@@ -11,9 +11,10 @@ gloss: night — the fourth part of the day, and the fourth time the same ending
 concept_tag: TIME-NIGHT
 prerequisites: [MR-C66-sandhyakal]
 sounds: [halant-conjunct, matra-aa]
-roots: []
+roots: [sanskrit-ratri]
+etymology_hook: "rātra: Sanskrit rātri 'night'; CDIAL lists the inherited Marathi rāt (CDIAL 10702)"
 duration:
-  max_seconds: 210
+  max_seconds: 240
 requires:
   knowledge: [MR-LEX-SANDHYAKAL, MR-GRAMMAR-TIME-II]
 introduces:
@@ -50,6 +51,11 @@ give it its full value — *rā-tra*, not *rāt*.
 
 > **मी रात्री येतो.**
 > — *mī rātrī yeto.* — **I come at night.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रात्र** is Sanskrit *rātri*, "night", lightly reshaped; the inherited form is *rāt* (CDIAL 10702).
 
 ## Grammar Lens: four for four, and what English does instead
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-TIME-II, MR-LEX-RATRA, MR-LEX-SAKAL, MR-LEX-DUPAR, MR-LEX-SANDHYAKAL] -->

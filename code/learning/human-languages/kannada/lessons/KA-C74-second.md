@@ -11,9 +11,10 @@ romanization: "eraḍaneya"
 concept_tag: KA-ORDINAL-SECOND
 prerequisites: [KA-C73-a-flower, KA-C73-very, KA-C70-say, KA-C58-a-little, KA-C07-eradu, KA-C07-ondu]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "eraḍaneya: native eraḍu 'two' (DEDR 474) + the ordinal ending -aneya"
 duration:
-  max_seconds: 220
+  max_seconds: 229
 requires:
   knowledge: [KA-GRAMMAR-C73-ABLE-06, KA-LEX-C73-ABLE-01, KA-LEX-C70-TELL-01, KA-LEX-C58-REPLY-01, KA-LEX-C07-ERADU-01, KA-LEX-C07-ONDU-01]
 introduces:
@@ -52,6 +53,11 @@ line**, and Kannada keeps a second set of words for that job.
 It goes straight in front of what it counts, and nothing on the noun changes:
 **ಎರಡನೆಯ ದಿನ** (*eraḍaneya dina*), the second day; **ಎರಡನೆಯ ಬಾಗಿಲು**
 (*eraḍaneya bāgilu*), the second door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎರಡನೆಯ** (*eraḍaneya*) is built from *eraḍu*, "two", native Dravidian (DEDR 474, with Tamil *iraṇṭu*), and the ordinal ending *-aneya*.
 
 ## Grammar Lens: the ending, and why the chapter opens on two
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C74-ORDINAL-02]; assesses=[KA-LEX-C74-ORDINAL-01, KA-LEX-C07-ERADU-01, KA-LEX-C07-ONDU-01] -->

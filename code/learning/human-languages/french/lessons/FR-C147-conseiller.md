@@ -13,7 +13,8 @@ gloss: "to advise"
 concept_tag: FR-VERB-CONSEILLER
 prerequisites: [FR-C146-fumer, FR-C147-comparer]
 sounds: []
-roots: []
+roots: [consilium-latin]
+etymology_hook: "conseiller ← Latin consiliari 'to take counsel', from consilium — English counsel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C147-comparer]
 <!-- hl-knowledge: introduces=[FR-LEX-C147-VERBES147-02]; assesses=[] -->
 
 **conseiller** — "to advise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conseiller** ← Old French *consellier* (EtymDB 2.1) ← Latin *consiliari*, "to take counsel", from *consilium*, "advice" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

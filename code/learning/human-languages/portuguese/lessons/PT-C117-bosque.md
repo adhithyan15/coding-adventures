@@ -14,6 +14,7 @@ concept_tag: PT-NATUREZA117-BOSQUE
 prerequisites: [PT-C117-gruta, PT-C117-cascata]
 sounds: []
 roots: []
+etymology_hook: "bosque ← Catalan or Provençal bosc, from a Germanic word — English bush is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C117-cascata]
 <!-- hl-knowledge: introduces=[PT-LEX-C117-NATUREZA117-04]; assesses=[] -->
 
 **o bosque** — "a wood, a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bosque** ← Catalan or Provençal *bosc* — borrowed, from a Germanic word for bushes and woodland.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

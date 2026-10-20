@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d04dcef66ef053cb",
+  "sourceHash": "fnv1a64:884f0ea007980cc8",
   "lessons": [
     {
       "id": "TE-C04-dappu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59197f1b6e22b419",
+      "sourceHash": "fnv1a64:4fdb899e8bff2f6d",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of డప్పు (ḍappu) is uncertain. Neither DEDR nor CDIAL lists it. Both have drum words of a similar shape, but neither is a sure source: DEDR 3082 lists Telugu tappeṭa, \"a kind of drum\", and CDIAL 5531 lists Gujarati ḍaph under Sanskrit ḍamaru, \"drum\", a word CDIAL takes as imitating the sound, perhaps from Munda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +302,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0663528e381b7bce",
+      "sourceHash": "fnv1a64:b6969231a4dd72a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -338,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వెళ్ళు (veḷḷu, \"to go\") and vaccu (\"to come\") are native Dravidian verbs. As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+              "text": "వెళ్ళు (veḷḷu, \"to go\") and vaccu (\"to come\") are native Dravidian verbs (DEDR 5393, 5270). As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
             }
           ]
         },
@@ -569,7 +580,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:167fb4af55c04131",
+      "sourceHash": "fnv1a64:be91d314a3ad66a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -641,6 +652,10 @@
             {
               "kind": "speech",
               "text": "The whole south — and, in Bengali, well beyond it — prefers a promise of return to a blunt farewell. The languages are not all related; the habit travelled anyway."
+            },
+            {
+              "kind": "speech",
+              "text": "Both verbs are native Dravidian: veḷḷu (DEDR 5393) and vaccu (DEDR 5270)."
             }
           ]
         },
@@ -727,7 +742,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:56a3dc92ceca80f8",
+      "sourceHash": "fnv1a64:374bf8183e0f1d9b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -774,7 +789,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "రేపు (rēpu, \"tomorrow\") is native Dravidian. కలుద్దాం (kaluddām, \"let's meet\") is from కలు (kalu, \"to meet, to join\") — so the phrase is \"tomorrow, let's meet,\" the Telugu \"see you tomorrow.\" The -దాం (-ddām) ending is Telugu's \"let's ___\" — a first-person-plural invitation: veḷḷddām (\"let's go\"), tindām (\"let's eat\")."
+              "text": "రేపు (rēpu, \"tomorrow\") is native Dravidian (DEDR 916). కలుద్దాం (kaluddām, \"let's meet\") is from కలు (kalu, \"to meet, to join\"; DEDR 1299, which compares Sanskrit kalka, \"a paste\") — so the phrase is \"tomorrow, let's meet,\" the Telugu \"see you tomorrow.\" The -దాం (-ddām) ending is Telugu's \"let's ___\" — a first-person-plural invitation: veḷḷddām (\"let's go\"), tindām (\"let's eat\")."
             }
           ]
         },
@@ -1030,7 +1045,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:34a3ff98d57eee78",
+      "sourceHash": "fnv1a64:5d471831bc5019fb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1077,7 +1092,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "మళ్ళీ కలుద్దాం (maḷḷī kaluddām) = మళ్ళీ (maḷḷī, \"again\") + కలుద్దాం (kaluddām, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: maḷḷī (\"again,\" from maral, \"to return\") and kalu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock."
+              "text": "మళ్ళీ కలుద్దాం (maḷḷī kaluddām) = మళ్ళీ (maḷḷī, \"again\") + కలుద్దాం (kaluddām, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: maḷḷī (\"again,\" from maral, \"to return\"; DEDR 4761) and kalu (\"to meet\"; DEDR 1299, which compares Sanskrit kalka, \"a paste\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Telugu keeps the native kalu."
             }
           ]
         },

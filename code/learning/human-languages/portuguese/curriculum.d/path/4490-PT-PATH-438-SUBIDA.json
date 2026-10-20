@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-438-SUBIDA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-438-SUBIDA"
+  ],
+  "after": []
+}

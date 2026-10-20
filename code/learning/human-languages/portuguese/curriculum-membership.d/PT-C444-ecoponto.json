@@ -1,0 +1,11 @@
+{
+  "id": "PT-C444-ecoponto",
+  "pathSegment": "PT-PATH-444-MOBILIARIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-444-MOBILIARIO",
+      "order": 1
+    }
+  ]
+}

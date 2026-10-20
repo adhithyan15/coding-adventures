@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C384-norma",
+    "language": "italian",
+    "chapter": 384,
+    "sequence": 21900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbbdc5917741ad27"
+  },
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "to park"
 concept_tag: PT-VERB-ESTACIONAR
 prerequisites: [PT-C171-agradecer, PT-C171-convidar]
 sounds: []
-roots: []
+roots: [stare-latin]
+etymology_hook: "estacionar — built on estação 'station' (← Latin statio 'a standing place')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C171-convidar]
 <!-- hl-knowledge: introduces=[PT-LEX-C171-VERBOS171-05]; assesses=[] -->
 
 **estacionar** — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**estacionar** is built on *estação*, "station" (← Latin *statio*, "a standing place").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

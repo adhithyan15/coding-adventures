@@ -14,7 +14,8 @@ romanization: "ādar"
 concept_tag: MR-VASTU273-ADAR
 prerequisites: [MR-C273-svabhav, MR-C273-vagnuk]
 sounds: []
-roots: []
+roots: [sanskrit-adara]
+etymology_hook: "ādar ← Sanskrit ādara 'respect', a tatsama (CDIAL 1142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C273-vagnuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C273-VASTU273-04]; assesses=[] -->
 
 **आदर** — *ādar* — "respect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आदर** (*ādar*) is Sanskrit *ādara*, "respect", taken over whole as a learned loan, a tatsama (CDIAL 1142).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

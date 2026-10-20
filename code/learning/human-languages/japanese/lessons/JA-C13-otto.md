@@ -11,8 +11,8 @@ gloss: my husband
 concept_tag: JA-FAMILY-HUSBAND
 prerequisites: [JA-C13-imouto]
 sounds: [mora]
-roots: []
-etymology_hook: The small っ now earns a lexical payoff by holding the consonant before と.
+roots: [japanese-otto]
+etymology_hook: "otto: native; usually explained as an old word for 'man' + hito 'person'; kanji 夫 attached later"
 duration:
   max_seconds: 160
 requires:
@@ -43,6 +43,11 @@ Retrieve **いもうと** once from its meaning.
 
 Hear *o | hold | to* and say it without inserting a
 vowel into the held beat.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おっと** (*otto*) is a native word, inherited rather than borrowed. It is usually explained as an old word for a man with *hito*, "person", worn down; the kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO, JA-SCRIPT-O-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-TO-01] -->

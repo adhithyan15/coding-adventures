@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-390-LEGALE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-390-LEGALE"
+  ],
+  "after": []
+}

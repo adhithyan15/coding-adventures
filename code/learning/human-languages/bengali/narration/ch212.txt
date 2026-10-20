@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to quarrel, then the Bengali for to hug.
 You'll want to know: তুলনা করা.
 তুলনা করা — tulônā kôrā — "to compare".
 
+The phrase, taken apart.
+তুলনা করা (tulônā kôrā) is tulônā, "comparison", Sanskrit tulanā, "weighing, comparing", taken over whole, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to hug, then the Bengali for to compare.
 
 You'll want to know: ভাড়া নেওয়া.
 ভাড়া নেওয়া — bhāṛā neoyā — "to rent (from someone)".
+
+The phrase, taken apart.
+ভাড়া নেওয়া (bhāṛā neoyā) is bhāṛā, "hire, rent", which CDIAL lists under bhārta, "pertaining to servants" (CDIAL 9468), + neoyā, "to take", from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to compare, then the Bengali for to rent
 You'll want to know: পাল্টানো.
 পাল্টানো — pālṭāno — "to swap, to change".
 
+The word, taken apart.
+পাল্টানো (pālṭāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from pallaṭṭ, "turn, overturn", a form CDIAL reconstructs from its descendants (CDIAL 7968). CDIAL lists Bengali pālṭāna, "to turn, change", and calls the origin of the reconstructed form very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to rent, then the Bengali for to swap.
 You'll want to know: লড়া.
 লড়া — lôṛā — "to fight".
 
+The word, taken apart.
+লড়া (lôṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍ, "fight", a form CDIAL reconstructs from its descendants (CDIAL 10920). CDIAL lists Bengali laṛā, "to fight".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to swap, then the Bengali for to fight.
 
 You'll want to know: পালানো.
 পালানো — pālāno — "to run away".
+
+The word, taken apart.
+পালানো (pālāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from palāyate, "flees" (CDIAL 7955). CDIAL lists Bengali palāna, "to run away".
 
 What you've built.
 One more word for this chapter.

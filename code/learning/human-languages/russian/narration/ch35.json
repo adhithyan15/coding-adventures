@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Son, Daughter, Grandmother, Husband, Wife",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e514142428c0ba3",
+  "sourceHash": "fnv1a64:6b5312d9f539c611",
   "lessons": [
     {
       "id": "RU-C35-son",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d50bfda727db90e",
+      "sourceHash": "fnv1a64:bd068ff4e3c8aa7b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сын (syn) from Proto-Slavic synŭ — inherited from PIE suHnús, \"son\". Vasmer lists Lithuanian sūnùs, Sanskrit sūnú- and Gothic sunus, so English son is a cousin, and he links the word with a Sanskrit verb \"to give birth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0226ed9a6f2277f",
+      "sourceHash": "fnv1a64:63649d48f05b1ea7",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "дочь (doch) from Proto-Slavic dŭťi, Old Russian дочи — inherited from PIE dʰugh₂tḗr, \"daughter\". Vasmer lists Lithuanian duktė, Sanskrit duhitā, Greek thygátēr and Gothic daúhtar: English daughter is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59c9227e0758809f",
+      "sourceHash": "fnv1a64:7e2fe003f90819f4",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "бабушка (bábushka) is баба, \"old woman, granny\", with -ушка, a fond diminutive. баба is a nursery word, says Vasmer, and Lithuanian bóba, \"old woman\", is the same kind of word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14895d35c49c018b",
+      "sourceHash": "fnv1a64:8100324e9151e8e6",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "муж (muzh) from Proto-Slavic mǫžĭ, \"a man\" — inherited. Vasmer calls it undoubtedly related to Sanskrit mánu-, \"man\", and Gothic manna, so English man is a cousin. \"Husband\" grew out of \"man\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d57b38e6c6f665f4",
+      "sourceHash": "fnv1a64:712f4c39a681912d",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жена (zhená) from Proto-Slavic žena, \"woman, wife\" — inherited from PIE gʷénh₂, \"woman\". Vasmer lists Greek gynē, Sanskrit jani- and Gothic qinō, \"wife\": English queen is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "jhāḍ"
 concept_tag: MR-SCHOOL95-JHAD
 prerequisites: [MR-C95-patra, MR-C95-chitra]
 sounds: []
-roots: []
+roots: [indo-aryan-jhata]
+etymology_hook: "jhāḍ ← Sanskrit jhāṭa 'forest, arbour', which Kuiper traces to Munda (CDIAL 5362)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C95-chitra]
 <!-- hl-knowledge: introduces=[MR-LEX-C95-SCHOOL95-05]; assesses=[] -->
 
 **झाड** — *jhāḍ* — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झाड** (*jhāḍ*) is a tadbhava of Sanskrit *jhāṭa*, "forest, arbour", a word known from the old word-lists (CDIAL 5362). CDIAL reports Kuiper's view that it comes from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

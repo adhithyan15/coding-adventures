@@ -14,7 +14,8 @@ romanization: "vizâ"
 concept_tag: FA-CHIZ168-VIZA
 prerequisites: [FA-C168-ramz, FA-C168-pasport]
 sounds: []
-roots: []
+roots: [french-visa]
+etymology_hook: "vizâ: a loan, usually traced to French visa 'visa'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C168-pasport]
 <!-- hl-knowledge: introduces=[FA-LEX-C168-CHIZ168-04]; assesses=[] -->
 
 **ویزا** — *vizâ* — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vizâ* is a loan, usually traced to French *visa*, "visa".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

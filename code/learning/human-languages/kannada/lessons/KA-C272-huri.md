@@ -14,7 +14,8 @@ romanization: "huri"
 concept_tag: KA-VERB-HURI
 prerequisites: [KA-C272-beresu, KA-C272-kalaku]
 sounds: []
-roots: []
+roots: [dravidian-pori-fry]
+etymology_hook: "huri: native Dravidian, one word with Tamil pori and Malayalam pori (DEDR 4537)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C272-kalaku]
 <!-- hl-knowledge: introduces=[KA-LEX-C272-KRIYE272-05]; assesses=[] -->
 
 **ಹುರಿ** — *huri* — "to roast, to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುರಿ** (*huri*) is native Dravidian, one word with Tamil *pori* and Malayalam *pori* (DEDR 4537). DEDR lists older *puri*, "to parch, roast": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

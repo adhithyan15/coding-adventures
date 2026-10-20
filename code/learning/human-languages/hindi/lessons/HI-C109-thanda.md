@@ -14,7 +14,8 @@ romanization: "ṭhaṇḍā"
 concept_tag: HI-MOOD-COLD
 prerequisites: [HI-C109-dukh, HI-C109-akela]
 sounds: []
-roots: []
+roots: [indo-aryan-thandha]
+etymology_hook: "ṭhaṇḍā ← *ṭhaṇḍha 'cold', under Sanskrit stabdha 'stiff' (CDIAL 13676); DEDR compares Tamil taṇ 'cool'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C109-akela]
 **ठंडा** (*ṭhaṇḍā*) — "cold, cool", of a thing.
 
 **ठंडा पानी** — "cold water", the first comfort offered to a guest on a hot day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठंडा** (*ṭhaṇḍā*) comes from a reconstructed *\*ṭhaṇḍha*, "cold", which CDIAL lists under Sanskrit *stabdha*, "stiff, solidified", tracing the sense from "firm" through "sluggish" to "cold" (CDIAL 13676). DEDR compares Dravidian words for "cool", such as Tamil *taṇ* (DEDR 3045).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

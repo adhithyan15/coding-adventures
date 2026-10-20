@@ -41,7 +41,8 @@ pasaporte*.)
 
 **la foto** is the everyday short form of **la fotografía**. It ends in **-o**,
 but it remains feminine because the full word is feminine: **la foto**, never
-*el foto* for an ordinary photograph.
+*el foto* for an ordinary photograph. *Fotografía* is a learned word built from
+two Greek roots, "light" and "writing".
 
 The two forms overlap, but the short one is especially natural for a physical
 photo or an ID picture: **una foto y el pasaporte**.

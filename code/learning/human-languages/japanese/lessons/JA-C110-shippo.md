@@ -14,7 +14,8 @@ romanization: "shippo"
 concept_tag: JA-THINGS110-SHIPPO
 prerequisites: [JA-C110-hae, JA-C110-katatsumuri]
 sounds: []
-roots: []
+roots: [japanese-shiri, japanese-o-tail]
+etymology_hook: "shippo: native shiri 'buttocks' + o 'tail'; JMdict lists older shirio"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C110-katatsumuri]
 <!-- hl-knowledge: introduces=[JA-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **しっぽ** — *shippo* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しっぽ** (*shippo*) is native: *shiri*, "buttocks", and *o*, "tail". JMdict lists the older form *shirio*, which shows the two parts before they ran together. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

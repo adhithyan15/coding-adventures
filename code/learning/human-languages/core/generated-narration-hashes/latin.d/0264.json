@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 264,
-  "sourceHash": "fnv1a64:d2d4c77600623cad",
+  "sourceHash": "fnv1a64:450a4f9e7f3de5fb",
   "lessonIds": [
     "LA-C264-nusquam",
     "LA-C264-undique",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch264.txt",
   "json": "latin/narration/ch264.json",
-  "textHash": "fnv1a64:ab34216aee7fe839",
-  "jsonHash": "fnv1a64:380fb5d30a604d51",
+  "textHash": "fnv1a64:6600eaf6b759f711",
+  "jsonHash": "fnv1a64:42c02b236faf446a",
   "findings": []
 }

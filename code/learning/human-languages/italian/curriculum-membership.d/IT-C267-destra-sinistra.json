@@ -1,0 +1,11 @@
+{
+  "id": "IT-C267-destra-sinistra",
+  "pathSegment": "IT-PATH-267-STRADA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-267-STRADA",
+      "order": 1
+    }
+  ]
+}

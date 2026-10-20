@@ -14,7 +14,8 @@ romanization: "sōsu"
 concept_tag: KA-VERB-SOSU
 prerequisites: [KA-C205-kilu, KA-C205-turi]
 sounds: []
-roots: []
+roots: [kannada-sosu-filter]
+etymology_hook: "sōsu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C205-turi]
 <!-- hl-knowledge: introduces=[KA-LEX-C205-KRIYE205-03]; assesses=[] -->
 
 **ಸೋಸು** — *sōsu* — "to strain, to filter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸೋಸು** (*sōsu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

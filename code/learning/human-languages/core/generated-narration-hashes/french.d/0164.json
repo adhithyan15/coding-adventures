@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 164,
-  "sourceHash": "fnv1a64:1462cad52185a7dc",
+  "sourceHash": "fnv1a64:5fe50e549bff65ee",
   "lessonIds": [
     "FR-C164-passeport",
     "FR-C164-douane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch164.txt",
   "json": "french/narration/ch164.json",
-  "textHash": "fnv1a64:98185a5e5611d7ec",
-  "jsonHash": "fnv1a64:fc6d9b4ca7698169",
+  "textHash": "fnv1a64:0c9b0b9615a22202",
+  "jsonHash": "fnv1a64:28c4a452d50942ae",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C259-fazia-frio",
+    "language": "portuguese",
+    "chapter": 259,
+    "sequence": 15420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:309ecf72e36244d3"
+  },
+  "findings": []
+}

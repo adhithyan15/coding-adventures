@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 90,
-  "sourceHash": "fnv1a64:f89f41504788f16c",
+  "sourceHash": "fnv1a64:314a916fcc987f9e",
   "lessonIds": [
     "BN-C90-bikel",
     "BN-C90-bhor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch90.txt",
   "json": "bengali/narration/ch90.json",
-  "textHash": "fnv1a64:beba63c6acb76ac2",
-  "jsonHash": "fnv1a64:f738bbbc5c4512d5",
+  "textHash": "fnv1a64:cdd25b67d00833ff",
+  "jsonHash": "fnv1a64:5630846e2c1b7078",
   "findings": []
 }

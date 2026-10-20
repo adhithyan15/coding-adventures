@@ -1,0 +1,11 @@
+{
+  "id": "PT-C435-bussola",
+  "pathSegment": "PT-PATH-435-ORIENTAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-435-ORIENTAR",
+      "order": 1
+    }
+  ]
+}

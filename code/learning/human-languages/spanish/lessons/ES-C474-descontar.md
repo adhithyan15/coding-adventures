@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DESCONTAR
 prerequisites: [ES-C474-importe, ES-C38-contar, ES-C444-cubrir]
 sounds: [k-hard, nasal-n, stress-final]
 roots: [computare-latin]
+etymology_hook: "descontar — des- + contar, Latin computare: com- + putare 'to reckon' — English count"
 duration:
   max_seconds: 275
 requires:

@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Nervos e calma",
+  "label": "ch:pt-nervos-e-calma",
+  "canDo": "I can talk about nerves, irritation and calming down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C475-alivio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about nerves, irritation and calming down.",
+    "assesses": [
+      "PT-LEX-C475-NERVOS-03",
+      "PT-LEX-C475-NERVOS-04",
+      "PT-LEX-C475-NERVOS-05"
+    ]
+  }
+}

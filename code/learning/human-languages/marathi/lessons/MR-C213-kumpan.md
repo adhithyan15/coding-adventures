@@ -15,6 +15,7 @@ concept_tag: MR-VASTU213-KUMPAN
 prerequisites: [MR-C213-karanje, MR-C213-phatak]
 sounds: []
 roots: []
+etymology_hook: "kumpaṇ 'fence': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C213-phatak]
 <!-- hl-knowledge: introduces=[MR-LEX-C213-VASTU213-03]; assesses=[] -->
 
 **कुंपण** — *kumpaṇ* — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कुंपण** (*kumpaṇ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

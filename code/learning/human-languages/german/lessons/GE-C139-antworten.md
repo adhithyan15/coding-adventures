@@ -13,7 +13,8 @@ gloss: "to answer"
 concept_tag: GE-VERB-ANTWORTEN
 prerequisites: [GE-C139-beginnen, GE-C139-besuchen]
 sounds: []
-roots: []
+roots: [germanic-wurda]
+etymology_hook: "antworten — the verb made from Antwort 'answer', 'counter-word'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C139-besuchen]
 <!-- hl-knowledge: introduces=[GE-LEX-C139-VERB139-03]; assesses=[] -->
 
 **antworten** — "to answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**antworten** is the verb made from *Antwort* ← Old High German *antwurti*, "counter-word" (EtymDB 2.1): to give a word back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

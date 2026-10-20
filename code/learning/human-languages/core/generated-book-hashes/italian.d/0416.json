@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:3e8360681ec46d10",
+  "lessonIds": [
+    "IT-C416-motorino",
+    "IT-C416-scooter",
+    "IT-C416-pedalare",
+    "IT-C416-parchimetro",
+    "IT-C416-sostare"
+  ],
+  "tex": "italian/book/chapters/ch416-su-due-ruote.tex"
+}

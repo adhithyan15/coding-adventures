@@ -13,7 +13,8 @@ gloss: "formerly, in the old days"
 concept_tag: FR-PAS140-AUTREFOIS
 prerequisites: [FR-C140-recemment, FR-C140-avant-hier]
 sounds: []
-roots: []
+roots: [alter-latin, vicis-latin]
+etymology_hook: "autrefois — 'another time': other + fois — Latin alter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C140-avant-hier]
 <!-- hl-knowledge: introduces=[FR-LEX-C140-PAS140-04]; assesses=[] -->
 
 **autrefois** — "formerly, in the old days". It points to a time long past rather than a single day: **Autrefois, le magasin était ici.** — "In the old days the shop was here."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**autrefois** — "another time": the word for "other", ← Latin *alter*, and *fois*, "a time". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

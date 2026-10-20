@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 444,
-  "sourceHash": "fnv1a64:84587abdb1317321",
+  "sourceHash": "fnv1a64:6271ba6c0dca6ffb",
   "lessonIds": [
     "ES-C444-calefaccion",
     "ES-C444-madera",
@@ -15,7 +15,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch444.txt",
   "json": "spanish/narration/ch444.json",
-  "textHash": "fnv1a64:a0116a0f7207e693",
-  "jsonHash": "fnv1a64:8fbfb417a24c55b7",
+  "textHash": "fnv1a64:25026cbc6a4f4206",
+  "jsonHash": "fnv1a64:fdc6e9a0768826af",
   "findings": []
 }

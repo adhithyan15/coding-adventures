@@ -14,7 +14,8 @@ romanization: "mājhrāt"
 concept_tag: BN-TIME90-MAJHRAT
 prerequisites: [BN-C90-bikel, BN-C90-bhor]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, sanskrit-ratri]
+etymology_hook: "mājhrāt: mājh 'middle' ← madhya (CDIAL 9804) + rāt 'night' ← rātrī (CDIAL 10702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C90-bhor]
 <!-- hl-knowledge: introduces=[BN-LEX-C90-TIME90-03]; assesses=[] -->
 
 **মাঝরাত** — *mājhrāt* — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাঝরাত** (*mājhrāt*) is *mājh*, "middle", from Sanskrit *madhya* (CDIAL 9804), + *rāt*, "night", from Sanskrit *rātrī* (CDIAL 10702): both halves inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

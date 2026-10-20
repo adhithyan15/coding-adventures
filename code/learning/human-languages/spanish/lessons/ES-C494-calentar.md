@@ -10,7 +10,8 @@ gloss: "to heat up, to warm up"
 concept_tag: ES-VERB-CALENTAR
 prerequisites: [ES-C494-bajar, ES-C494-encender]
 sounds: []
-roots: []
+roots: [calere-latin]
+etymology_hook: "calentar — built on caliente 'hot', Latin calentem 'being warm', from calere — English calorie"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C494-encender]
 > *I heat up the milk in the microwave.*
 
 The e breaks into ie under stress: *caliento*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calentar** is built on *caliente*, "hot", from Latin *calentem*, "being warm" (EtymDB 2.1), the participle of *calere*, "to be warm". *Caliente* is inherited: the stressed *e* opened into *ie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

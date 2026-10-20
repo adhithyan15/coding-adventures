@@ -11,9 +11,10 @@ romanization: "etra dūraṁ"
 concept_tag: ML-WORD-HOW-FAR
 prerequisites: [ML-C81-akale, ML-C19-vayassu]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian, sanskrit-dura]
+etymology_hook: "etra dūraṁ: native etra 'how much' (DEDR 5151) + Sanskrit dūra 'distant' (CDIAL 6495)"
 duration:
-  max_seconds: 260
+  max_seconds: 264
 requires:
   knowledge: [ML-LEX-C81-DISTANCE-02, ML-CONCEPT-C19-VAYASSU-01]
 introduces:
@@ -67,6 +68,11 @@ usually has two or three words in it that work on their own.
 *dūraṁ* is a borrowing from Sanskrit, where *akale* is inherited. Both are
 ordinary and neither is grander than the other; Malayalam keeps pairs like this
 all over, and having both is not a redundancy but a choice of texture.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എത്ര ദൂരം** (*etra dūraṁ*) joins native *etra*, "how much" (DEDR 5151), to Sanskrit *dūra*, "distant; distance" (CDIAL 6495), with Malayalam's noun ending *-ṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-DISTANCE-03, ML-LEX-C81-HOW-MUCH-01, ML-LEX-C81-DISTANCE-01, ML-LEX-C81-DISTANCE-02] -->

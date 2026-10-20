@@ -1,0 +1,11 @@
+{
+  "id": "FR-C328-hacher",
+  "pathSegment": "FR-PATH-328-COUPER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-328-COUPER",
+      "order": 2
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 157,
-  "sourceHash": "fnv1a64:71baea2ddea418f0",
+  "sourceHash": "fnv1a64:6349d07e65edce60",
   "lessonIds": [
     "IT-C157-semplice",
     "IT-C157-complicato",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch157.txt",
   "json": "italian/narration/ch157.json",
-  "textHash": "fnv1a64:0e7b786db0d5320b",
-  "jsonHash": "fnv1a64:f4230a7460513f3d",
+  "textHash": "fnv1a64:b418eb0d3e0be966",
+  "jsonHash": "fnv1a64:bfcbd826f030f2f7",
   "findings": []
 }

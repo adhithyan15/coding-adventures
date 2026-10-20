@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-07",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "say that you know, or do not know, something",
+  "probe": [
+    "SA-LEX-JANATI-KNOW",
+    "SA-LEX-AVAGACCHATI-UNDERSTAND"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F2-13",
+    "A1-F2-14",
+    "A1-F2-15",
+    "A1-NG7-01"
+  ],
+  "note": "jānāti and avagacchati are both taught, in the third person. The first-person jānāmi that the function actually needs is not, and neither is the negated form."
+}

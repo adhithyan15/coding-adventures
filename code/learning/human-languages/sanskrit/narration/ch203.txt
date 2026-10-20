@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for the west, then the Sanskrit for the nor
 You'll want to know: मोदते.
 मोदते — modate — "rejoices".
 
+The word, taken apart.
+modate is the present of the root √mud, "to be merry, glad, rejoice" (MW). The same root gives mud, "joy"; MW gives it no older source, so its origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for the north, then the Sanskrit for rejoic
 
 You'll want to know: वन्दते.
 वन्दते — vandate — "salutes, greets with respect".
+
+The word, taken apart.
+vandate is the present of the root √vand, "to praise, salute respectfully" (MW). In the Rigveda it means "praises", later "greets respectfully" (CDIAL 11270), and its noun vandana, "reverence", is borrowed in Malayalam.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for rejoices, then the Sanskrit for salutes
 You'll want to know: याचते.
 याचते — yācate — "begs, asks for".
 
+The word, taken apart.
+yācate is the middle present of the root √yāc, "to ask, beg" (MW): the middle voice means asking for yourself. It is already in the Rigveda (CDIAL 10447), and yācaka, "beggar", is built on it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for salutes, then the Sanskrit for begs.
 You'll want to know: भाषते.
 भाषते — bhāṣate — "speaks, talks".
 
+The word, taken apart.
+bhāṣate is the present of the root √bhāṣ, "to speak, say" (MW), first found in the Taittirīya Brāhmaṇa (CDIAL 9478). The nouns bhāṣā, "language", and bhāṣaṇa, "speech", are built on the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for begs, then the Sanskrit for speaks.
 
 You'll want to know: शोभते.
 शोभते — śobhate — "shines, looks fine".
+
+The word, taken apart.
+śobhate is the present of the root √śubh, "to beautify; to look beautiful, shine" (MW). The adjective śubha, "bright, auspicious", comes from the same root, as in Hindi śubh rātri, "good night".
 
 What you've built.
 One more word for this chapter.

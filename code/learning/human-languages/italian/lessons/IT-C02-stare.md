@@ -35,8 +35,8 @@ reviews_of: [IT-C02-come]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Like Spanish, Italian has **two** verbs for "to be" — **essere**
-(identity) and **stare** (state). "How are you?" runs on **stare**. Spanish's *estar* is
+[PAUSE 2s] Like Spanish, Italian has **two** verbs for "to be" — one for identity,
+which comes much later, and **stare** (state). "How are you?" runs on **stare**. Spanish's *estar* is
 this very verb, with a front *e* added on.
 
 ## Sounds you'll need
@@ -58,12 +58,12 @@ That **stā-** root stands behind a wall of English words: **stay**, **stand**,
 **con-stant**, **circum-stance**. So *Come stai?* is, at the root, **"how do you
 stand?"** — the very same picture as Spanish *¿Cómo estás?*.
 
-## Grammar Lens: essere vs stare, and the two forms you need
+## Grammar Lens: the two be-verbs, and the two forms you need
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-STARE-04]; assesses=[] -->
 
 | verb | from | job |
 |---|---|---|
-| **essere** | Latin *esse* | identity — *sono Marco*, "I am Marco" |
+| the identity one (later) | Latin *esse* | identity — "I am Marco" |
 | **stare** | Latin *stāre* | state / how you are — *sto bene*, "I'm well" |
 
 For this chapter, just two forms of *stare*:
@@ -84,4 +84,4 @@ For this chapter, just two forms of *stare*:
 
 [PAUSE 3s] What Latin verb is *stare*, and which Spanish verb is its twin?
 ("To stand," *stāre* — Spanish *estar*.) Which Italian be-verb is for how you
-feel — *essere* or *stare*? (*stare*.) Next: ask it — **Come stai?**
+feel — the identity one, or *stare*? (*stare*.) Next: ask it — **Come stai?**

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:ef4147151dd00707",
+  "lessonIds": [
+    "GE-C312-volksfest",
+    "GE-C312-jahrmarkt",
+    "GE-C312-karussell",
+    "GE-C312-tracht",
+    "GE-C312-kapelle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch312.txt",
+  "json": "german/narration/ch312.json",
+  "textHash": "fnv1a64:0e66ad3211147e1a",
+  "jsonHash": "fnv1a64:5f431c3130d0d720",
+  "findings": []
+}

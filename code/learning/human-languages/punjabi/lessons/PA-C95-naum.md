@@ -14,7 +14,8 @@ romanization: "nauṁ"
 concept_tag: PA-NUMBERS95-NAUM
 prerequisites: [PA-C95-satt, PA-C95-atth]
 sounds: []
-roots: []
+roots: [sanskrit-nava-nine]
+etymology_hook: "nauṁ ← Sanskrit nava 'nine', a tadbhava (CDIAL 6984)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C95-atth]
 <!-- hl-knowledge: introduces=[PA-LEX-C95-NUMBERS95-03]; assesses=[] -->
 
 **ਨੌਂ** — *nauṁ* — "nine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨੌਂ** (*nauṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "nine" (CDIAL 6984).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

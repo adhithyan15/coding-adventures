@@ -14,7 +14,8 @@ romanization: "kṣamate"
 concept_tag: SA-VERB-KSAMATE
 prerequisites: [SA-C204-jivati, SA-C204-tapati]
 sounds: []
-roots: []
+roots: [sanskrit-kshamate]
+etymology_hook: "kṣamate ← root √kṣam 'be patient, endure', and so 'forgive' (MW; CDIAL 3657)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C204-tapati]
 <!-- hl-knowledge: introduces=[SA-LEX-C205-ACT205-01]; assesses=[] -->
 
 **क्षमते** — *kṣamate* — "forgives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṣamate* is the present of the root √kṣam, "to be patient, endure", and so "to pardon, forgive" (MW). In the Rigveda it means "is patient, endures" (CDIAL 3657). Its noun *kṣamā*, "patience, forgiveness", went into Telugu and Kannada.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

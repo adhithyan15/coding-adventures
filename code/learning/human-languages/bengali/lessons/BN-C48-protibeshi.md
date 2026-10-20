@@ -14,7 +14,8 @@ romanization: "prôtibeshi"
 concept_tag: BN-FAMILY48-PROTIBESHI
 prerequisites: [BN-C47-lok, BN-C48-mohila]
 sounds: []
-roots: []
+roots: [sanskrit-prativesha]
+etymology_hook: "prôtibeshi ← Sanskrit prativeśin 'neighbour', a tatsama; the inherited word is paṛsī (CDIAL 8599)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C48-mohila]
 <!-- hl-knowledge: introduces=[BN-LEX-C48-FAMILY48-02]; assesses=[] -->
 
 **প্রতিবেশী** — *prôtibeshi* — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রতিবেশী** (*prôtibeshi*) is Sanskrit *prativeśin*, "neighbour", taken over whole as a learned loan, a tatsama (CDIAL 8599). The word inherited from the related *prativeśya* is *paṛsī*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kharjūram"
 concept_tag: SA-THG190-KHARJURAM
 prerequisites: [SA-C190-masah, SA-C190-yavah]
 sounds: []
-roots: []
+roots: [sanskrit-kharjura]
+etymology_hook: "kharjūra 'date palm', in the Taittirīya Saṃhitā (CDIAL 3828); origin uncertain; Hindi khajūr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C190-yavah]
 <!-- hl-knowledge: introduces=[SA-LEX-C190-THG190-03]; assesses=[] -->
 
 **खर्जूरम्** — *kharjūram* — "a date palm's fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kharjūra* names the date palm as early as the Taittirīya Saṃhitā, and its fruit later (CDIAL 3828). MW offers no derivation, and its origin is uncertain. It lives on as Hindi *khajūr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

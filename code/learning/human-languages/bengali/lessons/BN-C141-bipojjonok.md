@@ -14,7 +14,8 @@ romanization: "bipôjjônôk"
 concept_tag: BN-QUAL141-BIPOJJONOK
 prerequisites: [BN-C141-mojar, BN-C141-aramdayok]
 sounds: []
-roots: []
+roots: [sanskrit-vipad, sanskrit-janaka]
+etymology_hook: "bipôjjônôk: Sanskrit vipad 'misfortune' + janaka 'producing', taken over whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C141-aramdayok]
 <!-- hl-knowledge: introduces=[BN-LEX-C141-QUAL141-04]; assesses=[] -->
 
 **বিপজ্জনক** — *bipôjjônôk* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিপজ্জনক** (*bipôjjônôk*) is Sanskrit *vipad*, "misfortune", + *janaka*, "producing", put together by Sanskrit sound rules and taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

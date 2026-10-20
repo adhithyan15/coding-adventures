@@ -14,7 +14,8 @@ romanization: "tamām"
 concept_tag: UR-DEF90-TAMAM
 prerequisites: [UR-C89-kuchh, UR-C89-donon]
 sounds: []
-roots: []
+roots: [arabic-tamam]
+etymology_hook: "tamām ← Arabic tamām 'completeness; complete, whole', through Persian (Lane, root t-m-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C89-donon]
 <!-- hl-knowledge: introduces=[UR-LEX-C90-DEF90-01]; assesses=[] -->
 
 **تمام** — *tamām* — "all, entire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تمام** (*tamām*) is a loan from Arabic *tamām*, "completeness; complete, whole", which reached Urdu through Persian. Its Arabic root is *t-m-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

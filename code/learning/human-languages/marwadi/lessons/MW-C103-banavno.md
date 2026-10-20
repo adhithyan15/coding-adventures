@@ -14,7 +14,8 @@ romanization: "baṇāvṇo"
 concept_tag: MW-VERB-BANAVNO
 prerequisites: [MW-C103-nhavno, MW-C103-pakavno]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "baṇāvṇo 'to make': Old Awadhi banāvaï 'makes', under Sanskrit vanati 'gains, makes ready' (CDIAL 11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C103-pakavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C103-ACT103-03]; assesses=[] -->
 
 **बणावणो** — *baṇāvṇo* — "to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL gives no Marwari row for **बणावणो** (*baṇāvṇo*), "to make". It lists Old Awadhi *banāvaï*, "makes", and Hindi *bannā*, "to be made", under Sanskrit *vanati*, "desires, gains, makes ready" (CDIAL 11260), and notes a rival account from Sanskrit *varṇayati*, "describes". The match is through those languages.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

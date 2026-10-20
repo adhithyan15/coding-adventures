@@ -14,7 +14,8 @@ romanization: "gāḍhav"
 concept_tag: MR-THINGS144-GADHAV
 prerequisites: [MR-C143-landga, MR-C144-kolha]
 sounds: []
-roots: []
+roots: [sanskrit-gardabha]
+etymology_hook: "gāḍhav ← Sanskrit gardabha 'ass', a tadbhava (CDIAL 4054)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C144-kolha]
 <!-- hl-knowledge: introduces=[MR-LEX-C144-THINGS144-02]; assesses=[] -->
 
 **गाढव** — *gāḍhav* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाढव** (*gāḍhav*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gardabha*, "ass" (CDIAL 4054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

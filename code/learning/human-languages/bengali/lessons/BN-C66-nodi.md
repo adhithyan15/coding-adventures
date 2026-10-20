@@ -14,7 +14,8 @@ romanization: "nôdi"
 concept_tag: BN-NATURE66-NODI
 prerequisites: [BN-C66-pahar, BN-C66-bon]
 sounds: []
-roots: []
+roots: [sanskrit-nadi]
+etymology_hook: "nôdi ← Sanskrit nadī 'river', a tatsama; CDIAL lists the inherited form naï (CDIAL 6943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C66-bon]
 <!-- hl-knowledge: introduces=[BN-LEX-C66-NATURE66-03]; assesses=[] -->
 
 **নদী** — *nôdi* — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নদী** (*nôdi*) is Sanskrit *nadī*, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943). The word inherited from it is *naï*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

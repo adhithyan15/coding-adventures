@@ -13,7 +13,8 @@ gloss: "everywhere"
 concept_tag: FR-LIEU216-PARTOUT
 prerequisites: [FR-C215-pommade, FR-C216-autour]
 sounds: []
-roots: []
+roots: [totus-latin]
+etymology_hook: "partout — 'through all': through + the word for 'all', Latin totus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C216-autour]
 <!-- hl-knowledge: introduces=[FR-LEX-C216-LIEU216-02]; assesses=[] -->
 
 **partout** — "everywhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partout** — the words for "through" and "all", the second ← Latin *totus* (EtymDB 2.1): through all places.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

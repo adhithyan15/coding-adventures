@@ -14,6 +14,7 @@ concept_tag: IT-VERB-PARCHEGGIARE
 prerequisites: [IT-C203-stampante, IT-C203-indirizzo]
 sounds: []
 roots: []
+etymology_hook: "parcheggiare — from parcheggio 'a car park', adapted from English park(ing)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C203-indirizzo]
 <!-- hl-knowledge: introduces=[IT-LEX-C204-VERBI204-01]; assesses=[] -->
 
 **parcheggiare** — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parcheggiare** is the verb of *parcheggio*, "a car park", which was adapted from English *park*, *parking*. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

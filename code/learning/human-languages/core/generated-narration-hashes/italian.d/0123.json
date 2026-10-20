@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 123,
-  "sourceHash": "fnv1a64:023b2856b285c0fe",
+  "sourceHash": "fnv1a64:45ba5c81b2888d47",
   "lessonIds": [
     "IT-C123-rosa",
     "IT-C123-viola",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch123.txt",
   "json": "italian/narration/ch123.json",
-  "textHash": "fnv1a64:3eadef2377da2508",
-  "jsonHash": "fnv1a64:97db84475a80f372",
+  "textHash": "fnv1a64:08fed231acb6dd5f",
+  "jsonHash": "fnv1a64:b423b47b5d1a2df6",
   "findings": []
 }

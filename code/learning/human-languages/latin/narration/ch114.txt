@@ -12,6 +12,9 @@ Before the new one: say the Latin for and so, then the Latin for a reason.
 You'll want to know: ratiō, ratiōnis.
 ratiō, ratiōnis — "a reason, a way of thinking".
 
+The word, taken apart.
+ratiō is built on ratus, "reckoned", the participle of reor, "to reckon, to think" (Lewis & Short): a reckoning. English reason comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a reason, then the Latin for a reason.
 
 You'll want to know: proptereā.
 proptereā — "because of that".
+
+The word, taken apart.
+proptereā is propter, "because of", with ea, "these things" (EtymDB 2.1): because of that.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a reason, then the Latin for because of th
 You'll want to know: locus, locī.
 locus, locī — "a place".
 
+The word, taken apart.
+locus comes from Old Latin stlocus, "place" (Lewis & Short), usually traced to Proto-Indo-European stel-, "to put, to place" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for because of that, then the Latin for a plac
 You'll want to know: dexter, dextra, dextrum.
 dexter, dextra, dextrum — "right (not left)".
 
+The word, taken apart.
+dexter is inherited, usually traced to Proto-Indo-European deks-, "right side" (EtymDB 2.1), with -ter, an ending that sets one of two sides against the other; Greek dexios, "on the right", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a place, then the Latin for right.
 
 You'll want to know: sinister, sinistra, sinistrum.
 sinister, sinistra, sinistrum — "left (not right)".
+
+The word, taken apart.
+sinister has no sure origin; Lewis & Short call it doubtful. It ends in -ter, an ending that sets one of two sides against the other, as in dexter, "right".
 
 What you've built.
 One more word for this chapter.

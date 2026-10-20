@@ -14,7 +14,8 @@ romanization: "vari"
 concept_tag: TA-PORUL272-VARI
 prerequisites: [TA-C271-pappali, TA-C272-ataiyala-attai]
 sounds: []
-roots: []
+roots: [dravidian-vari-line]
+etymology_hook: "வரி — native Dravidian (DEDR 5263); Malayalam vara 'line', Kannada bare 'writing, lines'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C272-ataiyala-attai]
 <!-- hl-knowledge: introduces=[TA-LEX-C272-PORUL272-02]; assesses=[] -->
 
 **வரி** — *vari* — "a tax; a line (of text)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**வரி** (*vari*) is native Dravidian. DEDR 5263 lists Malayalam *vara*, "line" and Kannada *bare*, "writing, lines". The entry glosses "line" and "to write"; the sense "tax" is probably the line in a register.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

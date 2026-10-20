@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-458-WILDTIERE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-458-WILDTIERE"
+  ],
+  "after": []
+}

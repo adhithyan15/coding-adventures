@@ -14,7 +14,8 @@ romanization: "kandan"
 concept_tag: FA-VERB-KANDAN
 prerequisites: [FA-C134-chashidan, FA-C134-buyidan]
 sounds: []
-roots: []
+roots: [persian-kandan]
+etymology_hook: "kandan: inherited, usually traced to Middle Persian kandan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C134-buyidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C134-ACT134-05]; assesses=[] -->
 
 **کندن** — *kandan* — "to dig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kandan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kandan*, "to dig".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 670,
+  "sourceHash": "fnv1a64:443bd7f8dd842b88",
+  "lessonIds": [
+    "ES-C670-indicar",
+    "ES-C670-indicacion",
+    "ES-C670-doblar",
+    "ES-C670-atravesar",
+    "ES-C670-desviarse"
+  ],
+  "tex": "spanish/book/chapters/ch670-como-llegar.tex"
+}

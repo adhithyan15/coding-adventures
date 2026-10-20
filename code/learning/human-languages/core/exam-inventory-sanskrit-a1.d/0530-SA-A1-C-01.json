@@ -1,0 +1,18 @@
+{
+  "id": "SA-A1-C-01",
+  "category": "Vibhakti — the case system",
+  "label": "the case system itself: eight cases doing what Spanish does with prepositions and order",
+  "probe": [
+    "SA-GRAMMAR-C16-NOUN-FAMILIES",
+    "SA-GRAMMAR-LOCATIVE-CASE",
+    "SA-GRAMMAR-DATIVE-OF-PURPOSE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific, and the single biggest thing the proxy cannot ask for. Spanish marks roles with word order and prepositions; Sanskrit marks them on the noun, and until a learner has that, no sentence parses. The track teaches the locative in chapter 5 and the dative of purpose in chapter 4 before naming the families in chapter 16."
+}

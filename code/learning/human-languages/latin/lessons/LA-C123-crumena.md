@@ -13,7 +13,8 @@ gloss: "a purse"
 concept_tag: LA-THINGS123-CRUMENA
 prerequisites: [LA-C123-amphora, LA-C123-lagoena]
 sounds: []
-roots: []
+roots: [crumena-latin]
+etymology_hook: "crumēna 'purse' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C123-lagoena]
 <!-- hl-knowledge: introduces=[LA-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **crumēna, crumēnae** — "a purse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**crumēna** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

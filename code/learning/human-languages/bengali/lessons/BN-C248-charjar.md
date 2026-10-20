@@ -14,7 +14,8 @@ romanization: "chārjār"
 concept_tag: BN-JINIS248-CHARJAR
 prerequisites: [BN-C247-chpta, BN-C247-chokchoke]
 sounds: []
-roots: []
+roots: [english-charger]
+etymology_hook: "chārjār ← English charger"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C247-chokchoke]
 <!-- hl-knowledge: introduces=[BN-LEX-C248-JINIS248-01]; assesses=[] -->
 
 **চার্জার** — *chārjār* — "a charger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চার্জার** (*chārjār*) is a loan from English *charger*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

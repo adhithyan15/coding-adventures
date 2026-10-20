@@ -13,7 +13,8 @@ gloss: "a bridge"
 concept_tag: PT-CIDADE2-PONTE
 prerequisites: [PT-C74-aviao, PT-C74-carro]
 sounds: []
-roots: []
+roots: [pons-latin]
+etymology_hook: "ponte ← Latin pons, pontis 'bridge' — English pontoon shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C74-carro]
 <!-- hl-knowledge: introduces=[PT-LEX-C74-CIDADE2-04]; assesses=[] -->
 
 **a ponte** — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ponte** ← Latin *pons, pontis*, "bridge" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

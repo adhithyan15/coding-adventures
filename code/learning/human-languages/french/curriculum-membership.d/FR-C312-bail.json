@@ -1,0 +1,11 @@
+{
+  "id": "FR-C312-bail",
+  "pathSegment": "FR-PATH-312-DEMENAGEMENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-312-DEMENAGEMENT",
+      "order": 4
+    }
+  ]
+}

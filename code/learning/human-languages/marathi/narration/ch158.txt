@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to get tired, then the Marathi for to st
 You'll want to know: पुसणे.
 पुसणे — pusṇe — "to wipe".
 
+The word, taken apart.
+पुसणे (pusṇe) is a tadbhava of Sanskrit proñchati, "wipes off" (CDIAL 9011). CDIAL suggests the Sanskrit verb renders a Middle Indo-Aryan poṁch-, perhaps from Dravidian, comparing Tamil pūcu, "to smear, rub".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to stay awake, then the Marathi for to w
 
 You'll want to know: झाडणे.
 झाडणे — jhāḍṇe — "to sweep".
+
+The word, taken apart.
+झाडणे (jhāḍṇe) comes from a reconstructed jhāṭayati, "shakes down" (CDIAL 5328). CDIAL lists Marathi jhaḍṇẽ, "to be shed (of leaves)", under the same entry.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to wipe, then the Marathi for to sweep.
 You'll want to know: भांडणे.
 भांडणे — bhāṇḍṇe — "to quarrel".
 
+The word, taken apart.
+भांडणे (bhāṇḍṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhaṇḍate, "reproves, mocks, jests" (CDIAL 9372). CDIAL glosses the Marathi verb "to reproach, abuse".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to sweep, then the Marathi for to quarre
 You'll want to know: मिळवणे.
 मिळवणे — miḷavṇe — "to obtain, to earn".
 
+The word, taken apart.
+मिळवणे (miḷavṇe) is the "make" form of मिळणे, "to be got", which comes from Sanskrit milati, "meets, encounters" (CDIAL 10133).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to quarrel, then the Marathi for to obta
 
 You'll want to know: वाचवणे.
 वाचवणे — vācavṇe — "to save, to rescue".
+
+The word, taken apart.
+वाचवणे (vācavṇe) is the "make" form of vācṇẽ, "to escape, survive", which CDIAL lists as vāṁcṇẽ under Sanskrit vañcati, a verb whose forms meant "moves, escapes from" (CDIAL 11208). The b- form, bacāviṇẽ, "to save", it marks as taken from Hindi.
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:d138302d82dd7cf3",
+  "lessonIds": [
+    "PT-C260-no-fim",
+    "PT-C260-contar",
+    "PT-C260-leitura",
+    "PT-C260-revisao-historia"
+  ],
+  "tex": "portuguese/book/chapters/ch260-a-story-told-in-order.tex"
+}

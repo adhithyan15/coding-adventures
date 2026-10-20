@@ -14,7 +14,8 @@ romanization: "tōrttŭ"
 concept_tag: ML-THINGS147-TORTTU
 prerequisites: [ML-C146-cippu, ML-C147-soppu, ML-C26-raavile]
 sounds: []
-roots: []
+roots: [dravidian-tuvar-dry]
+etymology_hook: "tōrttŭ 'towel': most likely from the Dravidian verb 'to dry, wipe' (DEDR 3351, Tamil tuvarttu)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C147-soppu]
 <!-- hl-knowledge: introduces=[ML-LEX-C147-THINGS147-02]; assesses=[] -->
 
 **തോർത്ത്** — *tōrttŭ* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തോർത്ത്** (*tōrttŭ*) is most likely native Dravidian. DEDR 3351 lists the Malayalam verbs *tōruka*, "to air, dry", and *tuvarttuka*, "to make dry, wipe clean", with Tamil *tuvarttu*, "to wipe off moisture"; the towel itself is not named in that entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

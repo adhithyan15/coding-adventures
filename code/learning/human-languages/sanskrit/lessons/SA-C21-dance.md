@@ -14,7 +14,8 @@ romanization: "nṛtyati"
 concept_tag: SA-VERB-DANCE
 prerequisites: [SA-C19-six, SA-C19-seven]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nṛtyati ← the root √nṛt 'dance' (MW); it lives on as Hindi nācnā 'to dance' (CDIAL 7583)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,12 @@ reviews_of: []
 **नृत्यति** (*nṛtyati*) — "he, she or it dances".
 
 From **√नृत्** (*nṛt*), 'to dance'. It gives *nṛtya*, the danced half of the classical performing arts, as against *nāṭya*, the acted half — a distinction Sanskrit draws that English does not.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nṛtyati* is the present of the root √nṛt, "to dance", already in the Rigveda
+(MW). It lives on as Hindi *nācnā*, "to dance" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

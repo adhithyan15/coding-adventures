@@ -14,7 +14,8 @@ romanization: "gnev"
 concept_tag: RU-FEEL-ANGER
 prerequisites: [RU-C34-joy, RU-C34-fear]
 sounds: []
-roots: []
+roots: [slavic-gnevu]
+etymology_hook: "гнев ← Proto-Slavic *gněvŭ; Vasmer thinks it probably goes with гнить 'to rot', a view others dispute"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C34-fear]
 <!-- hl-knowledge: introduces=[RU-LEX-C34-FEEL-03]; assesses=[] -->
 
 **гнев** (*gnev*) — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гнев** ← Proto-Slavic *\*gněvŭ* — inherited. Vasmer thinks it probably belongs with *гнить*, "to rot", so the first sense would have been "rot, poison"; others start from a sense "to burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

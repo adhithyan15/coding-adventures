@@ -16,6 +16,10 @@ string describing the component as a tree of Qt Quick elements.
 
 ## Pipeline position
 
+Painted rectangles preserve a single finite `rotate(Ndeg)` through centered
+Qt Item rotation, including ordered state overrides. Layout dimensions remain
+unchanged; other transform functions and units remain explicit style debt.
+
 ```
 .mil  (interface)  ──┐
                      │
@@ -149,7 +153,7 @@ platform fonts and explicit host font choices remain unchanged.
 | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
 | `Input`       | `TextArea { ... }` when multiline; otherwise the `HostInput` lowering       |
-| `HostInput`   | `TextInput` or placeholder-capable `TextField` with native input semantics   |
+| `HostInput`   | `TextInput` or placeholder-capable `TextField` with native input semantics; `TextArea` with `multiline: true` |
 | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (from Controls 2.15)   |
 | `HostSlider`  | `Slider { value: ...; from: ...; to: ...; stepSize: ... }` with movement and release events |
 | `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
@@ -190,6 +194,11 @@ behavior; partial or unsupported combinations remain reported degradations.
 | `onChange: emit: onE`   | `onTextChanged: e(text)` for a one-parameter emit        |
 | `onCommit: emit: onE`   | `onAccepted: e(text)` (Enter)                           |
 | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`  |
+
+An exact `width: 100%` on `Input`, `HostInput`, or `HostButton` lowers to
+`Layout.fillWidth: true`. This lowering is deliberately limited to controls
+whose width states either omit `width` or repeat `100%`; other percentages,
+intrinsic widths, and mixed fixed/fill states remain reported degradations.
 
 **`HostButton` (`Button` from Controls):**
 

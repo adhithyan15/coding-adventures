@@ -14,7 +14,8 @@ romanization: "paśa"
 concept_tag: ML-VASTU214-PASA
 prerequisites: [ML-C214-torccu, ML-C214-barrari]
 sounds: []
-roots: []
+roots: [dravidian-pacai-glue]
+etymology_hook: "paśa: native Dravidian, one word with Tamil pacai and Kannada pagil (DEDR 3827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C214-barrari]
 <!-- hl-knowledge: introduces=[ML-LEX-C214-VASTU214-03]; assesses=[] -->
 
 **പശ** — *paśa* — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പശ** (*paśa*) is native Dravidian, one word with Tamil *pacai* and Kannada *pagil* (DEDR 3827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

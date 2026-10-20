@@ -14,7 +14,8 @@ romanization: "kadā"
 concept_tag: SA-Q-WHEN
 prerequisites: [SA-C17-time-words]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kadā 'when' ← the question stem ka-; MW compares Avestan kadha, Latin quando, Lithuanian kada"
 duration:
   max_seconds: 210
 requires:
@@ -52,6 +53,12 @@ Set it beside the word you just learned and something jumps out:
 One letter apart, and the difference is the whole of this chapter. Sanskrit
 builds its question words on **क्** (*k-*), and it builds several of its answering
 words on **स्** (*s-*) or **त्** (*t-*). Ask with *k-*, answer with *t-*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kadā* is built on the question stem *ka-* (MW). It is inherited: MW compares
+Avestan *kadha*, Latin *quandō* and Lithuanian *kada*, all "when".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

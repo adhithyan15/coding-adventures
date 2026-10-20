@@ -11,6 +11,7 @@ concept_tag: ES-ROAD-OBRA
 prerequisites: [ES-C453-sintesis-limpieza, ES-C346-oficina, ES-C449-arreglar]
 sounds: [br-cluster, stress-penultimate]
 roots: [opus-latin]
+etymology_hook: "obra ← Latin opera 'works', plural of opus — kin to oficina; English opera"
 duration:
   max_seconds: 270
 requires:

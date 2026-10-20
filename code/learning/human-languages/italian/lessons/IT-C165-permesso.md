@@ -13,7 +13,8 @@ gloss: "permission"
 concept_tag: IT-COSE165-PERMESSO
 prerequisites: [IT-C164-fallimento, IT-C165-regola]
 sounds: []
-roots: []
+roots: [permittere-latin]
+etymology_hook: "permesso — 'allowed', from Latin permittere 'to let through' — English permission"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C165-regola]
 <!-- hl-knowledge: introduces=[IT-LEX-C165-COSE165-02]; assesses=[] -->
 
 **il permesso** — "permission".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permesso** is "a thing allowed": the past participle of the verb for "to allow", which ← Latin *permittere*, "to let through". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

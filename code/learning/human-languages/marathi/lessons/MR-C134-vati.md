@@ -14,7 +14,8 @@ romanization: "vāṭī"
 concept_tag: MR-THINGS134-VATI
 prerequisites: [MR-C133-topli, MR-C133-menbatti]
 sounds: []
-roots: []
+roots: [indo-aryan-varta]
+etymology_hook: "vāṭī ← *varta 'something made of metal', CDIAL's guess beside vartaka 'bell-metal' (CDIAL 11347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C133-menbatti]
 <!-- hl-knowledge: introduces=[MR-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **वाटी** — *vāṭī* — "a bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाटी** (*vāṭī*) comes from *\*varta*, which CDIAL glosses "circular object" or, more probably, "something made of metal", comparing Sanskrit *vartaka*, "bell-metal, brass" (CDIAL 11347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

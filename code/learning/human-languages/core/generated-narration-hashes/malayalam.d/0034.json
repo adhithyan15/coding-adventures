@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 34,
-  "sourceHash": "fnv1a64:dfca8f35972e05f8",
+  "sourceHash": "fnv1a64:56766489a86d03c4",
   "lessonIds": [
     "ML-C34-edukkuka",
     "ML-C34-codikkuka",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch34.txt",
   "json": "malayalam/narration/ch34.json",
-  "textHash": "fnv1a64:fa2e0c8003579da3",
-  "jsonHash": "fnv1a64:20a23ea309681163",
+  "textHash": "fnv1a64:33a7a2b8b8a503d4",
+  "jsonHash": "fnv1a64:3855273256ee3462",
   "findings": []
 }

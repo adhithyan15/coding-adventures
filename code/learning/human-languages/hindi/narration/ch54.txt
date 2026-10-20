@@ -109,6 +109,9 @@ You'll want to know: चिड़िया.
 The origin of चिड़िया (chiṛiyā) is not settled. It is usually grouped with a family of words for small birds that look as though they were built from the noise a bird makes, but that is a description of the family, not a documented derivation.
 It is worth saying plainly that 'sounds like a bird' is a guess and not evidence. The honest position is that this everyday word has no agreed ancestor, and that is the fifth such word you have met.
 
+The word, taken apart.
+चिड़िया (chiṛiyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṭaka, "sparrow" (CDIAL 4571). It came through a variant ciṭaka. CDIAL calls the word imitative of the bird's call, with similar words in Dravidian and Munda.
+
 What you've built.
 The fourth of five, and a guess that this book will not make.
 

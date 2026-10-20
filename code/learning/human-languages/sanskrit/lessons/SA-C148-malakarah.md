@@ -14,7 +14,8 @@ romanization: "mālākāraḥ"
 concept_tag: SA-PPL148-MALAKARAH
 prerequisites: [SA-C148-napitah, SA-C148-pacakah]
 sounds: []
-roots: []
+roots: [sanskrit-mala-garland, sanskrit-malakara]
+etymology_hook: "mālākāra ← mālā 'garland' + kāra 'maker' (√kṛ): 'garland-maker', so 'gardener' (CDIAL 10093)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C148-pacakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C148-PPL148-03]; assesses=[] -->
 
 **मालाकारः** — *mālākāraḥ* — "a gardener, a garland-maker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mālākāra* is built from *mālā* "garland" and *kāra* "maker", from the root √kṛ "do, make" (CDIAL 10093): "a garland-maker", and so "a gardener, a florist" (MW). CDIAL 10092 takes *mālā* itself from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

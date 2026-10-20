@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:d8f7066f5abf7b8f",
+  "lessonIds": [
+    "LA-C549-poema",
+    "LA-C549-epigramma",
+    "LA-C549-versiculus",
+    "LA-C549-recitatio",
+    "LA-C549-auditor"
+  ],
+  "tex": "latin/book/chapters/ch549-poems-and-readings.tex"
+}

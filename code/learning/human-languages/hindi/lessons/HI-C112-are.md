@@ -14,7 +14,8 @@ romanization: "are"
 concept_tag: HI-RIGHT-OH
 prerequisites: [HI-C112-pakka, HI-C112-sachme]
 sounds: []
-roots: []
+roots: [sanskrit-are]
+etymology_hook: "are ← Sanskrit are 'a call to someone', inherited (CDIAL 621)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C112-sachme]
 **अरे** (*are*) — "oh!", "hey!", a cry of surprise.
 
 **अरे, सच में?** — "oh, really?". It is informal: use it with friends.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अरे** (*are*) is inherited from Sanskrit *are*, "a call to someone", and has come down with almost no change (CDIAL 621). Sanskrit already had it in its oldest prose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

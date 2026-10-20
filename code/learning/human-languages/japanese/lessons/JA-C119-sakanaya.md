@@ -14,7 +14,8 @@ romanization: "sakanaya"
 concept_tag: JA-THINGS119-SAKANAYA
 prerequisites: [JA-C118-honya, JA-C119-hanaya, JA-C19-kyoushitsu]
 sounds: []
-roots: []
+roots: [japanese-sakana, japanese-ya-house]
+etymology_hook: "sakanaya: native sakana 'fish' + ya 'shop' (魚屋)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [JA-C119-hanaya]
 <!-- hl-knowledge: introduces=[JA-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **さかなや** — *sakanaya* — "a fishmonger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さかなや** (*sakanaya*) is a native compound, inherited rather than borrowed: *sakana*, "fish", and *ya*, "house, shop" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jvālāmukhī"
 concept_tag: MR-VASTU267-JVALAMUKHI
 prerequisites: [MR-C266-parvana, MR-C266-sirastran]
 sounds: []
-roots: []
+roots: [sanskrit-jvalati, sanskrit-mukha]
+etymology_hook: "jvālāmukhī: Sanskrit jvālā 'flame' + mukha 'mouth' + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C266-sirastran]
 <!-- hl-knowledge: introduces=[MR-LEX-C267-VASTU267-01]; assesses=[] -->
 
 **ज्वालामुखी** — *jvālāmukhī* — "a volcano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ज्वालामुखी** (*jvālāmukhī*) is "flame-mouthed": Sanskrit *jvālā*, "flame", and *mukha*, "mouth", with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

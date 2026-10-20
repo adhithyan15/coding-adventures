@@ -13,7 +13,8 @@ gloss: "a mushroom"
 concept_tag: FR-REPAS71-CHAMPIGNON
 prerequisites: [FR-C119-boeuf, FR-C119-legumes]
 sounds: []
-roots: []
+roots: [campus-latin]
+etymology_hook: "champignon ← Vulgar Latin *campaniolus 'of the fields', from campus — English champion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C119-legumes]
 <!-- hl-knowledge: introduces=[FR-LEX-C119-REPAS71-03]; assesses=[] -->
 
 **le champignon** — "a mushroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**champignon** ← Vulgar Latin *\*campaniolus*, "growing in the fields", from Latin *campania*, "level country", and *campus*, "a field" (EtymDB 2.1) — inherited: *ca-* became *cha-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tahānlelā"
 concept_tag: MR-GUN261-TAHANLELA
 prerequisites: [MR-C261-thaklela, MR-C261-bhukela]
 sounds: []
-roots: []
+roots: [sanskrit-trshna]
+etymology_hook: "tahānlelā: built on tahān 'thirst' ← Sanskrit tṛṣṇā 'thirst' (CDIAL 5941)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C261-bhukela]
 <!-- hl-knowledge: introduces=[MR-LEX-C261-GUN261-04]; assesses=[] -->
 
 **तहानलेला** — *tahānlelā* — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तहानलेला** (*tahānlelā*) is built on *tahān*, "thirst", which comes from Sanskrit *tṛṣṇā*, "thirst" (CDIAL 5941).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

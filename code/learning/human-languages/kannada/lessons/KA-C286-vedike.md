@@ -14,7 +14,8 @@ romanization: "vēdike"
 concept_tag: KA-STHALA286-VEDIKE
 prerequisites: [KA-C286-mahadi, KA-C286-pravesa]
 sounds: []
-roots: []
+roots: [sanskrit-vedi]
+etymology_hook: "vēdike ← Sanskrit vēdikā 'bench, platform' (CDIAL 12107)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C286-pravesa]
 <!-- hl-knowledge: introduces=[KA-LEX-C286-STHALA286-04]; assesses=[] -->
 
 **ವೇದಿಕೆ** — *vēdike* — "a platform, a stage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವೇದಿಕೆ** (*vēdike*) is Sanskrit *vēdikā*, "a bench, a platform" (CDIAL 12107), from *vēdi*, the raised ground of a sacrifice, with the Kannada *-e* for final *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

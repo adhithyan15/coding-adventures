@@ -14,6 +14,9 @@ Say "I live in Amritsar." (Maiṁ Amritsar rahindā hāṁ: the place-name needs
 You'll want to know: ਅੱਧੀ ਰਾਤ.
 ਅੱਧੀ ਰਾਤ — adhī rāt — "midnight".
 
+The word, taken apart.
+Both words are inherited. Adhī, "half", goes with Punjabi addhā, which CDIAL lists under Sanskrit ardha, "half" (CDIAL 644), and rāt comes from rātrī, "night" (CDIAL 10702).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Punjabi for a country, then the Punjabi for midnight
 
 You'll want to know: ਤੜਕਾ.
 ਤੜਕਾ — taṛkā — "daybreak, early morning".
+
+The word, taken apart.
+ਤੜਕਾ (taṛkā) matches Hindi taṛkā, "dawn", which CDIAL lists under the imitative Sanskrit traṭ, "crackle", comparing the English "crack of dawn" (CDIAL 5988). The same entry gives Punjabi taṛakṇā, "to crack, crackle".
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Punjabi for midnight, then the Punjabi for daybreak.
 You'll want to know: ਪਰਸੋਂ.
 ਪਰਸੋਂ — parsõ — "the day after tomorrow".
 
+The word, taken apart.
+ਪਰਸੋਂ (parsõ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, "the day after tomorrow" (CDIAL 7799j). Punjabi parsõ means both the day after tomorrow and the day before yesterday.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Punjabi for daybreak, then the Punjabi for the day a
 You'll want to know: ਗਰਮੀ.
 ਗਰਮੀ — garmī — "summer, the heat".
 
+The word, taken apart.
+ਗਰਮੀ (garmī) is a loan, usually traced to Persian garmī, "heat". It is Persian garm, "hot", with the ending -ī.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Punjabi for the day after tomorrow, then the Punjabi
 
 You'll want to know: ਸਰਦੀ.
 ਸਰਦੀ — sardī — "winter, the cold".
+
+The word, taken apart.
+ਸਰਦੀ (sardī) is a loan, usually traced to Persian sardī, "cold". It is Persian sard, "cold", with the ending -ī.
 
 What you've built.
 One more word for this chapter.

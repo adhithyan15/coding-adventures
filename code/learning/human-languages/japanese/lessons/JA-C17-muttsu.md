@@ -11,8 +11,8 @@ gloss: six things — and the second count's six, unlike the first one's, is nat
 concept_tag: JA-NATIVE-SIX
 prerequisites: [JA-W17-mu, JA-C15-roku, JA-C10-sukoshi]
 sounds: [mora]
-roots: []
-etymology_hook: Six is the one number whose borrowed reading had no native word beside it; here is the native word, in the count it belongs to.
+roots: [japanese-mu-six, japanese-tsu-counter]
+etymology_hook: "muttsu: native mu 'six' + native counter -tsu"
 duration:
   max_seconds: 185
 requires:
@@ -52,6 +52,11 @@ stands beside it.* That was true of the borrowed count and it is worth putting
 straight now. The native word for six exists — it is **む**, and you are holding
 it. What it does not do is stand inside the borrowed count the way **よん**
 does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**むっつ** (*muttsu*) is native: *mu*, the inherited word for "six", with the counter *-tsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MUTTSU, JA-LEX-ROKU, JA-LEX-ITSUTSU] -->

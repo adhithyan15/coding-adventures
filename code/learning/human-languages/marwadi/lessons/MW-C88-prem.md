@@ -14,7 +14,8 @@ romanization: "prem"
 concept_tag: MW-WORLD88-PREM
 prerequisites: [MW-C88-jatra, MW-C88-chhutti]
 sounds: []
-roots: []
+roots: [sanskrit-preman]
+etymology_hook: "prem ← Sanskrit preman 'love', a tatsama (CDIAL 8999)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C88-chhutti]
 <!-- hl-knowledge: introduces=[MW-LEX-C88-WORLD88-05]; assesses=[] -->
 
 **प्रेम** — *prem* — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रेम** (*prem*) is Sanskrit *preman*, "love", taken over whole as a learned loan, a tatsama (CDIAL 8999).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

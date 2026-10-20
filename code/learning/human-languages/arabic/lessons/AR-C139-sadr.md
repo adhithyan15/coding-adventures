@@ -14,7 +14,8 @@ romanization: "ṣadr"
 concept_tag: AR-THINGS139-SADR
 prerequisites: [AR-C139-lihya, AR-C139-sharib]
 sounds: []
-roots: []
+roots: [ṣ-d-r]
+etymology_hook: "ṣadr: built on the root ṣ-d-r, 'the breast' (Lane); ṣadr is the breast, the front"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C139-sharib]
 <!-- hl-knowledge: introduces=[AR-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **صدر** — *ṣadr* — "a chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صدر** (*ṣadr*) is built on the native Arabic root *ṣ-d-r*, "the breast; to come back from water" (Lane). *Ṣadr* is the breast, the front.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dayagala"
 concept_tag: TE-GUNAM260-DAYAGALA
 prerequisites: [TE-C260-arudaina, TE-C260-vinta]
 sounds: []
-roots: []
+roots: [sanskrit-daya, dravidian-kala-be]
+etymology_hook: "dayagala: Sanskrit dayā 'sympathy' (CDIAL 6185) + native gala 'having' (DEDR 1300)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C260-vinta]
 <!-- hl-knowledge: introduces=[TE-LEX-C260-GUNAM260-05]; assesses=[] -->
 
 **దయగల** — *dayagala* — "kind, compassionate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దయగల** (*dayagala*) is Sanskrit *dayā*, "sympathy" (CDIAL 6185), with native *gala*, "having", which DEDR 1300 lists as *kala*, "existing, having".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MR-ANCHOR-BET
 prerequisites: [MR-C02-sant]
 sounds: []
 roots: []
+etymology_hook: "bet 'a plan': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **बेत** — *bet* — "a plan".
 
 Say it: *bet*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ब** and **े**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बेत** (*bet*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-BET] -->

@@ -13,7 +13,8 @@ gloss: "as if"
 concept_tag: LA-CAUSA239-QUASI
 prerequisites: [LA-C239-fortasse, LA-C239-quoque]
 sounds: []
-roots: []
+roots: [quasi-latin, si-latin]
+etymology_hook: "quasi 'as if' — contracted from quam sī 'as if'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C239-quoque]
 <!-- hl-knowledge: introduces=[LA-LEX-C239-CAUSA239-04]; assesses=[] -->
 
 **quasi** — "as if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quasi** is contracted from *quam sī*, "as if" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

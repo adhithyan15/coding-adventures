@@ -11,8 +11,8 @@ gloss: one, on the page — the new letter and an old consonant
 concept_tag: MW-NUMBER-ONE-WRITTEN
 prerequisites: [MW-C32-hear-ek]
 sounds: [long-e, unaspirated-k]
-roots: []
-etymology_hook: Two signs, one of them a day old and one of them thirty chapters old.
+roots: [sanskrit-eka]
+etymology_hook: "ek ← Sanskrit eka 'one', a tadbhava (CDIAL 2462, Hindi and Gujarati rows)"
 duration:
   max_seconds: 160
 requires:
@@ -46,6 +46,11 @@ write **ए**.
 
 Nothing joins and nothing changes shape. The standing vowel keeps its own head
 -line stroke, **क** keeps its, and the two run together under one line.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**एक** (*ek*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *eka*, "one". CDIAL gives no Marwari form in this entry (CDIAL 2462); the match is through Hindi *ek* and Gujarati *ek*. CDIAL traces it through a form with a doubled *k*, *\*ēkka*, which it explains either as emphasis or as a Middle Indo-Aryan loan from Sanskrit.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-EK-01] -->

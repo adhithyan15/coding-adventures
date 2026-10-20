@@ -13,7 +13,8 @@ gloss: "common, shared"
 concept_tag: LA-QUAL182-COMMUNIS
 prerequisites: [LA-C182-publicus, LA-C182-privatus]
 sounds: []
-roots: []
+roots: [communis-latin, munus-latin]
+etymology_hook: "commūnis 'common' — Old Latin comoinis, usually traced to PIE *kom-moyni- 'held in common'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C182-privatus]
 <!-- hl-knowledge: introduces=[LA-LEX-C182-QUAL182-03]; assesses=[] -->
 
 **commūnis, commūne** — "common, shared".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commūnis** is inherited; Old Latin wrote *comoinis*, and it is usually traced to Proto-Indo-European *\*kom-moyni-*, "held in common", from *\*mey-*, "to exchange" (EtymDB 2.1). *mūnus*, "a duty, a gift", has the same root (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

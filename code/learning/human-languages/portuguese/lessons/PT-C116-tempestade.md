@@ -13,7 +13,8 @@ gloss: "a storm"
 concept_tag: PT-NATUREZA116-TEMPESTADE
 prerequisites: [PT-C115-relva, PT-C116-nevoeiro]
 sounds: []
-roots: []
+roots: [tempus-latin]
+etymology_hook: "tempestade ← Latin tempestas 'weather, storm', from tempus 'time' — English tempest"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C116-nevoeiro]
 <!-- hl-knowledge: introduces=[PT-LEX-C116-NATUREZA116-02]; assesses=[] -->
 
 **a tempestade** — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tempestade** ← Latin *tempestas, tempestatis*, "weather, storm" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

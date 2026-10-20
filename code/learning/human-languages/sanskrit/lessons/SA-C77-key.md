@@ -14,7 +14,8 @@ romanization: "kuñcikā"
 concept_tag: SA-HOME-KEY
 prerequisites: [SA-C77-bathroom, SA-C77-roof]
 sounds: []
-roots: []
+roots: [sanskrit-kuncika]
+etymology_hook: "kuñcikā 'key', filed by MW under √kuñc 'bend'; CDIAL 3225 doubts the root; Punjabi kuñjī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C77-roof]
 <!-- hl-knowledge: introduces=[SA-LEX-C77-HOME-05]; assesses=[] -->
 
 **कुञ्चिका** (*kuñcikā*) — "a key". **कुञ्चिका कुत्र?** — "where is the key?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW files *kuñcikā* under the root √kuñc, "to bend, curve"; CDIAL 3225 sets it
+under √kuc, with a question mark. It lives on as Punjabi *kuñjī*, "key", which
+Hindi borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

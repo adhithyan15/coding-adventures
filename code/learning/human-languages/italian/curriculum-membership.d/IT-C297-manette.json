@@ -1,0 +1,11 @@
+{
+  "id": "IT-C297-manette",
+  "pathSegment": "IT-PATH-297-MANETTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-297-MANETTE",
+      "order": 2
+    }
+  ]
+}

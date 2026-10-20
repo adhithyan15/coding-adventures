@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 646,
+  "sourceHash": "fnv1a64:e1cd4b2c3253800d",
+  "lessonIds": [
+    "ES-C646-surtidor",
+    "ES-C646-repostar",
+    "ES-C646-deposito",
+    "ES-C646-combustible",
+    "ES-C646-kilometro"
+  ],
+  "tex": "spanish/book/chapters/ch646-llenar-el-deposito.tex"
+}

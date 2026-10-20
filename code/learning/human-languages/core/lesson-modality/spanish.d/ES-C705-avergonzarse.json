@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C705-avergonzarse",
+    "language": "spanish",
+    "chapter": 705,
+    "sequence": 25190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d7348784edd241d"
+  },
+  "findings": []
+}

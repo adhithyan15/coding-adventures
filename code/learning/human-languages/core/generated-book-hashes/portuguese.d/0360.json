@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:45a4e6b29700c548",
+  "lessonIds": [
+    "PT-C360-promocao",
+    "PT-C360-promover",
+    "PT-C360-cargo",
+    "PT-C360-aumento",
+    "PT-C360-qualificacao"
+  ],
+  "tex": "portuguese/book/chapters/ch360-subir-na-empresa.tex"
+}

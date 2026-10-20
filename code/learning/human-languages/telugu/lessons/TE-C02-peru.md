@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [TE-C01-namaskaram]
 sounds: [ee-sign]
 roots: [peer-dravidian]
+etymology_hook: "pēru: native Dravidian, one word with Tamil peyar and Kannada pesaru (DEDR 4410)"
 duration:
   max_seconds: 150
 requires:
@@ -44,7 +45,7 @@ reviews_of: [TE-C01-namaskaram]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C02-PERU-02]; assesses=[] -->
 
-**పేరు** (*pēru*, "name") is **native Dravidian**, from Proto-Dravidian **\*pēr**
+**పేరు** (*pēru*, "name") is **native Dravidian** (DEDR 4410), from Proto-Dravidian **\*pēr**
 — the same word as Tamil *peyar* and Malayalam *pēr*, and a cousin of Kannada
 *hesaru* (which softened *p* → *h*). It is *not* Sanskrit *nāma* (Hindi *nām*,
 English *name*). Even Telugu — the most Sanskritised of the Dravidian tongues —

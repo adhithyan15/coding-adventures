@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:079a9228431c0925",
+  "lessonIds": [
+    "PT-C443-esquadra",
+    "PT-C443-quartel",
+    "PT-C443-conservatoria",
+    "PT-C443-denunciar",
+    "PT-C443-requerer"
+  ],
+  "tex": "portuguese/book/chapters/ch443-servicos-publicos.tex"
+}

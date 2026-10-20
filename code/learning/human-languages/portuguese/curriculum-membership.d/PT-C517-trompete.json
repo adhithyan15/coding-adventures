@@ -1,0 +1,11 @@
+{
+  "id": "PT-C517-trompete",
+  "pathSegment": "PT-PATH-517-SOPROS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-517-SOPROS",
+      "order": 1
+    }
+  ]
+}

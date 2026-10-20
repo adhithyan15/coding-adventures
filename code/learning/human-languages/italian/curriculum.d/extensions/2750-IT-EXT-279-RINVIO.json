@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-279-RINVIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that something was interrupted, suspended, put off or done early, and name a stop along the way.",
+  "prerequisites": []
+}

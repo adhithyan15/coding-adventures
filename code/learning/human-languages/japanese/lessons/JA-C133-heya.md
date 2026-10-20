@@ -14,8 +14,8 @@ romanization: "heya"
 concept_tag: JA-ANCHOR-HEYA
 prerequisites: [JA-C133-nuno, JA-W17-ya, JA-W18-ho, JA-W133-ke, JA-W131-wo]
 sounds: [mora]
-roots: []
-etymology_hook: Heya is any room in a house or a flat; its first sign is the one the ha, hi, fu, he, ho row has been missing.
+roots: [japanese-heya, japanese-ya-house]
+etymology_hook: "heya: native, ending in ya 'house'; 部屋 read as a whole; first part not settled"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +51,11 @@ Two beats: *he–ya*. The second sign is the **や** you already write. The firs
 one is new: a single low peak, like a roof. When you wrote **ほ**, the row
 *ha, hi, fu, he, ho* had one sign missing. This is it, and the next lesson
 writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**へや** (*heya*) is a native word, inherited rather than borrowed, ending in *ya*, "house". JMdict writes it with characters for "section" and "house", read as a whole. Where the first part comes from is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-HEYA, JA-SCRIPT-YA-01] -->

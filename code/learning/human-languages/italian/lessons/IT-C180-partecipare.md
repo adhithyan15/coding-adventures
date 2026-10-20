@@ -13,7 +13,8 @@ gloss: "to take part"
 concept_tag: IT-VERB-PARTECIPARE
 prerequisites: [IT-C179-fidarsi, IT-C180-osservare]
 sounds: []
-roots: []
+roots: [participare-latin]
+etymology_hook: "partecipare ← Latin participare 'to share in' — English participate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C180-osservare]
 <!-- hl-knowledge: introduces=[IT-LEX-C180-VERBI180-02]; assesses=[] -->
 
 **partecipare** — "to take part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partecipare** ← Latin *participare*, "to share in" — a learned borrowing. (EtymDB 2.1 records the Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

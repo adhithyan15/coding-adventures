@@ -14,7 +14,8 @@ romanization: "jhāl"
 concept_tag: BN-QUAL134-JHAL
 prerequisites: [BN-C133-kap, BN-C134-bete]
 sounds: []
-roots: []
+roots: [indo-aryan-jhala]
+etymology_hook: "jhāl ← *jhāla 'burning, pungent', a reconstructed form; a tadbhava (CDIAL 5379)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C134-bete]
 <!-- hl-knowledge: introduces=[BN-LEX-C134-QUAL134-02]; assesses=[] -->
 
 **ঝাল** — *jhāl* — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝাল** (*jhāl*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhāla*, "burning, pungent", a form CDIAL reconstructs from its descendants (CDIAL 5379). Late Sanskrit has *jhāli*, a dish of fried green mango.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

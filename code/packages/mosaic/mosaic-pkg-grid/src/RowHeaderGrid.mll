@@ -45,7 +45,7 @@ layout RowHeaderGrid {
           For (each: row, as: v, index: c) {
             Box [data-cell] (table-cell-role: data) {
               pkg::mosaic-pkg-grid::Cell (
-                height: slot: row-height,
+                row-height: slot: row-height,
                 editor-label: slot: editor-label,
                 value: (v), row: (r), col: (c), edit-content: slot: edit-content,
                 is-editing: (r == editRow && c == editCol),

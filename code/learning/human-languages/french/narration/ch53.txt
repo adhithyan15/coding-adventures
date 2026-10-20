@@ -12,6 +12,9 @@ Before the new one: say the French for an elbow, then the French for a wrist.
 You'll want to know: la douleur.
 la douleur — "pain".
 
+The word, taken apart.
+douleur from Old French dolor from Latin dolor, "pain, grief" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the French for a wrist, then the French for pain.
 
 You'll want to know: la fièvre.
 la fièvre — "a fever".
+
+The word, taken apart.
+fièvre from Latin febris, "fever" (EtymDB 2.1) — inherited: the stressed e broke into ie, and b became v.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the French for pain, then the French for a fever.
 You'll want to know: la toux.
 la toux — "a cough".
 
+The word, taken apart.
+toux from Old French tous (EtymDB 2.1) from Latin tussis, "a cough" (Lewis & Short) — inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the French for a fever, then the French for a cough.
 You'll want to know: le médicament.
 le médicament — "a medicine".
 
+The word, taken apart.
+médicament from Latin medicamentum, "a remedy", from medicari, "to heal" — a learned borrowing. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the French for a cough, then the French for a medicine.
 
 You'll want to know: le médecin.
 le médecin — "a doctor".
+
+The word, taken apart.
+médecin — formed in French from the word for "medicine", which from Latin medicina, "the art of healing", from medicus, "doctor" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

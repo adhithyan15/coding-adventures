@@ -13,7 +13,8 @@ gloss: "fortune, luck"
 concept_tag: LA-RES221-FORTUNA
 prerequisites: [LA-C221-discrimen, LA-C221-eventus]
 sounds: []
-roots: []
+roots: [fortuna-latin, fors-latin]
+etymology_hook: "fortūna 'fortune' — built on fors 'chance'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C221-eventus]
 <!-- hl-knowledge: introduces=[LA-LEX-C221-RES221-04]; assesses=[] -->
 
 **fortūna, fortūnae** — "fortune, luck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fortūna** is built on *fors*, "chance, luck" (Lewis & Short), with *-tūna*, an ending also in *Neptūnus*, "Neptune". *fors* is usually traced to the root of *ferō*, "to bring": what chance brings.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

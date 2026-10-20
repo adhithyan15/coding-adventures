@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:6273df86e4896729",
+  "lessonIds": [
+    "IT-C276-avvenimento",
+    "IT-C276-vicenda",
+    "IT-C276-faccenda",
+    "IT-C276-cronologia",
+    "IT-C276-sequenza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch276.txt",
+  "json": "italian/narration/ch276.json",
+  "textHash": "fnv1a64:735c0eb9071a0069",
+  "jsonHash": "fnv1a64:52db25fb5ad6051b",
+  "findings": []
+}

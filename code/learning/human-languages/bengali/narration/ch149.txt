@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to sweep, then the Bengali for to boil.
 You'll want to know: সাঁতার কাটা.
 সাঁতার কাটা — sā̃tār kāṭā — "to swim".
 
+The phrase, taken apart.
+সাঁতার কাটা (sā̃tār kāṭā) (sāṁtār kāṭā) is sāṁtār, "a swim", from Sanskrit saṁtāra, "crossing over" (CDIAL 12888), + kāṭā, "to cut", from Sanskrit kartati, "cuts" (CDIAL 2854).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to boil, then the Bengali for to swim.
 
 You'll want to know: পিছলে পড়া.
 পিছলে পড়া — pichhle pôṛā — "to slip".
+
+The phrase, taken apart.
+পিছলে পড়া (pichhle pôṛā) is pichhle, "slipping", which belongs with Bengali pichal, "slippery", from Sanskrit picchala (CDIAL 8152), + pôṛā, "to fall", from Sanskrit patati, "falls" (CDIAL 7722).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to swim, then the Bengali for to slip.
 You'll want to know: বিশ্রাম নেওয়া.
 বিশ্রাম নেওয়া — bishrām neoyā — "to rest".
 
+The phrase, taken apart.
+বিশ্রাম নেওয়া (bishrām neoyā) is bishrām, "rest", Sanskrit viśrāma taken over whole, + neoyā, "to take", from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to slip, then the Bengali for to rest.
 You'll want to know: তাড়াতাড়ি করা.
 তাড়াতাড়ি করা — tāṛātāṛi kôrā — "to hurry".
 
+The phrase, taken apart.
+তাড়াতাড়ি করা (tāṛātāṛi kôrā) is tāṛātāṛi, "quickly", whose origin is not settled, as CDIAL has no entry for it, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to rest, then the Bengali for to hurry.
 
 You'll want to know: দেরি করা.
 দেরি করা — deri kôrā — "to delay, to be late".
+
+The phrase, taken apart.
+দেরি করা (deri kôrā) is deri, "lateness", usually traced to Persian dēr, "late", + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

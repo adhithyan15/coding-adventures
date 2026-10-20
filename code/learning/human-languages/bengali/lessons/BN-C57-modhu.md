@@ -14,7 +14,8 @@ romanization: "môdhu"
 concept_tag: BN-FOOD57-MODHU
 prerequisites: [BN-C57-nun, BN-C57-makhon]
 sounds: []
-roots: []
+roots: [sanskrit-madhu]
+etymology_hook: "môdhu ← Sanskrit madhu 'honey, mead', a tatsama; CDIAL lists the inherited form mau (CDIAL 9784)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C57-makhon]
 <!-- hl-knowledge: introduces=[BN-LEX-C57-FOOD57-04]; assesses=[] -->
 
 **মধু** — *môdhu* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মধু** (*môdhu*) is Sanskrit *madhu*, "honey, mead", taken over whole as a learned loan, a tatsama (CDIAL 9784). The word inherited from it is *mau*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

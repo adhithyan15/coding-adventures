@@ -14,7 +14,8 @@ romanization: "gasít"
 concept_tag: RU-VERB-GASIT
 prerequisites: [RU-C205-prepodavat, RU-C205-sdavat]
 sounds: []
-roots: []
+roots: [slavic-gasiti]
+etymology_hook: "гасить ← Proto-Slavic *gasiti; Lithuanian gesti 'to go out' and Greek sbennymi 'I quench' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C205-sdavat]
 <!-- hl-knowledge: introduces=[RU-LEX-C206-ACT206-01]; assesses=[] -->
 
 **гасить** (*gasít*) — "to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**гасить** ← Proto-Slavic *\*gasiti* — inherited. Vasmer relates it to Lithuanian *gèsti*, "to go out", and Greek *sbénnymi*, "I put out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

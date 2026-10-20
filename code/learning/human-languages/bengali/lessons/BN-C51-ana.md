@@ -14,7 +14,8 @@ romanization: "ānā"
 concept_tag: BN-VERB-ANA
 prerequisites: [BN-C51-bhola, BN-C51-chaowa]
 sounds: []
-roots: []
+roots: [sanskrit-anayati]
+etymology_hook: "ānā ← Sanskrit ānayati 'leads forward, fetches', a tadbhava (CDIAL 1174)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C51-chaowa]
 <!-- hl-knowledge: introduces=[BN-LEX-C51-VERBS51-04]; assesses=[] -->
 
 **আনা** — *ānā* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আনা** (*ānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ānayati*, "leads forward, fetches" (CDIAL 1174).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

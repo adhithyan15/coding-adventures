@@ -1,0 +1,19 @@
+{
+  "chapter": 676,
+  "title": "Turismo",
+  "label": "ch:es-turismo",
+  "canDo": "I can talk about tourism, pick up a leaflet, find a viewpoint and haggle at a market.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C676-regatear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 676: I can talk about tourism, pick up a leaflet, find a viewpoint and haggle at a market.",
+    "assesses": [
+      "ES-LEX-C676-TURISMO-03",
+      "ES-LEX-C676-TURISMO-04",
+      "ES-LEX-C676-TURISMO-05"
+    ]
+  }
+}

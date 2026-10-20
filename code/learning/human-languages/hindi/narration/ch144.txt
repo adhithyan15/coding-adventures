@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a tree, then the Hindi for a root.
 You'll want to know: पत्थर.
 पत्थर — patthar — "a stone".
 
+The word, taken apart.
+पत्थर (patthar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prastara, "anything strewn; flat surface; stone" (CDIAL 8857).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a root, then the Hindi for a stone.
 
 You'll want to know: रेत.
 रेत — ret — "sand".
+
+The word, taken apart.
+रेत (ret) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from retra, "perfumed powder" (CDIAL 10816). CDIAL doubts a suggested Munda source; the Sanskrit word is known only from the old word-lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a stone, then the Hindi for sand.
 You'll want to know: लहर.
 लहर — lahar — "a wave".
 
+The word, taken apart.
+लहर (lahar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laharī, "large wave" (CDIAL 10999).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for sand, then the Hindi for a wave.
 You'll want to know: किनारा.
 किनारा — kinārā — "a shore, a bank".
 
+The word, taken apart.
+किनारा (kinārā) is a loan, usually traced to Persian kinār, "edge, shore".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a wave, then the Hindi for a shore.
 
 You'll want to know: बिजली.
 बिजली — bijlī — "electricity; lightning".
+
+The word, taken apart.
+बिजली (bijlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vidyullatā, "forked lightning" (CDIAL 11745). It is built from vidyut, "lightning", and latā, "creeper": lightning as a forking vine. The sense "electricity" came later.
 
 What you've built.
 One more word for this chapter.

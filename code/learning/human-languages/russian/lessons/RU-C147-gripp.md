@@ -14,7 +14,8 @@ romanization: "gripp"
 concept_tag: RU-ZDOROV147-GRIPP
 prerequisites: [RU-C147-bolnoy, RU-C147-prostuda]
 sounds: []
-roots: []
+roots: [germanic-gripana]
+etymology_hook: "грипп ← French grippe 'flu', from gripper 'to seize'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C147-prostuda]
 <!-- hl-knowledge: introduces=[RU-LEX-C147-ZDOROV147-03]; assesses=[] -->
 
 **грипп** (*gripp*) — "flu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**грипп** comes from French *grippe*, "flu", from *gripper*, "to seize", a word of Germanic origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

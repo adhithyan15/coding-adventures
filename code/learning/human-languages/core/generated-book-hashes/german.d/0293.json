@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:38ff9f1c77611ea2",
+  "lessonIds": [
+    "GE-C293-brennen",
+    "GE-C293-rauch",
+    "GE-C293-flamme",
+    "GE-C293-loeschen",
+    "GE-C293-waldbrand",
+    "GE-R293-review-286-293"
+  ],
+  "tex": "german/book/chapters/ch293-es-brennt.tex"
+}

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for brave, then the Sanskrit for clever.
 You'll want to know: मूर्खः.
 मूर्खः — mūrkhaḥ — "foolish".
 
+The word, taken apart.
+mūrkha "stupid, foolish" is old, in the Taittirīya Saṃhitā. MW files it under the root √mūrch "thicken, congeal, faint" without deriving it from there, so its source is uncertain. Hindi uses it unchanged as mūrkh (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for clever, then the Sanskrit for foolish.
 
 You'll want to know: अलसः.
 अलसः — alasaḥ — "lazy".
+
+The word, taken apart.
+alasa "inactive, lazy" has a disputed origin: MW divides it as a- "not" + lasa "lively", CDIAL 708 reports EWA's view that it is an l-form of arasa "sapless", and DEDR 236 takes it from Dravidian. Pali kept it as alasa "lazy" (CDIAL 708).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for foolish, then the Sanskrit for lazy.
 You'll want to know: सबलः.
 सबलः — sabalaḥ — "strong".
 
+The word, taken apart.
+sabala is built from sa "with" and bala "strength, force": "having strength", so "powerful, strong", already in the Rigveda (MW).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for lazy, then the Sanskrit for strong.
 You'll want to know: दुर्बलः.
 दुर्बलः — durbalaḥ — "weak".
 
+The word, taken apart.
+durbala is built from dus- "bad, ill" and bala "strength" (CDIAL 6438): "of little strength". It lives on as Hindi dublā "thin, weak" (CDIAL 6438).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for strong, then the Sanskrit for weak.
 
 You'll want to know: स्वच्छः.
 स्वच्छः — svacchaḥ — "clear, clean".
+
+The word, taken apart.
+svaccha is built from su "very, well" and accha "clear, transparent" (MW): "very clear, crystalline", and so "clean".
 
 What you've built.
 One more word for this chapter.

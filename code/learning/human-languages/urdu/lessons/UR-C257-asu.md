@@ -14,7 +14,8 @@ romanization: "ā̃sū"
 concept_tag: UR-CHIZ257-ASU
 prerequisites: [UR-C256-mezban, UR-C256-log]
 sounds: []
-roots: []
+roots: [sanskrit-ashru]
+etymology_hook: "ā̃sū ← Sanskrit aśru 'tear', a tadbhava (CDIAL 919)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C256-log]
 <!-- hl-knowledge: introduces=[UR-LEX-C257-CHIZ257-01]; assesses=[] -->
 
 **آنسو** — *ā̃sū* — "tears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آنسو** (*ā̃sū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aśru*, "tear" (CDIAL 919). CDIAL notes that the word took a nasal vowel early, as the word for "eye" did.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

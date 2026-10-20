@@ -12,6 +12,9 @@ Before the new one: say the Persian for a visa, then the Persian for a form.
 You'll want to know: بزرگسال.
 بزرگسال — bozorgsâl — "an adult".
 
+The word, taken apart.
+bozorgsâl is bozorg, "big", with sâl, "year": big in years. Both are inherited; EtymDB traces bozorg to Middle Persian wuzurg and sâl to Middle Persian sāl.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a form, then the Persian for an adult.
 
 You'll want to know: همکلاسی.
 همکلاسی — hamkelâsi — "a classmate".
+
+The word, taken apart.
+hamkelâsi is ham-, "same", with kelâs, "class", and -i: one of the same class. ham- is native Persian; kelâs is borrowed from French classe (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for an adult, then the Persian for a classma
 You'll want to know: میزبان.
 میزبان — mizbân — "a host".
 
+The word, taken apart.
+mizbân is usually traced to Middle Persian mēzbān: mēzd, "ritual meal" (EtymDB), with -bân, "keeper". The host is the keeper of the feast.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a classmate, then the Persian for a host
 You'll want to know: دشمن.
 دشمن — doshman — "an enemy".
 
+The word, taken apart.
+doshman is a native Persian word, inherited rather than borrowed: it continues Middle Persian dušman, "enemy" (EtymDB). It is usually explained as duš-, "bad", with man, "mind": "ill-minded".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a host, then the Persian for an enemy.
 
 You'll want to know: مردم.
 مردم — mardom — "people".
+
+The word, taken apart.
+mardom is a native Persian word, inherited rather than borrowed: it continues Middle Persian mardōm, "mankind, people" (EtymDB).
 
 What you've built.
 One more word for this chapter.

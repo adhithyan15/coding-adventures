@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Three Verbs Under One Roof",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:dc772465be575c60",
+  "sourceHash": "fnv1a64:dfaf5ef4e89e0e0e",
   "lessons": [
     {
       "id": "GE-C16-ich-war",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:904627fdb5b143fe",
+      "sourceHash": "fnv1a64:cc0490b7014778d5",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "war — inherited, from Old High German wesan, \"to be\" from Proto-Germanic wesaną; EtymDB 2.1 traces English was to the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -82,7 +93,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -131,7 +142,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -162,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38a9e00f27e68c90",
+      "sourceHash": "fnv1a64:cbfb82b73ba5f990",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +214,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "warst is the past stem war + -st. The stem goes back to Old High German wesan, \"to be\" from Proto-Germanic wesaną, the verb behind English was. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -217,7 +239,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -266,7 +288,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -297,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0981d87ec36bae0e",
+      "sourceHash": "fnv1a64:ac7af59091889b0a",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +360,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "war goes back to Old High German wesan, \"to be\" from Proto-Germanic wesaną; EtymDB 2.1 traces English was to the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "pronunciation",
           "title": "Sounds you'll need",
           "segments": [
@@ -352,7 +385,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -401,7 +434,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1006,7 +1039,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0283213c12ee08e0",
+      "sourceHash": "fnv1a64:e390a5553b3f0588",
       "notice": null,
       "blocks": [
         {
@@ -1066,7 +1099,7 @@
                 "Wo warst du? means Where were you?",
                 "Ich war in Berlin. means I was in Berlin.",
                 "Wie war es? means How was it?",
-                "Es war gut. Aber ich bin müde. means It was good. But I am tired."
+                "Es war gut, und ich bin müde. means It was good, and I am tired."
               ]
             },
             {

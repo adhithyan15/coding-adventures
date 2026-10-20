@@ -13,7 +13,8 @@ gloss: "beautiful"
 concept_tag: IT-AGG1-BELLO
 prerequisites: [IT-C72-nuovo, IT-C72-vecchio]
 sounds: []
-roots: []
+roots: [bellus-latin]
+etymology_hook: "bello ← Latin bellus 'pretty' — English belle and embellish share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C72-vecchio]
 <!-- hl-knowledge: introduces=[IT-LEX-C72-AGG1-05]; assesses=[] -->
 
 **bello** — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**bello** ← Latin *bellus*, "pretty, handsome" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

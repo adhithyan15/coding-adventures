@@ -14,7 +14,8 @@ romanization: "rakhīṣ"
 concept_tag: AR-ADJ83-RAKHIS
 prerequisites: [AR-C83-sahl, AR-C83-sab]
 sounds: []
-roots: []
+roots: [r-kh-ṣ]
+etymology_hook: "rakhīṣ: built on the root r-kh-ṣ, 'to be cheap' (Lane); rakhīṣ is the faʿīl adjective, 'cheap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C83-sab]
 <!-- hl-knowledge: introduces=[AR-LEX-C83-ADJ83-05]; assesses=[] -->
 
 **رخيص** — *rakhīṣ* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رخيص** (*rakhīṣ*) is built on the native Arabic root *r-kh-ṣ*, "to be cheap; to be soft" (Lane). *Rakhīṣ* is the *faʿīl* adjective, "cheap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

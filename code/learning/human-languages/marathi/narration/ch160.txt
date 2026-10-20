@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the past, then the Marathi for to happen
 You'll want to know: भविष्य.
 भविष्य — bhaviṣya — "the future". Marathi's future adds endings to the verb: मी जाईन — mī jāīn — "I will go"; तो जाईल — to jāīl — "he will go".
 
+The word, taken apart.
+भविष्य (bhaviṣya) is Sanskrit bhaviṣya, "about to be, future", taken over whole as a learned loan, a tatsama. It is built on bhū, "to be, become".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to happen, then the Marathi for the futu
 
 You'll want to know: लवकरच.
 लवकरच — lavkarac — "soon". लवकर, "early, quickly", with the emphatic च: मी लवकरच येईन. — mī lavkarac yeīn — "I will come soon."
+
+The word, taken apart.
+लवकरच (lavkarac) is लवकर, "early, soon", with the emphatic -च. The origin of लवकर is not settled: neither CDIAL nor DEDR has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for the future, then the Marathi for soon.
 You'll want to know: पुढचा / पुढची / पुढचे.
 पुढचा / पुढची / पुढचे — puḍhcā / puḍhcī / puḍhce — "next". It agrees with its noun: पुढच्या आठवड्यात — puḍhcyā āṭhavḍyāt — "next week".
 
+The word, taken apart.
+पुढचा (puḍhcā) is पुढे, "ahead", with the possessive ending -cā, "of". The origin of पुढे is not settled: neither CDIAL nor DEDR has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for soon, then the Marathi for next.
 You'll want to know: यानंतर.
 यानंतर — yānantar — "from now on, after this". It is या, "this", with नंतर, "after": यानंतर मी रोज चालेन. — yānantar mī roj cālen — "From now on I will walk every day."
 
+The word, taken apart.
+यानंतर (yānantar) is yā-, "this", with नंतर, "after", which comes from Sanskrit anantaram, "immediately after" (CDIAL 287).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for next, then the Marathi for from now on.
 
 You'll want to know: आखणे.
 आखणे — ākhṇe — "to plan, to draw up". Said of a plan or a line: मी प्रवासाची योजना आखीन. — mī pravāsācī yojanā ākhīn — "I will plan the trip."
+
+The word, taken apart.
+आखणे (ākhṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅkayati, "marks, brands" (CDIAL 104). CDIAL glosses the Marathi verb "to mark, trace".
 
 What you've built.
 One more word for this chapter.

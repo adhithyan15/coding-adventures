@@ -14,7 +14,8 @@ romanization: "kharīṭa"
 concept_tag: AR-SCHOOL74-KHARITA
 prerequisites: [AR-C74-haqiba, AR-C74-mal]
 sounds: []
-roots: []
+roots: [kh-r-ṭ]
+etymology_hook: "kharīṭa: a pouch in Lane (root kh-r-ṭ); the map sense is modern, linked by some to Greek chartēs"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C74-mal]
 <!-- hl-knowledge: introduces=[AR-LEX-C74-SCHOOL74-03]; assesses=[] -->
 
 **خريطة** — *kharīṭa* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خريطة** (*kharīṭa*) is listed by Lane under *kh-r-ṭ* as a leather pouch or bag. As the word for a map it is modern, and some trace that sense to Greek *chartēs*, "sheet of papyrus" (EtymDB); the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

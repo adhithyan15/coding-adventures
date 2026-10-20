@@ -15,6 +15,7 @@ concept_tag: PA-VERB-SUTTNA
 prerequisites: [PA-C62-udikna, PA-C63-labbhna]
 sounds: []
 roots: []
+etymology_hook: "suṭṭṇā: CDIAL lists the close Punjabi siṭṭṇā 'to throw' under sṛṣṭa 'thrown' (CDIAL 13578), not suṭṭṇā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C63-labbhna]
 <!-- hl-knowledge: introduces=[PA-LEX-C63-VERBS63-02]; assesses=[] -->
 
 **ਸੁੱਟਣਾ** — *suṭṭṇā* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਸੁੱਟਣਾ** (*suṭṭṇā*) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi forms *siṭṭṇā* and *saṭṭṇā*, "to throw", under Sanskrit *sṛṣṭa*, "released, thrown" (CDIAL 13578).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

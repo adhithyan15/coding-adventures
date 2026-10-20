@@ -14,7 +14,8 @@ romanization: "khaṭvā"
 concept_tag: SA-THINGS122-KHATVA
 prerequisites: [SA-C122-sakatam, SA-C122-bhandam]
 sounds: []
-roots: []
+roots: [sanskrit-khatva]
+etymology_hook: "khaṭvā 'bedstead, cot' (Kauśika) has no derivation in MW or CDIAL; Hindi khāṭ, khaṭolā (CDIAL 3781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C122-bhandam]
 <!-- hl-knowledge: introduces=[SA-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **खट्वा** — *khaṭvā* — "a cot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khaṭvā* "a bedstead, a cot" appears from the Kauśika Sūtra on, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi *khāṭ* "bedstead" and *khaṭolā* "cot" (CDIAL 3781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

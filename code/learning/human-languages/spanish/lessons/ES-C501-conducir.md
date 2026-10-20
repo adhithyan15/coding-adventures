@@ -10,7 +10,8 @@ gloss: "to drive"
 concept_tag: ES-VERB-CONDUCIR
 prerequisites: [ES-C500-libertad, ES-C501-viajero]
 sounds: []
-roots: []
+roots: [ducere-latin]
+etymology_hook: "conducir ← Latin conducere 'to lead together': con- + ducere 'to lead' — English conduct"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C501-viajero]
 > *I drive to work.*
 
 It takes *zc* in the first person present: *conduzco*. In much of Latin America people say *manejar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**conducir** ← Latin *conducere*, "to lead together" (EtymDB 2.1): *con-* and *ducere*, "to lead" — a learned word. To drive is to lead a car.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

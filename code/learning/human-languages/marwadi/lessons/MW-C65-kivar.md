@@ -14,7 +14,8 @@ romanization: "kivāṛ"
 concept_tag: MW-HOME65-KIVAR
 prerequisites: [MW-C64-chhuri, MW-C64-botal]
 sounds: []
-roots: []
+roots: [sanskrit-kapata]
+etymology_hook: "kivāṛ ← Sanskrit kapāṭa 'leaf of a door', perhaps from Dravidian (CDIAL 2963, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C64-botal]
 <!-- hl-knowledge: introduces=[MW-LEX-C65-HOME65-01]; assesses=[] -->
 
 **किवाड़** — *kivāṛ* — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किवाड़** (*kivāṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kapāṭa*, "leaf of a door". CDIAL lists Old Marwari *kibāṛi* under it (CDIAL 2963). CDIAL notes a possible Dravidian origin for the Sanskrit word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-530-PELIGRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-530-PELIGRO"
+  ],
+  "after": []
+}

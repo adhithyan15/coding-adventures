@@ -1,0 +1,11 @@
+{
+  "id": "IT-C345-esprimere",
+  "pathSegment": "IT-PATH-345-AFFERMARE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-345-AFFERMARE",
+      "order": 0
+    }
+  ]
+}

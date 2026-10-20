@@ -14,7 +14,8 @@ romanization: "pākaśālā"
 concept_tag: SA-HOME-KITCHEN
 prerequisites: [SA-C76-summer, SA-C77-room]
 sounds: []
-roots: []
+roots: [sanskrit-shala, sanskrit-pacati]
+etymology_hook: "pākaśālā 'kitchen' ← pāka 'cooking' (from √pac) + śālā 'hall'; MW records it as 'cooking-room'"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C77-room]
 
 **पाकशाला** (*pākaśālā*) — "the kitchen": **पाक**, "cooking", the noun of **पचति**,
 with **शाला**, "hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pākaśālā* is a compound of *pāka*, "cooking", from the root √pac, and *śālā*,
+"hall, house"; MW records it as "cooking-room". *Śālā* is inherited: MW compares
+German *Saal* and English **hall**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

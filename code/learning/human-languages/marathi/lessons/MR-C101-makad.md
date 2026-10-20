@@ -14,7 +14,8 @@ romanization: "mākaḍ"
 concept_tag: MR-ANIMALS101-MAKAD
 prerequisites: [MR-C101-vagh, MR-C101-hatti]
 sounds: []
-roots: []
+roots: [sanskrit-markata]
+etymology_hook: "mākaḍ ← Sanskrit markaṭa 'monkey', perhaps built on a Dravidian marka (CDIAL 9882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C101-hatti]
 <!-- hl-knowledge: introduces=[MR-LEX-C101-ANIMALS101-05]; assesses=[] -->
 
 **माकड** — *mākaḍ* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माकड** (*mākaḍ*) is a tadbhava of Sanskrit *markaṭa*, "monkey" (CDIAL 9882). CDIAL suggests it may extend a word *marka* that may come from Dravidian, comparing Kannada *maṅga*, "monkey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

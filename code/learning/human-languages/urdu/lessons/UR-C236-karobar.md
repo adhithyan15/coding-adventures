@@ -14,7 +14,8 @@ romanization: "kārobār"
 concept_tag: UR-KAM236-KAROBAR
 prerequisites: [UR-C236-dukandar, UR-C236-gahak]
 sounds: []
-roots: []
+roots: [persian-karobar]
+etymology_hook: "kārobār: usually traced to Persian kār-o-bār 'work and business'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C236-gahak]
 <!-- hl-knowledge: introduces=[UR-LEX-C236-KAM236-05]; assesses=[] -->
 
 **کاروبار** — *kārobār* — "business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کاروبار** (*kārobār*) is a loan, usually traced to Persian *kār-o-bār*, "work and business". It is built from *kār*, "work", *o*, "and", and *bār*, "load, business".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

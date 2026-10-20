@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0cf00eafbed62514",
+  "sourceHash": "fnv1a64:cd63d7f0a44dff3a",
   "lessons": [
     {
       "id": "TE-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24d949d6b497a93c",
+      "sourceHash": "fnv1a64:c2e72f84db8ede9b",
       "notice": null,
       "blocks": [
         {
@@ -54,12 +54,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is అది adi, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇది (idi) is native Dravidian, one word with Tamil itu and Kannada idu (DEDR 410). It is built on the near-pointing base i-, \"this\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,7 +101,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -121,7 +132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f0438aef0ee39bc",
+      "sourceHash": "fnv1a64:44bbad20e76a9f44",
       "notice": null,
       "blocks": [
         {
@@ -156,12 +167,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఇది idi, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ఇది idi, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అది (adi) is native Dravidian, one word with Tamil atu and Kannada adu (DEDR 1). It is built on the far-pointing base a-, \"that\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -192,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -223,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:966ab8e80296424d",
+      "sourceHash": "fnv1a64:970c2efcc9f13169",
       "notice": null,
       "blocks": [
         {
@@ -258,12 +280,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is అక్కడ akkaḍa, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇక్కడ (ikkaḍa) is native Dravidian, built on the near-pointing base i-, \"this\". DEDR 410 lists ikkaḍa, \"this place, here\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -294,7 +327,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -325,7 +358,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:183cd5ca68c234a1",
+      "sourceHash": "fnv1a64:ba514af1521bdd6a",
       "notice": null,
       "blocks": [
         {
@@ -360,12 +393,23 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఇక్కడ ikkaḍa, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ఇక్కడ ikkaḍa, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అక్కడ (akkaḍa) is native Dravidian, built on the far-pointing base a-, \"that\". DEDR 1 lists akkaḍa, \"that place, there\", itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +440,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f693405b6cebbafd",
+      "sourceHash": "fnv1a64:8ab239306569b8a6",
       "notice": null,
       "blocks": [
         {
@@ -458,16 +502,27 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఎక్కడ ekkaḍa, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes in the next lesson, and it opens with the same e-. That is the pattern: the near words you know open with i- (ఇది idi, ఇక్కడ ikkaḍa), the far ones with a- (అది adi, అక్కడ akkaḍa), and the asking words with e-. The last lesson of this chapter lays it out."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎవరు (evaru) is native Dravidian, built on the question base e-. DEDR 5151 lists evaru, \"who\", itself, with Tamil yār, \"who\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,11 +535,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఎవరు (evaru)\" three times, picturing something different each time",
+              "instruction": "\"ఎవరు (evaru)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఎవరు\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"ఎవరు\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -498,7 +553,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -529,7 +584,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:386a21e4b5c01b7f",
+      "sourceHash": "fnv1a64:88c0236297cfce5c",
       "notice": null,
       "blocks": [
         {
@@ -560,16 +615,27 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is ఎవరు evaru, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ఎవరు evaru, which you have just met: both open with e-, the asking sound. Its other partners, ఇక్కడ ikkaḍa and అక్కడ akkaḍa, differ from it only at the front. That is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎక్కడ (ekkaḍa) is native Dravidian, built on the question base e-. DEDR 5151 lists ekkaḍa, \"where\", itself, with Tamil eṅku, \"where\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -582,11 +648,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఎక్కడ (ekkaḍa)\" three times, picturing something different each time",
+              "instruction": "\"ఎక్కడ (ekkaḍa)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఎక్కడ\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"ఎక్కడ\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -600,7 +666,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

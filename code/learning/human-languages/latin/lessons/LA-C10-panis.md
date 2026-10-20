@@ -45,7 +45,8 @@ in English.
 
 **pānis, pānis** — "**bread**." Spanish **pan**, French **pain**, Italian
 **pane** all continue it directly — bread mattered enough to keep its own
-name everywhere.
+name everywhere. *Pānis* itself is inherited, built on an old root for feeding,
+*\*peh₂-* (EtymDB 2.1).
 
 ## You'll want to know: com- + pānis — "sharing bread"
 <!-- hl-knowledge: introduces=[LA-LEX-PANIS-02]; assesses=[] -->

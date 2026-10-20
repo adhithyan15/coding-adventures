@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 146,
-  "sourceHash": "fnv1a64:2c30cb4edaa6282b",
+  "sourceHash": "fnv1a64:844089faeff0fa42",
   "lessonIds": [
     "KA-C146-ketta",
     "KA-C146-bhayankara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch146.txt",
   "json": "kannada/narration/ch146.json",
-  "textHash": "fnv1a64:67875e23d6e51f7a",
-  "jsonHash": "fnv1a64:c69410f71e2682d4",
+  "textHash": "fnv1a64:2279b11af61dd4da",
+  "jsonHash": "fnv1a64:d6a714a993f78cd4",
   "findings": []
 }

@@ -14,6 +14,7 @@ concept_tag: FR-HABITS69-MAILLOT
 prerequisites: [FR-C117-bottes, FR-C117-casquette]
 sounds: []
 roots: []
+etymology_hook: "maillot ← Old French mailloel 'swaddling band', from Latin macula 'a mesh' — English mail (armour)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C117-casquette]
 <!-- hl-knowledge: introduces=[FR-LEX-C117-HABITS69-03]; assesses=[] -->
 
 **le maillot** — "a swimsuit; a sports shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maillot** ← Old French *mailloel*, a swaddling band, from *maille*, "a stitch, a mesh", ← Latin *macula*, "a spot, a mesh". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

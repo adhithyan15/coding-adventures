@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 187,
-  "sourceHash": "fnv1a64:99bb4259bfbc9ea7",
+  "sourceHash": "fnv1a64:1a0d2f17da3585ac",
   "lessonIds": [
     "LA-C187-pax",
     "LA-C187-dux",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch187.txt",
   "json": "latin/narration/ch187.json",
-  "textHash": "fnv1a64:931e7783696ee89c",
-  "jsonHash": "fnv1a64:d1979ebfae43d15d",
+  "textHash": "fnv1a64:6efd7b6170f65090",
+  "jsonHash": "fnv1a64:e2c3fd7bc894e5a4",
   "findings": []
 }

@@ -11,8 +11,8 @@ gloss: take the money — the line that closes a purchase
 concept_tag: MW-SHOPPING-PAY
 prerequisites: [MW-C24-lo]
 sounds: [unaspirated-p, open-ai, dental-l, long-o]
-roots: []
-etymology_hook: The word for money has been taught since Chapter 14 with nothing to do with it.
+roots: [sanskrit-labhate, indo-aryan-padamsha]
+etymology_hook: "paisā le lo: paisā ← *padāṃśa (CDIAL 7761); le, lo ← labhate 'takes' (CDIAL 10948)"
 duration:
   max_seconds: 175
 requires:
@@ -52,6 +52,11 @@ short beats that run together in ordinary speech.
 Say the three turns you already have, then this one. That is a whole purchase,
 from asking to see a thing to paying for it, and every word in it was taught
 before this chapter except *lo*.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paisā le lo* joins words with their own lessons: *paisā*, "money", from *\*padāṃśa*, "quarter part" (CDIAL 7761); and *le* and *lo*, two forms of the verb "to take", which CDIAL lists as Old Marwari *lei* under Sanskrit *labhate*, "takes" (CDIAL 10948).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAY-01] -->

@@ -14,7 +14,8 @@ romanization: "baṇāuṇā"
 concept_tag: PA-VERB-BANAUNA
 prerequisites: [PA-C149-bulauna, PA-C149-vartna]
 sounds: []
-roots: []
+roots: [sanskrit-vanati]
+etymology_hook: "baṇāuṇā: causing form of baṇnā 'to be made', which CDIAL lists under vanati, as taken from Lahnda (11260)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C149-vartna]
 <!-- hl-knowledge: introduces=[PA-LEX-C149-ACT149-05]; assesses=[] -->
 
 **ਬਣਾਉਣਾ** — *baṇāuṇā* — "to make".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਣਾਉਣਾ** (*baṇāuṇā*) is the causing form of *baṇnā*, "to be made, to become". CDIAL lists *baṇnā* under Sanskrit *vanati*, "desires, gains, makes ready", and marks it as taken from Lahnda *baṇṇaṇ*, "to become" (CDIAL 11260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

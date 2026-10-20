@@ -11,7 +11,8 @@ romanization: "vēdana"
 concept_tag: ML-NOUN-PAIN
 prerequisites: [ML-C63-tiredness, ML-C61-curd]
 sounds: []
-roots: []
+roots: [sanskrit-vedana]
+etymology_hook: "vēdana ← Sanskrit vēdanā 'feeling, pain', a tatsama (CDIAL 12106)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *vedanā*, from the root *vid*, to know or to feel — pain named as th
 That root has been busy in this book. *Vaidyan*, the doctor, and *vidyārtthi*, the student, both grow from it: knowing, learning, healing and hurting all off one seed.
 
 Malayalam keeps it for bodily pain first and lets the wider sense follow, so a speaker saying വേദന is usually pointing somewhere.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേദന** (*vēdana*) ← Sanskrit *vēdanā*, "feeling, pain", taken over whole as a tatsama (CDIAL 12106). It is built on the root *vid*, "to know, to feel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

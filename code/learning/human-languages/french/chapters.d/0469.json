@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "De quelle humeur ?",
+  "label": "ch:fr-de-quelle-humeur",
+  "canDo": "I can describe moods: calm, moody or irritated.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C469-agacer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can describe moods: calm, moody or irritated.",
+    "assesses": [
+      "FR-LEX-C469-HUMEUR-03",
+      "FR-LEX-C469-HUMEUR-04",
+      "FR-LEX-C469-HUMEUR-05"
+    ]
+  }
+}

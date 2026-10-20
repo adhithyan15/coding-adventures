@@ -14,7 +14,8 @@ romanization: "kāryakrama"
 concept_tag: KA-VASTU300-KARYAKRAMA
 prerequisites: [KA-C300-photo, KA-C300-kyamara]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-krama]
+etymology_hook: "kāryakrama ← Sanskrit kārya 'work, business' + krama 'step, order' (CDIAL 3577)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C300-kyamara]
 <!-- hl-knowledge: introduces=[KA-LEX-C300-VASTU300-03]; assesses=[] -->
 
 **ಕಾರ್ಯಕ್ರಮ** — *kāryakrama* — "a programme, a show, an event".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾರ್ಯಕ್ರಮ** (*kāryakrama*) is Sanskrit *kārya*, "work, business", and *krama*, "step, order" (CDIAL 3577): "an order of business".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

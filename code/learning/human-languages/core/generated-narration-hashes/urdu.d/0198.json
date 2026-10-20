@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 198,
-  "sourceHash": "fnv1a64:175e30270da69257",
+  "sourceHash": "fnv1a64:54367b9f301dd91d",
   "lessonIds": [
     "UR-C198-tar",
     "UR-C198-skrin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch198.txt",
   "json": "urdu/narration/ch198.json",
-  "textHash": "fnv1a64:8f468e90fd4d05ff",
-  "jsonHash": "fnv1a64:aba2dc2c7ac95273",
+  "textHash": "fnv1a64:0830114cf4bc96ac",
+  "jsonHash": "fnv1a64:60a7f0ad11f00b0b",
   "findings": []
 }

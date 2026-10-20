@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a hermitage, then the Sanskrit for a mo
 You'll want to know: केन्द्रम्.
 केन्द्रम् — kendram — "a centre".
 
+The word, taken apart.
+kendra was borrowed from Greek kentron, "point, centre of a circle" (MW), with Greek astronomy. English centre comes from the same Greek word through Latin centrum.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a monastery, then the Sanskrit for a ce
 
 You'll want to know: अट्टालिका.
 अट्टालिका — aṭṭālikā — "a tall building".
+
+The word, taken apart.
+aṭṭālikā is built on aṭṭāla, "watch-tower" (CDIAL 185), from aṭṭa, "high; tower". CDIAL 180 reports Mayrhofer's view that aṭṭa is non-Aryan, so it was probably borrowed. MW glosses aṭṭālikā "a palace".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a centre, then the Sanskrit for a tall 
 You'll want to know: अन्धकारः.
 अन्धकारः — andhakāraḥ — "darkness".
 
+The word, taken apart.
+andhakāra is built on andha, "blind, dark", and kāra, "making", from the root √kṛ (CDIAL 386): what makes blind. It lives on as Gujarati ãdhārũ and Marathi ãdhār, "darkness".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a tall building, then the Sanskrit for 
 You'll want to know: ज्योतिः.
 ज्योतिः — jyotiḥ — "radiance, a flame".
 
+The word, taken apart.
+jyotiḥ is the nominative of jyotis, "light", built on the root √jyut, "to shine", which MW calls a form of √dyut. It is a Rigvedic word (CDIAL 5300), and jyotsnā, "moonlight", comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for darkness, then the Sanskrit for radianc
 
 You'll want to know: भूमिः.
 भूमिः — bhūmiḥ — "the ground, land".
+
+The word, taken apart.
+bhūmi is built on the root √bhū, "to be, become" (MW), the root of bhavati: the earth is where things come to be. It is a Rigvedic word (CDIAL 9557). MW compares √bhū with English be.
 
 What you've built.
 One more word for this chapter.

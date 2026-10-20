@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Two Ideas, One Sentence",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:daafe21d736424f5",
+  "sourceHash": "fnv1a64:c50cf7e70241a11a",
   "lessons": [
     {
       "id": "FR-C36-svo",
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0722373b778302",
+      "sourceHash": "fnv1a64:d2b4ab3a48adffb8",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +568,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words are welded in there: par (\"by\"), ce (\"this\") and que (\"that\"). By this that… — a phrase that pointed forward at the reason about to be given, said so often that the first two fused and the third stayed loose."
+              "text": "Three words are welded in there: par (\"by\"), ce (\"this\") and que (\"that\"). By this that… — a phrase that pointed forward at the reason about to be given, said so often that the first two fused and the third stayed loose. All three are inherited from Latin: par from per, ce from ecce hoc, \"look, this\", and que from quid, quem or quia (EtymDB 2.1 lists all three)."
             },
             {
               "kind": "speech",
@@ -580,7 +580,7 @@
             },
             {
               "kind": "speech",
-              "text": "parce qu'il est tard — because it's late."
+              "text": "parce qu'il est midi — because it's noon."
             },
             {
               "kind": "speech",
@@ -605,11 +605,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "elided — \"parce qu'il est tard\"",
+              "instruction": "elided — \"parce qu'il est midi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: elided — \"parce qu'il est tard\"]"
+              "source": "[YOU SAY: elided — \"parce qu'il est midi\"]"
             },
             {
               "kind": "prompt",

@@ -11,7 +11,8 @@ romanization: "kāyiri"
 concept_tag: KA-REP-WAIT
 prerequisites: [KA-C85-writeit, KA-C86-oneminute]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard]
+etymology_hook: "kāyiri: native kāyu 'to wait, guard' (DEDR 1416) + the polite ending -iri"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C86-oneminute]
 "to wait".
 
 **ಒಂದು ನಿಮಿಷ ಕಾಯಿರಿ** (*ondu nimiṣa kāyiri*) — "please wait a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಯಿರಿ** (*kāyiri*) is native Dravidian: the polite command of *kāyu*, "to guard, keep watch, wait", which DEDR 1416 lists with Tamil *kā*, "to guard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

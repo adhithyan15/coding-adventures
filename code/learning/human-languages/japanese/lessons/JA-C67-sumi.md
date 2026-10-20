@@ -14,7 +14,8 @@ romanization: "sumi"
 concept_tag: JA-THINGS67-SUMI
 prerequisites: [JA-C67-uchiwa, JA-C67-sensu]
 sounds: []
-roots: []
+roots: [japanese-sumi-charcoal, japanese-sumi-corner]
+etymology_hook: "sumi: two native words, 'charcoal' (炭) and 'corner' (隅), with their own kanji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C67-sensu]
 <!-- hl-knowledge: introduces=[JA-LEX-C67-THINGS67-03]; assesses=[] -->
 
 **すみ** — *sumi* — "charcoal; a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すみ** (*sumi*) is two native words that sound alike: *sumi*, "charcoal", and *sumi*, "corner", each with its own kanji (JMdict). Both are inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

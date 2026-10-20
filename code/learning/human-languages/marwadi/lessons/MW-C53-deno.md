@@ -14,7 +14,8 @@ romanization: "deṇo"
 concept_tag: MW-VERB-DENO
 prerequisites: [MW-C53-khelno, MW-C53-bechno]
 sounds: []
-roots: []
+roots: [sanskrit-dadati]
+etymology_hook: "deṇo ← Sanskrit dadāti 'gives', a tadbhava (CDIAL 6141, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C53-bechno]
 <!-- hl-knowledge: introduces=[MW-LEX-C53-VERBS53-03]; assesses=[] -->
 
 **देणो** — *deṇo* — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देणो** (*deṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadāti*, "gives". CDIAL lists Marwari *deṇo* under it (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

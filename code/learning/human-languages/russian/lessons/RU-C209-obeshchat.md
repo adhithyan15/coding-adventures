@@ -14,7 +14,8 @@ romanization: "obeshchát"
 concept_tag: RU-VERB-OBESHCHAT
 prerequisites: [RU-C209-fotografirovat, RU-C209-sobirat]
 sounds: []
-roots: []
+roots: [vet]
+etymology_hook: "обещать is Church Slavonic, with обет 'a vow', on the root вет- 'counsel, word'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C209-sobirat]
 <!-- hl-knowledge: introduces=[RU-LEX-C209-ACT209-03]; assesses=[] -->
 
 **обещать** (*obeshchát*) — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обещать** — taken from Church Slavonic, says Vasmer, in place of an Old Russian *\*обечати*; the *-щ-* marks it. It goes with *обет*, "a vow", on the old root *вет-*, "counsel, word".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

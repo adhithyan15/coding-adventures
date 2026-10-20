@@ -14,7 +14,8 @@ romanization: "uchi"
 concept_tag: JA-HOME37-UCHI
 prerequisites: [JA-C36-mame, JA-C36-kome]
 sounds: []
-roots: []
+roots: [japanese-uchi]
+etymology_hook: "uchi: native Japanese, inherited, not borrowed; kanji 家 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C36-kome]
 <!-- hl-knowledge: introduces=[JA-LEX-C37-HOME37-01]; assesses=[] -->
 
 **うち** — *uchi* — "home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うち** (*uchi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

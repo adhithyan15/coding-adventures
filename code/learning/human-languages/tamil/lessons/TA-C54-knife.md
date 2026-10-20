@@ -11,7 +11,8 @@ romanization: "katti"
 concept_tag: TA-NOUN-KNIFE
 prerequisites: [TA-C54-basket, TA-C52-shoot, TA-C53-field]
 sounds: []
-roots: []
+roots: [dravidian-katti-knife]
+etymology_hook: "கத்தி — native Dravidian (DEDR 1204); Malayalam katti, Kannada katti, Telugu katti"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C54-basket]
 Three sisters and one word. Malayalam കത്തി, Telugu కత్తి, Tamil கத்தி. Not merely close — the same word three times, which happens with things every household has had for as long as there have been households.
 
 The doubled த in the middle carries the whole difficulty. Hold it: *ka-t-ti*, with the tongue staying where it is between the two.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கத்தி** (*katti*) is native Dravidian. DEDR 1204 lists Malayalam *katti*, Kannada *katti* and Telugu *katti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

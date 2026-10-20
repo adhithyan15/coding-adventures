@@ -14,7 +14,7 @@ sounds: [telugu-ca, telugu-long-uu-sign]
 roots: [cuudu-see-telugu, proto-dravidian-kan-eye]
 etymology_hook: "no two Dravidian sisters agree on the everyday see-verb — చూడు, பார், ನೋಡು, കാണുക — but the family's oldest seeing-root survives in all four as the word for 'eye', Telugu కన్ను; and చూడండి shows that the polite -అండి of కూర్చోండి and క్షమించండి is a slot open to every verb"
 duration:
-  max_seconds: 255
+  max_seconds: 295
 requires:
   knowledge: [TE-LEX-C32-VELLU-01, TE-LEX-C32-RAA-01, TE-LEX-C32-TINU-01]
 introduces:
@@ -47,11 +47,13 @@ Threaded up: **చూస్తాను** (*cūstānu*), "I see, I will see," an
 
 Here the sisters scatter completely. Tamil says **பார்** (*pār*), Kannada
 **ನೋಡು** (*nōḍu*), Malayalam **കാണുക** (*kāṇuka*), Telugu **చూడు** (*cūḍu*).
-Four languages, four unrelated everyday verbs.
+Four languages, four different everyday verbs. Telugu's is Dravidian: DEDR 2735
+lists it as *cūcu*, "to see".
 
 And yet the family's oldest seeing-root is right there in all four, sitting in a
-noun you can point at: **కన్ను** (*kannu*, "eye") — Tamil **கண்** (*kaṇ*),
-Kannada **ಕಣ್ಣು** (*kaṇṇu*), Malayalam **കണ്ണ്** (*kaṇṇ*). Telugu still builds on
+noun you can point at, "eye" — Tamil **கண்** (*kaṇ*), Kannada **ಕಣ್ಣು**
+(*kaṇṇu*), Malayalam **കണ്ണ്** (*kaṇṇ*), and Telugu's own eye-word, which comes
+later in this book. Telugu still builds on
 it: **కనిపించు** (*kanipin̄cu*), "to appear, to be visible." Four everyday verbs,
 one shared eye.
 
@@ -85,7 +87,7 @@ one person, and *-aṇḍi* is that plural now sitting on the verb.
 [PAUSE 1s]
 - [YOU SAY: "cūḍu" — see, look — then "cūstānu"]
 - [YOU SAY: the four sisters' four verbs — "cūḍu … pār … nōḍu … kāṇuka"]
-- [YOU SAY: the eye they all share — "kannu … kaṇ … kaṇṇu … kaṇṇ"]
+- [YOU SAY: the eye the sisters share — "kaṇ … kaṇṇu … kaṇṇ"]
 - [YOU SAY: all four polite commands — "cūḍaṇḍi … raṇḍi … tinaṇḍi … veḷḷaṇḍi"]
 
 ## Wrap-up Recall
@@ -93,7 +95,7 @@ one person, and *-aṇḍi* is that plural now sitting on the verb.
 
 [PAUSE 3s] Do the four sisters share an everyday verb for seeing? (**No** —
 *cūḍu*, *pār*, *nōḍu*, *kāṇuka*, all different.) What do they share instead?
-(**The eye** — *kannu*, *kaṇ*, *kaṇṇu*, *kaṇṇ*.) Make "please eat" and "please
+(**The eye** — *kaṇ*, *kaṇṇu*, *kaṇṇ*.) Make "please eat" and "please
 come." (*Tinaṇḍi*; *raṇḍi*.) Where have you met that politeness before? (**In
 మీరు** — a plural used for one person, now on the verb.) Next: a verb with no
 room for a person at all.

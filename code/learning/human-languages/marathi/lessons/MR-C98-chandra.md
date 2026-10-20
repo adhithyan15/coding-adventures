@@ -14,7 +14,8 @@ romanization: "chandra"
 concept_tag: MR-NATURE98-CHANDRA
 prerequisites: [MR-C97-tara, MR-C98-surya]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "chandra ← Sanskrit candra 'shining; moon', a tatsama (CDIAL 4661)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C98-surya]
 <!-- hl-knowledge: introduces=[MR-LEX-C98-NATURE98-02]; assesses=[] -->
 
 **चंद्र** — *chandra* — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चंद्र** (*chandra*) is Sanskrit *candra*, "shining; moon", taken over whole as a learned loan, a tatsama (CDIAL 4661). CDIAL lists the inherited Marathi form *cāṁd*, "moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

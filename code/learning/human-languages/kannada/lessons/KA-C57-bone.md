@@ -11,7 +11,8 @@ romanization: "mūḷe"
 concept_tag: KA-NOUN-BONE
 prerequisites: [KA-C57-shoulder, KA-C55-path]
 sounds: []
-roots: []
+roots: [dravidian-muule-bone]
+etymology_hook: "mūḷe: native Dravidian (DEDR 5050)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Here Kannada is the odd one out. Tamil says *elumbu*, Malayalam says *eluvu*, Te
 That happens. A language drops an inherited word and promotes another one, and afterwards the family tree looks broken at exactly one branch. The ear-word and the nose-word each showed you a version of this earlier, with a different sister standing apart each time. Which one is the odd one out changes from word to word, and that is the whole point: these are four separate languages, not four accents.
 
 ಮೂಳೆ closes the body run, and it is the piece of you that outlasts the rest.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂಳೆ** (*mūḷe*) is native Dravidian (DEDR 5050). DEDR lists Kannada *mūḷe* with Kodagu *mu·ḷe* and Tulu *mūḷe*, "bone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 113,
-  "sourceHash": "fnv1a64:776de9fd663bfc78",
+  "sourceHash": "fnv1a64:05342a9a93e4db28",
   "lessonIds": [
     "FR-C113-oreiller",
     "FR-C113-couverture",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch113.txt",
   "json": "french/narration/ch113.json",
-  "textHash": "fnv1a64:4c559a89748d75b7",
-  "jsonHash": "fnv1a64:30baeb4f7b2118ba",
+  "textHash": "fnv1a64:8cd71bdeac667fed",
+  "jsonHash": "fnv1a64:08dc948733f88542",
   "findings": []
 }

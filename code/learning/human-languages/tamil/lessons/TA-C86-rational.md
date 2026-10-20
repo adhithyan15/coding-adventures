@@ -11,9 +11,10 @@ romanization: tēnīr / tēnīrai
 concept_tag: TA-ACCUSATIVE-RATIONAL
 prerequisites: [TA-C86-ennai-unnai]
 sounds: []
-roots: []
+roots: [dravidian-niir-water]
+etymology_hook: "தேநீர் / தேநீரை — tē 'tea' + native nīr 'water' (DEDR 3690), then the accusative -ai"
 duration:
-  max_seconds: 240
+  max_seconds: 280
 requires:
   knowledge: [TA-GRAMMAR-C86-AI-01, TA-LEX-C86-ENNAI-UNNAI-01, TA-LEX-TENEER-01]
 introduces:
@@ -60,6 +61,11 @@ the places the job gets done instead.
 | a person | required |
 | a thing, in general | usually left off |
 | a thing, a particular one | put on |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேநீர் / தேநீரை** (*tēnīr / tēnīrai*) is *tēnīr*, "tea", with the accusative *-ai*. *Tēnīr* is the travelling word *tē*, "tea", and native *nīr*, "water" (DEDR 3690; it compares Sanskrit *nīra*).
 
 ## Across the family: the same line, drawn at the other end
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C86-RATIONAL-01] -->

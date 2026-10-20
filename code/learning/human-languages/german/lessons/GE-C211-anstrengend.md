@@ -14,6 +14,7 @@ concept_tag: GE-QUAL211-ANSTRENGEND
 prerequisites: [GE-C210-kaufhaus, GE-C211-aengstlich]
 sounds: []
 roots: []
+etymology_hook: "anstrengend — 'straining', from the verb built on the word for 'tight, strict', a cousin of English strong"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C211-aengstlich]
 <!-- hl-knowledge: introduces=[GE-LEX-C211-QUAL211-02]; assesses=[] -->
 
 **anstrengend** — "tiring, demanding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anstrengend** is the present participle of the verb "to strain", built on the word for "tight, strict", Old High German *strengi*, which EtymDB 2.1 lists beside English *strong*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: GE-QUAL222-SPORTLICH
 prerequisites: [GE-C221-sonnig, GE-C222-sparsam]
 sounds: []
 roots: []
+etymology_hook: "sportlich — Sport + -lich; Sport ← English sport"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C222-sparsam]
 <!-- hl-knowledge: introduces=[GE-LEX-C222-QUAL222-02]; assesses=[] -->
 
 **sportlich** — "sporty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sportlich** is *Sport* + *-lich*. *Sport* ← English *sport* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

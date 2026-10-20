@@ -1,0 +1,11 @@
+{
+  "id": "GE-C462-donnern",
+  "pathSegment": "GE-PATH-462-UNWETTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-462-UNWETTER",
+      "order": 4
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "vóvremya"
 concept_tag: RU-VREMYA182-VOVREMYA
 prerequisites: [RU-C182-den-rozhdeniya, RU-C182-vykhodnoy]
 sounds: []
-roots: []
+roots: [pie-wert]
+etymology_hook: "вовремя is во 'in' + время 'time': 'in time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C182-vykhodnoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C182-VREMYA182-05]; assesses=[] -->
 
 **вовремя** (*vóvremya*) — "on time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вовремя** is *во*, "in", with *время*, "time", a Church Slavonic word beside Old Russian *веремя* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [MR-C34-kaa-why, MR-C24-shikne]
 sounds: [matra-aa, retroflex-na]
 roots: []
-etymology_hook: "कारण is Sanskrit कारण (kāraṇa, 'cause'), a noun built on the root कृ kṛ- 'to do' — so Marathi's word for because is literally 'the doing of it'; the same कृ is inside करणे, the verb this book taught for 'to do', so the reason-word and the doing-word are one family"
+etymology_hook: "कारण is Sanskrit kāraṇa 'a cause', built on kṛ- 'to do', the root inside करणे"
 duration:
   max_seconds: 220
 requires:

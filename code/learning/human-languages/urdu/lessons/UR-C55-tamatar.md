@@ -14,7 +14,8 @@ romanization: "ṭamāṭar"
 concept_tag: UR-FOOD55-TAMATAR
 prerequisites: [UR-C54-kela, UR-C55-alu]
 sounds: []
-roots: []
+roots: [english-tomato]
+etymology_hook: "ṭamāṭar ← English tomato"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C55-alu]
 <!-- hl-knowledge: introduces=[UR-LEX-C55-FOOD55-02]; assesses=[] -->
 
 **ٹماٹر** — *ṭamāṭar* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹماٹر** (*ṭamāṭar*) is a loan from English *tomato*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

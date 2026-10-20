@@ -13,7 +13,8 @@ gloss: "to have to, must"
 concept_tag: PT-VERB-DEVER
 prerequisites: [PT-C81-chegar, PT-C82-poder]
 sounds: []
-roots: []
+roots: [debere-latin]
+etymology_hook: "dever ← Latin debere 'to owe' — English debt and debit share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C82-poder]
 <!-- hl-knowledge: introduces=[PT-LEX-C82-PODER82-02]; assesses=[] -->
 
 **dever** — "to have to, must".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dever** ← Latin *debere*, "to owe" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

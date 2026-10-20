@@ -55,9 +55,9 @@ can't hear.
 ## Guided Practice: say something real
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-FRANCAIS-09, FR-LEX-HABITER-04, FR-LEX-TRAVAILLER-06] -->
 
-> — **Tu parles** français ? — Oui, je **parle** un peu. (Do you speak French? —
-> Yes, I speak a little.)
-> — **Où** habites-tu ? — **J'habite** à Lyon. Et je **travaille** à Paris.
+> — **Tu parles** français ? — Oui, je **parle** français. (Do you speak French?
+> — Yes, I speak French.)
+> — **Tu habites** à Lyon ? — Oui, **j'habite** à Lyon. Je **travaille** à Paris.
 > — Merci ! — De rien.
 
 ## What you've built this chapter
@@ -81,12 +81,12 @@ can't hear.
 - [YOU SAY: chain it — "Bonjour ! Je parle français. Tu parles français ? …
   Au revoir !"]
 
-[REPEAT x2] "Tu parles français ? — Oui, je parle un peu."
+[REPEAT x2] "Tu parles français ? — Oui, je parle français."
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PARLER-01, FR-GRAM-ER-PRESENT-02, FR-GRAM-PRONOUN-REQUIRED-03, FR-LEX-HABITER-04, FR-ETYMON-HABITER-05, FR-LEX-TRAVAILLER-06, FR-ETYMON-TRAVAILLER-07, FR-CULTURE-TRAVAILLER-08, FR-LEX-FRANCAIS-09, FR-ETYMON-FRANCAIS-10] -->
 
 [PAUSE 3s] Which -er endings are silent, and what follows from that? (*-e, -es,
 -ent* — so French keeps its subject pronouns.) Give "I" forms of the three verbs.
-(*Je parle, j'habite, je travaille*.) Say "I live in Paris and I work in Lyon."
-(*J'habite à Paris et je travaille à Lyon.*) French now moves in real sentences.
+(*Je parle, j'habite, je travaille*.) Say "I live in Paris. I work in Lyon."
+(*J'habite à Paris. Je travaille à Lyon.*) French now moves in real sentences.

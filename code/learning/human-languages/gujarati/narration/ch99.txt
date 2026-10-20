@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for Bhadarvo, then the Gujarati for Aso.
 You'll want to know: પેલું.
 પેલું (pelũ) — "that (over there)".
 
+The word, taken apart.
+પેલું (pelũ) is a tadbhava. CDIAL lists it under a reconstructed pratilla, "opposite", built on Sanskrit prati, "against" (CDIAL 8594), and again under pratikūla, "contrary, opposite" (CDIAL 8545).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for Aso, then the Gujarati for that.
 
 You'll want to know: આવું.
 આવું (āvũ) — "like this, such".
+
+The word, taken apart.
+The origin of આવું (āvũ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for that, then the Gujarati for like this.
 You'll want to know: એવું.
 એવું (evũ) — "like that, such".
 
+The word, taken apart.
+The origin of એવું (evũ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for like this, then the Gujarati for like t
 You'll want to know: દરેક.
 દરેક (darek) — "every, each".
 
+The word, taken apart.
+The origin of દરેક (darek) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for like that, then the Gujarati for every.
 
 You'll want to know: કોઈ.
 કોઈ (koī) — "someone, anyone".
+
+The word, taken apart.
+કોઈ (koī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaścid, "someone, anyone" (CDIAL 2967).
 
 What you've built.
 One more word for this chapter.

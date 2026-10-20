@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "In der Reinigung",
+  "label": "ch:ge-in-der-reinigung",
+  "canDo": "I can get clothes cleaned and altered: the dry cleaner, the launderette, removing a stain, patching and drying.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C446-trocknen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can get clothes cleaned and altered: the dry cleaner, the launderette, removing a stain, patching and drying.",
+    "assesses": [
+      "GE-LEX-C446-REINIGUNG-03",
+      "GE-LEX-C446-REINIGUNG-04",
+      "GE-LEX-C446-REINIGUNG-05"
+    ]
+  }
+}

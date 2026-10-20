@@ -12,6 +12,9 @@ Before the new one: say the Marathi for sugar, then the Marathi for salt.
 You'll want to know: मिरची.
 मिरची — mirchī — "a chilli".
 
+The word, taken apart.
+मिरची (mirchī) belongs with Sanskrit marīca, "peppercorn" (CDIAL 9875). CDIAL lists Marathi only under the plain marīca, with mirī, "a peppercorn"; mirchī, with its -ch-, matches the variant maricca in the same entry, under which CDIAL puts Hindi mirc and Gujarati marcī. CDIAL notes the view that the Sanskrit word comes from Austroasiatic. The chilli came later, from the Americas, and took over the pepper's name.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for salt, then the Marathi for a chilli.
 
 You'll want to know: लोणी.
 लोणी — loṇī — "butter".
+
+The word, taken apart.
+लोणी (loṇī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from navanīta, "fresh butter" (CDIAL 7003). It is built on nava, "new".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a chilli, then the Marathi for butter.
 You'll want to know: मध.
 मध — madh — "honey".
 
+The word, taken apart.
+मध (madh) is Sanskrit madhu, "honey, mead", lightly reshaped. CDIAL lists the inherited Marathi form as moh, "honeycomb, hive" (CDIAL 9784).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for butter, then the Marathi for honey.
 You'll want to know: तेल.
 तेल — tel — "oil".
 
+The word, taken apart.
+तेल (tel) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taila, "sesame oil, oil" (CDIAL 5958). It is built on tila, "sesame".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for honey, then the Marathi for oil.
 
 You'll want to know: द्राक्षे.
 द्राक्षे — drākṣe — "grapes".
+
+The word, taken apart.
+द्राक्षे (drākṣe) is Sanskrit drākṣā, "vine, grape", taken over whole as a learned loan, a tatsama (CDIAL 6628).
 
 What you've built.
 One more word for this chapter.

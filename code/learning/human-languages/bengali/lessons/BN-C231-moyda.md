@@ -14,7 +14,8 @@ romanization: "môydā"
 concept_tag: BN-JINIS231-MOYDA
 prerequisites: [BN-C231-somadhan, BN-C231-ata2]
 sounds: []
-roots: []
+roots: [persian-maida]
+etymology_hook: "môydā: usually traced to Persian maida 'fine flour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C231-ata2]
 <!-- hl-knowledge: introduces=[BN-LEX-C231-JINIS231-04]; assesses=[] -->
 
 **ময়দা** — *môydā* — "fine flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ময়দা** (*môydā*) is a loan, usually traced to Persian *maida*, "fine flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

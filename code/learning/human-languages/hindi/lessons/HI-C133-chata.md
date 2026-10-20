@@ -14,7 +14,8 @@ romanization: "chātā"
 concept_tag: HI-THINGS133-CHATA
 prerequisites: [HI-C132-ghari, HI-C133-casma]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chātā ← Sanskrit chattra 'parasol', a tadbhava (CDIAL 4972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C133-casma]
 <!-- hl-knowledge: introduces=[HI-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **छाता** — *chātā* — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छाता** (*chātā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chattra*, "parasol" (CDIAL 4972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

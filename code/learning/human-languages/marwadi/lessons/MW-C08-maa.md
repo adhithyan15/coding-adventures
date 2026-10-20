@@ -11,8 +11,8 @@ gloss: mother, written with three known units
 concept_tag: MW-FAMILY-MOTHER
 prerequisites: [MW-C08-hear-maa]
 sounds: [long-aa, nasal-vowel]
-roots: []
-etymology_hook: The new meaning needs no new sign: known म, ा, and ं now carry one family word.
+roots: [sanskrit-matr]
+etymology_hook: "mā̃ ← Sanskrit mātṛ 'mother', a tadbhava (CDIAL 10016, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -46,6 +46,11 @@ write **ि** and say the known question word *kāĩ*.
 > **म** + **ा** + **ं** → **मां** — *mā̃* — mother
 
 Nothing on the page is new. Join three earned units and read the complete word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मां** (*mā̃*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mātṛ*, "mother". CDIAL lists Old Marwari *mā* under it (CDIAL 10016). It is the same ancient word as English *mother*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-SCRIPT-MAA-01] -->

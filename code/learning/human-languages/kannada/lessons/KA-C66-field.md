@@ -11,7 +11,8 @@ romanization: "hola"
 concept_tag: KA-NOUN-FIELD
 prerequisites: [KA-C65-manners, KA-C64-after]
 sounds: []
-roots: []
+roots: [dravidian-pulam-field]
+etymology_hook: "hola: native Dravidian, one word with Tamil pulam and Telugu polamu (DEDR 4303)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C65-manners]
 ಹೊಲ is inherited, and it is the dry field — ground that is ploughed and planted and waits on the ಮಳೆಗಾಲ for its water.
 
 It lies past the edge of the ಹಳ್ಳಿ, along the ದಾರಿ you learned to ask for, and it is where the ರೈತ is when he is not at home.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊಲ** (*hola*) is native Dravidian, one word with Tamil *pulam* and Telugu *polamu* (DEDR 4303). DEDR gives the older Kannada *pola*, "a plough-field": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

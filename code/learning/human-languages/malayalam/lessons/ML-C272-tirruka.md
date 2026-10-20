@@ -14,7 +14,8 @@ romanization: "tīṟṟuka"
 concept_tag: ML-VERB-TIRRUKA
 prerequisites: [ML-C271-ketakuka, ML-C271-tutaruka]
 sounds: []
-roots: []
+roots: [dravidian-tin-eat]
+etymology_hook: "tīṟṟuka: native Dravidian, 'make eat', the causative of tin 'eat' (DEDR 3263)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C271-tutaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C272-KRIYA272-01]; assesses=[] -->
 
 **തീറ്റുക** — *tīṟṟuka* — "to feed (an animal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തീറ്റുക** (*tīṟṟuka*) is native Dravidian, the causative of the verb "to eat": "make eat"; DEDR 3263 lists the root with Tamil *tiṉ*, Kannada *tin* and Telugu *tinu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "taka"
 concept_tag: JA-THINGS109-TAKA
 prerequisites: [JA-C109-kamo, JA-C109-washi]
 sounds: []
-roots: []
+roots: [japanese-taka]
+etymology_hook: "taka: native Japanese, inherited, not borrowed; usually kana, kanji 鷹 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C109-washi]
 <!-- hl-knowledge: introduces=[JA-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **たか** — *taka* — "a hawk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たか** (*taka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

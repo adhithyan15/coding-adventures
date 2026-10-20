@@ -14,7 +14,8 @@ romanization: "toshak"
 concept_tag: FA-CHIZ282-TOSHAK
 prerequisites: [FA-C282-lule, FA-C282-qab]
 sounds: []
-roots: []
+roots: [turkic-dosek]
+etymology_hook: "toshak: a loan, usually traced to Turkic döşek 'mattress'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C282-qab]
 <!-- hl-knowledge: introduces=[FA-LEX-C282-CHIZ282-03]; assesses=[] -->
 
 **تشک** — *toshak* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*toshak* is a loan, usually traced to Turkic *döşek*, "mattress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 670,
+  "title": "Cómo llegar",
+  "label": "ch:es-como-llegar",
+  "canDo": "I can ask the way and follow directions: turn, go through and turn off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C670-desviarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 670: I can ask the way and follow directions: turn, go through and turn off.",
+    "assesses": [
+      "ES-LEX-C670-INDICAR-03",
+      "ES-LEX-C670-INDICAR-04",
+      "ES-LEX-C670-INDICAR-05"
+    ]
+  }
+}

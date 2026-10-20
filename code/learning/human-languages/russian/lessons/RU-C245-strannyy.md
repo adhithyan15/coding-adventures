@@ -14,7 +14,8 @@ romanization: "stránnyy"
 concept_tag: RU-KACH245-STRANNYY
 prerequisites: [RU-C244-tyomnyy, RU-C244-svetlyy]
 sounds: []
-roots: []
+roots: [slavic-storna]
+etymology_hook: "странный is from страна, Church Slavonic for 'side, foreign land': first 'foreign'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C244-svetlyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C245-KACH245-01]; assesses=[] -->
 
 **странный** (*stránnyy*) — "strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**странный** — Old Church Slavonic *stranĭnŭ*, "foreign", from *страна*, "a land, a side" (Vasmer): strange was first "from another land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

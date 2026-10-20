@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C320-formido",
+    "language": "latin",
+    "chapter": 320,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c7516cea3824437"
+  },
+  "findings": []
+}

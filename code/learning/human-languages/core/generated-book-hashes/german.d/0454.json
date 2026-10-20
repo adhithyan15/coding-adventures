@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:f6264d5d067c7b28",
+  "lessonIds": [
+    "GE-C454-wanderung",
+    "GE-C454-wanderweg",
+    "GE-C454-besteigen",
+    "GE-C454-absteigen",
+    "GE-C454-rasten"
+  ],
+  "tex": "german/book/chapters/ch454-eine-wanderung.tex"
+}

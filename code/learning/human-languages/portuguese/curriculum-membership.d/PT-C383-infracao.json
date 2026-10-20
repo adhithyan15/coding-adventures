@@ -1,0 +1,11 @@
+{
+  "id": "PT-C383-infracao",
+  "pathSegment": "PT-PATH-383-EXCECAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-383-EXCECAO",
+      "order": 3
+    }
+  ]
+}

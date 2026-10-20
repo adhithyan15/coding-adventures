@@ -14,7 +14,8 @@ romanization: "sādhanaṁ"
 concept_tag: ML-JOLI260-SADHANAM
 prerequisites: [ML-C260-tulasu, ML-C260-kilo]
 sounds: []
-roots: []
+roots: [sanskrit-sadhana]
+etymology_hook: "sādhanaṁ ← Sanskrit sādhana 'furthering; goods', a tatsama (CDIAL 13334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C260-kilo]
 <!-- hl-knowledge: introduces=[ML-LEX-C260-JOLI260-05]; assesses=[] -->
 
 **സാധനം** — *sādhanaṁ* — "a thing, an item, goods".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സാധനം** (*sādhanaṁ*) ← Sanskrit *sādhana*, "furthering; goods", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13334).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

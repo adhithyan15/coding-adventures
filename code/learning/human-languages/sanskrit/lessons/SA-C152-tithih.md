@@ -14,7 +14,8 @@ romanization: "tithiḥ"
 concept_tag: SA-TIME152-TITHIH
 prerequisites: [SA-C152-kalah, SA-C152-varah]
 sounds: []
-roots: []
+roots: [sanskrit-tithi]
+etymology_hook: "tithi 'lunar day' (Gobhila); MW and CDIAL 5810 give no derivation, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C152-varah]
 <!-- hl-knowledge: introduces=[SA-LEX-C152-TIME152-03]; assesses=[] -->
 
 **तिथिः** — *tithiḥ* — "a lunar day, a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tithi* "a lunar day", a thirtieth of the moon's month, is a word of the ritual manuals (CDIAL 5810). Neither MW nor CDIAL gives a derivation, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chamcho"
 concept_tag: MW-HOME64-CHAMCHO
 prerequisites: [MW-C64-pyalo, MW-C64-thali]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "chamcho: usually traced to Persian čamča 'spoon, ladle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C64-thali]
 <!-- hl-knowledge: introduces=[MW-LEX-C64-HOME64-03]; assesses=[] -->
 
 **चमचो** — *chamcho* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चमचो** (*chamcho*) is a loan, usually traced to Persian *čamča*, "spoon, ladle". Persian took the word from a Turkic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

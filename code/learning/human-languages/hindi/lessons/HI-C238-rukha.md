@@ -14,7 +14,8 @@ romanization: "rūkhā"
 concept_tag: HI-QUAL238-RUKHA
 prerequisites: [HI-C238-kacca, HI-C238-gunguna]
 sounds: []
-roots: []
+roots: [sanskrit-ruksha]
+etymology_hook: "rūkhā ← Sanskrit rūkṣa 'dry, rough', a tadbhava (CDIAL 10799)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C238-gunguna]
 <!-- hl-knowledge: introduces=[HI-LEX-C238-QUAL238-03]; assesses=[] -->
 
 **रूखा** — *rūkhā* — "dry, rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रूखा** (*rūkhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rūkṣa*, "dry, rough" (CDIAL 10799).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

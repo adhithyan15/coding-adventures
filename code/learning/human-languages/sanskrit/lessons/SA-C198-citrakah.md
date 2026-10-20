@@ -14,7 +14,8 @@ romanization: "citrakaḥ"
 concept_tag: SA-THG198-CITRAKAH
 prerequisites: [SA-C197-jyotsna, SA-C198-harinah]
 sounds: []
-roots: []
+roots: [sanskrit-citraka, sanskrit-citra]
+etymology_hook: "citraka 'leopard' ← citra 'spotted, bright'; Hindi cītā (CDIAL 4804), whence English cheetah"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C198-harinah]
 <!-- hl-knowledge: introduces=[SA-LEX-C198-THG198-02]; assesses=[] -->
 
 **चित्रकः** — *citrakaḥ* — "a leopard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*citraka* is built on *citra*, "bright, variegated", from the root √cit (MW): the spotted one. It lives on as Hindi *cītā*, "leopard" (CDIAL 4804), and English *cheetah* was borrowed from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

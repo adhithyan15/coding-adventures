@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 148,
-  "sourceHash": "fnv1a64:dbb3dddf0a916079",
+  "sourceHash": "fnv1a64:592874786e839e3a",
   "lessonIds": [
     "TE-C148-kapadu",
     "TE-C148-kalcu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch148.txt",
   "json": "telugu/narration/ch148.json",
-  "textHash": "fnv1a64:8ffd52041df56142",
-  "jsonHash": "fnv1a64:3b9efbf74ba0e1e1",
+  "textHash": "fnv1a64:64f9575d97266371",
+  "jsonHash": "fnv1a64:e39625bc6d9c280e",
   "findings": []
 }

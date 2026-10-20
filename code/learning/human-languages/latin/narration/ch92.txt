@@ -12,6 +12,9 @@ Before the new one: say the Latin for a bear, then the Latin for a snake.
 You'll want to know: mūs, mūris.
 mūs, mūris — "a mouse".
 
+The word, taken apart.
+mūs is inherited, usually traced to Proto-Indo-European muh2s, "mouse" (EtymDB 2.1). Greek mys, "mouse" (Lewis & Short), and English mouse are cousins.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a snake, then the Latin for a mouse.
 
 You'll want to know: gallīna, gallīnae.
 gallīna, gallīnae — "a hen". It lays the ōvum.
+
+The word, taken apart.
+gallīna is built on gallus, "a rooster" (Lewis & Short): the hen is the rooster's female. Where gallus comes from is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a mouse, then the Latin for a hen.
 You'll want to know: asinus, asinī.
 asinus, asinī — "a donkey".
 
+The word, taken apart.
+asinus is probably a loan from an eastern language, as Lewis & Short already suspected; Greek onos, "donkey", may share the source, which is unknown. English ass comes from asinus.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a hen, then the Latin for a donkey.
 You'll want to know: elephantus, elephantī.
 elephantus, elephantī — "an elephant".
 
+The word, taken apart.
+elephantus was borrowed from Greek elephas, elephantos, "elephant, ivory" (Lewis & Short). Where Greek got the word is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a donkey, then the Latin for an elephant.
 
 You'll want to know: cervus, cervī.
 cervus, cervī — "a deer, a stag".
+
+The word, taken apart.
+cervus is inherited, usually traced to Proto-Indo-European krh2wos, "deer, stag", from kerh2-, "horn" (EtymDB 2.1): the horned one. cornū, "horn", comes from the same root (Lewis & Short), and English hart is a cousin.
 
 What you've built.
 One more word for this chapter.

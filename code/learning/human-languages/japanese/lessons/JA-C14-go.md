@@ -11,8 +11,8 @@ gloss: five — the second job of a kanji you have been writing since chapter fi
 concept_tag: JA-NUMBER-FIVE
 prerequisites: [JA-C14-ichi, JA-W05-five-component, JA-C08-hear-sayounara]
 sounds: [mora, dakuten]
-roots: []
-etymology_hook: The chapter-five script lesson wrote that 五 means five on its own and then asked for only its sound; this is the job it was holding.
+roots: [middle-chinese-ngux-five]
+etymology_hook: "go: Sino-Japanese, the on'yomi of 五 'five', from Middle Chinese nguX; native itsu is the kun'yomi"
 duration:
   max_seconds: 170
 requires:
@@ -55,6 +55,11 @@ That was the whole of the deferral. **五** is **five**, read *go*, and you have
 been able to write it for nine chapters.
 
 Its reading in hiragana is **こ** with the dakuten: **ご**. Both marks are yours.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**五** (*go*) is Sino-Japanese: *go* is the on'yomi of the character for "five", a reading borrowed from Chinese (Middle Chinese *nguX*). The native word for five is *itsu*, as in *itsutsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-GO, JA-LEX-ICHI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-DAKUTEN-01] -->

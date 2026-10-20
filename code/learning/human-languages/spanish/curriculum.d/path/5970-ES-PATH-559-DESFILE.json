@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-559-DESFILE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-559-DESFILE"
+  ],
+  "after": []
+}

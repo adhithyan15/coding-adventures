@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to console, then the Kannada for to be p
 You'll want to know: ಊಹಿಸು.
 ಊಹಿಸು — ūhisu — "to guess".
 
+The word, taken apart.
+ಊಹಿಸು (ūhisu) is Sanskrit ūha, "consideration, guess" (CDIAL 2443), made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to be proud, then the Kannada for to gue
 
 You'll want to know: ಅನಿಸು.
 ಅನಿಸು — anisu — "to seem, to feel (that)".
+
+The word, taken apart.
+ಅನಿಸು (anisu) is native Dravidian, from an, "to say", and DEDR 868 lists anisu, "to cause to say", itself: "it makes me say" became "it seems"; the entry also has Tamil eṉ and Telugu anu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to guess, then the Kannada for to seem.
 You'll want to know: ಅಭ್ಯಾಸ ಮಾಡು.
 ಅಭ್ಯಾಸ ಮಾಡು — abhyāsa māḍu — "to practise".
 
+The word, taken apart.
+ಅಭ್ಯಾಸ ಮಾಡು (abhyāsa māḍu) is Sanskrit abhyāsa, "repetition, practice", with native māḍu, "to do" (DEDR 4797).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to seem, then the Kannada for to practis
 You'll want to know: ಬಣ್ಣ ಹಚ್ಚು.
 ಬಣ್ಣ ಹಚ್ಚು — baṇṇa haccu — "to paint (apply colour)".
 
+The word, taken apart.
+ಬಣ್ಣ ಹಚ್ಚು (baṇṇa haccu) is baṇṇa, "colour", a tadbhava of Sanskrit varṇa, "colour" (CDIAL 11338), through Prakrit vaṇṇa, and native haccu, "to apply, put to", which DEDR 4034 lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to practise, then the Kannada for to pai
 
 You'll want to know: ಡೌನ್ಲೋಡ್ ಮಾಡು.
 ಡೌನ್ಲೋಡ್ ಮಾಡು — ḍaunlōḍ māḍu — "to download".
+
+The word, taken apart.
+ಡೌನ್ಲೋಡ್ ಮಾಡು (ḍaunlōḍ māḍu) is English download with native māḍu, "to do" (DEDR 4797).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pūrvī"
 concept_tag: MR-PAS159-PURVI
 prerequisites: [MR-C158-vacavne, MR-C159-alikade]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūrvī: Sanskrit pūrva 'fore, former, ancient' (CDIAL 8343) with the ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C159-alikade]
 <!-- hl-knowledge: introduces=[MR-LEX-C159-PAS159-02]; assesses=[] -->
 
 **पूर्वी** — *pūrvī* — "formerly, before". **पूर्वी इथे एक दुकान होते.** — *pūrvī ithe ek dukān hote* — "There used to be a shop here." **होते** is the past of **आहे**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूर्वी** (*pūrvī*) is Sanskrit *pūrva*, "fore, first, ancient" (CDIAL 8343), with the ending *-ī*: "in former times".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fātir"
 concept_tag: AR-SIFA243-FATIR
 prerequisites: [AR-C242-alif, AR-C242-samm]
 sounds: []
-roots: []
+roots: [f-t-r]
+etymology_hook: "fātir: built on the root f-t-r, 'to become tepid, to slacken' (Lane); fātir is the active participle, 'tepid'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C242-samm]
 <!-- hl-knowledge: introduces=[AR-LEX-C243-SIFA243-01]; assesses=[] -->
 
 **فاتر** — *fātir* — "lukewarm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فاتر** (*fātir*) is built on the native Arabic root *f-t-r*, "to become tepid, to slacken" (Lane). *Fātir* is the active participle, "tepid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

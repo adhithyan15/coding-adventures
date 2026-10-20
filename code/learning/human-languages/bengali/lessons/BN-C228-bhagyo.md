@@ -14,7 +14,8 @@ romanization: "bhāgyô"
 concept_tag: BN-JINIS228-BHAGYO
 prerequisites: [BN-C228-jibon, BN-C228-mrityu]
 sounds: []
-roots: []
+roots: [sanskrit-bhagya]
+etymology_hook: "bhāgyô ← Sanskrit bhāgya 'fortune, lot', a tatsama (CDIAL 9434)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C228-mrityu]
 <!-- hl-knowledge: introduces=[BN-LEX-C228-JINIS228-04]; assesses=[] -->
 
 **ভাগ্য** — *bhāgyô* — "luck, fate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাগ্য** (*bhāgyô*) is Sanskrit *bhāgya*, "fortune, lot", taken over whole as a learned loan, a tatsama (CDIAL 9434). The word inherited from it is *bhāg*, "fortune", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

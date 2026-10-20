@@ -14,7 +14,8 @@ romanization: "dōṣaṁ"
 concept_tag: ML-KARANAM202-DOSAM
 prerequisites: [ML-C202-nirbandham, ML-C202-gunam]
 sounds: []
-roots: []
+roots: [sanskrit-dosha]
+etymology_hook: "dōṣaṁ ← Sanskrit dōṣa 'fault', a tatsama (CDIAL 6587)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C202-gunam]
 <!-- hl-knowledge: introduces=[ML-LEX-C202-KARANAM202-04]; assesses=[] -->
 
 **ദോഷം** — *dōṣaṁ* — "a drawback, harm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദോഷം** (*dōṣaṁ*) ← Sanskrit *dōṣa*, "fault", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 6587).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

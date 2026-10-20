@@ -1,0 +1,11 @@
+{
+  "id": "IT-C304-sfollato",
+  "pathSegment": "IT-PATH-304-TERREMOTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-304-TERREMOTO",
+      "order": 3
+    }
+  ]
+}

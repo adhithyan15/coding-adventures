@@ -53,6 +53,11 @@ reviews_of: [ML-C67-first, ML-C66-grass, ML-C63-tiredness, ML-C51-favour]
 
 **രണ്ടാം വാതിൽ** (*raṇṭāṁ vātil*), the second door.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രണ്ടാം** (*raṇṭāṁ*) is native Dravidian: DEDR 474 lists it, "second", with Tamil *iraṇṭām*, built on the number "two" (Tamil *iraṇṭu*).
+
 ## Across the family: the word Malayalam did not use
 <!-- hl-knowledge: introduces=[ML-ETYMON-C67-ORDINAL-04]; assesses=[ML-LEX-C67-ORDINAL-01] -->
 

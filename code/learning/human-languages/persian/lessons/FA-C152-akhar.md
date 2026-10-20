@@ -14,7 +14,8 @@ romanization: "âkhar"
 concept_tag: FA-ZAMAN152-AKHAR
 prerequisites: [FA-C152-ruzane, FA-C152-mahane]
 sounds: []
-roots: []
+roots: [arabic-akhir]
+etymology_hook: "âkhar ← Arabic āḫir 'last, end', root ʾ-ḫ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C152-mahane]
 <!-- hl-knowledge: introduces=[FA-LEX-C152-ZAMAN152-04]; assesses=[] -->
 
 **آخر** — *âkhar* — "last; the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âkhar* is borrowed from Arabic *āḫir*, "last, end". Its Arabic root is *ʾ-ḫ-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

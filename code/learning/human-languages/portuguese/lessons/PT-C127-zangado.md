@@ -14,6 +14,7 @@ concept_tag: PT-QUALIDADES127-ZANGADO
 prerequisites: [PT-C126-largo, PT-C127-estreito]
 sounds: []
 roots: []
+etymology_hook: "zangado — from the verb to anger, whose origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C127-estreito]
 <!-- hl-knowledge: introduces=[PT-LEX-C127-QUALIDADES127-02]; assesses=[] -->
 
 **zangado** — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zangado** is the participle of the verb "to anger", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

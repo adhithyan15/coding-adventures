@@ -13,7 +13,8 @@ gloss: "the end; a boundary"
 concept_tag: LA-TEMP237-FINIS
 prerequisites: [LA-C236-amor, LA-C236-amicitia]
 sounds: []
-roots: []
+roots: [finis-latin]
+etymology_hook: "fīnis 'end' — origin uncertain; English final and finish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C236-amicitia]
 <!-- hl-knowledge: introduces=[LA-LEX-C237-TEMP237-01]; assesses=[] -->
 
 **fīnis, fīnis** — "the end; a boundary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīnis** has no sure origin; EtymDB 2.1 records a proposed Proto-Indo-European *\*dhnh2-*, "end", but no account is generally accepted. English *final* and *finish* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,10 +11,10 @@ gloss: "second; other — the pair-mate of ત્રીજું, and the first 
 concept_tag: GU-ORDINAL-IJU
 prerequisites: [GU-C38-triju, GU-C37-kyaan-write, GU-C34-kemke-write, GU-C25-time-written, GU-C06-number-histories, GU-C06-numbers-1-5-more]
 sounds: [long-ii]
-roots: []
-etymology_hook: "Two Sanskrit words ending in -teeya gave Gujarati two ordinals ending in -eejun, and only one of them still shows its number"
+roots: [sanskrit-dvitiya, sanskrit-tritiya]
+etymology_hook: "bījũ ← Sanskrit dvitīya 'second' (CDIAL 6680); trījũ ← tṛtīya 'third' (CDIAL 5912)"
 duration:
-  max_seconds: 240
+  max_seconds: 268
 requires:
   knowledge: [GU-LEX-TRIJU, GU-LEX-PANCHMU, GU-GRAMMAR-ORDINAL-MU, GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B, GU-SCRIPT-KYAAN-01, GU-SCRIPT-KEMKE-01, GU-PERFORMANCE-TIME-EIGHT-WRITTEN-01]
 introduces:
@@ -60,6 +60,11 @@ ordinal begins the way the cardinal does.
 Endings as before: **બીજો**, **બીજી**, **બીજું**. The everyday sense of
 **other** sits in the same word — the *other* cup, the *other* road — exactly as
 *second* and *other* share one word in English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બીજું** (*bījũ*) is inherited from Sanskrit *dvitīya*, "second" (CDIAL 6680), and *trījũ* from *tṛtīya* (CDIAL 5912).
 
 ## What you've built: two words, one shape
 <!-- hl-knowledge: introduces=[GU-GRAMMAR-ORDINAL-IJU]; assesses=[GU-LEX-BIJU, GU-LEX-TRIJU, GU-GRAMMAR-ORDINAL-MU] -->

@@ -14,7 +14,8 @@ romanization: "śvāsaṁ"
 concept_tag: ML-AROGYAM233-SVASAM
 prerequisites: [ML-C233-kanankal, ML-C233-cora]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa]
+etymology_hook: "śvāsaṁ ← Sanskrit śvāsa 'breath, breathing', a tatsama (CDIAL 12769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C233-cora]
 <!-- hl-knowledge: introduces=[ML-LEX-C233-AROGYAM233-03]; assesses=[] -->
 
 **ശ്വാസം** — *śvāsaṁ* — "breath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശ്വാസം** (*śvāsaṁ*) ← Sanskrit *śvāsa*, "breath, breathing", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

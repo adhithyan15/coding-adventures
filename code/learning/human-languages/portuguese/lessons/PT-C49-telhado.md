@@ -13,7 +13,8 @@ gloss: "a roof"
 concept_tag: PT-CASA2-TELHADO
 prerequisites: [PT-C49-chave, PT-C49-parede]
 sounds: []
-roots: []
+roots: [tegula-latin]
+etymology_hook: "telhado ← Latin tegulatum 'tiled roof', from tegula 'tile' — English tile shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C49-parede]
 <!-- hl-knowledge: introduces=[PT-LEX-C49-CASA2-04]; assesses=[] -->
 
 **o telhado** — "a roof".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**telhado** ← Latin *tegulatum*, "tiled roof" (EtymDB 2.1), from *tegula*, "tile" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

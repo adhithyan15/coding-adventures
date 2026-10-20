@@ -13,7 +13,8 @@ gloss: "to cool down"
 concept_tag: FR-VERB-REFROIDIR
 prerequisites: [FR-C206-gouter, FR-C206-chauffer]
 sounds: []
-roots: []
+roots: [frigidus-latin]
+etymology_hook: "refroidir — re- + the word for 'cold', from Latin frigidus — English frigid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C206-chauffer]
 <!-- hl-knowledge: introduces=[FR-LEX-C206-VERBES206-05]; assesses=[] -->
 
 **refroidir** — "to cool down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**refroidir** — built from *re-* and the word for "cold", ← Latin *frigidus* (EtymDB 2.1), with the verb ending *-ir*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:64c493e0a087c328",
+  "lessonIds": [
+    "IT-C498-tata",
+    "IT-C498-pediatra",
+    "IT-C498-accudire",
+    "IT-C498-badare",
+    "IT-C498-ubbidire"
+  ],
+  "tex": "italian/book/chapters/ch498-chi-bada-ai-bambini.tex"
+}

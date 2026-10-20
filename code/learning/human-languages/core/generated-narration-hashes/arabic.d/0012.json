@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 12,
-  "sourceHash": "fnv1a64:4e0fe0cd963d6844",
+  "sourceHash": "fnv1a64:57b4b765709ecd3d",
   "lessonIds": [
     "AR-C12-al-fusul"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch12.txt",
   "json": "arabic/narration/ch12.json",
-  "textHash": "fnv1a64:43b9228187495624",
-  "jsonHash": "fnv1a64:6d264002b90d6981",
+  "textHash": "fnv1a64:28f37d2242e85ae9",
+  "jsonHash": "fnv1a64:f851cc6d17e361bc",
   "findings": []
 }

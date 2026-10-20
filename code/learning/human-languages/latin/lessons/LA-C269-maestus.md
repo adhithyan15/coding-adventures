@@ -13,7 +13,8 @@ gloss: "gloomy, mournful"
 concept_tag: LA-QUAL269-MAESTUS
 prerequisites: [LA-C268-paratus, LA-C268-adversus]
 sounds: []
-roots: []
+roots: [maestus-latin, maerere-latin]
+etymology_hook: "maestus 'mournful' — kin to maereō 'to grieve'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C268-adversus]
 <!-- hl-knowledge: introduces=[LA-LEX-C269-QUAL269-01]; assesses=[] -->
 
 **maestus, maesta, maestum** — "gloomy, mournful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**maestus** belongs with *maereō*, "to grieve, to mourn" (Lewis & Short), whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C528-balayer",
+    "language": "french",
+    "chapter": 528,
+    "sequence": 28870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:128e2cf739e6be47"
+  },
+  "findings": []
+}

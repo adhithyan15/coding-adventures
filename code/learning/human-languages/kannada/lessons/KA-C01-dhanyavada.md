@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [KA-C01-namaskara]
 sounds: [nya-conjunct, vowel-sign-aa]
 roots: [dhanya, vada]
+etymology_hook: "dhanyavāda ← Sanskrit dhanya 'fortunate' (CDIAL 6727a) + vāda 'a saying' (CDIAL 11507)"
 duration:
   max_seconds: 270
 requires:
@@ -58,6 +59,8 @@ pieces, and the whole written word, wait for the end of this chapter.
 "to speak"). Literally **"an utterance of '[you are] worthy'"** — a formal,
 dignified thanks. It is the **same word** as Hindi *dhanyavād* and Telugu
 *dhanyavādamulu*.
+
+Sanskrit *dhanya* is in CDIAL 6727a, glossed "rich; fortunate, happy", and *vāda*, "speech", in CDIAL 11507.
 
 ## Across the family — the same idea, five ways
 <!-- hl-knowledge: introduces=[KA-ETYMON-C01-DHANYAVADA-03]; assesses=[] -->

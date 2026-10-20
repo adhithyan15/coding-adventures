@@ -1,0 +1,19 @@
+{
+  "chapter": 693,
+  "title": "Árboles y plantas",
+  "label": "ch:es-arboles-y-plantas",
+  "canDo": "I can name trees and plants on a walk: olive trees, pines, oaks, bushes and plant life.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C693-roble",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 693: I can name trees and plants on a walk: olive trees, pines, oaks, bushes and plant life.",
+    "assesses": [
+      "ES-LEX-C693-ARBOLES-03",
+      "ES-LEX-C693-ARBOLES-04",
+      "ES-LEX-C693-ARBOLES-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "mukhyōpādhyāya"
 concept_tag: KA-KELASA197-MUKHYOPADHYAYA
 prerequisites: [KA-C197-kuli, KA-C197-kandaktar]
 sounds: []
-roots: []
+roots: [sanskrit-mukhya, sanskrit-upadhyaya]
+etymology_hook: "mukhyōpādhyāya ← Sanskrit mukhya 'chief' (CDIAL 10174) + upādhyāya 'teacher' (CDIAL 2301)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C197-kandaktar]
 <!-- hl-knowledge: introduces=[KA-LEX-C197-KELASA197-04]; assesses=[] -->
 
 **ಮುಖ್ಯೋಪಾಧ್ಯಾಯ** — *mukhyōpādhyāya* — "a headmaster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಖ್ಯೋಪಾಧ್ಯಾಯ** (*mukhyōpādhyāya*) is Sanskrit *mukhya*, "chief" (CDIAL 10174), and *upādhyāya*, "teacher" (CDIAL 2301): "the chief teacher".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

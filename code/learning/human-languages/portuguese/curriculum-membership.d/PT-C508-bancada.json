@@ -1,0 +1,11 @@
+{
+  "id": "PT-C508-bancada",
+  "pathSegment": "PT-PATH-508-ARBITRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-508-ARBITRO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:68591d2f51bc8c62",
+  "lessonIds": [
+    "IT-C323-c-era-una-volta",
+    "IT-C323-racconto",
+    "IT-C323-favola",
+    "IT-C323-narrare",
+    "IT-C323-narratore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch323.txt",
+  "json": "italian/narration/ch323.json",
+  "textHash": "fnv1a64:240846334c788dcc",
+  "jsonHash": "fnv1a64:c233f8fe4f647225",
+  "findings": []
+}

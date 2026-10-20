@@ -1,0 +1,11 @@
+{
+  "id": "FR-C336-objecter",
+  "pathSegment": "FR-PATH-336-DESACCORD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-336-DESACCORD",
+      "order": 1
+    }
+  ]
+}

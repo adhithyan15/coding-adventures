@@ -12,6 +12,7 @@ concept_tag: PA-VERB-RAHNA
 prerequisites: [PA-C05-main-punjabi-bolda-han]
 sounds: [sihari-i, retroflex-na]
 roots: [rah-remain]
+etymology_hook: "rahiṇā ← *rahati 'remains', a form CDIAL reconstructs (CDIAL 10666)"
 duration:
   max_seconds: 210
 requires:

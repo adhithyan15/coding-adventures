@@ -14,6 +14,7 @@ concept_tag: GE-THING238-SCHWIERIGKEIT
 prerequisites: [GE-C237-schatten, GE-C237-schritt]
 sounds: []
 roots: []
+etymology_hook: "Schwierigkeit — schwierig 'difficult' + -keit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C237-schritt]
 <!-- hl-knowledge: introduces=[GE-LEX-C238-THING238-01]; assesses=[] -->
 
 **die Schwierigkeit** — "a difficulty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Schwierigkeit** is *schwierig*, "difficult", + *-keit*, the ending that makes a noun. *schwierig* first meant "full of sores", from Middle High German *swër*, "ulcer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

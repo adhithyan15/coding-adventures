@@ -1,0 +1,11 @@
+{
+  "id": "GE-C440-parkbank",
+  "pathSegment": "GE-PATH-440-BRUNNEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-440-BRUNNEN",
+      "order": 1
+    }
+  ]
+}

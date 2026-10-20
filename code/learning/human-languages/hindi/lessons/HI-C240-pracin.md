@@ -14,7 +14,8 @@ romanization: "prācīn"
 concept_tag: HI-QUAL240-PRACIN
 prerequisites: [HI-C239-abad, HI-C240-adhunik]
 sounds: []
-roots: []
+roots: [sanskrit-pracina]
+etymology_hook: "prācīn ← Sanskrit prācīna 'turned east; former, old', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C240-adhunik]
 <!-- hl-knowledge: introduces=[HI-LEX-C240-QUAL240-02]; assesses=[] -->
 
 **प्राचीन** — *prācīn* — "ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्राचीन** (*prācīn*) is Sanskrit *prācīna*, "turned east; former, old", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

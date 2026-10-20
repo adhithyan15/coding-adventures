@@ -13,7 +13,8 @@ gloss: "departure; a match"
 concept_tag: PT-COISAS166-PARTIDA
 prerequisites: [PT-C166-regresso, PT-C166-chegada]
 sounds: []
-roots: []
+roots: [partire-latin]
+etymology_hook: "partida — built from the verb 'to part, to leave' (← Latin partire 'to divide')"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C166-chegada]
 <!-- hl-knowledge: introduces=[PT-LEX-C166-COISAS166-04]; assesses=[] -->
 
 **a partida** — "departure; a match".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**partida** is built from the verb "to part, to leave" (EtymDB 2.1), which ← Latin *partire*, "to divide, to share out" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C547-imago",
+    "language": "latin",
+    "chapter": 547,
+    "sequence": 28970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:895f5594e5c21800"
+  },
+  "findings": []
+}

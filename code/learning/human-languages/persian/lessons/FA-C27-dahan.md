@@ -14,7 +14,8 @@ romanization: "dahân"
 concept_tag: FA-BODY27-DAHAN
 prerequisites: [FA-C27-gush, FA-C27-bini]
 sounds: []
-roots: []
+roots: [persian-dahan]
+etymology_hook: "dahân: inherited, usually traced to Middle Persian dahān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C27-bini]
 <!-- hl-knowledge: introduces=[FA-LEX-C27-BODY27-04]; assesses=[] -->
 
 **دهان** — *dahân* — "a mouth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dahân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dahān*, "mouth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

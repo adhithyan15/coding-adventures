@@ -13,7 +13,8 @@ gloss: "an elbow"
 concept_tag: LA-THINGS136-CUBITUM
 prerequisites: [LA-C135-mentum, LA-C135-dorsum]
 sounds: []
-roots: []
+roots: [cubitum-latin, cubare-latin]
+etymology_hook: "cubitum 'elbow' — built on cubō 'to recline': what one leans on; English cubit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C135-dorsum]
 <!-- hl-knowledge: introduces=[LA-LEX-C136-THINGS136-01]; assesses=[] -->
 
 **cubitum, cubitī** — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cubitum** is built on *cubō*, "to lie down, to recline" (EtymDB 2.1): the elbow is what one leans on at table. English *cubit*, the length from elbow to fingertip, comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

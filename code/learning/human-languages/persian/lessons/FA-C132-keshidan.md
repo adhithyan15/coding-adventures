@@ -14,7 +14,8 @@ romanization: "keshidan"
 concept_tag: FA-VERB-KESHIDAN
 prerequisites: [FA-C132-shekastan, FA-C132-dukhtan]
 sounds: []
-roots: []
+roots: [persian-kashidan]
+etymology_hook: "keshidan: inherited, usually traced to Middle Persian kašīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C132-dukhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C132-ACT132-03]; assesses=[] -->
 
 **کشیدن** — *keshidan* — "to pull; to draw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*keshidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kašīdan*, "to pull, to draw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ke bād"
 concept_tag: HI-TIME-AFTER
 prerequisites: [HI-C90-pahle, HI-C84-uska]
 sounds: []
-roots: []
+roots: [arabic-bad]
+etymology_hook: "bād ← Arabic baʿd 'after', through Persian"
 duration:
   max_seconds: 240
 requires:

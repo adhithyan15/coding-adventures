@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C509-rigore",
+    "language": "italian",
+    "chapter": 509,
+    "sequence": 28570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c6ef6eeb7d18d24"
+  },
+  "findings": []
+}

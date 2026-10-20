@@ -1,5 +1,19 @@
 # Changelog — web-core
 
+## Unreleased — 2026-10-14
+
+### Changed
+
+- **Sharded serving works on Windows.** `tcp-runtime` now feeds a multi-worker
+  runtime on Windows through an accept fan-out (one listener, accepted sockets
+  adopted by the worker shards' IOCP providers), so `bind_windows_sharded` with
+  more than one worker binds and serves instead of failing on the missing
+  `SO_REUSEPORT`. As its own failure message asked, the
+  `sharded_bind_is_unsupported_on_windows` tripwire is deleted and the sharded
+  suite (`start_sharded_server`, the concurrency proof and the two ignored
+  benchmarks) is no longer `cfg(not(windows))`. The constructor's docs no
+  longer say it cannot shard.
+
 ## Unreleased — 2026-08-18
 
 Brought under CI, and fixed the two things that were red because it never was.

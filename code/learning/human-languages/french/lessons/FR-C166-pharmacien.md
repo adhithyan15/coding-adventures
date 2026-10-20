@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES166-PHARMACIEN
 prerequisites: [FR-C166-architecte, FR-C166-dentiste]
 sounds: []
 roots: []
+etymology_hook: "pharmacien — pharmacie + -ien"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C166-dentiste]
 <!-- hl-knowledge: introduces=[FR-LEX-C166-CHOSES166-05]; assesses=[] -->
 
 **le pharmacien** — "a pharmacist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pharmacien** — *pharmacie* with *-ien*, "one who works in". *Pharmacie* ← Medieval Latin *pharmacia*, from Greek (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

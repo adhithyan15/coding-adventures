@@ -13,7 +13,8 @@ gloss: "to sit down"
 concept_tag: PT-VERB-SENTAR-SE
 prerequisites: [PT-C132-lavar-se, PT-C132-levantar-se]
 sounds: []
-roots: []
+roots: [sedere-latin]
+etymology_hook: "sentar-se — sentar ← Vulgar Latin *sedentare, from sedens 'sitting', with -se 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C132-levantar-se]
 <!-- hl-knowledge: introduces=[PT-LEX-C132-VERBOS132-03]; assesses=[] -->
 
 **sentar-se** — "to sit down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sentar** ← Vulgar Latin *\*sedentare* (EtymDB 2.1), from Latin *sedens*, "sitting" — inherited. *-se* means "oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

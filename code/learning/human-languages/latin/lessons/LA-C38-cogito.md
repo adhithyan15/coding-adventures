@@ -6,7 +6,7 @@ sequence: 720
 chapter: 38
 type: word
 headword: cōgitō, cōgitāre
-gloss: "I think" — the verb of *cōgitō ergō sum*, built from a word meaning "to shake together"
+gloss: '"I think" — the verb of *cōgitō ergō sum*, built from a word meaning "to shake together"'
 concept_tag: VERB-THINK
 prerequisites: [LA-C37-scio]
 sounds: [macron-long-vowel, c-as-k, g-as-hard]

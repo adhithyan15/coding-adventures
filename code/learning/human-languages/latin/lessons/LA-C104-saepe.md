@@ -13,7 +13,8 @@ gloss: "often"
 concept_tag: LA-SEMPER-SAEPE
 prerequisites: [LA-C103-mensis, LA-C103-aurora]
 sounds: []
-roots: []
+roots: [saepe-latin]
+etymology_hook: "saepe 'often' — usually explained as an old form of saepis 'thick, crowded'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C103-aurora]
 <!-- hl-knowledge: introduces=[LA-LEX-C104-SEMPER-01]; assesses=[] -->
 
 **saepe** — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saepe** is usually explained as an old neuter form of *saepis*, "thick, crowded" (Lewis & Short): what comes thick and fast comes often.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

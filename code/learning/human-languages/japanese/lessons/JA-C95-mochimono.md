@@ -14,7 +14,8 @@ romanization: "mochimono"
 concept_tag: JA-CAN95-MOCHIMONO
 prerequisites: [JA-C95-tokui, JA-C95-nigate, JA-C19-greetings]
 sounds: []
-roots: []
+roots: [japanese-motsu, japanese-mono]
+etymology_hook: "mochimono: native mochi 'holding' (motsu) + mono 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +49,11 @@ reviews_of: [JA-C95-nigate]
 <!-- hl-knowledge: introduces=[JA-LEX-C95-CAN95-04]; assesses=[] -->
 
 **もちもの** — *mochimono* — "belongings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もちもの** (*mochimono*) is a native compound, inherited rather than borrowed: *mochi*, "holding", from *motsu*, "to hold", and *mono*, "thing" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

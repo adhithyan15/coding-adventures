@@ -13,7 +13,8 @@ gloss: "to protect"
 concept_tag: FR-VERB-PROTEGER
 prerequisites: [FR-C177-permettre, FR-C177-interdire]
 sounds: []
-roots: []
+roots: [tegere-latin]
+etymology_hook: "protéger ← Latin protegere 'to cover in front' — English protect"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C177-interdire]
 <!-- hl-knowledge: introduces=[FR-LEX-C177-VERBES177-04]; assesses=[] -->
 
 **protéger** — "to protect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**protéger** ← Latin *protegere*, "to cover in front" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "elections"
 concept_tag: PT-COISAS189-ELEICOES
 prerequisites: [PT-C188-botao, PT-C189-juiz-a-juiza]
 sounds: []
-roots: []
+roots: [legere-latin]
+etymology_hook: "eleições — plural of eleição ← Latin electio 'a choosing', semi-learned — English election"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C189-juiz-a-juiza]
 <!-- hl-knowledge: introduces=[PT-LEX-C189-COISAS189-02]; assesses=[] -->
 
 **as eleições** — "elections".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**eleições** ← Latin *electio, electionis*, "a choosing" (Lewis & Short) — a semi-learned borrowing from Latin: the *-ct-* became *-iç-*, as in popular speech. It is the plural of *eleição*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

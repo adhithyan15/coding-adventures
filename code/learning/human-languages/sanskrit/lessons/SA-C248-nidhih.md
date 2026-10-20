@@ -14,7 +14,8 @@ romanization: "nidhiḥ"
 concept_tag: SA-THG248-NIDHIH
 prerequisites: [SA-C247-patahah, SA-C248-kosah]
 sounds: []
-roots: []
+roots: [sanskrit-nidhi]
+etymology_hook: "nidhi ← ni 'down' + √dhā 'put': 'what is put down', a hoard (MW; CDIAL 7207)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C248-kosah]
 <!-- hl-knowledge: introduces=[SA-LEX-C248-THG248-02]; assesses=[] -->
 
 **निधिः** — *nidhiḥ* — "a treasure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nidhi* is built on *ni*, "down", and the root √dhā, "to put" (MW): a hoard is what is laid down and stored. In the Rigveda it means "setting down" and "hoard" (CDIAL 7207).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

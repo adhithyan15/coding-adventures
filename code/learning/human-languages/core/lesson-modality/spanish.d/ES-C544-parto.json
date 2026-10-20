@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C544-parto",
+    "language": "spanish",
+    "chapter": 544,
+    "sequence": 16830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3bce6da4eaa4884"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "yaoya"
 concept_tag: JA-THINGS119-YAOYA
 prerequisites: [JA-C119-hanaya, JA-C119-sakanaya]
 sounds: []
-roots: []
+roots: [japanese-ya-house]
+etymology_hook: "yaoya: native ya 'shop'; written 八百屋 'eight hundred shop'; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C119-sakanaya]
 <!-- hl-knowledge: introduces=[JA-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **やおや** — *yaoya* — "a greengrocer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やおや** (*yaoya*) is native *ya*, "shop", after *yao*, "eight hundred", as JMdict writes it; the usual account reads "eight hundred" as "many goods", but the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

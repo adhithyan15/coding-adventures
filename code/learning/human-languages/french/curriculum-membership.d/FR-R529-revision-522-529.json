@@ -1,0 +1,11 @@
+{
+  "id": "FR-R529-revision-522-529",
+  "pathSegment": "FR-PATH-529-TABLE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-529-TABLE",
+      "order": 5
+    }
+  ]
+}

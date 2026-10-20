@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to explain, then the Urdu for to ask for.
 You'll want to know: ٹھہرنا.
 ٹھہرنا — ṭhaharnā — "to stay, to wait".
 
+The word, taken apart.
+ٹھہرنا (ṭhaharnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from stabhira, "fixed, firm", a form CDIAL reconstructs from its descendants (CDIAL 13680). It is built on stambh-, "to make firm".
+
 What you've built.
 One more word for this chapter.
 
@@ -44,6 +47,9 @@ This lesson's verb is the way back.
 You'll want to know: لوٹنا.
 لوٹنا — lauṭnā — "to come back".
 
+The word, taken apart.
+The origin of لوٹنا (lauṭnā) is uncertain. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -72,6 +78,9 @@ Before the new one: say the Urdu for to stay, then the Urdu for to come back.
 
 You'll want to know: پہنچنا.
 پہنچنا — pahuṅchnā — "to arrive".
+
+The word, taken apart.
+پہنچنا (pahuṅchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prabhūta, "much, great" (CDIAL 8716). Prakrit made a verb of it, "is strong, reaches", and Urdu kept "to reach".
 
 What you've built.
 One more word for this chapter.
@@ -102,6 +111,9 @@ Before the new one: say the Urdu for to come back, then the Urdu for to arrive.
 You'll want to know: نکلنا.
 نکلنا — nikalnā — "to come out, to leave".
 
+The word, taken apart.
+نکلنا (nikalnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from niṣkalati, "comes out", a form CDIAL reconstructs from its descendants (CDIAL 7478). CDIAL takes it as formed back from Sanskrit niṣkālayati, "drives out".
+
 What you've built.
 One more word for this chapter.
 
@@ -130,6 +142,9 @@ Before the new one: say the Urdu for to arrive, then the Urdu for to come out.
 
 You'll want to know: چڑھنا.
 چڑھنا — chaṛhnā — "to climb".
+
+The word, taken apart.
+چڑھنا (chaṛhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
 
 What you've built.
 One more word for this chapter.

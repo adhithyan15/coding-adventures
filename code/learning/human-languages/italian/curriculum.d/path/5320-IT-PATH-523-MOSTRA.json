@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-523-MOSTRA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-523-MOSTRA"
+  ],
+  "after": []
+}

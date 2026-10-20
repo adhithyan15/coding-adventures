@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e77e9e39f367589b",
+  "sourceHash": "fnv1a64:6735395ad624f900",
   "lessons": [
     {
       "id": "KA-C23-dina",
@@ -12,14 +12,14 @@
       "title": "ದಿನ (dina) — \"day,\" Sanskrit kept whole",
       "headword": "ದಿನ",
       "romanization": "dina",
-      "gloss": "day\" — a Sanskrit tatsama word, kept whole and unworn, unlike Hindi's own eroded din; Kannada also has a real native Dravidian word, hagalu, but it means specifically \"daytime,\" not \"a day",
+      "gloss": "\"day\" — a Sanskrit tatsama word, kept whole and unworn, unlike Hindi's own eroded din; Kannada also has a real native Dravidian word, hagalu, but it means specifically \"daytime,\" not \"a day\"",
       "script": "kannada",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49bd60942a29a9d9",
+      "sourceHash": "fnv1a64:0e876a34237bbb29",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:973f54ac1bd21686",
+      "sourceHash": "fnv1a64:806eeca27b29958e",
       "notice": null,
       "blocks": [
         {
@@ -203,6 +203,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಥೆ (kathe) is Sanskrit kathā, \"conversation; story\", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 2704)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -233,7 +244,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

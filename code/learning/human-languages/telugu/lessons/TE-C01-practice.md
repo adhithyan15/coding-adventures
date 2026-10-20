@@ -45,8 +45,8 @@ Sound each out, left to right, before checking:
 | **నమస్కారం** *namaskāram* | hello / greetings | Sanskrit |
 | **ధన్యవాదములు** *dhanyavādamulu* | thank you | Sanskrit stem + Telugu plural |
 | **అవును** *avunu* | yes | native |
-| **లేదు** *lēdu* | no / there isn't | native (root *lē-*, not *il-*) |
-| **సరే** *sarē* | okay | native (= *sari*) |
+| **లేదు** *lēdu* | no / there isn't | native (*lē-*, filed with *il-*) |
+| **సరే** *sarē* | okay | uncertain (= *sari*) |
 
 The letters that did it: consonants carry a built-in **"a"** (many under the
 little *talakaṭṭu* hat); a **vowel sign** swaps that vowel (ా ā, ు u, ే ē); a
@@ -55,8 +55,8 @@ dot **anusvāra** (ం) adds a final nasal; and a word-initial vowel gets a **fu
 letter** (అ).
 
 The now-familiar pattern: the two **greeting/politeness** words are Sanskrit;
-the three **everyday grammar** words are native — though Telugu's "no" (*lēdu*)
-takes a *different* native root from its sisters' *il-*.
+*avunu* and *lēdu* are native, and *lēdu* only looks unlike its sisters' *il-*;
+*sarē*'s origin is uncertain.
 
 ## Why it's said this way — a promise for later
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-AVUNU-01, TE-LEX-C01-DHANYAVADAMULU-01, TE-LEX-C01-LEDU-01, TE-LEX-C01-NAMASKARAM-01, TE-LEX-C01-SARE-01] -->
@@ -74,9 +74,9 @@ now, repeating the greeting is enough when you part.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-AVUNU-01, TE-ETYMON-C01-AVUNU-02, TE-GRAMMAR-C01-AVUNU-03, TE-LEX-C01-DHANYAVADAMULU-01, TE-ETYMON-C01-DHANYAVADAMULU-02, TE-GRAMMAR-C01-DHANYAVADAMULU-03, TE-LEX-C01-LEDU-01, TE-ETYMON-C01-LEDU-02, TE-GRAMMAR-C01-LEDU-03, TE-LEX-C01-NAMASKARAM-01, TE-ETYMON-C01-NAMASKARAM-02, TE-PRAGMATICS-C01-NAMASKARAM-03, TE-LEX-C01-SARE-01, TE-ETYMON-C01-SARE-02, TE-GRAMMAR-C01-SARE-03, TE-SCRIPT-RECOG-03, TE-SCRIPT-RECOG-07, TE-SCRIPT-RECOG-120] -->
 
-[PAUSE 3s] Read all five aloud. Which two are Sanskrit, which three native?
-(Sanskrit: *namaskāram*, *dhanyavādamulu*. Native: *avunu*, *lēdu*, *sarē*.)
-How does Telugu's "no" differ from its sisters'? (Different root — *lē-* /
-*kā-*, not *il-*.) Which word means "okay"? (*sarē*.)
+[PAUSE 3s] Read all five aloud. Which two are Sanskrit, which two native?
+(Sanskrit: *namaskāram*, *dhanyavādamulu*. Native: *avunu*, *lēdu*; *sarē* is
+uncertain.) How does Telugu's "no" differ from its sisters'? (Only in shape —
+DEDR files *lē-* with their *il-*.) Which word means "okay"? (*sarē*.)
 
 Next chapter starts introducing yourself, one short possession form at a time.

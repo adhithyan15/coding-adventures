@@ -14,7 +14,8 @@ romanization: "mochī"
 concept_tag: UR-KAM210-MOCHI
 prerequisites: [UR-C210-nai, UR-C210-dhobi]
 sounds: []
-roots: []
+roots: [indo-aryan-moca]
+etymology_hook: "mochī ← mocika 'cobbler' (CDIAL 10349), from an Iranian word for shoe (Pahlavi mōč)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C210-dhobi]
 <!-- hl-knowledge: introduces=[UR-LEX-C210-KAM210-03]; assesses=[] -->
 
 **موچی** — *mochī* — "a cobbler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موچی** (*mochī*) comes from *mocika*, "tanner and cobbler", built on *\*moca*, "shoe", which CDIAL takes from an Iranian word, Pahlavi *mōč*, "shoe" (CDIAL 10349).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

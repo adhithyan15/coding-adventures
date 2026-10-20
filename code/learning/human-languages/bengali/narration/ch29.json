@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Agreeing, Differing, and Saying Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ffd3f0803f6651e5",
+  "sourceHash": "fnv1a64:00559a7a52385dce",
   "lessons": [
     {
       "id": "BN-C18-kintu",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:460ae61b5490fe7c",
+      "sourceHash": "fnv1a64:9d52337b21f248d5",
       "notice": null,
       "blocks": [
         {
@@ -213,6 +213,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ek goes back to Sanskrit ēka, \"one\" (CDIAL 2462), and môt is Sanskrit mata, \"opinion\", taken over whole as a tatsama."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: agreeing needs no verb, and disagreeing needs no new word",
           "segments": [
@@ -227,7 +238,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

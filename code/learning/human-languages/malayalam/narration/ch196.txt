@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for quickly, then the Malayalam for in adv
 You'll want to know: ഇതുവരെ.
 ഇതുവരെ — ituvare — "so far, until now".
 
+The word, taken apart.
+ഇതുവരെ (ituvare) is native Dravidian, "up to this": itu, "this" (DEDR 410), and vare, "until", a form of the verb "to come" (DEDR 5270).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for in advance, then the Malayalam for so 
 
 You'll want to know: ഇപ്പോഴും.
 ഇപ്പോഴും — ippōḻuṁ — "still, even now".
+
+The word, taken apart.
+ഇപ്പോഴും (ippōḻuṁ) is native Dravidian: ippōḷ, "now", built from "this" (DEDR 410) and "time" (DEDR 4559, with Tamil poḻutu), with -uṁ, "even": "even now".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for so far, then the Malayalam for still.
 You'll want to know: ഒടുവിൽ.
 ഒടുവിൽ — oṭuvil — "finally, at last".
 
+The word, taken apart.
+ഒടുവിൽ (oṭuvil) is native Dravidian: oṭuvu, "the end" (DEDR 954, with Tamil oṭuṅku), with the place ending -il: "at the end".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for still, then the Malayalam for finally.
 You'll want to know: കൃത്യസമയത്ത്.
 കൃത്യസമയത്ത് — kṛtyasamayattŭ — "on time".
 
+The word, taken apart.
+കൃത്യസമയത്ത് (kṛtyasamayattŭ) is built from Sanskrit kṛtya, "proper to be done" (CDIAL 3428), and samaya, "time" (CDIAL 13185), with the Malayalam place ending: "at the proper time".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for finally, then the Malayalam for on tim
 
 You'll want to know: ഒഴിവുസമയം.
 ഒഴിവുസമയം — oḻivusamayaṁ — "free time".
+
+The word, taken apart.
+ഒഴിവുസമയം (oḻivusamayaṁ) joins native oḻivu, "vacancy, being free" (DEDR 1009, with Tamil oḻi), to Sanskrit samaya, "time" (CDIAL 13185).
 
 What you've built.
 One more word for this chapter.

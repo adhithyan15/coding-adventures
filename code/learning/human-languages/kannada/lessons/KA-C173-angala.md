@@ -14,7 +14,8 @@ romanization: "aṅgaḷa"
 concept_tag: KA-STHALA173-ANGALA
 prerequisites: [KA-C173-saucalaya, KA-C173-kone]
 sounds: []
-roots: []
+roots: [dravidian-angala-yard]
+etymology_hook: "aṅgaḷa: generally taken as a tadbhava of Sanskrit aṅgaṇa 'courtyard' (CDIAL 118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C173-kone]
 <!-- hl-knowledge: introduces=[KA-LEX-C173-STHALA173-05]; assesses=[] -->
 
 **ಅಂಗಳ** — *aṅgaḷa* — "a courtyard, a front yard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಗಳ** (*aṅgaḷa*) is generally taken as a tadbhava of Sanskrit *aṅgaṇa*, "courtyard" (CDIAL 118), with *ḷ* for *ṇ*. DEDR 33 lists a Kannada *aṅgaḷa* too, but that one means "palate": a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

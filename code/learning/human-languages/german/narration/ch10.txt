@@ -43,6 +43,9 @@ der Mond — "the moon."
 A der-word, and the same inherited word as English moon. German rounded the vowel and added a d on the end; nothing else happened to it.
 The moon was the first Germanic god-slot in the week, which is why it comes first here.
 
+The word, taken apart.
+Mond from Old High German māno from Proto-Germanic mēnô, "moon" — inherited, the same word as English moon. (EtymDB 2.1).
+
 Sounds you'll need.
 long-o — a long, round o, the vowel of English moan, not the oo of moon.
 d-t-final — the final d hardens to a t at the end of the word, the same hardening you met in und. So it comes out mohnt.
@@ -74,6 +77,9 @@ You'll want to know: Montag.
 Montag — "Monday."
 Mon- is Mond with its hard ending worn off inside the compound, and -tag is the day. The pattern's first instance, and the easiest: English says the same two words in the same order — moon and day.
 That is what an inherited name looks like. Nobody translated this; both languages were already saying it before they were separate languages.
+
+The word, taken apart.
+Montag from Middle High German mōntac (EtymDB 2.1): Mond + Tag, "moon's day", built the same way as English Monday.
 
 Guided Practice.
 [pause 1 second]
@@ -134,6 +140,9 @@ You'll want to know: der Donner.
 der Donner — "thunder."
 Th- becomes d-, exactly as it did in drei. Take the th off thunder, put a d there, and you have most of the German word already.
 This is the second time that rule has paid, and it will keep paying: German d answers English th right across the vocabulary.
+
+The word, taken apart.
+Donner from Middle High German doner (EtymDB 2.1), from Proto-Germanic þunraz, "thunder" — inherited, the same word as English thunder and the god's name Thor.
 
 Sounds you'll need.
 vowel-o — short and open, the o of English on.
@@ -201,7 +210,7 @@ Ei is the English word eye, always — so the first syllable rhymes with fry, ne
 That one rule has now told you how to say eins, zwei, drei and this. It does not have exceptions to remember.
 
 The word, taken apart.
-The goddess is Frija — Frigg in the Norse — and she stood in for Venus. English named the day for her too: Friday.
+The goddess is Frija — Frigg in the Norse — and she stood in for Venus. English named the day for her too: Friday. Freitag from Old High German frīatag, "Frija's day" (EtymDB 2.1).
 This is the one day of the week named for a goddess, and it is a goddess in both systems. The Germanic swap did not merely fill the slot; it matched the god in it. Whoever made these substitutions was paying attention to who the Roman deity was, not only to which day was which.
 
 Guided Practice.
@@ -233,6 +242,9 @@ You'll want to know: Mittwoch.
 Mittwoch — "Wednesday," and literally "mid-week."
 No god, no Tag. Mitt- is the middle, Woche is the week, and the day is named for its position rather than for anybody.
 English did not do this. Wednesday is Woden's day — the chief god, sitting exactly where the pattern says he should. So English kept the Germanic name and German threw it away, which is the opposite of what the rest of this chapter would lead you to expect.
+
+The word, taken apart.
+Mittwoch from Middle High German mittewoche from Old High German mittawehha, "middle of the week" (EtymDB 2.1) — built from "mid" and "week", the same pair as English midweek.
 
 Sounds you'll need.
 ch-ach — the ending is the raspy back-of-the-throat sound you first met in Nacht. Same sound, same spelling, and it closes this word too: MIT-vokh.

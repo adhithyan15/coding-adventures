@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:100d82b9cf72a4b0",
+  "lessonIds": [
+    "ES-C512-producirse",
+    "ES-C512-suceso",
+    "ES-C512-acontecimiento",
+    "ES-C512-acontecer",
+    "ES-C512-tener-lugar"
+  ],
+  "tex": "spanish/book/chapters/ch512-lo-que-paso.tex"
+}

@@ -14,7 +14,8 @@ romanization: "vardhate"
 concept_tag: SA-VERB-VARDHATE
 prerequisites: [SA-C138-nudati, SA-C138-bhramati]
 sounds: []
-roots: []
+roots: [sanskrit-vardhate]
+etymology_hook: "vardhate ← √vṛdh 'grow, increase' (MW; CDIAL 11376); Hindi baṛhnā 'to increase'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C138-bhramati]
 <!-- hl-knowledge: introduces=[SA-LEX-C138-ACT138-05]; assesses=[] -->
 
 **वर्धते** — *vardhate* — "grows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vardhate* comes from the root √vṛdh "grow, increase, thrive" (MW; CDIAL 11376), already in the Rigveda. It lives on as Hindi *baṛhnā* and Marathi *vāḍhṇe* "to grow, increase" (CDIAL 11376).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

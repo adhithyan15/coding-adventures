@@ -14,7 +14,8 @@ romanization: "kemerā"
 concept_tag: TE-VASTUVU230-KEMERA
 prerequisites: [TE-C230-kavita, TE-C230-citram]
 sounds: []
-roots: []
+roots: [english-camera]
+etymology_hook: "kemerā ← English camera"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C230-citram]
 <!-- hl-knowledge: introduces=[TE-LEX-C230-VASTUVU230-03]; assesses=[] -->
 
 **కెమెరా** — *kemerā* — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కెమెరా** (*kemerā*) is a loan from English *camera*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

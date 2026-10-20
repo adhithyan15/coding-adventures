@@ -14,7 +14,8 @@ romanization: "vicaippalakai"
 concept_tag: TA-PORUL220-VICAIPPALAKAI
 prerequisites: [TA-C219-tenral, TA-C219-vellam]
 sounds: []
-roots: []
+roots: [sanskrit-phalaka]
+etymology_hook: "விசைப்பலகை — native vicai 'spring, lever' (DEDR 5450) + palakai 'board' ← Sanskrit phalaka (CDIAL 9053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C219-vellam]
 <!-- hl-knowledge: introduces=[TA-LEX-C220-PORUL220-01]; assesses=[] -->
 
 **விசைப்பலகை** — *vicaippalakai* — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**விசைப்பலகை** (*vicaippalakai*) is a modern coinage: native *vicai*, "spring, lever" (DEDR 5450), used for "key", and *palakai*, "board", from Sanskrit *phalaka*, "board, bench" (CDIAL 9053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

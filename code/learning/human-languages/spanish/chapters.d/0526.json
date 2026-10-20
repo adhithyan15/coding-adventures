@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "El rescate",
+  "label": "ch:es-el-rescate",
+  "canDo": "I can say that people were trapped, rescued and saved, and that they survived.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C526-atrapar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can say that people were trapped, rescued and saved, and that they survived.",
+    "assesses": [
+      "ES-LEX-C526-RESCATE-03",
+      "ES-LEX-C526-RESCATE-04",
+      "ES-LEX-C526-RESCATE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C286-scoop",
+  "pathSegment": "IT-PATH-286-EDIZIONE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-286-EDIZIONE",
+      "order": 2
+    }
+  ]
+}

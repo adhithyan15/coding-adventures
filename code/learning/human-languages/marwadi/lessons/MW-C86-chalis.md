@@ -14,7 +14,8 @@ romanization: "chāḷīs"
 concept_tag: MW-NUMBERS86-CHALIS
 prerequisites: [MW-C85-topi, MW-C86-tis]
 sounds: []
-roots: []
+roots: [sanskrit-catvarimshat]
+etymology_hook: "chāḷīs ← Sanskrit catvāriṃśat 'forty', a tadbhava (CDIAL 4656, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C86-tis]
 <!-- hl-knowledge: introduces=[MW-LEX-C86-NUMBERS86-02]; assesses=[] -->
 
 **चाळीस** — *chāḷīs* — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाळीस** (*chāḷīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṃśat*, "forty". CDIAL lists Old Marwari *cyārīsa* under it (CDIAL 4656). CDIAL notes that the Old Marwari *r* comes from *cyāri*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

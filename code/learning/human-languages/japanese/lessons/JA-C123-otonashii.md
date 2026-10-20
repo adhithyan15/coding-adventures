@@ -14,7 +14,8 @@ romanization: "otonashii"
 concept_tag: JA-QUAL123-OTONASHII
 prerequisites: [JA-C122-kantan, JA-C122-fukuzatsu]
 sounds: []
-roots: []
+roots: [japanese-otona]
+etymology_hook: "otonashii: native otona 'adult' + -shii; grown-up in manner"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C122-fukuzatsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C123-QUAL123-01]; assesses=[] -->
 
 **おとなしい** — *otonashii* — "well-behaved, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おとなしい** (*otonashii*) is native: *otona*, "adult", with the adjective ending *-shii*, so "grown-up in manner". JMdict writes it with the characters of *otona*. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

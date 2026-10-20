@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 141,
-  "sourceHash": "fnv1a64:6fbc7cc932c80c2d",
+  "sourceHash": "fnv1a64:ca9a4af23a964e6d",
   "lessonIds": [
     "UR-C141-thaharna",
     "UR-C141-lautna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch141.txt",
   "json": "urdu/narration/ch141.json",
-  "textHash": "fnv1a64:6a2dd3e138cdd904",
-  "jsonHash": "fnv1a64:0ac947a088bed2c3",
+  "textHash": "fnv1a64:788e4021878cf3bf",
+  "jsonHash": "fnv1a64:1f889447e2bc1cd8",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C516-tromba",
+  "pathSegment": "IT-PATH-516-STRUMENTI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-516-STRUMENTI",
+      "order": 2
+    }
+  ]
+}

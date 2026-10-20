@@ -14,6 +14,7 @@ concept_tag: FR-TRAV232-HISTOIRE
 prerequisites: [FR-C232-universite, FR-C232-erreur]
 sounds: []
 roots: []
+etymology_hook: "histoire ← Latin historia, from Greek historia 'inquiry' — English history and story"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C232-erreur]
 <!-- hl-knowledge: introduces=[FR-LEX-C232-TRAV232-05]; assesses=[] -->
 
 **l'histoire** — "history, a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**histoire** ← Latin *historia*, from Greek *historia*, "inquiry, a narrative" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

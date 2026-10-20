@@ -14,7 +14,8 @@ romanization: "gire"
 concept_tag: FA-CHIZ248-GIRE
 prerequisites: [FA-C247-sim, FA-C248-chub-lebasi]
 sounds: []
-roots: []
+roots: [old-persian-grab]
+etymology_hook: "gire: Persian gir- 'grip' (gereftan, EtymDB) + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C248-chub-lebasi]
 <!-- hl-knowledge: introduces=[FA-LEX-C248-CHIZ248-02]; assesses=[] -->
 
 **گیره** — *gire* — "a clip, a peg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gire* is *gir-*, the present stem of *gereftan*, "to take, to grip", with *-e*: the gripper. The verb is inherited (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

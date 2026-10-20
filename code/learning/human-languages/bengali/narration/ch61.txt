@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a roof, then the Bengali for a bed.
 You'll want to know: আলমারি.
 আলমারি — ālmāri — "a cupboard".
 
+The word, taken apart.
+আলমারি (ālmāri) is a loan from Portuguese armário, "cupboard".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a bed, then the Bengali for a cupboard.
 
 You'll want to know: মেঝে.
 মেঝে — mejhe — "the floor".
+
+The word, taken apart.
+The origin of মেঝে (mejhe) is not settled. CDIAL has no Bengali word for "floor" of this shape; the nearest it gives is mejha, "the middle", under Sanskrit madhyama, "middle" (CDIAL 9810), and it does not connect the two.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a cupboard, then the Bengali for the flo
 You'll want to know: সিঁড়ি.
 সিঁড়ি — sĩṛi — "stairs".
 
+The word, taken apart.
+সিঁড়ি (sĩṛi) is a tadbhava, a word inherited and reshaped by sound change. It comes from śrīḍhi, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for the floor, then the Bengali for stairs.
 You'll want to know: আয়না.
 আয়না — āynā — "a mirror".
 
+The word, taken apart.
+আয়না (āynā) is a loan, usually traced to Persian āyina, "mirror".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for stairs, then the Bengali for a mirror.
 
 You'll want to know: বাতি.
 বাতি — bāti — "a lamp".
+
+The word, taken apart.
+বাতি (bāti) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from varti, "wick, lamp" (CDIAL 11359).
 
 What you've built.
 One more word for this chapter.

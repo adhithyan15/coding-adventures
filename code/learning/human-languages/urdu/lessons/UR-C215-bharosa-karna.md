@@ -14,7 +14,8 @@ romanization: "bharosā karnā"
 concept_tag: UR-VERB-BHAROSA-KARNA
 prerequisites: [UR-C215-kam-karna, UR-C215-pichha-karna]
 sounds: []
-roots: []
+roots: [indo-aryan-bharavashya, kr-do]
+etymology_hook: "bharosā ← *bharavaśya 'dependence on support' (CDIAL 9398); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C215-pichha-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C215-ACT215-03]; assesses=[] -->
 
 **بھروسا کرنا** — *bharosā karnā* — "to trust".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھروسا کرنا** (*bharosā karnā*) joins *bharosā*, "trust", and *karnā*, "to do". *bharosā* comes from a reconstructed *\*bharavaśya*, "dependence on support", built from *bhara*, "support", and *vaśa*, "power" (CDIAL 9398); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

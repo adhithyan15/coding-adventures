@@ -13,7 +13,8 @@ gloss: "reputation, rumour"
 concept_tag: LA-RES219-FAMA
 prerequisites: [LA-C218-poena, LA-C218-crimen]
 sounds: []
-roots: []
+roots: [fama-latin, fari-latin]
+etymology_hook: "fāma 'reputation' — usually traced to PIE *bheh2meh2 'talk'; kin to fārī 'to speak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C218-crimen]
 <!-- hl-knowledge: introduces=[LA-LEX-C219-RES219-01]; assesses=[] -->
 
 **fāma, fāmae** — "reputation, rumour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fāma** is inherited, usually traced to Proto-Indo-European *\*bheh2meh2*, "talk, report", from *\*bheh2-*, "to speak" (EtymDB 2.1); *fārī*, "to speak", has the same root (Lewis & Short). Greek *phēmē*, "a saying", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 179,
-  "sourceHash": "fnv1a64:504669a3e2f2a490",
+  "sourceHash": "fnv1a64:bf91279235c1d71b",
   "lessonIds": [
     "KA-C179-taja",
     "KA-C179-halasida",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch179.txt",
   "json": "kannada/narration/ch179.json",
-  "textHash": "fnv1a64:cbc00ad3ce411ea5",
-  "jsonHash": "fnv1a64:803b0f73e4ba4752",
+  "textHash": "fnv1a64:efcd65995d6460c3",
+  "jsonHash": "fnv1a64:1b678efc23d32595",
   "findings": []
 }

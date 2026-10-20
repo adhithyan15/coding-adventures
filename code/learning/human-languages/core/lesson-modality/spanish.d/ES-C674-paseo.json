@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C674-paseo",
+    "language": "spanish",
+    "chapter": 674,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40b5eb3527951ca6"
+  },
+  "findings": []
+}

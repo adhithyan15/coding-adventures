@@ -14,7 +14,8 @@ romanization: "cuvāraciyamāṉa"
 concept_tag: TA-GUNAM180-CUVARACIYAMANA
 prerequisites: [TA-C180-pitivatamana, TA-C180-nakaiccuvaiyana]
 sounds: []
-roots: []
+roots: [sanskrit-svarasya]
+etymology_hook: "சுவாரசியமான — cuvāraciyam ← Sanskrit svārasya 'natural flavour, charm', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C180-nakaiccuvaiyana]
 <!-- hl-knowledge: introduces=[TA-LEX-C180-GUNAM180-05]; assesses=[] -->
 
 **சுவாரசியமான** — *cuvāraciyamāṉa* — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சுவாரசியமான** (*cuvāraciyamāṉa*) is *cuvāraciyam*, "interest, relish", a well-established loan from Sanskrit *svārasya*, "natural flavour, charm", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

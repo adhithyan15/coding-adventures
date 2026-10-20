@@ -14,7 +14,8 @@ romanization: "planírovat"
 concept_tag: RU-VERB-PLANIROVAT
 prerequisites: [RU-C138-cherez, RU-C138-plan]
 sounds: []
-roots: []
+roots: [french-plan]
+etymology_hook: "планировать is план 'a plan' + the borrowed verb ending -ировать"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C138-plan]
 <!-- hl-knowledge: introduces=[RU-LEX-C138-FUT138-04]; assesses=[] -->
 
 **планировать** (*planírovat*) — "to plan". **Я планирую путешествие.** — *ya planíruyu puteshéstviye* — "I'm planning a trip." Verbs in **-овать** swap it for **-ую**, like **рисовать**, **рисую**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**планировать** is *план*, "a plan", with *-ировать*, a verb ending taken from German *-ieren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cūṭuḷḷa"
 concept_tag: ML-THINGS164-CUTULLA
 prerequisites: [ML-C164-aviyal, ML-C164-pappatam, ML-C88-ninety-hundred, ML-C88-ninety-hundred]
 sounds: []
-roots: []
+roots: [dravidian-cutu-burn, dravidian-ul-be]
+etymology_hook: "cūṭuḷḷa: native Dravidian, 'having heat': cūṭŭ (DEDR 2654) + uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C164-pappatam]
 <!-- hl-knowledge: introduces=[ML-LEX-C164-THINGS164-03]; assesses=[] -->
 
 **ചൂടുള്ള** — *cūṭuḷḷa* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചൂടുള്ള** (*cūṭuḷḷa*) is native Dravidian, "having heat": *cūṭŭ*, "heat" (DEDR 2654), with the ending *-uḷḷa*, "that has", from the verb "to be" (DEDR 697, with Tamil *uḷ*). DEDR 2654 compares Sanskrit *cūḍ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

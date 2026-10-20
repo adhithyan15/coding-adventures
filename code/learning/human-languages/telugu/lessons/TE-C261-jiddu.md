@@ -14,7 +14,8 @@ romanization: "jiḍḍu"
 concept_tag: TE-GUNAM261-JIDDU
 prerequisites: [TE-C261-sahajamaina, TE-C261-cikkani]
 sounds: []
-roots: []
+roots: [dravidian-jiddu-grease]
+etymology_hook: "jiḍḍu: native Dravidian; DEDR 2516 lists jiḍḍu 'greasiness' with Kannada jiḍḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C261-cikkani]
 <!-- hl-knowledge: introduces=[TE-LEX-C261-GUNAM261-03]; assesses=[] -->
 
 **జిడ్డు** — *jiḍḍu* — "greasy, oily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జిడ్డు** (*jiḍḍu*) is native Dravidian. DEDR 2516 lists *jiḍḍu*, "oiliness, greasiness", with Kannada *jiḍḍu*, "a greasy substance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

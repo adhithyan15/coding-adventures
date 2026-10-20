@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Where, and When",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:86157b38615e4fe1",
+  "sourceHash": "fnv1a64:bd960d3a15f9ad06",
   "lessons": [
     {
       "id": "MR-C38-kuthe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e02c18ad29fc904",
+      "sourceHash": "fnv1a64:c81623894367f9c1",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
             },
             {
               "kind": "speech",
-              "text": "कुठे (kuṭhe) is the क- family again, from Sanskrit कुत्र (kutra, \"where\"). Its answer is a place, the way कोण wants a person and किती wants a number."
+              "text": "कुठे (kuṭhe) is the क- family again, usually traced to Sanskrit कुत्र (kutra, \"where\"). Its answer is a place, the way कोण wants a person and किती wants a number."
             },
             {
               "kind": "speech",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8bd6d1d0dab9fa1",
+      "sourceHash": "fnv1a64:429e41b45805a63d",
       "notice": null,
       "blocks": [
         {
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "कधी (kadhī) is Sanskrit कदा (kadā, \"when\"), and it is the fourth क- word in four lessons. The family is now large enough to be a rule rather than a coincidence: काय, कोण, किती, कुठे (kuṭhe), कधी (kadhī)."
+              "text": "कधी (kadhī) is usually traced to Sanskrit कदा (kadā, \"when\"), and it is the fourth क- word in four lessons. The family is now large enough to be a rule rather than a coincidence: काय, कोण, किती, कुठे (kuṭhe), कधी (kadhī)."
             },
             {
               "kind": "speech",
@@ -328,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ef9911e4fbff96a",
+      "sourceHash": "fnv1a64:dcfe5448c8968125",
       "notice": null,
       "blocks": [
         {
@@ -369,6 +369,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुठे (kuṭhe) is usually traced to Sanskrit kutra, \"where\", on the same question stem ka- as काय. CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -428,7 +439,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

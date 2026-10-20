@@ -1,0 +1,19 @@
+{
+  "chapter": 584,
+  "title": "Pros y contras",
+  "label": "ch:es-pros-y-contras",
+  "canDo": "I can weigh the advantages and the drawbacks of a choice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C584-negativo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 584: I can weigh the advantages and the drawbacks of a choice.",
+    "assesses": [
+      "ES-LEX-C584-VENTAJA-03",
+      "ES-LEX-C584-VENTAJA-04",
+      "ES-LEX-C584-VENTAJA-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "planéta"
 concept_tag: RU-THINGS122-PLANET
 prerequisites: [RU-C122-lightning, RU-C122-thunder]
 sounds: []
-roots: []
+roots: [planeta-latin]
+etymology_hook: "планета came through Polish planeta from Latin planeta, Greek planētēs 'a wanderer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C122-thunder]
 <!-- hl-knowledge: introduces=[RU-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **планета** (*planéta*) — "a planet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**планета** came through Polish *planeta* from Latin *planēta*, Greek *planḗtēs*, "a wanderer": a planet is a wandering star (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

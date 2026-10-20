@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Parting Words",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:fa9d56d7a2c8ec6e",
+  "sourceHash": "fnv1a64:c585a9b6b809419c",
   "lessons": [
     {
       "id": "RU-C11-do-svidaniya",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:964301d19adbc2a6",
+      "sourceHash": "fnv1a64:c40d22c089bef824",
       "notice": null,
       "blocks": [
         {
@@ -247,11 +247,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root — \"как, какой, пока (paká) — one ancient question-stem\"",
+              "instruction": "the root — \"как, пока (paká) — one ancient question-stem\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root — \"как, какой, пока — one ancient question-stem\"]"
+              "source": "[YOU SAY: the root — \"как, пока — one ancient question-stem\"]"
             },
             {
               "kind": "prompt",
@@ -277,7 +277,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"bye,\" casually. (Пока.) Which two earlier words share its root, and what English word-family is their cousin? (Kak and какой; English who, what, when, where, why, which.) Does пока (paká) follow yesterday's до + genitive pattern? (No — it is built differently.) How old is пока (paká)'s use as a farewell? (Only since the early 20th century.) One more look back: which word closes on the sound ts, as in cats? (Sérdtse.)"
+              "text": "Say \"bye,\" casually. (Пока.) Which earlier word shares its root, and what English word-family is its cousin? (Kak; English who, what, when, where, why, which.) Does пока (paká) follow yesterday's до + genitive pattern? (No — it is built differently.) How old is пока (paká)'s use as a farewell? (Only since the early 20th century.) One more look back: which word closes on the sound ts, as in cats? (Sérdtse.)"
             }
           ]
         }
@@ -296,7 +296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aaeaa1b8edb9fa8",
+      "sourceHash": "fnv1a64:3693d5b156f7873f",
       "notice": null,
       "blocks": [
         {
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed2cdb3b8a974a0e",
+      "sourceHash": "fnv1a64:8d53eabc2dda8452",
       "notice": null,
       "blocks": [
         {
@@ -600,7 +600,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "встреча takes apart by its pieces rather than by a single ancient root: в-, \"into,\" plus с-, \"with, together,\" on an old Slavic base meaning roughly \"to come upon.\" Put together, it is close to what English meet does when it means \"to come together\" — but that closeness is a match of idea, not of ancestry: there is no secure shared root behind the two words, the same honest gap this chapter already met in skórava."
+              "text": "встреча takes apart by its pieces rather than by a single ancient root: в-, \"into,\" plus с-, \"with, together,\" on an old Slavic base (Vasmer compares Lithuanian surėsti, \"to catch\") meaning roughly \"to come upon.\" Put together, it is close to what English meet does when it means \"to come together\" — but that closeness is a match of idea, not of ancestry: there is no secure shared root behind the two words, the same honest gap this chapter already met in skórava."
             },
             {
               "kind": "speech",

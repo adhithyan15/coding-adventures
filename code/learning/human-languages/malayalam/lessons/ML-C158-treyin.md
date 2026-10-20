@@ -14,7 +14,8 @@ romanization: "ṭreyin"
 concept_tag: ML-THINGS158-TREYIN
 prerequisites: [ML-C157-saikkil, ML-C158-toni, ML-C69-adyathe-vaayana]
 sounds: []
-roots: []
+roots: [english-train]
+etymology_hook: "ṭreyin ← English train"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [ML-C158-toni]
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-02]; assesses=[] -->
 
 **ട്രെയിൻ** — *ṭreyin* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ട്രെയിൻ** (*ṭreyin*) ← English *train*, from French *traîner*, "to drag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

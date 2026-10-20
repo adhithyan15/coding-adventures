@@ -14,7 +14,8 @@ romanization: "kabutar"
 concept_tag: FA-THINGS106-KABUTAR
 prerequisites: [FA-C105-khuk, FA-C106-tuti]
 sounds: []
-roots: []
+roots: [persian-kabutar]
+etymology_hook: "kabutar ← Middle Persian kabōtar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C106-tuti]
 <!-- hl-knowledge: introduces=[FA-LEX-C106-THINGS106-02]; assesses=[] -->
 
 **کبوتر** — *kabutar* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kabutar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kabōtar*, "pigeon" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "iṭi"
 concept_tag: TA-THINGS127-ITI
 prerequisites: [TA-C127-natcattiram, TA-C127-pani]
 sounds: []
-roots: []
+roots: [dravidian-idi-thunder]
+etymology_hook: "இடி — native Dravidian (DEDR 438); Malayalam iṭi 'thunderbolt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C127-pani]
 <!-- hl-knowledge: introduces=[TA-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **இடி** — *iṭi* — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இடி** (*iṭi*) is native Dravidian. DEDR 438 lists Malayalam *iṭi*, "thunderbolt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

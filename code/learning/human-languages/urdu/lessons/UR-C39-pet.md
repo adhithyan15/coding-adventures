@@ -14,7 +14,8 @@ romanization: "peṭ"
 concept_tag: UR-BODY39-PET
 prerequisites: [UR-C38-dant, UR-C38-gala]
 sounds: []
-roots: []
+roots: [prakrit-petta]
+etymology_hook: "peṭ ← *peṭṭa 'belly', reconstructed (CDIAL 8376); DEDR compares Dravidian poṭṭa 'belly' (DEDR 4494)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C38-gala]
 <!-- hl-knowledge: introduces=[UR-LEX-C39-BODY39-01]; assesses=[] -->
 
 **پیٹ** — *peṭ* — "the stomach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیٹ** (*peṭ*) is inherited. CDIAL lists it under a reconstructed *\*peṭṭa*, "belly", and notes that it may be the same word as similar forms meaning "basket" (CDIAL 8376). DEDR compares its variant *poṭṭa* with Dravidian words for "belly", such as Telugu *poṭṭa* (DEDR 4494).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

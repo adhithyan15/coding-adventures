@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C332-zumal",
+    "language": "german",
+    "chapter": 332,
+    "sequence": 18130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a9b67f90bd1b139"
+  },
+  "findings": []
+}

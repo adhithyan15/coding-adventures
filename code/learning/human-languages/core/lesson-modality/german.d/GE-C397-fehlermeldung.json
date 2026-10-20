@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C397-fehlermeldung",
+    "language": "german",
+    "chapter": 397,
+    "sequence": 21450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a9955d5db066afd"
+  },
+  "findings": []
+}

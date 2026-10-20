@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:a8da481c05a3891e",
+  "lessonIds": [
+    "LA-C434-stabulum",
+    "LA-C434-praesepe",
+    "LA-C434-faenum",
+    "LA-C434-hinnio",
+    "LA-C434-mulio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch434.txt",
+  "json": "latin/narration/ch434.json",
+  "textHash": "fnv1a64:1a0034c7d5635d12",
+  "jsonHash": "fnv1a64:c2e534ae0faae5b5",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C395-tasso",
+  "pathSegment": "IT-PATH-395-RISPARMIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-395-RISPARMIO",
+      "order": 3
+    }
+  ]
+}

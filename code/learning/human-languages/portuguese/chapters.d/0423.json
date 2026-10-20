@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "No controlo",
+  "label": "ch:pt-no-controlo",
+  "canDo": "I can get through border and security checks: searching, declaring, confiscating, the detector and stamping a passport.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C423-carimbar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can get through border and security checks: searching, declaring, confiscating, the detector and stamping a passport.",
+    "assesses": [
+      "PT-LEX-C423-CONTROLO-03",
+      "PT-LEX-C423-CONTROLO-04",
+      "PT-LEX-C423-CONTROLO-05"
+    ]
+  }
+}

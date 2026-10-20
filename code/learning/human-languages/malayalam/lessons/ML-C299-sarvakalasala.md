@@ -14,7 +14,8 @@ romanization: "sarvakalāśāla"
 concept_tag: ML-JOLI299-SARVAKALASALA
 prerequisites: [ML-C299-niyamam, ML-C299-koleju]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art, sanskrit-shala]
+etymology_hook: "sarvakalāśāla: Sanskrit sarva 'all' + kalā 'art' (CDIAL 2927) + śālā 'hall' (CDIAL 12414)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C299-koleju]
 <!-- hl-knowledge: introduces=[ML-LEX-C299-JOLI299-05]; assesses=[] -->
 
 **സർവകലാശാല** — *sarvakalāśāla* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സർവകലാശാല** (*sarvakalāśāla*) is a modern compound of Sanskrit *sarva*, "all", *kalā*, "art, learning" (CDIAL 2927), and *śālā*, "hall" (CDIAL 12414): "the hall of all learning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

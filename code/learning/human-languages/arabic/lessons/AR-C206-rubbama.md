@@ -14,7 +14,8 @@ romanization: "rubbamā"
 concept_tag: AR-SABAB206-RUBBAMA
 prerequisites: [AR-C205-hudud, AR-C205-kawkab]
 sounds: []
-roots: []
+roots: [rubba]
+etymology_hook: "rubbamā: built from rubba 'many a' + mā; Lane lists it among rubba's many forms"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C205-kawkab]
 <!-- hl-knowledge: introduces=[AR-LEX-C206-SABAB206-01]; assesses=[] -->
 
 **ربما** — *rubbamā* — "perhaps, maybe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ربما** (*rubbamā*) is built from *rubba*, "many a", and *mā*. Lane gives *rubba* as a particle with some seventy dialect forms, *rubbamā* among them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

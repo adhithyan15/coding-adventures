@@ -14,7 +14,8 @@ romanization: "meh"
 concept_tag: FA-THINGS104-MEH
 prerequisites: [FA-C104-sabze, FA-C104-tufan]
 sounds: []
-roots: []
+roots: [persian-meh]
+etymology_hook: "meh: inherited, usually traced to Middle Persian mēg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C104-tufan]
 <!-- hl-knowledge: introduces=[FA-LEX-C104-THINGS104-04]; assesses=[] -->
 
 **مه** — *meh* — "fog, mist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*meh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *mēg*, "cloud, mist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

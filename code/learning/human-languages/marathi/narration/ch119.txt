@@ -12,6 +12,9 @@ Before the new one: say the Marathi for seventy, then the Marathi for ninety.
 You'll want to know: शंभर.
 शंभर — shambhar — "a hundred".
 
+The word, taken apart.
+शंभर (shambhar) is a tadbhava, a word inherited and reshaped by sound change. It comes from śatambhara, "full hundred", a form CDIAL reconstructs from its descendants (CDIAL 12284). It is built on śata, "hundred".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for ninety, then the Marathi for a hundred.
 
 You'll want to know: हजार.
 हजार — hajār — "a thousand".
+
+The word, taken apart.
+हजार (hajār) is a loan, usually traced to Persian hazār, "thousand". Marathi writes the z as ज.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a hundred, then the Marathi for a thousa
 You'll want to know: जग.
 जग — jag — "the world".
 
+The word, taken apart.
+जग (jag) is Sanskrit jagat, "moving, living", which meant "the world" from the Brahmanas on (CDIAL 5078). Marathi drops the final -t.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a thousand, then the Marathi for the wor
 You'll want to know: रंग.
 रंग — raṅg — "a colour".
 
+The word, taken apart.
+रंग (raṅg) may come from Sanskrit raṅga, "dye, colour" (CDIAL 10560), or from Persian rang, "colour". The two words are alike in sound and sense and may have merged.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for the world, then the Marathi for a colour
 
 You'll want to know: प्रवास.
 प्रवास — pravās — "a journey".
+
+The word, taken apart.
+प्रवास (pravās) is Sanskrit pravāsa, "dwelling abroad", taken over whole as a learned loan, a tatsama (CDIAL 8802). It is pra-, "forth", and vāsa, "dwelling".
 
 What you've built.
 One more word for this chapter.

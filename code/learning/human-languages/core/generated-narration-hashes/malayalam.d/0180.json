@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 180,
-  "sourceHash": "fnv1a64:e8d3dc68aa6c8b80",
+  "sourceHash": "fnv1a64:136f83b31df7d9f6",
   "lessonIds": [
     "ML-C180-samayappattika",
     "ML-C180-ariyippu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch180.txt",
   "json": "malayalam/narration/ch180.json",
-  "textHash": "fnv1a64:de913a42f05e1244",
-  "jsonHash": "fnv1a64:d8b7520f1f96f029",
+  "textHash": "fnv1a64:4fb1cfabf27fe7e3",
+  "jsonHash": "fnv1a64:de0834a28383a1ec",
   "findings": []
 }

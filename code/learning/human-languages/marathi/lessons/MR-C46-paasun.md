@@ -11,7 +11,8 @@ gloss: from, since — the starting point of a journey and of a stretch of time,
 concept_tag: MR-POSTP-PAASUN
 prerequisites: [MR-C46-huun, MR-C04-udya-bhetu]
 sounds: [matra-aa, matra-oo]
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "pāsūn: built on pās 'near', which CDIAL lists under Sanskrit pārśva 'side' (CDIAL 8118)"
 duration:
   max_seconds: 210
 requires:
@@ -61,6 +62,11 @@ running:
 
 That is why a notice about opening hours uses **पासून** and a traveller uses
 **-हून**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पासून** (*pāsūn*) is built on Marathi *pās*, "near", which CDIAL lists under Sanskrit *pārśva*, "side", in its adverb *pārśve*, "near" (CDIAL 8118).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-PAASUN, MR-POSTP-HUUN, MR-LEX-UDYA, MR-POSTP-BAROBAR] -->

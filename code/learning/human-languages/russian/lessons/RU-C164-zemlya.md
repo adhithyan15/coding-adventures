@@ -14,7 +14,8 @@ romanization: "zemlyá"
 concept_tag: RU-VESHCH164-ZEMLYA
 prerequisites: [RU-C164-klimat, RU-C164-vozdukh]
 sounds: []
-roots: []
+roots: [pie-dhghem]
+etymology_hook: "земля ← Proto-Slavic *zemja; Latin humus 'soil' and Greek chamai 'on the ground' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C164-vozdukh]
 <!-- hl-knowledge: introduces=[RU-LEX-C164-VESHCH164-05]; assesses=[] -->
 
 **земля** (*zemlyá*) — "the earth; land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**земля** ← Proto-Slavic *\*zemja* — inherited. Vasmer relates it to Lithuanian *žẽmė*, "earth", Avestan *zam-*, Greek *chamaí*, "on the ground", and Latin *humus*, "soil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

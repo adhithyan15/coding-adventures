@@ -1,0 +1,11 @@
+{
+  "id": "PT-C265-estava-contente",
+  "pathSegment": "PT-PATH-265-SENTIMENTOS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-265-SENTIMENTOS",
+      "order": 0
+    }
+  ]
+}

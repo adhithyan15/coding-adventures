@@ -14,7 +14,8 @@ romanization: "bhul"
 concept_tag: BN-JINIS199-BHUL
 prerequisites: [BN-C199-porjotok, BN-C199-bakyo]
 sounds: []
-roots: []
+roots: [indo-aryan-bhull]
+etymology_hook: "bhul ← *bhull 'err, forget', a reconstructed form; a tadbhava (CDIAL 9538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C199-bakyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C199-JINIS199-04]; assesses=[] -->
 
 **ভুল** — *bhul* — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভুল** (*bhul*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhull*, "err, forget", a form CDIAL reconstructs from its descendants (CDIAL 9538). CDIAL lists Bengali *bhulā*, "to err, forget".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

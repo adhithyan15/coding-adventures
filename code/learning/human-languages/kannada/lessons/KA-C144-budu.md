@@ -14,7 +14,8 @@ romanization: "būdu"
 concept_tag: KA-QUAL144-BUDU
 prerequisites: [KA-C144-sullu, KA-C144-nerale]
 sounds: []
-roots: []
+roots: [sanskrit-bhuti]
+etymology_hook: "būdu: probably from Sanskrit bhūti 'ashes'; DEDR 4316 brackets it as a likely loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C144-nerale]
 <!-- hl-knowledge: introduces=[KA-LEX-C144-QUAL144-04]; assesses=[] -->
 
 **ಬೂದು** — *būdu* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೂದು** (*būdu*) means "ash-coloured". DEDR 4316 lists Kannada *būdu*, "ashes", in brackets, as probably borrowed from Sanskrit *bhūti*, "ashes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C276-sequenza",
+    "language": "italian",
+    "chapter": 276,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:816a019ea54fcaf1"
+  },
+  "findings": []
+}

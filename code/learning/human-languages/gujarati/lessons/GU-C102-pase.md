@@ -14,7 +14,8 @@ romanization: "pāse"
 concept_tag: GU-CAN102-PASE
 prerequisites: [GU-C101-tya, GU-C102-sakvu]
 sounds: []
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "pāse ← Sanskrit pārśva 'side'; its form pārśve meant 'near' (CDIAL 8118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C102-sakvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C102-CAN102-02]; assesses=[] -->
 
 **પાસે** (*pāse*) — "with, in one's possession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાસે** (*pāse*) is a tadbhava. CDIAL lists it under Sanskrit *pārśva*, "side", whose form *pārśve* meant "near" (CDIAL 8118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

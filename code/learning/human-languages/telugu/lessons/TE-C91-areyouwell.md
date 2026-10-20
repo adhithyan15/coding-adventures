@@ -11,7 +11,8 @@ romanization: "bāgunnārā?"
 concept_tag: TE-GREET-ARE-YOU-WELL
 prerequisites: [TE-C90-leave, TE-C90-letsgo]
 sounds: []
-roots: []
+roots: [dravidian-baagu-good, dravidian-ul-be]
+etymology_hook: "bāgunnārā: native bāgu 'good' (DEDR 5332) + unnāru 'you are' (DEDR 697) + -ā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C90-letsgo]
 
 It is the answer you already give, **బాగున్నాను**, turned into a question: the respectful
 ending **-ారు** and the question mark **-ఆ** you know from **అవునా?**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both pieces are native Dravidian: *bāgu*, "good" (DEDR 5332), and *uṇḍu*, "to be" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

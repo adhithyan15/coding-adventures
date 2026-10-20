@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "People under one roof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bcf3c1521b169f23",
+  "sourceHash": "fnv1a64:bbe4e7634d46d04c",
   "lessons": [
     {
       "id": "ZH-C12-ren",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8211621017edbf2",
+      "sourceHash": "fnv1a64:02f0bee44d3e51dc",
       "notice": null,
       "blocks": [
         {
@@ -78,6 +78,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "人 rén is inherited from Middle Chinese nyin, \"person\" (Guangyun, in Baxter's transcription). Its ny became the Mandarin r, as in rì."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:088763b25582e02e",
+      "sourceHash": "fnv1a64:77339001acd3665a",
       "notice": null,
       "blocks": [
         {
@@ -205,6 +216,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "女 nǚ is inherited from Middle Chinese nrjoX, \"woman\" (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -229,7 +251,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a57e410e0be33515",
+      "sourceHash": "fnv1a64:188cae5766d7b32f",
       "notice": null,
       "blocks": [
         {
@@ -305,6 +327,10 @@
             {
               "kind": "speech",
               "text": "Hear two beats: rising ér, then a short, light zi. Say the whole word once from the meaning. Keep the characters covered; the new first shape comes next."
+            },
+            {
+              "kind": "speech",
+              "text": "Érzi is built from Middle Chinese nye, \"infant\", and tsiX, \"offspring\"."
             }
           ]
         },
@@ -460,7 +486,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c46e9a5b56ba364",
+      "sourceHash": "fnv1a64:3aa588b910f5f07d",
       "notice": null,
       "blocks": [
         {
@@ -501,6 +527,10 @@
             {
               "kind": "speech",
               "text": "The first syllable rises. The second is light. Both characters carry child meanings, but the whole word—not either character alone—is the ordinary kinship word son."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: nye, \"infant\", and tsiX, \"offspring\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -574,7 +604,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:669844489037ac14",
+      "sourceHash": "fnv1a64:bf73fd313fbb92b8",
       "notice": null,
       "blocks": [
         {
@@ -606,6 +636,10 @@
             {
               "kind": "speech",
               "text": "Say two clear syllables: low nǚ, rising ér. The apostrophe only keeps the vowel boundary visible in pinyin. It is not a pause and not part of the Chinese writing."
+            },
+            {
+              "kind": "speech",
+              "text": "Nǚ'ér is built from Middle Chinese nrjoX, \"woman\", and nye, \"infant\"."
             }
           ]
         },
@@ -655,7 +689,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:465f38d36acfaddc",
+      "sourceHash": "fnv1a64:c15e3d26df9d68be",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -699,6 +733,10 @@
             {
               "kind": "speech",
               "text": "Nothing is hidden: 女 (nǚ) gives female and 儿 (ér) gives child. Read the two characters without the pinyin, then say the whole word without a pause."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: nrjoX, \"woman\", and nye, \"infant\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -758,7 +796,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7ebfa4ca4ee088c",
+      "sourceHash": "fnv1a64:a2cc9226edd7b6ee",
       "notice": null,
       "blocks": [
         {
@@ -790,6 +828,10 @@
             {
               "kind": "speech",
               "text": "Hold the pitch high and level: jiā. The word can name the household place or the family belonging to it. Keep the character covered; it has ten strokes, and the next lesson gives them to you in two familiar-sized pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "Jiā is inherited from Middle Chinese kae, \"dwelling\"."
             }
           ]
         },
@@ -953,7 +995,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:656011a7a8d96410",
+      "sourceHash": "fnv1a64:6d769374342d422c",
       "notice": null,
       "blocks": [
         {
@@ -1003,6 +1045,10 @@
             {
               "kind": "speech",
               "text": "The high line over ā records first tone; the character records no tone mark at all."
+            },
+            {
+              "kind": "speech",
+              "text": "家 (jiā) is inherited from Middle Chinese kae, \"dwelling\" (Guangyun, in Baxter's transcription); Mandarin softened its k to j."
             }
           ]
         },
@@ -1067,7 +1113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:070b1c8be41bf708",
+      "sourceHash": "fnv1a64:38e1e12774ffc73f",
       "notice": null,
       "blocks": [
         {
@@ -1099,6 +1145,10 @@
             {
               "kind": "speech",
               "text": "You already own both sounds: jiā + rén. The compound names the people of the home. Say it once from the meaning before looking at either character."
+            },
+            {
+              "kind": "speech",
+              "text": "Jiārén is built from Middle Chinese kae, \"dwelling\", and nyin, \"person\"."
             }
           ]
         },
@@ -1150,7 +1200,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:9d94b71035359378",
+      "sourceHash": "fnv1a64:1c0c70753a7dea47",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1194,6 +1244,10 @@
             {
               "kind": "speech",
               "text": "Read from the characters: home + person. The word is plural by meaning here, but Mandarin adds no plural ending to 人 (rén)."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese, kae and nyin (Guangyun, in Baxter's transcription), and the pair is old: it names a hexagram in the Book of Changes."
             }
           ]
         },

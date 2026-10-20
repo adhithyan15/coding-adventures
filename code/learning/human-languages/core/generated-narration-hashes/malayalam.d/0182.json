@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 182,
-  "sourceHash": "fnv1a64:d055d7dcb6a262c2",
+  "sourceHash": "fnv1a64:957376499609a99c",
   "lessonIds": [
     "ML-C182-ilakkuka",
     "ML-C182-porikkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch182.txt",
   "json": "malayalam/narration/ch182.json",
-  "textHash": "fnv1a64:4c2454bef6c9d1ae",
-  "jsonHash": "fnv1a64:728f0c6d2ee7ba79",
+  "textHash": "fnv1a64:211482c2081b1a34",
+  "jsonHash": "fnv1a64:092381fd114a07c4",
   "findings": []
 }

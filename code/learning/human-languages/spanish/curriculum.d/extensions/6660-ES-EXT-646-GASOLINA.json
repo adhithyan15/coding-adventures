@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-646-GASOLINA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can fill up at a petrol pump and talk about the tank, fuel and kilometres.",
+  "prerequisites": []
+}

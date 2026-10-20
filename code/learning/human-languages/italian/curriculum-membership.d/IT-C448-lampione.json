@@ -1,0 +1,11 @@
+{
+  "id": "IT-C448-lampione",
+  "pathSegment": "IT-PATH-448-ARREDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-448-ARREDO",
+      "order": 1
+    }
+  ]
+}

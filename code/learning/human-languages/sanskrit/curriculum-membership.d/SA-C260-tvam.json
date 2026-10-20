@@ -1,0 +1,11 @@
+{
+  "id": "SA-C260-tvam",
+  "pathSegment": "SA-PATH-260-OBJ260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-260-OBJ260",
+      "order": 1
+    }
+  ]
+}

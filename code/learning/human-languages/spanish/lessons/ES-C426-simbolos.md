@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-SIMBOLOS
 prerequisites: [ES-C426-siglas]
 sounds: []
 roots: []
+etymology_hook: "símbolo ← Latin symbolus 'a sign, a token', from Greek symbolon"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +55,9 @@ language.
 
 You have already read one in use: **km/h**, which you learned to say aloud as
 *kilómetros por hora*.
+
+*Símbolo* is Latin *symbolus*, "a sign, a token" (Lewis & Short), from Greek
+*symbolon*.
 
 ## Grammar Lens: the compass, and where the euro goes
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C426-06, ES-ORTH-C424-08] -->

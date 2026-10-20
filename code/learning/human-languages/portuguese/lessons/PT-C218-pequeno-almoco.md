@@ -13,7 +13,8 @@ gloss: "breakfast"
 concept_tag: PT-COISAS218-PEQUENO-ALMOCO
 prerequisites: [PT-C217-chuvoso-chuvosa, PT-C217-gordo-gorda]
 sounds: []
-roots: []
+roots: [admordere-latin]
+etymology_hook: "pequeno-almoço — 'little lunch': pequeno 'small' + almoço 'lunch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,13 @@ reviews_of: [PT-C217-gordo-gorda]
 <!-- hl-knowledge: introduces=[PT-LEX-C218-COISAS218-01]; assesses=[] -->
 
 **o pequeno-almoço** — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pequeno-almoço** is "little lunch": *pequeno*, "small", and *almoço*, "lunch".
+Both are inherited through Old Portuguese, *pequeno* unchanged and *almoço* from
+*almorço* (EtymDB 2.1); where *pequeno* came from before that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "flour"
 concept_tag: GE-ESSEN122-MEHL
 prerequisites: [GE-C121-melone, GE-C122-knoblauch]
 sounds: []
-roots: []
+roots: [germanic-melwa]
+etymology_hook: "Mehl ← Old High German melo ← Proto-Germanic *melwą — the same word as English meal, 'ground grain'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C122-knoblauch]
 <!-- hl-knowledge: introduces=[GE-LEX-C122-ESSEN122-02]; assesses=[] -->
 
 **das Mehl** — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Mehl** ← Old High German *melo* ← Proto-Germanic *\*melwą*, "meal, flour" — inherited, the same word as English *meal* in *oatmeal*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

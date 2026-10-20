@@ -14,7 +14,8 @@ romanization: "mâshin"
 concept_tag: FA-TOWN70-MASHIN
 prerequisites: [FA-C70-bank, FA-C70-istgah]
 sounds: []
-roots: []
+roots: [french-machine]
+etymology_hook: "mâshin ← French machine 'machine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C70-istgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C70-TOWN70-03]; assesses=[] -->
 
 **ماشین** — *mâshin* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâshin* is borrowed from French *machine*, "machine" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

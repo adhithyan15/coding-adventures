@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 777,
+  "sourceHash": "fnv1a64:3ee8327a2c5bcea2",
+  "lessonIds": [
+    "ES-C777-congelar",
+    "ES-C777-enfriar",
+    "ES-C777-planchar",
+    "ES-C777-enchufar",
+    "ES-C777-reiniciar",
+    "ES-R777-repaso-776-777",
+    "ES-R777-repaso-final-777"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch777.txt",
+  "json": "spanish/narration/ch777.json",
+  "textHash": "fnv1a64:1e476f4e7c31871b",
+  "jsonHash": "fnv1a64:41cc1412b29492c2",
+  "findings": []
+}

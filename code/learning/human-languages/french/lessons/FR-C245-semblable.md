@@ -13,7 +13,8 @@ gloss: "similar"
 concept_tag: FR-QUAL245-SEMBLABLE
 prerequisites: [FR-C244-lisse, FR-C244-rugueux-rugueuse]
 sounds: []
-roots: []
+roots: [similis-latin]
+etymology_hook: "semblable — sembler + -able: seeming alike"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C244-rugueux-rugueuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C245-QUAL245-01]; assesses=[] -->
 
 **semblable** — "similar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**semblable** — *sembler* with *-able*: seeming alike. *Sembler* ← Late Latin *similāre*, from *similis*, "like" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

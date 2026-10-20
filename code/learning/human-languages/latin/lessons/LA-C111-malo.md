@@ -13,7 +13,8 @@ gloss: "to prefer"
 concept_tag: LA-VERB-MALO
 prerequisites: [LA-C110-licet, LA-C110-nolo]
 sounds: []
-roots: []
+roots: [malle-latin, magis-latin, velle-latin]
+etymology_hook: "mālō 'to prefer' — contracted from magis 'more' + volō 'to want'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C110-nolo]
 <!-- hl-knowledge: introduces=[LA-LEX-C111-WANT111-01]; assesses=[] -->
 
 **mālō, mālle** — "to prefer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mālō** is contracted from *magis*, "more", and *volō*, "to want" (Lewis & Short): to want more, so to prefer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

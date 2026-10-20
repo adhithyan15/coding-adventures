@@ -14,7 +14,8 @@ romanization: "pāsoyārḍ"
 concept_tag: BN-JINIS258-PASOYARD
 prerequisites: [BN-C258-imel, BN-C258-barta]
 sounds: []
-roots: []
+roots: [english-password]
+etymology_hook: "pāsoyārḍ ← English password"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C258-barta]
 <!-- hl-knowledge: introduces=[BN-LEX-C258-JINIS258-03]; assesses=[] -->
 
 **পাসওয়ার্ড** — *pāsoyārḍ* — "a password".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাসওয়ার্ড** (*pāsoyārḍ*) is a loan from English *password*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

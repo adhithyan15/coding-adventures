@@ -14,7 +14,8 @@ romanization: "ātmīyô"
 concept_tag: BN-JINIS168-ATMIYO
 prerequisites: [BN-C168-kone, BN-C168-biye]
 sounds: []
-roots: []
+roots: [sanskrit-atmiya]
+etymology_hook: "ātmīyô ← Sanskrit ātmīya 'one's own', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C168-biye]
 <!-- hl-knowledge: introduces=[BN-LEX-C168-JINIS168-05]; assesses=[] -->
 
 **আত্মীয়** — *ātmīyô* — "a relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আত্মীয়** (*ātmīyô*) is Sanskrit *ātmīya*, "one's own", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

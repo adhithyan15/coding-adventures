@@ -14,7 +14,8 @@ romanization: "rākhṇo"
 concept_tag: MW-VERB-RAKHNO
 prerequisites: [MW-C53-deno, MW-C53-leno]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rākhṇo ← Sanskrit rakṣati 'guards', a tadbhava (CDIAL 10547, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C53-leno]
 <!-- hl-knowledge: introduces=[MW-LEX-C53-VERBS53-05]; assesses=[] -->
 
 **राखणो** — *rākhṇo* — "to keep, to put".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राखणो** (*rākhṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rakṣati*, "guards". CDIAL lists Old Marwari *rākhaï* under it (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

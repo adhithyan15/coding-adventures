@@ -10,7 +10,8 @@ gloss: "the cashier; the cash machine"
 concept_tag: ES-REF-CAJERO
 prerequisites: [ES-C491-recibo, ES-C491-oferta]
 sounds: []
-roots: []
+roots: [capsa-latin]
+etymology_hook: "cajero — caja 'box' + -ero; caja came through Catalan caixa from Latin capsa 'a box'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C491-oferta]
 > *The cash machine is not working.*
 
 *La caja* is the till.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cajero** is *caja*, "a box, a cash box", with *-ero*. *Caja* came through Catalan *caixa* from Latin *capsa*, "a box" (EtymDB 2.1 traces it to *capsa*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

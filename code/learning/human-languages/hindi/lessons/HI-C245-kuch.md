@@ -14,7 +14,8 @@ romanization: "kuch"
 concept_tag: HI-THG245-KUCH
 prerequisites: [HI-C245-har, HI-C245-sab]
 sounds: []
-roots: []
+roots: [sanskrit-kimcid]
+etymology_hook: "kuch ← Sanskrit kiṁcid 'anything', a tadbhava (CDIAL 3144)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C245-sab]
 <!-- hl-knowledge: introduces=[HI-LEX-C245-THG245-03]; assesses=[] -->
 
 **कुछ** — *kuch* — "some, something".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुछ** (*kuch*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kiṁcid*, "anything" (CDIAL 3144). CDIAL notes that its *-ch-* comes from the masculine *kaścid*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

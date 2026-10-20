@@ -12,8 +12,9 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [ML-C02-aanu, ML-C03-engane, ML-C03-ola]
 sounds: [question-o]
 roots: [sukha-sanskrit, aaka-dravidian]
+etymology_hook: "sukhamāṇō: Sanskrit sukha 'ease' + native āṇŭ 'is' + the question -ō (CDIAL 13451, DEDR 333)"
 duration:
-  max_seconds: 240
+  max_seconds: 241
 requires:
   knowledge: [ML-LEX-ANCHOR-OLA]
 introduces:
@@ -39,8 +40,7 @@ and the question is built from a Chapter-2 word plus a single new sound.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**സുഖം** (*sukhaṁ*, "well-being") + **ആണ്** (*āṇŭ*, "is," from Chapter 2) + the
-question-marker **ഓ** (*ō*) → **സുഖമാണോ** (*sukhamāṇō*), "is [it] well?"
+**സുഖം** (*sukhaṁ*, "well-being") + **ആണ്** (*āṇŭ*, "is," from Chapter 2) + the question-marker **ഓ** (*ō*) → **സുഖമാണോ** (*sukhamāṇō*), "is [it] well?"
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[ML-PHRASE-C03-ARE-YOU-WELL-01]; assesses=[] -->
@@ -52,6 +52,8 @@ borrowed whole (the *su-* "good" that is Greek *eu-*). Onto it, Malayalam
 adds its own **native copula** *āṇŭ* ("is," from Chapter 2) and the question
 particle **-ō** — a whole yes/no question made by one small sound at the end. This
 mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature.
+
+Sources: Sanskrit *sukha*, "comfort, happiness", is CDIAL 13451; the copula's verb is DEDR 333. DEDR 333 compares Sanskrit *ām*.
 
 ## Grammar Lens: turning a statement into a question
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C03-QUESTION-PARTICLE-O-01]; assesses=[ML-PHRASE-C03-ARE-YOU-WELL-01] -->

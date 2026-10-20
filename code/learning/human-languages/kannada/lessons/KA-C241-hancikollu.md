@@ -14,7 +14,8 @@ romanization: "hañcikoḷḷu"
 concept_tag: KA-VERB-HANCIKOLLU
 prerequisites: [KA-C240-kalpisiko, KA-C241-tikisu]
 sounds: []
-roots: []
+roots: [dravidian-pancu-share, dravidian-kol-take]
+etymology_hook: "hañcikoḷḷu: native hañcu 'to share out' (DEDR 3936) + koḷḷu 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C241-tikisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C241-KRIYE241-02]; assesses=[] -->
 
 **ಹಂಚಿಕೊಳ್ಳು** — *hañcikoḷḷu* — "to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಂಚಿಕೊಳ್ಳು** (*hañcikoḷḷu*) is native Dravidian: *hañci*, from *hañcu*, "to distribute, share", which DEDR 3936 lists as older Kannada *pañcu*, and *koḷḷu*, "to take" (DEDR 2151): "to share among ourselves".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

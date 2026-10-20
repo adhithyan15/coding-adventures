@@ -14,7 +14,8 @@ romanization: "amtiʿa"
 concept_tag: AR-SHAY215-AMTIA
 prerequisites: [AR-C215-hawiyya, AR-C215-tashira]
 sounds: []
-roots: []
+roots: [m-t-ʿ]
+etymology_hook: "amtiʿa: built on the root m-t-ʿ, 'to enjoy' (Lane); amtiʿa is the plural of matāʿ, 'goods, belongings'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C215-tashira]
 <!-- hl-knowledge: introduces=[AR-LEX-C215-SHAY215-03]; assesses=[] -->
 
 **أمتعة** — *amtiʿa* — "luggage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمتعة** (*amtiʿa*) is built on the native Arabic root *m-t-ʿ*, "to enjoy; goods" (Lane). *Amtiʿa* is the plural of *matāʿ*, "goods, belongings".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

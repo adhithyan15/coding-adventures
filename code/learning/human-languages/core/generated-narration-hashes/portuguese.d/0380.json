@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:fdb5db1f8d683492",
+  "lessonIds": [
+    "PT-C380-ministro",
+    "PT-C380-partido",
+    "PT-C380-parlamento",
+    "PT-C380-eleger",
+    "PT-C380-eleitor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch380.txt",
+  "json": "portuguese/narration/ch380.json",
+  "textHash": "fnv1a64:098c64d93d2c4cac",
+  "jsonHash": "fnv1a64:0dc21bb81ea8a4c6",
+  "findings": []
+}

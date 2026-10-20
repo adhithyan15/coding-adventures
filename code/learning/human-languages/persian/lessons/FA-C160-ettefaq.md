@@ -14,7 +14,8 @@ romanization: "ettefâq"
 concept_tag: FA-CHERA160-ETTEFAQ
 prerequisites: [FA-C160-manzur, FA-C160-qasd]
 sounds: []
-roots: []
+roots: [arabic-ittifaq]
+etymology_hook: "ettefâq ← Arabic ittifāq 'agreement, coincidence', root w-f-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C160-qasd]
 <!-- hl-knowledge: introduces=[FA-LEX-C160-CHERA160-04]; assesses=[] -->
 
 **اتفاق** — *ettefâq* — "an event, an incident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ettefâq* is borrowed from Arabic *ittifāq*, "agreement, coincidence". Its Arabic root is *w-f-q* (Lane). Persian uses it for something that happens.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

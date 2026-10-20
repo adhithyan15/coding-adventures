@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 245,
-  "sourceHash": "fnv1a64:feb419db6b082ce6",
+  "sourceHash": "fnv1a64:a93741dcbe7c5d2a",
   "lessonIds": [
     "RU-C245-strannyy",
     "RU-C245-smeshnoy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch245.txt",
   "json": "russian/narration/ch245.json",
-  "textHash": "fnv1a64:99f193629bab8aaf",
-  "jsonHash": "fnv1a64:acb94226afdc9b36",
+  "textHash": "fnv1a64:e46260796c78d674",
+  "jsonHash": "fnv1a64:da385c0d9d953030",
   "findings": []
 }

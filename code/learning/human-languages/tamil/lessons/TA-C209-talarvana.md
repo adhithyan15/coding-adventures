@@ -14,7 +14,8 @@ romanization: "taḷarvāṉa"
 concept_tag: TA-GUNAM209-TALARVANA
 prerequisites: [TA-C209-kaliyana, TA-C209-irukkamana]
 sounds: []
-roots: []
+roots: [dravidian-talar-slacken]
+etymology_hook: "தளர்வான — native Dravidian (DEDR 3127); Malayalam taḷaruka 'to slacken'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C209-irukkamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C209-GUNAM209-05]; assesses=[] -->
 
 **தளர்வான** — *taḷarvāṉa* — "loose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தளர்வான** (*taḷarvāṉa*) is native Dravidian. DEDR 3127 lists Malayalam *taḷaruka*, "to slacken". It is *taḷarvu*, "slackness", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C605-racismo",
+  "pathSegment": "ES-PATH-605-PROBSOC",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-605-PROBSOC",
+      "order": 3
+    }
+  ]
+}

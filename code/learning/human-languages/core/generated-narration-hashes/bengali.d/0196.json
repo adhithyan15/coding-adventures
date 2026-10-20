@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 196,
-  "sourceHash": "fnv1a64:75d010f14fe04fa1",
+  "sourceHash": "fnv1a64:12b7337e6c18402c",
   "lessonIds": [
     "BN-C196-biriyani",
     "BN-C196-khichuri",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch196.txt",
   "json": "bengali/narration/ch196.json",
-  "textHash": "fnv1a64:b3d124bbbe7788f6",
-  "jsonHash": "fnv1a64:95f0c72f8196a34b",
+  "textHash": "fnv1a64:5623e29efde79b03",
+  "jsonHash": "fnv1a64:bbc0886253788704",
   "findings": []
 }

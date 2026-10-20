@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 169,
-  "sourceHash": "fnv1a64:a596c100f316ef7b",
+  "sourceHash": "fnv1a64:5fd37bf5f42d3ef0",
   "lessonIds": [
     "KA-C169-talme",
     "KA-C169-asuye",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch169.txt",
   "json": "kannada/narration/ch169.json",
-  "textHash": "fnv1a64:54f4d279dd48d788",
-  "jsonHash": "fnv1a64:3f55eb1069b9000c",
+  "textHash": "fnv1a64:9847ba85297606b3",
+  "jsonHash": "fnv1a64:341c888af8ae6414",
   "findings": []
 }

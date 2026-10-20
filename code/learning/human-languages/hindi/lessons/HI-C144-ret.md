@@ -14,7 +14,8 @@ romanization: "ret"
 concept_tag: HI-THINGS144-RET
 prerequisites: [HI-C143-jar, HI-C144-patthar]
 sounds: []
-roots: []
+roots: [sanskrit-retra]
+etymology_hook: "ret ← Sanskrit retra 'perfumed powder', a tadbhava (CDIAL 10816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C144-patthar]
 <!-- hl-knowledge: introduces=[HI-LEX-C144-THINGS144-02]; assesses=[] -->
 
 **रेत** — *ret* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रेत** (*ret*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *retra*, "perfumed powder" (CDIAL 10816). CDIAL doubts a suggested Munda source; the Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

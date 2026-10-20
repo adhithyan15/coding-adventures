@@ -14,7 +14,8 @@ romanization: "rasīd"
 concept_tag: HI-READ167-RASID
 prerequisites: [HI-C167-nambar, HI-C167-manzil]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rasīd: usually traced to Persian rasīd 'arrived; a receipt'"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +49,11 @@ reviews_of: [HI-C167-manzil]
 The receipt says **रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच।** (*rasīd: kirāyā
 pā̃c sau rupaye, tārīkh pā̃c.*) Five hundred rupees of rent, paid on the fifth:
 keep it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रसीद** (*rasīd*) is a loan, usually traced to Persian *rasīd*, "arrived; a receipt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

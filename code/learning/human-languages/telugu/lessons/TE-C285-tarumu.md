@@ -14,7 +14,8 @@ romanization: "tarumu"
 concept_tag: TE-VERB-TARUMU
 prerequisites: [TE-C285-heccarincu, TE-C285-gamanincu]
 sounds: []
-roots: []
+roots: [telugu-tarumu-chase]
+etymology_hook: "tarumu: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'to chase'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C285-gamanincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C285-KRIYA285-04]; assesses=[] -->
 
 **తరుము** — *tarumu* — "to chase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తరుము** (*tarumu*) is uncertain. DEDR and CDIAL list no word of this shape meaning "to chase".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

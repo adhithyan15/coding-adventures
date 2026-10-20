@@ -15,6 +15,7 @@ concept_tag: GU-DEF99-EVU
 prerequisites: [GU-C99-pelu, GU-C99-avu]
 sounds: []
 roots: []
+etymology_hook: "evũ 'like that': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C99-avu]
 <!-- hl-knowledge: introduces=[GU-LEX-C99-DEF99-03]; assesses=[] -->
 
 **એવું** (*evũ*) — "like that, such".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **એવું** (*evũ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

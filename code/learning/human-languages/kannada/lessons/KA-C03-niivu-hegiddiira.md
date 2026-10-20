@@ -12,6 +12,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [KA-C03-hege, KA-C02-niinu-niivu]
 sounds: [double-dd, long-ii]
 roots: [dravidian-iru-be]
+etymology_hook: "nīvu hēgiddīrā: native nīvu 'you' (DEDR 3688), hēge 'how' (DEDR 5151), iru 'to be' (DEDR 480)"
 duration:
   max_seconds: 270
 requires:
@@ -39,8 +40,8 @@ reviews_of: [KA-C02-niinu-niivu, KA-C03-hege]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 The new word is **ಹೇಗಿದ್ದೀರಾ** (*hēgiddīrā*): *hēge* ("how") fused with
-**ಇದ್ದೀರಾ** (*iddīrā*, "are you"), from the verb **ಇರು** (*iru*, "to be, exist,
-stay") + the respectful-you ending. Note the doubled **ದ್ದ** (*dd*).
+**ಇದ್ದೀರಾ** (*iddīrā*, "are you"), from the verb "to be, exist, stay" + the
+respectful-you ending. Note the doubled **ದ್ದ** (*dd*).
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C03-HEGIDDIIRA-01]; assesses=[] -->
@@ -49,6 +50,8 @@ stay") + the respectful-you ending. Note the doubled **ದ್ದ** (*dd*).
 (*hēgiddīrā*, "how are you") — the verb **last**, as always. The verb is **ಇರು**
 (*iru*, "to be / exist / stay") — the same native Dravidian *iru* that Tamil uses
 for "how are you," and (in Chapter 5) the verb for "I live."
+
+All three pieces are native Dravidian: *nīvu* (DEDR 3688), *hēge* (DEDR 5151) and *iru*, "to be" (DEDR 480).
 
 ## Grammar Lens: the verb carries "you"
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C03-HEGIDDIIRA-02]; assesses=[] -->

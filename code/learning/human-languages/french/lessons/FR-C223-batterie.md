@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES223-BATTERIE
 prerequisites: [FR-C222-tribunal, FR-C222-juge]
 sounds: []
 roots: []
+etymology_hook: "batterie — from the verb 'to beat', Latin battuere — English battery"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C222-juge]
 <!-- hl-knowledge: introduces=[FR-LEX-C223-CHOSES223-01]; assesses=[] -->
 
 **la batterie** — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**batterie** — built from the verb for "to beat", ← Latin *battuere*, with *-erie* (EtymDB 2.1): guns firing together, then cells working together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

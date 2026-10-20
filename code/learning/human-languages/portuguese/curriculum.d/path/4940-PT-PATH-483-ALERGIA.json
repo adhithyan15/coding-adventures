@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-483-ALERGIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-483-ALERGIA"
+  ],
+  "after": []
+}

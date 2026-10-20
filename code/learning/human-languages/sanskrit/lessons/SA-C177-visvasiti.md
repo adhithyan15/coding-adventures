@@ -14,7 +14,8 @@ romanization: "viśvasiti"
 concept_tag: SA-VERB-VISVASITI
 prerequisites: [SA-C177-vitarati, SA-C177-sangrhnati]
 sounds: []
-roots: []
+roots: [sanskrit-vishvasiti]
+etymology_hook: "viśvasiti ← vi- + √śvas 'breathe': 'breathe freely', so 'be confident, trust' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C177-sangrhnati]
 <!-- hl-knowledge: introduces=[SA-LEX-C177-ACT177-04]; assesses=[] -->
 
 **विश्वसिति** — *viśvasiti* — "trusts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*viśvasiti* is built on *vi-* and the root √śvas, "to breathe" (MW). MW's first gloss is "to draw breath freely, be free from fear", and from there "to trust". Its noun *viśvāsa*, "trust", went into Hindi as *viśvās*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

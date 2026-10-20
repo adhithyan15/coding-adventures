@@ -12,6 +12,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [ML-C02-enre, ML-C02-peru, ML-C02-aanu]
 sounds: []
 roots: []
+etymology_hook: "enṟe pēr … āṇŭ: three native Dravidian words, 'my name is' (DEDR 5160, 4410, 333)"
 duration:
   max_seconds: 180
 requires:
@@ -45,6 +46,8 @@ lacks.
 > **എന്റെ പേര് … ആണ്** = "my name … is" = **"my name is…"**
 
 *Enṟe pēr Arun āṇŭ.* → "My name is Arun."
+
+All three words are native Dravidian: *enṟe* (DEDR 5160), *pēr* (DEDR 4410) and *āṇŭ* (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## Grammar Lens: verb last
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C02-COPULA-01] -->

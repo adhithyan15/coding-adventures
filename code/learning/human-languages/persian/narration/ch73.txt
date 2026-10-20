@@ -12,6 +12,9 @@ Before the new one: say the Persian for a village, then the Persian for a city.
 You'll want to know: فرودگاه.
 فرودگاه — forudgâh — "an airport".
 
+The word, taken apart.
+forudgâh is built from forud, "descent, landing", and gâh, "place": "landing place". Both parts are native Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a city, then the Persian for an airport.
 
 You'll want to know: رستوران.
 رستوران — resturân — "a restaurant".
+
+The word, taken apart.
+resturân is borrowed from French restaurant, "restaurant" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for an airport, then the Persian for a resta
 You'll want to know: لباس.
 لباس — lebâs — "clothes".
 
+The word, taken apart.
+lebâs is borrowed from Arabic libās, "clothing". Its Arabic root is l-b-s (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a restaurant, then the Persian for cloth
 You'll want to know: پیراهن.
 پیراهن — pirâhan — "a shirt".
 
+The word, taken apart.
+pirâhan is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian pērāhan, "shirt".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for clothes, then the Persian for a shirt.
 
 You'll want to know: شلوار.
 شلوار — shalvâr — "trousers".
+
+The word, taken apart.
+shalvâr is a native Persian word, inherited rather than borrowed: it continues Middle Persian šalwār, "trousers" (EtymDB).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "nāzuk"
 concept_tag: UR-SIFAT161-NAZUK
 prerequisites: [UR-C160-mehnati, UR-C161-mahfuz]
 sounds: []
-roots: []
+roots: [persian-nazuk]
+etymology_hook: "nāzuk: usually traced to Persian nāzuk 'delicate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C161-mahfuz]
 <!-- hl-knowledge: introduces=[UR-LEX-C161-SIFAT161-02]; assesses=[] -->
 
 **نازک** — *nāzuk* — "delicate, fragile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نازک** (*nāzuk*) is a loan, usually traced to Persian *nāzuk*, "delicate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

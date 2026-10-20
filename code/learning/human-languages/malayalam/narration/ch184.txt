@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to get, then the Malayalam for to lose
 You'll want to know: ഒടിയുക.
 ഒടിയുക — oṭiyuka — "to break (a bone, a stick)".
 
+The word, taken apart.
+ഒടിയുക (oṭiyuka) is native Dravidian, one word with Tamil oṭi and Kannada oḍi (DEDR 946).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to lose, then the Malayalam for to bre
 
 You'll want to know: ഭേദമാകുക.
 ഭേദമാകുക — bhēdamākuka — "to get better, to recover".
+
+The word, taken apart.
+ഭേദമാകുക (bhēdamākuka) joins Sanskrit bhēda, "division, difference" (CDIAL 9610), to native ākuka, "to become" (DEDR 333): to get better is "to become different". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to break, then the Malayalam for to ge
 You'll want to know: വ്യായാമം ചെയ്യുക.
 വ്യായാമം ചെയ്യുക — vyāyāmaṁ ceyyuka — "to exercise".
 
+The word, taken apart.
+വ്യായാമം ചെയ്യുക (vyāyāmaṁ ceyyuka) joins Sanskrit vyāyāma, "exertion" (CDIAL 12209), to native ceyyuka, "to do" (DEDR 1957, with Tamil cey).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to get better, then the Malayalam for 
 You'll want to know: പൂരിപ്പിക്കുക.
 പൂരിപ്പിക്കുക — pūrippikkuka — "to fill in (a form)".
 
+The word, taken apart.
+പൂരിപ്പിക്കുക (pūrippikkuka) is built on Sanskrit pūrayati, "fills" (CDIAL 8335), made into a Malayalam causative: "make full".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to exercise, then the Malayalam for to
 
 You'll want to know: ഒപ്പിടുക.
 ഒപ്പിടുക — oppiṭuka — "to sign".
+
+The word, taken apart.
+ഒപ്പിടുക (oppiṭuka) is native Dravidian, "put one's signature": oppu, "conformity; signature" (DEDR 924, with Kannada oppu), and iṭuka, "to put" (DEDR 442, with Tamil iṭu).
 
 What you've built.
 One more word for this chapter.

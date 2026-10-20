@@ -1,0 +1,11 @@
+{
+  "id": "GE-C376-pauken",
+  "pathSegment": "GE-PATH-376-LERNEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-376-LERNEN",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-302-SPECULATOR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how secrets came out: a spy, a scout, to search out, to betray and to disclose.",
+  "prerequisites": []
+}

@@ -11,7 +11,8 @@ romanization: "koḍu"
 concept_tag: KA-VERB-GIVE
 prerequisites: [KA-C43-stand, KA-C42-big]
 sounds: []
-roots: []
+roots: [dravidian-kodu-give]
+etymology_hook: "koḍu: native Dravidian, one word with Tamil koṭu (DEDR 2053)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C43-stand]
 **ಕೊಡು** (*koḍu*) — "give".
 
 The everyday 'give'. Politeness is added with a separate word, not by altering this one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊಡು** (*koḍu*) is native Dravidian, one word with Tamil *koṭu* (DEDR 2053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,7 @@ Warm-up.
 You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all.
 
 The word, taken apart — español.
-español = "Spanish" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL.
+español = "Spanish" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. It did not wear down inside Spanish: it is usually traced, after Corominas and the DLE, through Occitan espaignol to medieval Latin Hispaniolus. There is the ñ again, the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL.
 Two footnotes worth having:
 English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other.
 Hispania itself may go back through Latin to a Phoenician name for the coast, often read as "land of hyraxes" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had.
@@ -19,7 +19,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "español" — es-pa-NYOL]
 [pause 8 seconds for the answer]
-[your turn — say: the path — "Hispania, hispaniolus, español"]
+[your turn — say: the path — "Hispania, Hispaniolus, espaignol, español"]
 [pause 8 seconds for the answer]
 [your turn — say: "español" then English "Hispanic" — same root]
 [pause 8 seconds for the answer]
@@ -44,6 +44,9 @@ Now swap the pieces and watch it generate:
 Estudio español. — "I study Spanish."
 Trabajo. — "I work."
 ¿Hablas español? — "Do you speak Spanish?" (the ¿? pair opening and closing the question, as in the writing lesson).
+
+The phrase, taken apart.
+hablo español is two words you have taken apart: hablo is hablar, Latin fabulari, "to chat", its f- turned to h-; español was built on Hispania, the Roman name for the peninsula.
 
 Grammar Lens: languages go bare.
 One more thing missing from hablo español: no "the," no "a." After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español.

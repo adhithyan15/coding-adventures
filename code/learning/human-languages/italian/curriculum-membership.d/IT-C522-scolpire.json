@@ -1,0 +1,11 @@
+{
+  "id": "IT-C522-scolpire",
+  "pathSegment": "IT-PATH-522-SCULTURA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-522-SCULTURA",
+      "order": 0
+    }
+  ]
+}

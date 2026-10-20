@@ -14,7 +14,8 @@ romanization: "phrij"
 concept_tag: KA-VASTU220-PHRIJ
 prerequisites: [KA-C220-muccala, KA-C220-biru]
 sounds: []
-roots: []
+roots: [english-fridge]
+etymology_hook: "phrij ← English fridge"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C220-biru]
 <!-- hl-knowledge: introduces=[KA-LEX-C220-VASTU220-03]; assesses=[] -->
 
 **ಫ್ರಿಜ್** — *phrij* — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫ್ರಿಜ್** (*phrij*) is a loan from English *fridge*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

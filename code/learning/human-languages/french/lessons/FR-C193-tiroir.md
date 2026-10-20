@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES193-TIROIR
 prerequisites: [FR-C192-lointain-lointaine, FR-C193-drap]
 sounds: []
 roots: []
+etymology_hook: "tiroir — tirer 'to pull' + -oir: the thing you pull out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C193-drap]
 <!-- hl-knowledge: introduces=[FR-LEX-C193-CHOSES193-02]; assesses=[] -->
 
 **le tiroir** — "a drawer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tiroir** — *tirer*, "to pull", with *-oir*, "a thing for": the thing you pull out. *Tirer* is of uncertain origin; EtymDB 2.1 points to a Gothic verb, "to tear away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

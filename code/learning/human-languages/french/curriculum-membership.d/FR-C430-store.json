@@ -1,0 +1,11 @@
+{
+  "id": "FR-C430-store",
+  "pathSegment": "FR-PATH-430-BESTIOLES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-430-BESTIOLES",
+      "order": 4
+    }
+  ]
+}

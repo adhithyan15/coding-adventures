@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C336-teglia",
+    "language": "italian",
+    "chapter": 336,
+    "sequence": 19350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e581c4546042a76"
+  },
+  "findings": []
+}

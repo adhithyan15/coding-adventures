@@ -13,7 +13,8 @@ gloss: "open"
 concept_tag: IT-QUALITA124-APERTO
 prerequisites: [IT-C124-occupato, IT-C124-libero]
 sounds: []
-roots: []
+roots: [aperire-latin]
+etymology_hook: "aperto ← Latin apertus 'opened', from aperire 'to open' — English aperture shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C124-libero]
 <!-- hl-knowledge: introduces=[IT-LEX-C124-QUALITA124-03]; assesses=[] -->
 
 **aperto** — "open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aperto** ← Latin *apertus*, "opened", from *aperire*, "to open" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an island, then the Sanskrit for a shor
 You'll want to know: विद्यालयः.
 विद्यालयः (vidyālayaḥ) — "a school": विद्या, "knowledge", with आलयः, "home". A school is a home of knowledge.
 
+The word, taken apart.
+Vidyālaya is built from vidyā, "knowledge", from the root √vid, and ālaya, "a dwelling". MW records it as "seat of learning, a school" only from a nineteenth-century dictionary, so the everyday school sense is recent.
+
 What you've built.
 Knowledge plus home.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a shore, then the Sanskrit for a school
 
 You'll want to know: छात्रः.
 छात्रः (chātraḥ) — "a student", the everyday word beside शिष्यः.
+
+The word, taken apart.
+The grammarians explain chātra as built on chatra, "parasol": the pupil whose habit is to shield his teacher's faults (Apte). That is the traditional account; the origin is not settled.
 
 What you've built.
 Who sits in a school.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a school, then the Sanskrit for a stude
 You'll want to know: अध्यापकः.
 अध्यापकः (adhyāpakaḥ) — "a teacher", the school word beside गुरुः.
 
+The word, taken apart.
+Adhyāpaka is built on the causative of adhi + the root √i, "to go over, study": "one who makes others study" (MW, CDIAL 278). Worn down, it became jhā, the name of a Maithili Brahman community.
+
 What you've built.
 Who teaches the student.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a student, then the Sanskrit for a teac
 You'll want to know: पाठः.
 पाठः (pāṭhaḥ) — "a lesson", what is read: it is the noun of पठति.
 
+The word, taken apart.
+Pāṭha is built on the root √paṭh, "to read or recite aloud" (MW, CDIAL 8035): a lesson is what is recited.
+
 What you've built.
 Read, as a noun.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a teacher, then the Sanskrit for a less
 
 You'll want to know: परीक्षा.
 परीक्षा (parīkṣā) — "an exam", "a test": looking all around a thing.
+
+The word, taken apart.
+Parīkṣā is built from pari, "around", and the root √īkṣ, "to look": to examine is to look all around a thing (MW, CDIAL 7904).
 
 What you've built.
 The end of the term.

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a day, then the Urdu for night.
 You'll want to know: شام.
 شام — shām — "evening".
 
+The word, taken apart.
+شام (shām) is a loan, usually traced to Persian shām, "evening". It only looks like Sanskrit śyāma, "dark", and is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for night, then the Urdu for evening.
 
 You'll want to know: ہفتہ.
 ہفتہ — haftā — "a week".
+
+The word, taken apart.
+ہفتہ (haftā) is a loan, usually traced to Persian hafta, "week". It is built on haft, "seven".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for evening, then the Urdu for a week.
 You'll want to know: مہینہ.
 مہینہ — mahīnā — "a month".
 
+The word, taken apart.
+مہینہ (mahīnā) is a loan, usually traced to Persian māhīna, "monthly". It is built on māh, "moon, month".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a week, then the Urdu for a month.
 You'll want to know: سال.
 سال — sāl — "a year".
 
+The word, taken apart.
+سال (sāl) is a loan, usually traced to Persian sāl, "year".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a month, then the Urdu for a year.
 
 You'll want to know: گھنٹہ.
 گھنٹہ — ghaṇṭā — "an hour".
+
+The word, taken apart.
+گھنٹہ (ghaṇṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṇṭā, "bell" (CDIAL 4421). Clocks once marked the hour by striking a bell, and CDIAL glosses the Hindi word "bell, clock, hour".
 
 What you've built.
 One more word for this chapter.

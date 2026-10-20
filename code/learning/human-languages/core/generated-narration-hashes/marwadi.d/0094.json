@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 94,
-  "sourceHash": "fnv1a64:46ce03ac4bf01974",
+  "sourceHash": "fnv1a64:1ef6759684f04389",
   "lessonIds": [
     "MW-C94-pos",
     "MW-C94-magh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch94.txt",
   "json": "marwadi/narration/ch94.json",
-  "textHash": "fnv1a64:d34710ba8c809f08",
-  "jsonHash": "fnv1a64:efd1385b4f517d68",
+  "textHash": "fnv1a64:8387f13f6f94ae38",
+  "jsonHash": "fnv1a64:b0c3a507940d1e69",
   "findings": []
 }

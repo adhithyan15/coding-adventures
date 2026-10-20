@@ -1,0 +1,11 @@
+{
+  "id": "FR-C465-flaque",
+  "pathSegment": "FR-PATH-465-TEMPETE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-465-TEMPETE",
+      "order": 4
+    }
+  ]
+}

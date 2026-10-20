@@ -11,9 +11,10 @@ romanization: kaḻiyuṁ
 concept_tag: ML-ABILITY
 prerequisites: [ML-C74-purpose, ML-C32-ariyuka]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-able]
+etymology_hook: "kaḻiyuṁ: native Dravidian, from the verb 'to be able'; Tamil kaḻi (DEDR 1357)"
 duration:
-  max_seconds: 240
+  max_seconds: 250
 requires:
   knowledge: [ML-GRAMMAR-C74-AAN-01, ML-CONCEPT-C32-ARIYUKA-01]
 introduces:
@@ -60,6 +61,11 @@ subject slot and turns into *to me*. Can behaves identically:
 
 English makes both of these an action with *I* at the front — *I know*, *I can*.
 Malayalam puts the person in the dative and lets the ability be the subject.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഴിയും** (*kaḻiyuṁ*) is native Dravidian, a form of the verb "to be possible, able"; DEDR 1357 lists the root with Tamil *kaḻi*.
 
 ## Grammar Lens: one ending, two jobs
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C74-KAZHIYUM-01, ML-GRAMMAR-C74-AAN-01] -->

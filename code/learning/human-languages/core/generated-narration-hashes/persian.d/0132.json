@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 132,
-  "sourceHash": "fnv1a64:cd926b4193929d0d",
+  "sourceHash": "fnv1a64:08f6a56a2944ad45",
   "lessonIds": [
     "FA-C132-shekastan",
     "FA-C132-dukhtan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch132.txt",
   "json": "persian/narration/ch132.json",
-  "textHash": "fnv1a64:3bc226da85f8733e",
-  "jsonHash": "fnv1a64:160624b7325cb9df",
+  "textHash": "fnv1a64:63fb82e9516eabf7",
+  "jsonHash": "fnv1a64:4a571a0a4d059a88",
   "findings": []
 }

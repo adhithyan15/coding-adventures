@@ -14,7 +14,8 @@ romanization: "śivāru"
 concept_tag: TE-STHALAM256-SIVARU
 prerequisites: [TE-C256-sandu, TE-C256-sorangam]
 sounds: []
-roots: []
+roots: [telugu-sivaru-outskirts]
+etymology_hook: "śivāru: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'outskirts'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C256-sorangam]
 <!-- hl-knowledge: introduces=[TE-LEX-C256-STHALAM256-03]; assesses=[] -->
 
 **శివారు** — *śivāru* — "the outskirts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **శివారు** (*śivāru*) is uncertain. DEDR and CDIAL list no word of this shape meaning "outskirts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

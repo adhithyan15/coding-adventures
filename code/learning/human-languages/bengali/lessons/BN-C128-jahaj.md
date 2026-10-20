@@ -14,7 +14,8 @@ romanization: "jāhāj"
 concept_tag: BN-THINGS128-JAHAJ
 prerequisites: [BN-C128-maine, BN-C128-bondor]
 sounds: []
-roots: []
+roots: [arabic-jahaz]
+etymology_hook: "jāhāj ← Arabic jahāz 'equipment, gear', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C128-bondor]
 <!-- hl-knowledge: introduces=[BN-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **জাহাজ** — *jāhāj* — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাহাজ** (*jāhāj*) is a loan from Arabic *jahāz*, "equipment, gear", which reached Bengali through Persian. Its Arabic root is *j-h-z* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

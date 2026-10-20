@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C434-intasato",
+    "language": "italian",
+    "chapter": 434,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76efb107d7b2c3dd"
+  },
+  "findings": []
+}

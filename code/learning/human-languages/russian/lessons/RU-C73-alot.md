@@ -14,7 +14,8 @@ romanization: "mnógo"
 concept_tag: RU-WHERE2-ALOT
 prerequisites: [RU-C73-left, RU-C73-right]
 sounds: []
-roots: []
+roots: [pie-menegh]
+etymology_hook: "много ← Proto-Slavic *mŭnogŭ; Gothic manags 'many' and English many are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C73-right]
 <!-- hl-knowledge: introduces=[RU-LEX-C73-WHERE2-04]; assesses=[] -->
 
 **много** (*mnógo*) — "a lot, many".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**много** ← Proto-Slavic *\*mŭnogŭ*, "much, many" — inherited. Vasmer relates it to Gothic *manags*, "many", and Old Irish *menicc*, "frequent", and finds no grounds for a Germanic loan: English *many* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

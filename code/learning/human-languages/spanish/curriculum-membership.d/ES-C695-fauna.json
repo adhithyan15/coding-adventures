@@ -1,0 +1,11 @@
+{
+  "id": "ES-C695-fauna",
+  "pathSegment": "ES-PATH-695-FAUNA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-695-FAUNA",
+      "order": 1
+    }
+  ]
+}

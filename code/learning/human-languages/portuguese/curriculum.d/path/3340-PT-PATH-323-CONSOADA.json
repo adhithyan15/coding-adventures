@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-323-CONSOADA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-323-CONSOADA"
+  ],
+  "after": []
+}

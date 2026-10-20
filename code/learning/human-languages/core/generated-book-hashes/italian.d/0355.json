@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:7ee8a2d37be40857",
+  "lessonIds": [
+    "IT-C355-rimedio",
+    "IT-C355-sistemare",
+    "IT-C355-aggravare",
+    "IT-C355-attenuare",
+    "IT-C355-compensare"
+  ],
+  "tex": "italian/book/chapters/ch355-porre-rimedio.tex"
+}

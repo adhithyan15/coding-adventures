@@ -14,6 +14,7 @@ concept_tag: FR-ECOLE78-EXAMEN
 prerequisites: [FR-C126-classe, FR-C126-lecon]
 sounds: []
 roots: []
+etymology_hook: "examen ← Latin examen 'the tongue of a balance, a weighing' — English examine"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C126-lecon]
 <!-- hl-knowledge: introduces=[FR-LEX-C126-ECOLE78-03]; assesses=[] -->
 
 **l'examen** — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**examen** ← Latin *examen*, "the tongue of a balance, a weighing" (Lewis & Short) — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C426-nastro",
+  "pathSegment": "IT-PATH-426-BAGAGLI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-426-BAGAGLI",
+      "order": 2
+    }
+  ]
+}

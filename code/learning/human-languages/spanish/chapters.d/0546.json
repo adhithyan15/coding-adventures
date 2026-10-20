@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "El bautizo",
+  "label": "ch:es-el-bautizo",
+  "canDo": "I can talk about a christening: the godparents, the baby's nappies and the grandchildren.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C546-panal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can talk about a christening: the godparents, the baby's nappies and the grandchildren.",
+    "assesses": [
+      "ES-LEX-C546-BAUTIZO-03",
+      "ES-LEX-C546-BAUTIZO-04",
+      "ES-LEX-C546-BAUTIZO-05"
+    ]
+  }
+}

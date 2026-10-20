@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C285-recta-via",
+    "language": "latin",
+    "chapter": 285,
+    "sequence": 15570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a252f0854396bcf"
+  },
+  "findings": []
+}

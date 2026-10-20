@@ -14,7 +14,8 @@ romanization: "upadiśati"
 concept_tag: SA-VERB-UPADISATI
 prerequisites: [SA-C207-pravahati, SA-C207-asvadayati]
 sounds: []
-roots: []
+roots: [sanskrit-dish]
+etymology_hook: "upadiśati ← upa 'towards' + √diś 'point out': 'points out to', so 'instructs' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C207-asvadayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C207-ACT207-04]; assesses=[] -->
 
 **उपदिशति** — *upadiśati* — "advises, instructs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upadiśati* is built on *upa*, "towards", and the root √diś, "to point out, show" (MW), the root of *diśā*, "direction". To instruct someone is to point things out to them, and the noun *upadeśa* means "teaching".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āpaṇaḥ"
 concept_tag: SA-MARKET-SHOP
 prerequisites: [SA-C74-money, SA-C74-price]
 sounds: []
-roots: []
+roots: [sanskrit-apana, sanskrit-panate]
+etymology_hook: "āpaṇa 'market, shop' ← ā + the root √paṇ 'barter, buy' (MW; CDIAL 1191)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C74-price]
 <!-- hl-knowledge: introduces=[SA-LEX-C74-MARKET-04]; assesses=[] -->
 
 **आपणः** (*āpaṇaḥ*) — "a shop". **आपणः कुत्र?** — "where is the shop?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Āpaṇa* is built from *ā* and the root √paṇ, "to barter, buy" (MW, CDIAL 1191):
+the place where bargains are struck.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

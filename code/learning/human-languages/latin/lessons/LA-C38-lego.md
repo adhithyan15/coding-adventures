@@ -6,7 +6,7 @@ sequence: 730
 chapter: 38
 type: word
 headword: legō, legere
-gloss: "I read" — a verb that first meant "to gather", which is why English got collect, elegant, lecture and legible from it
+gloss: '"I read" — a verb that first meant "to gather", which is why English got collect, elegant, lecture and legible from it'
 concept_tag: VERB-READ
 prerequisites: [LA-C38-cogito]
 sounds: [macron-none-short-vowel, g-as-hard]

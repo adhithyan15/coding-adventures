@@ -14,7 +14,8 @@ romanization: "modalupeṭṭu"
 concept_tag: TE-VERB-MODALUPETTU
 prerequisites: [TE-C242-upayogincu, TE-C242-mugincu]
 sounds: []
-roots: []
+roots: [dravidian-mutal-beginning, dravidian-pettu-put]
+etymology_hook: "modalupeṭṭu: native modalu 'beginning' (DEDR 4950) + peṭṭu 'to put' (DEDR 4390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C242-mugincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C242-KRIYA242-04]; assesses=[] -->
 
 **మొదలుపెట్టు** — *modalupeṭṭu* — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మొదలుపెట్టు** (*modalupeṭṭu*) is native Dravidian: *modalu*, "beginning", one word with Tamil *mutal* (DEDR 4950), and *peṭṭu*, "to put" (DEDR 4390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

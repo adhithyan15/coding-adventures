@@ -13,7 +13,8 @@ gloss: "hot, warm"
 concept_tag: LA-CALIDUS-CALIDUS
 prerequisites: [LA-C94-celer, LA-C94-lentus]
 sounds: []
-roots: []
+roots: [calidus-latin, calere-latin]
+etymology_hook: "calidus 'hot' — built on caleō 'to be warm', from PIE *kelh1- 'warm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C94-lentus]
 <!-- hl-knowledge: introduces=[LA-LEX-C95-CALIDUS-01]; assesses=[] -->
 
 **calidus, calida, calidum** — "hot, warm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calidus** is built on *caleō*, "to be warm" (EtymDB 2.1), with *-idus*, the ending of state adjectives. *caleō* is usually traced to Proto-Indo-European *\*kelh1-*, "warm" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

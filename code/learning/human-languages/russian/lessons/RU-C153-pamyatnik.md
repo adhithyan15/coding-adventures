@@ -14,7 +14,8 @@ romanization: "pámyatnik"
 concept_tag: RU-MESTO153-PAMYATNIK
 prerequisites: [RU-C153-mechet, RU-C153-khram]
 sounds: []
-roots: []
+roots: [slavic-pameti]
+etymology_hook: "памятник is память 'memory' + -ник; Latin mens 'mind' is a cousin of память"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C153-khram]
 <!-- hl-knowledge: introduces=[RU-LEX-C153-MESTO153-04]; assesses=[] -->
 
 **памятник** (*pámyatnik*) — "a monument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**памятник** is *память*, "memory", with *-ник*: a thing that keeps memory. Vasmer relates *память* to Lithuanian *atmintìs*, "memory", Sanskrit *matí-*, "thought", and Latin *mēns*, "mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 993
 chapter: 55
 type: grammar
 headword: están
-gloss: "they are" — with an accent that tells you where the stress went
+gloss: '"they are" — with an accent that tells you where the stress went'
 concept_tag: ES-GRAMMAR-ESTAR-PRESENT-PLURAL
 prerequisites: [ES-C09-estamos]
 sounds: []

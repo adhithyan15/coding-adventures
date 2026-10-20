@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-M-07",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "housing as an activity: buying, renting, keeping house",
+  "probe": [
+    "SA-PATTERN-C274-RENTAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE10-01",
+    "A1-NE10-03"
+  ],
+  "note": "COVERED by chapter 274 as one bounded, cross-checked rental exchange that explicitly reconnects the already-owned house, first-person buying, cooking, washing, and cleaning field. This does not claim productive participle, case, or sandhi mastery, a general renting repertoire, housing competence, human validation, learner attainment, or exam readiness."
+}

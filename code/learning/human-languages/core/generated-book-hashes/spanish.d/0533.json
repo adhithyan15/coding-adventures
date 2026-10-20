@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:8eccf497c9fd2821",
+  "lessonIds": [
+    "ES-C533-casualidad",
+    "ES-C533-coincidencia",
+    "ES-C533-fortuito",
+    "ES-C533-inesperado",
+    "ES-C533-repentino"
+  ],
+  "tex": "spanish/book/chapters/ch533-por-casualidad.tex"
+}

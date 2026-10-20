@@ -14,7 +14,8 @@ romanization: "anokho"
 concept_tag: MW-QUAL148-ANOKHO
 prerequisites: [MW-C148-khas, MW-C148-sado]
 sounds: []
-roots: []
+roots: [sanskrit-anapeksha]
+etymology_hook: "anokho ← Sanskrit anapekṣa 'careless', a tadbhava (CDIAL 289, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C148-sado]
 <!-- hl-knowledge: introduces=[MW-LEX-C148-QUAL148-05]; assesses=[] -->
 
 **अनोखो** — *anokho* — "unusual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अनोखो** (*anokho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *anapekṣa*, "careless". CDIAL gives no Marwari form in this entry (CDIAL 289); the match is through Hindi *anokhā*. It is built on *an-*, "not", and *apekṣā*, "expectation": "not expected", so "unusual".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

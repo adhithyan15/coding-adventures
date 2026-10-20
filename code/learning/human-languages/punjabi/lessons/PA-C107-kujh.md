@@ -14,7 +14,8 @@ romanization: "kujh"
 concept_tag: PA-DEF107-KUJH
 prerequisites: [PA-C106-ajiha, PA-C106-har2]
 sounds: []
-roots: []
+roots: [sanskrit-kimcid]
+etymology_hook: "kujh ← kiṁcid 'anything'; CDIAL lists Lahnda kujh, with -cch- from kaścid (CDIAL 3144)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C106-har2]
 <!-- hl-knowledge: introduces=[PA-LEX-C107-DEF107-01]; assesses=[] -->
 
 **ਕੁਝ** — *kujh* — "something, some".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੁਝ** (*kujh*) is inherited from Sanskrit *kiṁcid*, "anything". CDIAL gives no Punjabi form, but lists Lahnda *kujh*, "some", whose consonant it explains from *kaścid*, "someone" (CDIAL 3144).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

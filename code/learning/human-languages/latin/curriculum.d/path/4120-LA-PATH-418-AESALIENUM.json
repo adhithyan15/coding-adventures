@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-418-AESALIENUM",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-418-AESALIENUM"
+  ],
+  "after": []
+}

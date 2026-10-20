@@ -14,7 +14,8 @@ romanization: "maṭbūkh"
 concept_tag: AR-SIFA177-MATBUKH
 prerequisites: [AR-C177-majjani, AR-C177-nay]
 sounds: []
-roots: []
+roots: [ṭ-b-kh]
+etymology_hook: "maṭbūkh: built on the root ṭ-b-kh, 'to cook' (Lane); maṭbūkh is the passive participle, 'cooked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C177-nay]
 <!-- hl-knowledge: introduces=[AR-LEX-C177-SIFA177-04]; assesses=[] -->
 
 **مطبوخ** — *maṭbūkh* — "cooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطبوخ** (*maṭbūkh*) is built on the native Arabic root *ṭ-b-kh*, "to cook" (Lane). *Maṭbūkh* is the passive participle, "cooked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

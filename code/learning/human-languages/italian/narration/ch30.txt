@@ -78,6 +78,9 @@ A slower and gentler version, for when you have caught some of it:
 Non capisco bene. — I don't quite understand.
 Bene is the wellbeing chapter's, doing new work.
 
+The phrase, taken apart.
+capisco from capire from Latin capere, "to seize". (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: Capisco.]
@@ -118,6 +121,9 @@ Say that first Italian sentence again and count the negatives. There are three: 
 Wrong: Prendo né caffè né tè. Right: Non prendo né caffè né tè.
 This is why né comes after non in this book rather than before it. Without non there is nothing for it to stand beside.
 The accent is doing the same job it did on sì: it separates né from ne, a different unstressed word.
+
+The word, taken apart.
+né from Latin nec, "and not, nor" — inherited. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -161,7 +167,7 @@ io, with the vowel elided — the same elision as l'acqua and d'accordo.
 
 The word, taken apart: né + anche.
 neanche — neither, not … either, not even.
-It is né + anche, welded into one word, and you were given the first half one lesson ago. Because it carries a né, it keeps the non rule with it:
+It is né + anche, welded into one word, and you were given the first half one lesson ago. Né is inherited from Latin nec, "and not" (EtymDB 2.1); where anche comes from is uncertain. Because it carries a né, it keeps the non rule with it:
 Non prendo neanche il tè. — I'm not having tea either.
 Standing alone, answering somebody, the non has nowhere to sit and drops away:
 — Non capisco. — Neanch'io. — Me neither.

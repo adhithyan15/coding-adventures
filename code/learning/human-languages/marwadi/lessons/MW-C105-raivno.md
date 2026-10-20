@@ -14,7 +14,8 @@ romanization: "raivṇo"
 concept_tag: MW-VERB-RAIVNO
 prerequisites: [MW-C104-mangno, MW-C104-jovno]
 sounds: []
-roots: []
+roots: [indo-aryan-rahati]
+etymology_hook: "raivṇo ← *rahati 'remains', reconstructed (CDIAL 10666, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C104-jovno]
 <!-- hl-knowledge: introduces=[MW-LEX-C105-ACT105-01]; assesses=[] -->
 
 **रैवणो** — *raivṇo* — "to stay, to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रैवणो** (*raivṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rahati*, "remains", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *rahaï* under it (CDIAL 10666).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

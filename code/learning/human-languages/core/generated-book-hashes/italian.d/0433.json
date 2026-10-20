@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:89dab0546a9185ca",
+  "lessonIds": [
+    "IT-C433-matrimoniale",
+    "IT-C433-culla",
+    "IT-C433-federa",
+    "IT-C433-saponetta",
+    "IT-C433-asciugacapelli"
+  ],
+  "tex": "italian/book/chapters/ch433-in-camera.tex"
+}

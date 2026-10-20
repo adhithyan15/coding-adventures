@@ -11,7 +11,8 @@ romanization: "abhinandanegaḷu"
 concept_tag: KA-COUR-CONGRATS
 prerequisites: [KA-C87-isthatso, KA-C87-thesame]
 sounds: []
-roots: []
+roots: [sanskrit-abhinandana]
+etymology_hook: "abhinandanegaḷu ← Sanskrit abhinandana 'rejoicing, praise', with Kannada's plural -gaḷu"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C87-thesame]
 
 **ಅಭಿನಂದನೆಗಳು** (*abhinandanegaḷu*) — "congratulations". The ending **‑ಗಳು**
 (*-gaḷu*) is the plural: many good wishes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಭಿನಂದನೆಗಳು** (*abhinandanegaḷu*) is Sanskrit *abhinandana*, "rejoicing, praise, welcome", with Kannada's plural *-gaḷu*: "congratulations" is said in the plural, as in English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

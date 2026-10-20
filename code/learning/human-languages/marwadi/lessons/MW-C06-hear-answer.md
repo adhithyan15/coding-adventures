@@ -11,8 +11,8 @@ gloss: I am fine
 concept_tag: WORD-WELL
 prerequisites: [MW-C06-question]
 sounds: [long-uu, nasal-vowel, retroflex-tth, long-ii]
-roots: []
-etymology_hook: Secure the answer by ear before two unfamiliar written shapes appear.
+roots: [sanskrit-aham, indo-aryan-thikka]
+etymology_hook: "hū̃ 'I' ← Sanskrit aham (CDIAL 992); ṭhīk ← *ṭhīkka 'firm, right', prob. from sthita (CDIAL 5503)"
 duration:
   max_seconds: 150
 requires:
@@ -51,6 +51,11 @@ Hear three groups: *hū̃ | ṭhīk | hū̃*. The first and last groups match. H
 *ū* and let the ending nasal colour it; do not add a separate final syllable.
 The middle begins with a curled-back, breathed *ṭh*. Say the line once. Its two
 unfamiliar written shapes come later.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In *hū̃ ṭhīk hū̃*, the first *hū̃*, "I", is listed by CDIAL as Old Marwari *hũ* under Sanskrit *aham*, "I" (CDIAL 992). *ṭhīk*, "fine, right", goes back to *\*ṭhīkka*, "firm, right", which CDIAL says is probably from Sanskrit *sthita*, "standing" (CDIAL 5503). The second *hū̃*, "am", has no Marwari row in CDIAL, so its exact source is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HOON-01, MW-LEX-THIK-01, MW-ANSWER-WELLBEING-HEARD-01] -->

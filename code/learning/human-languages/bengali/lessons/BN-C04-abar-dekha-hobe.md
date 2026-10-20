@@ -11,7 +11,8 @@ gloss: we'll meet again (goodbye)
 concept_tag: FAREWELL-LATER
 prerequisites: [BN-C04-abar, BN-C04-dekha-hobe, BN-C01-ashi]
 sounds: []
-roots: []
+roots: [dekh-see, sanskrit-bhavati]
+etymology_hook: "dækhā ← *dṛkṣati 'sees' (CDIAL 6507); hôbe ← bhavati 'becomes' (CDIAL 9416); ābār not settled"
 duration:
   max_seconds: 180
 requires:
@@ -44,6 +45,8 @@ happen"). Chapter 1 gave you the tender **আসি** (*āshi*, "I'll come [agai
 the "promise of return" goodbye; *ābār dækhā hôbe* is its warm, explicit form. It
 is the sibling of the whole subcontinent's parting habit (Hindi *phir milenge*,
 Tamil *pōy varugiṟēṉ*): never a blunt "goodbye," always a return promised.
+
+*Dækhā* goes back to *\*dṛkṣati*, "sees", a form CDIAL reconstructs (CDIAL 6507), and *hôbe* to Sanskrit *bhavati*, "becomes, is" (CDIAL 9416); where *ābār* comes from is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01] -->

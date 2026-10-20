@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Greetings People Actually Say",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d2144aa40e71a4a7",
+  "sourceHash": "fnv1a64:ddf9ae783a038a76",
   "lessons": [
     {
       "id": "TA-C108-eaten",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:563ea44e4304eeaf",
+      "sourceHash": "fnv1a64:521cf9184de978a2",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாப்பிட்டீர்களா? (cāppiṭṭīrkaḷā?) is the past of sāppiḍu, \"to eat\" (sāppu, \"food\", with iḍu, \"to put\", DEDR 442), with the question ending -ā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -66,7 +77,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9aba787b57d683ae",
+      "sourceHash": "fnv1a64:dc79ad3f3d55f4de",
       "notice": null,
       "blocks": [
         {
@@ -183,6 +194,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ரொம்ப நாளாச்சு (rompa nāḷāccu) is native: rompa, \"very\", the spoken form of nirampa, \"fully\", from nira, \"to be full\" (DEDR 3672), and nāḷ, \"day\" (DEDR 3656), with āccu, \"it has become\": \"it has been many days\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -193,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -273,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:586ceb23c5c177f0",
+      "sourceHash": "fnv1a64:ffe196977d1d0346",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +328,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என்ன விசேஷம்? (eṉṉa vicēṣam?) is native eṉṉa, \"what\" (DEDR 5151), and vicēṣam, \"news, something special\", a well-established loan from Sanskrit viśeṣa, \"distinction, something particular\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -316,7 +349,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +398,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2e4ed33a05dc873",
+      "sourceHash": "fnv1a64:bf4f10d0fd2a9672",
       "notice": null,
       "blocks": [
         {
@@ -433,6 +466,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நல்லா இருக்கீங்களா? (nallā irukkīṅkaḷā?) is native: nallā, spoken for nallāka, \"well\", from nal, \"good\" (DEDR 3610), and iru, \"to be\" (DEDR 480)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -443,7 +487,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -492,7 +536,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -523,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68cfb8b1c22468b4",
+      "sourceHash": "fnv1a64:1118aa013712888e",
       "notice": null,
       "blocks": [
         {
@@ -560,6 +604,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எப்படி இருக்கீங்க? (eppaṭi irukkīṅka?) is native: eppaṭi, \"how\" (DEDR 5151), and iru, \"to be\" (DEDR 480), in its spoken form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -570,7 +625,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -619,7 +674,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "hamesā"
 concept_tag: MW-TIME80-HAMESA
 prerequisites: [MW-C79-kal, MW-C79-abar]
 sounds: []
-roots: []
+roots: [persian-hamesha]
+etymology_hook: "hamesā: usually traced to Persian hamēša 'always'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C79-abar]
 <!-- hl-knowledge: introduces=[MW-LEX-C80-TIME80-01]; assesses=[] -->
 
 **हमेसा** — *hamesā* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हमेसा** (*hamesā*) is a loan, usually traced to Persian *hamēša*, "always".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

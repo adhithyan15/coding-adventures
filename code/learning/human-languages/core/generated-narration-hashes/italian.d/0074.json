@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 74,
-  "sourceHash": "fnv1a64:71c540be865fbc23",
+  "sourceHash": "fnv1a64:72f5e6c7b9ba228c",
   "lessonIds": [
     "IT-C74-veloce",
     "IT-C74-lento",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch74.txt",
   "json": "italian/narration/ch74.json",
-  "textHash": "fnv1a64:3badd6caf4eef0fe",
-  "jsonHash": "fnv1a64:dd718331dc4a7206",
+  "textHash": "fnv1a64:8f0b2ef1c7795b56",
+  "jsonHash": "fnv1a64:c42954f4029be5be",
   "findings": []
 }

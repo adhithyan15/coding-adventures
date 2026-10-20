@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Very Good, Very Bad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:516263982b57a7b4",
+  "sourceHash": "fnv1a64:ee962accf4731dea",
   "lessons": [
     {
       "id": "TE-C76-very",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ea3423015779476",
+      "sourceHash": "fnv1a64:31eb6c9ae1093a64",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చాలా మంచి (cālā manci) is cālā, \"very\", which DEDR 2470 lists as cāla, \"abundant, abundantly\", under cālu, \"to be enough\", with Tamil cāl; and manci, \"good\", whose origin is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,7 +130,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9405c3c878e3e101",
+      "sourceHash": "fnv1a64:b34651278db4d862",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +202,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చెడ్డ (ceḍḍa) is native Dravidian. DEDR 2760 lists ceḍu, \"to be rotten\", and ceḍḍa, \"rotten\", with Tamil ceṭi, \"bad odour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -201,7 +223,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,7 +272,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -281,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d22247adcca853e",
+      "sourceHash": "fnv1a64:3b07b5d85b17f272",
       "notice": null,
       "blocks": [
         {
@@ -322,6 +344,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచిది (mancidi) is manci, \"good\", with -di, \"it, the thing\". The origin of manci is uncertain: neither DEDR nor CDIAL records it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: -ది turns a describing word into a naming word",
           "segments": [
@@ -332,7 +365,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -343,7 +376,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -392,7 +425,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -423,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1e2e9598847cdb9",
+      "sourceHash": "fnv1a64:5fe97573d09bae62",
       "notice": null,
       "blocks": [
         {
@@ -459,6 +492,10 @@
             {
               "kind": "speech",
               "text": "తెలుగు సులభం (sulabhaṁ) — \"Telugu is easy.\" A -ం noun like this needs no -ది; it is already a naming word."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 13512 lists Sanskrit sulabha, \"easy\"."
             }
           ]
         },
@@ -554,7 +591,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd48cf16cd2c820d",
+      "sourceHash": "fnv1a64:d38a2e88b4617a96",
       "notice": null,
       "blocks": [
         {
@@ -595,6 +632,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కష్టం (kaṣṭaṁ) is Sanskrit kaṣṭa, \"bad, difficult\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 2978)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -605,7 +653,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -654,7 +702,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

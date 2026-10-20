@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C379-chumbar",
+    "language": "portuguese",
+    "chapter": 379,
+    "sequence": 21450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c520a650c02fd064"
+  },
+  "findings": []
+}

@@ -15,6 +15,7 @@ concept_tag: GU-THINGS110-DHIGLI
 prerequisites: [GU-C110-minbatti, GU-C110-takiyo]
 sounds: []
 roots: []
+etymology_hook: "ḍhīṁglī 'doll': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C110-takiyo]
 <!-- hl-knowledge: introduces=[GU-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **ઢીંગલી** (*ḍhī̃glī*) — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ઢીંગલી** (*ḍhīṁglī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

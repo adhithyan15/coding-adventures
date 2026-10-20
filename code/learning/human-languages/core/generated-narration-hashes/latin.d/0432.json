@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:5d60991845a5e8df",
+  "lessonIds": [
+    "LA-C432-equito",
+    "LA-C432-ephippium",
+    "LA-C432-calcar",
+    "LA-C432-desilio",
+    "LA-C432-calcitro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch432.txt",
+  "json": "latin/narration/ch432.json",
+  "textHash": "fnv1a64:b8aaa05fd9b2cbb4",
+  "jsonHash": "fnv1a64:9fec0daa2df4c34d",
+  "findings": []
+}

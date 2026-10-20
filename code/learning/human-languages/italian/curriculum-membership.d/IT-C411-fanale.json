@@ -1,0 +1,11 @@
+{
+  "id": "IT-C411-fanale",
+  "pathSegment": "IT-PATH-411-COFANO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-411-COFANO",
+      "order": 3
+    }
+  ]
+}

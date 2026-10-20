@@ -1,0 +1,19 @@
+{
+  "chapter": 727,
+  "title": "Sensibles y educados",
+  "label": "ch:es-sensibles-y-educados",
+  "canDo": "I can describe sensitive, polite and rude people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R727-repaso-720-727",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 727: I can describe sensitive, polite and rude people.",
+    "assesses": [
+      "ES-LEX-C727-SENSIBLE-03",
+      "ES-LEX-C727-SENSIBLE-04",
+      "ES-LEX-C727-SENSIBLE-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "kol"
 concept_tag: PA-CAN109-KOL
 prerequisites: [PA-C109-jankari, PA-C109-sakna]
 sounds: []
-roots: []
+roots: [sanskrit-kroda]
+etymology_hook: "kol 'near' ← kōla 'breast, lap', beside Sanskrit krōḍa 'breast, bosom' (CDIAL 3607)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C109-sakna]
 <!-- hl-knowledge: introduces=[PA-LEX-C109-CAN109-04]; assesses=[] -->
 
 **ਕੋਲ** — *kol* — "near, in one's possession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਕੋਲ** (*kol*), "near", used as an adverb and postposition, under Sanskrit *krōḍa*, "breast, bosom", through its variant *kōla*, "breast, lap" (CDIAL 3607). CDIAL allows that *krōḍa* may be non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

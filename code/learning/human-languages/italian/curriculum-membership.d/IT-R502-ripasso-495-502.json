@@ -1,0 +1,11 @@
+{
+  "id": "IT-R502-ripasso-495-502",
+  "pathSegment": "IT-PATH-502-CAMPEGGIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-502-CAMPEGGIO",
+      "order": 5
+    }
+  ]
+}

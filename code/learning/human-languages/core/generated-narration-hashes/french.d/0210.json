@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 210,
-  "sourceHash": "fnv1a64:02dc6cadf13988d9",
+  "sourceHash": "fnv1a64:39a9e5a65213193e",
   "lessonIds": [
     "FR-C210-atteindre",
     "FR-C210-realiser",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch210.txt",
   "json": "french/narration/ch210.json",
-  "textHash": "fnv1a64:3efef2746994864c",
-  "jsonHash": "fnv1a64:463bff6d080a9911",
+  "textHash": "fnv1a64:279bb416794cbeca",
+  "jsonHash": "fnv1a64:34045e6e9798986a",
   "findings": []
 }

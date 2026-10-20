@@ -14,7 +14,8 @@ romanization: "thakṇe"
 concept_tag: MR-VERB-THAKNE
 prerequisites: [MR-C157-perne, MR-C157-vadhne]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thakṇe ← *sthakk 'stop, halt'; CDIAL thinks a link with sthā 'stand' probable but unclear (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C157-vadhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C157-ACT157-04]; assesses=[] -->
 
 **थकणे** — *thakṇe* — "to get tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थकणे** (*thakṇe*) comes from a reconstructed *\*sthakk-*, "stop, halt" (CDIAL 13737). CDIAL thinks a link with *sthā*, "to stand", probable, but not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a river"
 concept_tag: IT-NATURA2-FIUME
 prerequisites: [IT-C64-montagna, IT-C64-bosco]
 sounds: []
-roots: []
+roots: [flumen-latin]
+etymology_hook: "fiume ← Latin flumen 'river', from fluere 'to flow' — English fluid shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C64-bosco]
 <!-- hl-knowledge: introduces=[IT-LEX-C65-NATURA2-01]; assesses=[] -->
 
 **il fiume** — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fiume** ← Latin *flumen*, "river", from *fluere*, "to flow" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

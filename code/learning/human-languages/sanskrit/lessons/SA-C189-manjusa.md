@@ -14,7 +14,8 @@ romanization: "mañjūṣā"
 concept_tag: SA-THG189-MANJUSA
 prerequisites: [SA-C188-nirmalah, SA-C188-ujjvalah]
 sounds: []
-roots: []
+roots: [sanskrit-manjusha]
+etymology_hook: "mañjūṣā 'box', possibly borrowed from Dravidian (CDIAL 9721; DEDR 4640 compares Tamil mañcikai)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C188-ujjvalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C189-THG189-01]; assesses=[] -->
 
 **मञ्जूषा** — *mañjūṣā* — "a trunk, a chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mañjūṣā* may be borrowed from Dravidian: CDIAL 9721 says "possibly", and DEDR 4640 compares Tamil *mañcikai*, "chest, box", with a question mark. Pali has it as *mañjūsā*, "casket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

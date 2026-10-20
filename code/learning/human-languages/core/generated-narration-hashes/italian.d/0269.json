@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:da0f675f51bd4325",
+  "lessonIds": [
+    "IT-C269-ero-contento",
+    "IT-C269-spero-di",
+    "IT-C269-ripasso-sentimenti"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch269.txt",
+  "json": "italian/narration/ch269.json",
+  "textHash": "fnv1a64:847b616f7f12727f",
+  "jsonHash": "fnv1a64:11ceda4b44677ee0",
+  "findings": []
+}

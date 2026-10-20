@@ -1,0 +1,11 @@
+{
+  "id": "GE-C279-vorfall",
+  "pathSegment": "GE-PATH-279-EREIGNIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-279-EREIGNIS",
+      "order": 4
+    }
+  ]
+}

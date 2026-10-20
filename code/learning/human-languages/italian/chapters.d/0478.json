@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Orgoglio e vergogna",
+  "label": "ch:it-orgoglio-e-vergogna",
+  "canDo": "I can talk about pride, embarrassment and envy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R478-ripasso-471-478",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about pride, embarrassment and envy.",
+    "assesses": [
+      "IT-LEX-C478-VERGOGNA-03",
+      "IT-LEX-C478-VERGOGNA-04",
+      "IT-LEX-C478-VERGOGNA-05"
+    ]
+  }
+}

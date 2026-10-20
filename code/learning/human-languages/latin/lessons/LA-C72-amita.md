@@ -13,7 +13,8 @@ gloss: "an aunt (father's sister)"
 concept_tag: LA-HOMINES1-AMITA
 prerequisites: [LA-C71-infans, LA-C71-patruus]
 sounds: []
-roots: []
+roots: [amita-latin]
+etymology_hook: "amita 'father's sister' — probably from a nursery word *amma- 'mother'; English aunt comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C71-patruus]
 <!-- hl-knowledge: introduces=[LA-LEX-C72-HOMINES1-01]; assesses=[] -->
 
 **amita, amitae** — "an aunt (father's sister)". English *aunt* comes from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amita** is probably built on a nursery word, Proto-Indo-European *\*amma-*, "mother" (EtymDB 2.1), with a suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

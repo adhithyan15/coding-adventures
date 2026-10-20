@@ -14,7 +14,8 @@ romanization: "kūḍisu"
 concept_tag: KA-VERB-KUDISU
 prerequisites: [KA-C243-gurutisu, KA-C243-uccarisu]
 sounds: []
-roots: []
+roots: [dravidian-kuudu-join]
+etymology_hook: "kūḍisu: native Dravidian, 'make join', from kūḍu 'to join, add' (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C243-uccarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C243-KRIYE243-03]; assesses=[] -->
 
 **ಕೂಡಿಸು** — *kūḍisu* — "to add up (numbers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೂಡಿಸು** (*kūḍisu*) is native Dravidian, from *kūḍu*, "to join, add", with *-isu*, "to make": to add up is "to make join"; DEDR 1882 lists the root with Tamil *kūṭu*, Telugu *kūḍu* and Malayalam *kūṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

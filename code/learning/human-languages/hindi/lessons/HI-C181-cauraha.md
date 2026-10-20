@@ -15,6 +15,7 @@ concept_tag: HI-THG181-CAURAHA
 prerequisites: [HI-C181-rasta, HI-C181-mor]
 sounds: []
 roots: []
+etymology_hook: "caurāhā: usually explained as cau 'four' + rāh 'road' (Persian); CDIAL lists only cauhaṭṭā (CDIAL 4626)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C181-mor]
 <!-- hl-knowledge: introduces=[HI-LEX-C181-THG181-04]; assesses=[] -->
 
 **चौराहा** — *caurāhā* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौराहा** (*caurāhā*) is usually explained as *cau-*, "four", with Persian *rāh*, "road". CDIAL does not list it; it lists *cauhaṭṭā*, "a crossing of market streets", from *catur-*, "four" (CDIAL 4626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

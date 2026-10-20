@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:abd7a5b92af4e74a",
+  "lessonIds": [
+    "IT-C282-cronaca",
+    "IT-C282-quotidiano",
+    "IT-C282-settimanale",
+    "IT-C282-titolo",
+    "IT-C282-articolo"
+  ],
+  "tex": "italian/book/chapters/ch282-il-giornale-del-mattino.tex"
+}

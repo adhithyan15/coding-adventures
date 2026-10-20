@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0adee886bc236dca",
+  "sourceHash": "fnv1a64:9c47c4b3c0013528",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:a8a660090237b77f",
+      "sourceHash": "fnv1a64:0243cbbdabd6f689",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:96f0747bd3358fda",
+      "sourceHash": "fnv1a64:04e263e7305b3545",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -710,7 +710,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91c67d996866702a",
+      "sourceHash": "fnv1a64:1fcc366c5b674d8d",
       "notice": null,
       "blocks": [
         {
@@ -835,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:557a273f42daf9fb",
+      "sourceHash": "fnv1a64:e84c5f927db7c065",
       "notice": null,
       "blocks": [
         {
@@ -851,7 +851,7 @@
             },
             {
               "kind": "speech",
-              "text": "One word that is cognate with English \"welcome\" — not just a translation of it."
+              "text": "One word that is partly cognate with English \"welcome\", not only a translation of it."
             }
           ]
         },
@@ -873,11 +873,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "svāgatam = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
+              "text": "svāgatam = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two Indo-European threads surface:"
             },
             {
               "kind": "speech",
-              "text": "su- \"good\" is the twin of Greek eu- — the eu of euphoria, eulogy, euphemism. Sanskrit su- and Greek eu- are the same prefix."
+              "text": "su- \"good\" does the work of Greek eu- — the eu of euphoria, eulogy, euphemism; MW sets the two prefixes side by side."
             },
             {
               "kind": "speech",
@@ -932,11 +932,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English word that is su-'s Greek twin (eu-, as in euphoria)",
+              "instruction": "the Greek prefix MW sets beside su- (eu-, as in euphoria)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English word that is *su-*'s Greek twin (*eu-*, as in *euphoria*)]"
+              "source": "[YOU SAY: the Greek prefix MW sets beside *su-* (*eu-*, as in *euphoria*)]"
             },
             {
               "kind": "prompt",
@@ -962,7 +962,7 @@
             },
             {
               "kind": "speech",
-              "text": "Svāgatam literally means what, and name two of its far-flung cousins. (\"Well come\" = welcome; Greek eu- (from su-) and English come (from √gam).)"
+              "text": "Svāgatam literally means what, and name two of its far-flung cousins. (\"Well come\" = welcome; Greek eu- (beside su-) and English come (cousin of √gam).)"
             }
           ]
         }
@@ -1170,7 +1170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0dd9549f749e57a",
+      "sourceHash": "fnv1a64:fc936bc43c29d5b9",
       "notice": null,
       "blocks": [
         {
@@ -1203,6 +1203,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ām is an old Sanskrit particle of assent (MW). It lives on in the daughter languages' everyday \"yes\", with an h- added in front: Hindi and Marathi hāṃ (CDIAL 1235)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -1213,7 +1224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1253,7 +1264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1284,7 +1295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fc892002b28f685",
+      "sourceHash": "fnv1a64:0c403af885703323",
       "notice": null,
       "blocks": [
         {
@@ -1322,7 +1333,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Na (\"no, not\") you have already met wearing other clothes: it is Proto-Indo-European ne \"not,\" the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṇ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years."
+              "text": "Na (\"no, not\") you have already met wearing other clothes: it is Proto-Indo-European ne \"not,\" the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṃ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years."
             }
           ]
         },
@@ -1379,7 +1390,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the ancient root of na, and name three of its living cousins. (PIE ne \"not\"; English no/not/none, Latin nōn, German nein, Hindi nahīṇ — any three.)"
+              "text": "What is the ancient root of na, and name three of its living cousins. (PIE ne \"not\"; English no/not/none, Latin nōn, German nein, Hindi nahīṃ — any three.)"
             }
           ]
         }

@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "level": "A1",
+  "mockId": "a1-mock-2",
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 20,
+      "partIds": [
+        "a1-reading-signs-and-forms",
+        "a1-reading-short-messages",
+        "a1-reading-personal-descriptions"
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 18,
+      "partIds": [
+        "a1-listening-announcements",
+        "a1-listening-short-exchanges",
+        "a1-listening-personal-account"
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 20,
+      "partIds": [
+        "a1-writing-practical-form",
+        "a1-writing-reader-purpose-message"
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": 10,
+      "partIds": [
+        "a1-speaking-personal-interview",
+        "a1-speaking-prepared-description",
+        "a1-speaking-transactional-role-play"
+      ]
+    }
+  ]
+}

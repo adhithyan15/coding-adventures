@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C619-oportunidad",
+    "language": "spanish",
+    "chapter": 619,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e22f433dc2bb0703"
+  },
+  "findings": []
+}

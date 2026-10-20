@@ -14,7 +14,8 @@ romanization: "zor se"
 concept_tag: HI-AGAIN-LOUDLY
 prerequisites: [HI-C109-thanda, HI-C110-dobara]
 sounds: []
-roots: []
+roots: [persian-zor]
+etymology_hook: "zor usually traced to Persian zōr 'strength'; se inherited (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C110-dobara]
 **ज़ोर से** (*zor se*) — "loudly", literally "with force".
 
 **थोड़ा ज़ोर से बोलिए** — "please speak a little louder", with the softening **थोड़ा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ज़ोर से** (*zor se*) is *zor*, "force", with *se*, "with". *zor* is usually traced to Persian *zōr*, "strength"; *se* is inherited (CDIAL 13310).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

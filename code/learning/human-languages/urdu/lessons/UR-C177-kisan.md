@@ -14,7 +14,8 @@ romanization: "kisān"
 concept_tag: UR-KAM177-KISAN
 prerequisites: [UR-C177-sathi, UR-C177-mazdur]
 sounds: []
-roots: []
+roots: [sanskrit-krshana]
+etymology_hook: "kisān ← Sanskrit kṛṣāṇa 'ploughing', a tadbhava (CDIAL 3447)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C177-mazdur]
 <!-- hl-knowledge: introduces=[UR-LEX-C177-KAM177-04]; assesses=[] -->
 
 **کسان** — *kisān* — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کسان** (*kisān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṛṣāṇa*, "ploughing" (CDIAL 3447). It is the present participle of *kṛṣati*, "ploughs": a farmer is "the one ploughing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

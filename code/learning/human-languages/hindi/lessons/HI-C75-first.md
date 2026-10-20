@@ -14,8 +14,8 @@ romanization: "pahlā / pahlī / pahle"
 concept_tag: HI-ORDINAL-FIRST
 prerequisites: [HI-C74-late, HI-C74-open, HI-A1F01-name-select, HI-C68-country, HI-C18-ghanta, HI-C24-hara-pila]
 sounds: []
-roots: []
-etymology_hook: "pahla comes from Sanskrit prathama and has no ek in it at all; the adverb pahle, earlier, is the same word, so in Hindi the word for first and the word for before are one"
+roots: [sanskrit-prathama, indo-aryan-prathila]
+etymology_hook: "pahlā ← *prathilla, which CDIAL builds on Sanskrit prathama 'first' (8652); no ek in it, and pahle is the same word"
 duration:
   max_seconds: 240
 requires:
@@ -60,9 +60,10 @@ It agrees like any *-ā* adjective: **पहला दिन** (*pahlā din*), t
 ## The word, taken apart: no एक in it
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-There is no **एक** inside **पहला** (*pahlā*). It comes down from Sanskrit **प्रथम**
-(*prathama*), a word that already meant "foremost" before Hindi existed, and the
-number was never part of it.
+There is no **एक** inside **पहला** (*pahlā*). It comes down from *\*prathilla*, a form
+CDIAL reconstructs beside *\*prathila*, "first", and builds on Sanskrit **प्रथम**
+(*prathama*), a word that already meant "foremost" before Hindi existed
+(CDIAL 8652). The number was never part of it.
 
 You will meet its close relative constantly: **पहले** (*pahle*) — "**before**,
 **earlier**, **first of all**". *खाने से पहले* is "before eating". So in Hindi the

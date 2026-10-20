@@ -14,7 +14,8 @@ romanization: "mudarrib"
 concept_tag: AR-AMAL190-MUDARRIB
 prerequisites: [AR-C190-mughanni, AR-C190-laib]
 sounds: []
-roots: []
+roots: [d-r-b]
+etymology_hook: "mudarrib: built on the root d-r-b, 'to be trained, to be accustomed' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C190-laib]
 <!-- hl-knowledge: introduces=[AR-LEX-C190-AMAL190-03]; assesses=[] -->
 
 **مدرب** — *mudarrib* — "a coach, a trainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدرب** (*mudarrib*) is built on the native Arabic root *d-r-b*, "to be trained, to be accustomed" (Lane). *Mudarrib* is the Form II participle, "one who trains".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

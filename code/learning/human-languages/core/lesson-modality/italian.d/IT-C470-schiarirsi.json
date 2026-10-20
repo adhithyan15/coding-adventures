@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C470-schiarirsi",
+    "language": "italian",
+    "chapter": 470,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:332db7b46a9d9b6a"
+  },
+  "findings": []
+}

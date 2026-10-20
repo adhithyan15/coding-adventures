@@ -13,7 +13,8 @@ gloss: "blood"
 concept_tag: FR-CORPS2-SANG
 prerequisites: [FR-C50-genou, FR-C50-visage]
 sounds: []
-roots: []
+roots: [sanguis-latin]
+etymology_hook: "sang ← Latin sanguis 'blood' — English sanguine is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C50-visage]
 <!-- hl-knowledge: introduces=[FR-LEX-C50-CORPS2-05]; assesses=[] -->
 
 **le sang** — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sang** ← Old French *sanc* ← Latin *sanguis*, "blood", through a Vulgar Latin form *\*sanguem* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

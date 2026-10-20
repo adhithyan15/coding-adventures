@@ -1,0 +1,11 @@
+{
+  "id": "ES-C537-hasta-entonces",
+  "pathSegment": "ES-PATH-537-ENTONCES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-537-ENTONCES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C405-svincolo",
+  "pathSegment": "IT-PATH-405-AUTOSTRADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-405-AUTOSTRADA",
+      "order": 3
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "niyamaṁ"
 concept_tag: TE-KARANAM258-NIYAMAM
 prerequisites: [TE-C257-samskrti, TE-C258-paddhati]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyamaṁ ← Sanskrit niyama 'restraint; fixed law', a tatsama (CDIAL 7250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C258-paddhati]
 <!-- hl-knowledge: introduces=[TE-LEX-C258-KARANAM258-02]; assesses=[] -->
 
 **నియమం** — *niyamaṁ* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నియమం** (*niyamaṁ*) is Sanskrit *niyama*, "restraint; fixed law", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 7250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

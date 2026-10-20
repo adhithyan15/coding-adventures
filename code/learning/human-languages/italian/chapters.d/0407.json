@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Vetri e specchietti",
+  "label": "ch:it-vetri-e-specchietti",
+  "canDo": "I can talk about seeing clearly from a car: the windscreen, the wipers, the mirror, the horn and windows that mist up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C407-appannarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about seeing clearly from a car: the windscreen, the wipers, the mirror, the horn and windows that mist up.",
+    "assesses": [
+      "IT-LEX-C407-VETRI-03",
+      "IT-LEX-C407-VETRI-04",
+      "IT-LEX-C407-VETRI-05"
+    ]
+  }
+}

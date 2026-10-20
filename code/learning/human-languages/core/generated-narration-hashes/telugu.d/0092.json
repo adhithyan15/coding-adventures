@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 92,
-  "sourceHash": "fnv1a64:55b2a22c796ad69d",
+  "sourceHash": "fnv1a64:d60a69036d869fcd",
   "lessonIds": [
     "TE-C92-cold-illness",
     "TE-C92-medicine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch92.txt",
   "json": "telugu/narration/ch92.json",
-  "textHash": "fnv1a64:c4e058b0680e4aa2",
-  "jsonHash": "fnv1a64:321c47f0db158b2a",
+  "textHash": "fnv1a64:955ce0b65f1aff91",
+  "jsonHash": "fnv1a64:378930741d7f01ef",
   "findings": []
 }

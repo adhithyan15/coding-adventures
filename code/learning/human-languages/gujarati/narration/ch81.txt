@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a festival, then the Gujarati for Holi.
 You'll want to know: અગિયાર.
 અગિયાર (agiyār) — "eleven".
 
+The word, taken apart.
+અગિયાર (agiyār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ekādaśa, "eleven" (CDIAL 2485). It is eka, "one", and daśa, "ten".
+
 What you've built.
 One more word for eleven to sixteen.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for Holi, then the Gujarati for eleven.
 
 You'll want to know: બાર.
 બાર (bār) — "twelve".
+
+The word, taken apart.
+બાર (bār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dvādaśa, "twelve" (CDIAL 6658). It is dvā, "two", and daśa, "ten".
 
 What you've built.
 One more word for eleven to sixteen.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for eleven, then the Gujarati for twelve.
 You'll want to know: તેર.
 તેર (ter) — "thirteen".
 
+The word, taken apart.
+તેર (ter) is a tadbhava. CDIAL lists it under trayedaśa, a variant of Sanskrit trayodaśa, "thirteen" (CDIAL 6001).
+
 What you've built.
 One more word for eleven to sixteen.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for twelve, then the Gujarati for thirteen.
 You'll want to know: પંદર.
 પંદર (pandar) — "fifteen".
 
+The word, taken apart.
+પંદર (pandar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcadaśa, "fifteen" (CDIAL 7662). It is pañca, "five", and daśa, "ten".
+
 What you've built.
 One more word for eleven to sixteen.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for thirteen, then the Gujarati for fifteen
 
 You'll want to know: સોળ.
 સોળ (soḷ) — "sixteen".
+
+The word, taken apart.
+સોળ (soḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṣoḍaśa, "sixteen" (CDIAL 12812).
 
 What you've built.
 One more word for eleven to sixteen.

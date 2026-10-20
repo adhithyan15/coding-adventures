@@ -13,7 +13,8 @@ gloss: "beer"
 concept_tag: LA-THINGS128-CERVISIA
 prerequisites: [LA-C127-piper, LA-C128-placenta]
 sounds: []
-roots: []
+roots: [cervisia-latin]
+etymology_hook: "cervīsia 'beer' — a Gaulish word: Celtic beer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C128-placenta]
 <!-- hl-knowledge: introduces=[LA-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **cervīsia, cervīsiae** — "beer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cervīsia** came from Gaulish, the Celtic language of Gaul: Lewis & Short mark *cervīsia* as Gallic, a Celtic word for beer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

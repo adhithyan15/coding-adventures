@@ -14,7 +14,8 @@ romanization: "nirddēśaṁ"
 concept_tag: ML-KARANAM318-NIRDDESAM
 prerequisites: [ML-C318-vicaram, ML-C318-ormma]
 sounds: []
-roots: []
+roots: [sanskrit-nirdesha]
+etymology_hook: "nirddēśaṁ ← Sanskrit nirdēśa 'instruction, order', a tatsama (CDIAL 7347)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C318-ormma]
 <!-- hl-knowledge: introduces=[ML-LEX-C318-KARANAM318-05]; assesses=[] -->
 
 **നിർദ്ദേശം** — *nirddēśaṁ* — "a suggestion, an instruction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിർദ്ദേശം** (*nirddēśaṁ*) ← Sanskrit *nirdēśa*, "instruction, order", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

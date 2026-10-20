@@ -14,6 +14,7 @@ concept_tag: GE-BERUF124-JOGHURT
 prerequisites: [GE-C123-nachtisch, GE-C123-mahlzeit, GE-C22-hund-katze-more, GE-C23-gruen-gelb-more]
 sounds: []
 roots: []
+etymology_hook: "Joghurt ← Turkish yoğurt — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [GE-C123-mahlzeit]
 <!-- hl-knowledge: introduces=[GE-LEX-C124-BERUF124-01]; assesses=[] -->
 
 **der Joghurt** — "a yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Joghurt** ← Turkish *yoğurt* (EtymDB 2.1) — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

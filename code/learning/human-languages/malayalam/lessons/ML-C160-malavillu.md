@@ -14,7 +14,8 @@ romanization: "maḻavillŭ"
 concept_tag: ML-THINGS160-MALAVILLU
 prerequisites: [ML-C160-koni, ML-C160-varanta]
 sounds: []
-roots: []
+roots: [dravidian-mazhai-rain, dravidian-vil-bow]
+etymology_hook: "maḻavillŭ: native Dravidian, 'rain bow': maḻa 'rain' (DEDR 4753) + villŭ 'bow' (DEDR 5422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C160-varanta]
 <!-- hl-knowledge: introduces=[ML-LEX-C160-THINGS160-03]; assesses=[] -->
 
 **മഴവില്ല്** — *maḻavillŭ* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മഴവില്ല്** (*maḻavillŭ*) is native Dravidian, "the rain bow", built exactly like the English: *maḻa*, "rain" (DEDR 4753, with Tamil *maḻai*), and *villŭ*, "bow" (DEDR 5422, with Tamil *vil*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

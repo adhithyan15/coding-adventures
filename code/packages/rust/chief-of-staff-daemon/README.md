@@ -206,16 +206,32 @@ broker process (D18S P2.6d-2b). It holds only that agent's channel keys,
 and the host's Receive, Publish and Acknowledge requests go to it rather
 than to the daemon.
 
+Since P2.6d-2c that is the only channel path. The daemon holds no channel
+key and serves no channel operation, so:
+- `[data_plane] channel_keys` without `[hosts.broker]` stops the daemon at
+  startup (`ChannelKeysNeedBroker`);
+- a host bound to a channel never launches without a broker
+  (`ChannelsNeedBroker` from the supervisor);
+- on macOS the table must also pin the Seatbelt shim that confines the
+  broker (`seatbelt_shim`, `seatbelt_shim_sha256`; D18S P2.7b), or startup
+  stops (`BrokerShimMissing`);
+- on Windows the table pins the broker alone, as on Linux; the launcher
+  confines it in its own AppContainer (D18S P2.8b-2);
+- elsewhere, off Linux, macOS and Windows, `[hosts.broker]` is refused, so
+  `channel_keys` cannot be configured yet.
+
 ```text
 [data_plane] channel_keys ─▶ broker_key_files    (read: 1 slot, write: 2)
-[hosts.broker] sha256     ─▶ VerifiedExecutable  (startup: wrong bytes stop the daemon)
+[hosts.broker] sha256     ─▶ BrokerProgram       (startup: wrong bytes stop the daemon;
+  (+ seatbelt_shim on macOS)                      on macOS the shim is verified too)
                           ─▶ ChannelBrokers ─▶ ProcessHostSupervisor
 ```
 
 The daemon opens no key file here. The launcher opens an agent's files,
 owner-only or refused, when it launches that agent's broker, and passes
-them by descriptor. Off Linux the table is refused at startup
-(`BrokerUnsupported`), because there is no verified launch there yet.
+them by descriptor (on Windows, by handle). Off Linux, macOS and Windows
+the table is refused at startup (`BrokerUnsupported`), because there is no
+verified launch there yet.
 
 Each broker runs confined (P2.6d-3): it can open no file by path, and has
 no network and no exec. Before every launch, every directory holding
@@ -225,13 +241,12 @@ symlinks on the way), or the launch is refused. That set is:
 - the vault's storage directory, once it exists;
 - the directory of the vault's KEK file.
 
+On Windows, owner-only means the directory's access list names only the
+user, SYSTEM and Administrators (D18S P2.8b-1).
+
 The daemon checks them at startup too (`BrokerSecretDirectory`), so give
 the KEK and the key files directories of their own rather than `$HOME`. A
 directory that does not exist yet is skipped until it does.
-
-In this step the daemon still provisions the same keys for its own channel
-path. Step 2c removes that path, and `channel_keys` will then require
-`[hosts.broker]`.
 
 ## Validation
 

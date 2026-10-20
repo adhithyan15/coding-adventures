@@ -14,7 +14,8 @@ romanization: "tōṭṭam"
 concept_tag: TA-LOC116-TOTTAM
 prerequisites: [TA-C115-katarkarai, TA-C115-aluvalakam]
 sounds: []
-roots: []
+roots: [dravidian-tondu-dig]
+etymology_hook: "தோட்டம் — native Dravidian (DEDR 3549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C115-aluvalakam]
 <!-- hl-knowledge: introduces=[TA-LEX-C116-LOC116-01]; assesses=[] -->
 
 **தோட்டம்** — *tōṭṭam* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தோட்டம்** (*tōṭṭam*) is native Dravidian (DEDR 3549). The entry lists *tōṭṭam*, "garden, orchard", under the native verb "to dig": a garden is dug ground.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

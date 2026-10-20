@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Chi legge, chi guarda",
+  "label": "ch:it-chi-legge-chi-guarda",
+  "canDo": "I can talk about the people who follow the news: readers, listeners, viewers, the public, and the editorial.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C289-editoriale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can talk about the people who follow the news: readers, listeners, viewers, the public, and the editorial.",
+    "assesses": [
+      "IT-LEX-C289-PUBBLICO-03",
+      "IT-LEX-C289-PUBBLICO-04",
+      "IT-LEX-C289-PUBBLICO-05"
+    ]
+  }
+}

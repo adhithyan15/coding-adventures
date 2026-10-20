@@ -14,7 +14,8 @@ romanization: "sargije"
 concept_tag: FA-SALAMAT263-SARGIJE
 prerequisites: [FA-C262-tah-gereftan, FA-C263-asib]
 sounds: []
-roots: []
+roots: [persian-sar]
+etymology_hook: "sargije: Persian sar 'head' (EtymDB) + gij 'dizzy' + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C263-asib]
 <!-- hl-knowledge: introduces=[FA-LEX-C263-SALAMAT263-02]; assesses=[] -->
 
 **سرگیجه** — *sargije* — "dizziness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sargije* is built from *sar*, "head", *gij*, "dizzy", and *-e*: a dizzy head. *sar* is inherited, from Middle Persian *sar* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

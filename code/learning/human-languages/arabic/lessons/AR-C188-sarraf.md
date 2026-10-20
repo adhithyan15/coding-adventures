@@ -14,7 +14,8 @@ romanization: "ṣarrāf"
 concept_tag: AR-AMAL188-SARRAF
 prerequisites: [AR-C188-khasm, AR-C188-zabun]
 sounds: []
-roots: []
+roots: [ṣ-r-f]
+etymology_hook: "ṣarrāf: built on the root ṣ-r-f, 'to turn' (Lane); ṣarrāf is the faʿʿāl trade noun, 'money-changer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C188-zabun]
 <!-- hl-knowledge: introduces=[AR-LEX-C188-AMAL188-05]; assesses=[] -->
 
 **صراف** — *ṣarrāf* — "a cashier; a money changer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صراف** (*ṣarrāf*) is built on the native Arabic root *ṣ-r-f*, "to turn; to exchange money" (Lane). *Ṣarrāf* is the *faʿʿāl* trade noun, "money-changer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

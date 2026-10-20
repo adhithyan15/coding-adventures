@@ -14,7 +14,8 @@ romanization: "ṭāimṭebil"
 concept_tag: BN-PORA147-TAIMTEBIL
 prerequisites: [BN-C146-sthir-kora, BN-C146-asha-kora]
 sounds: []
-roots: []
+roots: [english-timetable]
+etymology_hook: "ṭāimṭebil ← English timetable"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +49,11 @@ reviews_of: [BN-C146-asha-kora]
 The board says **বাস ছাড়ার সময়: সকাল আটটা** — *bās chhāṛār sômôy: sôkāl āṭṭā*
 — "Bus departure time: 8 a.m." The bus leaves at eight, so be there before
 eight.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টাইমটেবিল** (*ṭāimṭebil*) is a loan from English *timetable*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

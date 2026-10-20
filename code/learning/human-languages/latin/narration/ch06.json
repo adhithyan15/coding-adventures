@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dbf8c750da959bef",
+  "sourceHash": "fnv1a64:04b3142a252602a8",
   "lessons": [
     {
       "id": "LA-C06-niger-albus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3b169e6f6ff32ac",
+      "sourceHash": "fnv1a64:c177839843d24691",
       "notice": null,
       "blocks": [
         {
@@ -75,6 +75,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niger has no agreed origin outside Latin. albus \"white\" is inherited, usually traced to Proto-Indo-European h2elbhos, \"white\" (EtymDB 2.1). āter \"dull black\" may come from a root for \"fire\" (EtymDB 2.1), and candidus \"shining white\" was built on candeō \"I shine\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -114,7 +125,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

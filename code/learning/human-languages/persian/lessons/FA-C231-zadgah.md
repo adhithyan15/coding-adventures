@@ -14,7 +14,8 @@ romanization: "zâdgâh"
 concept_tag: FA-MAKAN231-ZADGAH
 prerequisites: [FA-C231-estakhr, FA-C231-vatan]
 sounds: []
-roots: []
+roots: [persian-gah]
+etymology_hook: "zâdgâh: Persian zâd 'born' + gâh 'place'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C231-vatan]
 <!-- hl-knowledge: introduces=[FA-LEX-C231-MAKAN231-05]; assesses=[] -->
 
 **زادگاه** — *zâdgâh* — "birthplace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zâdgâh* is built from *zâd*, "born" (from *zâdan*, "to give birth"), and *gâh*, "place": the place one was born. Both are inherited; *gâh* is usually traced to Middle Persian *gāh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

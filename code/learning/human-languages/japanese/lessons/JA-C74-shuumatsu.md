@@ -14,7 +14,8 @@ romanization: "shuumatsu"
 concept_tag: JA-TIME74-SHUUMATSU
 prerequisites: [JA-C73-maiasa, JA-C74-maishuu]
 sounds: []
-roots: []
+roots: [middle-chinese-mat]
+etymology_hook: "shuumatsu: Sino-Japanese 週 'week' + 末 'end', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C74-maishuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C74-TIME74-02]; assesses=[] -->
 
 **しゅうまつ** — *shuumatsu* — "the weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しゅうまつ** (*shuumatsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shū*, "week" and *matsu*, "end" (Middle Chinese *mat*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

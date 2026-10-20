@@ -14,7 +14,8 @@ romanization: "sāmbāru"
 concept_tag: KA-THINGS121-SAMBARU
 prerequisites: [KA-C121-bale, KA-C121-saru]
 sounds: []
-roots: []
+roots: [kannada-sambar]
+etymology_hook: "sāmbāru: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C121-saru]
 <!-- hl-knowledge: introduces=[KA-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **ಸಾಂಬಾರು** — *sāmbāru* — "sambar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸಾಂಬಾರು** (*sāmbāru*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

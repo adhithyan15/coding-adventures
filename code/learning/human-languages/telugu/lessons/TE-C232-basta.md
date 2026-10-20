@@ -14,7 +14,8 @@ romanization: "bastā"
 concept_tag: TE-VASTUVU232-BASTA
 prerequisites: [TE-C231-kolabadda, TE-C232-jadi]
 sounds: []
-roots: []
+roots: [persian-basta]
+etymology_hook: "bastā ← Persian basta 'bundle', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C232-jadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C232-VASTUVU232-02]; assesses=[] -->
 
 **బస్తా** — *bastā* — "a sack (of grain)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బస్తా** (*bastā*) is a loan from Persian *basta*, "bundle, package", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

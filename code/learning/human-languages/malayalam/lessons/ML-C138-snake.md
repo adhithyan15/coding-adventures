@@ -11,7 +11,8 @@ romanization: "pāmpŭ"
 concept_tag: ML-ANIMAL-SNAKE
 prerequisites: [ML-C137-auto, ML-C138-bird]
 sounds: []
-roots: []
+roots: [dravidian-pambu-snake]
+etymology_hook: "pāmpŭ: native Dravidian, one word with Tamil pāmpu and Kannada pāvu (DEDR 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C138-bird]
 <!-- hl-knowledge: introduces=[ML-LEX-C138-ANIMALS-02]; assesses=[] -->
 
 **പാമ്പ്** (*pāmpŭ*) — "a snake". **പാമ്പ്!** is the one word to shout.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാമ്പ്** (*pāmpŭ*) is native Dravidian, one word with Tamil *pāmpu*, Kannada *pāvu* and Telugu *pāmu* (DEDR 4085).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

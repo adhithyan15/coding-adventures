@@ -14,7 +14,8 @@ romanization: "kothimbīr"
 concept_tag: MR-VASTU244-KOTHIMBIR
 prerequisites: [MR-C243-kadhai, MR-C244-mohari]
 sounds: []
-roots: []
+roots: [sanskrit-kustumbari]
+etymology_hook: "kothimbīr ← Sanskrit kustumbarī 'coriander', a tadbhava (CDIAL 3380)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C244-mohari]
 <!-- hl-knowledge: introduces=[MR-LEX-C244-VASTU244-02]; assesses=[] -->
 
 **कोथिंबीर** — *kothimbīr* — "coriander leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोथिंबीर** (*kothimbīr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kustumbarī*, "coriander" (CDIAL 3380). CDIAL calls the Sanskrit word non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

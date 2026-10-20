@@ -14,7 +14,8 @@ romanization: "ókolo"
 concept_tag: RU-MESTO152-OKOLO
 prerequisites: [RU-C151-rayon, RU-C151-prospekt]
 sounds: []
-roots: []
+roots: [pie-kwel-turn]
+etymology_hook: "около is о- + коло 'a circle, a wheel': round about"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C151-prospekt]
 <!-- hl-knowledge: introduces=[RU-LEX-C152-MESTO152-01]; assesses=[] -->
 
 **около** (*ókolo*) — "beside; roughly (with numbers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**около** is *о-*, "around", with *коло*, "a circle, a wheel" (Vasmer), the root of *колесо*, "wheel": "round about", and so "approximately".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

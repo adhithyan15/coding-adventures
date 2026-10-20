@@ -14,7 +14,8 @@ romanization: "chakhnā"
 concept_tag: UR-VERB-CHAKHNA
 prerequisites: [UR-C212-talna, UR-C212-ubalna]
 sounds: []
-roots: []
+roots: [indo-aryan-cakshati]
+etymology_hook: "chakhnā ← *cakṣati 'tastes', a reconstructed form; a tadbhava (CDIAL 4557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C212-ubalna]
 <!-- hl-knowledge: introduces=[UR-LEX-C212-ACT212-05]; assesses=[] -->
 
 **چکھنا** — *chakhnā* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چکھنا** (*chakhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cakṣati*, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

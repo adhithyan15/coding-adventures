@@ -12,8 +12,9 @@ concept_tag: RESPONSE-NO
 prerequisites: [ML-C01-athe]
 sounds: [independent-vowel-i, lla-conjunct]
 roots: [il]
+etymology_hook: "illa: native Dravidian 'is not', one word with Tamil illai and Kannada illa (DEDR 2559)"
 duration:
-  max_seconds: 240
+  max_seconds: 247
 requires:
   knowledge: [ML-LEX-ATHE-01]
 introduces:
@@ -33,7 +34,7 @@ reviews_of: [ML-C01-athe, ML-C01-namaskaram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The partner of *athe*, and more family evidence: this Malayalam "no"
+[PAUSE 2s] The partner of *ate*, and more family evidence: this Malayalam "no"
 is essentially the **same word** as Tamil's *illai* and Kannada's *illa* — the
 old Dravidian *il-* runs right through.
 
@@ -43,7 +44,7 @@ old Dravidian *il-* runs right through.
 *(Skim if you read Malayalam.)*
 
 - **ഇ** = **"i"** — an **independent vowel** (word-initial, so a full letter,
-  like **അ** in *athe*).
+  like **അ** in *ate*).
 - **ല്ല** = "lla" — a **conjunct**: **ല** (la) loses its vowel and joins
   another **ല** (la) into a doubled, held "ll."
 
@@ -69,6 +70,8 @@ The same idea, five ways:
 | Telugu | *lēdu* (లేదు) | native, a **different** root |
 | Hindi | *nahīṁ* (नहीं) | Indo-European (unrelated) |
 
+DEDR 2559 lists Malayalam *illa* with Tamil *illai* and Kannada *illa*.
+
 ## Grammar Lens: Dravidian negates by *being*
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01]; assesses=[ML-LEX-ILLA-01] -->
 
@@ -85,7 +88,7 @@ say a thing is not. (Recall Telugu was the outlier here, using *lēdu*.)
 
 [PAUSE 1s]
 - [YOU SAY: i · lla → "illa"]
-- [YOU SAY: the pair — *athe* ("yes") / *illa* ("no")]
+- [YOU SAY: the pair — *ate* ("yes") / *illa* ("no")]
 - [YOU SAY: *illa* once as the short answer "no"]
 
 ## Wrap-up Recall

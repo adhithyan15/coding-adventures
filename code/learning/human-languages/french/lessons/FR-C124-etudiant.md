@@ -13,7 +13,8 @@ gloss: "a student"
 concept_tag: FR-METIERS76-ETUDIANT
 prerequisites: [FR-C123-agriculteur, FR-C124-boulanger]
 sounds: []
-roots: []
+roots: [studere-latin]
+etymology_hook: "étudiant — 'studying', from étudier — English student"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C124-boulanger]
 <!-- hl-knowledge: introduces=[FR-LEX-C124-METIERS76-02]; assesses=[] -->
 
 **l'étudiant** — "a student".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**étudiant** is the present participle of *étudier*, "to study", used as a noun: one who is studying. *Étudier* ← Old French *estudier*, from the Latin family of *studium*, "eagerness, study" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

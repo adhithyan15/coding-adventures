@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-430-TEMO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-430-TEMO"
+  ],
+  "after": []
+}

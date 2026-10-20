@@ -1,0 +1,11 @@
+{
+  "id": "IT-C506-rullino",
+  "pathSegment": "IT-PATH-506-FOTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-506-FOTO",
+      "order": 3
+    }
+  ]
+}

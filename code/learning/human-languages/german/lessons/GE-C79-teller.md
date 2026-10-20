@@ -14,6 +14,7 @@ concept_tag: GE-GESCHIRR-TELLER
 prerequisites: [GE-C78-wohnung, GE-C79-tasse]
 sounds: []
 roots: []
+etymology_hook: "Teller ← Italian tagliere 'cutting board' — a plate was first a board to cut meat on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C79-tasse]
 <!-- hl-knowledge: introduces=[GE-LEX-C79-GESCHIRR-02]; assesses=[] -->
 
 **der Teller** — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Teller** ← Middle High German *teller* (EtymDB 2.1), from Italian *tagliere*, "cutting board" — borrowed: a plate was first a board to cut meat on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

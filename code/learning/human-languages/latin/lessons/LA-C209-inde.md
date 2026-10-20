@@ -13,7 +13,8 @@ gloss: "from there; then"
 concept_tag: LA-LOC209-INDE
 prerequisites: [LA-C209-regio, LA-C209-provincia]
 sounds: []
-roots: []
+roots: [inde-latin, is-latin]
+etymology_hook: "inde 'from there' — usually explained as the stem of is + -de 'from'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C209-provincia]
 <!-- hl-knowledge: introduces=[LA-LEX-C209-LOC209-03]; assesses=[] -->
 
 **inde** — "from there; then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**inde** is usually explained as built on the pronoun stem of *is*, "he, that", with an ending *-de*, "from" (Lewis & Short): from there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,9 @@ The everyday word, and the one a ವೈದ್ಯ uses. Kannada has a second, ಕ
 So a singer's is a ಕೊರಳು and a patient's is a ಕುತ್ತಿಗೆ (kuttige), and the same piece of a person is both, depending on why you brought it up.
 This chapter picks up where the leg and the tooth left off, and the run gets less obvious as it goes.
 
+The word, taken apart.
+ಕುತ್ತಿಗೆ (kuttige) is native Dravidian, one word with Telugu kutika (DEDR 1718).
+
 What you've built.
 The first of five more pieces of a person.
 
@@ -47,6 +50,9 @@ Inherited, and it opens with the b that has now turned up in ಬಾಗಿಲು,
 ಬೆನ್ನು (bennu) is the part of a person that faces away, so the language uses it for anything behind you. ಬೆನ್ನ ಹಿಂದೆ, behind the back, is where things are said about you that would not be said in front.
 And ಬೆನ್ನು (bennu) ತಟ್ಟು, to pat the back, means to praise or encourage — the same gesture English named the same way, with no contact between the two languages at any point. Some pictures are simply what bodies do.
 
+The word, taken apart.
+ಬೆನ್ನು (bennu) is native Dravidian, one word with Tamil veṉ and Telugu vennu (DEDR 5488). DEDR gives Kannada ben, bennu: the old v- has become b-.
+
 What you've built.
 Two, and this one has a hand on it.
 
@@ -77,6 +83,9 @@ You'll want to know: ತುಟಿ.
 Two syllables, inherited, and here the four sisters go four different ways. Tamil, Malayalam and Telugu each reach for something quite unlike ತುಟಿ (tuṭi) and unlike each other. For a family this close that is unusual, and it usually means the part in question got renamed after the family split, several times over, by whichever picture each language happened to prefer.
 ತುಟಿ (tuṭi) sits directly on the ಬಾಯಿ you already have. The mouth is the opening; the ತುಟಿ (tuṭi) is its edge.
 And it is the piece of the face that Kannada uses for keeping quiet. To say nothing at all is to not move the ತುಟಿ (tuṭi) — a phrase built out of a body part rather than out of a word for silence, which is how a great many everyday expressions in this language are put together.
+
+The word, taken apart.
+ತುಟಿ (tuṭi) is native Dravidian, one word with Tamil tuṭi (DEDR 3296). DEDR points to related Indo-Aryan words in CDIAL 5853.
 
 What you've built.
 Three, and this one edges a word you already had.
@@ -109,6 +118,7 @@ You'll want to know: ಭುಜ.
 Sanskrit bhuja, and behind it bhuj-, "to bend". The shoulder is named for being the joint that folds — the limb described by what it does rather than by where it sits. Sanskrit built a good many body words that way.
 Kannada's own word here is ಹೆಗಲು (hegalu), and the division between the two is worth having. ಹೆಗಲು is the shoulder you carry a load on, the flat top of it; ಭುಜ (bhuja) leans toward the joint and toward strength — the arm-and-shoulder of somebody who can lift things.
 That opening ಭ is a letter Kannada mostly uses in borrowed words. Meeting one is a fair hint that the word came from Sanskrit before you know anything else about it.
+CDIAL 9525 lists Sanskrit bhuja, "arm".
 
 What you've built.
 Four, and this is the run's borrowed one.
@@ -140,6 +150,9 @@ You'll want to know: ಮೂಳೆ.
 Here Kannada is the odd one out. Tamil says elumbu, Malayalam says eluvu, Telugu says emuka — three sisters plainly holding the same old word between them, and Kannada holding ಮೂಳೆ (mūḷe), which is not it.
 That happens. A language drops an inherited word and promotes another one, and afterwards the family tree looks broken at exactly one branch. The ear-word and the nose-word each showed you a version of this earlier, with a different sister standing apart each time. Which one is the odd one out changes from word to word, and that is the whole point: these are four separate languages, not four accents.
 ಮೂಳೆ (mūḷe) closes the body run, and it is the piece of you that outlasts the rest.
+
+The word, taken apart.
+ಮೂಳೆ (mūḷe) is native Dravidian (DEDR 5050). DEDR lists Kannada mūḷe with Kodagu mu, ḷe and Tulu mūḷe, "bone".
 
 What you've built.
 Five: ಕುತ್ತಿಗೆ (kuttige), ಬೆನ್ನು (bennu), ತುಟಿ (tuṭi), ಭುಜ (bhuja), ಮೂಳೆ (mūḷe). Enough to say where it hurts.

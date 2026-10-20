@@ -1,0 +1,11 @@
+{
+  "id": "GE-C453-gipfel",
+  "pathSegment": "GE-PATH-453-GIPFEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-453-GIPFEL",
+      "order": 2
+    }
+  ]
+}

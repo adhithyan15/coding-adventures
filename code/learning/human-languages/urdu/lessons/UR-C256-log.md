@@ -14,7 +14,8 @@ romanization: "log"
 concept_tag: UR-CHIZ256-LOG
 prerequisites: [UR-C256-saheli, UR-C256-mezban]
 sounds: []
-roots: []
+roots: [sanskrit-loka]
+etymology_hook: "log: usually traced to Sanskrit loka 'world; people'; CDIAL 11119 lists Hindi loī, loe and Prakrit loga"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C256-mezban]
 <!-- hl-knowledge: introduces=[UR-LEX-C256-CHIZ256-05]; assesses=[] -->
 
 **لوگ** — *log* — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لوگ** (*log*) is usually traced to Sanskrit *loka*, "world, space; people". CDIAL lists under it the Prakrit *loga* and the Hindi forms *loī* and *loe*, "people", but not *log* itself (CDIAL 11119).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an experience (something lived)"
 concept_tag: GE-THING229-ERLEBNIS
 prerequisites: [GE-C228-ergebnis, GE-C228-erklaerung]
 sounds: []
-roots: []
+roots: [germanic-libjana]
+etymology_hook: "Erlebnis — er- + leben 'to live' + -nis: something lived through"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C228-erklaerung]
 <!-- hl-knowledge: introduces=[GE-LEX-C229-THING229-01]; assesses=[] -->
 
 **das Erlebnis** — "an experience (something lived)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erlebnis** is *er-* + *leben*, "to live", + *-nis*: something lived through. *leben* ← Proto-Germanic *\*libjaną*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

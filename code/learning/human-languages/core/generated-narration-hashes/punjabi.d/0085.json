@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 85,
-  "sourceHash": "fnv1a64:bf3fe03642c7da9d",
+  "sourceHash": "fnv1a64:6f24f0dd1fea5f76",
   "lessonIds": [
     "PA-C85-bhura",
     "PA-C85-din",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch85.txt",
   "json": "punjabi/narration/ch85.json",
-  "textHash": "fnv1a64:3be122ebf1dcec4d",
-  "jsonHash": "fnv1a64:95002643e1d83b3f",
+  "textHash": "fnv1a64:6b49683ded823623",
+  "jsonHash": "fnv1a64:a84d3575addde6c7",
   "findings": []
 }

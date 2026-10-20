@@ -14,6 +14,7 @@ concept_tag: GE-VERB-SPUELEN
 prerequisites: [GE-C186-senden, GE-C186-spazieren]
 sounds: []
 roots: []
+etymology_hook: "spülen ← Old High German spuolen — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C186-spazieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C187-VERB187-01]; assesses=[] -->
 
 **spülen** — "to rinse, to wash up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spülen** ← Middle High German *spüelen* ← Old High German *spuolen*, "to rinse" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

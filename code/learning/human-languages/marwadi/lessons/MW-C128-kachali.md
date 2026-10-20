@@ -14,7 +14,8 @@ romanization: "kā̃chaḷī"
 concept_tag: MW-THINGS128-KACHALI
 prerequisites: [MW-C128-ghaghro, MW-C128-lugro]
 sounds: []
-roots: []
+roots: [sanskrit-kanculi]
+etymology_hook: "kā̃chaḷī ← Sanskrit kañculī 'bodice', a tadbhava (CDIAL 2627, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C128-lugro]
 <!-- hl-knowledge: introduces=[MW-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **कांचळी** — *kā̃chaḷī* — "a bodice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कांचळी** (*kā̃chaḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kañculī*, "bodice". CDIAL gives no Marwari form in this entry (CDIAL 2627); the match is through Gujarati *kā̃cḷī*. Its base word, *\*kañcu*, "snake's skin; bodice", does have Old Marwari *kaṃcū*, "bodice" (CDIAL 2626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

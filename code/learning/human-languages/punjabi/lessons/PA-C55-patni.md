@@ -14,7 +14,8 @@ romanization: "patnī"
 concept_tag: PA-FAMILY55-PATNI
 prerequisites: [PA-C54-nani, PA-C54-pati]
 sounds: []
-roots: []
+roots: [sanskrit-patni]
+etymology_hook: "patnī ← Sanskrit patnī 'mistress, wife', a tatsama (CDIAL 7742)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C54-pati]
 <!-- hl-knowledge: introduces=[PA-LEX-C55-FAMILY55-01]; assesses=[] -->
 
 **ਪਤਨੀ** — *patnī* — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਤਨੀ** (*patnī*) is Sanskrit *patnī*, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

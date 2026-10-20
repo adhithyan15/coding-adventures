@@ -14,7 +14,8 @@ romanization: "ummīd"
 concept_tag: HI-THG186-UMMID
 prerequisites: [HI-C186-pyar, HI-C186-sarm]
 sounds: []
-roots: []
+roots: [persian-ummed]
+etymology_hook: "ummīd: usually traced to Persian ummēd 'hope'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C186-sarm]
 <!-- hl-knowledge: introduces=[HI-LEX-C186-THG186-04]; assesses=[] -->
 
 **उम्मीद** — *ummīd* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उम्मीद** (*ummīd*) is a loan, usually traced to Persian *ummēd*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

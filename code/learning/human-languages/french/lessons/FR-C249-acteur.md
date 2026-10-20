@@ -13,7 +13,8 @@ gloss: "an actor"
 concept_tag: FR-CHOSES249-ACTEUR
 prerequisites: [FR-C248-politique, FR-C248-economie]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "acteur ← Latin actor 'a doer, a performer', from agere — the Latin of agir"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C248-economie]
 <!-- hl-knowledge: introduces=[FR-LEX-C249-CHOSES249-01]; assesses=[] -->
 
 **l'acteur** — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**acteur** ← Latin *actor*, "a doer, a performer", from *agere*, the Latin of *agir* — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

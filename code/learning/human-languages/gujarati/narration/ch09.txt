@@ -85,6 +85,9 @@ The greeting most Gujaratis actually use — three words you already own.
 The phrase, taken apart.
 તમે કેમ છો? (tame kem chho?) = તમે (tame, respectful "you") + કેમ (kem, "how") + છો (chho, "are") — literally "you how are?", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?).
 
+The phrase, taken apart.
+Tame and chho are inherited, from Sanskrit yuṣmad-, "you", and ākṣeti, "abides" (CDIAL 10511, 1031). Kem has no CDIAL entry.
+
 Grammar Lens: match the "you" to the copula.
 Respectful: તમે કેમ છો? (tame kem chho?) (tame … chho).
 Familiar: તું કેમ (kem) છે? (tũ … chhe).
@@ -162,6 +165,7 @@ The letters in this word.
 
 The word, taken apart.
 વાંધો નહીં (vāndho nahĩ) literally means "[there is] no objection" — vāndho ("objection, difficulty, harm") + નહીં (nahĩ, "not / no"). It serves as "it's okay / no worries / no problem / you're welcome." The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ.
+CDIAL lists Old Gujarati nahīaṁ under Sanskrit nahi, "surely not" (CDIAL 7035), and nahĩ is its modern form. It has no entry for vāndho, so the origin of that word is not settled.
 
 Guided Practice.
 [pause 1 second]

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 105,
-  "sourceHash": "fnv1a64:b26b677deaf8779c",
+  "sourceHash": "fnv1a64:a6cd9a5978abba95",
   "lessonIds": [
     "UR-C105-shauq",
     "UR-C105-irada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch105.txt",
   "json": "urdu/narration/ch105.json",
-  "textHash": "fnv1a64:82240f60e7e5096e",
-  "jsonHash": "fnv1a64:d62cb31ac1e18a76",
+  "textHash": "fnv1a64:e61c61150a92f8ac",
+  "jsonHash": "fnv1a64:0e4f607b823e84e5",
   "findings": []
 }

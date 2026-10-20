@@ -13,7 +13,8 @@ gloss: "to order (goods)"
 concept_tag: PT-VERB-ENCOMENDAR
 prerequisites: [PT-C201-gastar, PT-C201-poupar]
 sounds: []
-roots: []
+roots: [commendare-latin]
+etymology_hook: "encomendar — en- + an old verb from Latin commendare 'to entrust'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C201-poupar]
 <!-- hl-knowledge: introduces=[PT-LEX-C201-VERBOS201-04]; assesses=[] -->
 
 **encomendar** — "to order (goods)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**encomendar** is built from *en-* and an old verb from Latin *commendare*, "to entrust" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

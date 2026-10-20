@@ -14,7 +14,8 @@ romanization: "morabbi"
 concept_tag: FA-KAR251-MORABBI
 prerequisites: [FA-C251-honarmand, FA-C251-davar]
 sounds: []
-roots: []
+roots: [arabic-murabbi]
+etymology_hook: "morabbi ← Arabic murabbī 'one who brings up, educator', root r-b-w (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C251-davar]
 <!-- hl-knowledge: introduces=[FA-LEX-C251-KAR251-03]; assesses=[] -->
 
 **مربی** — *morabbi* — "a coach, a trainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*morabbi* is borrowed from Arabic *murabbī*, "one who brings up, educator". Its Arabic root is *r-b-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

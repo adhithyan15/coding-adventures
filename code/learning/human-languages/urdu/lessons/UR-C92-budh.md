@@ -14,7 +14,8 @@ romanization: "budh"
 concept_tag: UR-TIME92-BUDH
 prerequisites: [UR-C91-itvar, UR-C92-mangal]
 sounds: []
-roots: []
+roots: [sanskrit-budha, sanskrit-vara-day]
+etymology_hook: "budh: short for budhvār; Sanskrit budha 'the planet Mercury' + vāra 'day of the week', tatsamas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C92-mangal]
 <!-- hl-knowledge: introduces=[UR-LEX-C92-TIME92-02]; assesses=[] -->
 
 **بدھ** — *budh* — "Wednesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدھ** (*budh*) is short for *budhvār*, "Mercury's day": Sanskrit *budha*, "the planet Mercury", with *vāra*, "day of the week", both taken over as tatsamas.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

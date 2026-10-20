@@ -14,7 +14,8 @@ romanization: "sandhyā"
 concept_tag: SA-TIME91-SANDHYA
 prerequisites: [SA-C90-usah, SA-C91-prabhatam]
 sounds: []
-roots: []
+roots: [sanskrit-sandhya]
+etymology_hook: "sandhyā 'twilight', first a form of saṃdhi 'junction' of day and night; Hindi sāṃjh (CDIAL 12918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C91-prabhatam]
 <!-- hl-knowledge: introduces=[SA-LEX-C91-TIME91-02]; assesses=[] -->
 
 **सन्ध्या** — *sandhyā* — "twilight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL 12918 explains *sandhyā* as first a form of *saṃdhi*, "junction": the
+joining of day and night. It lives on as Hindi *sāṃjh*, "evening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

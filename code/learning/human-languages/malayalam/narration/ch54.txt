@@ -15,6 +15,9 @@ Inherited Dravidian, matching Tamil maram, Kannada mara and Telugu mrānu. Four 
 It carries the standing tree and the cut timber on one shape. A carpenter's മരം (maraṁ) and a forest's മരം (maraṁ) are the same word, and Malayalam leaves it to the situation to say which is meant. English needs tree and wood to do that work.
 Kerala's own tree, the coconut, gets a compound built on this one, and the ordinary word for a tree-climber is built on it too.
 
+The word, taken apart.
+മരം (maraṁ) is native Dravidian, one word with Tamil maram, Kannada mara and Telugu m(r)ānu (DEDR 4711).
+
 What you've built.
 The thing the rest of this run takes apart.
 
@@ -47,6 +50,9 @@ Inherited, matching Tamil kompu. Malayalam puts one shape on anything that juts 
 That is a picture doing the work rather than a rule. Once you have seen the branch and the horn as one thing, the elephant's tusk needs no separate word, and Malayalam never gave it one.
 The elephant sense is the one you are most likely to hear in Kerala, where the animal is a fixture of festival and of conversation both.
 
+The word, taken apart.
+കൊമ്പ് (kompŭ) is native Dravidian, one word with Tamil kompu, Kannada kombu and Telugu kommu (DEDR 2115). One word covers the branch, the horn and the tusk: anything that juts out to a point.
+
 What you've built.
 Two: the tree, and the part that reaches out from it.
 
@@ -77,6 +83,9 @@ You'll want to know: തടി.
 Inherited, and it does three jobs on one shape: the trunk of a standing tree, the sawn timber that comes out of it, and — of a person — bulk or build.
 The third sense is ordinary Malayalam and not unkind. To say somebody has തടി (taṭi) is to say they are solidly made, and Kerala says it about a person the way English might say sturdy.
 Beside it sits തടിയൻ (taṭiyan), a heavy-set man, carrying that same he-word tail you met on the sun and the moon.
+
+The word, taken apart.
+തടി (taṭi) is native Dravidian. DEDR 3030 lists it in the sense "stick, staff", with Tamil taṭi and Kannada taḍi; its sense of bulk, "stout, robust", sits in DEDR 3020 with Tamil taṭa, "large".
 
 What you've built.
 Three, and this one describes people as well as trees.
@@ -110,6 +119,9 @@ Inherited, matching Tamil vēr closely. The little ŭ at the end is the enunciat
 വേര് (vērŭ) reaches past the plant, as the English word does. The വേര് (vērŭ) of a matter is where it started, and a question about the വേര് (vērŭ) of a quarrel is a question about its cause.
 The two languages arriving at the same figure from the same word is not a coincidence here — it is what roots look like to anybody who has pulled one up.
 
+The word, taken apart.
+വേര് (vērŭ) is native Dravidian, one word with Tamil vēr, Kannada bēr(u) and Telugu vēru (DEDR 5535).
+
 What you've built.
 Four: the tree, the branch, the trunk, and what holds it down.
 
@@ -140,6 +152,9 @@ You'll want to know: വിത്ത്.
 Inherited, matching Tamil vittu, and it closes the tree by going back to where the tree started.
 Like വേര് (vērŭ) it travels into the abstract. The വിത്ത് (vittŭ) of a plan is its beginning, and Malayalam will talk about sowing one. The doubled tt in the middle is worth catching by ear — Malayalam holds it long, and the length is what separates this word from others in its neighbourhood.
 Sowing season in Kerala is set by the rains rather than by a date, which is why the farming words in this language lean on the weather more than on the calendar.
+
+The word, taken apart.
+വിത്ത് (vittŭ) is native Dravidian, one word with Tamil vittu, Kannada bittu and Telugu vittu (DEDR 5401).
 
 What you've built.
 Five, and the run closes where a tree starts: a tree, a branch, the trunk, a root, a seed.

@@ -14,7 +14,8 @@ romanization: "upēkṣikkuka"
 concept_tag: ML-VERB-UPEKSIKKUKA
 prerequisites: [ML-C310-uraykkuka, ML-C310-alikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-upeksha]
+etymology_hook: "upēkṣikkuka ← Sanskrit upēkṣā 'overlooking, disregard' (CDIAL 2319) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C310-alikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C310-KRIYA310-04]; assesses=[] -->
 
 **ഉപേക്ഷിക്കുക** — *upēkṣikkuka* — "to give up, to abandon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപേക്ഷിക്കുക** (*upēkṣikkuka*) is built on Sanskrit *upēkṣā*, "overlooking, disregard" (CDIAL 2319), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

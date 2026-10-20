@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Sul fuoco",
+  "label": "ch:it-sul-fuoco",
+  "canDo": "I can say how I boiled and drained food, with the lid on the pan.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C333-tegame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say how I boiled and drained food, with the lid on the pan.",
+    "assesses": [
+      "IT-LEX-C333-PENTOLA-03",
+      "IT-LEX-C333-PENTOLA-04",
+      "IT-LEX-C333-PENTOLA-05"
+    ]
+  }
+}

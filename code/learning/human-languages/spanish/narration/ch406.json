@@ -4,7 +4,7 @@
   "chapter": 406,
   "title": "Clients, Documents and Data",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1a58f27f32acebea",
+  "sourceHash": "fnv1a64:1e714d4dbbacef35",
   "lessons": [
     {
       "id": "ES-C406-cliente",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e04abd040661e22",
+      "sourceHash": "fnv1a64:1fed4811caa77412",
       "notice": null,
       "blocks": [
         {
@@ -566,7 +566,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Rellenar shows its construction on the surface: re- + llenar, “to fill.” Its broad sense is to fill something again or completely. In an office, it has the practical meaning “to fill in” or “to fill out.”"
+              "text": "Rellenar shows its construction on the surface: re- + llenar, “to fill.” Its broad sense is to fill something again or completely. In an office, it has the practical meaning “to fill in” or “to fill out.” Llenar belongs with lleno, “full”, inherited from Latin plēnus, with pl- turned to ll-."
             },
             {
               "kind": "speech",

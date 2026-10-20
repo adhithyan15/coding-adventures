@@ -14,7 +14,8 @@ romanization: "mâr"
 concept_tag: FA-ANIMALS56-MAR
 prerequisites: [FA-C56-fil, FA-C56-meymun]
 sounds: []
-roots: []
+roots: [persian-mar]
+etymology_hook: "mâr ← Middle Persian mār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C56-meymun]
 <!-- hl-knowledge: introduces=[FA-LEX-C56-ANIMALS56-05]; assesses=[] -->
 
 **مار** — *mâr* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *mār*, "snake" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

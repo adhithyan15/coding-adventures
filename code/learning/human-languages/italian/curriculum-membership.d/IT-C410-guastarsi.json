@@ -1,0 +1,11 @@
+{
+  "id": "IT-C410-guastarsi",
+  "pathSegment": "IT-PATH-410-GUASTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-410-GUASTO",
+      "order": 1
+    }
+  ]
+}

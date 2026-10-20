@@ -14,7 +14,8 @@ romanization: "goṣṭa"
 concept_tag: MR-WORLD120-GOSTA
 prerequisites: [MR-C120-batmi, MR-C120-desh]
 sounds: []
-roots: []
+roots: [sanskrit-goshthi]
+etymology_hook: "goṣṭa: a learned form of Sanskrit goṣṭhī 'assembly'; CDIAL lists inherited goṭh 'conversation, tale' (CDIAL 4339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C120-desh]
 <!-- hl-knowledge: introduces=[MR-LEX-C120-WORLD120-05]; assesses=[] -->
 
 **गोष्ट** — *goṣṭa* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोष्ट** (*goṣṭa*) is a learned form of Sanskrit *goṣṭhī*, "assembly, meeting place". CDIAL lists the inherited Marathi word as *goṭh*, "conversation, tale" (CDIAL 4339).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

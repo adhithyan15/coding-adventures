@@ -14,7 +14,8 @@ romanization: "yukata"
 concept_tag: JA-THINGS105-YUKATA
 prerequisites: [JA-C104-kane, JA-C105-hakama]
 sounds: []
-roots: []
+roots: [japanese-yu]
+etymology_hook: "yukata: native; usually yu 'bath' + katabira 'light robe', shortened; written 浴衣"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C105-hakama]
 <!-- hl-knowledge: introduces=[JA-LEX-C105-THINGS105-02]; assesses=[] -->
 
 **ゆかた** — *yukata* — "a cotton kimono".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆかた** (*yukata*) is a native word. JMdict writes it with characters for "bathe" and "clothes", read as a whole; it is usually explained as *yu*, "bath", with *katabira*, a light robe, shortened. That account is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

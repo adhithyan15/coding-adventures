@@ -13,7 +13,8 @@ gloss: "every day"
 concept_tag: LA-TEMP237-COTIDIE
 prerequisites: [LA-C237-mora, LA-C237-interdum]
 sounds: []
-roots: []
+roots: [cotidie-latin, dies-latin]
+etymology_hook: "cotīdiē 'every day' — fused from quot + diē 'on the day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C237-interdum]
 <!-- hl-knowledge: introduces=[LA-LEX-C237-TEMP237-04]; assesses=[] -->
 
 **cotīdiē** — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cotīdiē** is fused from *quot*, "as many as", and *diē*, "on the day": on every day there is. English *quotidian* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

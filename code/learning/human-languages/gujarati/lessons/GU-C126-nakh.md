@@ -14,7 +14,8 @@ romanization: "nakh"
 concept_tag: GU-THINGS126-NAKH
 prerequisites: [GU-C126-koni, GU-C126-hatheli]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nakh ← Sanskrit nakha 'nail of finger or toe, claw', a tatsama (CDIAL 6914)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C126-hatheli]
 <!-- hl-knowledge: introduces=[GU-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **નખ** (*nakh*) — "a fingernail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નખ** (*nakh*) is Sanskrit *nakha*, "nail of finger or toe, claw", taken over whole as a learned loan, a tatsama (CDIAL 6914). CDIAL lists the inherited Old Gujarati form as *naha*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

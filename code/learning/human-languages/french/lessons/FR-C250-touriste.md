@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES250-TOURISTE
 prerequisites: [FR-C249-peintre, FR-C250-etranger]
 sounds: []
 roots: []
+etymology_hook: "touriste ← English tourist, built on English tour 'a circuit', itself from French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C250-etranger]
 <!-- hl-knowledge: introduces=[FR-LEX-C250-CHOSES250-02]; assesses=[] -->
 
 **le touriste** — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**touriste** ← English *tourist*, built on English *tour*, "a circuit", which English had taken from French — borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

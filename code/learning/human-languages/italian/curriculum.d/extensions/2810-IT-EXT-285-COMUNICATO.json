@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-285-COMUNICATO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow official words: a statement, a spokesperson, a press conference, a press release and a denial.",
+  "prerequisites": []
+}

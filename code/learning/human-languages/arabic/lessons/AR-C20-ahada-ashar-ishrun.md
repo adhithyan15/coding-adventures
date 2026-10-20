@@ -12,7 +12,7 @@ concept_tag: AR-NUM-11-20
 prerequisites: [AR-C19-wahid-khamsa]
 sounds: [arabic-ain-shiin, arabic-teh-marbuta]
 roots: [arabic-ashar-ten, arabic-ishrun-twenty]
-etymology_hook: "أحد عشر through خمسة عشر (11-15) are plain 'X and ten' compounds, X + عشر (ʿashar, 'ten') — but عشرون (ʿishrūn, 'twenty') is NOT 'two-ten'; it's its OWN distinct plural-like form built directly on the 'ten' root, the same root behind Hebrew's eser and English's own '-teen'"
+etymology_hook: "aḥada ʿashar, ʿishrūn: on the root ʿ-sh-r 'ten' (Lane), cousin of Hebrew ʿeser; English -teen is not related"
 duration:
   max_seconds: 240
 requires:
@@ -71,6 +71,14 @@ the two roots are **not** related: Arabic and English inherited "ten" from
 two entirely separate language families, so this is a parallel, not a shared
 borrowing or common ancestor.
 
+And now the age question has its answer: **عمري عشرون سنة** (*ʿumrī
+ʿishrūna sana*) — "I am twenty years old," literally "my age [is] twenty years."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ʿAshar* and *ʿishrūn* are built on the native root *ʿ-sh-r*, "ten" (Lane), a cousin of Hebrew *ʿeser*, "ten"; *aḥada*, "one", is listed by Lane under *ʾ-ḥ-d*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02] -->
 
@@ -78,6 +86,7 @@ borrowing or common ancestor.
 - [YOU SAY: "aḥada ʿashar, ithnā ʿashar, thalāthata ʿashar" — 11, 12, 13, "X
   and ten"]
 - [YOU SAY: "ʿishrūn" — twenty, its OWN word, not "two-ten"]
+- [YOU SAY: "ʿumrī ʿishrūna sana" — my age is twenty years, no verb at all]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02] -->

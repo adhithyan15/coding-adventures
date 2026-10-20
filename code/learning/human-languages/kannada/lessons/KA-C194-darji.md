@@ -14,7 +14,8 @@ romanization: "darji"
 concept_tag: KA-KELASA194-DARJI
 prerequisites: [KA-C194-sambala, KA-C194-grahaka]
 sounds: []
-roots: []
+roots: [persian-darzi]
+etymology_hook: "darji ← Persian darzī 'tailor', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C194-grahaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C194-KELASA194-03]; assesses=[] -->
 
 **ದರ್ಜಿ** — *darji* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದರ್ಜಿ** (*darji*) is a loan from Persian *darzī*, "tailor", from *darz*, "seam", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

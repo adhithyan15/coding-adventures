@@ -11,7 +11,8 @@ romanization: "itŭ"
 concept_tag: ML-DEIXIS-THIS
 prerequisites: [ML-C37-chevi, ML-C37-mookku]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "itŭ: native Dravidian, a near-pointing base + a 'thing' ending; Tamil itu is the same word (DEDR 410)"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,14 @@ reviews_of: []
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **അത്** *atŭ*, which you will meet in a moment. The two of them
+Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇത്** (*itŭ*) is native Dravidian: the old near-pointing base with an ending meaning "thing". DEDR 410 lists Malayalam *itu* with Tamil *itu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02] -->

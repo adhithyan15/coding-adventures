@@ -14,7 +14,8 @@ romanization: "rasoī"
 concept_tag: MW-HOME65-RASOI
 prerequisites: [MW-C64-botal, MW-C65-kivar]
 sounds: []
-roots: []
+roots: [sanskrit-rasavati]
+etymology_hook: "rasoī ← Sanskrit rasavatī 'kitchen', a tadbhava (CDIAL 10656, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C65-kivar]
 <!-- hl-knowledge: introduces=[MW-LEX-C65-HOME65-02]; assesses=[] -->
 
 **रसोई** — *rasoī* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रसोई** (*rasoī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rasavatī*, "kitchen". CDIAL lists Marwari *rasoī* under it (CDIAL 10656). It is built on *rasa*, "juice, flavour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

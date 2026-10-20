@@ -14,7 +14,8 @@ romanization: "âvizân kardan"
 concept_tag: FA-VERB-AVIZAN-KARDAN
 prerequisites: [FA-C254-otu-kardan, FA-C254-ta-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "âvizân kardan: Persian âvizân 'hanging' (âvikhtan) + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C254-ta-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C254-KONESH254-05]; assesses=[] -->
 
 **آویزان کردن** — *âvizân kardan* — "to hang up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âvizân kardan* pairs *âvizân*, "hanging" (from *âvikhtan*, "to hang"), with *kardan*. Both are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

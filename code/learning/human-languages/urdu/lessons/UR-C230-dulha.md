@@ -14,7 +14,8 @@ romanization: "dūlhā"
 concept_tag: UR-CHIZ230-DULHA
 prerequisites: [UR-C230-sasur, UR-C230-sas]
 sounds: []
-roots: []
+roots: [sanskrit-durlabha]
+etymology_hook: "dūlhā ← Sanskrit durlabha 'hard to obtain; beloved', a tadbhava (CDIAL 6446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C230-sas]
 <!-- hl-knowledge: introduces=[UR-LEX-C230-CHIZ230-04]; assesses=[] -->
 
 **دولہا** — *dūlhā* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دولہا** (*dūlhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *durlabha*, "hard to obtain; beloved" (CDIAL 6446).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

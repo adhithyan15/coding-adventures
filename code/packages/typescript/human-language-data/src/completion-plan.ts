@@ -38,11 +38,12 @@ import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
 import type { WritingStageReport } from "./writing-stages.js";
 
-/** The twelve families of work. Every item belongs to exactly one. */
+/** The thirteen families of work. Every item belongs to exactly one. */
 export type WorkKind =
   | "assessment-contract"
   | "external-capstone"
   | "task-shape"
+  | "mock-assessment"
   | "writing-stage"
   | "human-validation"
   | "exam-inventory"
@@ -93,15 +94,16 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
   "external-capstone": 2,
   "task-shape": 3,
-  "writing-stage": 4,
-  "human-validation": 5,
-  "exam-inventory": 6,
-  "script-closure": 7,
-  "exam-point": 8,
-  vocabulary: 9,
-  reinforcement: 10,
-  "atom-budget": 11,
-  "spine-nodes": 12,
+  "mock-assessment": 4,
+  "writing-stage": 5,
+  "human-validation": 6,
+  "exam-inventory": 7,
+  "script-closure": 8,
+  "exam-point": 9,
+  vocabulary: 10,
+  reinforcement: 11,
+  "atom-budget": 12,
+  "spine-nodes": 13,
 });
 
 /**
@@ -117,6 +119,7 @@ export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
   "external-capstone": 1,
   "task-shape": 1,
+  "mock-assessment": 1,
   "writing-stage": 1,
   "human-validation": 1,
   "exam-inventory": 1,
@@ -157,6 +160,8 @@ export interface WorkItem {
   outstanding: number;
   /** PRs this decomposes into at the family's tranche size. Sort key 3. */
   tranches: number;
+  /** Concrete prerequisites that keep this item visible but out of the actionable head. */
+  blockedBy?: readonly string[];
 }
 
 /** Work counted rather than listed, because listing it would be a lie. */
@@ -171,6 +176,8 @@ export interface CompletionPlan {
   ceiling: CefrLevel;
   /** The next items, fully enumerated and ready to pick up. */
   head: WorkItem[];
+  /** Visible debt that cannot be picked up until its named prerequisites exist. */
+  blocked: WorkItem[];
   /** Everything behind the head, counted per family. */
   projection: PlanProjection[];
   summary: {
@@ -208,6 +215,16 @@ export interface HumanValidationCoverage {
   missingMocks: readonly string[];
 }
 
+/** Structural evidence coverage for one rung's timed four-skill papers. */
+export interface MockAssessmentCoverage {
+  language: string;
+  level: CefrLevel;
+  requiredMocks: number;
+  completeMocks: number;
+  missingMocks: readonly string[];
+  blockedBy: readonly string[];
+}
+
 export interface CompletionPlanInput {
   levelGate: LevelGateReport;
   scriptClosure: ScriptClosureReport;
@@ -215,6 +232,8 @@ export interface CompletionPlanInput {
   writingStages?: WritingStageReport;
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
+  /** Measured blockers for publishing a missing contract, keyed by track. */
+  assessmentPrerequisites: ReadonlyArray<{ language: string; missing: readonly string[] }>;
   /** Declared external exams that intentionally have no CEFR equivalence. */
   externalCapstones?: ReadonlyArray<{
     language: string;
@@ -230,6 +249,8 @@ export interface CompletionPlanInput {
   partialInventories?: readonly InventoryPresence[];
   /** Which sourced four-skill performance shapes exist. Absent pairs become `task-shape` items. */
   taskShapes?: readonly InventoryPresence[];
+  /** Complete paper, rubric, key, and task-shape manifest evidence per rung. */
+  mockAssessments?: readonly MockAssessmentCoverage[];
   /**
    * Human-review evidence for the full mocks enumerated by valid contracts.
    * Missing declarations and dangling declared evidence both remain explicit.
@@ -300,6 +321,12 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const have = new Set(input.inventories.map((entry) => `${entry.language}/${entry.level}`));
   const partial = new Set((input.partialInventories ?? []).map((entry) => `${entry.language}/${entry.level}`));
   const haveTaskShapes = new Set((input.taskShapes ?? []).map((entry) => `${entry.language}/${entry.level}`));
+  const mockAssessmentsByLanguage = new Map<string, MockAssessmentCoverage[]>();
+  for (const status of input.mockAssessments ?? []) {
+    const statuses = mockAssessmentsByLanguage.get(status.language) ?? [];
+    statuses.push(status);
+    mockAssessmentsByLanguage.set(status.language, statuses);
+  }
   const humanValidationByLanguage = new Map<string, HumanValidationCoverage[]>();
   for (const status of input.humanValidation ?? []) {
     const statuses = humanValidationByLanguage.get(status.language) ?? [];
@@ -308,6 +335,9 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   }
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
+  const assessmentPrerequisites = new Map(
+    input.assessmentPrerequisites.map((entry) => [entry.language, entry.missing]),
+  );
 
   // Items are collected PER TRACK and interleaved at the end, never pooled and
   // sorted flat. The first version of this function pooled them, and the queue it
@@ -321,12 +351,38 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
 
   for (const track of input.levelGate.tracks) {
     const mine: WorkItem[] = [];
+    const nextMissingMock = (from?: CefrLevel): MockAssessmentCoverage | undefined =>
+      contracted.has(track.language) && input.mockAssessments !== undefined
+        ? (mockAssessmentsByLanguage.get(track.language) ?? [])
+            .filter((status) =>
+              (from === undefined || levelRank(status.level) >= levelRank(from))
+              && levelRank(status.level) <= levelRank(ceiling)
+              && status.missingMocks.length > 0
+            )
+            .sort((a, b) => levelRank(a.level) - levelRank(b.level))[0]
+        : undefined;
+    const mockItem = (status: MockAssessmentCoverage): WorkItem => ({
+      id: `mock-assessment/${track.language}/${status.level}`,
+      kind: "mock-assessment",
+      language: track.language,
+      level: track.inProgressAt !== null && levelRank(status.level) < levelRank(track.inProgressAt)
+        ? status.level
+        : track.inProgressAt ?? status.level,
+      goal:
+        `complete ${status.missingMocks.length} of ${status.requiredMocks} timed ${status.level} ` +
+        `four-skill mock(s) for ${track.language}: learner paper, distinct rubric and answer key, ` +
+        `and a manifest matching the published task-shape parts`,
+      outstanding: status.missingMocks.length,
+      tranches: tranchesFor(status.missingMocks.length, "mock-assessment"),
+      ...(status.blockedBy.length > 0 ? { blockedBy: [...status.blockedBy] } : {}),
+    });
     // `inProgressAt` is null exactly when the ladder is complete. A track that
     // has attained the structural ceiling may still owe learner evidence. The
     // human-validation family is checked before that early exit so "corpus
     // complete" cannot silently become "learner proven".
     const level = track.inProgressAt;
     if (level === null || levelRank(level) > levelRank(ceiling)) {
+      const missingMock = nextMissingMock();
       const missingHumanValidation = contracted.has(track.language) && input.humanValidation !== undefined
         ? (humanValidationByLanguage.get(track.language) ?? [])
             .filter((status) =>
@@ -334,6 +390,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
             )
             .sort((a, b) => levelRank(a.level) - levelRank(b.level))[0]
         : undefined;
+      if (missingMock !== undefined) mine.push(mockItem(missingMock));
       if (missingHumanValidation !== undefined) {
         mine.push({
           id: `human-validation/${track.language}/${missingHumanValidation.level}`,
@@ -347,10 +404,12 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
           outstanding: missingHumanValidation.missingMocks.length,
           tranches: tranchesFor(missingHumanValidation.missingMocks.length, "human-validation"),
         });
+      }
+      if (mine.length === 0) {
+        tracksDone += 1;
+      } else {
         byTrack.set(track.language, mine);
         items.push(...mine);
-      } else {
-        tracksDone += 1;
       }
       continue;
     }
@@ -362,6 +421,9 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     // exists, a track cannot honestly claim that finishing its book prepares the
     // reader to pass, however complete its vocabulary and grammar may look.
     if (!contracted.has(track.language)) {
+      // Missing measurement is unknown readiness, never proof of readiness.
+      const blockedBy = assessmentPrerequisites.get(track.language)
+        ?? ["assessment artifact prerequisites not measured"];
       mine.push({
         id: `assessment-contract/${track.language}`,
         kind: "assessment-contract",
@@ -373,6 +435,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
           `the gentle writing stages, scored tasks, rubrics, answer keys and timed full mocks`,
         outstanding: 1,
         tranches: 1,
+        ...(blockedBy && blockedBy.length > 0 ? { blockedBy } : {}),
       });
     }
 
@@ -412,6 +475,9 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
         tranches: 1,
       });
     }
+
+    const missingMock = nextMissingMock();
+    if (missingMock !== undefined) mine.push(mockItem(missingMock));
 
     // Policy has required human validation since HL16, but until HL-C13440 the
     // contract could not name its evidence and the queue could not represent
@@ -536,14 +602,21 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     items.push(...mine);
   }
 
+  const blocked = items.filter((item) => item.blockedBy?.length);
+  const actionableByTrack = new Map([...byTrack].map(([language, mine]) => [
+    language,
+    mine.filter((item) => !item.blockedBy?.length),
+  ]));
+  const actionable = items.length - blocked.length;
   return {
     ceiling,
-    head: interleave(byTrack, input.levelGate).slice(0, headSize),
+    head: interleave(actionableByTrack, input.levelGate).slice(0, headSize),
+    blocked,
     projection: project(input, ceiling, items),
     summary: {
       tracks: input.levelGate.tracks.length,
       tracksDone,
-      itemsInHead: Math.min(headSize, items.length),
+      itemsInHead: Math.min(headSize, actionable),
       itemsOutstanding: items.length,
       projectedTotal: projectedTotal(input, ceiling, items),
     },
@@ -570,7 +643,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
  * a precondition for the climb; it stops being a precondition for the floor.
  */
 function effectivePriority(item: WorkItem): number {
-  if (item.kind === "task-shape" || item.kind === "human-validation" || item.kind === "exam-inventory") {
+  if (item.kind === "task-shape" || item.kind === "mock-assessment" || item.kind === "human-validation" || item.kind === "exam-inventory") {
     const target = item.id.split("/").at(-1) as CefrLevel | undefined;
     if (target !== undefined && levelRank(target) > levelRank(item.level)) {
       return KIND_PRIORITY["spine-nodes"] + 1;
@@ -682,6 +755,15 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
   );
   const assessmentItems = Math.max(0, input.levelGate.tracks.length - validAssessmentContracts.size);
+  const relevantMockAssessments = (input.mockAssessments ?? []).filter(
+    (status) => trackNames.has(status.language) && levelRank(status.level) <= levelRank(ceiling),
+  );
+  const missingMockEvidence = relevantMockAssessments.reduce(
+    (sum, status) => sum + status.missingMocks.length, 0,
+  );
+  const mockAssessmentItems = input.mockAssessments === undefined || assessmentItems > 0
+    ? null
+    : relevantMockAssessments.filter((status) => status.missingMocks.length > 0).length;
   const relevantHumanValidation = (input.humanValidation ?? []).filter(
     (status) => trackNames.has(status.language) && levelRank(status.level) <= levelRank(ceiling),
   );
@@ -745,6 +827,17 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
       kind: "task-shape",
       items: taskShapeItems,
       detail: `${validTaskShapePairs.size} of ${wantedTaskShapes} (track x curriculum level) four-skill task shapes written`,
+    },
+    {
+      kind: "mock-assessment",
+      items: mockAssessmentItems,
+      detail: input.mockAssessments === undefined
+        ? "not measured — no full-mock structure report was supplied"
+        : mockAssessmentItems === null
+          ? `${missingMockEvidence} complete mock evidence set(s) missing from ` +
+            `${relevantMockAssessments.length} measured rung(s); not projectable until every track has a contract`
+          : `${missingMockEvidence} complete mock evidence set(s) missing across ` +
+            `${mockAssessmentItems} (track x level) work item(s)`,
     },
     {
       kind: "writing-stage",
@@ -843,6 +936,16 @@ export function renderCompletionPlan(plan: CompletionPlan): string[] {
     lines.push(`       ${item.goal}`);
     lines.push(`       ${item.outstanding} outstanding, ${item.tranches} tranche(s)`);
   });
+  if (plan.blocked.length > 0) {
+    lines.push("");
+    lines.push(`${plan.blocked.length} blocked item(s), retained but not actionable:`);
+    for (const item of plan.blocked.slice(0, 10)) {
+      const missing = item.blockedBy ?? [];
+      lines.push(`  [${item.level}] ${item.kind} — ${item.language}: ${missing.slice(0, 3).join(", ")}`);
+      if (missing.length > 3) lines.push(`       and ${missing.length - 3} more prerequisite(s)`);
+    }
+    if (plan.blocked.length > 10) lines.push(`  ... ${plan.blocked.length - 10} more blocked item(s)`);
+  }
   lines.push("");
   lines.push("Projection to the ceiling, per family:");
   for (const entry of plan.projection) {

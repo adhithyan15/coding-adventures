@@ -10,11 +10,12 @@ chapter: 224
 type: word
 headword: "വിളമ്പുക"
 gloss: "to serve (food)"
-romanization: "viḷambuka"
+romanization: "viḷampuka"
 concept_tag: ML-VERB-VILAMBUKA
 prerequisites: [ML-C223-marruka, ML-C224-kalarttuka]
 sounds: []
-roots: []
+roots: [dravidian-vilampu-serve]
+etymology_hook: "viḷampuka: native Dravidian, one word with Tamil viḷampu (DEDR 5434)"
 duration:
   max_seconds: 200
 requires:
@@ -31,7 +32,7 @@ variety: standard-colloquial
 reviews_of: [ML-C224-kalarttuka]
 ---
 
-# വിളമ്പുക (viḷambuka) — to serve (food)
+# വിളമ്പുക (viḷampuka) — to serve (food)
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C223-KRIYA223-05, ML-LEX-C224-KRIYA224-01] -->
@@ -41,7 +42,12 @@ reviews_of: [ML-C224-kalarttuka]
 ## You'll want to know: വിളമ്പുക
 <!-- hl-knowledge: introduces=[ML-LEX-C224-KRIYA224-02]; assesses=[] -->
 
-**വിളമ്പുക** — *viḷambuka* — "to serve (food)".
+**വിളമ്പുക** — *viḷampuka* — "to serve (food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിളമ്പുക** (*viḷampuka*) is native Dravidian, one word with Tamil *viḷampu* (DEDR 5434).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -52,10 +58,10 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C224-KRIYA224-02, ML-LEX-C223-KRIYA223-05, ML-LEX-C224-KRIYA224-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *viḷambuka*]
-- [YOU SAY: *viḷambuka*, once more]
-- [YOU SAY: say *viḷambuka*]
-- [YOU RECALL: say the Malayalam for to change, then the Malayalam for to mix, then say *viḷambuka* again]
+- [YOU SAY: *viḷampuka*]
+- [YOU SAY: *viḷampuka*, once more]
+- [YOU SAY: say *viḷampuka*]
+- [YOU RECALL: say the Malayalam for to change, then the Malayalam for to mix, then say *viḷampuka* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C224-KRIYA224-02, ML-LEX-C223-KRIYA223-05, ML-LEX-C224-KRIYA224-01] -->

@@ -14,7 +14,8 @@ romanization: "khashm"
 concept_tag: FA-CHIZ170-KHASHM
 prerequisites: [FA-C169-mardom, FA-C170-mohabbat]
 sounds: []
-roots: []
+roots: [persian-khashm]
+etymology_hook: "khashm ← Middle Persian xēšm (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C170-mohabbat]
 <!-- hl-knowledge: introduces=[FA-LEX-C170-CHIZ170-02]; assesses=[] -->
 
 **خشم** — *khashm* — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khashm* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *xēšm*, "anger" (EtymDB). It is usually set beside Avestan *aēšma-*, "fury".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

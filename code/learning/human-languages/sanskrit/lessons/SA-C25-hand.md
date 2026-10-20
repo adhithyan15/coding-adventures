@@ -14,7 +14,8 @@ romanization: "hastaḥ"
 concept_tag: SA-BODY-HAND
 prerequisites: [SA-C24-lamp, SA-C23-father, SA-C24-water]
 sounds: []
-roots: []
+roots: [hasta-sanskrit]
+etymology_hook: "hasta 'hand' is shared with Iranian (Persian dast); MW calls its deeper origin unknown; Hindi hāth (CDIAL 14024)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C24-lamp]
 
 You have अक्षि, कर्णः, मुखम्, नासिका and हृदयम् (*akṣi, karṇaḥ, mukham, nāsikā, hṛdayam*). **हस्तः** adds the hand.
 
-Its cousins run west rather than into Europe: Avestan *zasta*, Old Persian *dasta*, and modern Persian *dast*, all "hand". Latin went its own way with *manus* and shares nothing with this word at all — a reminder that the family tree branches, and that two languages can both be cousins of Sanskrit without being cousins of each other in any given word.
+Its cousins run west rather than into Europe: Avestan *zasta*, Old Persian *dasta*, and modern Persian *dast*, all "hand". Latin went its own way with *manus*, which is unrelated to this word — a reminder that the family tree branches, and that two languages can both be cousins of Sanskrit without being cousins of each other in any given word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

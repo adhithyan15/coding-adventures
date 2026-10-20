@@ -283,6 +283,9 @@ impl JITCore {
             let _ = entry; // release borrow — we hold Arcs to the counters
 
             let result = self.backend.run(&binary, args);
+            // Fail closed: a failure the run recorded (LANG83 trap, divide by
+            // zero, malformed binary, fuel cap) becomes this call's `Err`.
+            let failure = self.backend.take_error();
 
             exec_arc.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
             let ec = exec_arc.load(std::sync::atomic::Ordering::Relaxed);
@@ -292,6 +295,9 @@ impl JITCore {
                 // observe the invalidation via take_deopt_events().
                 self.deopt_events.push(fn_name_owned.clone());
                 self.invalidate(vm, &fn_name_owned);
+            }
+            if let Some(err) = failure {
+                return Err(err);
             }
             return Ok(Some(result));
         }
@@ -465,11 +471,22 @@ impl JITCore {
         self.cache.put(entry);
 
         // Register a JIT handler so vm-core bypasses the interpreter.
+        //
+        // The handler is fallible and FAILS CLOSED: right after the run it
+        // drains the backend's error slot (`Backend::take_error`) and returns
+        // that failure as `Err`.  vm-core's `call` propagates it with `?`, so
+        // an interpreted caller of a trapping compiled function stops at the
+        // call — exactly as if the callee had been interpreted.  (Returning
+        // the run's placeholder `Value::Null` here instead is the fail-open
+        // bug the LANG83 PR1b security review found.)
         let backend = Arc::clone(&self.backend);
-        vm.register_jit_handler(&fn_.name, move |args: &[Value]| -> Value {
+        vm.register_jit_handler(&fn_.name, move |args: &[Value]| -> Result<Value, VMError> {
             let result = backend.run(&binary, args);
             exec_arc.fetch_add(1, Ordering::Relaxed);
-            result
+            match backend.take_error() {
+                Some(err) => Err(err),
+                None => Ok(result),
+            }
         });
 
         true

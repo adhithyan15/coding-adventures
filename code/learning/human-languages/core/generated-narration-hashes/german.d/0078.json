@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 78,
-  "sourceHash": "fnv1a64:d54e6a9e11bdfc83",
+  "sourceHash": "fnv1a64:64fae05ccef93bb4",
   "lessonIds": [
     "GE-C78-schrank",
     "GE-C78-boden",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch78.txt",
   "json": "german/narration/ch78.json",
-  "textHash": "fnv1a64:4cb58e0d499f49cf",
-  "jsonHash": "fnv1a64:90aaffb2ce85de93",
+  "textHash": "fnv1a64:9383e38ecf9e1704",
+  "jsonHash": "fnv1a64:70adbd1e81a4f439",
   "findings": []
 }

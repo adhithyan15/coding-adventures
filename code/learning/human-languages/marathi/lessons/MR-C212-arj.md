@@ -14,7 +14,8 @@ romanization: "arj"
 concept_tag: MR-VASTU212-ARJ
 prerequisites: [MR-C211-nirnay, MR-C211-sakyata]
 sounds: []
-roots: []
+roots: [arabic-arz]
+etymology_hook: "arj ← Arabic ʿarḍ 'a presenting, a petition', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C211-sakyata]
 <!-- hl-knowledge: introduces=[MR-LEX-C212-VASTU212-01]; assesses=[] -->
 
 **अर्ज** — *arj* — "an application, a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अर्ज** (*arj*) is a loan from Arabic *ʿarḍ*, "a presenting, a petition", which reached Marathi through Persian. Its Arabic root is *ʿ-r-ḍ* (Lane). Persian says *ʿarz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

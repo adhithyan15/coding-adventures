@@ -13,7 +13,8 @@ gloss: "quite, very"
 concept_tag: LA-CAUSA179-ADMODUM
 prerequisites: [LA-C179-maxime, LA-C179-valde]
 sounds: []
-roots: []
+roots: [admodum-latin, modus-latin]
+etymology_hook: "admodum 'quite' — ad 'up to' + modum 'the measure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C179-valde]
 <!-- hl-knowledge: introduces=[LA-LEX-C179-CAUSA179-05]; assesses=[] -->
 
 **admodum** — "quite, very".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**admodum** is *ad*, "up to", with *modum*, "the measure" (Lewis & Short): up to the full measure, so quite.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

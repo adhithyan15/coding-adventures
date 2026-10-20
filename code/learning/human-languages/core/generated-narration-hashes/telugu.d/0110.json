@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 110,
-  "sourceHash": "fnv1a64:83410e1ac53c062a",
+  "sourceHash": "fnv1a64:37c375ee00e90e2b",
   "lessonIds": [
     "TE-C110-talam",
     "TE-C110-talamcevi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch110.txt",
   "json": "telugu/narration/ch110.json",
-  "textHash": "fnv1a64:2feb8eba9afd2b8c",
-  "jsonHash": "fnv1a64:7a6e38a9761aa647",
+  "textHash": "fnv1a64:ac6b4dbac4946903",
+  "jsonHash": "fnv1a64:0e06e59700684aff",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a licence, then the Marathi for a helmet
 You'll want to know: ज्वालामुखी.
 ज्वालामुखी — jvālāmukhī — "a volcano".
 
+The word, taken apart.
+ज्वालामुखी (jvālāmukhī) is "flame-mouthed": Sanskrit jvālā, "flame", and mukha, "mouth", with the ending -ī.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a helmet, then the Marathi for a volcano
 
 You'll want to know: पठार.
 पठार — paṭhār — "a plateau".
+
+The word, taken apart.
+पठार (paṭhār) is a tadbhava, a word inherited and reshaped by sound change. It comes from pṛṣṭhadhāra, "plateau", a form CDIAL reconstructs from its descendants (CDIAL 8372). It is pṛṣṭha, "back, top", and dhārā, "edge".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a volcano, then the Marathi for a platea
 You'll want to know: गोटा.
 गोटा — goṭā — "a pebble".
 
+The word, taken apart.
+गोटा (goṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from goṭṭa, "something round", a form CDIAL reconstructs from its descendants (CDIAL 4271). CDIAL glosses the Marathi word "roundish stone". In the sense "fruit, kernel" it takes the word from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a plateau, then the Marathi for a pebble
 You'll want to know: चिखल.
 चिखल — cikhal — "mud".
 
+The word, taken apart.
+चिखल (cikhal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cikhalla, "mud, mire" (CDIAL 4784). CDIAL lists the Marathi word under the form cikkhalla-.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a pebble, then the Marathi for mud.
 
 You'll want to know: धूळ.
 धूळ — dhūḷ — "dust".
+
+The word, taken apart.
+धूळ (dhūḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhūli, "dust, powder" (CDIAL 6835).
 
 What you've built.
 One more word for this chapter.

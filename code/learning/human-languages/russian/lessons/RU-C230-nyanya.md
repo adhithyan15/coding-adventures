@@ -14,7 +14,8 @@ romanization: "nyánya"
 concept_tag: RU-RABOTA230-NYANYA
 prerequisites: [RU-C230-parikmakher, RU-C230-okhrannik]
 sounds: []
-roots: []
+roots: [slavic-njanja]
+etymology_hook: "няня is a nursery word of uncertain age, like Greek nanna 'aunt' and Latin nonna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C230-okhrannik]
 <!-- hl-knowledge: introduces=[RU-LEX-C230-RABOTA230-05]; assesses=[] -->
 
 **няня** (*nyánya*) — "a nanny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**няня** is a nursery word, says Vasmer, of uncertain age, like Greek *nánnē*, "aunt", Sanskrit *nanā*, "mummy", and Latin *nonna*, "a nun".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

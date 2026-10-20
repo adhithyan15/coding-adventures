@@ -14,7 +14,8 @@ romanization: "tandūr"
 concept_tag: UR-CHIZ250-TANDUR
 prerequisites: [UR-C250-tava, UR-C250-karahi]
 sounds: []
-roots: []
+roots: [persian-tandur]
+etymology_hook: "tandūr: usually traced to Persian tandūr 'an oven'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C250-karahi]
 <!-- hl-knowledge: introduces=[UR-LEX-C250-CHIZ250-04]; assesses=[] -->
 
 **تندور** — *tandūr* — "a clay oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تندور** (*tandūr*) is a loan, usually traced to Persian *tandūr*, "an oven".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

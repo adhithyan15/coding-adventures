@@ -1,0 +1,11 @@
+{
+  "id": "PT-C414-passe",
+  "pathSegment": "PT-PATH-414-BILHETEIRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-414-BILHETEIRA",
+      "order": 1
+    }
+  ]
+}

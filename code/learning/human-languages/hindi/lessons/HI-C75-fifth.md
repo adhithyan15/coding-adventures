@@ -14,8 +14,8 @@ romanization: "pā̃cvā̃ / pā̃cvī̃ / bīsvā̃ / sauvā̃"
 concept_tag: HI-ORDINAL-FIFTH
 prerequisites: [HI-C72-sau, HI-C75-fourth, HI-C74-late, HI-C70-infinitive-object, HI-C68-english, HI-S123-letter-da, HI-C27-shubh-raatri]
 sounds: []
-roots: []
-etymology_hook: "panch gives panchvan, and from five upward the ordinal is the plain cardinal with -van added; the nasal is written with a chandrabindu and there are two of them in this word"
+roots: [sanskrit-panca]
+etymology_hook: "pāṁcvāṁ ← Sanskrit pañcama 'fifth', a tadbhava (CDIAL 7669)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,11 @@ reviews_of: [HI-C75-fourth, HI-C74-late, HI-C70-infinitive-object, HI-C68-englis
 
 Two nasal hooks in one word: one over the **पाँ**, one over the **वाँ**. The
 chandrabindu you learned in the writing chapters is doing both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाँचवाँ** (*pāṁcvāṁ*) comes from Sanskrit *pañcama*, "fifth" (CDIAL 7669), the ordinal built on *pañca*, "five".
 
 ## Grammar Lens: the number, plus -वाँ
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C75-ORDINAL-07]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Tamil for Deepavali, the festival of lights, then th
 You'll want to know: நூற்றாண்டு.
 நூற்றாண்டு — nūṟṟāṇṭu — "a century".
 
+The word, taken apart.
+நூற்றாண்டு (nūṟṟāṇṭu) is native: nūṟu, "hundred" (DEDR 3729), and āṇṭu, "year" (DEDR 5153). DEDR lists Malayalam nūṟṟ-āṇṭu, "100 years", built the same way.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for the New Year, then the Tamil for a century
 
 You'll want to know: இதுவரை.
 இதுவரை — ituvarai — "until now, so far".
+
+The word, taken apart.
+இதுவரை (ituvarai) is native: itu, "this" (DEDR 410), and varai, "up to" (DEDR 5261): "up to this".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for a century, then the Tamil for until now.
 You'll want to know: காலக்கெடு.
 காலக்கெடு — kālakkeṭu — "a deadline".
 
+The word, taken apart.
+காலக்கெடு (kālakkeṭu) is kālam, "time", from Sanskrit kāla (CDIAL 3084), and native keṭu, "fixed time, term", which DEDR 1109 lists among words for passing through and limits of time.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for until now, then the Tamil for a deadline.
 You'll want to know: அதுவரை.
 அதுவரை — atuvarai — "until then".
 
+The word, taken apart.
+அதுவரை (atuvarai) is native: atu, "that" (DEDR 1), and varai, "up to" (DEDR 5261): "up to that".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a deadline, then the Tamil for until then.
 
 You'll want to know: குழந்தைப் பருவம்.
 குழந்தைப் பருவம் — kuḻantaip paruvam — "childhood".
+
+The word, taken apart.
+குழந்தைப் பருவம் (kuḻantaip paruvam) is native kuḻantai, "child" (DEDR 2149, which compares Sanskrit kuḍaka), and paruvam, "season, stage of life", from Sanskrit parvan, "joint, section" (CDIAL 7947).
 
 What you've built.
 One more word for this chapter.

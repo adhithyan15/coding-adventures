@@ -13,7 +13,8 @@ gloss: "a tower"
 concept_tag: FR-CHOSES170-TOUR
 prerequisites: [FR-C169-guide, FR-C170-chateau]
 sounds: []
-roots: []
+roots: [turris-latin]
+etymology_hook: "tour ← Latin turris 'a tower' — English turret and tower"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C170-chateau]
 <!-- hl-knowledge: introduces=[FR-LEX-C170-CHOSES170-02]; assesses=[] -->
 
 **la tour** — "a tower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tour** ← Old French *tor* ← Latin *turris*, "a tower", from Greek — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

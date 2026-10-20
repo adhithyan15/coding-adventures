@@ -1,0 +1,11 @@
+{
+  "id": "GE-C428-klempner",
+  "pathSegment": "GE-PATH-428-ABFLUSS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-428-ABFLUSS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C465-pfuetze",
+  "pathSegment": "GE-PATH-465-STURM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-465-STURM",
+      "order": 4
+    }
+  ]
+}

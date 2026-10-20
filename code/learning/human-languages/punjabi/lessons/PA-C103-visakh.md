@@ -14,7 +14,8 @@ romanization: "visākh"
 concept_tag: PA-TIME103-VISAKH
 prerequisites: [PA-C103-dasambar, PA-C103-cet, PA-C45-pehla-paath]
 sounds: []
-roots: []
+roots: [sanskrit-vaishakha]
+etymology_hook: "visākh ← Sanskrit vaiśākha 'the month April-May', a semi-tatsama (CDIAL 12149)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [PA-C103-cet]
 <!-- hl-knowledge: introduces=[PA-LEX-C103-TIME103-05]; assesses=[] -->
 
 **ਵਿਸਾਖ** — *visākh* — "Visakh, the month of Vaisakhi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵਿਸਾਖ** (*visākh*) is a semi-tatsama: Sanskrit *vaiśākha*, "the month April-May", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12149). CDIAL lists no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

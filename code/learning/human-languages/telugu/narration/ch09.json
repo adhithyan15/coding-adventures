@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b70517b720dfb480",
+  "sourceHash": "fnv1a64:f64d1c7667ea37f0",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b4635df07b1be39",
+      "sourceHash": "fnv1a64:fd4c287c2c931824",
       "notice": null,
       "blocks": [
         {
@@ -218,6 +218,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇటుక (iṭuka) is usually traced to Sanskrit iṣṭakā, \"brick\", reshaped to Telugu sounds: a tadbhava. CDIAL 1600 lists the Sanskrit word with Prakrit iṭṭagā, which has already lost the ṣ; it does not list the Telugu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -248,7 +259,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

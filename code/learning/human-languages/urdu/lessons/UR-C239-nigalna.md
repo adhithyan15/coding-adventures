@@ -14,7 +14,8 @@ romanization: "nigalnā"
 concept_tag: UR-VERB-NIGALNA
 prerequisites: [UR-C238-sunar, UR-C238-kumhar]
 sounds: []
-roots: []
+roots: [sanskrit-nigalati]
+etymology_hook: "nigalnā ← Sanskrit nigalati 'swallows', a tadbhava (CDIAL 7163)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C238-kumhar]
 <!-- hl-knowledge: introduces=[UR-LEX-C239-ACT239-01]; assesses=[] -->
 
 **نگلنا** — *nigalnā* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نگلنا** (*nigalnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nigalati*, "swallows" (CDIAL 7163).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

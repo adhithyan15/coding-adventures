@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Toys and play",
+  "label": "ch:la-toys-and-play",
+  "canDo": "I can talk about children's toys and games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C540-natatio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about children's toys and games.",
+    "assesses": [
+      "LA-LEX-C540-PUPA-03",
+      "LA-LEX-C540-PUPA-04",
+      "LA-LEX-C540-PUPA-05"
+    ]
+  }
+}

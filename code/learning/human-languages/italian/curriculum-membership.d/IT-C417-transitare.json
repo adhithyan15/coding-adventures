@@ -1,0 +1,11 @@
+{
+  "id": "IT-C417-transitare",
+  "pathSegment": "IT-PATH-417-FERMATA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-417-FERMATA",
+      "order": 4
+    }
+  ]
+}

@@ -13,7 +13,8 @@ gloss: "a reason, a way of thinking"
 concept_tag: LA-WHY114-RATIO
 prerequisites: [LA-C113-itaque, LA-C113-causa]
 sounds: []
-roots: []
+roots: [ratio-latin, reri-latin]
+etymology_hook: "ratiō 'reason' — built on ratus, from reor 'to reckon': a reckoning; English reason"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C113-causa]
 <!-- hl-knowledge: introduces=[LA-LEX-C114-WHY114-01]; assesses=[] -->
 
 **ratiō, ratiōnis** — "a reason, a way of thinking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ratiō** is built on *ratus*, "reckoned", the participle of *reor*, "to reckon, to think" (Lewis & Short): a reckoning. English *reason* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

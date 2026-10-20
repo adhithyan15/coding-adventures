@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c4f261c400788d36",
+  "sourceHash": "fnv1a64:805eed14dd19c7c0",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4d7d9c92a7d86b2",
+      "sourceHash": "fnv1a64:c00805967c9d2acd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fec5879d0b85b23f",
+      "sourceHash": "fnv1a64:1d851005a435825a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Dhônyobad = Sanskrit dhanya (\"worthy\") + vāda (\"a saying\") — the very \"thank you\" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate \"v,\" only b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu)."
+              "text": "Dhônyobad = Sanskrit dhanya (\"fortunate, blessed\") + vāda (\"a saying\") — the very \"thank you\" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate \"v,\" only b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu)."
             }
           ]
         },
@@ -269,7 +269,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dhônyobad comes from which two Sanskrit parts, and why is the \"v\" gone? (Dhanya \"worthy\" + vāda \"saying\"; Bengali has no \"v,\" only b.)"
+              "text": "Dhônyobad comes from which two Sanskrit parts, and why is the \"v\" gone? (Dhanya \"fortunate\" + vāda \"saying\"; Bengali has no \"v,\" only b.)"
             }
           ]
         }
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:db6e7d9b5c17a30d",
+      "sourceHash": "fnv1a64:e7da101fb175b242",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -336,6 +336,10 @@
             {
               "kind": "speech",
               "text": "হ্যাঁ (hyã, \"yes\") and না (nā, \"no\"). That \"no\" rides the ancient negative na- — the same Proto-Indo-European ne behind English no, not, none, Latin nōn, and Hindi nahīṇ. Bengali kept it at its shortest, bare nā: the family resemblance to English no sits right on the surface."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists the Bengali word for \"yes\" under Sanskrit ām, \"yes\", with an h- added either for emphasis or from the verb \"to be\" (CDIAL 1235); nā is Sanskrit na, \"not\" (CDIAL 6906)."
             }
           ]
         },
@@ -413,7 +417,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f4c00863f28ddfe4",
+      "sourceHash": "fnv1a64:7c80fd83287997e6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -460,7 +464,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আচ্ছা (āchchhā) is the all-purpose \"okay, alright, I see, go on\" — a true workhorse of spoken Bengali, from Sanskrit acchā (\"good, clear\"). It is the word a Bengali speaker peppers through speech the way an English speaker says \"right… right,\" a nod made audible."
+              "text": "আচ্ছা (āchchhā) is the all-purpose \"okay, alright, I see, go on\" — a true workhorse of spoken Bengali, from Sanskrit accha, \"clear, transparent\", which CDIAL suggests may first have meant \"shadowless\" (CDIAL 142). It is the word a Bengali speaker peppers through speech the way an English speaker says \"right… right,\" a nod made audible."
             }
           ]
         },
@@ -538,7 +542,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:81ebf5f6a998a457",
+      "sourceHash": "fnv1a64:fd5d4f6b74c00d0a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -585,7 +589,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আসি (āshi) literally means \"I come,\" from the verb āsā (\"to come,\" a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never \"I'm leaving\" (unlucky, too final) but \"I'll come [again]\": আসি, or the fuller āschhi (\"I am coming\"). It is the very same \"promise of return\" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb."
+              "text": "আসি (āshi) literally means \"I come,\" from the verb āsā (\"to come\"), which CDIAL lists under Sanskrit āsadati, \"approaches\" (CDIAL 1483), while noting that Chatterji derived it from āviśati, \"enters\". Yet it is how Bengalis say goodbye — never \"I'm leaving\" (unlucky, too final) but \"I'll come [again]\": আসি, or the fuller āschhi (\"I am coming\"). It is the very same \"promise of return\" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb."
             }
           ]
         },

@@ -17,6 +17,7 @@ The letters in this word.
 
 The word, taken apart.
 ಹೇಗೆ (hēge, "how") is native Dravidian, on the interrogative base ē-/yā- you met in ēnu. Kannada gathers its questions here: ēnu (what), hēge (how), yāru (who), elli (where), yāvāga (when), yāke (why). It is the same Dravidian question-root heading Tamil's eppaṭi and Telugu's elā — a family far older than the Sanskrit words Kannada, like its sisters, borrows so readily.
+DEDR 5151 lists hēge itself, "in what manner, how", among the Kannada question words.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -85,10 +86,11 @@ The everyday "how are you?" — and the verb "to be" that carries it.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
-The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge ("how") fused with ಇದ್ದೀರಾ (iddīrā, "are you"), from the verb ಇರು (iru, "to be, exist, stay") + the respectful-you ending. Note the doubled ದ್ದ (dd).
+The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge ("how") fused with ಇದ್ದೀರಾ (iddīrā, "are you"), from the verb "to be, exist, stay" + the respectful-you ending. Note the doubled ದ್ದ (dd).
 
 The phrase, taken apart.
 ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā) = ನೀವು (nīvu, "you," respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, "how are you") — the verb last, as always. The verb is ಇರು (iru, "to be / exist / stay") — the same native Dravidian iru that Tamil uses for "how are you," and (in Chapter 5) the verb for "I live."
+All three pieces are native Dravidian: nīvu (DEDR 3688), hēge (DEDR 5151) and iru, "to be" (DEDR 480).
 
 Grammar Lens: the verb carries "you".
 The ending already means "you (respectful)," so nīvu can be dropped: hēgiddīrā? alone is a complete "how are you?" To a friend (nīnu), it shifts: ನೀನು ಹೇಗಿದ್ದೀಯಾ? (nīnu hēgiddīyā?). Match the "you" to the verb-ending, as Kannada always does.
@@ -122,6 +124,7 @@ The letters in this word.
 
 The word, taken apart.
 ನಾನು (nānu, "I") from Proto-Dravidian yāṉ / nāṉ — native, and (unlike Hindi's maiṁ, cousin of English me) not related to the European "I/me" family. Its possessive is the ನನ್ನ (nanna, "my") you already met: nānu "I," nanna "my." Kannada borrows Sanskrit words freely for higher vocabulary, but its bedrock pronouns stayed Dravidian.
+DEDR 5160 lists Kannada nān and ān with Tamil yāṉ, nāṉ and Telugu nēnu.
 
 Grammar Lens: "I" you can drop.
 Kannada verbs carry the person in their ending — iddēne already means "I am" — so nānu is often left out. You still learn it first, because the answer to hēgiddīrā? begins with it.
@@ -157,6 +160,7 @@ The letters in this word.
 
 The word, taken apart.
 ಚೆನ್ನಾಗಿ (cennāgi, "well, nicely") is native Dravidian, from ಚೆನ್ನು (cennu, "good, beautiful, fine") + the adverb-maker -āgi ("in a … way"). So it literally means "in a beautiful way" — Kannada answers "how are you?" by saying, in effect, "beautifully." The root cennu is pure Kannada, with no Sanskrit or European cousin.
+DEDR 2423 lists Kannada cennu, "beauty, grace", with Tulu canna, "handsome".
 
 You'll want to know: The reply.
 Fuse it with the iru verb: nānu cennāgiddēne — "I am well" (cennāgi + iddēne, "I am"). The whole exchange:
@@ -230,10 +234,10 @@ When someone thanks you — or apologises — this is the easy, gracious reply, 
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
-ಪರವಾ (paravā, "harm, concern") + ಗಿಲ್ಲ (gilla, a fused form of āgi + ಇಲ್ಲ illa, "is not") becomes ಪರವಾಗಿಲ್ಲ (paravāgilla).
+ಪರವಾ (paravā, "care, concern", Persian parvā through Hindustani) + ಗಿಲ್ಲ (gilla, a fused form of āgi + ಇಲ್ಲ illa, "is not") becomes ಪರವಾಗಿಲ್ಲ (paravāgilla).
 
 The word, taken apart.
-ಪರವಾಗಿಲ್ಲ means "it does not matter / there is no harm" — paravā ("harm, concern") + ಇಲ್ಲ (illa, "is-not"). It serves as "it's okay / no worries / never mind / you're welcome." The key atom, ಇಲ್ಲ (illa), you met in Chapter 1 — Kannada's word for negation and non-existence, the mirror of iru ("to be"). Where iru says "it is," illa says "it is not." This illa is shared, almost unchanged, across Kannada, Tamil, and Malayalam — one of the deep bonds of the Dravidian south. (Telugu alone breaks away, to lēdu — so Telugu's "no problem" is paravālēdu, Kannada's is paravāgilla, each on its own "not.")
+ಪರವಾಗಿಲ್ಲ means "it does not matter / there is no harm" — paravā ("care, concern") + ಇಲ್ಲ (illa, "is-not"). It serves as "it's okay / no worries / never mind / you're welcome." The key atom, ಇಲ್ಲ (illa), you met in Chapter 1 — Kannada's word for negation and non-existence, the mirror of iru ("to be"). Where iru says "it is," illa says "it is not." This illa is shared, almost unchanged, across Kannada, Tamil, and Malayalam — one of the deep bonds of the Dravidian south. (Telugu's lēdu looks different, but DEDR 2559 files it with them — Telugu's "no problem" is paravālēdu, Kannada's is paravāgilla.)
 
 Grammar Lens: ಇಲ್ಲ, the all-purpose "no".
 Illa negates existence and equations alike, and stands alone as "no": duḍḍu illa ("there's no money"), nānu illa ("it's not me"). Hold iru / illa together — "is" and "is-not."

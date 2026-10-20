@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a memory, then the Malayalam for a sug
 You'll want to know: ഓൺലൈൻ.
 ഓൺലൈൻ — ōṇlain — "online".
 
+The word, taken apart.
+ഓൺലൈൻ (ōṇlain) from English online.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a suggestion, then the Malayalam for o
 
 You'll want to know: വിനയം.
 വിനയം — vinayaṁ — "humility, modesty".
+
+The word, taken apart.
+വിനയം (vinayaṁ) from Sanskrit vinaya, "guidance, good breeding", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11767).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for online, then the Malayalam for humilit
 You'll want to know: സ്വഭാവം.
 സ്വഭാവം — svabhāvaṁ — "character, a person's nature".
 
+The word, taken apart.
+സ്വഭാവം (svabhāvaṁ) from Sanskrit svabhāva, "one's own nature", taken over whole as a tatsama, with Malayalam's noun ending -ṁ. Its parts are sva, "own", and bhāva, "being".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for humility, then the Malayalam for chara
 You'll want to know: അഹങ്കാരം.
 അഹങ്കാരം — ahaṅkāraṁ — "arrogance".
 
+The word, taken apart.
+അഹങ്കാരം (ahaṅkāraṁ) from Sanskrit ahaṁkāra, "self-consciousness, pride", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 991). Its parts are aham, "I", and kāra, "making": the making of an "I".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for character, then the Malayalam for arro
 
 You'll want to know: കർശനമായ.
 കർശനമായ — karśanamāya — "strict".
+
+The word, taken apart.
+കർശനമായ (karśanamāya) is karśanaṁ, "strictness", a word of Sanskrit shape whose exact source is uncertain, with native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

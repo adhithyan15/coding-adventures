@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C751-coleccionar",
+    "language": "spanish",
+    "chapter": 751,
+    "sequence": 27520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:135b2d83a0c15a1a"
+  },
+  "findings": []
+}

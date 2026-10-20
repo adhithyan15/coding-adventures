@@ -11,7 +11,8 @@ romanization: "pēṭi"
 concept_tag: ML-FEEL-FEAR
 prerequisites: [ML-C115-notwell, ML-C116-sadness]
 sounds: []
-roots: []
+roots: [dravidian-peti-fear]
+etymology_hook: "pēṭi: native Dravidian, one word with Tamil pēṭi and Kannada hēḍi (DEDR 4434)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C116-sadness]
 <!-- hl-knowledge: introduces=[ML-LEX-C116-FEELINGS-02]; assesses=[] -->
 
 **പേടി** (*pēṭi*) — "fear". **പേടിക്കേണ്ട** (*pēṭikkēṇṭa*) — "don't be afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പേടി** (*pēṭi*) is native Dravidian, one word with Tamil *pēṭi* and Kannada *hēḍi* (DEDR 4434). DEDR 4434 compares Sanskrit *poṭā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

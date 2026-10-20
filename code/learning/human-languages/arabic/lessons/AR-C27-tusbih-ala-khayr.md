@@ -6,13 +6,13 @@ sequence: 710
 chapter: 27
 type: phrase
 headword: تصبح على خير
-gloss: "good night" — but honestly, it doesn't wish you a good NIGHT at all; it wishes you a good morning, reusing both roots from ṣabāḥ al-khayr and masāʾ al-khayr
+gloss: '"good night" — but honestly, it doesn''t wish you a good NIGHT at all; it wishes you a good morning, reusing both roots from ṣabāḥ al-khayr and masāʾ al-khayr'
 concept_tag: GREETING-GOODNIGHT
 romanization: tuṣbiḥ ʿalā khayr
 prerequisites: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]
 sounds: [sad-emphatic, kha]
 roots: [ṣ-b-ḥ, kh-y-r]
-etymology_hook: "تصبح على خير (tuṣbiḥ ʿalā khayr), the everyday Arabic 'good night,' literally means 'may you WAKE UP into goodness' — tuṣbiḥ is the ordinary imperfect of aṣbaḥa ('to become morning'), used performatively as a blessing (no special subjunctive/jussive marking), the same ṣ-b-ḥ root as ṣabāḥ al-khayr ('good morning'), plus khayr ('goodness') already met in masāʾ al-khayr; unlike the everyday good-nights of English, French, German, and Spanish, Arabic's night-parting phrase points FORWARD to the morning, not to the night itself"
+etymology_hook: "tuṣbiḥ ʿalā khayr: aṣbaḥa 'to reach morning' (root ṣ-b-ḥ, Lane) + ʿalā 'upon' + khayr 'good'"
 duration:
   max_seconds: 240
 requires:
@@ -75,6 +75,11 @@ grammatically about the **morning that follows**, built from the same
 phrase at all. It reuses pieces you already have (*ṣ-b-ḥ*, *khayr*) but
 points them at a **different moment in time** than every other language's
 farewell.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تصبح على خير** (*tuṣbiḥ ʿalā khayr*) is built from *tuṣbiḥ*, "you reach morning", Form IV of the native root *ṣ-b-ḥ*, "morning" (Lane), *ʿalā*, "upon", and *khayr*, "good", on *kh-y-r*: "may you wake upon good".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02] -->

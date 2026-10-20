@@ -14,6 +14,7 @@ concept_tag: FR-VERB-DEFENDRE
 prerequisites: [FR-C184-bouger, FR-C184-cueillir]
 sounds: []
 roots: []
+etymology_hook: "défendre ← Latin defendere 'to ward off' — English defend"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C184-cueillir]
 <!-- hl-knowledge: introduces=[FR-LEX-C184-VERBES184-03]; assesses=[] -->
 
 **défendre** — "to defend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**défendre** ← Latin *defendere*, "to ward off" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

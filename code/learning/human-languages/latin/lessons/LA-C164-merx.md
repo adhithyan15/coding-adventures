@@ -13,7 +13,8 @@ gloss: "goods, merchandise"
 concept_tag: LA-LEG164-MERX
 prerequisites: [LA-C164-pretium, LA-C164-venalis]
 sounds: []
-roots: []
+roots: [merx-latin]
+etymology_hook: "merx 'goods' — origin uncertain; perhaps kin to mereō 'to earn'"
 duration:
   max_seconds: 200
 requires:
@@ -40,7 +41,16 @@ reviews_of: [LA-C164-venalis]
 ## You'll want to know: merx, mercis
 <!-- hl-knowledge: introduces=[LA-LEX-C164-LEG164-05]; assesses=[] -->
 
-**merx, mercis** — "goods, merchandise". What a shop sells: **mercēs** in the plural. That is not the same word as **mercēs, mercēdis**, "wages". English *merchant* and *commerce* come from it.
+**merx, mercis** — "goods, merchandise". What a shop sells is usually said in the plural:
+
+**merc-** (the stem, as in *mercis*) + **-ēs** (the plural ending) → **mercēs**
+
+English *merchant* and *commerce* come from this word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**merx** has no sure origin. Lewis & Short tie it to *mereō*, "to earn"; others think it may be a loan, perhaps from Etruscan. English *market* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to keep, to maintain"
 concept_tag: PT-VERB-MANTER
 prerequisites: [PT-C209-desaparecer, PT-C209-gravar]
 sounds: []
-roots: []
+roots: [tenere-latin]
+etymology_hook: "manter ← Late Latin manutenere 'to hold in the hand' — English maintain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C209-gravar]
 <!-- hl-knowledge: introduces=[PT-LEX-C209-VERBOS209-03]; assesses=[] -->
 
 **manter** — "to keep, to maintain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manter** ← Late Latin *manutenere*, "to hold in the hand" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

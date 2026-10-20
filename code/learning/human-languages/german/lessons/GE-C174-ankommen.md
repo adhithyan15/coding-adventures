@@ -13,7 +13,8 @@ gloss: "to arrive"
 concept_tag: GE-VERB-ANKOMMEN
 prerequisites: [GE-C174-abholen, GE-C174-abfahren]
 sounds: []
-roots: []
+roots: [kwemana-germanic]
+etymology_hook: "ankommen — an- 'at' + kommen 'to come': to come at a place"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C174-abfahren]
 <!-- hl-knowledge: introduces=[GE-LEX-C174-VERB174-03]; assesses=[] -->
 
 **ankommen** — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ankommen** is *an-*, "at", + *kommen*, "to come" ← Old High German *kweman* (EtymDB 2.1). EtymDB lists Dutch *aankomen* beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

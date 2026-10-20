@@ -12,6 +12,9 @@ Before the new one: say the Tamil for mathematics, then the Tamil for science.
 You'll want to know: கலைஞர்.
 கலைஞர் — kalaiñar — "an artist".
 
+The word, taken apart.
+கலைஞர் (kalaiñar) is kalai, "arts and learning", with the respectful ending -ñar, "one who". DEDR files kalai under kal, "to learn" (DEDR 1297), but compares Sanskrit kalā, "art"; many treat it as a loan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for science, then the Tamil for an artist.
 
 You'll want to know: அதிகாரி.
 அதிகாரி — atikāri — "an officer, an official".
+
+The word, taken apart.
+அதிகாரி (atikāri) is a well-established loan from Sanskrit adhikārin, "one in authority".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for an artist, then the Tamil for an officer.
 You'll want to know: நீதிபதி.
 நீதிபதி — nītipati — "a judge".
 
+The word, taken apart.
+நீதிபதி (nītipati) is built from Sanskrit nīti, "right conduct, justice" (CDIAL 7546), and pati, "master" (CDIAL 7727): "the master of justice".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for an officer, then the Tamil for a judge.
 You'll want to know: ஓய்வூதியம்.
 ஓய்வூதியம் — ōyvūtiyam — "a pension".
 
+The word, taken apart.
+ஓய்வூதியம் (ōyvūtiyam) is a modern coinage: native ōyvu, "rest" (DEDR 1057), and ūtiyam, "pay", which DEDR 609 lists, with a query, as "profit, benefit", beside a verb meaning "to help": "rest pay".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a judge, then the Tamil for a pension.
 
 You'll want to know: சான்றிதழ்.
 சான்றிதழ் — cāṉṟitaḻ — "a certificate".
+
+The word, taken apart.
+சான்றிதழ் (cāṉṟitaḻ) is a modern coinage: cāṉṟu, "proof, witness", and native itaḻ, "leaf, petal" (DEDR 459): "a leaf of proof". The origin of cāṉṟu is uncertain.
 
 What you've built.
 One more word for this chapter.

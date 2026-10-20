@@ -11,6 +11,7 @@ concept_tag: COMPARISON-BASIC
 prerequisites: [ES-C269-espero]
 sounds: [vowel-a, vowel-e]
 roots: [magis]
+etymology_hook: "más ← Latin magis 'more' — English magnitude, major"
 duration:
   max_seconds: 240
 requires:

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:b1be0434b70c69bb",
+  "lessonIds": [
+    "PT-C447-marginal",
+    "PT-C447-vaguear",
+    "PT-C447-espreitar",
+    "PT-C447-cirandar",
+    "PT-C447-miradouro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch447.txt",
+  "json": "portuguese/narration/ch447.json",
+  "textHash": "fnv1a64:064ae90658a2f68f",
+  "jsonHash": "fnv1a64:059a29640815363b",
+  "findings": []
+}

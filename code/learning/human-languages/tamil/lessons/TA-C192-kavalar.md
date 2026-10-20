@@ -14,7 +14,8 @@ romanization: "kāvalar"
 concept_tag: TA-VELAI192-KAVALAR
 prerequisites: [TA-C191-taiyalkarar, TA-C191-cillarai]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard]
+etymology_hook: "காவலர் — native Dravidian (DEDR 1416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C191-cillarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C192-VELAI192-01]; assesses=[] -->
 
 **காவலர்** — *kāvalar* — "a police officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**காவலர்** (*kāvalar*) is native Dravidian (DEDR 1416). It is *kāval*, "watch, guard", from *kā*, "to guard", with the respectful *-ar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [macron-long-vowel]
 roots: [medius-latin, dies-latin, nox-latin]
 etymology_hook: "medius diēs 'mid-day' and media nox 'mid-night' survived at wildly different rates: Spanish kept both halves fully alive, French kept nox/nuit but wore diēs/-di to a fossil, and English's OWN word for noon isn't even this phrase — it's nōna hōra, 'the ninth hour,' which drifted from 3pm to midday"
 duration:
-  max_seconds: 240
+  max_seconds: 265
 requires:
   knowledge: [LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
 introduces:
@@ -60,13 +60,18 @@ and each one treated it completely differently.
   fossil, recognizable only from weekday names like *lundi, mardi*, not
   from any living, standalone word for "day."
 - **English** didn't inherit this phrase for "noon" **at all**. Instead,
-  English's *noon* comes from an entirely different Latin phrase: **nōna
-  hōra**, "the **ninth hour**" — originally meaning roughly 3 p.m. (counting
-  from a sunrise start), it drifted steadily earlier over the centuries
-  until it settled on **midday**.
+  English's *noon* comes from an entirely different Latin phrase, "the **ninth
+  hour**" (the next lesson meets its second word) — originally meaning roughly 3
+  p.m. (counting from a sunrise start), it drifted steadily earlier over the
+  centuries until it settled on **midday**.
 
 One Latin phrase, three completely different fates: fully kept, half-worn,
 and simply replaced by another Latin phrase altogether.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**medius diēs** joins two inherited words: *diēs* "day", met with the weekday names, and *medius* "middle", usually traced to Proto-Indo-European *\*medhyos*, "middle" (EtymDB 2.1), a cousin of English mid.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->
@@ -75,8 +80,8 @@ and simply replaced by another Latin phrase altogether.
 - [YOU SAY: "medius diēs" — mid-day, then "media nox" — mid-night]
 - [YOU SAY: the three fates — "Spanish kept both halves, French kept only
   night, English used a different phrase entirely"]
-- [YOU SAY: "nōna hōra" — the ninth hour — English's real ancestor for
-  "noon"]
+- [YOU SAY: what English's real ancestor for "noon" meant — "the ninth
+  hour"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02] -->
@@ -86,5 +91,5 @@ middle day" = noon; "the middle night" = midnight.) Which language kept
 both halves of both phrases fully transparent? (**Spanish** — *mediodía,
 medianoche*.) Which language kept "night" but not "day"? (**French** —
 *nuit* stayed alive, *-di* became a fossil.) Does English's *noon* come
-from this same phrase? (**No** — from *nōna hōra*, "the ninth hour," which
+from this same phrase? (**No** — from a Latin phrase meaning "the ninth hour," which
 drifted from afternoon to midday.)

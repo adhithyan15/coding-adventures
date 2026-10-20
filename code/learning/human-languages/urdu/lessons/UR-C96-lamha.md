@@ -14,7 +14,8 @@ romanization: "lamhā"
 concept_tag: UR-TIME96-LAMHA
 prerequisites: [UR-C95-pichhla, UR-C95-agla]
 sounds: []
-roots: []
+roots: [arabic-lamha]
+etymology_hook: "lamhā ← Arabic lamḥa 'a glance, a moment', through Persian (Lane, root l-m-ḥ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C95-agla]
 <!-- hl-knowledge: introduces=[UR-LEX-C96-TIME96-01]; assesses=[] -->
 
 **لمحہ** — *lamhā* — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لمحہ** (*lamhā*) is a loan from Arabic *lamḥa*, "a glance, a moment", which reached Urdu through Persian. Its Arabic root is *l-m-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

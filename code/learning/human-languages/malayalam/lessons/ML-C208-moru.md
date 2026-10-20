@@ -14,7 +14,8 @@ romanization: "mōrŭ"
 concept_tag: ML-VASTU208-MORU
 prerequisites: [ML-C207-arippa, ML-C208-accar]
 sounds: []
-roots: []
+roots: [dravidian-mor-buttermilk]
+etymology_hook: "mōrŭ: native Dravidian, one word with Tamil mucar and Kannada mosar(u) (DEDR 4902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C208-accar]
 <!-- hl-knowledge: introduces=[ML-LEX-C208-VASTU208-02]; assesses=[] -->
 
 **മോര്** — *mōrŭ* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മോര്** (*mōrŭ*) is native Dravidian, one word with Tamil *mucar* and Kannada *mosar(u)* (DEDR 4902). DEDR 4902 compares Sanskrit *moraṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

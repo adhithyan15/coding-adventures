@@ -14,7 +14,8 @@ romanization: "buyidan"
 concept_tag: FA-VERB-BUYIDAN
 prerequisites: [FA-C134-tarsidan, FA-C134-chashidan]
 sounds: []
-roots: []
+roots: [persian-bu]
+etymology_hook: "buyidan: Persian bu 'smell' (Middle Persian bōy) + -idan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C134-chashidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C134-ACT134-04]; assesses=[] -->
 
 **بوییدن** — *buyidan* — "to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*buyidan* is built on *bu*, "smell", with the verb ending *-idan*. *bu* is native, usually traced to Middle Persian *bōy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

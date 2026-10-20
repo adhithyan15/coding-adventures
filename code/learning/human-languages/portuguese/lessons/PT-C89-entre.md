@@ -13,7 +13,8 @@ gloss: "between"
 concept_tag: PT-LUGARES89-ENTRE
 prerequisites: [PT-C89-atras, PT-C89-ao-lado]
 sounds: []
-roots: []
+roots: [inter-latin]
+etymology_hook: "entre ← Latin inter 'between' — English inter-, as in international, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C89-ao-lado]
 <!-- hl-knowledge: introduces=[PT-LEX-C89-LUGARES89-04]; assesses=[] -->
 
 **entre** — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entre** ← Latin *inter*, "between" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

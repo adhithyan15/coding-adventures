@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:82a8acccf41f449e",
+  "lessonIds": [
+    "LA-C392-caveo",
+    "LA-C392-cautio",
+    "LA-C392-necessitas",
+    "LA-C392-opportunus",
+    "LA-C392-praecaveo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch392.txt",
+  "json": "latin/narration/ch392.json",
+  "textHash": "fnv1a64:b3ca83f239b237b8",
+  "jsonHash": "fnv1a64:9837e36613b6cdf4",
+  "findings": []
+}

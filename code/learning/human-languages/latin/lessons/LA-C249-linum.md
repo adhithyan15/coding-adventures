@@ -13,7 +13,8 @@ gloss: "linen, flax"
 concept_tag: LA-RES249-LINUM
 prerequisites: [LA-C249-vitrum, LA-C249-corium]
 sounds: []
-roots: []
+roots: [linum-latin]
+etymology_hook: "līnum 'flax' — kin to Greek linon; perhaps an old shared loan; English linen, line"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C249-corium]
 <!-- hl-knowledge: introduces=[LA-LEX-C249-RES249-05]; assesses=[] -->
 
 **līnum, līnī** — "linen, flax".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**līnum** belongs with Greek *linon*, "flax" (Lewis & Short), and Gothic *lein*, "linen". EtymDB 2.1 gives a reconstructed Proto-Indo-European *\*līno-*, "flax", but many think it is an old loan shared across Europe. English *linen* and *line* belong to its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

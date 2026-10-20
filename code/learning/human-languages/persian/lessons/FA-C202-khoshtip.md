@@ -14,7 +14,8 @@ romanization: "khoshtip"
 concept_tag: FA-SEFAT202-KHOSHTIP
 prerequisites: [FA-C202-pare, FA-C202-kaj]
 sounds: []
-roots: []
+roots: [khush-persian, french-type]
+etymology_hook: "khoshtip: Persian khosh 'good' + tip ← French type"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C202-kaj]
 <!-- hl-knowledge: introduces=[FA-LEX-C202-SEFAT202-03]; assesses=[] -->
 
 **خوشتیپ** — *khoshtip* — "stylish, good-looking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshtip* is *khosh*, "pleasant, good", with *tip*, "type, look", borrowed from French *type*. A Persian-French hybrid.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

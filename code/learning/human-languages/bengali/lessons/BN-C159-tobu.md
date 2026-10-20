@@ -15,6 +15,7 @@ concept_tag: BN-KARON159-TOBU
 prerequisites: [BN-C159-jehetu, BN-C159-jodi]
 sounds: []
 roots: []
+etymology_hook: "tôbu: origin not settled; Assamese teo 'yet' ← tathāpi (CDIAL 5647) is close in sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C159-jodi]
 <!-- hl-knowledge: introduces=[BN-LEX-C159-KARON159-04]; assesses=[] -->
 
 **তবু** — *tôbu* — "yet, even so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **তবু** (*tôbu*) is not settled. CDIAL lists Assamese *teo*, "yet, still", under Sanskrit *tathāpi*, "even so" (CDIAL 5647), and Bengali *tabe*, "then", under *ēvam ēva*, "exactly so" (CDIAL 2528), but gives no Bengali *tôbu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

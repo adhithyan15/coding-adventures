@@ -14,7 +14,8 @@ romanization: "kuṛtā"
 concept_tag: PA-CLOTHES93-KURTA
 prerequisites: [PA-C92-bazar, PA-C92-kappre]
 sounds: []
-roots: []
+roots: [persian-kurta]
+etymology_hook: "kuṛtā: usually traced to Persian kurta 'a long shirt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C92-kappre]
 <!-- hl-knowledge: introduces=[PA-LEX-C93-CLOTHES93-01]; assesses=[] -->
 
 **ਕੁੜਤਾ** — *kuṛtā* — "a kurta, a long shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੁੜਤਾ** (*kuṛtā*) is a loan, usually traced to Persian *kurta*, "a long shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

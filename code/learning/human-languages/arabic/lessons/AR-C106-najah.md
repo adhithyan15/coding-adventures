@@ -14,7 +14,8 @@ romanization: "najāḥ"
 concept_tag: AR-CAN106-NAJAH
 prerequisites: [AR-C106-imkaniyya, AR-C106-sulta]
 sounds: []
-roots: []
+roots: [n-j-ḥ]
+etymology_hook: "najāḥ: built on the root n-j-ḥ, 'to succeed, to prosper' (Lane); najāḥ is the verbal noun, 'success'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C106-sulta]
 <!-- hl-knowledge: introduces=[AR-LEX-C106-CAN106-03]; assesses=[] -->
 
 **نجاح** — *najāḥ* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نجاح** (*najāḥ*) is built on the native Arabic root *n-j-ḥ*, "to succeed, to prosper" (Lane). *Najāḥ* is the verbal noun, "success".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

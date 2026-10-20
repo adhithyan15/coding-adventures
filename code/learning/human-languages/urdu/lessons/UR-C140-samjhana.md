@@ -14,7 +14,8 @@ romanization: "samjhānā"
 concept_tag: UR-VERB-SAMJHANA
 prerequisites: [UR-C140-harna, UR-C140-sikhana]
 sounds: []
-roots: []
+roots: [sanskrit-sambudhyate]
+etymology_hook: "samjhānā: the causing form of samajhnā 'to understand', from Sanskrit saṃbudhyate (CDIAL 12959)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C140-sikhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C140-ACT140-04]; assesses=[] -->
 
 **سمجھانا** — *samjhānā* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمجھانا** (*samjhānā*) is the causing form of *samajhnā*, "to understand": to explain is to make someone understand. CDIAL lists the verb under Sanskrit *saṃbudhyate*, "wakes up, understands" (CDIAL 12959).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

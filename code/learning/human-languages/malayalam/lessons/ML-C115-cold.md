@@ -11,7 +11,8 @@ romanization: "jaladōṣaṁ"
 concept_tag: ML-UNWELL-COLD
 prerequisites: [ML-C63-cough, ML-C63-fever]
 sounds: []
-roots: []
+roots: [sanskrit-jala, sanskrit-dosha]
+etymology_hook: "jaladōṣaṁ: built from Sanskrit jala 'water' (CDIAL 5155) + dōṣa 'fault, disorder' (CDIAL 6587)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C63-fever]
 
 **എനിക്ക് ജലദോഷമുണ്ട്** (*enikkŭ jaladōṣamuṇṭŭ*) — "I have a cold". The person sits in
 **എനിക്ക്**, "to me", and **ഉണ്ട്** says "there is".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജലദോഷം** (*jaladōṣaṁ*) is built from two Sanskrit words: *jala*, "water" (CDIAL 5155), and *dōṣa*, "fault, disorder" (CDIAL 6587). A cold is a water-disorder.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chaṇā"
 concept_tag: MW-THINGS133-CHANA
 prerequisites: [MW-C132-makki, MW-C132-gehu]
 sounds: []
-roots: []
+roots: [sanskrit-cana]
+etymology_hook: "chaṇā ← Sanskrit caṇa 'the chickpea', a tadbhava (CDIAL 4579, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C132-gehu]
 <!-- hl-knowledge: introduces=[MW-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **चणा** — *chaṇā* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चणा** (*chaṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṇa*, "the chickpea". CDIAL gives no Marwari form in this entry (CDIAL 4579); the match is through Gujarati *caṇā*. Marwadi, like Gujarati, keeps the *ṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

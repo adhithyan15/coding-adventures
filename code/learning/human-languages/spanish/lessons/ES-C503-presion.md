@@ -10,7 +10,8 @@ gloss: "the pressure"
 concept_tag: ES-REF-PRESION
 prerequisites: [ES-C503-aguantar, ES-C503-esfuerzo]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "presión ← Latin pressio 'a pressing', from premere 'to press' — English pressure"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C503-esfuerzo]
 > *They take my blood pressure at the chemist's.*
 
 *Bajo presión* — under pressure.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**presión** ← Latin *pressio*, "a pressing" (EtymDB 2.1), from *premere*, "to press" — a learned word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "krodhaḥ"
 concept_tag: SA-FEEL-ANGER
 prerequisites: [SA-C68-sorrow, SA-C68-fear]
 sounds: []
-roots: []
+roots: [sanskrit-krodha]
+etymology_hook: "krodha 'anger' ← the root √krudh 'be angry' (MW; CDIAL 3608)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C68-fear]
 <!-- hl-knowledge: introduces=[SA-LEX-C68-FEELINGS-03]; assesses=[] -->
 
 **क्रोधः** (*krodhaḥ*) — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Krodha* is built on the root √krudh, "to be angry", and is already in the
+Atharvaveda (MW, CDIAL 3608).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

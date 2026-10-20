@@ -14,7 +14,8 @@ romanization: "saṅgrahālay"
 concept_tag: HI-THG203-SANGRAHALAY
 prerequisites: [HI-C202-bag, HI-C203-ciriyaghar]
 sounds: []
-roots: []
+roots: [sanskrit-sangraha, sanskrit-alaya]
+etymology_hook: "saṅgrahālay: Sanskrit saṅgraha 'collection' + ālaya 'abode', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C203-ciriyaghar]
 <!-- hl-knowledge: introduces=[HI-LEX-C203-THG203-02]; assesses=[] -->
 
 **संग्रहालय** — *saṅgrahālay* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संग्रहालय** (*saṅgrahālay*) is a tatsama compound, taken over whole from Sanskrit: *saṅgraha*, "a collection", and *ālaya*, "abode".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

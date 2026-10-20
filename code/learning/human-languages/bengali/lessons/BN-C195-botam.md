@@ -14,7 +14,8 @@ romanization: "botām"
 concept_tag: BN-JINIS195-BOTAM
 prerequisites: [BN-C195-renkot, BN-C195-belt]
 sounds: []
-roots: []
+roots: [portuguese-botao]
+etymology_hook: "botām ← Portuguese botão 'button'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C195-belt]
 <!-- hl-knowledge: introduces=[BN-LEX-C195-JINIS195-04]; assesses=[] -->
 
 **বোতাম** — *botām* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বোতাম** (*botām*) is a loan from Portuguese *botão*, "button".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

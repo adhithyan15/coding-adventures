@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Alla posta",
+  "label": "ch:it-alla-posta",
+  "canDo": "I can send things by post: a registered letter, the shipping, the sender, the postage and delivery.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C458-recapitare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can send things by post: a registered letter, the shipping, the sender, the postage and delivery.",
+    "assesses": [
+      "IT-LEX-C458-POSTA-03",
+      "IT-LEX-C458-POSTA-04",
+      "IT-LEX-C458-POSTA-05"
+    ]
+  }
+}

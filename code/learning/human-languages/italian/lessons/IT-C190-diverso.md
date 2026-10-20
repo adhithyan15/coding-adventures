@@ -13,7 +13,8 @@ gloss: "different"
 concept_tag: IT-QUAL190-DIVERSO
 prerequisites: [IT-C190-strano, IT-C190-normale]
 sounds: []
-roots: []
+roots: [diversus-latin]
+etymology_hook: "diverso ← Latin diversus 'turned different ways' — English diverse"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C190-normale]
 <!-- hl-knowledge: introduces=[IT-LEX-C190-QUAL190-05]; assesses=[] -->
 
 **diverso** — "different".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**diverso** ← Latin *diversus*, "turned different ways" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

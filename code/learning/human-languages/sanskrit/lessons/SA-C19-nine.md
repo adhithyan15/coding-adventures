@@ -14,7 +14,8 @@ romanization: "navan"
 concept_tag: SA-NUM-NINE
 prerequisites: [SA-C19-eight]
 sounds: []
-roots: []
+roots: [sanskrit-nava-nine]
+etymology_hook: "navan 'nine' is inherited: MW compares Latin novem and English nine; Hindi nau (CDIAL 6984)"
 duration:
   max_seconds: 210
 requires:

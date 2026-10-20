@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a crab, then the Urdu for a prawn.
 You'll want to know: بچت.
 بچت — bachat — "savings".
 
+The word, taken apart.
+بچت (bachat) is the noun of bachnā, "to be saved, to be left over", which CDIAL lists under Sanskrit vañcati, "moves; escapes from" (CDIAL 11208).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a prawn, then the Urdu for savings.
 
 You'll want to know: قیمت.
 قیمت — qīmat — "a price".
+
+The word, taken apart.
+قیمت (qīmat) is a loan from Arabic qīma, "value", which reached Urdu through Persian. Its Arabic root is q-w-m (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for savings, then the Urdu for a price.
 You'll want to know: دکاندار.
 دکاندار — dukāndār — "a shopkeeper".
 
+The word, taken apart.
+دکاندار (dukāndār) is "shop-holder". It joins dukān, "shop", from Arabic dukkān, which reached Urdu through Persian (Lane, root d-k-n), and the Persian -dār, "holder".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a price, then the Urdu for a shopkeeper.
 You'll want to know: گاہک.
 گاہک — gāhak — "a customer".
 
+The word, taken apart.
+گاہک (gāhak) is usually taken as an inherited form of Sanskrit grāhaka, "one who takes, a buyer", built on grah-, "to take". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a shopkeeper, then the Urdu for a customer.
 
 You'll want to know: کاروبار.
 کاروبار — kārobār — "business".
+
+The word, taken apart.
+کاروبار (kārobār) is a loan, usually traced to Persian kār-o-bār, "work and business". It is built from kār, "work", o, "and", and bār, "load, business".
 
 What you've built.
 One more word for this chapter.

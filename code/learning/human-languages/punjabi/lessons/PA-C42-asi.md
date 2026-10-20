@@ -11,8 +11,8 @@ gloss: we - the word behind an ending you have been saying for chapters
 concept_tag: PA-PRON-ASI
 prerequisites: [PA-C42-oh, PA-C36-kall-milaange]
 sounds: [bihari-ii, bindi-nasal]
-roots: []
-etymology_hook: This book has taught the we-ending four times over and never the word itself, so a reader has been saying we will meet without owning we.
+roots: [sanskrit-asmad]
+etymology_hook: "asīṁ ← Sanskrit asmad 'we, us', the base of the plural forms, inherited (CDIAL 986)"
 duration:
   max_seconds: 250
 requires:
@@ -59,6 +59,8 @@ meet* over and over without ever owning the word for *we*.
 Punjabi often leaves the pronoun out when the ending already carries it, which is
 why nothing sounded wrong. But you cannot say **we** on its own, or put it in
 front of anything else, until you have the word.
+
+*Asīṁ* is inherited. CDIAL lists it under *asmad*, the base of the Sanskrit plural forms of "we, us" (CDIAL 986).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PRON-ASI-01, PA-LEX-KALL] -->

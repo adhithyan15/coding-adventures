@@ -14,7 +14,8 @@ romanization: "bokál"
 concept_tag: RU-VESHCH160-BOKAL
 prerequisites: [RU-C159-kreslo, RU-C159-komod]
 sounds: []
-roots: []
+roots: [french-bocal]
+etymology_hook: "бокал ← French bocal or Italian boccale 'a goblet'; older покал came from German Pokal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C159-komod]
 <!-- hl-knowledge: introduces=[RU-LEX-C160-VESHCH160-01]; assesses=[] -->
 
 **бокал** (*bokál*) — "a wine glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бокал** comes from French *bocal* or Italian *boccale*, "a goblet"; the rarer *покал*, under Peter the Great, came from German *Pokal* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

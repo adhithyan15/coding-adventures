@@ -11,8 +11,8 @@ gloss: vegetables
 concept_tag: MW-FOOD-VEGETABLES
 prerequisites: [MW-C18-ghee]
 sounds: [voiceless-s, voiced-b, voiced-j, long-ii]
-roots: []
-etymology_hook: Three beats name the vegetable dish that sits beside lentils on the same plate.
+roots: [persian-sabzi]
+etymology_hook: "sabjī: usually traced to Persian sabzī 'greenness, greens'"
 duration:
   max_seconds: 145
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-C18-ghee, MW-C16-bas, MW-W10-gha]
 
 Three beats, ending long. Hear it twice, picture a vegetable dish, and say it
 once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabjī* is a loan, usually traced to Persian *sabzī*, "greenness, greens". Marwadi says the *z* as *j*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SABJI-01] -->

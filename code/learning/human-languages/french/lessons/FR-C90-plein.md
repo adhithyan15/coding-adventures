@@ -13,7 +13,8 @@ gloss: "full"
 concept_tag: FR-ADJ42-PLEIN
 prerequisites: [FR-C90-cher, FR-C90-haut]
 sounds: []
-roots: []
+roots: [plenus-latin]
+etymology_hook: "plein ← Latin plenus 'full' — English plenty and plenary share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C90-haut]
 <!-- hl-knowledge: introduces=[FR-LEX-C90-ADJ42-04]; assesses=[] -->
 
 **plein** — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plein** ← Latin *plenus*, "full" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

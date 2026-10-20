@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 229,
-  "sourceHash": "fnv1a64:48c783584b155039",
+  "sourceHash": "fnv1a64:f15133158d80aada",
   "lessonIds": [
     "TE-C229-tapakayalu",
     "TE-C229-gangireddu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch229.txt",
   "json": "telugu/narration/ch229.json",
-  "textHash": "fnv1a64:e428c28295f4eda7",
-  "jsonHash": "fnv1a64:d491d118745b2778",
+  "textHash": "fnv1a64:c9f139d5c9115a71",
+  "jsonHash": "fnv1a64:9585d257a085518d",
   "findings": []
 }

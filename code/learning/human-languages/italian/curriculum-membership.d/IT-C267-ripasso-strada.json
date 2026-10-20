@@ -1,0 +1,11 @@
+{
+  "id": "IT-C267-ripasso-strada",
+  "pathSegment": "IT-PATH-267-STRADA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-267-STRADA",
+      "order": 2
+    }
+  ]
+}

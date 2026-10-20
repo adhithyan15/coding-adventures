@@ -14,6 +14,7 @@ concept_tag: FR-LIEU157-AU-DESSUS
 prerequisites: [FR-C156-desormais, FR-C156-encore]
 sounds: []
 roots: []
+etymology_hook: "au-dessus — au + dessus 'on top'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C156-encore]
 <!-- hl-knowledge: introduces=[FR-LEX-C157-LIEU157-01]; assesses=[] -->
 
 **au-dessus** — "above".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**au-dessus** — *au*, "at the", and *dessus*, "on top". *Dessus* is *de* with Old French *sus*, "above", from Latin *sursum*, "upward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

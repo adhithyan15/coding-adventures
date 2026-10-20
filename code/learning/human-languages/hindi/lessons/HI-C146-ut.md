@@ -14,7 +14,8 @@ romanization: "ū̃ṭ"
 concept_tag: HI-THINGS146-UT
 prerequisites: [HI-C146-bhalu, HI-C146-hathi]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "ūṁṭ ← Sanskrit uṣṭra 'buffalo; camel', a tadbhava (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C146-hathi]
 <!-- hl-knowledge: introduces=[HI-LEX-C146-THINGS146-03]; assesses=[] -->
 
 **ऊँट** — *ū̃ṭ* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऊँट** (*ūṁṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uṣṭra*, "buffalo; camel" (CDIAL 2387).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a house"
 concept_tag: GE-THING161-HAUS
 prerequisites: [GE-C160-woerterbuch, GE-C160-fehler]
 sounds: []
-roots: []
+roots: [germanic-husa]
+etymology_hook: "Haus ← Old High German hūs ← Proto-Germanic *hūsą — the same word as English house"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C160-fehler]
 <!-- hl-knowledge: introduces=[GE-LEX-C161-THING161-01]; assesses=[] -->
 
 **das Haus** — "a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Haus** ← Old High German *hūs* ← Proto-Germanic *\*hūsą*, "dwelling" — inherited, the same word as English *house*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

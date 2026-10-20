@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-390-LEGALE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether something is legal or illegal, allowed or not, and call out what is unauthorised.",
+  "prerequisites": []
+}

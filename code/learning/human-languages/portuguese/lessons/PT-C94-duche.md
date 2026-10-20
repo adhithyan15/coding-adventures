@@ -14,6 +14,7 @@ concept_tag: PT-CASA94-DUCHE
 prerequisites: [PT-C93-frigorifico, PT-C93-forno]
 sounds: []
 roots: []
+etymology_hook: "duche ← French douche 'shower', from Italian doccia 'water pipe'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C93-forno]
 <!-- hl-knowledge: introduces=[PT-LEX-C94-CASA94-01]; assesses=[] -->
 
 **o duche** — "a shower". In Brazil, **o chuveiro**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**duche** ← French *douche*, "shower" — borrowed. The French word came from Italian *doccia*, "water pipe" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

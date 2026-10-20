@@ -14,7 +14,8 @@ romanization: "piyāz"
 concept_tag: UR-THINGS114-PIYAZ
 prerequisites: [UR-C114-zaban, UR-C114-sabzi]
 sounds: []
-roots: []
+roots: [persian-piyaz]
+etymology_hook: "piyāz: usually traced to Persian piyāz 'onion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C114-sabzi]
 <!-- hl-knowledge: introduces=[UR-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **پیاز** — *piyāz* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیاز** (*piyāz*) is a loan, usually traced to Persian *piyāz*, "onion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

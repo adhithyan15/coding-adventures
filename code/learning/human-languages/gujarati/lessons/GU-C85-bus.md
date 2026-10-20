@@ -14,7 +14,8 @@ romanization: "bas"
 concept_tag: GU-TRAVEL-BUS
 prerequisites: [GU-C84-ground, GU-C84-bridge]
 sounds: []
-roots: []
+roots: [english-bus]
+etymology_hook: "bas ← English bus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C84-bridge]
 <!-- hl-knowledge: introduces=[GU-LEX-C85-TRAVEL-01]; assesses=[] -->
 
 **બસ** (*bas*) — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બસ** (*bas*) is a loan from English *bus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

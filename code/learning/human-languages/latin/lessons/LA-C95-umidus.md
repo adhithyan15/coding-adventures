@@ -13,7 +13,8 @@ gloss: "wet, damp"
 concept_tag: LA-CALIDUS-UMIDUS
 prerequisites: [LA-C95-frigidus, LA-C95-siccus]
 sounds: []
-roots: []
+roots: [umidus-latin, umere-latin]
+etymology_hook: "ūmidus 'damp' — built on ūmeō 'to be moist'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C95-siccus]
 <!-- hl-knowledge: introduces=[LA-LEX-C95-CALIDUS-04]; assesses=[] -->
 
 **ūmidus, ūmida, ūmidum** — "wet, damp". English *humid*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ūmidus** is built on *ūmeō*, "to be moist" (Lewis & Short), with *-idus*, the ending of state adjectives. The spelling with h came later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

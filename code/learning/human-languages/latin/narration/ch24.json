@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "See You Soon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:693351155bbf9e45",
+  "sourceHash": "fnv1a64:e8a3d4e4c17dde50",
   "lessons": [
     {
       "id": "LA-C24-propediem-te-videbo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59770f9c3cd8e6b7",
+      "sourceHash": "fnv1a64:3adc4b8ec1eadf05",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ad Familiārēs 2.12 (to Caelius): \"Sed, ut spērō, propediem tē vidēbō\" — \"But, as I hope, I shall see you soon.\""
+              "text": "Ad Familiārēs 2.12 (to Caelius): \"…ut spērō, propediem tē vidēbō\" — \"…as I hope, I shall see you soon.\""
             },
             {
               "kind": "speech",
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Propediem breaks down as prope (\"near\") + diem (accusative of diēs, \"day\") — literally \"near the day,\" meaning \"very soon, shortly.\" That's the same diēs from your days-of-week lessons (diēs Lūnae, diēs Veneris) — a familiar root showing up in a brand-new job."
+              "text": "Propediem is built from prope (\"near\") + diem (accusative of diēs, \"day\") — literally \"near the day,\" meaning \"very soon, shortly.\" That's the same diēs from your days-of-week lessons (diēs Lūnae, diēs Veneris) — a familiar root showing up in a brand-new job."
             }
           ]
         },
@@ -76,7 +76,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Vidēbō is the future tense of vidēre, \"to see\" — and just like agō back in \"thank you,\" the -bō ending already carries \"I will,\" so no separate pronoun for \"I\" is needed. Tē (\"you\") is simply the direct object: \"[I] will-see you.\""
+              "text": "vidē- (the stem of \"to see\") + -bō (\"I will\") becomes vidēbō."
+            },
+            {
+              "kind": "speech",
+              "text": "Vidēbō is the future tense of the verb \"to see\", which a later chapter teaches on its own — and just like agō back in \"thank you,\" the -bō ending already carries \"I will,\" so no separate pronoun for \"I\" is needed. Tē (\"you\") is simply the direct object: \"[I] will-see you.\""
             }
           ]
         },

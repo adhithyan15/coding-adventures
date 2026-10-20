@@ -12,7 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [UR-C03-aap-tum-tu, UR-C01-salam, UR-C01-shukriya]
 sounds: [rtl, consonantal-ye, long-a]
 roots: [sanskrit-kim, pie-question-kwo]
-etymology_hook: Urdu kyā continues the Indo-Aryan question family from Sanskrit kim and the ancient k-question root related to English wh- words.
+etymology_hook: "kyā ← Sanskrit kim 'what' (CDIAL 3164), of the old k- question family behind English wh- words"
 duration:
   max_seconds: 210
 requires:
@@ -55,7 +55,7 @@ spell yet. Its job depends on the word; here the learned shape is *kyā*.
 <!-- hl-knowledge: introduces=[UR-ETYMON-KYA-QUESTION-FAMILY]; assesses=[] -->
 
 Urdu **kyā** and Hindi **kyā** are the same inherited Indo-Aryan word in
-different scripts. Their history reaches Sanskrit *kim* and the old
+different scripts. Their history reaches Sanskrit *kim*, “what” (CDIAL 3164), and the old
 Indo-European *k/kw-* question family behind English **wh-** words such as
 *what, who,* and *which*. The bridge helps memory; Urdu **کیا** remains the form
 you must read here.

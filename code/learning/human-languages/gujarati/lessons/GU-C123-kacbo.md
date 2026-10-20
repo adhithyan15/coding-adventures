@@ -14,7 +14,8 @@ romanization: "kācbo"
 concept_tag: GU-THINGS123-KACBO
 prerequisites: [GU-C122-kabutar, GU-C122-batak]
 sounds: []
-roots: []
+roots: [sanskrit-kacchapa]
+etymology_hook: "kācbo ← Sanskrit kacchapa 'turtle, tortoise', a tadbhava (CDIAL 2619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C122-batak]
 <!-- hl-knowledge: introduces=[GU-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **કાચબો** (*kācbo*) — "a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાચબો** (*kācbo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kacchapa*, "turtle, tortoise" (CDIAL 2619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

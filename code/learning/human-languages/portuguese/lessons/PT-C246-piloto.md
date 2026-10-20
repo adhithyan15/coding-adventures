@@ -14,6 +14,7 @@ concept_tag: PT-COISAS246-PILOTO
 prerequisites: [PT-C246-canalizador, PT-C246-operario]
 sounds: []
 roots: []
+etymology_hook: "piloto ← Italian piloto, from a Greek word for a steersman — English pilot"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C246-operario]
 <!-- hl-knowledge: introduces=[PT-LEX-C246-COISAS246-05]; assesses=[] -->
 
 **o piloto** — "a pilot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piloto** ← Italian *piloto*, "steersman" (EtymDB 2.1) — borrowed. The Italian word came from a Greek word for a steersman.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

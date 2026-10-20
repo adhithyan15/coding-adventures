@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:97eff3706e8226fb",
+  "sourceHash": "fnv1a64:3efe2494520c1363",
   "lessons": [
     {
       "id": "AR-C26-layl",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ccb2b45d9e92522",
+      "sourceHash": "fnv1a64:3272fcf88f1e4bd5",
       "notice": null,
       "blocks": [
         {

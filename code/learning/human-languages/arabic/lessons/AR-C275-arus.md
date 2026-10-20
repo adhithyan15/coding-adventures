@@ -14,7 +14,8 @@ romanization: "ʿarūs"
 concept_tag: AR-SHAY275-ARUS
 prerequisites: [AR-C274-qamus, AR-C274-malaff]
 sounds: []
-roots: []
+roots: [ʿ-r-s]
+etymology_hook: "ʿarūs: built on the root ʿ-r-s, 'to marry, to hold a wedding' (Lane); ʿarūs is a bride"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C274-malaff]
 <!-- hl-knowledge: introduces=[AR-LEX-C275-SHAY275-01]; assesses=[] -->
 
 **عروس** — *ʿarūs* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عروس** (*ʿarūs*) is built on the native Arabic root *ʿ-r-s*, "to marry, to hold a wedding" (Lane). *ʿArūs* is a bride.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

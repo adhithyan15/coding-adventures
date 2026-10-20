@@ -14,7 +14,8 @@ romanization: "nampu"
 concept_tag: TA-VERB-NAMPU
 prerequisites: [TA-C198-cantai-potu, TA-C198-keli-cey]
 sounds: []
-roots: []
+roots: [dravidian-nambu-trust]
+etymology_hook: "நம்பு — native Dravidian (DEDR 3600); Malayalam nampuka, Kannada nambu, Telugu nammu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C198-keli-cey]
 <!-- hl-knowledge: introduces=[TA-LEX-C199-ACT199-01]; assesses=[] -->
 
 **நம்பு** — *nampu* — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நம்பு** (*nampu*) is native Dravidian. DEDR 3600 lists Malayalam *nampuka*, Kannada *nambu* and Telugu *nammu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suṇṇo"
 concept_tag: MW-VERB-SUNNO
 prerequisites: [MW-C51-avno, MW-C51-dekhno]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "suṇṇo ← Sanskrit śṛṇoti 'hears', a tadbhava (CDIAL 12598, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C51-dekhno]
 <!-- hl-knowledge: introduces=[MW-LEX-C51-VERBS51-05]; assesses=[] -->
 
 **सुणणो** — *suṇṇo* — "to hear, to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुणणो** (*suṇṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛṇoti*, "hears". CDIAL lists Marwari *suṇṇo* under it (CDIAL 12598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

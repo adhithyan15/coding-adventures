@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 756,
+  "sourceHash": "fnv1a64:991eb6d7c8df8acd",
+  "lessonIds": [
+    "ES-C756-delantero",
+    "ES-C756-marcar",
+    "ES-C756-marcador",
+    "ES-C756-arbitro",
+    "ES-C756-empatar"
+  ],
+  "tex": "spanish/book/chapters/ch756-el-partido.tex"
+}

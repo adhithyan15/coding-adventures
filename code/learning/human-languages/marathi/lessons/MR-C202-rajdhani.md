@@ -14,7 +14,8 @@ romanization: "rājdhānī"
 concept_tag: MR-JAGA202-RAJDHANI
 prerequisites: [MR-C202-sima, MR-C202-prades]
 sounds: []
-roots: []
+roots: [sanskrit-rajan, sanskrit-dhani]
+etymology_hook: "rājdhānī: Sanskrit rājadhānī 'royal seat', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C202-prades]
 <!-- hl-knowledge: introduces=[MR-LEX-C202-JAGA202-03]; assesses=[] -->
 
 **राजधानी** — *rājdhānī* — "a capital city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राजधानी** (*rājdhānī*) is Sanskrit *rājadhānī*, "royal seat", a tatsama: *rāja*, "king", and *dhānī*, "seat, receptacle". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

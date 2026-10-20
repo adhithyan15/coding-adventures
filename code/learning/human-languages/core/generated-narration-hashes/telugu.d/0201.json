@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 201,
-  "sourceHash": "fnv1a64:d650f9ddd96ba619",
+  "sourceHash": "fnv1a64:ed094909e27c7673",
   "lessonIds": [
     "TE-C201-doruku",
     "TE-C201-paduko",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch201.txt",
   "json": "telugu/narration/ch201.json",
-  "textHash": "fnv1a64:6f4f1da25ad5a178",
-  "jsonHash": "fnv1a64:82ca2540836aad8b",
+  "textHash": "fnv1a64:9903bea2b4096578",
+  "jsonHash": "fnv1a64:9db3adb209d71d00",
   "findings": []
 }

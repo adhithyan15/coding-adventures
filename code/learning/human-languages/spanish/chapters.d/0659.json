@@ -1,0 +1,19 @@
+{
+  "chapter": 659,
+  "title": "Barcas y marineros",
+  "label": "ch:es-barcas-y-marineros",
+  "canDo": "I can talk about small boats: a launch, a sailing boat, rowing, the sailor and the captain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C659-capitan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 659: I can talk about small boats: a launch, a sailing boat, rowing, the sailor and the captain.",
+    "assesses": [
+      "ES-LEX-C659-BARCA-03",
+      "ES-LEX-C659-BARCA-04",
+      "ES-LEX-C659-BARCA-05"
+    ]
+  }
+}

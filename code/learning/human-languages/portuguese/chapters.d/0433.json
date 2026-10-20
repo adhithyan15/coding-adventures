@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Barulho e sujidade",
+  "label": "ch:pt-barulho-e-sujidade",
+  "canDo": "I can complain about noise and dirt: a racket, creaking, a cockroach, mould and dirt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C433-sujidade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can complain about noise and dirt: a racket, creaking, a cockroach, mould and dirt.",
+    "assesses": [
+      "PT-LEX-C433-BARULHO-03",
+      "PT-LEX-C433-BARULHO-04",
+      "PT-LEX-C433-BARULHO-05"
+    ]
+  }
+}

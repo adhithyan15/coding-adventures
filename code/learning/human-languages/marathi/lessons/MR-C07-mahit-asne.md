@@ -12,7 +12,7 @@ concept_tag: VERB-KNOW
 prerequisites: [MR-C07-pahne]
 sounds: [matra-aa, matra-ii, retroflex-na]
 roots: [persian-mahiyat-particulars, sanskrit-jnaa-know]
-etymology_hook: "Marathi does not say I know: it says मला माहीत आहे, to-me known is — the knower sits in the dative and the inherited verb जाणणे, cousin of English know, keeps to the formal register"
+etymology_hook: "माहीत is Arabic māhiyat, through Persian; inherited जाणणे, root jñā-, is a cousin of English know"
 duration:
   max_seconds: 260
 requires:
@@ -53,7 +53,7 @@ says *māhīt asṇe*, "to be known," built on *asṇe*.
 ## Sounds you'll need: मा · ही · त
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**म** is *ma*; with the long-*ā* stroke, **मा**. **ही** is **ह** *ha* with the
+**म** is *ma*; with the long-*ā* stroke, **मा**. Then **ह** + **ी** → **ही**, *ha* with the
 long *-ī* stroke, which leans forward ahead of its letter. **त** is *ta*:
 *mā-hī-t*.
 

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C386-ladrao",
+  "pathSegment": "PT-PATH-386-ACUSACAO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-386-ACUSACAO",
+      "order": 0
+    }
+  ]
+}

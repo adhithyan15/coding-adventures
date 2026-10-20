@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:6469fc4f04956505",
+  "lessonIds": [
+    "GE-C440-buergersteig",
+    "GE-C440-parkbank",
+    "GE-C440-laterne",
+    "GE-C440-kopfsteinpflaster",
+    "GE-C440-brunnen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch440.txt",
+  "json": "german/narration/ch440.json",
+  "textHash": "fnv1a64:bba9a1a39a36dc6e",
+  "jsonHash": "fnv1a64:21608accb8176ae1",
+  "findings": []
+}

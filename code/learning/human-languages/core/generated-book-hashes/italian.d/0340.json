@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:7b698ba79a5dc72f",
+  "lessonIds": [
+    "IT-C340-dibattito",
+    "IT-C340-tesi",
+    "IT-C340-argomentazione",
+    "IT-C340-convincente",
+    "IT-C340-persuadere"
+  ],
+  "tex": "italian/book/chapters/ch340-il-dibattito.tex"
+}

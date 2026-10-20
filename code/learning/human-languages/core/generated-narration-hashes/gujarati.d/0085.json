@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 85,
-  "sourceHash": "fnv1a64:6b0ebef582f8ae51",
+  "sourceHash": "fnv1a64:c0947be49484d120",
   "lessonIds": [
     "GU-C85-bus",
     "GU-C85-train",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch85.txt",
   "json": "gujarati/narration/ch85.json",
-  "textHash": "fnv1a64:87e9df8cda4ca8fd",
-  "jsonHash": "fnv1a64:de59861860790e63",
+  "textHash": "fnv1a64:fe9509db88cd5e68",
+  "jsonHash": "fnv1a64:5683a0b1c16e7143",
   "findings": []
 }

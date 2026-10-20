@@ -1,0 +1,19 @@
+{
+  "chapter": 662,
+  "title": "Cambios y cancelaciones",
+  "label": "ch:es-cambios-y-cancelaciones",
+  "canDo": "I can change and cancel a booking: the booking reference, the confirmation and any penalty.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C662-cancelacion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 662: I can change and cancel a booking: the booking reference, the confirmation and any penalty.",
+    "assesses": [
+      "ES-LEX-C662-RESERVA-03",
+      "ES-LEX-C662-RESERVA-04",
+      "ES-LEX-C662-RESERVA-05"
+    ]
+  }
+}

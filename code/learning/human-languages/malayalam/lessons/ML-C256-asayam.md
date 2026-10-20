@@ -14,7 +14,8 @@ romanization: "āśayaṁ"
 concept_tag: ML-VASTU256-ASAYAM
 prerequisites: [ML-C256-kalippattam, ML-C256-abhiprayam]
 sounds: []
-roots: []
+roots: [sanskrit-ashaya]
+etymology_hook: "āśayaṁ ← Sanskrit āśaya 'resting place; intention', a tatsama (CDIAL 1453)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C256-abhiprayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C256-VASTU256-04]; assesses=[] -->
 
 **ആശയം** — *āśayaṁ* — "an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശയം** (*āśayaṁ*) ← Sanskrit *āśaya*, "resting place; intention", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1453). The place where a thought rests became the thought.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to go back, to return"
 concept_tag: LA-VERB-REDEO
 prerequisites: [LA-C78-vivo, LA-C78-intro]
 sounds: []
-roots: []
+roots: [redire-latin, ire-latin]
+etymology_hook: "redeō 'to go back' — red- 'back' + eō 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C78-intro]
 <!-- hl-knowledge: introduces=[LA-LEX-C78-VERBA4-03]; assesses=[] -->
 
 **redeō, redīre** — "to go back, to return". **re-**, back, with **eō**, go.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**redeō** is built from *red-*, "back", and *eō*, "to go" (EtymDB 2.1); *red-* is the older form of the prefix, kept before a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

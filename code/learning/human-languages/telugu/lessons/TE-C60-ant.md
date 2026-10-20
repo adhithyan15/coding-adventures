@@ -11,7 +11,8 @@ romanization: "cīma"
 concept_tag: TE-NOUN-ANT
 prerequisites: [TE-C60-hen]
 sounds: []
-roots: []
+roots: [dravidian-ciima-ant]
+etymology_hook: "cīma: native Dravidian; DEDR 2623 lists it with Konda and Kuwi sīma"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C60-hen]
 The word is inherited. Telugu has a stock comparison about a చీమ carrying many times its own weight, and it is the ordinary way to praise somebody small who works hard.
 
 A line of చీమలు across a floor usually ends at a పండు somebody left out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చీమ** (*cīma*) is native Dravidian. DEDR 2623 lists *cīma*, "ant", with Konda and Kuwi *sīma*; it has no Tamil or Kannada match.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

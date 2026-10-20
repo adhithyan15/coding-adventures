@@ -13,7 +13,8 @@ gloss: "the chin"
 concept_tag: FR-CORPS3-MENTON
 prerequisites: [FR-C51-peau, FR-C51-ongle]
 sounds: []
-roots: []
+roots: [mentum-latin]
+etymology_hook: "menton ← Vulgar Latin *mento, from Latin mentum 'chin'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C51-ongle]
 <!-- hl-knowledge: introduces=[FR-LEX-C51-CORPS3-03]; assesses=[] -->
 
 **le menton** — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**menton** ← Vulgar Latin *\*mento*, from Latin *mentum*, "chin" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

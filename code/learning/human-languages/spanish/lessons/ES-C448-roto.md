@@ -11,6 +11,7 @@ concept_tag: ES-STATE-ROTO
 prerequisites: [ES-C448-estropear, ES-C381-romper, ES-C366-caja]
 sounds: [r-tap, stress-penultimate]
 roots: [rumpere-latin]
+etymology_hook: "roto ← Latin ruptus, participle of rumpere 'to burst' — English rupture, abrupt"
 duration:
   max_seconds: 270
 requires:

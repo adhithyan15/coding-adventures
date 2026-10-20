@@ -14,7 +14,8 @@ romanization: "banâbarin"
 concept_tag: FA-WHY93-BANABARIN
 prerequisites: [FA-C92-dalil, FA-C92-sabab]
 sounds: []
-roots: []
+roots: [arabic-bina, persian-in]
+etymology_hook: "banâbarin: banâ ← Arabic bināʾ 'building' (root b-n-y, Lane) + Persian bar 'on' + in 'this'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C92-sabab]
 <!-- hl-knowledge: introduces=[FA-LEX-C93-WHY93-01]; assesses=[] -->
 
 **بنابراین** — *banâbarin* — "therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*banâbarin* is *banâ*, "foundation", with *bar*, "on", and *in*, "this": "on this basis". *banâ* is borrowed from Arabic *bināʾ*, "building" (root *b-n-y*, Lane); *bar* and *in* are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

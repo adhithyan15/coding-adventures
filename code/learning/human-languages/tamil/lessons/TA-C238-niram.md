@@ -14,7 +14,8 @@ romanization: "niṟam"
 concept_tag: TA-GUNAM238-NIRAM
 prerequisites: [TA-C237-onraka, TA-C237-kavanamaka]
 sounds: []
-roots: []
+roots: [dravidian-niram-colour]
+etymology_hook: "நிறம் — native Dravidian (DEDR 3680); Malayalam niṟam 'colour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C237-kavanamaka]
 <!-- hl-knowledge: introduces=[TA-LEX-C238-GUNAM238-01]; assesses=[] -->
 
 **நிறம்** — *niṟam* — "a colour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**நிறம்** (*niṟam*) is native Dravidian. DEDR 3680 lists Malayalam *niṟam*, "colour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

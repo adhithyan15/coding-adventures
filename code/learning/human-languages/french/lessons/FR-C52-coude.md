@@ -13,7 +13,8 @@ gloss: "an elbow"
 concept_tag: FR-CORPS4-COUDE
 prerequisites: [FR-C52-estomac, FR-C52-cheville]
 sounds: []
-roots: []
+roots: [cubitum-latin]
+etymology_hook: "coude ← Latin cubitus 'elbow' — English cubit, an elbow-to-fingertip length"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C52-cheville]
 <!-- hl-knowledge: introduces=[FR-LEX-C52-CORPS4-04]; assesses=[] -->
 
 **le coude** — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coude** ← Latin *cubitus*, "elbow" (EtymDB 2.1 records the Latin word) — inherited: once the *i* dropped out, *cubitu* became *\*cobdo*, the *b* was lost, and Old French had *code*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

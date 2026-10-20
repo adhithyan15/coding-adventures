@@ -14,7 +14,8 @@ romanization: "zifāf"
 concept_tag: AR-SHAY275-ZIFAF
 prerequisites: [AR-C275-nas, AR-C275-hafla]
 sounds: []
-roots: []
+roots: [z-f-f]
+etymology_hook: "zifāf: built on the root z-f-f, 'to lead the bride to her husband' (Lane); zifāf is the leading of the bride"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C275-hafla]
 <!-- hl-knowledge: introduces=[AR-LEX-C275-SHAY275-05]; assesses=[] -->
 
 **زفاف** — *zifāf* — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زفاف** (*zifāf*) is built on the native Arabic root *z-f-f*, "to lead the bride to her husband" (Lane). *Zifāf* is the leading of the bride.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

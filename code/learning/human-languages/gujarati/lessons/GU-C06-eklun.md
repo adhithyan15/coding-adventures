@@ -14,7 +14,8 @@ gloss: "alone"
 concept_tag: GU-ANCHOR-EKLUN
 prerequisites: [GU-C06-ukhaanun]
 sounds: []
-roots: []
+roots: [indo-aryan-ekkala]
+etymology_hook: "eklũ ← *ekkalla 'alone', a variant of the reconstructed *ekkala; a tadbhava (CDIAL 2506)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **એકલું** — *eklũ* — "alone".
 
 Say it: *eklũ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **એ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**એકલું** (*eklũ*) is a tadbhava, a word inherited and reshaped by sound change. CDIAL reconstructs *\*ekkala*, "alone", built on *eka*, "one", and lists the Gujarati word under its doubled variant *\*ekkalla* (CDIAL 2506).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-EKLUN] -->

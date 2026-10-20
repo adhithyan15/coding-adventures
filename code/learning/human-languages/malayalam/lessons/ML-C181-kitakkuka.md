@@ -14,7 +14,8 @@ romanization: "kiṭakkuka"
 concept_tag: ML-VERB-KITAKKUKA
 prerequisites: [ML-C180-parasyam, ML-C180-rasitu]
 sounds: []
-roots: []
+roots: [dravidian-kida-lie]
+etymology_hook: "kiṭakkuka: native Dravidian, one word with Tamil kiṭa and Kannada keḍe (DEDR 1524)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C180-rasitu]
 <!-- hl-knowledge: introduces=[ML-LEX-C181-KRIYA181-01]; assesses=[] -->
 
 **കിടക്കുക** — *kiṭakkuka* — "to lie down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കിടക്കുക** (*kiṭakkuka*) is native Dravidian, one word with Tamil *kiṭa* and Kannada *keḍe* (DEDR 1524).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

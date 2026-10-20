@@ -14,7 +14,8 @@ romanization: "jhākaṇ"
 concept_tag: MR-VASTU269-JHAKAN
 prerequisites: [MR-C268-satar, MR-C268-cendu]
 sounds: []
-roots: []
+roots: [indo-aryan-jhakk-cover]
+etymology_hook: "jhākaṇ: from jhākṇe 'to cover' ← *jhakk 'cover' (CDIAL 5317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C268-cendu]
 <!-- hl-knowledge: introduces=[MR-LEX-C269-VASTU269-01]; assesses=[] -->
 
 **झाकण** — *jhākaṇ* — "a lid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झाकण** (*jhākaṇ*) is built on *jhākṇẽ*, "to cover", which comes from a reconstructed *\*jhakk-*, "cover" (CDIAL 5317).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

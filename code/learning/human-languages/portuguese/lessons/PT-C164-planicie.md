@@ -13,7 +13,8 @@ gloss: "a plain"
 concept_tag: PT-COISAS164-PLANICIE
 prerequisites: [PT-C164-relvado, PT-C164-caminho]
 sounds: []
-roots: []
+roots: [planus-latin]
+etymology_hook: "planície ← Latin planities 'a flat place', from planus — the same root as chão"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C164-caminho]
 <!-- hl-knowledge: introduces=[PT-LEX-C164-COISAS164-03]; assesses=[] -->
 
 **a planície** — "a plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**planície** ← Latin *planities*, "a flat place" (EtymDB 2.1), from *planus*, "flat" — a learned borrowing from Latin. *chão* is the inherited word from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

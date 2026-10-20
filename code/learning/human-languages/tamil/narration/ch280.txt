@@ -12,6 +12,9 @@ Before the new one: say the Tamil for an engineer, then the Tamil for a lawyer.
 You'll want to know: அரசு.
 அரசு — aracu — "the government".
 
+The word, taken apart.
+அரசு (aracu) is a loan from Sanskrit rājan, "king" (CDIAL 10679). DEDR 201 gives this source, and lists Malayalam aracu and Kannada arasu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for a lawyer, then the Tamil for the governmen
 
 You'll want to know: விதி.
 விதி — viti — "a rule".
+
+The word, taken apart.
+விதி (viti) is a loan from Sanskrit vidhi, "rule; fate" (CDIAL 11755).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for the government, then the Tamil for a rule.
 You'll want to know: அபராதம்.
 அபராதம் — aparātam — "a fine, a penalty".
 
+The word, taken apart.
+அபராதம் (aparātam) is a loan from Sanskrit aparādha, "offence" (CDIAL 439).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for a rule, then the Tamil for a fine.
 You'll want to know: புகார்.
 புகார் — pukār — "a complaint".
 
+The word, taken apart.
+புகார் (pukār) is a loan from Hindustani pukār, "a call, an outcry", which goes back to Indo-Aryan pukkār, "shout" (CDIAL 8246).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for a fine, then the Tamil for a complaint.
 
 You'll want to know: வீரர்.
 வீரர் — vīrar — "an athlete, a sportsperson; a hero, a warrior".
+
+The word, taken apart.
+வீரர் (vīrar) is vīrar, "heroes", from Sanskrit vīra, "man, hero" (CDIAL 12056), with the respectful plural -ar.
 
 What you've built.
 One more word for this chapter.

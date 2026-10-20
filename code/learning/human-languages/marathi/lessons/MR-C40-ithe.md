@@ -11,7 +11,8 @@ gloss: here — the near half of the pair, and the third column of the क- / �
 concept_tag: MR-LEX-ITHE
 prerequisites: [MR-A1M04-language-line, MR-W34-comma, MR-C38-kuthe, MR-C39-tithe, MR-W40-i-independent]
 sounds: [standalone-vowel-i, aspirated-th, matra-e]
-roots: []
+roots: [sanskrit-ittham]
+etymology_hook: "ithe: CDIAL lists Marathi ethẽ 'here' under Sanskrit ittham 'thus', Prakrit ittha 'here' (CDIAL 1564)"
 duration:
   max_seconds: 220
 requires:
@@ -59,6 +60,11 @@ keep paying out for the rest of the book:
 One shared ending, three stems: **क-**, **इ-**, **त-**. When you later meet an
 unfamiliar Marathi word beginning with one of those three, you already know
 which of the three jobs it is doing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इथे** (*ithe*) is inherited. CDIAL lists it, as *ethẽ*, "here", under Sanskrit *ittham*, "thus", whose Prakrit form *ittha* already meant "here" (CDIAL 1564).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ITHE, MR-LEX-TITHE, MR-QUESTION-KUTHE, MR-SCRIPT-COMMA, MR-A1-MESSAGE-LINE-KNOW-MARATHI] -->

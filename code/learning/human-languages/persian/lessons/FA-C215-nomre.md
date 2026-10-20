@@ -14,7 +14,8 @@ romanization: "nomre"
 concept_tag: FA-KAR215-NOMRE
 prerequisites: [FA-C214-hamkar, FA-C214-modir]
 sounds: []
-roots: []
+roots: [numerus-latin]
+etymology_hook: "nomre: usually traced to Italian numero 'number', which reached Persian through Turkish or Arabic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C214-modir]
 <!-- hl-knowledge: introduces=[FA-LEX-C215-KAR215-01]; assesses=[] -->
 
 **نمره** — *nomre* — "a mark, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nomre* is usually traced to Italian *numero*, "number", which reached Persian through Turkish or Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

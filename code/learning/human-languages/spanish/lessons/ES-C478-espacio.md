@@ -10,7 +10,8 @@ gloss: "the space"
 concept_tag: ES-REF-ESPACIO
 prerequisites: [ES-C478-calzado, ES-C478-sitio]
 sounds: []
-roots: []
+roots: [spatium-latin]
+etymology_hook: "espacio ← Latin spatium 'room, extent', with Spanish e- before sp- — English space"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C478-sitio]
 > *The space is small but it has light.*
 
 More formal than *sitio*, and the word for outer space too.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**espacio** ← Latin *spatium*, "room, extent" (EtymDB 2.1) — a learned borrowing, with the *e-* Spanish puts before *sp-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

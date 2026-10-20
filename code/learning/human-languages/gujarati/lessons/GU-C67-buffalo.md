@@ -14,7 +14,8 @@ romanization: "bhẽs"
 concept_tag: GU-ANIMALS1-BUFFALO
 prerequisites: [GU-C66-fog, GU-C67-cow]
 sounds: []
-roots: []
+roots: [sanskrit-mahishi]
+etymology_hook: "bhẽs ← Sanskrit mahiṣī 'buffalo cow', a tadbhava (CDIAL 9964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C67-cow]
 <!-- hl-knowledge: introduces=[GU-LEX-C67-ANIMALS1-02]; assesses=[] -->
 
 **ભેંસ** (*bhẽs*) — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભેંસ** (*bhẽs*) is a tadbhava of Sanskrit *mahiṣī*, "buffalo cow", the feminine of *mahiṣa*, "great, powerful; buffalo" (CDIAL 9964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "funny, witty"
 concept_tag: GE-QUAL224-WITZIG
 prerequisites: [GE-C224-vorsichtig, GE-C224-windig]
 sounds: []
-roots: []
+roots: [witan-germanic]
+etymology_hook: "witzig — Witz 'joke, wit' + -ig; Witz ← Old High German wizzi 'knowledge', English wit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C224-windig]
 <!-- hl-knowledge: introduces=[GE-LEX-C224-QUAL224-05]; assesses=[] -->
 
 **witzig** — "funny, witty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**witzig** is the word for "joke", Old High German *wizzi*, "knowledge, understanding" ← Proto-Germanic *\*witją*, English *wit* (EtymDB 2.1), + *-ig*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

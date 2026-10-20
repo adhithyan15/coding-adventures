@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a minaret, then the Bengali for a ceilin
 You'll want to know: তাই.
 তাই — tāi — "so, therefore".
 
+The word, taken apart.
+তাই (tāi) is tā, "that", + -i, "indeed": "that very thing, so". CDIAL lists Bengali tā under the Sanskrit pronoun base ta-, "that" (CDIAL 5612), with Middle Bengali tẽ, "therefore".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a ceiling, then the Bengali for so.
 
 You'll want to know: যেহেতু.
 যেহেতু — jehetu — "since, as".
+
+The word, taken apart.
+যেহেতু (jehetu) is je, "which", from the Sanskrit pronoun ya-, "who, which" (CDIAL 10391), + hetu, "cause", Sanskrit hetu taken over whole: "for which cause".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for so, then the Bengali for since.
 You'll want to know: যদি.
 যদি — jôdi — "if".
 
+The word, taken apart.
+যদি (jôdi) is Sanskrit yadi, "if", taken over whole as a learned loan, a tatsama (CDIAL 10410). The word inherited from it is Old Bengali jaï, "when", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for since, then the Bengali for if.
 You'll want to know: তবু.
 তবু — tôbu — "yet, even so".
 
+The word, taken apart.
+The origin of তবু (tôbu) is not settled. CDIAL lists Assamese teo, "yet, still", under Sanskrit tathāpi, "even so" (CDIAL 5647), and Bengali tabe, "then", under ēvam ēva, "exactly so" (CDIAL 2528), but gives no Bengali tôbu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for if, then the Bengali for yet.
 
 You'll want to know: নাহলে.
 নাহলে — nāhôle — "otherwise".
+
+The word, taken apart.
+নাহলে (nāhôle) is nā, "not", from Sanskrit na (CDIAL 6906), + hôle, "if it is", a form of hôoyā, "to be", from Sanskrit bhavati, "becomes, is" (CDIAL 9416): "if not so".
 
 What you've built.
 One more word for this chapter.

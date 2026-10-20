@@ -15,6 +15,7 @@ concept_tag: HI-QUAL212-SASTA
 prerequisites: [HI-C212-mazbut, HI-C212-kamzor]
 sounds: []
 roots: []
+etymology_hook: "sastā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C212-kamzor]
 <!-- hl-knowledge: introduces=[HI-LEX-C212-QUAL212-04]; assesses=[] -->
 
 **सस्ता** — *sastā* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **सस्ता** (*sastā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

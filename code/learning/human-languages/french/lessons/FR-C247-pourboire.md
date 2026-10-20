@@ -13,7 +13,8 @@ gloss: "a tip"
 concept_tag: FR-CHOSES247-POURBOIRE
 prerequisites: [FR-C246-fache-fachee, FR-C247-addition]
 sounds: []
-roots: []
+roots: [bibere-latin]
+etymology_hook: "pourboire — 'for drinking': for + boire, money for a drink"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C247-addition]
 <!-- hl-knowledge: introduces=[FR-LEX-C247-CHOSES247-02]; assesses=[] -->
 
 **le pourboire** — "a tip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pourboire** — the word for "for" and *boire*, "to drink": money for a drink. *Boire* ← Latin *bibere*, "to drink" (EtymDB 2.1), and *pour* ← Vulgar Latin *por*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

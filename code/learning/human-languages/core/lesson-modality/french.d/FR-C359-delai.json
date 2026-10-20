@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C359-delai",
+    "language": "french",
+    "chapter": 359,
+    "sequence": 20200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da08f7b7d7b4b182"
+  },
+  "findings": []
+}

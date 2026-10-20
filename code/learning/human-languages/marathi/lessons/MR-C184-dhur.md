@@ -14,7 +14,8 @@ romanization: "dhūr"
 concept_tag: MR-VASTU184-DHUR
 prerequisites: [MR-C183-smarak, MR-C183-putala]
 sounds: []
-roots: []
+roots: [indo-aryan-dhumara]
+etymology_hook: "dhūr ← *dhūmara 'smoky', a reconstructed form; a tadbhava (CDIAL 6852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C183-putala]
 <!-- hl-knowledge: introduces=[MR-LEX-C184-VASTU184-01]; assesses=[] -->
 
 **धूर** — *dhūr* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धूर** (*dhūr*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhūmara*, "smoky", a form CDIAL reconstructs from its descendants (CDIAL 6852). CDIAL builds it on Sanskrit *dhūma*, "smoke".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

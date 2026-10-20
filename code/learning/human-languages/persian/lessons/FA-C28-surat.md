@@ -14,7 +14,8 @@ romanization: "surat"
 concept_tag: FA-BODY28-SURAT
 prerequisites: [FA-C28-shane, FA-C28-gardan]
 sounds: []
-roots: []
+roots: [arabic-sura]
+etymology_hook: "surat ← Arabic ṣūra 'form, image', root ṣ-w-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C28-gardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C28-BODY28-05]; assesses=[] -->
 
 **صورت** — *surat* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*surat* is borrowed from Arabic *ṣūra*, "form, image". Its Arabic root is *ṣ-w-r* (Lane). Persian uses it for the face.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

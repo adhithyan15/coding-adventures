@@ -14,7 +14,8 @@ romanization: "bôṭ"
 concept_tag: BN-JINIS171-BOT
 prerequisites: [BN-C171-kuri, BN-C171-golap]
 sounds: []
-roots: []
+roots: [sanskrit-vata-banyan]
+etymology_hook: "bôṭ ← Sanskrit vaṭa 'banyan', a tatsama (CDIAL 11211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C171-golap]
 <!-- hl-knowledge: introduces=[BN-LEX-C171-JINIS171-03]; assesses=[] -->
 
 **বট** — *bôṭ* — "a banyan tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বট** (*bôṭ*) is Sanskrit *vaṭa*, "banyan", taken over whole as a learned loan, a tatsama (CDIAL 11211). The word inherited from it is *baṛ*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

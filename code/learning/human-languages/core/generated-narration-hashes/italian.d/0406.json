@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:1ffa09975a725019",
+  "lessonIds": [
+    "IT-C406-accelerare",
+    "IT-C406-freno",
+    "IT-C406-frenata",
+    "IT-C406-sterzare",
+    "IT-C406-sbandare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch406.txt",
+  "json": "italian/narration/ch406.json",
+  "textHash": "fnv1a64:f3bcfad72593bc24",
+  "jsonHash": "fnv1a64:a632b093e9737e85",
+  "findings": []
+}

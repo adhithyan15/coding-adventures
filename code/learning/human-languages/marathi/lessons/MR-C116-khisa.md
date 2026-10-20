@@ -14,7 +14,8 @@ romanization: "khisā"
 concept_tag: MR-CLOTHES116-KHISA
 prerequisites: [MR-C116-sadi, MR-C116-moja]
 sounds: []
-roots: []
+roots: [persian-kisa]
+etymology_hook: "khisā: usually traced to Persian kīsa 'purse, pouch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C116-moja]
 <!-- hl-knowledge: introduces=[MR-LEX-C116-CLOTHES116-04]; assesses=[] -->
 
 **खिसा** — *khisā* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खिसा** (*khisā*) is a loan, usually traced to Persian *kīsa*, "purse, pouch". Marathi uses it for a pocket.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -37,7 +37,7 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import Data.Char (isAlpha, isAlphaNum, isAsciiLower, isAsciiUpper, isSpace, ord, toLower)
-import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn)
+import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn, tails)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, isJust, listToMaybe, mapMaybe, maybeToList)
@@ -86,7 +86,10 @@ import System.Process
     )
 import Text.Read (readMaybe)
 import LanguageSourceInputRegistry
-    ( generatedDirectoryComponents
+    ( LanguageRegistry(registryLanguages)
+    , LanguageRule(ruleLanguage)
+    , generatedDirectoryComponents
+    , languageSourceInputRegistry
     , registeredPackageExactRoot
     , selectLanguageSourceInput
     )
@@ -957,12 +960,20 @@ findRepoRoot maybeStart = do
 discoverPackages :: FilePath -> IO [Package]
 discoverPackages codeRoot = do
     canonicalRoot <- canonicalizePath codeRoot
-    found <- walk canonicalRoot
+    found <- walk canonicalRoot canonicalRoot
     pure (sortOnPackageName found)
   where
-    walk current = do
+    walk canonicalRoot current = do
         skipCurrent <- shouldSkipDirectory current
-        if skipCurrent
+        let relative = makeRelative canonicalRoot current
+            components = splitDirectories (normalise relative)
+            isSpecification = case components of
+                "specs" : _ -> True
+                _ -> False
+        -- Specification BUILD records are inert examples. Prune them before
+        -- reading commands, just as generated output is pruned before a root
+        -- can claim package membership.
+        if skipCurrent || isSpecification
             then pure []
             else do
                 maybeBuildFile <- getBuildFile current
@@ -971,11 +982,11 @@ discoverPackages codeRoot = do
                         commands <- readBuildCommands buildFile
                         pure
                             [ Package
-                                { packageName = inferPackageName current
+                                { packageName = inferRelativePackageName relative current
                                 , packagePath = current
                                 , packageBuildFile = buildFile
                                 , packageBuildCommands = commands
-                                , packageLanguage = inferLanguage current
+                                , packageLanguage = inferRelativeLanguage relative
                                 }
                             ]
                     Nothing -> do
@@ -984,7 +995,7 @@ discoverPackages codeRoot = do
                             filterM
                                 (doesDirectoryExist . (current </>))
                                 entries
-                        nested <- mapM (walk . (current </>)) directories
+                        nested <- mapM (walk canonicalRoot . (current </>)) directories
                         pure (concat nested)
 
 sortOnPackageName :: [Package] -> [Package]
@@ -992,76 +1003,47 @@ sortOnPackageName = sortOn packageName
 
 shouldSkipDirectory :: FilePath -> IO Bool
 shouldSkipDirectory path =
-    pure (takeFileName path `elem` skipDirectories)
-
-skipDirectories :: [String]
-skipDirectories =
-    [ ".git"
-    , ".hg"
-    , ".svn"
-    , ".venv"
-    , ".tox"
-    , ".mypy_cache"
-    , ".pytest_cache"
-    , ".ruff_cache"
-    , ".stack-work"
-    , "__pycache__"
-    , "build"
-    , "deps"
-    , "dist"
-    , "node_modules"
-    , "target"
-    , "vendor"
-    , ".claude"
-    , ".build"
-    , "_build"
-    , "cover"
-    , "Pods"
-    ]
+    -- The embedded checked registry is shared with source hashing. Exact
+    -- component equality preserves _Build and dist-newstyle-example source
+    -- roots; neither case folding nor substring matching belongs here.
+    pure (takeFileName path `elem` generatedDirectoryComponents)
 
 inferLanguage :: FilePath -> String
 inferLanguage path =
-    case filter (`elem` supportedLanguages) (map (map toLower) (splitDirectories (normalise path))) of
-        lang : _ -> lang
-        [] -> "unknown"
+    let components = splitDirectories (normalise path)
+        anchors = [remaining
+                  | "code" : remaining@(origin : _) <- tails components
+                  , origin `elem` ["packages", "programs"]]
+        relative = case reverse anchors of
+            innermost : _ -> joinPath innermost
+            [] -> path
+     in inferRelativeLanguage relative
+
+-- Production classification starts at a supplied code root. A checkout named
+-- rust, or a package whose later path contains programs/rust, cannot steal
+-- the leading Kotlin bucket's language or turn a library into a program.
+inferRelativeLanguage :: FilePath -> String
+inferRelativeLanguage path =
+    case splitDirectories (normalise path) of
+        origin : bucket : _
+            | origin `elem` ["packages", "programs"]
+                && bucket `elem` supportedLanguages -> bucket
+        _ -> "unknown"
 
 supportedLanguages :: [String]
-supportedLanguages =
-    [ "c"
-    , "cpp"
-    , "python"
-    , "ruby"
-    , "go"
-    , "rust"
-    , "dart"
-    , "typescript"
-    , "elixir"
-    , "lua"
-    , "perl"
-    , "swift"
-    , "haskell"
-    , "wasm"
-    , "starlark"
-    , "java"
-    , "kotlin"
-    , "csharp"
-    , "fsharp"
-    , "dotnet"
-    , "mosaic"
-    , "ocaml"
-    , "twig"
-    ]
+supportedLanguages = map ruleLanguage (registryLanguages languageSourceInputRegistry)
 
-inferPackageName :: FilePath -> String
-inferPackageName path =
-    let language = inferLanguage path
-        components = map (map toLower) (splitDirectories (normalise path))
-        isProgram =
-            any
-                (\(parent, child) -> parent == "programs" && child == language)
-                (zip components (drop 1 components))
+inferRelativePackageName :: FilePath -> FilePath -> String
+inferRelativePackageName path current =
+    let language = inferRelativeLanguage path
+        isProgram = case splitDirectories (normalise path) of
+            "programs" : _ : _ -> True
+            _ -> False
         identityPrefix = if isProgram then language ++ "/programs/" else language ++ "/"
-     in identityPrefix ++ takeFileName path
+        -- makeRelative returns "." for membership at the configured root
+        -- itself. Classification stays relative, but the identity's basename
+        -- always comes from the actual directory, including that root case.
+     in identityPrefix ++ takeFileName current
 
 getBuildFile :: FilePath -> IO (Maybe FilePath)
 getBuildFile directory = do

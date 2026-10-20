@@ -13,7 +13,8 @@ gloss: "the post office"
 concept_tag: PT-LUGARES85-CORREIOS
 prerequisites: [PT-C85-aeroporto, PT-C85-paragem]
 sounds: []
-roots: []
+roots: [currere-latin]
+etymology_hook: "correios — the plural of correio 'post', from Spanish correo 'courier'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C85-paragem]
 <!-- hl-knowledge: introduces=[PT-LEX-C85-LUGARES85-03]; assesses=[] -->
 
 **os correios** — "the post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**correios** is the plural of *correio*, "post": the service is named in the plural. *correio* ← Spanish *correo* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

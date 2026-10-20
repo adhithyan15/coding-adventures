@@ -14,7 +14,8 @@ romanization: "pol"
 concept_tag: FA-TOWN71-POL
 prerequisites: [FA-C70-otobus, FA-C70-ghatar]
 sounds: []
-roots: []
+roots: [persian-pul]
+etymology_hook: "pol ← Middle Persian puhl (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C70-ghatar]
 <!-- hl-knowledge: introduces=[FA-LEX-C71-TOWN71-01]; assesses=[] -->
 
 **پل** — *pol* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pol* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *puhl*, "bridge" (EtymDB). EtymDB takes it back to an Indo-European word for "crossing", the word that also gave English *ford*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

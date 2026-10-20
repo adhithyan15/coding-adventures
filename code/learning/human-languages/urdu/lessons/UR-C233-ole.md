@@ -14,7 +14,8 @@ romanization: "ole"
 concept_tag: UR-CHIZ233-OLE
 prerequisites: [UR-C233-kohra, UR-C233-os]
 sounds: []
-roots: []
+roots: [sanskrit-upala]
+etymology_hook: "ole: the plural of olā 'hailstone' ← Sanskrit upala 'stone' (CDIAL 2223)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C233-os]
 <!-- hl-knowledge: introduces=[UR-LEX-C233-CHIZ233-03]; assesses=[] -->
 
 **اولے** — *ole* — "hail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اولے** (*ole*) is the plural of *olā*, "a hailstone", which CDIAL lists under Sanskrit *upala*, "stone, rock" (CDIAL 2223): hail is "stones" falling from the sky.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "to snow"
 concept_tag: PT-VERB-NEVAR
 prerequisites: [PT-C233-preocupar-se, PT-C233-fumar]
 sounds: []
-roots: []
+roots: [nix-latin]
+etymology_hook: "nevar ← Vulgar Latin *nivare, from nix, nivis 'snow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C233-fumar]
 <!-- hl-knowledge: introduces=[PT-LEX-C233-VERBOS233-05]; assesses=[] -->
 
 **nevar** — "to snow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nevar** ← Vulgar Latin *\*nivare* (EtymDB 2.1), from Latin *nix, nivis*, "snow" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

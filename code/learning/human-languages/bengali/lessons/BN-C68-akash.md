@@ -14,7 +14,8 @@ romanization: "ākāsh"
 concept_tag: BN-NATURE68-AKASH
 prerequisites: [BN-C68-mati, BN-C68-batas]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ākāsh ← Sanskrit ākāśa 'sky', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C68-batas]
 <!-- hl-knowledge: introduces=[BN-LEX-C68-NATURE68-03]; assesses=[] -->
 
 **আকাশ** — *ākāsh* — "the sky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আকাশ** (*ākāsh*) is Sanskrit *ākāśa*, "sky", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

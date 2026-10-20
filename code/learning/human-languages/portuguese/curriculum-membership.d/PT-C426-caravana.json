@@ -1,0 +1,11 @@
+{
+  "id": "PT-C426-caravana",
+  "pathSegment": "PT-PATH-426-TENDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-426-TENDA",
+      "order": 1
+    }
+  ]
+}

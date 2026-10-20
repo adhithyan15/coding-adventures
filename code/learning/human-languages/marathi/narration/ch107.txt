@@ -12,6 +12,9 @@ Before the new one: say the Marathi for thin, then the Marathi for light.
 You'll want to know: खरे.
 खरे — khare — "true".
 
+The word, taken apart.
+खरे (khare) is a form of Marathi kharā, "pure, good, firm", which CDIAL lists under Sanskrit khara, "hard, sharp; solid" (CDIAL 3819).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for light, then the Marathi for true.
 
 You'll want to know: हिरवा.
 हिरवा — hirvā — "green".
+
+The word, taken apart.
+हिरवा (hirvā) is a tadbhava, a word inherited and reshaped by sound change. It comes from hiru, "yellow, green", a form CDIAL reconstructs from its descendants (CDIAL 14114). CDIAL builds it on Sanskrit hari, "yellow, green".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for true, then the Marathi for green.
 You'll want to know: पिवळा.
 पिवळा — pivḷā — "yellow".
 
+The word, taken apart.
+पिवळा (pivḷā) comes from pīvala, "yellow", one of the forms CDIAL reconstructs beside Sanskrit pītala, "yellow", built on pīta, "yellow" (CDIAL 8233).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for green, then the Marathi for yellow.
 You'll want to know: लाल.
 लाल — lāl — "red".
 
+The word, taken apart.
+लाल (lāl) is a loan, usually traced to Persian lāl, "red". The Persian word is usually tied to laʿl, "a ruby".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for yellow, then the Marathi for red.
 
 You'll want to know: निळा.
 निळा — niḷā — "blue".
+
+The word, taken apart.
+निळा (niḷā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīla, "dark blue, dark green, black" (CDIAL 7563). CDIAL lists Marathi nīḷ, "blue".
 
 What you've built.
 One more word for this chapter.

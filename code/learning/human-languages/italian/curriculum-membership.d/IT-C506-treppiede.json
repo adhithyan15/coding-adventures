@@ -1,0 +1,11 @@
+{
+  "id": "IT-C506-treppiede",
+  "pathSegment": "IT-PATH-506-FOTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-506-FOTO",
+      "order": 2
+    }
+  ]
+}

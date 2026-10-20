@@ -13,7 +13,8 @@ gloss: "beautiful"
 concept_tag: LA-PULCHER-PULCHER
 prerequisites: [LA-C95-umidus, LA-C95-dulcis]
 sounds: []
-roots: []
+roots: [pulcher-latin]
+etymology_hook: "pulcher 'beautiful' — origin unknown; early Latin wrote pulcer"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C95-dulcis]
 <!-- hl-knowledge: introduces=[LA-LEX-C96-PULCHER-01]; assesses=[] -->
 
 **pulcher, pulchra, pulchrum** — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulcher** has no sure origin; no proposal is generally accepted. The ch, imitating Greek spelling, came in later; early Latin wrote *pulcer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

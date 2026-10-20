@@ -14,7 +14,8 @@ romanization: "ānārôs"
 concept_tag: BN-THINGS115-ANAROS
 prerequisites: [BN-C115-amgachh, BN-C115-narkel]
 sounds: []
-roots: []
+roots: [portuguese-ananas]
+etymology_hook: "ānārôs ← Portuguese ananás 'pineapple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C115-narkel]
 <!-- hl-knowledge: introduces=[BN-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **আনারস** — *ānārôs* — "a pineapple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আনারস** (*ānārôs*) is a loan from Portuguese *ananás*, "pineapple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

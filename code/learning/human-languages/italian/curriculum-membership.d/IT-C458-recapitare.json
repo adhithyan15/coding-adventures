@@ -1,0 +1,11 @@
+{
+  "id": "IT-C458-recapitare",
+  "pathSegment": "IT-PATH-458-POSTA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-458-POSTA",
+      "order": 4
+    }
+  ]
+}

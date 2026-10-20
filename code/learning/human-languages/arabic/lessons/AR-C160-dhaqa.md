@@ -14,7 +14,8 @@ romanization: "dhāqa"
 concept_tag: AR-VERB-DHAQA
 prerequisites: [AR-C159-safara, AR-C159-abara]
 sounds: []
-roots: []
+roots: [dh-w-q]
+etymology_hook: "dhāqa: built on the root dh-w-q, 'to taste' (Lane); dhāqa is the plain verb, 'he tasted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C159-abara]
 <!-- hl-knowledge: introduces=[AR-LEX-C160-ACT160-01]; assesses=[] -->
 
 **ذاق** — *dhāqa* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذاق** (*dhāqa*) is built on the native Arabic root *dh-w-q*, "to taste" (Lane). *Dhāqa* is the plain verb, "he tasted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ticai"
 concept_tag: TA-IDAM235-TICAI
 prerequisites: [TA-C234-talainakaram, TA-C234-narcanti]
 sounds: []
-roots: []
+roots: [sanskrit-disha]
+etymology_hook: "திசை ← Sanskrit diśā 'direction', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C234-narcanti]
 <!-- hl-knowledge: introduces=[TA-LEX-C235-IDAM235-01]; assesses=[] -->
 
 **திசை** — *ticai* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**திசை** (*ticai*) is a well-established loan from Sanskrit *diśā*, "direction, quarter of the sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

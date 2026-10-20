@@ -11,7 +11,8 @@ romanization: "kalyāṇaṁ"
 concept_tag: ML-YOU-WEDDING
 prerequisites: [ML-C125-nephew, ML-C126-address]
 sounds: []
-roots: []
+roots: [sanskrit-kalyana]
+etymology_hook: "kalyāṇaṁ ← Sanskrit kalyāṇa 'beautiful, auspicious', a tatsama (CDIAL 2952)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C126-address]
 
 **കല്യാണം** (*kalyāṇaṁ*) — "wedding". **കല്യാണത്തിന് ക്ഷണം** — "an invitation to a wedding",
 with **ക്ഷണം** from the welcome chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കല്യാണം** (*kalyāṇaṁ*) ← Sanskrit *kalyāṇa*, "beautiful, auspicious", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 2952). An auspicious event became the name of the wedding.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

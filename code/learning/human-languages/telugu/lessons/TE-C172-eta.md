@@ -14,7 +14,8 @@ romanization: "ēṭā"
 concept_tag: TE-SAMAYAM172-ETA
 prerequisites: [TE-C172-vrddhapyam, TE-C172-intalo]
 sounds: []
-roots: []
+roots: [dravidian-aandu-year]
+etymology_hook: "ēṭā: native Dravidian; DEDR 5153 lists ēṇṭēṭa 'yearly' under the word for 'year'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C172-intalo]
 <!-- hl-knowledge: introduces=[TE-LEX-C172-SAMAYAM172-04]; assesses=[] -->
 
 **ఏటా** — *ēṭā* — "every year, annually".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఏటా** (*ēṭā*) is native Dravidian. DEDR 5153 lists *ēṇṭēṭa*, "yearly", under the word for "year", one word with Kannada *ēḍu* and Tamil *yāṇṭu*, "year".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

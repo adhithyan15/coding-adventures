@@ -11,7 +11,8 @@ romanization: "ēḻāṁ"
 concept_tag: ML-ORDINAL-SEVENTH
 prerequisites: [ML-C68-sixth, ML-C67-second, ML-C64-soon, ML-C52-chair, ML-C07-numbers-6-10]
 sounds: [malayalam-zha]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ēḻāṁ: native Dravidian, 'seven' + -āṁ; Tamil ēḻu keeps the same ḻ (DEDR 910)"
 duration:
   max_seconds: 200
 requires:
@@ -58,6 +59,11 @@ yet to *write* — no stroke order for it has been sourced, so none is offered.
 
 Do not copy it yet. That is why this lesson is headed by its romanization rather
 than by the Malayalam word, the way the counting lessons were.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഏഴാം** (*ēḻāṁ*) is native Dravidian: "seven" (DEDR 910, with Tamil *ēḻu* and Kannada *ēḻu*) with the ordinal ending *-āṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-02, ML-LEX-C68-ORDINAL-01] -->

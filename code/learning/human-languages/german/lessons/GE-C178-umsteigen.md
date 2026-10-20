@@ -13,7 +13,8 @@ gloss: "to change (trains or buses)"
 concept_tag: GE-VERB-UMSTEIGEN
 prerequisites: [GE-C178-einsteigen, GE-C178-aussteigen]
 sounds: []
-roots: []
+roots: [germanic-stigana]
+etymology_hook: "umsteigen — um- 'over, around' + the verb 'to climb': to climb over to another train"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C178-aussteigen]
 <!-- hl-knowledge: introduces=[GE-LEX-C178-VERB178-05]; assesses=[] -->
 
 **umsteigen** — "to change (trains or buses)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**umsteigen** is *um-*, "over, around", + the verb "to climb", Old High German *stīgan* (EtymDB 2.1): to climb over into another train.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

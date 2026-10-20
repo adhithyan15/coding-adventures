@@ -11,7 +11,8 @@ romanization: "gāru"
 concept_tag: TE-ADDRESS-HONORIFIC
 prerequisites: [TE-C79-me, TE-C23-roju]
 sounds: []
-roots: []
+roots: [telugu-gaaru-honorific]
+etymology_hook: "gāru: origin uncertain; neither DEDR nor CDIAL records the honorific"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C79-me]
 It is not a word you say alone. It rides on the end of a name or a role: **రాము గారు**, **గురువు గారు**, **అమ్మ గారు**.
 
 You have had మీరు from your first introduction for respect in the pronoun. గారు is respect in the *address*, and leaving it off where it belongs is heard as rudeness, not neutrality.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **గారు** (*gāru*) is uncertain. Neither DEDR nor CDIAL records the honorific.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

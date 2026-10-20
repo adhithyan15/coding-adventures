@@ -14,7 +14,8 @@ romanization: "eḷitāṉa"
 concept_tag: TA-GUNAM267-ELITANA
 prerequisites: [TA-C267-avacaramana, TA-C267-nericalana]
 sounds: []
-roots: []
+roots: [dravidian-eli-easy]
+etymology_hook: "எளிதான — native: eḷitu 'what is easy', from eḷi (DEDR 855) + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C267-nericalana]
 <!-- hl-knowledge: introduces=[TA-LEX-C267-GUNAM267-05]; assesses=[] -->
 
 **எளிதான** — *eḷitāṉa* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**எளிதான** (*eḷitāṉa*) is native: *eḷitu*, "what is easy", from *eḷi*, "easy" (DEDR 855, which lists Malayalam eḷutu), with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

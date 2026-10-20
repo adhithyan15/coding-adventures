@@ -1,0 +1,11 @@
+{
+  "id": "ES-C616-posponer",
+  "pathSegment": "ES-PATH-616-IMPREV",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-616-IMPREV",
+      "order": 2
+    }
+  ]
+}

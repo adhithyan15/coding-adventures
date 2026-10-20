@@ -14,7 +14,8 @@ romanization: "ṭīvi"
 concept_tag: KA-THINGS137-TIVI
 prerequisites: [KA-C137-kitaki, KA-C137-kannadi]
 sounds: []
-roots: []
+roots: [english-tv]
+etymology_hook: "ṭīvi ← English TV, short for television"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C137-kannadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C137-THINGS137-04]; assesses=[] -->
 
 **ಟೀವಿ** — *ṭīvi* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಟೀವಿ** (*ṭīvi*) is a loan from English *TV*, the short form of *television*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

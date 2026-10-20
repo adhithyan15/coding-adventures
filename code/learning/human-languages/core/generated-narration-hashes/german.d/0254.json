@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:5664223d3f1191ec",
+  "lessonIds": [
+    "GE-C254-ich-finde-dass",
+    "GE-C254-meiner-meinung-nach",
+    "GE-C254-darum",
+    "GE-C254-review"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch254.txt",
+  "json": "german/narration/ch254.json",
+  "textHash": "fnv1a64:26057d08c3360e7d",
+  "jsonHash": "fnv1a64:ec6b57f980c8f7e5",
+  "findings": []
+}

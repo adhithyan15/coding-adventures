@@ -12,6 +12,9 @@ Before the new one: say the German for a lawyer, then the German for an engineer
 You'll want to know: der Briefträger.
 der Briefträger — "a postman".
 
+The word, taken apart.
+Briefträger is the word for "letter" + Träger, "carrier", from tragen. The letter word from Old High German briaf from Latin brevis, "short (document)" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for an engineer, then the German for a postma
 
 You'll want to know: der Kellner.
 der Kellner — "a waiter".
+
+The word, taken apart.
+Kellner from Old High German kelnere from Medieval Latin cellenārius, "cellar master" (EtymDB 2.1) — borrowed: the man who kept the wine cellar.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a postman, then the German for a waiter.
 You'll want to know: der Kunde.
 der Kunde — "a customer".
 
+The word, taken apart.
+Kunde from Old High German cundo, "one who is known", from kund, "known" from Proto-Germanic kunþaz (EtymDB 2.1) — inherited. English uncouth, "unknown, strange", shares the root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a waiter, then the German for a customer.
 You'll want to know: die Kasse.
 die Kasse — "a till, a checkout".
 
+The word, taken apart.
+Kasse from Italian cassa, "box" from Latin capsa, "case, box" (EtymDB 2.1) — borrowed. English cash and case come from the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for a customer, then the German for a till.
 
 You'll want to know: der Chef.
 der Chef — "a boss".
+
+The word, taken apart.
+Chef from French chef, "head" from Latin caput (EtymDB 2.1) — borrowed. English chief is the same word; English chef kept only the kitchen sense.
 
 What you've built.
 One more word for this chapter.

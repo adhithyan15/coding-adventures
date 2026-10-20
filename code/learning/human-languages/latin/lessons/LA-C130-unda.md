@@ -13,7 +13,8 @@ gloss: "a wave"
 concept_tag: LA-THINGS130-UNDA
 prerequisites: [LA-C129-saxum, LA-C129-ripa]
 sounds: []
-roots: []
+roots: [unda-latin]
+etymology_hook: "unda 'wave' — usually traced to PIE *wed- 'water'; English water is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C129-ripa]
 <!-- hl-knowledge: introduces=[LA-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **unda, undae** — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**unda** is inherited, usually traced to the Proto-Indo-European root *\*wed-*, "water", in a form with an n. Greek *hydōr*, "water", and English *water* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

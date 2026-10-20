@@ -14,6 +14,9 @@ You'll want to know: కృతజ్ఞత.
 kṛta, "done", plus jña, "knowing": knowing what was done for you. That is the whole of gratitude in two Sanskrit syllables, and Telugu took it entire.
 Set it beside ధన్యవాదములు, the thank-you from the first pages of this book, which is "utterances of 'worthy'". One word thanks by calling the giver worthy. The other thanks by admitting the debt is remembered. They are not the same gesture, and Telugu keeps both.
 
+The word, taken apart.
+కృతజ్ఞత (kṛtajñata) is Sanskrit kṛtajñatā, "gratitude", from kṛtajña, "knowing what has been done", taken over as a learned loan, a tatsama, with the final -ā shortened.
+
 What you've built.
 A second word for thanks, with a different picture inside it.
 
@@ -85,6 +88,9 @@ You'll want to know: మేలు.
 Inherited, and short. మేల్ meant "above"; the good is what is above. From it Telugu draws మేలు (mēlu), a benefit or a good turn done to someone, and also the plain comparative sense of "better".
 So idi mēlu says "this one is higher" and lets the height do the judging --- which is what English does too, in superior, without anyone noticing any more.
 
+The word, taken apart.
+మేలు (mēlu) is native Dravidian, one word with Tamil mē and Kannada mē (DEDR 5086). DEDR lists Telugu mēlu, "good, advantage, better".
+
 What you've built.
 Two.
 
@@ -116,6 +122,9 @@ You'll want to know: గౌరవం.
 గౌరవం (gauravaṁ) — "respect".
 gaurava is the abstract noun of guru --- the very word met one chapter ago as the teacher. Respect is weightiness: to hold someone in గౌరవం (gauravaṁ) is to grant that what they say has mass.
 Telugu marks the same idea in its grammar as well as its vocabulary. మీరు rather than నువ్వు, and the -అండి hung on the end of a verb, are గౌరవం (gauravaṁ) turned into endings. A language can be polite in its words or in its shapes, and this one does both.
+
+The word, taken apart.
+గౌరవం (gauravaṁ) is Sanskrit gaurava, "weight; venerableness", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 4346).
 
 What you've built.
 Three, and one of them is a word you already knew wearing a different suit.
@@ -189,6 +198,9 @@ You'll want to know: ఆశీర్వాదం.
 The ceremony behind it is still in daily use. You bend and touch an elder's feet, and what comes back is ఆశీర్వాదం (āśīrvādaṁ) --- a hand on the head --- at a birthday, before an examination, at a wedding, and at every departure.
 Notice vāda sitting there. It is the same piece inside ధన్యవాదములు, "utterances of 'worthy'". Twice now this language has counted a thing said as a thing given.
 
+The word, taken apart.
+ఆశీర్వాదం (āśīrvādaṁ) is Sanskrit āśīrvāda, "blessing", taken over whole as a learned loan, a tatsama: āśis, "wish, blessing" (CDIAL 1457), and vāda, "utterance" (CDIAL 11507).
+
 What you've built.
 Four courtesy words, and two of them are utterances by name.
 
@@ -254,7 +266,8 @@ You'll want to know: దండం.
 దండం (daṇḍaṁ) — "a salutation, "my respects"".
 దండం (daṇḍaṁ) is what you say with the palms together --- my respects --- offered to an elder, a temple, a photograph on the wall. Children are taught to say it long before anyone explains it.
 Sanskrit daṇḍa is a staff, a stick. The full form of the gesture, daṇḍa-praṇāma, is the prostration where the body lies down straight as a staff. Telugu kept the word and let the body straighten most of the way up.
-Hold on to దండ; it comes back in the next chapter carrying flowers.
+Hold on to దండ; a word of the same shape comes back in the next chapter carrying flowers.
+CDIAL 6128 lists Sanskrit daṇḍa, "stick, staff", which it thinks probably non-Aryan; the greeting is usually explained through daṇḍa-praṇāma, the full prostration.
 
 What you've built.
 Five courtesy words: కృతజ్ఞత (kṛtajñata), మేలు (mēlu), గౌరవం (gauravaṁ), ఆశీర్వాదం (āśīrvādaṁ), దండం (daṇḍaṁ). Thanks, a good turn, respect, a blessing, and the greeting you make with your hands.

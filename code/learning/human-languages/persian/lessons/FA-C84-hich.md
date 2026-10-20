@@ -14,7 +14,8 @@ romanization: "hich"
 concept_tag: FA-DEF84-HICH
 prerequisites: [FA-C84-kasi, FA-C84-chizi]
 sounds: []
-roots: []
+roots: [persian-hich]
+etymology_hook: "hich ← Middle Persian ēč (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C84-chizi]
 <!-- hl-knowledge: introduces=[FA-LEX-C84-DEF84-04]; assesses=[] -->
 
 **هیچ** — *hich* — "none, no".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hich* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *ēč*, "any, none" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

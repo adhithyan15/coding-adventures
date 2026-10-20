@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:023819192ecf7bc7",
+  "lessonIds": [
+    "FR-C300-secours",
+    "FR-C300-secourir",
+    "FR-C300-reanimer",
+    "FR-C300-garrot",
+    "FR-C300-civiere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch300.txt",
+  "json": "french/narration/ch300.json",
+  "textHash": "fnv1a64:f639de5183fc4556",
+  "jsonHash": "fnv1a64:799640a1e85c6cf5",
+  "findings": []
+}

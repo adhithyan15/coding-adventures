@@ -1,0 +1,11 @@
+{
+  "id": "GE-R361-review-354-361",
+  "pathSegment": "GE-PATH-361-EINWANDERUNG",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-361-EINWANDERUNG",
+      "order": 5
+    }
+  ]
+}

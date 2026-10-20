@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:cd4f4ae1c3695534",
+  "lessonIds": [
+    "PT-C303-inundacao",
+    "PT-C303-inundar",
+    "PT-C303-afogamento",
+    "PT-C303-alerta",
+    "PT-C303-alertar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch303.txt",
+  "json": "portuguese/narration/ch303.json",
+  "textHash": "fnv1a64:d7b542cccafcb13e",
+  "jsonHash": "fnv1a64:b77af9f51686b4a1",
+  "findings": []
+}

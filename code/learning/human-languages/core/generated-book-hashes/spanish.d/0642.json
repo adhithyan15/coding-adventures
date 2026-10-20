@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 642,
+  "sourceHash": "fnv1a64:977127521fb53794",
+  "lessonIds": [
+    "ES-C642-circunvalacion",
+    "ES-C642-arcen",
+    "ES-C642-peaje",
+    "ES-C642-bache",
+    "ES-C642-tramo"
+  ],
+  "tex": "spanish/book/chapters/ch642-en-ruta.tex"
+}

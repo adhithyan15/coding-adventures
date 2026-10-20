@@ -14,7 +14,8 @@ romanization: "paṛdo"
 concept_tag: MW-THINGS123-PARDO
 prerequisites: [MW-C123-chadar, MW-C123-dari]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "paṛdo: usually traced to Persian parda 'curtain, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C123-dari]
 <!-- hl-knowledge: introduces=[MW-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **पड़दो** — *paṛdo* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पड़दो** (*paṛdo*) is a loan, usually traced to Persian *parda*, "curtain, veil". Marwadi says the *r* as *ṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

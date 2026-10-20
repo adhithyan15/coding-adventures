@@ -14,7 +14,8 @@ romanization: "lechít"
 concept_tag: RU-VERB-LECHIT
 prerequisites: [RU-C206-chistit, RU-C207-bolet]
 sounds: []
-roots: []
+roots: [germanic-lek]
+etymology_hook: "лечить is from *lěkŭ 'a cure', a loan from Germanic, as Gothic lekeis 'doctor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C207-bolet]
 <!-- hl-knowledge: introduces=[RU-LEX-C207-ACT207-02]; assesses=[] -->
 
 **лечить** (*lechít*) — "to treat (an illness)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лечить** comes from *\*lěkŭ*, "a cure", the root of *лекарство*, "medicine", which Vasmer calls a certain loan from Germanic, as in Gothic *lēkeis*, "a doctor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

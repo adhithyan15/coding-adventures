@@ -11,8 +11,8 @@ gloss: bus
 concept_tag: MW-TRANSPORT-BUS
 prerequisites: [MW-R15-shopping-close]
 sounds: [voiced-b, voiceless-s]
-roots: []
-etymology_hook: The first transport word is short and arrives by ear before print.
+roots: [english-bus]
+etymology_hook: "bas ← English bus"
 duration:
   max_seconds: 135
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-R15-shopping-close]
 
 Hear it twice, picture a bus, and say it once. Keep the spelling
 covered until the sound and meaning are easy.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bas* is a loan from English *bus*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01] -->

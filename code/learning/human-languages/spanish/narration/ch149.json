@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:56d98c4956a5b538",
+  "sourceHash": "fnv1a64:4ec0d526fdcf75cd",
   "lessons": [
     {
       "id": "ES-C31-once-quince",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1d9230d540c161e",
+      "sourceHash": "fnv1a64:8f3b62789f7b976c",
       "notice": null,
       "blocks": [
         {
@@ -175,7 +175,7 @@
             },
             {
               "kind": "speech",
-              "text": "No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it."
+              "text": "No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it. Every piece is inherited: diez from Latin decem, seis from sex, and the rest likewise (EtymDB 2.1)."
             }
           ]
         },

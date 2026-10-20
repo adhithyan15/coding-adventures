@@ -12,6 +12,9 @@ Before the new one: say the Telugu for about, then the Telugu for without.
 You'll want to know: ఒకవేళ.
 ఒకవేళ — okavēḷa — "if by chance, in case".
 
+The word, taken apart.
+ఒకవేళ (okavēḷa) is native oka, "one" (DEDR 990), and vēḷa, "time", from Sanskrit vēlā, "limit, time" (CDIAL 12115), a word CDIAL thinks probably came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for without, then the Telugu for if by chance
 
 You'll want to know: బదులు.
 బదులు — badulu — "instead of".
+
+The word, taken apart.
+బదులు (badulu) is a loan from Arabic badal, "exchange, substitute", which came through Persian and Hindustani.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for if by chance, then the Telugu for instead
 You'll want to know: ప్రకారం.
 ప్రకారం — prakāraṁ — "according to".
 
+The word, taken apart.
+ప్రకారం (prakāraṁ) is Sanskrit prakāra, "sort, manner", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 8435). Telugu uses it for "according to".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for instead of, then the Telugu for according
 You'll want to know: అసలు.
 అసలు — asalu — "actually; (not) at all".
 
+The word, taken apart.
+అసలు (asalu) is a loan from Arabic aṣl, "root, origin", which came through Persian and Hindustani, where it also means "real". DEDR 41 asalu, "mud", is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for according to, then the Telugu for actuall
 
 You'll want to know: ఏదేమైనా.
 ఏదేమైనా — ēdēmainā — "anyway, in any case".
+
+The word, taken apart.
+ఏదేమైనా (ēdēmainā) is native Dravidian: ēdi, "which", and ēmi, "what", both on the question base e- (DEDR 5151), with ainā, "even if it is", from agu, "to be" (DEDR 333).
 
 What you've built.
 One more word for this chapter.

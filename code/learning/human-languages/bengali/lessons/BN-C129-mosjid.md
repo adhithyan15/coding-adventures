@@ -14,7 +14,8 @@ romanization: "mosjid"
 concept_tag: BN-THINGS129-MOSJID
 prerequisites: [BN-C128-tren, BN-C128-tikit]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "mosjid ← Arabic masjid 'place of prostration, mosque', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C128-tikit]
 <!-- hl-knowledge: introduces=[BN-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **মসজিদ** — *mosjid* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মসজিদ** (*mosjid*) is a loan from Arabic *masjid*, "place of prostration, mosque", which reached Bengali through Persian. Its Arabic root is *s-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

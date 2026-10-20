@@ -18,6 +18,9 @@ nāṭŭ was handed to you with a warning printed inside it: its scale floats. A
 നാട് nāṭŭ. covers: anything from a district to a country.
 It is an old word and a shared one. Tamil says ūr for the same thing, and it is buried in place-names the length of the south — so a name you cannot read yet may still end in a piece you now know.
 
+The word, taken apart.
+ഊര് (ūrŭ) is native Dravidian, one word with Tamil ūr, Kannada ūr and Telugu ūru (DEDR 752).
+
 What you've built.
 The small end of the question you have been able to hear since the ground words, and not answer.
 
@@ -53,6 +56,9 @@ Now the floating word has fixed points to float between:
 ഇന്ത്യ indya, India.
 Each of the three can answer which nāṭŭ are you from, and choosing among them is the same choice English makes when it answers that question with a town, a region or a country: you pick the one your listener will recognise.
 Say kēraḷaṁ slowly and you will hear the retroflex ള in the middle of it — the sound you met in the name of the language itself. It is the same letter doing the same work, and it is worth noticing that the place and the tongue spoken there are built on the same sound.
+
+The word, taken apart.
+കേരളം ഇന്ത്യ (kēraḷaṁ indya): kēraḷaṁ is usually traced to Cēram, the land of the Chera kings, with a Dravidian ending; a popular story ties it instead to kēram, "coconut palm", and the question is not settled. indya is English India, which goes back through Greek and Persian to Sanskrit sindhu, "river, the Indus" (CDIAL 13415).
 
 What you've built.
 An answer, where you had only a category.
@@ -91,7 +97,7 @@ You have had most of this word since your fifth chapter's sentence. Put the two 
 Everything up to the last piece is shared. -ം ends the language, -ി ends the person, and you can see the join without being told where it is.
 
 Why it's said this way: the language, the hill and the place.
-The language word is itself built out of two older pieces — മല mala, a hill, and a second piece meaning a place. The language is named after the country it grew in, and the person is then named after the language rather than after the state.
+The language word is itself built out of two older pieces — മല mala, a hill (cognate with Tamil malai, DEDR 4742; compare Sanskrit malaya), and a second piece meaning a place. The language is named after the country it grew in, and the person is then named after the language rather than after the state.
 So the chain runs hill becomes land becomes language becomes person, and malayāḷi sits at the far end of it. Nobody has to tell you that Kerala is hilly for the word to make sense; the word has been saying so the whole time.
 
 Grammar Lens: Malayalam has no separate word for "Keralite".

@@ -14,7 +14,8 @@ romanization: "parājayaṁ"
 concept_tag: ML-KARANAM318-PARAJAYAM
 prerequisites: [ML-C317-ottum, ML-C317-kasticcu]
 sounds: []
-roots: []
+roots: [sanskrit-parajaya]
+etymology_hook: "parājayaṁ ← Sanskrit parājaya 'conquest, defeat', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C317-kasticcu]
 <!-- hl-knowledge: introduces=[ML-LEX-C318-KARANAM318-01]; assesses=[] -->
 
 **പരാജയം** — *parājayaṁ* — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരാജയം** (*parājayaṁ*) ← Sanskrit *parājaya*, "conquest, defeat", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

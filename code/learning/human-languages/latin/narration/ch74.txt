@@ -12,6 +12,9 @@ Before the new one: say the Latin for a sailor, then the Latin for a poet.
 You'll want to know: cīvis, cīvis.
 cīvis, cīvis — "a citizen". English civil and city.
 
+The word, taken apart.
+cīvis is inherited, usually traced to Proto-Indo-European keywos, "intimate, friendly" (EtymDB 2.1), from a root kei-, "to lie down, to settle".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a poet, then the Latin for a citizen.
 
 You'll want to know: coquus, coquī.
 coquus, coquī — "a cook".
+
+The word, taken apart.
+coquus is built on coquō, "to cook", which is usually traced to Proto-Indo-European pekw-, "to cook, to ripen" (EtymDB 2.1). English cook came from coquus very early.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a citizen, then the Latin for a cook.
 You'll want to know: mercātor, mercātōris.
 mercātor, mercātōris — "a merchant". English merchant.
 
+The word, taken apart.
+mercātor is built on mercor, "to trade", from merx, "goods, wares" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a cook, then the Latin for a merchant.
 You'll want to know: agricola, agricolae.
 agricola, agricolae — "a farmer". English agriculture.
 
+The word, taken apart.
+agricola is a compound of ager, "a field", and colō, "to till, to tend" (Lewis & Short): a field-tiller.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a merchant, then the Latin for a farmer.
 
 You'll want to know: ager, agrī.
 ager, agrī — "a field". Where the agricola works.
+
+The word, taken apart.
+ager is inherited, usually traced to Proto-Indo-European h2egros, "field" (EtymDB 2.1). Greek agros, "field", and English acre are cousins (Lewis & Short).
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C752-apostar",
+    "language": "spanish",
+    "chapter": 752,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8495e30befff290"
+  },
+  "findings": []
+}

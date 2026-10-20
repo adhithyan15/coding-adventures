@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 163,
-  "sourceHash": "fnv1a64:37a8a59afc73cfd7",
+  "sourceHash": "fnv1a64:77cb8a4d19dd40e1",
   "lessonIds": [
     "BN-C163-malpotro",
     "BN-C163-asbab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch163.txt",
   "json": "bengali/narration/ch163.json",
-  "textHash": "fnv1a64:922317936fd28474",
-  "jsonHash": "fnv1a64:65496016c610af98",
+  "textHash": "fnv1a64:024640610fbc4cf0",
+  "jsonHash": "fnv1a64:f5b380d913068963",
   "findings": []
 }

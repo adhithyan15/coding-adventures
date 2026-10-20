@@ -13,7 +13,8 @@ gloss: "cold"
 concept_tag: GE-THING197-KAELTE
 prerequisites: [GE-C197-nebel, GE-C197-hitze]
 sounds: []
-roots: []
+roots: [germanic-kaldaz]
+etymology_hook: "Kälte ← Old High German kaltī, the noun of the word for 'cold', English cold"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C197-hitze]
 <!-- hl-knowledge: introduces=[GE-LEX-C197-THING197-04]; assesses=[] -->
 
 **die Kälte** — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kälte** ← Middle High German *kelte* ← Old High German *kaltī*, the noun of the word for "cold" ← Proto-Germanic *\*kaldaz*, English *cold*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

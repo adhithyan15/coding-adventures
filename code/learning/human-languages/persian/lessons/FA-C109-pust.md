@@ -14,7 +14,8 @@ romanization: "pust"
 concept_tag: FA-THINGS109-PUST
 prerequisites: [FA-C108-kamar, FA-C109-abru]
 sounds: []
-roots: []
+roots: [persian-pust]
+etymology_hook: "pust: inherited, usually traced to Middle Persian pōst"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C109-abru]
 <!-- hl-knowledge: introduces=[FA-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **پوست** — *pust* — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pust* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pōst*, "skin, hide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

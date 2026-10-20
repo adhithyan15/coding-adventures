@@ -15,6 +15,9 @@ Say it: ḥājj.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ḥāʾ, khāʾ, jīm, and writes it on its own.
 
+The word, taken apart.
+حاج (ḥājj) is built on the native Arabic root ḥ-j-j, "to repair to, to make the pilgrimage" (Lane). Lane's ḥājj is one who repairs to Mecca for the pilgrimage.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ḥājj]
@@ -110,42 +113,6 @@ Describe ك: angular or curved, and what sits inside? (Angular body with a small
 
 
 Lesson 4 of 10.
-خير (khayr, bi-khayr) and بخير (bi-khayr) — writing "good," and how you say you're well.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Assemble خير — right to left, Script — Then بخير — "(I'm) well" and Guided Practice.
-
-Warm-up.
-[pause 2 seconds]
-Everything comes together. With خ (Lesson 7), ي (Lesson 5), and ر (Lesson 8), you can now write خير (khayr, bi-khayr) (khayr, "good") — the word hiding in every "good morning" you've greeted with — and then بخير (bi-khayr, "well"), the everyday answer to "how are you?"
-
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Script — Assemble خير — right to left.
-Write it starting on the right, moving left:
-خ (khāʾ) — the hook-body with one dot above, reaching left into…
-ي (yāʾ) — joined in the middle (its two dots below), flowing into…
-ر (rā) — the little down-curve. Remember Lesson 8: rā is a non-joiner, so it simply ends the word — but yāʾ does join into it from the right.
-Read back, right to left: خ, ي, ر = kh, ī, r = خير (khayr, bi-khayr), "good." (The root kh–y–r means "good, best, choice" across Semitic — the same three consonants carry the meaning, vowels laid on top, just like Arabic always works.)
-
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Script — Then بخير — "(I'm) well".
-Glue بـ (bi-, "in / with") onto the front — bāʾ from Lesson 3, its one dot below — and it joins straight into the khāʾ:
-بخير = bāʾ, khāʾ, yāʾ, rā = bi-khayr, literally "in goodness" — what you say when someone asks kayfa ḥāluk? ("how are you?"). "Al-ḥamdu lillāh, bi-khayr" — "Praise God, (I'm) well."
-You have now written a real reply in a real conversation, in your own hand.
-
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Guided Practice.
-[pause 1 second]
-[once you have stopped driving — write: خير (khayr, bi-khayr), right to left — "khāʾ (dot above), yāʾ, rā — lift"]
-[once you have stopped driving — write: بخير (bi-khayr) — add bi- on the right: "bāʾ joins into khāʾ"]
-[your turn — say: "the root kh-y-r = good; bi-khayr = 'in goodness' = 'I'm well'"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Spell خير (khayr, bi-khayr) letter by letter, right to left. (khāʾ, yāʾ, rā — "good.") Which letter ends it, and does anything join after it? (rā — no, it's a non-joiner; the pen lifts.) What does بخير (bi-khayr) literally mean, and when do you say it? ("In goodness" — the answer to "how are you?", kayfa ḥāluk?.) You can now hand-write a greeting and its reply — the Arabic script is yours.
-
-
-Lesson 5 of 10.
 كيف (kayfa) — "how".
 
 Warm-up.
@@ -166,6 +133,7 @@ kayfiyya means quality, manner — literally "how-ness".
 kayyafa means to adapt, adjust (to make a thing fit how it must be).
 takyīf means adaptation — and, in modern Arabic, air conditioning.
 So the abstract noun for "quality" is built straight from the word "how." Arabic does this constantly: take a word, run it through a pattern, get a concept.
+Kayfa itself is inherited, not built on a three-letter root: Lane notes that verbs such as kayyafa were later formed from it by analogy.
 
 Guided Practice.
 [pause 1 second]
@@ -181,7 +149,7 @@ Wrap-up Recall.
 What does كيف (kayfa) mean? ("How.") Which Chapter 2 word is its partner? (ما, "what".) Which letter in it is new? (ف, fāʾ — the f.) What is kayfiyya? ("Quality" — literally how-ness, built from this very word.) Next: the word Arabic asks about when it asks how you are — and it isn't "you."
 
 
-Lesson 6 of 10.
+Lesson 5 of 10.
 حال (ḥāl) — "state, condition".
 
 Warm-up.
@@ -217,7 +185,7 @@ Wrap-up Recall.
 What does حال (ḥāl) mean? ("State, condition.") What root is it from, and what does that root mean? (ḥ–w–l, "to turn, change.") So what is a "state," literally? (How things have turned.) What is ḥawl? ("A year" — one full turn.) Next: bolt a "your" onto it and you have the question.
 
 
-Lesson 7 of 10.
+Lesson 6 of 10.
 كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) (kayfa ḥāluka?) — "how are you?"
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -242,6 +210,9 @@ And look at that split: -ka to a man, -ki to a woman. That is exactly the أنت
 Grammar Lens — No verb at all.
 Notice what is missing: there is no "is," no "are." Just how — your-state. This is the zero copula you met with اسمي ("my name [is] …"): Arabic simply doesn't need a verb to join a thing to its description.
 
+The word, taken apart.
+كيف حالك (kayfa ḥāluka) is built from kayfa, "how", an inherited question word, and ḥāluka, "your state": ḥāl, on the native root ḥ-w-l, "to turn, to change" (Lane), with -ka, "your".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: to a man — "kayfa ḥāluka?"]
@@ -258,15 +229,15 @@ Wrap-up Recall.
 What does كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) literally say? ("How [is] your state?") Which suffix means "your," and how does it split? (-ka to a man, -ki to a woman — the anta/anti split again.) Which Chapter 2 suffix does it copy? (-ī, "my," as in ismī.) What word is absent from the sentence? ("Is" — the zero copula.) Next: how to answer.
 
 
-Lesson 8 of 10.
+Lesson 7 of 10.
 بخير (bi-khayr) — "well".
 
 Warm-up.
 [pause 2 seconds]
-The answer to kayfa ḥāluka? — and you have already written this word by hand. Nothing here is new; it is two old pieces stuck together.
+The answer to kayfa ḥāluka? — and nothing here is new; it is two old pieces stuck together. Before this chapter ends you will write it by hand.
 
 You'll want to know — The letters in this word.
-(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them from the writing set, where you assembled خير (khayr, bi-khayr) and then بخير (bi-khayr) letter by letter. Right to left: ب, خ, ي, ر.
+(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them a letter you have already written. The chapter's last writing lesson joins them into خير (khayr, bi-khayr) and then بخير (bi-khayr), letter by letter. Right to left: ب, خ, ي, ر.
 
 You'll want to know — The two pieces.
 خير (khayr, bi-khayr) (khayr) — "good, goodness." You have met it before without being told: it is sitting inside the Chapter 1 greeting صباح الخير (ṣabāḥ al-khayr, "morning of the good"). The greeting was never a fixed lump — it was always ṣabāḥ + al- + khayr.
@@ -280,6 +251,9 @@ Literally: "In goodness, thanks." Not "I am fine" — Arabic doesn't need the "I
 
 You'll want to know — The bi- you have heard before.
 That same بـ opens the most-spoken phrase in the language: bismillāh ("in the name of God") — bi- + ism (the very word from Chapter 2!) + allāh. One tiny letter, doing the same job.
+
+The word, taken apart.
+بخير (bi-khayr) is built from bi-, "in, with", an inherited Semitic preposition that Hebrew has as bə-, and khayr, "good", on the native root kh-y-r (Lane): "in goodness".
 
 Guided Practice.
 [pause 1 second]
@@ -297,7 +271,7 @@ Wrap-up Recall.
 What does بخير (bi-khayr) literally mean? ("In goodness.") Where had you already met khayr? (Inside صباح الخير — "morning of the good.") What kind of word is بـ? (A one-letter preposition that attaches, like al-.) What is missing from the answer, again? (Any word for "I am.") Next: the answer Arabic gives even more often.
 
 
-Lesson 9 of 10.
+Lesson 8 of 10.
 الحمد لله (al-ḥamdu lillāh) — "praise be to God".
 
 Warm-up.
@@ -345,6 +319,42 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does الحمد لله (al-ḥamdu lillāh) literally say? ("The praise [is] to God.") What root is ḥamd from? (ḥ–m–d, "to praise".) Which two names come out of that root? (Aḥmad and Muḥammad — "the much-praised.") What is allāh made of? (al- + ilāh = "the god"; cousin of Hebrew El.) Next: practice the whole exchange.
+
+
+Lesson 9 of 10.
+خير (khayr, bi-khayr) and بخير (bi-khayr) — writing "good," and how you say you're well.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Assemble خير — right to left, Script — Then بخير — "(I'm) well" and Guided Practice.
+
+Warm-up.
+[pause 2 seconds]
+Everything comes together. With خ (Lesson 7), ي (Lesson 5), and ر (Lesson 8), you can now write خير (khayr, bi-khayr) (khayr, "good") — the word hiding in every "good morning" you've greeted with — and then بخير (bi-khayr, "well"), the everyday answer to "how are you?"
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — Assemble خير — right to left.
+Write it starting on the right, moving left:
+خ (khāʾ) — the hook-body with one dot above, reaching left into…
+ي (yāʾ) — joined in the middle (its two dots below), flowing into…
+ر (rā) — the little down-curve. Remember Lesson 8: rā is a non-joiner, so it simply ends the word — but yāʾ does join into it from the right.
+Read back, right to left: خ, ي, ر = kh, ī, r = خير (khayr, bi-khayr), "good." (The root kh–y–r means "good, best, choice" across Semitic — the same three consonants carry the meaning, vowels laid on top, just like Arabic always works.)
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — Then بخير — "(I'm) well".
+Glue بـ (bi-, "in / with") onto the front — bāʾ from Lesson 3, its one dot below — and it joins straight into the khāʾ:
+بخير = bāʾ, khāʾ, yāʾ, rā = bi-khayr, literally "in goodness" — what you say when someone asks kayfa ḥāluk? ("how are you?"). "Al-ḥamdu lillāh, bi-khayr" — "Praise God, (I'm) well."
+You have now written a real reply in a real conversation, in your own hand.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: خير (khayr, bi-khayr), right to left — "khāʾ (dot above), yāʾ, rā — lift"]
+[once you have stopped driving — write: بخير (bi-khayr) — add bi- on the right: "bāʾ joins into khāʾ"]
+[your turn — say: "the root kh-y-r = good; bi-khayr = 'in goodness' = 'I'm well'"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Spell خير (khayr, bi-khayr) letter by letter, right to left. (khāʾ, yāʾ, rā — "good.") Which letter ends it, and does anything join after it? (rā — no, it's a non-joiner; the pen lifts.) What does بخير (bi-khayr) literally mean, and when do you say it? ("In goodness" — the answer to "how are you?", kayfa ḥāluk?.) You can now hand-write a greeting and its reply — the Arabic script is yours.
 
 
 Lesson 10 of 10.

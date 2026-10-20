@@ -1,0 +1,11 @@
+{
+  "id": "LA-C490-maereo",
+  "pathSegment": "LA-PATH-490-MAER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-490-MAER",
+      "order": 2
+    }
+  ]
+}

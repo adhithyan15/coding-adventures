@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e25d5c598a0c1e5d",
+  "sourceHash": "fnv1a64:91fbeb1067f8199e",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f9517b48becbcbc",
+      "sourceHash": "fnv1a64:950da3140484e7a3",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बड़ा (baṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaḍra, \"big\" (CDIAL 11225). CDIAL notes that the Sanskrit word is known only from the old word-lists, and doubts a link with vṛddha, \"grown\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,7 +128,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -148,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70b1bc48d189a979",
+      "sourceHash": "fnv1a64:9e177c258c12ef61",
       "notice": null,
       "blocks": [
         {
@@ -193,6 +204,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छोटा (choṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from choṭṭa, \"small\", a form CDIAL reconstructs from its descendants (CDIAL 5071)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -241,7 +263,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -272,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ebbdad1bb496f51",
+      "sourceHash": "fnv1a64:03424bb658e9c953",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अच्छा (acchā) goes back to Sanskrit accha, \"clear, transparent\" (CDIAL 142). CDIAL lists Hindi āchā, \"good\", and marks acchā itself as taken over from Punjabi. CDIAL adds that the Sanskrit word may once have meant \"shadowless\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -365,7 +398,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fa8de72cb0b00d4",
+      "sourceHash": "fnv1a64:991226c8c940fdfb",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नया (nayā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naviya, a by-form of Sanskrit navya, \"new\", which the Rigveda uses where the metre needs an extra syllable. CDIAL lists Hindi nayā and its feminine naī under naviya (CDIAL 7025)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83adb91eb387f205",
+      "sourceHash": "fnv1a64:b9e4957fe138264b",
       "notice": null,
       "blocks": [
         {
@@ -556,6 +600,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुराना (purānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from purāṇa, \"ancient\" (CDIAL 8283)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -595,7 +650,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "maṭṭi"
 concept_tag: TE-THINGS120-MATTI
 prerequisites: [TE-C120-adavi, TE-C120-aku]
 sounds: []
-roots: []
+roots: [sanskrit-mrttika]
+etymology_hook: "maṭṭi: usually traced to Sanskrit mṛttikā 'earth, clay' (CDIAL 10286), like Hindi maṭṭī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C120-aku]
 <!-- hl-knowledge: introduces=[TE-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **మట్టి** — *maṭṭi* — "soil, earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మట్టి** (*maṭṭi*) is usually traced to Sanskrit *mṛttikā*, "earth, clay" (CDIAL 10286), reshaped as a tadbhava; CDIAL lists Hindi *maṭṭī* from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

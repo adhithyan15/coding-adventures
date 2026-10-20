@@ -14,7 +14,8 @@ romanization: "oṭṭakacciviṅki"
 concept_tag: TA-PORUL218-OTTAKACCIVINKI
 prerequisites: [TA-C217-viruntu, TA-C217-vila]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra, dravidian-civinki-leopard]
+etymology_hook: "ஒட்டகச்சிவிங்கி — 'camel-leopard': oṭṭakam ← Sanskrit uṣṭra + native civiṅki 'leopard' (DEDR 2579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C217-vila]
 <!-- hl-knowledge: introduces=[TA-LEX-C218-PORUL218-01]; assesses=[] -->
 
 **ஒட்டகச்சிவிங்கி** — *oṭṭakacciviṅki* — "a giraffe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒட்டகச்சிவிங்கி** (*oṭṭakacciviṅki*) is "the camel-leopard": *oṭṭakam*, "camel", from Sanskrit *uṣṭra* (CDIAL 2387), and native *civiṅki*, "hunting leopard" (DEDR 2579; Malayalam *civiṅṅi*). Greek named the giraffe the same way, *camelopardalis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

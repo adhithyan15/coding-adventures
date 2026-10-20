@@ -15,6 +15,7 @@ concept_tag: BN-VERB-TEPA
 prerequisites: [BN-C105-meshano, BN-C106-chhora]
 sounds: []
 roots: []
+etymology_hook: "ṭepā: origin not settled; CDIAL has no entry, the nearest being ṭipā 'to pinch' under *ṭipp (CDIAL 5464)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C106-chhora]
 <!-- hl-knowledge: introduces=[BN-LEX-C106-ACT106-02]; assesses=[] -->
 
 **টেপা** — *ṭepā* — "to press".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **টেপা** (*ṭepā*) is not settled. CDIAL has no entry for it; the nearest form it gives is Bengali *ṭipā*, "to pinch", under *\*ṭipp* (CDIAL 5464), and it does not join the two.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

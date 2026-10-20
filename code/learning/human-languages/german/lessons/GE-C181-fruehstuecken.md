@@ -13,7 +13,8 @@ gloss: "to have breakfast"
 concept_tag: GE-VERB-FRUEHSTUECKEN
 prerequisites: [GE-C180-fluestern, GE-C181-fotografieren]
 sounds: []
-roots: []
+roots: [germanic-fruo]
+etymology_hook: "frühstücken — the verb made from Frühstück 'breakfast', früh 'early' + Stück 'piece'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C181-fotografieren]
 <!-- hl-knowledge: introduces=[GE-LEX-C181-VERB181-02]; assesses=[] -->
 
 **frühstücken** — "to have breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frühstücken** is the verb made from *Frühstück*: *früh*, "early", + the word for "a piece" (EtymDB 2.1) — to eat the early bite.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

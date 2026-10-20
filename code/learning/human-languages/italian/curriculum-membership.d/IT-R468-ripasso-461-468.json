@@ -1,0 +1,11 @@
+{
+  "id": "IT-R468-ripasso-461-468",
+  "pathSegment": "IT-PATH-468-GELO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-468-GELO",
+      "order": 5
+    }
+  ]
+}

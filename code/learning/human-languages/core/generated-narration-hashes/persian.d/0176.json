@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 176,
-  "sourceHash": "fnv1a64:7378daff43a09368",
+  "sourceHash": "fnv1a64:c0329d4db00cfd59",
   "lessonIds": [
     "FA-C176-herfe",
     "FA-C176-sherkat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch176.txt",
   "json": "persian/narration/ch176.json",
-  "textHash": "fnv1a64:d467455ece6addcb",
-  "jsonHash": "fnv1a64:28ac9a36ffe09237",
+  "textHash": "fnv1a64:b899a7b9bea0cba8",
+  "jsonHash": "fnv1a64:6d4446b2366ec4e6",
   "findings": []
 }

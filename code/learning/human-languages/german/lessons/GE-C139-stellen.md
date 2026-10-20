@@ -13,7 +13,8 @@ gloss: "to put (upright)"
 concept_tag: GE-VERB-STELLEN
 prerequisites: [GE-C139-antworten, GE-C139-legen]
 sounds: []
-roots: []
+roots: [germanic-stallijana]
+etymology_hook: "stellen ← Old High German stellen ← Proto-Germanic *stallijaną 'to put, to position'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C139-legen]
 <!-- hl-knowledge: introduces=[GE-LEX-C139-VERB139-05]; assesses=[] -->
 
 **stellen** — "to put (upright)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**stellen** ← Old High German *stellen* ← Proto-Germanic *\*stallijaną*, "to put, to position" — inherited, built on the word for "a place, a stall", English *stall*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

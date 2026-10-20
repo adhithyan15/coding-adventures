@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 657,
+  "sourceHash": "fnv1a64:230206286ecbe2d8",
+  "lessonIds": [
+    "ES-C657-caducar",
+    "ES-C657-valido",
+    "ES-C657-renovar",
+    "ES-C657-fotocopia",
+    "ES-C657-consulado"
+  ],
+  "tex": "spanish/book/chapters/ch657-papeles-en-regla.tex"
+}

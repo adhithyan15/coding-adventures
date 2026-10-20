@@ -10,7 +10,8 @@ gloss: "to switch on; to light"
 concept_tag: ES-VERB-ENCENDER
 prerequisites: [ES-C494-arreglarse, ES-C494-bajar]
 sounds: []
-roots: []
+roots: [incendere-latin]
+etymology_hook: "encender ← Latin incendere 'to set on fire' — English incense, incendiary"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C494-bajar]
 > *Switch on the light, please.*
 
 The e breaks into ie under stress: *enciendo*. The opposite is *apagar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**encender** ← Latin *incendere*, "to set on fire" (EtymDB 2.1) — inherited: *in-* became *en-*, and the stressed *e* opens into *ie* in *enciendo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāndā"
 concept_tag: MR-FOOD89-KANDA
 prerequisites: [MR-C88-ande, MR-C88-dahi]
 sounds: []
-roots: []
+roots: [sanskrit-kanda]
+etymology_hook: "kāndā ← Sanskrit kanda 'bulbous root', probably from Dravidian (CDIAL 2723)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C88-dahi]
 <!-- hl-knowledge: introduces=[MR-LEX-C89-FOOD89-01]; assesses=[] -->
 
 **कांदा** — *kāndā* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कांदा** (*kāndā*) is a tadbhava of Sanskrit *kanda*, "bulbous root" (CDIAL 2723). CDIAL takes the Sanskrit word as probably from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

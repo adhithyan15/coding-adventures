@@ -1,0 +1,11 @@
+{
+  "id": "GE-C501-wuerfel",
+  "pathSegment": "GE-PATH-501-BRETTSPIEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-501-BRETTSPIEL",
+      "order": 2
+    }
+  ]
+}

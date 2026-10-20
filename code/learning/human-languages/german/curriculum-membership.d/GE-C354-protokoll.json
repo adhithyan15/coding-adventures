@@ -1,0 +1,11 @@
+{
+  "id": "GE-C354-protokoll",
+  "pathSegment": "GE-PATH-354-BESPRECHUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-354-BESPRECHUNG",
+      "order": 2
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pain, Illness, Medicine, Doctor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:892bbeb45f328dd8",
+  "sourceHash": "fnv1a64:bdc9224522e2b933",
   "lessons": [
     {
       "id": "RU-C32-pain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cf7fcd328794dd6",
+      "sourceHash": "fnv1a64:ac56e3012e3271a3",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "боль (bol) from Proto-Slavic bolĭ — inherited, with the verb болеть, \"to ache, to be ill\". Vasmer sets it beside Gothic balwjan, \"to torment\", and Old English bealu, \"evil\", the bale of baleful, but notes that Berneker rejected the link."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f06ab3d7bc8b39cc",
+      "sourceHash": "fnv1a64:8f2a9dcf5f4cb2cc",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "болезнь (bolézn) — built from болеть, \"to be ill\", the verb of боль (bol), \"pain\", with the old noun suffix -знь that also makes жизнь, \"life\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dfaed38225cfc90",
+      "sourceHash": "fnv1a64:4ba3b13e9de506f9",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лекарство (lekárstvo) is лекарь, an old word for \"doctor\", with the noun suffix -ство. The root лек-, \"cure\", came into Slavic from Germanic; Vasmer calls the loan certain and compares Gothic lēkeis, \"doctor\". English leech, an old word for \"physician\", is from that Germanic word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8ab016de0fdbcd2",
+      "sourceHash": "fnv1a64:2a6dce8270a44e5e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "врач (vrach) — a Church Slavonic word, Old Church Slavonic vračĭ; its -ра-, where East Slavic would say -оро-, marks it. Vasmer derives it from the root of врать, \"to talk nonsense\", and ворчать, \"to grumble\", so the first sense was \"charmer, healer by spells\"; Bulgarian врач (vrach) still means \"sorcerer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c18f98faaafb22b3",
+      "sourceHash": "fnv1a64:08d89decbaaa5799",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "больница (bolnítsa) is больной, \"sick; a patient\", with -ница, a suffix that names places: a place for the sick. The root is that of боль (bol), \"pain\". Vasmer relates боль (bol) to Old English bealu, \"harm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

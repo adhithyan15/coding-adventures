@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 225,
-  "sourceHash": "fnv1a64:b7f5a3ae6764bb39",
+  "sourceHash": "fnv1a64:0c7ae191638f032e",
   "lessonIds": [
     "BN-C225-dol",
     "BN-C225-kheloyar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch225.txt",
   "json": "bengali/narration/ch225.json",
-  "textHash": "fnv1a64:4dd37f5b9fad42f6",
-  "jsonHash": "fnv1a64:fcf5e14ff2302eba",
+  "textHash": "fnv1a64:227bd6c182aa8c56",
+  "jsonHash": "fnv1a64:6c35507f1bc771b1",
   "findings": []
 }

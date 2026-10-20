@@ -14,7 +14,8 @@ romanization: "saccā"
 concept_tag: HI-QUAL214-SACCA
 prerequisites: [HI-C214-alsi, HI-C214-imandar]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "saccā ← Sanskrit satya 'true', a tadbhava (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C214-imandar]
 <!-- hl-knowledge: introduces=[HI-LEX-C214-QUAL214-05]; assesses=[] -->
 
 **सच्चा** — *saccā* — "true, genuine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सच्चा** (*saccā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *satya*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

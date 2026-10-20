@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 28,
-  "sourceHash": "fnv1a64:4aa577f7606ae7f4",
+  "sourceHash": "fnv1a64:3e1e743f132b6094",
   "lessonIds": [
     "MR-C24-sangne",
     "MR-C24-mhanne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch28.txt",
   "json": "marathi/narration/ch28.json",
-  "textHash": "fnv1a64:cd3d50caa8826c21",
-  "jsonHash": "fnv1a64:64b27010ebb19a0f",
+  "textHash": "fnv1a64:040c94cb22eb2552",
+  "jsonHash": "fnv1a64:e22fc9dea460d0cc",
   "findings": []
 }

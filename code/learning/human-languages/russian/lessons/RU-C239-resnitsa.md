@@ -14,7 +14,8 @@ romanization: "resnítsa"
 concept_tag: RU-ZDOROV239-RESNITSA
 prerequisites: [RU-C239-rost, RU-C239-brov]
 sounds: []
-roots: []
+roots: [slavic-resa]
+etymology_hook: "ресница is from ряса 'a fringe', Old Russian рясница 'eyelash'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C239-brov]
 <!-- hl-knowledge: introduces=[RU-LEX-C239-ZDOROV239-04]; assesses=[] -->
 
 **ресница** (*resnítsa*) — "an eyelash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ресница** — Old Russian *рясница*; it comes from *ряса*, "a fringe", which Vasmer thinks probably goes with *ряд*, "a row".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

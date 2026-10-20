@@ -13,7 +13,8 @@ gloss: "until; while"
 concept_tag: LA-TEMP175-DONEC
 prerequisites: [LA-C175-adhuc, LA-C175-subito]
 sounds: []
-roots: []
+roots: [donec-latin]
+etymology_hook: "dōnec 'until' — from older dōnicum; its formation is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C175-subito]
 <!-- hl-knowledge: introduces=[LA-LEX-C175-TEMP175-05]; assesses=[] -->
 
 **dōnec** — "until; while".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dōnec** comes from older *dōnicum* (Lewis & Short), but how that was formed is uncertain; Lewis & Short suggest an old word for "day" with *cum*, "when".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

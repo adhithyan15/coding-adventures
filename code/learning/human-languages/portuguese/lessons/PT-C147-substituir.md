@@ -13,7 +13,8 @@ gloss: "to replace"
 concept_tag: PT-VERB-SUBSTITUIR
 prerequisites: [PT-C146-acolher, PT-C146-admirar]
 sounds: []
-roots: []
+roots: [statuere-latin]
+etymology_hook: "substituir ← Latin substituere 'to put in place of' — English substitute"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C146-admirar]
 <!-- hl-knowledge: introduces=[PT-LEX-C147-VERBOS147-01]; assesses=[] -->
 
 **substituir** — "to replace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**substituir** ← Latin *substituere*, "to put in place of" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

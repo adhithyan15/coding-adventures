@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "A wider school map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5e6cb6a6d9a444c4",
+  "sourceHash": "fnv1a64:66012b17dc3e9d8d",
   "lessons": [
     {
       "id": "ZH-C15-hear-zhong",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83540c8bd1996720",
+      "sourceHash": "fnv1a64:4cdc1bf998d1e1a3",
       "notice": null,
       "blocks": [
         {
@@ -51,6 +51,10 @@
             {
               "kind": "speech",
               "text": "Hold one high, level tone: zhōng. Stay with sound and meaning. The written shape comes next."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōng is inherited from Middle Chinese trjuwng, \"middle\"."
             }
           ]
         },
@@ -314,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2774e884bfa80c64",
+      "sourceHash": "fnv1a64:83feabeb3d4e0f75",
       "notice": null,
       "blocks": [
         {
@@ -346,6 +350,10 @@
             {
               "kind": "speech",
               "text": "Hold zhōng level, then let xué rise. Hear the whole school word before seeing its two characters."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōngxué is built from Middle Chinese trjuwng, \"middle\", and haewk, \"learning\"."
             }
           ]
         },
@@ -395,7 +403,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:391373662cfeaa1d",
+      "sourceHash": "fnv1a64:34da17e0ae9d8dff",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -439,6 +447,10 @@
             {
               "kind": "speech",
               "text": "Read the pair without pinyin: level, then rising."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese, trjuwng and haewk (Guangyun, in Baxter's transcription); Chinese built the school name from them."
             }
           ]
         },
@@ -598,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07a7d24438682f44",
+      "sourceHash": "fnv1a64:88fb0cda54e464ff",
       "notice": null,
       "blocks": [
         {
@@ -630,6 +642,10 @@
             {
               "kind": "speech",
               "text": "Say three beats: level zhōng, rising xué, light sheng. The shared xué is spoken only once."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōngxuésheng is built from Middle Chinese trjuwng, haewk and srjaeng: middle, learning, life."
             }
           ]
         },
@@ -679,7 +695,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0853fa4ec5dbe40c",
+      "sourceHash": "fnv1a64:6137eda0da872ea8",
       "notice": null,
       "blocks": [
         {
@@ -721,6 +737,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: all three characters once without pinyin]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three pieces are inherited from Middle Chinese, trjuwng, haewk and srjaeng (Guangyun, in Baxter's transcription), and Chinese joined them as middle school plus student."
             }
           ]
         },
@@ -789,7 +809,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c65be4a4637bfce2",
+      "sourceHash": "fnv1a64:3068aebd4d6fd18e",
       "notice": null,
       "blocks": [
         {
@@ -821,6 +841,10 @@
             {
               "kind": "speech",
               "text": "Let both syllables rise: tóng-xué. Keep working only with sound and meaning. The first character comes next."
+            },
+            {
+              "kind": "speech",
+              "text": "Tóngxué is built from Middle Chinese duwng, \"same, together\", and haewk, \"to learn\"."
             }
           ]
         },
@@ -975,7 +999,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:696b2062d640c62b",
+      "sourceHash": "fnv1a64:a3337b62102af5a8",
       "notice": null,
       "blocks": [
         {
@@ -1021,6 +1045,10 @@
             {
               "kind": "speech",
               "text": "Both syllables rise."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: duwng, \"same, together\", and haewk, \"to learn\" (Guangyun, in Baxter's transcription). A classmate is someone who learns with you."
             }
           ]
         },
@@ -1191,7 +1219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87a3523fe8f407f0",
+      "sourceHash": "fnv1a64:b48b7e6e582f53ea",
       "notice": null,
       "blocks": [
         {
@@ -1223,6 +1251,10 @@
             {
               "kind": "speech",
               "text": "Drop firmly on shàng, then rise on xué. No new character is hiding in the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Shàngxué is built from Middle Chinese dzyangX, \"to go up\", and haewk, \"learning\"."
             }
           ]
         },
@@ -1274,7 +1306,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:50a923bfa560db05",
+      "sourceHash": "fnv1a64:4c099271698f35bc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1318,6 +1350,10 @@
             {
               "kind": "speech",
               "text": "Read the pair without pinyin: falling, then rising."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: dzyangX, \"to go up\", and haewk, \"learning\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

@@ -13,7 +13,8 @@ gloss: "cabbage"
 concept_tag: LA-RES279-BRASSICA
 prerequisites: [LA-C279-cerasum, LA-C279-prunum]
 sounds: []
-roots: []
+roots: [brassica-latin]
+etymology_hook: "brassica 'cabbage' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C279-prunum]
 <!-- hl-knowledge: introduces=[LA-LEX-C279-RES279-03]; assesses=[] -->
 
 **brassica, brassicae** — "cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**brassica** has no sure origin; a Celtic source is sometimes suggested.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

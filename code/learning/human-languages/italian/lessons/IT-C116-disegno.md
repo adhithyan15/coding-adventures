@@ -13,7 +13,8 @@ gloss: "a drawing"
 concept_tag: IT-TEMPOLIBERO116-DISEGNO
 prerequisites: [IT-C116-film, IT-C116-canzone]
 sounds: []
-roots: []
+roots: [designare-latin]
+etymology_hook: "disegno — from the verb for 'to draw' ← Latin designare 'to mark out' — English design"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C116-canzone]
 <!-- hl-knowledge: introduces=[IT-LEX-C116-TEMPOLIBERO116-04]; assesses=[] -->
 
 **il disegno** — "a drawing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**disegno** is the noun of the verb for "to draw", which ← Latin *designare*, "to mark out". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

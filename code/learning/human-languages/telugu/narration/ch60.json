@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6f636fb4b38ef412",
+  "sourceHash": "fnv1a64:0b3f9a8e7bc39350",
   "lessons": [
     {
       "id": "TE-C60-buffalo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2818f6b78b0d97a5",
+      "sourceHash": "fnv1a64:435497a6157ccc8f",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గేదె (gēde) is native Dravidian. DEDR 2000 lists gēde, \"a she-buffalo\", with Konda geyda and Kuwi gedde; it has no Tamil or Kannada match."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4f0456e1156445d",
+      "sourceHash": "fnv1a64:3b087ed8fed203b6",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మేక (mēka) is native Dravidian, one word with Kannada mēke, \"she-goat\" (DEDR 5087). DEDR compares Sanskrit meka, \"goat\", a word known only from lexicons."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6654ea755e1c6260",
+      "sourceHash": "fnv1a64:d5081ed0564545de",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కోడి (kōḍi) is native Dravidian, one word with Tamil kōḻi, Kannada kōḻi and Malayalam kōḻi (DEDR 2248)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51db8651a68dac74",
+      "sourceHash": "fnv1a64:a3aea3b23382f74a",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చీమ (cīma) is native Dravidian. DEDR 2623 lists cīma, \"ant\", with Konda and Kuwi sīma; it has no Tamil or Kannada match."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f5e177a086d692d",
+      "sourceHash": "fnv1a64:adcbefb4c7bdc527",
       "notice": null,
       "blocks": [
         {
@@ -635,6 +679,10 @@
             {
               "kind": "speech",
               "text": "Five animals now, from the గేదె (gēde) at the gate to the చీమ (cīma) under it, and a నమస్కారం for whoever keeps them."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 7636 lists Sanskrit pakṣin, \"winged; bird\"."
             }
           ]
         },

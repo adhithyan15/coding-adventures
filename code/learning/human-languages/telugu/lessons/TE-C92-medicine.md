@@ -11,7 +11,8 @@ romanization: "mandu"
 concept_tag: TE-DOCTOR-MEDICINE
 prerequisites: [TE-C91-eaten, TE-C92-cold-illness]
 sounds: []
-roots: []
+roots: [dravidian-marundu-medicine]
+etymology_hook: "mandu: native Dravidian, one word with Tamil maruntu and Kannada maddu (DEDR 4719)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C92-cold-illness]
 
 **మందు వేసుకోండి** — "please take the medicine". Telugu *puts on* a medicine, where English
 *takes* it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మందు** (*mandu*) is native Dravidian, one word with Tamil *maruntu*, Kannada *maddu* and Malayalam *marunnu* (DEDR 4719).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

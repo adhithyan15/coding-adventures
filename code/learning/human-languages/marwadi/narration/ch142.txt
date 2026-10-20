@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for wide, then the Marwadi for deep.
 You'll want to know: हळको.
 हळको — haḷko — "light (not heavy)".
 
+The word, taken apart.
+हळको (haḷko) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laghu, "light". CDIAL gives no Marwari form in this entry (CDIAL 10896); the match is through Hindi halkā. Its first sounds are swapped. CDIAL treats Hindi halkā as the source of the same word in Gujarati and Marathi; Marwadi says the l curled back.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for deep, then the Marwadi for light.
 
 You'll want to know: कड़क.
 कड़क — kaṛak — "hard, stiff".
+
+The word, taken apart.
+कड़क (kaṛak) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭakaṭā, "sound of rubbing". CDIAL lists Old Marwari kaṛāko under it (CDIAL 2632). CDIAL calls the word imitative. The Old Marwari row means "fasting", from a rumbling stomach; Gujarati kaṛak means "dry, crisp", as कड़क (kaṛak) does.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for light, then the Marwadi for hard.
 You'll want to know: नरम.
 नरम — naram — "soft".
 
+The word, taken apart.
+नरम (naram) is a loan, usually traced to Persian narm, "soft". Marwadi splits the final consonants with a vowel.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for hard, then the Marwadi for soft.
 You'll want to know: गीलो.
 गीलो — gīlo — "wet".
 
+The word, taken apart.
+गीलो (gīlo) is a tadbhava, a word inherited and reshaped by sound change. It comes from grilla, "wet, damp", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari gīlau under it (CDIAL 4386). CDIAL calls any further source very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for soft, then the Marwadi for wet.
 
 You'll want to know: सूको.
 सूको — sūko — "dry".
+
+The word, taken apart.
+सूको (sūko) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, "dried". CDIAL gives no Marwari form in this entry (CDIAL 12548); the match is through Hindi sūkā and Gujarati sūkũ. The verb made from it, śuṣkati, "becomes dry", does have Old Marwari sūkaï, "dries up" (CDIAL 12552).
 
 What you've built.
 One more word for this chapter.

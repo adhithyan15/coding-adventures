@@ -14,7 +14,8 @@ romanization: "ve"
 concept_tag: HI-PRON-THEY
 prerequisites: [HI-C86-ham, HI-C40-that]
 sounds: []
-roots: []
+roots: [sanskrit-asau]
+etymology_hook: "ve: the plural partner of vah 'that', which CDIAL lists under Sanskrit asau 'that' (CDIAL 972); CDIAL does not list ve"
 duration:
   max_seconds: 240
 requires:
@@ -46,6 +47,11 @@ include yourself in a group. Say "they," and notice the gap.
 
 It is the plural of **वह**, and the relationship is visible: the same word with
 a different vowel.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वे** (*ve*) is the plural partner of **वह**, "that". CDIAL lists *vah* under Sanskrit *asau*, "that" (CDIAL 972), but does not list *ve* itself.
 
 ## Grammar Lens: the plural that is also a courtesy
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-02, HI-LEX-C40-DEIXIS-02] -->

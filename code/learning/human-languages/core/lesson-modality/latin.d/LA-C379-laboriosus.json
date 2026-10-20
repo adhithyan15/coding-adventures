@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C379-laboriosus",
+    "language": "latin",
+    "chapter": 379,
+    "sequence": 20350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f6c6419135396eb"
+  },
+  "findings": []
+}

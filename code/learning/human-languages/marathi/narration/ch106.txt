@@ -12,6 +12,9 @@ Before the new one: say the Marathi for poor, then the Marathi for dirt; dirty.
 You'll want to know: स्वच्छ.
 स्वच्छ — svachchha — "clean".
 
+The word, taken apart.
+स्वच्छ (svachchha) is Sanskrit svaccha, "very clear, transparent", taken over whole as a learned loan, a tatsama. It is su-, "well", and accha, "clear".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for dirt; dirty, then the Marathi for clean.
 
 You'll want to know: गोड.
 गोड — goḍ — "sweet".
+
+The word, taken apart.
+गोड (goḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gauḍa, "prepared from molasses" (CDIAL 4344). It is built on guḍa, "molasses".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for clean, then the Marathi for sweet.
 You'll want to know: जाड.
 जाड — jāḍ — "thick, fat".
 
+The word, taken apart.
+जाड (jāḍ) is inherited. CDIAL lists Marathi jāḍ, "thick", under Sanskrit jaḍa, "stupid, dumb; cold", a word it calls certainly of non-Aryan origin (CDIAL 5090).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for sweet, then the Marathi for thick.
 You'll want to know: बारीक.
 बारीक — bārīk — "thin".
 
+The word, taken apart.
+बारीक (bārīk) is a loan, usually traced to Persian bārīk, "thin, fine".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for thick, then the Marathi for thin.
 
 You'll want to know: हलका.
 हलका — halkā — "light (in weight)".
+
+The word, taken apart.
+हलका (halkā) goes back to Sanskrit laghu, "light" (CDIAL 10896). CDIAL lists Marathi's own form as haḷkā, and says halkā was taken over from Hindi.
 
 What you've built.
 One more word for this chapter.

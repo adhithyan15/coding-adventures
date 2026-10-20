@@ -14,7 +14,8 @@ romanization: "palaka"
 concept_tag: TE-PANI313-PALAKA
 prerequisites: [TE-C312-injaniru, TE-C313-suddamukka]
 sounds: []
-roots: []
+roots: [telugu-palaka-slate]
+etymology_hook: "palaka: probably Sanskrit phalaka 'board' (CDIAL 9053), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C313-suddamukka]
 <!-- hl-knowledge: introduces=[TE-LEX-C313-PANI313-02]; assesses=[] -->
 
 **పలక** — *palaka* — "a slate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పలక** (*palaka*) probably comes from Sanskrit *phalaka*, "board" (CDIAL 9053), reshaped to Telugu sounds: a tadbhava. CDIAL lists Assamese *phali*, "slate", from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

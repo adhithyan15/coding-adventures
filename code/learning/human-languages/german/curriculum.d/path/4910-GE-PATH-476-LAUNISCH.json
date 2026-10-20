@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-476-LAUNISCH",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-476-LAUNISCH"
+  ],
+  "after": []
+}

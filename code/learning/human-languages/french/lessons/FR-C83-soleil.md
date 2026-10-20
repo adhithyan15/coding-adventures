@@ -13,7 +13,8 @@ gloss: "the sun"
 concept_tag: FR-NATURE35-SOLEIL
 prerequisites: [FR-C82-plage, FR-C82-ile]
 sounds: []
-roots: []
+roots: [sol-latin]
+etymology_hook: "soleil ← Vulgar Latin *soliculus 'little sun', from sol — English solar"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C82-ile]
 <!-- hl-knowledge: introduces=[FR-LEX-C83-NATURE35-01]; assesses=[] -->
 
 **le soleil** — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**soleil** ← Vulgar Latin *\*soliculus*, "a little sun", from Latin *sol*, "sun" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

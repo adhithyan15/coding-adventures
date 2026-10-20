@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an opinion, then the Kannada for an idea
 You'll want to know: ಹಂಡೆ.
 ಹಂಡೆ — haṇḍe — "a large water-heating pot".
 
+The word, taken apart.
+ಹಂಡೆ (haṇḍe) is probably the northern word for a large pot, Marathi haṇḍā, which CDIAL 14050 traces to a reconstructed hāṇḍa, "pot"; CDIAL does not list the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for an idea, then the Kannada for a large wa
 
 You'll want to know: ತೊಟ್ಟಿ.
 ತೊಟ್ಟಿ — toṭṭi — "a water tank, a trough".
+
+The word, taken apart.
+ತೊಟ್ಟಿ (toṭṭi) is native Dravidian, one word with Tamil toṭṭi and Telugu toṭṭi (DEDR 3484). DEDR lists toṭṭi itself, "trough, tub".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a large water-heating pot, then the Kann
 You'll want to know: ತೊಟ್ಟಿಲು.
 ತೊಟ್ಟಿಲು — toṭṭilu — "a cradle".
 
+The word, taken apart.
+ತೊಟ್ಟಿಲು (toṭṭilu) is native Dravidian, one word with Tamil toṭṭil (DEDR 3486). DEDR lists Kannada toṭṭil, "cradle".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a water tank, then the Kannada for a cra
 You'll want to know: ಗಂಟು.
 ಗಂಟು — gaṇṭu — "a knot; a bundle".
 
+The word, taken apart.
+ಗಂಟು (gaṇṭu) is native Dravidian, one word with Telugu gaṇṭu (DEDR 1946). DEDR lists gaṇṭu, "knot of cord, joint". DEDR 1946 compares Sanskrit gaṇḍa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a cradle, then the Kannada for a knot.
 
 You'll want to know: ಸರಪಳಿ.
 ಸರಪಳಿ — sarapaḷi — "a chain".
+
+The word, taken apart.
+ಸರಪಳಿ (sarapaḷi) is native Dravidian, one word with Tamil carappaṇi, Telugu sarapaṇi and Malayalam sarappaḷi (DEDR 2358). DEDR lists sarapaṇi, sarapaḷi, "a chain".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ṭenis"
 concept_tag: UR-CHIZ201-TENIS
 prerequisites: [UR-C200-salad, UR-C201-haki]
 sounds: []
-roots: []
+roots: [english-tennis]
+etymology_hook: "ṭenis ← English tennis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C201-haki]
 <!-- hl-knowledge: introduces=[UR-LEX-C201-CHIZ201-02]; assesses=[] -->
 
 **ٹینس** — *ṭenis* — "tennis".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹینس** (*ṭenis*) is a loan from English *tennis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

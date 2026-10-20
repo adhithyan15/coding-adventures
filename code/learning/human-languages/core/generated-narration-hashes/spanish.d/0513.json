@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:021961f42d2abf60",
+  "lessonIds": [
+    "ES-C513-redaccion",
+    "ES-C513-titular",
+    "ES-C513-prensa",
+    "ES-C513-corresponsal",
+    "ES-C513-publicar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch513.txt",
+  "json": "spanish/narration/ch513.json",
+  "textHash": "fnv1a64:24c9ca14b5367b24",
+  "jsonHash": "fnv1a64:460ce5704d9482e9",
+  "findings": []
+}

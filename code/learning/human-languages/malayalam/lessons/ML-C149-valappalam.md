@@ -14,7 +14,8 @@ romanization: "vāḻappaḻaṁ"
 concept_tag: ML-THINGS149-VALAPPALAM
 prerequisites: [ML-C149-ila, ML-C149-mambalam]
 sounds: []
-roots: []
+roots: [dravidian-vazhai-plantain, dravidian-pazhu-ripen]
+etymology_hook: "vāḻappaḻaṁ: native Dravidian, 'plantain fruit': the plantain's name (DEDR 5373) + paḻaṁ 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C149-mambalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C149-THINGS149-04]; assesses=[] -->
 
 **വാഴപ്പഴം** — *vāḻappaḻaṁ* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാഴപ്പഴം** (*vāḻappaḻaṁ*) is native Dravidian, "plantain fruit": the word for the plantain plant (DEDR 5373, with Tamil *vāḻai*), and *paḻaṁ*, "ripe fruit" (DEDR 4004). DEDR 5373 compares Sanskrit *vārabuṣā*. DEDR 4004 compares Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

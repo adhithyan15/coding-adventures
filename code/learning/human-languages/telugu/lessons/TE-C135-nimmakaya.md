@@ -14,7 +14,8 @@ romanization: "nimmakāya"
 concept_tag: TE-THINGS135-NIMMAKAYA
 prerequisites: [TE-C135-jilakarra, TE-C135-cintapandu]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu, dravidian-kaay-fruit]
+etymology_hook: "nimmakāya: nimma ← Sanskrit nimbū 'lime' (CDIAL 7247), itself from Austroasiatic, + native kāya 'fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C135-cintapandu]
 <!-- hl-knowledge: introduces=[TE-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **నిమ్మకాయ** — *nimmakāya* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిమ్మకాయ** (*nimmakāya*) is *nimma*, from Sanskrit *nimbū*, "lime" (CDIAL 7247), which CDIAL takes from an Austroasiatic language, and native *kāya*, "unripe fruit" (DEDR 1459). DEDR compares the Indo-Aryan *\*kacca*, "raw" (CDIAL 2613), with *kāya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

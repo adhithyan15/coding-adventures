@@ -14,7 +14,8 @@ romanization: "sābiqan"
 concept_tag: AR-WAQT203-SABIQAN
 prerequisites: [AR-C202-tarikh, AR-C202-lahza]
 sounds: []
-roots: []
+roots: [s-b-q]
+etymology_hook: "sābiqan: built on the root s-b-q, 'to go before, to outstrip' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C202-lahza]
 <!-- hl-knowledge: introduces=[AR-LEX-C203-WAQT203-01]; assesses=[] -->
 
 **سابقا** — *sābiqan* — "previously, formerly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سابقا** (*sābiqan*) is built on the native Arabic root *s-b-q*, "to go before, to outstrip" (Lane). *Sābiqan* is the active participle, "preceding", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

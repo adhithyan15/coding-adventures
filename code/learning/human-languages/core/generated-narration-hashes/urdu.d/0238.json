@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 238,
-  "sourceHash": "fnv1a64:3f69f38cf2d54c8d",
+  "sourceHash": "fnv1a64:0520c2525fcfdd7d",
   "lessonIds": [
     "UR-C238-mahir",
     "UR-C238-fankar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch238.txt",
   "json": "urdu/narration/ch238.json",
-  "textHash": "fnv1a64:3e0c0e210f0d8d7d",
-  "jsonHash": "fnv1a64:3e60007055251f3e",
+  "textHash": "fnv1a64:70335b58d5838698",
+  "jsonHash": "fnv1a64:8e08394cc80590fa",
   "findings": []
 }

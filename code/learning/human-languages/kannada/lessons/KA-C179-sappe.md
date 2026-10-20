@@ -14,7 +14,8 @@ romanization: "sappe"
 concept_tag: KA-GUNA179-SAPPE
 prerequisites: [KA-C179-halasida, KA-C179-hasi]
 sounds: []
-roots: []
+roots: [dravidian-cappai-insipid]
+etymology_hook: "sappe: native Dravidian, one word with Tamil cappai and Telugu cappa (DEDR 2337)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C179-hasi]
 <!-- hl-knowledge: introduces=[KA-LEX-C179-GUNA179-04]; assesses=[] -->
 
 **ಸಪ್ಪೆ** — *sappe* — "bland, tasteless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಪ್ಪೆ** (*sappe*) is native Dravidian, one word with Tamil *cappai* and Telugu *cappa* (DEDR 2337). DEDR lists *cappe*, *sappe*, "flatness, insipidness". DEDR 2337 compares Sanskrit *capaṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

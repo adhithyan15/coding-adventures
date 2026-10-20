@@ -10,7 +10,8 @@ gloss: "specific, particular"
 concept_tag: ES-REF-CONCRETO
 prerequisites: [ES-C481-prever, ES-C481-vigilar]
 sounds: []
-roots: []
+roots: [crescere-latin]
+etymology_hook: "concreto ← Latin concretus 'grown together, hardened', from concrescere — English concrete"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C481-vigilar]
 > *Are you looking for something specific?*
 
 *En concreto* — specifically.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**concreto** ← Latin *concretus*, "grown together, hardened" (EtymDB 2.1), the participle of *concrescere*: *con-* and *crescere*, "to grow" — a learned word. Something concrete has set solid.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

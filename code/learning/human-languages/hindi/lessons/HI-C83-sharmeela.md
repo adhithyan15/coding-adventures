@@ -14,7 +14,8 @@ romanization: "śarmīlā"
 concept_tag: HI-ADJ-SHY
 prerequisites: [HI-C83-mehnati]
 sounds: []
-roots: []
+roots: [persian-sharm]
+etymology_hook: "śarmīlā: sharm 'shame', usually traced to Persian sharm, + the ending -īlā"
 duration:
   max_seconds: 240
 requires:
@@ -44,8 +45,7 @@ same thing happens here with a different ending, and this one bends.
 
 **शर्मीला** (*śarmīlā*) — "shy, bashful."
 
-Built from **शरम** / **शर्म** (*śaram*), "shame, modesty," plus the ending
-**-ईला**.
+Built from a noun and an ending: **शरम** / **शर्म** (*śaram*, "shame, modesty") + **-ईला** → **शर्मीला**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -67,8 +67,8 @@ Someone can *feel* shame at a moment; a *śarmīlā* person is one for whom it i
 standing trait. This is settled character, not mood — the distinction the whole
 chapter turns on.
 
-**शर्म** itself is Persian, and it is the same word as English **shame**: both
-descend from the same ancient root for covering oneself.
+**शर्म** itself came into Hindi from Persian *šarm*. It only sounds like English
+**shame**: the English word is Germanic, and no shared root is established.
 
 ## Grammar Lens: back to the bending shape
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C83-CHAR-04, HI-LEX-C83-CHAR-03, HI-LEX-C83-CHAR-01, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

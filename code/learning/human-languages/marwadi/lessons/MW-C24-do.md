@@ -11,8 +11,8 @@ gloss: give, written with the da of daal and the o mark of lo
 concept_tag: MW-VERB-GIVE-WRITTEN
 prerequisites: [MW-C24-hear-do]
 sounds: [voiced-d, long-o]
-roots: []
-etymology_hook: Two letters apart on the page and two gestures apart at the counter.
+roots: [sanskrit-dadati]
+etymology_hook: "do 'give' ← Sanskrit dadāti 'gives', a tadbhava (CDIAL 6141, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C24-hear-do, MW-W08-da, MW-C24-lo, MW-C18-daal, MW-C08-dada]
 Two signs, and the **द** is the one that opens **दाल** and **दादा**. Write
 **दो** and **लो** side by side: same mark, different letter, opposite meanings.
 That pair is worth keeping on one line in your notes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दो** (*do*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadāti*, "gives". CDIAL lists Marwari *deṇo* under it (CDIAL 6141). *do* is the asking form of this verb.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DO-01, MW-SCRIPT-LO-01] -->

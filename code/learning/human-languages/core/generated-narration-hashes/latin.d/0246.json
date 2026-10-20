@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 246,
-  "sourceHash": "fnv1a64:3a354b727caffac7",
+  "sourceHash": "fnv1a64:5a840f18e51247f1",
   "lessonIds": [
     "LA-C246-carmen",
     "LA-C246-versus",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch246.txt",
   "json": "latin/narration/ch246.json",
-  "textHash": "fnv1a64:520effdba03e846f",
-  "jsonHash": "fnv1a64:536fb95740fde83f",
+  "textHash": "fnv1a64:a3c4f007637a58aa",
+  "jsonHash": "fnv1a64:95a5a3c07ac9ddbc",
   "findings": []
 }

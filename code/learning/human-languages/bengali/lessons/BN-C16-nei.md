@@ -11,10 +11,10 @@ gloss: there is not, I have not — a separate word for denying existence, and t
 concept_tag: BN-NEG-NEI
 prerequisites: [BN-C16-noy, BN-C10-cha, BN-C02-amar, BN-W04-achhi-read, BN-C15-shari]
 sounds: []
-roots: []
-etymology_hook: "নেই is a worn-down নাই, itself না plus the আছ- stem of the be-verb that চাই and আছি already use: the negator and the existence verb fused so long ago that Bengali no longer hears two words in it"
+roots: [sanskrit-na]
+etymology_hook: "nei: a worn form of nāi, the negator na 'not' (CDIAL 6906) fused with the verb of being; details not settled"
 duration:
-  max_seconds: 240
+  max_seconds: 247
 requires:
   knowledge: [BN-GRAMMAR-C16-NOY-01, BN-GRAMMAR-C16-NA-VERB-01, BN-LEX-C10-CHA-01, BN-CONCEPT-C02-AMAR-01, BN-SCRIPT-ACHHI-READ-01]
 introduces:
@@ -50,6 +50,11 @@ out of the first two.
 Chapter five taught **আমি ভালো আছি**, "I am well," on the stem **আছ-**, which
 means *to be present*. **নেই** is that stem's denial, and it comes as a single
 word rather than as **আছি না**, which no Bengali says.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নেই** is a worn form of *nāi*: the negator *na*, "not" (CDIAL 6906), fused with the verb of being; CDIAL has no entry for the whole, so the details are not settled.
 
 ## Grammar Lens: having, in a language with no verb for it
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C16-NEI-01, BN-CONCEPT-C02-AMAR-01] -->

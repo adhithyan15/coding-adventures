@@ -14,6 +14,7 @@ concept_tag: PT-QUALIDADES126-MACIO
 prerequisites: [PT-C125-seco, PT-C126-fresco]
 sounds: []
 roots: []
+etymology_hook: "macio — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C126-fresco]
 <!-- hl-knowledge: introduces=[PT-LEX-C126-QUALIDADES126-02]; assesses=[] -->
 
 **macio** — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**macio** — its origin is uncertain. EtymDB 2.1 has no row for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ANOTAR
 prerequisites: [ES-C465-cuaderno, ES-C451-apuntar, ES-C429-nota]
 sounds: [stress-final, vowel-o]
 roots: [nota-latin]
+etymology_hook: "anotar ← Latin adnotare: ad- + nota 'a mark' — English note, notice"
 duration:
   max_seconds: 275
 requires:

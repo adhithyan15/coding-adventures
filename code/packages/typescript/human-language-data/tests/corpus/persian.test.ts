@@ -46,14 +46,17 @@ it("pins Persian lesson-content budgets", () =>
     // headwords, fifty of them verbs, which brings Persian to A2.
     // 1304 -> 1482: the fourth A2 vocabulary tranche, chapters 253-286: 170
     // headwords, fifty of them verbs, beyond the A2 floor.
-    lessons: 1482,
+    // 1482 -> 1485: chapters 287-289, the three writing stages Persian had not
+    // proved at A1 (my own line, a three-minute timed form, four connected
+    // lines). No new word, letter or atom; no idiom, sense or culture claim.
+    lessons: 1485,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,
     unitPrefix: "FA",
   }));
 
-it("pins Persian's lesson-one writing ladder, now complete through dictation", () => {
+it("pins Persian's writing ladder IN ORDER, pre-A1 through A1", () => {
   const { lessons, curricula, spine } = loadEverything();
   const report = measureWritingStages(
     loadAssessmentPolicy(),
@@ -75,7 +78,14 @@ it("pins Persian's lesson-one writing ladder, now complete through dictation", (
     ["FA-W00-alef-guided-copy", "guided-copy"],
     ["FA-W00-alef-delayed-copy", "delayed-copy"],
     ["FA-W00-alef-dictation", "dictation-transcription"],
+    // Chapters 287-289. Order is the point: `missing-stage-prerequisite`
+    // rejects a timed or connected paper that sits before a controlled one, so
+    // a set-equality assertion would pass on a ladder whose rungs prove nothing.
+    ["FA-W287-khat-e-khodam", "controlled-composition"],
+    ["FA-W288-ba-saat", "timed-assessment-production"],
+    ["FA-W289-chahar-khat", "connected-composition"],
   ]);
+  expect(persian.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
   expect(persian.levels[0]).toMatchObject({
     level: "pre-A1",
     evidencedStages: ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription"],
@@ -92,8 +102,10 @@ it("pins Persian's peace-root payoff inside the chapter-one practice", () => {
   expect(ledger.entries.find((entry) => entry.namespace === "roots" && entry.root === "s-l-m"))
     .toMatchObject({
       introducedBy: "FA-C01-salam",
-      payoffs: ["FA-C01-practice"],
-      payoffCount: 1,
+      // FA-C130-salem joined in the etymology pass: sâlem "healthy" is Arabic
+      // sālim, from the same root s-l-m (Lane), so it spends the peace root again.
+      payoffs: ["FA-C01-practice", "FA-C130-salem"],
+      payoffCount: 2,
     });
   expect(ledger.entries.find((entry) =>
     entry.namespace === "etymon-atom" && entry.root === "FA-ETYMON-SALAM-SLM-02"

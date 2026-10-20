@@ -1,0 +1,11 @@
+{
+  "id": "IT-C289-ascoltatore",
+  "pathSegment": "IT-PATH-289-PUBBLICO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-289-PUBBLICO",
+      "order": 1
+    }
+  ]
+}

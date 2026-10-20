@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for yesterday; tomorrow, then the Marwadi fo
 You'll want to know: हमेसा.
 हमेसा — hamesā — "always".
 
+The word, taken apart.
+हमेसा (hamesā) is a loan, usually traced to Persian hamēša, "always".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for now, then the Marwadi for always.
 
 You'll want to know: कदी.
 कदी — kadī — "sometimes, ever".
+
+The word, taken apart.
+CDIAL has no entry for कदी (kadī), so its history is not settled. Its k- is the old question stem: CDIAL lists Hindi kabhī, "ever", under Sanskrit evam eva, "exactly so", crossed with the stem ka- (CDIAL 2528), but nothing with the shape of कदी (kadī).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for always, then the Marwadi for sometimes.
 You'll want to know: जल्दी.
 जल्दी — jaldī — "quickly".
 
+The word, taken apart.
+जल्दी (jaldī) is a loan, usually traced to Persian jald, "quick". Persian jald is itself of Arabic origin; Marwadi added the ending -ī.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for sometimes, then the Marwadi for quickly.
 You'll want to know: देर.
 देर — der — "a delay; late".
 
+The word, taken apart.
+देर (der) is a loan, usually traced to Persian dēr, "late; a long time".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for quickly, then the Marwadi for a delay; l
 
 You'll want to know: पैलां.
 पैलां — pailā̃ — "before".
+
+The word, taken apart.
+पैलां (pailā̃) is a tadbhava, a word inherited and reshaped by sound change. It comes from prathilla, "first", a form CDIAL reconstructs from its descendants beside prathila. CDIAL lists Old Marwari pahalo under it (CDIAL 8652). पैलां (pailā̃), "before", is a form of the word for "first", built on Sanskrit prathama, "first".
 
 What you've built.
 One more word for this chapter.

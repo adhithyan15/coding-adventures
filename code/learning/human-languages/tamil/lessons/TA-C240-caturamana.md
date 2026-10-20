@@ -14,7 +14,8 @@ romanization: "caturamāṉa"
 concept_tag: TA-GUNAM240-CATURAMANA
 prerequisites: [TA-C240-urutiyana, TA-C240-vattamana]
 sounds: []
-roots: []
+roots: [sanskrit-caturasra]
+etymology_hook: "சதுரமான — caturam 'square' ← Sanskrit caturasra 'four-cornered', a well-established loan, + -āṉa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C240-vattamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C240-GUNAM240-03]; assesses=[] -->
 
 **சதுரமான** — *caturamāṉa* — "square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சதுரமான** (*caturamāṉa*) is *caturam*, "square", a well-established loan from Sanskrit *caturasra*, "four-cornered", with *-āṉa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

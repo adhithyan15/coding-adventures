@@ -11,8 +11,8 @@ gloss: student
 concept_tag: ZH-SCHOOL-STUDENT
 prerequisites: [ZH-C13-xue]
 sounds: [tone-2, tone-neutral]
-roots: []
-etymology_hook: The familiar rising study syllable gains a light second beat before 生 is shown.
+roots: [middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "xuésheng: built from Middle Chinese haewk 'to learn' and srjaeng 'life, birth'"
 duration:
   max_seconds: 130
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C13-xue]
 
 Rise on *xué*. Keep *sheng* short and light. Hold the second character back;
 the next lesson gives its five strokes.
+
+*Xuésheng* is built from Middle Chinese *haewk*, "to learn", and *srjaeng*,
+"life, birth".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->

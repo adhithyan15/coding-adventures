@@ -12,6 +12,9 @@ Before the new one: say the Italian for to stop, then the Italian for to halt.
 You'll want to know: raffreddare.
 raffreddare — "to cool down".
 
+The word, taken apart.
+raffreddare — built on freddo, "cold", with ra-: to make cold. freddo goes back to Latin frigidus, "cold". EtymDB 2.1 has no row for the verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Italian for to halt, then the Italian for to cool do
 
 You'll want to know: riempire.
 riempire — "to fill".
+
+The word, taken apart.
+riempire from Latin implere, "to fill up", with ri-, "again" — inherited. EtymDB 2.1 has no row for riempire; it derives the older Italian empire, "to fill", from implere.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Italian for to cool down, then the Italian for to fi
 You'll want to know: svuotare.
 svuotare — "to empty".
 
+The word, taken apart.
+svuotare — built from vuoto, "empty", with s-: to make empty. vuoto from Vulgar Latin vocitus, "empty". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Italian for to fill, then the Italian for to empty.
 You'll want to know: contare.
 contare — "to count".
 
+The word, taken apart.
+contare from Latin computare, "to reckon" — inherited. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Italian for to empty, then the Italian for to count.
 
 You'll want to know: misurare.
 misurare — "to measure".
+
+The word, taken apart.
+misurare from Late Latin mensurare, "to measure" — inherited. (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

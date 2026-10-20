@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-FOURTEEN
 prerequisites: [MW-C37-tera]
 sounds: [au-diphthong, unaspirated-ch]
 roots: [sanskrit-chaturdasha]
-etymology_hook: Sanskrit chaturdasha; the d of dasha survives here where the other teens lost it to r.
+etymology_hook: "caudā ← Sanskrit caturdaśa 'fourteen', a tadbhava (CDIAL 4605, Hindi and Gujarati rows)"
 duration:
   max_seconds: 180
 requires:
@@ -56,6 +56,11 @@ likely to be misremembered as *chaurā*. It is not.
 
 The **au** is the diphthong of *mausam*, the weather word from chapter 16 — the
 mouth already knows it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*caudā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caturdaśa*, "fourteen". CDIAL gives no Marwari form in this entry (CDIAL 4605); the match is through Hindi *caudah* and Gujarati *cauda*. It is *catur*, "four", and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHAUDA-01, MW-LEX-TERA-01] -->

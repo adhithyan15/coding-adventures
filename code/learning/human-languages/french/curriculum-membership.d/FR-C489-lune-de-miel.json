@@ -1,0 +1,11 @@
+{
+  "id": "FR-C489-lune-de-miel",
+  "pathSegment": "FR-PATH-489-NOCES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-489-NOCES",
+      "order": 3
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "kuruvi"
 concept_tag: TA-PORUL247-KURUVI
 prerequisites: [TA-C246-palakkam, TA-C246-parampariyam]
 sounds: []
-roots: []
+roots: [dravidian-kuruvi-sparrow]
+etymology_hook: "குருவி — native Dravidian (DEDR 1793); Malayalam kuruvi 'sparrow', Kannada gubbi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C246-parampariyam]
 <!-- hl-knowledge: introduces=[TA-LEX-C247-PORUL247-01]; assesses=[] -->
 
 **குருவி** — *kuruvi* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குருவி** (*kuruvi*) is native Dravidian. DEDR 1793 lists Malayalam *kuruvi*, "sparrow" and Kannada *gubbi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

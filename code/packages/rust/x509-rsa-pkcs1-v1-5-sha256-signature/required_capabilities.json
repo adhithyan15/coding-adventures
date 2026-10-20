@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/x509-rsa-pkcs1-v1-5-sha256-signature",
+  "capabilities": [],
+  "justification": "Pure verification over public certificate, signature, digest, and RSA-key data. No filesystem, network, process, environment, clock, FFI, secret-key, or signing access is required."
+}

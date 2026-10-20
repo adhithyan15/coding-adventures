@@ -13,7 +13,8 @@ gloss: "a swimming pool"
 concept_tag: PT-LUGARES86-PISCINA
 prerequisites: [PT-C86-supermercado, PT-C86-bomba-de-gasolina]
 sounds: []
-roots: []
+roots: [piscis-latin]
+etymology_hook: "piscina ← Latin piscina 'fishpond', from piscis 'fish' — a pool was first for fish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C86-bomba-de-gasolina]
 <!-- hl-knowledge: introduces=[PT-LEX-C86-LUGARES86-03]; assesses=[] -->
 
 **a piscina** — "a swimming pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piscina** ← Latin *piscina*, "fishpond" (EtymDB 2.1), from *piscis*, "fish" — a learned borrowing from Latin. An inherited word would have changed the *-sc-* and lost the *-n-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

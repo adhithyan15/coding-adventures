@@ -14,7 +14,8 @@ romanization: "deldard"
 concept_tag: FA-SALAMAT263-DELDARD
 prerequisites: [FA-C263-sargije, FA-C263-sardard]
 sounds: []
-roots: []
+roots: [persian-dil, persian-dard]
+etymology_hook: "deldard: Persian del 'belly, heart' (EtymDB) + dard 'pain'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C263-sardard]
 <!-- hl-knowledge: introduces=[FA-LEX-C263-SALAMAT263-04]; assesses=[] -->
 
 **دل درد** — *deldard* — "a stomach ache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*deldard* is *del*, "belly, heart" (inherited, EtymDB), with *dard*, "pain": belly-pain. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

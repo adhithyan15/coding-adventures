@@ -14,7 +14,8 @@ romanization: "kabhī nahī̃"
 concept_tag: HI-FREQ192-KABHINAHI
 prerequisites: [HI-C192-hamesa, HI-C192-aksar]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, sanskrit-nahi]
+etymology_hook: "kabhī (CDIAL 2528) + nahīṁ ← nahi 'surely not' (CDIAL 7035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C192-aksar]
 <!-- hl-knowledge: introduces=[HI-LEX-C192-FREQ192-05]; assesses=[] -->
 
 **कभी नहीं** — *kabhī nahī̃* — "never".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कभी नहीं** (*kabhī nahīṁ*) is *kabhī*, "ever", which CDIAL lists under Sanskrit *evam eva*, "exactly so", crossed with the question stem *ka-* (CDIAL 2528), and *nahīṁ*, from *nahi*, "surely not" (CDIAL 7035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

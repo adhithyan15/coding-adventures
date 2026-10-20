@@ -14,7 +14,8 @@ romanization: "prakāraṁ"
 concept_tag: TE-KARANAM177-PRAKARAM
 prerequisites: [TE-C177-okavela, TE-C177-badulu]
 sounds: []
-roots: []
+roots: [sanskrit-prakara]
+etymology_hook: "prakāraṁ ← Sanskrit prakāra 'sort, manner', a tatsama (CDIAL 8435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C177-badulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C177-KARANAM177-03]; assesses=[] -->
 
 **ప్రకారం** — *prakāraṁ* — "according to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రకారం** (*prakāraṁ*) is Sanskrit *prakāra*, "sort, manner", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8435). Telugu uses it for "according to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

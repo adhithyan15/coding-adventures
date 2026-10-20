@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C409-engarrafamento",
+    "language": "portuguese",
+    "chapter": 409,
+    "sequence": 23010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b347b9ee2f4d5c7"
+  },
+  "findings": []
+}

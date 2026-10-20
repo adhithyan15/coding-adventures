@@ -14,7 +14,8 @@ romanization: "āsti"
 concept_tag: TE-CAN106-ASTI
 prerequisites: [TE-C106-avakasam, TE-C106-parikaram]
 sounds: []
-roots: []
+roots: [telugu-aasti-property]
+etymology_hook: "āsti: origin uncertain; often linked to Sanskrit asti 'existence, what is'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C106-parikaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C106-CAN106-03]; assesses=[] -->
 
 **ఆస్తి** — *āsti* — "property".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ఆస్తి** (*āsti*) is uncertain. It is often linked to Sanskrit *asti*, "existence, what is", but neither DEDR nor CDIAL records the Telugu word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

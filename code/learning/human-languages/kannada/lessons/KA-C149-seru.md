@@ -14,7 +14,8 @@ romanization: "sēru"
 concept_tag: KA-VERB-SERU
 prerequisites: [KA-C148-jigi, KA-C149-ili2]
 sounds: []
-roots: []
+roots: [dravidian-ceer-join]
+etymology_hook: "sēru: native Dravidian, one word with Tamil cēr and Telugu cēru (DEDR 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C149-ili2]
 <!-- hl-knowledge: introduces=[KA-LEX-C149-ACT149-02]; assesses=[] -->
 
 **ಸೇರು** — *sēru* — "to join, to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೇರು** (*sēru*) is native Dravidian, one word with Tamil *cēr* and Telugu *cēru* (DEDR 2814). DEDR lists Kannada *sēr*, "to approach, reach, join".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

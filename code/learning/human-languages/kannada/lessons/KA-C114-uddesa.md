@@ -14,7 +14,8 @@ romanization: "uddēśa"
 concept_tag: KA-WANT114-UDDESA
 prerequisites: [KA-C113-ase, KA-C113-kanasu]
 sounds: []
-roots: []
+roots: [sanskrit-uddesha]
+etymology_hook: "uddēśa ← Sanskrit uddeśa 'pointing out, explaining', a tatsama (CDIAL 1998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C113-kanasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C114-WANT114-01]; assesses=[] -->
 
 **ಉದ್ದೇಶ** — *uddēśa* — "an intention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದ್ದೇಶ** (*uddēśa*) is Sanskrit *uddeśa*, "pointing out, explaining", taken over whole as a learned loan, a tatsama (CDIAL 1998). Kannada narrowed it to what one points at: an intention.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

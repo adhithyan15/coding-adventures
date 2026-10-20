@@ -13,7 +13,8 @@ gloss: "to look for"
 concept_tag: IT-VERB-CERCARE
 prerequisites: [IT-C136-pulire, IT-C136-trovare]
 sounds: []
-roots: []
+roots: [circare-latin]
+etymology_hook: "cercare ← Late Latin circare 'to go around' — English search is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C136-trovare]
 <!-- hl-knowledge: introduces=[IT-LEX-C136-VERBI136-05]; assesses=[] -->
 
 **cercare** — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cercare** ← Late Latin *circare*, "to go around" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

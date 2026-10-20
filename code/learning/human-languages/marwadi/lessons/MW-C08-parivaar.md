@@ -11,8 +11,8 @@ gloss: family
 concept_tag: MW-FAMILY-GROUP
 prerequisites: [MW-W08-va]
 sounds: [unaspirated-p, tapped-r, short-i, voiced-v, long-aa]
-roots: []
-etymology_hook: New व joins six familiar written units to make the heard group word.
+roots: [sanskrit-parivara]
+etymology_hook: "parivār ← Sanskrit parivāra 'cover, surroundings; followers', a tatsama (CDIAL 7876)"
 duration:
   max_seconds: 180
 requires:
@@ -46,6 +46,11 @@ paternal grandfather and **ल**, then say paternal grandmother.
 > **प** + **रि** + **वा** + **र** → **परिवार** — *parivār* — family
 
 Remember that **ि** is written before **र** but read after it: *ri*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परिवार** (*parivār*) is Sanskrit *parivāra*, "cover, surroundings; followers", taken over whole as a learned loan, a tatsama (CDIAL 7876). The sense "family" grew from "followers".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PARIVAAR-01, MW-SCRIPT-PARIVAAR-01] -->

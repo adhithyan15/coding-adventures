@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-309-BAPTEME",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-309-BAPTEME"
+  ],
+  "after": []
+}

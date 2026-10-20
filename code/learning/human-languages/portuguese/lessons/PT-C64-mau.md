@@ -13,7 +13,8 @@ gloss: "bad"
 concept_tag: PT-ADJ1-MAU
 prerequisites: [PT-C64-novo, PT-C64-velho]
 sounds: []
-roots: []
+roots: [malus-latin]
+etymology_hook: "mau ← Latin malus 'bad': the -l- fell out — English malice and malady share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C64-velho]
 <!-- hl-knowledge: introduces=[PT-LEX-C64-ADJ1-05]; assesses=[] -->
 
 **mau** — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mau** ← Latin *malus*, "bad" (EtymDB 2.1) — inherited. The *-l-* between vowels fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

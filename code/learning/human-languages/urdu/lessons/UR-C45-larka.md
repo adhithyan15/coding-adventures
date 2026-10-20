@@ -14,7 +14,8 @@ romanization: "laṛkā"
 concept_tag: UR-FAMILY45-LARKA
 prerequisites: [UR-C44-bivi, UR-C44-bachcha]
 sounds: []
-roots: []
+roots: [indo-aryan-ladikka]
+etymology_hook: "laṛkā ← *laḍikka 'child', a reconstructed form; a tadbhava (CDIAL 10924)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C44-bachcha]
 <!-- hl-knowledge: introduces=[UR-LEX-C45-FAMILY45-01]; assesses=[] -->
 
 **لڑکا** — *laṛkā* — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لڑکا** (*laṛkā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*laḍikka*, "child", a form CDIAL reconstructs from its descendants (CDIAL 10924). CDIAL calls the group a "defective" word for children and notes similar formations in Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

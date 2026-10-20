@@ -14,6 +14,7 @@ concept_tag: FR-TRAV257-EQUIPE
 prerequisites: [FR-C257-mathematiques, FR-C257-art]
 sounds: []
 roots: []
+etymology_hook: "équipe — from the verb 'to fit out (a ship)', from Old Norse skip 'ship' — English equip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C257-art]
 <!-- hl-knowledge: introduces=[FR-LEX-C257-TRAV257-04]; assesses=[] -->
 
 **l'équipe** — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**équipe** — formed from the verb for "to fit out", first "to fit out a ship" (EtymDB 2.1), usually traced to Old Norse *skipa*, from *skip*, "a ship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

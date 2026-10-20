@@ -14,7 +14,8 @@ romanization: "sahnā"
 concept_tag: HI-VERB-SAHNA
 prerequisites: [HI-C178-cillana, HI-C179-thakna]
 sounds: []
-roots: []
+roots: [sanskrit-sahate]
+etymology_hook: "sahnā ← Sanskrit sahate 'conquers; bears, suffers', a tadbhava (CDIAL 13304)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C179-thakna]
 <!-- hl-knowledge: introduces=[HI-LEX-C179-ACT179-02]; assesses=[] -->
 
 **सहना** — *sahnā* — "to bear, to put up with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहना** (*sahnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sahate*, "conquers; bears, suffers" (CDIAL 13304).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

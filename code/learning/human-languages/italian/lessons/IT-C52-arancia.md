@@ -14,6 +14,7 @@ concept_tag: IT-FRUTTA-ARANCIA
 prerequisites: [IT-C52-mela, IT-C52-banana]
 sounds: []
 roots: []
+etymology_hook: "arancia ← Arabic naranj, from Persian narang — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C52-banana]
 <!-- hl-knowledge: introduces=[IT-LEX-C52-FRUTTA-04]; assesses=[] -->
 
 **l'arancia** — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**arancia** ← Arabic *naranj*, "orange" — borrowed; the Arabic word came from Persian *narang*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

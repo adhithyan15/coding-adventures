@@ -14,7 +14,8 @@ romanization: "jirāph"
 concept_tag: BN-JINIS250-JIRAPH
 prerequisites: [BN-C249-kaju, BN-C250-kumir]
 sounds: []
-roots: []
+roots: [english-giraffe]
+etymology_hook: "jirāph ← English giraffe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C250-kumir]
 <!-- hl-knowledge: introduces=[BN-LEX-C250-JINIS250-02]; assesses=[] -->
 
 **জিরাফ** — *jirāph* — "a giraffe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জিরাফ** (*jirāph*) is a loan from English *giraffe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

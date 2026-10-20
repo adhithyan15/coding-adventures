@@ -15,6 +15,7 @@ concept_tag: MR-PAS159-ADHIC
 prerequisites: [MR-C159-alikade, MR-C159-purvi]
 sounds: []
 roots: []
+etymology_hook: "ādhīc: ādhī 'before' + the emphatic -c; the origin of ādhī is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C159-purvi]
 <!-- hl-knowledge: introduces=[MR-LEX-C159-PAS159-03]; assesses=[] -->
 
 **आधीच** — *ādhīc* — "already". **आधी**, "before", with the emphatic **च**: **मी आधीच जेवलो.** — *mī ādhīc jevlo* — "I have already eaten." A woman says **जेवले**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आधीच** (*ādhīc*) is **आधी**, "before", with the emphatic **-च**. The origin of **आधी** is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

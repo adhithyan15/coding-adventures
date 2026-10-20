@@ -14,7 +14,8 @@ romanization: "dokumént"
 concept_tag: RU-VESHCH247-DOKUMENT
 prerequisites: [RU-C247-pasport, RU-C247-viza]
 sounds: []
-roots: []
+roots: [documentum-latin]
+etymology_hook: "документ came through German Dokument or Polish dokument from Latin documentum 'a proof'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C247-viza]
 <!-- hl-knowledge: introduces=[RU-LEX-C247-VESHCH247-05]; assesses=[] -->
 
 **документ** (*dokumént*) — "a document".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**документ** — from Peter the Great's time; it came through German *Dokument* or Polish *dokument* from Latin *documentum*, "a proof, a lesson", from *docēre*, "to teach, to show" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

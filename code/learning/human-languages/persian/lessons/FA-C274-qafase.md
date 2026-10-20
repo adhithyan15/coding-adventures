@@ -14,7 +14,8 @@ romanization: "qafase"
 concept_tag: FA-CHIZ274-QAFASE
 prerequisites: [FA-C273-momken, FA-C274-bokhari]
 sounds: []
-roots: []
+roots: [arabic-qafas]
+etymology_hook: "qafase: built on qafas ← Arabic qafaṣ 'cage' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C274-bokhari]
 <!-- hl-knowledge: introduces=[FA-LEX-C274-CHIZ274-02]; assesses=[] -->
 
 **قفسه** — *qafase* — "a shelf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qafase* is built on *qafas*, "cage", with the ending *-e*. *qafas* is borrowed from Arabic *qafaṣ*, "cage" (root *q-f-ṣ*, Lane); Lane notes that some take the Arabic word itself from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

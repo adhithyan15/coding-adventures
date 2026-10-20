@@ -11,6 +11,7 @@ concept_tag: HUMOR-CONVENTION
 prerequisites: [ES-C274-pasar-a-mejor-vida]
 sounds: [vowel-a, vowel-e]
 roots: [gratia]
+etymology_hook: "gracia ← Latin gratia 'favour, charm' — the word in gracias; English grace"
 duration:
   max_seconds: 240
 requires:

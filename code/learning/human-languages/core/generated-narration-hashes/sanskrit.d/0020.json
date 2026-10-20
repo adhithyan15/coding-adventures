@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 20,
-  "sourceHash": "fnv1a64:93ba87b4581c2dbe",
+  "sourceHash": "fnv1a64:f583ad528934e5d1",
   "lessonIds": [
     "SA-C20-man",
     "SA-C20-woman",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch20.txt",
   "json": "sanskrit/narration/ch20.json",
-  "textHash": "fnv1a64:61bee96f3a261bab",
-  "jsonHash": "fnv1a64:de77f09d7eb30751",
+  "textHash": "fnv1a64:b803d38ae9d42814",
+  "jsonHash": "fnv1a64:19d2f72d879d5376",
   "findings": []
 }

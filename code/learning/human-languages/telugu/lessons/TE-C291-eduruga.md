@@ -14,7 +14,8 @@ romanization: "edurugā"
 concept_tag: TE-STHALAM291-EDURUGA
 prerequisites: [TE-C291-pradesam, TE-C291-sarihaddu]
 sounds: []
-roots: []
+roots: [dravidian-etir-opposite]
+etymology_hook: "edurugā: native eduru 'the front' (DEDR 795) + -gā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C291-sarihaddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C291-STHALAM291-04]; assesses=[] -->
 
 **ఎదురుగా** — *edurugā* — "opposite, facing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎదురుగా** (*edurugā*) is native Dravidian: *eduru*, "the front, opposite", one word with Tamil *etir* (DEDR 795), with the adverb ending *-gā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

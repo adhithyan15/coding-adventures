@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 337,
-  "sourceHash": "fnv1a64:07264d2406d32ccc",
+  "sourceHash": "fnv1a64:cbacf1a62dba2eef",
   "lessonIds": [
     "ML-C337-cokku",
     "ML-C337-yuniphom",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch337.txt",
   "json": "malayalam/narration/ch337.json",
-  "textHash": "fnv1a64:b7f7ed86c02c8663",
-  "jsonHash": "fnv1a64:dcc836345d5e557d",
+  "textHash": "fnv1a64:1c2d69333a0e7624",
+  "jsonHash": "fnv1a64:048892927ab756ef",
   "findings": []
 }

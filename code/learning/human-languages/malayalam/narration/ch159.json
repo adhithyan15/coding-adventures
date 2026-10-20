@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "Scissors, Hammer, Nail, Fence, Gate",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0f55f1370ffba3ae",
+  "sourceHash": "fnv1a64:676eb7d9496afef5",
   "lessons": [
     {
       "id": "ML-C159-katrika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85f9b3994ac49bcc",
+      "sourceHash": "fnv1a64:c53f1a6d834a7a8d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കത്രിക (katrika) from Sanskrit kartarikā, \"scissors, knife\" (CDIAL 2858), reshaped as a tadbhava: Malayalam lets the r before the t drop away."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4d09d0ad9ebf05a",
+      "sourceHash": "fnv1a64:7a317301c77288bd",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +196,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുറ്റിക (cuṟṟika) is probably native Dravidian: DEDR 2668 lists Malayalam cuttika, \"hammer\", with Tamil cutti and Kannada suttige, though not this spelling."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -195,7 +217,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ca5d07087d8645a",
+      "sourceHash": "fnv1a64:f73edccff15c86bb",
       "notice": null,
       "blocks": [
         {
@@ -308,6 +330,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആണി (āṇi) from Sanskrit āṇi, \"axle-pin, peg\" (CDIAL 1110), an old Indo-Aryan word. DEDR appendix 10, which gathers Dravidian words taken from Indo-Aryan, lists it with Tamil āṇi and Kannada āṇi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -318,7 +351,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +400,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3a333b73aa09f33",
+      "sourceHash": "fnv1a64:35a044f8e162a8b8",
       "notice": null,
       "blocks": [
         {
@@ -441,6 +474,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേലി (vēli) is native Dravidian, one word with Tamil vēli and Kannada bēli (DEDR 5538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -451,7 +495,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -531,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bafda129feb4cdc",
+      "sourceHash": "fnv1a64:172cd5a536193bf3",
       "notice": null,
       "blocks": [
         {
@@ -564,6 +608,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഗേറ്റ് (gēṟṟŭ) from English gate."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -574,7 +629,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -623,7 +678,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -654,7 +709,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f5281d6d68ebc6f",
+      "sourceHash": "fnv1a64:30c0fccb21f12b67",
       "notice": null,
       "blocks": [
         {
@@ -736,7 +791,7 @@
             },
             {
               "kind": "speech",
-              "text": "A horse? (കുതിര, kutira.) A donkey? (കഴുത, kaḻuta.) A buffalo? (പോത്ത്, pōttŭ.) A pig? (പന്നി, panni.) A lion? (സിംഹം, simhaṁ.) A rat? (എലി, eli.) A frog? (തവള, tavaḷa.) A tortoise? (ആമ, āma.) A peacock? (മയിൽ, mayil.) A parrot? (തത്ത, tatta.) A dove? (പ്രാവ്, prāvŭ.) A butterfly? (പൂമ്പാറ്റ, pūmpāṟṟa.) An ant? (ഉറുമ്പ്, uṟumpŭ.) A mosquito? (കൊതുക്, kotukŭ.) A shoulder? (തോൾ, tōḷ.) An elbow? (കൈമുട്ട്, kaimuṭṭŭ.) A knee? (കാൽമുട്ട്, kālmuṭṭŭ.) A tongue? (നാവ്, nāvŭ.) Skin? (തൊലി, tolī.) A forehead? (നെറ്റി, neṟṟi.)"
+              "text": "A horse? (കുതിര, kutira.) A donkey? (കഴുത, kaḻuta.) A buffalo? (പോത്ത്, pōttŭ.) A pig? (പന്നി, panni.) A lion? (സിംഹം, simhaṁ.) A rat? (എലി, eli.) A frog? (തവള, tavaḷa.) A tortoise? (ആമ, āma.) A peacock? (മയിൽ, mayil.) A parrot? (തത്ത, tatta.) A dove? (പ്രാവ്, prāvŭ.) A butterfly? (പൂമ്പാറ്റ, pūmpāṟṟa.) An ant? (ഉറുമ്പ്, uṟumpŭ.) A mosquito? (കൊതുക്, kotukŭ.) A shoulder? (തോൾ, tōḷ.) An elbow? (കൈമുട്ട്, kaimuṭṭŭ.) A knee? (കാൽമുട്ട്, kālmuṭṭŭ.) A tongue? (നാവ്, nāvŭ.) Skin? (തൊലി, toli.) A forehead? (നെറ്റി, neṟṟi.)"
             }
           ]
         }
@@ -755,7 +810,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7459396333ca71e6",
+      "sourceHash": "fnv1a64:3a847ef674c721f2",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +901,7 @@
             },
             {
               "kind": "speech",
-              "text": "A cheek? (കവിൾ, kavil.) A chin? (താടി, tāṭi.) A street? (തെരുവ്, teruvŭ.) A library? (ഗ്രന്ഥശാല, granthaśāla.) A shirt? (ഷർട്ട്, ṣarṭṭŭ.) Trousers? (പാന്റ്, pāṇṟŭ.) An earring? (കമ്മൽ, kammal.) A bangle? (വള, vaḷa.) A ring? (മോതിരം, mōtiraṁ.) A cup? (കോപ്പ, kōppa.) A pot? (കലം, kalaṁ.) A stove? (അടുപ്പ്, aṭuppŭ.) A hand fan? (വിശറി, viśari.) An electric fan? (ഫാൻ, phān.) A bicycle? (സൈക്കിൾ, saikkiḷ.) A boat? (തോണി, tōṇi.) A train? (ട്രെയിൻ, ṭreyin.) A pillow? (തലയണ, talayaṇa.) A blanket? (പുതപ്പ്, putappŭ.) A bucket? (ബക്കറ്റ്, bakkaṟṟŭ.) Scissors? (കത്രിക, katrika.) A hammer? (ചുറ്റിക, cuṟṟika.) A nail? (ആണി, āṇi.) A fence? (വേലി, vēli.) A gate? (ഗേറ്റ്, gēṟṟŭ.)"
+              "text": "A cheek? (കവിൾ, kaviḷ.) A chin? (താടി, tāṭi.) A street? (തെരുവ്, teruvŭ.) A library? (ഗ്രന്ഥശാല, granthaśāla.) A shirt? (ഷർട്ട്, ṣarṭṭŭ.) Trousers? (പാന്റ്, pāṇṟŭ.) An earring? (കമ്മൽ, kammal.) A bangle? (വള, vaḷa.) A ring? (മോതിരം, mōtiraṁ.) A cup? (കോപ്പ, kōppa.) A pot? (കലം, kalaṁ.) A stove? (അടുപ്പ്, aṭuppŭ.) A hand fan? (വിശറി, viśari.) An electric fan? (ഫാൻ, phān.) A bicycle? (സൈക്കിൾ, saikkiḷ.) A boat? (തോണി, tōṇi.) A train? (ട്രെയിൻ, ṭreyin.) A pillow? (തലയണ, talayaṇa.) A blanket? (പുതപ്പ്, putappŭ.) A bucket? (ബക്കറ്റ്, bakkaṟṟŭ.) Scissors? (കത്രിക, katrika.) A hammer? (ചുറ്റിക, cuṟṟika.) A nail? (ആണി, āṇi.) A fence? (വേലി, vēli.) A gate? (ഗേറ്റ്, gēṟṟŭ.)"
             }
           ]
         }

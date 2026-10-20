@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "A casa de banho não funciona",
+  "label": "ch:pt-a-casa-de-banho-nao-funciona",
+  "canDo": "I can report problems in the bathroom: dripping, the drain, a blockage, getting it unblocked and the cistern.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C430-autoclismo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can report problems in the bathroom: dripping, the drain, a blockage, getting it unblocked and the cistern.",
+    "assesses": [
+      "PT-LEX-C430-BANHO-03",
+      "PT-LEX-C430-BANHO-04",
+      "PT-LEX-C430-BANHO-05"
+    ]
+  }
+}

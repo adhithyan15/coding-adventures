@@ -14,7 +14,8 @@ romanization: "sadī"
 concept_tag: HI-TIME191-SADI
 prerequisites: [HI-C191-hafta, HI-C191-sal]
 sounds: []
-roots: []
+roots: [persian-sadi]
+etymology_hook: "sadī: usually traced to Persian sadī 'century'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C191-sal]
 <!-- hl-knowledge: introduces=[HI-LEX-C191-TIME191-03]; assesses=[] -->
 
 **सदी** — *sadī* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सदी** (*sadī*) is a loan, usually traced to Persian *sadī*, "century". It is built on *sad*, "hundred".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

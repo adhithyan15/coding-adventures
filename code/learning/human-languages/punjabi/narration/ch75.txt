@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a lake, then the Punjabi for a stone.
 You'll want to know: ਰੇਤ.
 ਰੇਤ — ret — "sand".
 
+The word, taken apart.
+ਰੇਤ (ret) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from retra, "perfumed powder" (CDIAL 10816). CDIAL doubts the view that it is a Munda word in Sanskrit dress.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a stone, then the Punjabi for sand.
 
 You'll want to know: ਖੇਤ.
 ਖੇਤ — khet — "a field".
+
+The word, taken apart.
+ਖੇਤ (khet) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣetra, "land" (CDIAL 3735).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for sand, then the Punjabi for a field.
 You'll want to know: ਬੱਦਲ.
 ਬੱਦਲ — baddal — "a cloud".
 
+The word, taken apart.
+ਬੱਦਲ (baddal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārdala, "rainy day, bad weather" (CDIAL 11567).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a field, then the Punjabi for a cloud.
 You'll want to know: ਸੂਰਜ.
 ਸੂਰਜ — sūraj — "the sun".
 
+The word, taken apart.
+ਸੂਰਜ (sūraj) is usually traced to Sanskrit sūrya, "sun". CDIAL lists no Punjabi form under sūrya (CDIAL 13574).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a cloud, then the Punjabi for the sun.
 
 You'll want to know: ਚੰਨ.
 ਚੰਨ — chann — "the moon".
+
+The word, taken apart.
+ਚੰਨ (chann) is inherited from Sanskrit candra, "shining; moon". CDIAL lists Punjabi cand and candar under it, and the matching Lahnda cann (CDIAL 4661).
 
 What you've built.
 One more word for this chapter.

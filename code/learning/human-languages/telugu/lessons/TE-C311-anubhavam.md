@@ -14,7 +14,8 @@ romanization: "anubhavaṁ"
 concept_tag: TE-PANI311-ANUBHAVAM
 prerequisites: [TE-C311-visvavidyalayam, TE-C311-digri]
 sounds: []
-roots: []
+roots: [sanskrit-anubhava]
+etymology_hook: "anubhavaṁ ← Sanskrit anubhava 'experience', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C311-digri]
 <!-- hl-knowledge: introduces=[TE-LEX-C311-PANI311-04]; assesses=[] -->
 
 **అనుభవం** — *anubhavaṁ* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అనుభవం** (*anubhavaṁ*) is Sanskrit *anubhava*, "experience", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

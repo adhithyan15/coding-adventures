@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 152,
-  "sourceHash": "fnv1a64:cf69ab1bb36a4773",
+  "sourceHash": "fnv1a64:cdc731c069e1495d",
   "lessonIds": [
     "FR-C152-admirer",
     "FR-C152-agir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch152.txt",
   "json": "french/narration/ch152.json",
-  "textHash": "fnv1a64:de6759a2e07f9203",
-  "jsonHash": "fnv1a64:47433960c482b3f9",
+  "textHash": "fnv1a64:5ef5803367d1f43e",
+  "jsonHash": "fnv1a64:ae19d83036caa879",
   "findings": []
 }

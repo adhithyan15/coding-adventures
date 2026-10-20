@@ -1,0 +1,11 @@
+{
+  "id": "LA-C552-verro",
+  "pathSegment": "LA-PATH-552-DOMI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-552-DOMI",
+      "order": 3
+    }
+  ]
+}

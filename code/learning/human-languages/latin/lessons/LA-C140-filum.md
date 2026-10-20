@@ -13,7 +13,8 @@ gloss: "a thread"
 concept_tag: LA-THINGS140-FILUM
 prerequisites: [LA-C140-forfex, LA-C140-acus]
 sounds: []
-roots: []
+roots: [filum-latin]
+etymology_hook: "fīlum 'thread' — inherited, usually traced to PIE *gwhiHslo- 'thread'; English file, filament"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C140-acus]
 <!-- hl-knowledge: introduces=[LA-LEX-C140-THINGS140-04]; assesses=[] -->
 
 **fīlum, fīlī** — "a thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīlum** is inherited, usually traced to Proto-Indo-European *\*gwhiHslo-*, "thread" (EtymDB 2.1). English *filament* and *file*, a row, come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

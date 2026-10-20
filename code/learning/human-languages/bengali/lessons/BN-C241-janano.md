@@ -14,7 +14,8 @@ romanization: "jānāno"
 concept_tag: BN-VERB-JANANO
 prerequisites: [BN-C241-khuje-paoya, BN-C241-kheyal-kora]
 sounds: []
-roots: []
+roots: [sanskrit-janati]
+etymology_hook: "jānāno ← Sanskrit jānāti 'knows', a tadbhava (CDIAL 5193)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C241-kheyal-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C241-ACT241-04]; assesses=[] -->
 
 **জানানো** — *jānāno* — "to inform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জানানো** (*jānāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jānāti*, "knows" (CDIAL 5193). CDIAL lists Bengali *jānā*, "to know"; *jānāno* is its causing form, "to make know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

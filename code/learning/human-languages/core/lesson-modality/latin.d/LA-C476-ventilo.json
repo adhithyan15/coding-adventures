@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C476-ventilo",
+    "language": "latin",
+    "chapter": 476,
+    "sequence": 25320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61d787c985f9aebb"
+  },
+  "findings": []
+}

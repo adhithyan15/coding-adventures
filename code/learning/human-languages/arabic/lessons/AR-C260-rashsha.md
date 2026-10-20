@@ -14,7 +14,8 @@ romanization: "rashsha"
 concept_tag: AR-VERB-RASHSHA
 prerequisites: [AR-C259-qafaza, AR-C259-daghata]
 sounds: []
-roots: []
+roots: [r-sh-sh]
+etymology_hook: "rashsha: built on the root r-sh-sh, 'to sprinkle' (Lane); rashsha is the plain verb, 'he sprinkled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C259-daghata]
 <!-- hl-knowledge: introduces=[AR-LEX-C260-ACT260-01]; assesses=[] -->
 
 **رش** — *rashsha* — "to sprinkle, to spray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رش** (*rashsha*) is built on the native Arabic root *r-sh-sh*, "to sprinkle" (Lane). *Rashsha* is the plain verb, "he sprinkled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baqqāl"
 concept_tag: AR-AMAL191-BAQQAL
 prerequisites: [AR-C190-jughrafiya, AR-C191-sabbak]
 sounds: []
-roots: []
+roots: [b-q-l]
+etymology_hook: "baqqāl: built on the root b-q-l, 'herbs, vegetables' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C191-sabbak]
 <!-- hl-knowledge: introduces=[AR-LEX-C191-AMAL191-02]; assesses=[] -->
 
 **بقال** — *baqqāl* — "a grocer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بقال** (*baqqāl*) is built on the native Arabic root *b-q-l*, "herbs, vegetables" (Lane). Lane's *baqqāl* is a seller of green herbs, *baql*, and then any shopkeeper.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

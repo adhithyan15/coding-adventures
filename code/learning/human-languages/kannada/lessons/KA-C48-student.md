@@ -11,7 +11,8 @@ romanization: "vidyārthi"
 concept_tag: KA-NOUN-STUDENT
 prerequisites: [KA-C48-teacher, KA-C46-cloth]
 sounds: []
-roots: []
+roots: [sanskrit-vidya, sanskrit-arthin]
+etymology_hook: "vidyārthi ← Sanskrit vidyārthin, vidyā 'knowledge' (CDIAL 11741) + arthin 'seeking' (CDIAL 640)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C48-teacher]
 Two Sanskrit pieces: *vidyā*, knowledge, and *arthin*, one who seeks a thing. A student is a knowledge-seeker, said straight out.
 
 *vidyā* rests on a root meaning 'to know', and that root is among the oldest things in this book. It is the *wit* of English, the *vidēre* of Latin, and the first syllable of *vision*. A word for a schoolchild in Bengaluru and a word for eyesight in Rome are one word with three thousand years between them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಿದ್ಯಾರ್ಥಿ** (*vidyārthi*) is Sanskrit *vidyārthin*, "one who seeks knowledge": *vidyā*, "knowledge" (CDIAL 11741), and *arthin*, "desiring, seeking" (CDIAL 640). Kannada drops the final *-n*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

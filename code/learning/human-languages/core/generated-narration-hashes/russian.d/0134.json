@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 134,
-  "sourceHash": "fnv1a64:5cc0dea777593fd5",
+  "sourceHash": "fnv1a64:8579e1ff3955ab9c",
   "lessonIds": [
     "RU-C134-to-tell",
     "RU-C134-to-go-for-a-walk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch134.txt",
   "json": "russian/narration/ch134.json",
-  "textHash": "fnv1a64:cbe765d50a4be125",
-  "jsonHash": "fnv1a64:9a90718bea3574c4",
+  "textHash": "fnv1a64:7450f1ef98a887cb",
+  "jsonHash": "fnv1a64:f42c5ef4b01cece4",
   "findings": []
 }

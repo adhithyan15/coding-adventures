@@ -14,7 +14,8 @@ romanization: "nanad"
 concept_tag: HI-THG255-NANAD
 prerequisites: [HI-C255-damad, HI-C255-devar]
 sounds: []
-roots: []
+roots: [sanskrit-nanandr]
+etymology_hook: "nanad ← Sanskrit nanāndṛ 'husband's sister', a tadbhava (CDIAL 6946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C255-devar]
 <!-- hl-knowledge: introduces=[HI-LEX-C255-THG255-04]; assesses=[] -->
 
 **ननद** — *nanad* — "a husband's sister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ननद** (*nanad*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nanāndṛ*, "husband's sister" (CDIAL 6946).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

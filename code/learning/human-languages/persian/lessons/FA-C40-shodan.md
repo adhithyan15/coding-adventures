@@ -14,7 +14,8 @@ romanization: "shodan"
 concept_tag: FA-VERB-SHODAN
 prerequisites: [FA-C39-bargashtan, FA-C39-bordan]
 sounds: []
-roots: []
+roots: [persian-shudan]
+etymology_hook: "shodan: inherited; usually traced to Middle Persian šudan 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C39-bordan]
 <!-- hl-knowledge: introduces=[FA-LEX-C40-VERBS40-01]; assesses=[] -->
 
 **شدن** — *shodan* — "to become".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shodan* is a native Persian verb, inherited rather than borrowed; it is usually traced to Middle Persian *šudan*, which meant "to go". "To go" turning into "to become" is a shift English *go* shows too, as in "go bad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Promosso o bocciato",
+  "label": "ch:it-promosso-o-bocciato",
+  "canDo": "I can talk about passing or failing a year, an assessment and a score.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C383-punteggio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can talk about passing or failing a year, an assessment and a score.",
+    "assesses": [
+      "IT-LEX-C383-BOCCIATURA-03",
+      "IT-LEX-C383-BOCCIATURA-04",
+      "IT-LEX-C383-BOCCIATURA-05"
+    ]
+  }
+}

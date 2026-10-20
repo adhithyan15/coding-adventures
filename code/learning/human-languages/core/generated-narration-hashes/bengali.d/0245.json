@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 245,
-  "sourceHash": "fnv1a64:d20d77ede129c4f5",
+  "sourceHash": "fnv1a64:fa0f88bd2617fe40",
   "lessonIds": [
     "BN-C245-sinema-hol",
     "BN-C245-jim",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch245.txt",
   "json": "bengali/narration/ch245.json",
-  "textHash": "fnv1a64:3ae22ada9ffc85d0",
-  "jsonHash": "fnv1a64:79445486b10d4f80",
+  "textHash": "fnv1a64:b6cf57033c57628d",
+  "jsonHash": "fnv1a64:d4fea1ed211e6147",
   "findings": []
 }

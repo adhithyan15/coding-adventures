@@ -14,7 +14,8 @@ romanization: "mahāvidyālay"
 concept_tag: MR-VASTU245-MAHAVIDYALAY
 prerequisites: [MR-C245-gotha, MR-C245-masid]
 sounds: []
-roots: []
+roots: [sanskrit-maha, sanskrit-vidya, sanskrit-alaya]
+etymology_hook: "mahāvidyālay: Sanskrit mahā 'great' + vidyā 'knowledge' + ālaya 'abode'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C245-masid]
 <!-- hl-knowledge: introduces=[MR-LEX-C245-VASTU245-04]; assesses=[] -->
 
 **महाविद्यालय** — *mahāvidyālay* — "a college".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महाविद्यालय** (*mahāvidyālay*) is a modern compound built from Sanskrit *mahā*, "great", *vidyā*, "knowledge" (CDIAL 11741), and *ālaya*, "abode" (CDIAL 1366).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

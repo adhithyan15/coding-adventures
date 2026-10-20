@@ -11,6 +11,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [PT-C01-tarde]
 sounds: []
 roots: [noctem]
+etymology_hook: "noite ← Latin noctem 'night': Latin -ct- became -it-; English nocturnal shares it"
 reviews_of: [PT-C01-tarde, PT-C01-dia]
 duration:
   max_seconds: 120
@@ -60,6 +61,7 @@ for bed.
 [PAUSE 1s]
 - [YOU SAY: "boa noite"]
 - [YOU SAY: the rule — Latin *-ct-* → Portuguese *-it-* (*noite*, *feito*)]
+- [YOU SAY: the day's arc — bom dia → boa tarde → boa noite]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-NOITE-02, PT-LEX-NOITE-03] -->

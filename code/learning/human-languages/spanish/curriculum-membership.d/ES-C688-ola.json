@@ -1,0 +1,11 @@
+{
+  "id": "ES-C688-ola",
+  "pathSegment": "ES-PATH-688-MAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-688-MAR",
+      "order": 1
+    }
+  ]
+}

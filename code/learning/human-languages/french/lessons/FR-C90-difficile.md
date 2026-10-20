@@ -13,7 +13,8 @@ gloss: "difficult"
 concept_tag: FR-ADJ42-DIFFICILE
 prerequisites: [FR-C89-rapide, FR-C89-facile]
 sounds: []
-roots: []
+roots: [facere-latin]
+etymology_hook: "difficile ← Latin difficilis 'hard to do', facilis with dis- — English difficult"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C89-facile]
 <!-- hl-knowledge: introduces=[FR-LEX-C90-ADJ42-01]; assesses=[] -->
 
 **difficile** — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**difficile** ← Latin *difficilis*, "hard to do": *facile* with *dis-*, "not", in front — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

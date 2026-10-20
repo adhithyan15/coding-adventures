@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Pro e contro",
+  "label": "ch:it-pro-e-contro",
+  "canDo": "I can weigh up pros and cons: name an advantage, a disadvantage and an aspect, voice a criticism and repeat my point.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C348-ribadire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can weigh up pros and cons: name an advantage, a disadvantage and an aspect, voice a criticism and repeat my point.",
+    "assesses": [
+      "IT-LEX-C348-VANTAGGIO-03",
+      "IT-LEX-C348-VANTAGGIO-04",
+      "IT-LEX-C348-VANTAGGIO-05"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:da42370189844230",
+  "sourceHash": "fnv1a64:95bd85abfd0d92a0",
   "lessonIds": [
     "HI-C14-ghee",
     "HI-C14-ritu",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch14.txt",
   "json": "hindi/narration/ch14.json",
-  "textHash": "fnv1a64:788199fae757c2dd",
-  "jsonHash": "fnv1a64:93a458f84a85c31e",
+  "textHash": "fnv1a64:701786f3a621aef1",
+  "jsonHash": "fnv1a64:bccb32880028f5f7",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:1e3e253d4e3f9a42",
+  "lessonIds": [
+    "IT-C351-origine",
+    "IT-C351-derivare",
+    "IT-C351-comportare",
+    "IT-C351-determinare",
+    "IT-C351-influire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch351.txt",
+  "json": "italian/narration/ch351.json",
+  "textHash": "fnv1a64:92d2427da161411d",
+  "jsonHash": "fnv1a64:a84eef8648b1f7b2",
+  "findings": []
+}

@@ -11,7 +11,8 @@ romanization: "payir"
 concept_tag: TA-NOUN-CROP
 prerequisites: [TA-C64-grass, TA-C62-soon, TA-C63-hesitancy]
 sounds: []
-roots: []
+roots: [dravidian-paca-green]
+etymology_hook: "பயிர் — native Dravidian (DEDR 3821); Malayalam payir 'green corn'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C64-grass]
 What is growing in the வயல் at this moment, green and still rooted. It is not the வயல், which stays there when nothing is on it, and it is not the நெல் in the sack, which has stopped growing.
 
 So the run has three separate things now where English leans on one word: the ground, the standing green, and the grain. Kannada calls the standing green ಬೆಳೆ (*beḷe*).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பயிர்** (*payir*) is native Dravidian. DEDR 3821 lists Malayalam *payir*, "green corn". The entry gathers words for green and fresh: a crop is what grows green.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "laisansŭ"
 concept_tag: ML-VASTU210-LAISANSU
 prerequisites: [ML-C210-lageju, ML-C210-sirru]
 sounds: []
-roots: []
+roots: [english-licence]
+etymology_hook: "laisansŭ ← English licence"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C210-sirru]
 <!-- hl-knowledge: introduces=[ML-LEX-C210-VASTU210-03]; assesses=[] -->
 
 **ലൈസൻസ്** — *laisansŭ* — "a licence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലൈസൻസ്** (*laisansŭ*) ← English *licence*, from Latin *licentia*, "permission".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

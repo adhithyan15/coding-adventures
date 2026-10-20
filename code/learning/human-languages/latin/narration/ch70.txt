@@ -12,6 +12,9 @@ Before the new one: say the Latin for happy, then the Latin for sad.
 You'll want to know: fīlius, fīliī.
 fīlius, fīliī — "a son". English filial.
 
+The word, taken apart.
+fīlius is inherited. Old Latin had fīlios, "son", and the word is usually traced to Proto-Indo-European dheh1ylios, "a suckling" (EtymDB 2.1), from a root for nursing.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for sad, then the Latin for a son.
 
 You'll want to know: fīlia, fīliae.
 fīlia, fīliae — "a daughter".
+
+The word, taken apart.
+fīlia is the feminine of fīlius, "a son" (Lewis & Short); the pair is usually traced to Proto-Indo-European dheh1ylios, "a suckling" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a son, then the Latin for a daughter.
 You'll want to know: avus, avī.
 avus, avī — "a grandfather".
 
+The word, taken apart.
+avus is inherited, usually traced to Proto-Indo-European h2ewh2os, "grandfather, elder male relative" (EtymDB 2.1). Its family includes avunculus, "mother's brother", the source of English uncle.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a daughter, then the Latin for a grandfath
 You'll want to know: avia, aviae.
 avia, aviae — "a grandmother".
 
+The word, taken apart.
+avia is the feminine of avus, "a grandfather" (Lewis & Short), which is usually traced to Proto-Indo-European h2ewh2os, "grandfather" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a grandfather, then the Latin for a grandm
 
 You'll want to know: familia, familiae.
 familia, familiae — "a family, a household".
+
+The word, taken apart.
+familia is built on famulus, "a household slave, a servant" (Lewis & Short): a familia was first everyone under one master's roof, the slaves included. English family comes from it.
 
 What you've built.
 One more word for this chapter.

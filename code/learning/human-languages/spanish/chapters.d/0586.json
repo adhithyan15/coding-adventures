@@ -1,0 +1,19 @@
+{
+  "chapter": 586,
+  "title": "Dar explicaciones",
+  "label": "ch:es-dar-explicaciones",
+  "canDo": "I can justify a decision, tell an excuse from a reason and show that something is true.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C586-demostrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 586: I can justify a decision, tell an excuse from a reason and show that something is true.",
+    "assesses": [
+      "ES-LEX-C586-JUSTIF-03",
+      "ES-LEX-C586-JUSTIF-04",
+      "ES-LEX-C586-JUSTIF-05"
+    ]
+  }
+}

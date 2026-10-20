@@ -14,7 +14,8 @@ romanization: "shinai"
 concept_tag: JA-LOC82-SHINAI
 prerequisites: [JA-C81-chihou, JA-C82-machikado]
 sounds: []
-roots: []
+roots: [middle-chinese-dzyix, middle-chinese-nwojh]
+etymology_hook: "shinai: Sino-Japanese 市 'market' + 内 'inside', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C82-machikado]
 <!-- hl-knowledge: introduces=[JA-LEX-C82-LOC82-02]; assesses=[] -->
 
 **しない** — *shinai* — "within the city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しない** (*shinai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shi*, "market, city" (Middle Chinese *dzyiX*) and *nai*, "inside" (*nwojH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

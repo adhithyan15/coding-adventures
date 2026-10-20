@@ -14,7 +14,8 @@ romanization: "baraf"
 concept_tag: PA-NATURE76-BARAF
 prerequisites: [PA-C76-samundar, PA-C76-agg]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "baraf: usually traced to Persian barf 'snow, ice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C76-agg]
 <!-- hl-knowledge: introduces=[PA-LEX-C76-NATURE76-03]; assesses=[] -->
 
 **ਬਰਫ਼** — *baraf* — "snow; ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਰਫ਼** (*baraf*) is a loan, usually traced to Persian *barf*, "snow, ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

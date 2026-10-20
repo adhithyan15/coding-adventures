@@ -1,0 +1,11 @@
+{
+  "id": "IT-C465-rospo",
+  "pathSegment": "IT-PATH-465-PICCOLI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-465-PICCOLI",
+      "order": 2
+    }
+  ]
+}

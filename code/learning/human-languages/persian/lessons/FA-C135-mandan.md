@@ -14,7 +14,8 @@ romanization: "mândan"
 concept_tag: FA-VERB-MANDAN
 prerequisites: [FA-C134-kandan, FA-C135-randan]
 sounds: []
-roots: []
+roots: [persian-mandan]
+etymology_hook: "mândan ← Middle Persian māndan (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C135-randan]
 <!-- hl-knowledge: introduces=[FA-LEX-C135-ACT135-02]; assesses=[] -->
 
 **ماندن** — *mândan* — "to stay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mândan* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *māndan*, "to remain" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

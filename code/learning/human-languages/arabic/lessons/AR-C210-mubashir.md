@@ -14,7 +14,8 @@ romanization: "mubāshir"
 concept_tag: AR-SIFA210-MUBASHIR
 prerequisites: [AR-C209-sihhi, AR-C209-maksur]
 sounds: []
-roots: []
+roots: [b-sh-r]
+etymology_hook: "mubāshir: built on the root b-sh-r, 'skin' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C209-maksur]
 <!-- hl-knowledge: introduces=[AR-LEX-C210-SIFA210-01]; assesses=[] -->
 
 **مباشر** — *mubāshir* — "direct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مباشر** (*mubāshir*) is built on the native Arabic root *b-sh-r*, "skin; to touch skin to skin" (Lane). *Mubāshir* is the Form III participle, "dealing hand to hand", hence "direct".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

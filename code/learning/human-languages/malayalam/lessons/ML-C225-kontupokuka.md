@@ -14,7 +14,8 @@ romanization: "koṇṭupōkuka"
 concept_tag: ML-VERB-KONTUPOKUKA
 prerequisites: [ML-C225-ettuka, ML-C225-matannuka]
 sounds: []
-roots: []
+roots: [dravidian-kolu-take, po-go-dravidian]
+etymology_hook: "koṇṭupōkuka: native Dravidian, 'go having taken': koṇṭu (DEDR 2151) + pōkuka (DEDR 4572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C225-matannuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C225-KRIYA225-05]; assesses=[] -->
 
 **കൊണ്ടുപോകുക** — *koṇṭupōkuka* — "to take (along)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊണ്ടുപോകുക** (*koṇṭupōkuka*) is native Dravidian, "go having taken": *koṇṭu*, the past form of the verb "to take" (DEDR 2151, with Tamil *koḷ*), and *pōkuka*, "to go" (DEDR 4572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

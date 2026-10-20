@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C528-eponge",
+    "language": "french",
+    "chapter": 528,
+    "sequence": 28900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec056235fcbad24b"
+  },
+  "findings": []
+}

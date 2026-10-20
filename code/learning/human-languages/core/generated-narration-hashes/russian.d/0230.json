@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 230,
-  "sourceHash": "fnv1a64:ac6484b3d390be5e",
+  "sourceHash": "fnv1a64:c8278632c1b624f4",
   "lessonIds": [
     "RU-C230-sadovnik",
     "RU-C230-kassir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch230.txt",
   "json": "russian/narration/ch230.json",
-  "textHash": "fnv1a64:04afa5bb238d5ef8",
-  "jsonHash": "fnv1a64:f77b9769bff0ccc6",
+  "textHash": "fnv1a64:583c197bb3303db7",
+  "jsonHash": "fnv1a64:44105af90794aea7",
   "findings": []
 }

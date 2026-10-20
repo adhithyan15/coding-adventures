@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 197,
-  "sourceHash": "fnv1a64:ed26972410f1cad0",
+  "sourceHash": "fnv1a64:9ffb564f3797afac",
   "lessonIds": [
     "FR-C197-marie",
     "FR-C197-mariee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch197.txt",
   "json": "french/narration/ch197.json",
-  "textHash": "fnv1a64:f1aba331bc831ea9",
-  "jsonHash": "fnv1a64:bf962667eaeef491",
+  "textHash": "fnv1a64:26b3093d7db0c523",
+  "jsonHash": "fnv1a64:54814d63045751e8",
   "findings": []
 }

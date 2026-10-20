@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Not",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:366a661bca91f07a",
+  "sourceHash": "fnv1a64:5a205b86f49c5e8b",
   "lessons": [
     {
       "id": "IT-C30-non",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc439845a457f296",
+      "sourceHash": "fnv1a64:903c87344f8e6002",
       "notice": null,
       "blocks": [
         {
@@ -325,6 +325,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "capisco from capire from Latin capere, \"to seize\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -373,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -404,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:753d11bf3077619e",
+      "sourceHash": "fnv1a64:06c2a2224a99e6c9",
       "notice": null,
       "blocks": [
         {
@@ -502,6 +513,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "né from Latin nec, \"and not, nor\" — inherited. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -541,7 +563,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -572,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dc490d51be82146",
+      "sourceHash": "fnv1a64:8fb793d3ae616aeb",
       "notice": null,
       "blocks": [
         {
@@ -683,7 +705,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is né + anche, welded into one word, and you were given the first half one lesson ago. Because it carries a né, it keeps the non rule with it:"
+              "text": "It is né + anche, welded into one word, and you were given the first half one lesson ago. Né is inherited from Latin nec, \"and not\" (EtymDB 2.1); where anche comes from is uncertain. Because it carries a né, it keeps the non rule with it:"
             },
             {
               "kind": "speech",

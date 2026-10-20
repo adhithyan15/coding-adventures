@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 26,
-  "sourceHash": "fnv1a64:674bd81c1f3310dc",
+  "sourceHash": "fnv1a64:d515a42f67f1e9cb",
   "lessonIds": [
     "UR-C26-is-ka",
     "UR-C26-apna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "urdu/narration/ch26.txt",
   "json": "urdu/narration/ch26.json",
-  "textHash": "fnv1a64:ea6fd9fb1f06101b",
-  "jsonHash": "fnv1a64:08ac6266a8ef6aaa",
+  "textHash": "fnv1a64:a766592ca1a05298",
+  "jsonHash": "fnv1a64:12334ffbeed6c362",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the German for admission, then the German for an admissi
 You'll want to know: die Entscheidung.
 die Entscheidung — "a decision".
 
+The word, taken apart.
+Entscheidung is entscheiden, "to decide", + -ung. The verb is ent- + Old High German sceidan, "to separate". (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for an admission ticket, then the German for 
 
 You'll want to know: die Erinnerung.
 die Erinnerung — "a memory, a reminder".
+
+The word, taken apart.
+Erinnerung is erinnern, "to remind", + -ung: what is brought back inside the mind. Erinnern is built on inner, "inside", which EtymDB 2.1 traces to Old High German innar.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for a decision, then the German for a memory.
 You'll want to know: die Erlaubnis.
 die Erlaubnis — "permission".
 
+The word, taken apart.
+Erlaubnis is erlauben, "to allow", + -nis, an ending that makes a noun. erlauben from Old High German irlouben. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for a memory, then the German for permission.
 You'll want to know: das Ergebnis.
 das Ergebnis — "a result".
 
+The word, taken apart.
+Ergebnis comes from the verb "to yield, to result" (EtymDB 2.1): er- + the verb "to give", English give, + -nis. A result is what a thing gives out.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for permission, then the German for a result.
 
 You'll want to know: die Erklärung.
 die Erklärung — "an explanation".
+
+The word, taken apart.
+Erklärung is erklären, "to explain", + -ung (EtymDB 2.1). The verb is built on the word for "clear", from Latin clārus.
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C459-bonifico",
+    "language": "italian",
+    "chapter": 459,
+    "sequence": 25890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0aed14e241233185"
+  },
+  "findings": []
+}

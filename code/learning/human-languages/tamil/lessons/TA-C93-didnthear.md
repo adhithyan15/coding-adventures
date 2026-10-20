@@ -11,7 +11,8 @@ romanization: "kēṭkavillai"
 concept_tag: TA-ASK-DIDNT-HEAR
 prerequisites: [TA-C93-howsay, TA-C93-show]
 sounds: []
-roots: []
+roots: [dravidian-kel-hear-ask, il]
+etymology_hook: "கேட்கவில்லை — native: kēḷ 'to hear' (DEDR 2017) + illai 'not' (DEDR 2559)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C93-show]
 **கேட்கவில்லை** (*kēṭkavillai*) — "I did not hear (it)".
 
 It ends in **இல்லை**, the "no" of your first chapter. Pair it with **சத்தமாக**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கேட்கவில்லை** (*kēṭkavillai*) is native: *kēḷ*, "to hear" (DEDR 2017), and *illai*, "not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

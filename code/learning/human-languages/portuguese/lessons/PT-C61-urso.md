@@ -13,7 +13,8 @@ gloss: "a bear"
 concept_tag: PT-ANIMAIS2-URSO
 prerequisites: [PT-C61-rato, PT-C61-lobo]
 sounds: []
-roots: []
+roots: [ursus-latin]
+etymology_hook: "urso ← Latin ursus 'bear' — English ursine shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C61-lobo]
 <!-- hl-knowledge: introduces=[PT-LEX-C61-ANIMAIS2-04]; assesses=[] -->
 
 **o urso** — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**urso** ← Latin *ursus*, "bear" (EtymDB 2.1) — a learned borrowing from Latin. Spanish and Italian, which inherited it, say *oso* and *orso*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

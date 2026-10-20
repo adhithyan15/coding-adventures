@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-443-SERVICOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with public offices: the police station, the barracks, the registry office, reporting a crime and applying for something.",
+  "prerequisites": []
+}

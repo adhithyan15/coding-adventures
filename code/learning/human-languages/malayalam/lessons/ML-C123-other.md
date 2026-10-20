@@ -11,7 +11,8 @@ romanization: "vēṟe"
 concept_tag: ML-RESP-OTHER
 prerequisites: [ML-C123-notlikethat, ML-C123-maybe]
 sounds: []
-roots: []
+roots: [dravidian-veru-different]
+etymology_hook: "vēṟe: native Dravidian, one word with Tamil vēṟu (DEDR 5548)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C123-maybe]
 
 **വേറെ** (*vēṟe*) — "other, different". **വേറെ വേണം** (*vēṟe vēṇaṁ*) — "I want a
 different one".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേറെ** (*vēṟe*) is native Dravidian, one word with Tamil *vēṟu* (DEDR 5548).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

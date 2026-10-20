@@ -11,7 +11,8 @@ romanization: "nijamē"
 concept_tag: TE-REPLY-TRUE
 prerequisites: [TE-C98-notyet, TE-C98-enough]
 sounds: []
-roots: []
+roots: [sanskrit-nija]
+etymology_hook: "nijamē: Sanskrit nija 'one's own, innate' (CDIAL 7181) + the emphatic -ē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C98-enough]
 
 It is **నిజం** with **-ఏ**, the ending that says *exactly this*. Where **నిజంగా?** asks, **నిజమే**
 agrees.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిజమే** (*nijamē*) is *nijaṁ*, "truth", from Sanskrit *nija*, "one's own, innate" (CDIAL 7181), with the emphatic *-ē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

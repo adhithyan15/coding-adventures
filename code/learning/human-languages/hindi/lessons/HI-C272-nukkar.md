@@ -15,6 +15,7 @@ concept_tag: HI-THG272-NUKKAR
 prerequisites: [HI-C271-mohalla, HI-C272-gali]
 sounds: []
 roots: []
+etymology_hook: "nukkaṛ: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C272-gali]
 <!-- hl-knowledge: introduces=[HI-LEX-C272-THG272-02]; assesses=[] -->
 
 **नुक्कड़** — *nukkaṛ* — "a street corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **नुक्कड़** (*nukkaṛ*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭhikāṇ"
 concept_tag: MR-VASTU243-THIKAN
 prerequisites: [MR-C242-dhaga, MR-C242-sidi]
 sounds: []
-roots: []
+roots: [indo-aryan-thikka]
+etymology_hook: "ṭhikāṇ ← *ṭhīkka 'firm, right', a reconstructed form; a tadbhava (CDIAL 5503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C242-sidi]
 <!-- hl-knowledge: introduces=[MR-LEX-C243-VASTU243-01]; assesses=[] -->
 
 **ठिकाण** — *ṭhikāṇ* — "a place, a spot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठिकाण** (*ṭhikāṇ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭhīkka*, "firm, right", a form CDIAL reconstructs from its descendants (CDIAL 5503). CDIAL lists the Marathi word here only as a possibility; it derives the reconstruction, probably, from Sanskrit *sthita*, "standing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

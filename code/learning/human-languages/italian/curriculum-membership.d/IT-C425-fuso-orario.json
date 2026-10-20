@@ -1,0 +1,11 @@
+{
+  "id": "IT-C425-fuso-orario",
+  "pathSegment": "IT-PATH-425-AEROPORTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-425-AEROPORTO",
+      "order": 4
+    }
+  ]
+}

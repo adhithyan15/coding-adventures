@@ -14,7 +14,8 @@ romanization: "paliśa"
 concept_tag: ML-VASTU288-PALISA
 prerequisites: [ML-C288-palsal, ML-C288-cekku]
 sounds: []
-roots: []
+roots: [dravidian-poli-increase]
+etymology_hook: "paliśa: native Dravidian; DEDR 4550 lists Malayalam paliśa 'interest on money' under poli 'increase'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C288-cekku]
 <!-- hl-knowledge: introduces=[ML-LEX-C288-VASTU288-03]; assesses=[] -->
 
 **പലിശ** — *paliśa* — "interest (on money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പലിശ** (*paliśa*) is native Dravidian: DEDR 4550 lists it, "interest on money", under *poli*, "increase", with Tamil *poli*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

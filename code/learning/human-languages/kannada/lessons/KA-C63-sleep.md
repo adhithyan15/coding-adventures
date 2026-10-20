@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-SLEEP
 prerequisites: [KA-C63-hunger, KA-C61-ghee]
 sounds: []
 roots: []
+etymology_hook: "nidde ← Sanskrit nidrā 'sleep' (CDIAL 7200) through Prakrit niddā: a tadbhava"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C63-hunger]
 ನಿದ್ದೆ is a Sanskrit word worn smooth by everyday use — the original had a hard cluster in the middle that Kannada softened into the doubled sound you hear now.
 
 It takes the same frame ಹಸಿವು took: ನನಗೆ ನಿದ್ದೆ. Learn one of these sentences and you have the shape for the rest of the chapter, which is why they are grouped.
+
+CDIAL 7200 lists Sanskrit *nidrā*, "sleep", and Prakrit *ṇiddā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

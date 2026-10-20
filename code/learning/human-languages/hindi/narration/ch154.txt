@@ -14,6 +14,9 @@ Walk one दिन: दोपहर, two pahars, now the whole afternoon, then �
 You'll want to know: गरम.
 गरम — garam — "hot, warm".
 
+The word, taken apart.
+गरम (garam) is a loan, usually traced to Persian garm, "warm, hot".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for a bank, then the Hindi for hot.
 
 You'll want to know: गीला.
 गीला — gīlā — "wet".
+
+The word, taken apart.
+गीला (gīlā) is a tadbhava, a word inherited and reshaped by sound change. It comes from grilla, "wet, damp", a form CDIAL reconstructs from its descendants (CDIAL 4386). CDIAL calls a further link with gṛdla very doubtful.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Hindi for hot, then the Hindi for wet.
 You'll want to know: सूखा.
 सूखा — sūkhā — "dry".
 
+The word, taken apart.
+सूखा (sūkhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, "dried" (CDIAL 12548).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Hindi for wet, then the Hindi for dry.
 You'll want to know: भारी.
 भारी — bhārī — "heavy".
 
+The word, taken apart.
+भारी (bhārī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhārika, "forming a load, heavy" (CDIAL 9465). It is built on bhāra, "load".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for dry, then the Hindi for heavy.
 
 You'll want to know: हल्का.
 हल्का — halkā — "light (in weight)".
+
+The word, taken apart.
+हल्का (halkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laghu, "light" (CDIAL 10896). CDIAL notes that its l and h swapped places and that it took an added -k-.
 
 What you've built.
 One more word for this chapter.

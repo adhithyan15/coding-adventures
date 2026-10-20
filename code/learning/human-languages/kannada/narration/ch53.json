@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3455441898d1bbdc",
+  "sourceHash": "fnv1a64:7481419c327ab678",
   "lessons": [
     {
       "id": "KA-C53-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd56c1de27054875",
+      "sourceHash": "fnv1a64:1fc9bb473224128b",
       "notice": null,
       "blocks": [
         {
@@ -59,6 +59,10 @@
             {
               "kind": "speech",
               "text": "ākāśa travelled as well. Traders carried it east, and Malay and Indonesian still say angkasa for the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 1008 lists Sanskrit ākāśa, \"sky\"."
             }
           ]
         },
@@ -154,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62bb10564b57933e",
+      "sourceHash": "fnv1a64:ecca0acb2c47f4c9",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +203,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಸಿಲು (bisilu) is native Dravidian, of the root bē, \"to burn, be scorched\", and DEDR 5517 lists bisil itself, \"heat and glare of the sun, sunshine\"; the entry also has Tamil vē."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +273,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0e093abc4ed5af0",
+      "sourceHash": "fnv1a64:611fb78fbf50934d",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +344,10 @@
             {
               "kind": "speech",
               "text": "candra went a long way west too. It shares an ancestor with the Latin piece behind English candle and incandescent: a very old root for burning white."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 4661 lists Sanskrit candra, \"shining; moon\"."
             }
           ]
         },
@@ -424,7 +443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3a1e546e336ff3f",
+      "sourceHash": "fnv1a64:acbd6137879f9638",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +488,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚುಕ್ಕಿ (cukki) is native Dravidian. DEDR 2646 lists Kannada cukke, \"small mark, dot\", and cikki, \"spot, star\", with Telugu cukka, \"star, spot, dot\". Tamil cukkai, \"star\", is a loan from Telugu, the entry says."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -479,7 +509,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -528,7 +558,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -559,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d77621f64c06a7",
+      "sourceHash": "fnv1a64:d1291ed8b0ec2eb1",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +634,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೋಡ (mōḍa) is native Dravidian, one word with Tamil mūṭam and Telugu mōḍamu (DEDR 5033)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +655,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +704,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

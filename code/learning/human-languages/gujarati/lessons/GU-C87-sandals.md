@@ -15,6 +15,7 @@ concept_tag: GU-CLOTHES-SANDALS
 prerequisites: [GU-C87-dhoti, GU-C87-shirt]
 sounds: []
 roots: []
+etymology_hook: "campal: a form of cappal; not in CDIAL; DEDR 1963 compares Hindi cappal to Dravidian 'sandal' words"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C87-shirt]
 <!-- hl-knowledge: introduces=[GU-LEX-C87-CLOTHES-03]; assesses=[] -->
 
 **ચંપલ** (*campal*) — "sandals, slippers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચંપલ** (*campal*) is another form of *cappal*, "sandal". CDIAL has no entry for it. DEDR compares Hindi *cappal*, with a "Cf.", to the Dravidian words for a sandal, such as Telugu *ceppu* (DEDR 1963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

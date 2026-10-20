@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Caso contrário",
+  "label": "ch:pt-caso-contrario",
+  "canDo": "I can talk about what might stop a plan: unless, otherwise, and possible events.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C370-eventualmente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about what might stop a plan: unless, otherwise, and possible events.",
+    "assesses": [
+      "PT-LEX-C370-SENAO-03",
+      "PT-LEX-C370-SENAO-04",
+      "PT-LEX-C370-SENAO-05"
+    ]
+  }
+}

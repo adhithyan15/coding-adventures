@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 240,
-  "sourceHash": "fnv1a64:9ed35c786e9da92c",
+  "sourceHash": "fnv1a64:7c0a8701de48acbe",
   "lessonIds": [
     "FA-C240-dokme",
     "FA-C240-astin",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch240.txt",
   "json": "persian/narration/ch240.json",
-  "textHash": "fnv1a64:c46ef2f4c197c6ca",
-  "jsonHash": "fnv1a64:c2e406b1f662fab6",
+  "textHash": "fnv1a64:14b23368748dcca1",
+  "jsonHash": "fnv1a64:33fed20ee8498a86",
   "findings": []
 }

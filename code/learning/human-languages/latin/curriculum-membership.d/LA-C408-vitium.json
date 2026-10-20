@@ -1,0 +1,11 @@
+{
+  "id": "LA-C408-vitium",
+  "pathSegment": "LA-PATH-408-MENDUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-408-MENDUM",
+      "order": 1
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Cheek, Forehead, Eyebrow, Beard, Moustache",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:aeb408999c38def5",
+  "sourceHash": "fnv1a64:bc0a91a7964caca9",
   "lessons": [
     {
       "id": "PA-C134-gallh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdf5922243fa8d9f",
+      "sourceHash": "fnv1a64:97474edf1b46f59f",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੱਲ੍ਹ (gallh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from galla, \"cheek\" (CDIAL 4089). CDIAL cites Mayrhofer for a Dravidian source."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:242eab9e8b3a578c",
+      "sourceHash": "fnv1a64:ec040a937d895779",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੱਥਾ (matthā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mastaka, \"head, skull\" (CDIAL 9926)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:311293f42cae5a7e",
+      "sourceHash": "fnv1a64:dd854d008b4ee877",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where ਭਰਵੱਟਾ (bharavaṭṭā) comes from is not settled. CDIAL has no entry for it, though it lists the shorter Punjabi bhaũh, \"eyebrow\", under Sanskrit bhrū, \"eyebrow\" (CDIAL 9688)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c59387b65a1e571a",
+      "sourceHash": "fnv1a64:373355da5001f254",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਾੜ੍ਹੀ (dāṛhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dāṁṣṭra, \"fang, tusk, beard\", a form CDIAL reconstructs from its descendants (CDIAL 6250). CDIAL sets it beside Sanskrit daṁṣṭra, \"tusk, fang\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f08ad320ac1fe70",
+      "sourceHash": "fnv1a64:d62dbc806148cb59",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁੱਛ (mucch) is a tadbhava, a word inherited and reshaped by sound change. It comes from mucchā, \"moustache\", a form CDIAL reconstructs from its descendants (CDIAL 10180). Its deeper source is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

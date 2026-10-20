@@ -12,9 +12,10 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [TA-C01-nandri]
 sounds: [c-sa-one-letter, matra-i]
 roots: [sari]
+etymology_hook: "சரி — 'even, correct', hence 'okay'; origin uncertain, perhaps Sanskrit sadṛśa 'like' via Prakrit (CDIAL 13120)"
 reviews_of: [TA-C01-nandri]
 duration:
-  max_seconds: 120
+  max_seconds: 203
 requires:
   knowledge: []
 introduces:
@@ -61,8 +62,10 @@ soft *h*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-சரி (*sari*) is native Tamil for “correct, even, level,” and so
-“okay, agreed.” It is the verbal nod of the language: propose a plan, hear a
+சரி (*sari*) means “correct, even, level,” and so “okay, agreed.” Its origin
+is uncertain: DEDR has no entry for it, and the usual guess is Sanskrit
+*sadṛśa*, “like, equal,” through a Prakrit form such as *sarisa* (CDIAL 13120).
+It is the verbal nod of the language: propose a plan, hear a
 warm *sari*; doubled, *sari sari* = “alright, alright.”
 
 ## Grammar lens

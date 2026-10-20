@@ -14,9 +14,10 @@ romanization: "ke sāth"
 concept_tag: HI-POST-COMPOUND-SAATH
 prerequisites: [HI-C92-sintesis-maatra, HI-C84-uska, HI-C84-apna, HI-C39-dost, HI-C91-bacche-ko]
 sounds: []
-roots: []
+roots: [sanskrit-sartha]
+etymology_hook: "sāth 'with' ← Sanskrit sārthena 'in company with', a case form of sārtha 'caravan, company' (CDIAL 13364)"
 duration:
-  max_seconds: 240
+  max_seconds: 244
 requires:
   knowledge: [HI-LEX-C84-POSS-01, HI-CONCEPT-C39-DOST-01, HI-LEX-C91-NOUN-06, HI-LEX-C84-POSS-04]
 introduces:
@@ -47,6 +48,11 @@ that English needs exactly one word to do it.
 
 English spends one word on this. Hindi spends **two**, and only the second one
 is new.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sāth*, "with", comes from Sanskrit *sārthena*, "in company with", the instrumental case of *sārtha*, "caravan, company"; CDIAL lists the Hindi word under that case form (CDIAL 13364).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-01, HI-LEX-C84-POSS-01] -->

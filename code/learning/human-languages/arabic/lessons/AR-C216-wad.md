@@ -14,7 +14,8 @@ romanization: "waʿd"
 concept_tag: AR-SHAY216-WAD
 prerequisites: [AR-C216-hadith, AR-C216-sirr]
 sounds: []
-roots: []
+roots: [w-ʿ-d]
+etymology_hook: "waʿd: built on the root w-ʿ-d, 'to promise' (Lane); waʿd is the verbal noun, 'a promise'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C216-sirr]
 <!-- hl-knowledge: introduces=[AR-LEX-C216-SHAY216-04]; assesses=[] -->
 
 **وعد** — *waʿd* — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وعد** (*waʿd*) is built on the native Arabic root *w-ʿ-d*, "to promise" (Lane). *Waʿd* is the verbal noun, "a promise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

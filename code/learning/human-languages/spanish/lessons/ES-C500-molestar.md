@@ -10,7 +10,8 @@ gloss: "to bother, to disturb"
 concept_tag: ES-VERB-MOLESTAR
 prerequisites: [ES-C499-compartir, ES-C500-respetar]
 sounds: []
-roots: []
+roots: [molestus-latin]
+etymology_hook: "molestar ← Latin molestare 'to trouble', from molestus 'troublesome' — English molest"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C500-respetar]
 > *Do not disturb.*
 
 It works like *gustar*: *¿te molesta el ruido?*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**molestar** ← Latin *molestare*, "to trouble, to annoy" (Lewis & Short), from *molestus*, "troublesome".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 96,
-  "sourceHash": "fnv1a64:2b43861bb6372aec",
+  "sourceHash": "fnv1a64:03c57363a7f10a77",
   "lessonIds": [
     "RU-C96-towel",
     "RU-C96-soap",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch96.txt",
   "json": "russian/narration/ch96.json",
-  "textHash": "fnv1a64:0acdb567885cd990",
-  "jsonHash": "fnv1a64:a2f1a662603bb17d",
+  "textHash": "fnv1a64:1bd8e8c00d566d1d",
+  "jsonHash": "fnv1a64:a8eebe6829205983",
   "findings": []
 }

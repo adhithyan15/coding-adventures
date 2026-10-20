@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 411,
-  "sourceHash": "fnv1a64:afc57907a77499ab",
+  "sourceHash": "fnv1a64:1a5aa45adb8bdfbf",
   "lessonIds": [
     "ES-C411-helado",
     "ES-C411-helado-recall-1",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch411.txt",
   "json": "spanish/narration/ch411.json",
-  "textHash": "fnv1a64:6c729aa055d41409",
-  "jsonHash": "fnv1a64:c30566a479fcc8a4",
+  "textHash": "fnv1a64:38caa767e51d88c6",
+  "jsonHash": "fnv1a64:35df0d68d71a6a16",
   "findings": []
 }

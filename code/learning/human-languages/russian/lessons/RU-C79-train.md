@@ -14,7 +14,8 @@ romanization: "póyezd"
 concept_tag: RU-TRAVEL-TRAIN
 prerequisites: [RU-C78-restaurant, RU-C79-bus]
 sounds: []
-roots: []
+roots: [slavic-jechati]
+etymology_hook: "поезд is по- + езд, from ездить 'to ride, to travel': first 'a journey', then a line of carriages"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C79-bus]
 <!-- hl-knowledge: introduces=[RU-LEX-C79-TRAVEL-02]; assesses=[] -->
 
 **поезд** (*póyezd*) — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поезд** is *по-* with *езд*, from *ездить*, "to ride, to travel", and *езда*, "a ride" (Vasmer). It first meant "a journey", then "a procession of carriages", then a train.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

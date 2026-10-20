@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 186,
-  "sourceHash": "fnv1a64:58688ba17e6a4d08",
+  "sourceHash": "fnv1a64:4a4693c89270b92d",
   "lessonIds": [
     "FA-C186-baftan",
     "FA-C186-tarashidan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch186.txt",
   "json": "persian/narration/ch186.json",
-  "textHash": "fnv1a64:37ae007a3c80d1ff",
-  "jsonHash": "fnv1a64:12115dd8bd0b201d",
+  "textHash": "fnv1a64:bed4a5f91297ac10",
+  "jsonHash": "fnv1a64:041633256e8783fd",
   "findings": []
 }

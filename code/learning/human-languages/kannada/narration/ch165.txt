@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to switch on, then the Kannada for to sw
 You'll want to know: ಕದಿ.
 ಕದಿ — kadi — "to steal".
 
+The word, taken apart.
+ಕದಿ (kadi) is native Dravidian, one word with Telugu kadumu (DEDR 1200). DEDR lists kadi itself, "to steal".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to switch off, then the Kannada for to s
 
 You'll want to know: ನೆನಪಿಸಿಕೊಳ್ಳು.
 ನೆನಪಿಸಿಕೊಳ್ಳು — nenapisikoḷḷu — "to recall, to remember".
+
+The word, taken apart.
+ನೆನಪಿಸಿಕೊಳ್ಳು (nenapisikoḷḷu) is native Dravidian: nenapu, "remembrance", which DEDR 3683 lists under nene, "to think of", with Tamil niṉai, made into a verb and joined to koḷḷu, "to take" (DEDR 2151): "to bring to one's own mind".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to steal, then the Kannada for to recall
 You'll want to know: ಉರುಳು.
 ಉರುಳು — uruḷu — "to roll".
 
+The word, taken apart.
+ಉರುಳು (uruḷu) is native Dravidian, one word with Tamil uruḷ, Telugu uralu and Malayalam uruḷ (DEDR 664). DEDR lists uruḷ, "to roll". DEDR 664 compares Sanskrit uṇḍeraka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to recall, then the Kannada for to roll.
 You'll want to know: ಉಳಿ.
 ಉಳಿ — uḷi — "to remain, to be left over".
 
+The word, taken apart.
+ಉಳಿ (uḷi) is native Dravidian, one word with Tamil oḻi (DEDR 1009). DEDR gives the older Kannada uḻi, "to be left, remain".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to roll, then the Kannada for to remain.
 
 You'll want to know: ಕಾಯಿಸು.
 ಕಾಯಿಸು — kāyisu — "to heat (milk, water)".
+
+The word, taken apart.
+ಕಾಯಿಸು (kāyisu) is native Dravidian, from kāy, "to grow hot", and DEDR 1458 lists kāyisu, "to make hot", itself; the entry also has Tamil kāy and Malayalam kāyuka. DEDR 1458 compares Sanskrit kandu.
 
 What you've built.
 One more word for this chapter.

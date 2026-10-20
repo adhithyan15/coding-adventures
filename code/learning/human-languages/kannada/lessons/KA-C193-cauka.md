@@ -14,7 +14,8 @@ romanization: "cauka"
 concept_tag: KA-VASTU193-CAUKA
 prerequisites: [KA-C193-akara, KA-C193-vrtta]
 sounds: []
-roots: []
+roots: [sanskrit-catushka]
+etymology_hook: "cauka ← Sanskrit catuṣka 'set of four; quadrangular courtyard', reshaped as a tadbhava (CDIAL 4629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C193-vrtta]
 <!-- hl-knowledge: introduces=[KA-LEX-C193-VASTU193-04]; assesses=[] -->
 
 **ಚೌಕ** — *cauka* — "a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೌಕ** (*cauka*) comes from Sanskrit *catuṣka*, "set of four; quadrangular courtyard", reshaped to Kannada sounds: a tadbhava (CDIAL 4629). Prakrit *caükka* shows the step between.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

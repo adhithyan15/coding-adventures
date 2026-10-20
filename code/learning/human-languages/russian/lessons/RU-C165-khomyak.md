@@ -14,7 +14,8 @@ romanization: "khomyák"
 concept_tag: RU-VESHCH165-KHOMYAK
 prerequisites: [RU-C165-oryol, RU-C165-popugay]
 sounds: []
-roots: []
+roots: [iranian-hamaestar]
+etymology_hook: "хомяк is probably an old loan from Iranian, as in Avestan hamaēstar 'one who throws down'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C165-popugay]
 <!-- hl-knowledge: introduces=[RU-LEX-C165-VESHCH165-04]; assesses=[] -->
 
 **хомяк** (*khomyák*) — "a hamster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**хомяк** — Old Russian *хомекы*; Vasmer thinks it is probably an old loan from Iranian, compare Avestan *hamaēstar-*, "a foe who throws to the ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

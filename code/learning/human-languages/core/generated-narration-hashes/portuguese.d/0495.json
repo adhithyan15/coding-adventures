@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:6192e66380556b89",
+  "lessonIds": [
+    "PT-C495-educar",
+    "PT-C495-comportar",
+    "PT-C495-castigar",
+    "PT-C495-mesada",
+    "PT-C495-mimado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch495.txt",
+  "json": "portuguese/narration/ch495.json",
+  "textHash": "fnv1a64:b33c1f551b582bf7",
+  "jsonHash": "fnv1a64:c8848f0faf1e249e",
+  "findings": []
+}

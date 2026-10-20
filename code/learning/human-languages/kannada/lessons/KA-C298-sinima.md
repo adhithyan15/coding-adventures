@@ -14,7 +14,8 @@ romanization: "sinimā"
 concept_tag: KA-VASTU298-SINIMA
 prerequisites: [KA-C297-bala, KA-C298-ata]
 sounds: []
-roots: []
+roots: [english-cinema]
+etymology_hook: "sinimā ← English cinema"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C298-ata]
 <!-- hl-knowledge: introduces=[KA-LEX-C298-VASTU298-02]; assesses=[] -->
 
 **ಸಿನಿಮಾ** — *sinimā* — "a film, the cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿನಿಮಾ** (*sinimā*) is a loan from English *cinema*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

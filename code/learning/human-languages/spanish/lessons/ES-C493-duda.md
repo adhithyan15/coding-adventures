@@ -10,7 +10,8 @@ gloss: "the doubt; the question"
 concept_tag: ES-REF-DUDA
 prerequisites: [ES-C493-insistir, ES-C493-sugerir]
 sounds: []
-roots: []
+roots: [dubitare-latin]
+etymology_hook: "duda — from dudar, Latin dubitare 'to waver', through Old Spanish dubdar — English doubt"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C493-sugerir]
 > *If you have questions, ask.*
 
 *Sin duda* — without a doubt.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**duda** is the noun of *dudar*, "to doubt", from Latin *dubitare*, "to waver" (EtymDB 2.1) — inherited, through Old Spanish *dubdar*: the *-b-* fell out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

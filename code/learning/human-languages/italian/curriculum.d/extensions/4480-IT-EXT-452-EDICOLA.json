@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-452-EDICOLA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use small everyday shops: the tobacconist and his shop, the newsstand, the newsagent and the stationer.",
+  "prerequisites": []
+}

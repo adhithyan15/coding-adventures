@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C330-gesichtspunkt",
+    "language": "german",
+    "chapter": 330,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47cf43afe1886d53"
+  },
+  "findings": []
+}

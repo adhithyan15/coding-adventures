@@ -14,7 +14,8 @@ romanization: "tankhāh"
 concept_tag: PA-THINGS139-TANKHAH
 prerequisites: [PA-C138-jamat, PA-C138-adhiapak]
 sounds: []
-roots: []
+roots: [persian-tankhwah]
+etymology_hook: "tankhāh: usually traced to Persian tankhwāh 'salary'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C138-adhiapak]
 <!-- hl-knowledge: introduces=[PA-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **ਤਨਖ਼ਾਹ** — *tankhāh* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਨਖ਼ਾਹ** (*tankhāh*) is a loan, usually traced to Persian *tankhwāh*, "salary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

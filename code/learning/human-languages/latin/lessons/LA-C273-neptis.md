@@ -13,7 +13,8 @@ gloss: "a granddaughter"
 concept_tag: LA-RES273-NEPTIS
 prerequisites: [LA-C273-parens, LA-C273-nepos]
 sounds: []
-roots: []
+roots: [neptis-latin, nepos-latin]
+etymology_hook: "neptis 'granddaughter' — usually traced to PIE *neptih2; English niece comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C273-nepos]
 <!-- hl-knowledge: introduces=[LA-LEX-C273-RES273-05]; assesses=[] -->
 
 **neptis, neptis** — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**neptis** is inherited, usually traced to Proto-Indo-European *\*neptih2*, "granddaughter, niece" (EtymDB 2.1), the feminine partner of *nepōs*, "grandson" (Lewis & Short). English *niece* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

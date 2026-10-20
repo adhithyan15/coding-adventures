@@ -49,7 +49,7 @@ Two things shape this track.
   seasons, food, months, age, weather, animals, and progressively finer
   morning/evening/afternoon register.
 - **Chapter 34 — Four Verbs of the Mind** ([`lessons/HI-C34-*`](./lessons/)):
-  सोचना (think — from *śocati*, "to grieve"), समझना (understand — *sam-* +
+  सोचना (think — from *śocyate*, "is pained", root *śuc-*), समझना (understand — *sam-* +
   *budh-*, the root of **Buddha**), पढ़ना (read *and* study — *paṭhati*, "to
   recite aloud"), लिखना (write — *likhati*, "to scratch," the picture Latin,
   Greek and Old English each reached on their own). In the book.

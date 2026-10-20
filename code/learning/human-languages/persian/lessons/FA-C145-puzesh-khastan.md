@@ -14,7 +14,8 @@ romanization: "puzesh khâstan"
 concept_tag: FA-VERB-PUZESH-KHASTAN
 prerequisites: [FA-C144-edame-dadan, FA-C144-tayp-kardan]
 sounds: []
-roots: []
+roots: [persian-khwastan]
+etymology_hook: "puzesh khâstan: Persian puzesh 'apology' (not settled) + khâstan 'to ask for'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C144-tayp-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C145-KONESH145-01]; assesses=[] -->
 
 **پوزش خواستن** — *puzesh khâstan* — "to apologise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*puzesh khâstan* is "to ask for pardon": *puzesh*, "apology", with *khâstan*, "to ask for". *puzesh* is native, but its older form is not settled. *khâstan*, "to ask for", is an inherited verb, from Middle Persian *xwāstan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

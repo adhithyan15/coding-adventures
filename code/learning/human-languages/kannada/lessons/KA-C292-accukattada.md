@@ -14,7 +14,8 @@ romanization: "accukaṭṭāda"
 concept_tag: KA-GUNA292-ACCUKATTADA
 prerequisites: [KA-C292-nirjana, KA-C292-garigari]
 sounds: []
-roots: []
+roots: [dravidian-accu-mould, dravidian-kattu-bind, tamil-aaku-become]
+etymology_hook: "accukaṭṭāda: accu 'mould' (DEDR 47) + kaṭṭu 'build' (DEDR 1147) + āda"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C292-garigari]
 <!-- hl-knowledge: introduces=[KA-LEX-C292-GUNA292-03]; assesses=[] -->
 
 **ಅಚ್ಚುಕಟ್ಟಾದ** — *accukaṭṭāda* — "tidy, well-organised".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಚ್ಚುಕಟ್ಟಾದ** (*accukaṭṭāda*) is *accu*, "a mould, a stamp" (DEDR 47), *kaṭṭu*, "to bind, build" (DEDR 1147), and *āda*, "that has become": "made to a mould". DEDR 47 compares, with a query, Sanskrit *sañcaka*, "a mould".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

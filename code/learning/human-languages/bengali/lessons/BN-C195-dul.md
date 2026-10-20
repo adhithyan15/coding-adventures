@@ -14,7 +14,8 @@ romanization: "dul"
 concept_tag: BN-JINIS195-DUL
 prerequisites: [BN-C195-belt, BN-C195-botam]
 sounds: []
-roots: []
+roots: [indo-aryan-dulati]
+etymology_hook: "dul: with dulā 'to swing' ← *dulati 'swings' (CDIAL 6453)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C195-botam]
 <!-- hl-knowledge: introduces=[BN-LEX-C195-JINIS195-05]; assesses=[] -->
 
 **দুল** — *dul* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুল** (*dul*), "an earring", belongs with the verb *dulā*, "to swing", which CDIAL lists under *\*dulati*, "swings", a form it reconstructs (CDIAL 6453): "the thing that swings".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: GU-SKY-PARROT
 prerequisites: [GU-C68-snake, GU-C69-star]
 sounds: []
 roots: []
+etymology_hook: "popaṭ 'parrot': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C69-star]
 <!-- hl-knowledge: introduces=[GU-LEX-C69-SKY-02]; assesses=[] -->
 
 **પોપટ** (*popaṭ*) — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **પોપટ** (*popaṭ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [TA-C04-po, TA-C03-naan]
 sounds: [poy-participle]
 roots: [po-go-dravidian, dravidian-vaa-come]
+etymology_hook: "போய் வருகிறேன் — 'having gone, I come': native pō 'go' (DEDR 4572) and varu 'come' (DEDR 5270)"
 reviews_of: [TA-C04-po]
 duration:
   max_seconds: 240
@@ -62,7 +63,8 @@ return to a blunt farewell.
 
 *Varugiṟēṉ* itself is built in three parts: *varu* ("come") + a present-tense
 marker + *-ēṉ* ("I"). Chapter 5 makes that stem-tense-person pattern explicit;
-here it is enough to hear the three pieces.
+here it is enough to hear the three pieces. Both verbs are native Dravidian:
+*pō*, "go" (DEDR 4572), and *varu*, "come" (DEDR 5270).
 
 ## Grammar Lens: the "having …d" participle
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for to lie down, then the Persian for to mov
 You'll want to know: بسته بندی کردن.
 بسته بندی کردن — bastebandi kardan — "to pack, to package".
 
+The word, taken apart.
+bastebandi kardan pairs bastebandi, "packing", with kardan. baste, "bundle" (from bastan, "to bind"), and bandi, "binding", are both native. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to move house, then the Persian for to p
 
 You'll want to know: صف کشیدن.
 صف کشیدن — saf keshidan — "to queue".
+
+The word, taken apart.
+saf keshidan is "to draw a line": saf is borrowed from Arabic ṣaff, "row, rank" (root ṣ-f-f, Lane), and keshidan, "to draw", is native. keshidan, "to pull", is an inherited verb; it is usually traced to Middle Persian kašīdan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to pack, then the Persian for to queue.
 You'll want to know: جریمه شدن.
 جریمه شدن — jarime shodan — "to be fined".
 
+The word, taken apart.
+jarime shodan pairs jarime, borrowed from Arabic jarīma, "crime, offence" (root j-r-m, Lane), with the Persian verb shodan, "to become". shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go". Persian uses it for the fine paid for an offence.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to queue, then the Persian for to be fin
 You'll want to know: تمدید کردن.
 تمدید کردن — tamdid kardan — "to renew, to extend".
 
+The word, taken apart.
+tamdid kardan pairs tamdid, borrowed from Arabic tamdīd, "extending, stretching" (root m-d-d, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to be fined, then the Persian for to ren
 
 You'll want to know: ته گرفتن.
 ته گرفتن — tah gereftan — "to stick to the pan, to catch".
+
+The word, taken apart.
+tah gereftan is "to take the bottom": tah, "bottom", is inherited (Middle Persian tah, EtymDB). gereftan, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root gʰrebh₂-, "to seize".
 
 What you've built.
 One more word for this chapter.

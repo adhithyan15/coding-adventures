@@ -14,7 +14,8 @@ romanization: "ʿilāj"
 concept_tag: AR-SIHHA231-ILAJ
 prerequisites: [AR-C230-qassama, AR-C230-rakala]
 sounds: []
-roots: []
+roots: [ʿ-l-j]
+etymology_hook: "ʿilāj: built on the root ʿ-l-j, 'to treat, to deal with' (Lane); ʿilāj is the verbal noun, 'treatment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C230-rakala]
 <!-- hl-knowledge: introduces=[AR-LEX-C231-SIHHA231-01]; assesses=[] -->
 
 **علاج** — *ʿilāj* — "treatment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علاج** (*ʿilāj*) is built on the native Arabic root *ʿ-l-j*, "to treat, to deal with" (Lane). *ʿIlāj* is the verbal noun, "treatment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

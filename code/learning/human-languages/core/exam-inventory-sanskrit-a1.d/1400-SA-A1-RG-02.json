@@ -1,0 +1,15 @@
+{
+  "id": "SA-A1-RG-02",
+  "category": "Register — which Sanskrit is being taught",
+  "label": "the traditional ladder is ordered by grammar and text, and this inventory cannot measure it",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-EXAM-LEVELS",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific and deliberately UNCOVERED, because there is nothing in the corpus that could cover it and pretending otherwise would be the error. A pariksha syllabus asks for the śabda-rūpa and dhātu-rūpa tables, for sandhi rules by name, for samāsa analysis, and for a set text. The track teaches sandhi as a fact (SA-A1-C-05) and the noun families as a category (SA-A1-N-06), and it teaches NO paradigm table and NO text. Anybody who wants this file to speak to the traditional ladder has to build a second column, not extend this one."
+}

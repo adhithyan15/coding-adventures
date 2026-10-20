@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:694080e5a83c4c5f",
+  "lessonIds": [
+    "PT-C296-algemas",
+    "PT-C296-algemar",
+    "PT-C296-prender",
+    "PT-C296-preso",
+    "PT-C296-cela"
+  ],
+  "tex": "portuguese/book/chapters/ch296-algemas-e-celas.tex"
+}

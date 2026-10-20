@@ -1,0 +1,11 @@
+{
+  "id": "IT-C350-poiche",
+  "pathSegment": "IT-PATH-350-SICCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-350-SICCOME",
+      "order": 1
+    }
+  ]
+}

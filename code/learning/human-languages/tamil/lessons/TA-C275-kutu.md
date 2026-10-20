@@ -14,7 +14,8 @@ romanization: "kūṭu"
 concept_tag: TA-PORUL275-KUTU
 prerequisites: [TA-C275-iraku, TA-C275-val]
 sounds: []
-roots: []
+roots: [dravidian-kuudu-nest]
+etymology_hook: "கூடு — native Dravidian (DEDR 1883); Malayalam kūṭu 'nest, cage', Kannada gūḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C275-val]
 <!-- hl-knowledge: introduces=[TA-LEX-C275-PORUL275-03]; assesses=[] -->
 
 **கூடு** — *kūṭu* — "a nest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கூடு** (*kūṭu*) is native Dravidian. DEDR 1883 lists Malayalam *kūṭu*, "nest, cage" and Kannada *gūḍu*. The entry compares Sanskrit *kūṭa*, "trap" (CDIAL 3397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

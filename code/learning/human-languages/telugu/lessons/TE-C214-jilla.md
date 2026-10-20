@@ -14,7 +14,8 @@ romanization: "jillā"
 concept_tag: TE-STHALAM214-JILLA
 prerequisites: [TE-C214-kudali, TE-C214-rajadhani]
 sounds: []
-roots: []
+roots: [arabic-dila]
+etymology_hook: "jillā ← Arabic ḍilʿ 'side; district', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C214-rajadhani]
 <!-- hl-knowledge: introduces=[TE-LEX-C214-STHALAM214-05]; assesses=[] -->
 
 **జిల్లా** — *jillā* — "a district".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జిల్లా** (*jillā*) is a loan from Arabic *ḍilʿ*, "side; district", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

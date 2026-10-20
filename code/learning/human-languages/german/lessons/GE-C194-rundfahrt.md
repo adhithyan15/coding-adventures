@@ -13,7 +13,8 @@ gloss: "a round trip, a tour"
 concept_tag: GE-THING194-RUNDFAHRT
 prerequisites: [GE-C194-sehenswuerdigkeit, GE-C194-stadtplan]
 sounds: []
-roots: []
+roots: [rotundus-latin, germanic-fardiz]
+etymology_hook: "Rundfahrt — rund 'round' + Fahrt 'journey': a round trip"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C194-stadtplan]
 <!-- hl-knowledge: introduces=[GE-LEX-C194-THING194-04]; assesses=[] -->
 
 **die Rundfahrt** — "a round trip, a tour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Rundfahrt** is *rund*, "round", + the word for "a journey", Old High German *vart* (EtymDB 2.1): a trip that comes round to its start.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

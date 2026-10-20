@@ -14,7 +14,8 @@ romanization: "haṭhamāri"
 concept_tag: KA-GUNA182-HATHAMARI
 prerequisites: [KA-C181-sampradayika, KA-C182-jipuna]
 sounds: []
-roots: []
+roots: [sanskrit-hatha]
+etymology_hook: "haṭhamāri: Sanskrit haṭha 'force, obstinacy' + an ending -māri of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C182-jipuna]
 <!-- hl-knowledge: introduces=[KA-LEX-C182-GUNA182-02]; assesses=[] -->
 
 **ಹಠಮಾರಿ** — *haṭhamāri* — "stubborn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಠಮಾರಿ** (*haṭhamāri*) is *haṭha*, "obstinacy", from Sanskrit *haṭha*, "force, violence", with an ending *-māri* whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

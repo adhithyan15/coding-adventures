@@ -13,7 +13,8 @@ gloss: "to go shopping"
 concept_tag: GE-VERB-EINKAUFEN
 prerequisites: [GE-C144-aussehen, GE-C145-benutzen]
 sounds: []
-roots: []
+roots: [caupo-latin]
+etymology_hook: "einkaufen — ein 'in' + kaufen 'to buy': to buy in"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C145-benutzen]
 <!-- hl-knowledge: introduces=[GE-LEX-C145-VERB145-02]; assesses=[] -->
 
 **einkaufen** — "to go shopping".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einkaufen** is *ein-*, "in", + *kaufen*, "to buy": to buy in supplies. *kaufen* goes back to Latin *caupō*, "tradesman". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

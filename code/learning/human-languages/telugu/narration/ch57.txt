@@ -15,6 +15,9 @@ You'll want to know: మెడ.
 It is where a పూలదండ goes, so you already had the place before you had the word.
 మెడ (meḍa) వంచు, to bend the neck, is to give in. The gesture and the phrase mean the same thing in a great many languages, because the gesture came first.
 
+The word, taken apart.
+మెడ (meḍa) is native Dravidian, one word with Tamil miṭaṟu, "neck, throat", and Kannada meṭre, "throat" (DEDR 4847). DEDR compares Prakrit maḍa, "neck".
+
 What you've built.
 The place a garland already went.
 
@@ -47,6 +50,9 @@ You'll want to know: వీపు.
 వీపు (vīpu) is the back — the flat of it, the part you carry a load on and a child rides on.
 It sits with the other inherited body words you have: కాలు, పన్ను, వేలు, and now మెడ (meḍa) above it. The head is a different matter, since Telugu leans on borrowed words in the higher registers there, but the trunk and the limbs are almost entirely old stock.
 That pattern is worth noticing. The words a language borrows tend to be for things it acquired; the body was not acquired.
+
+The word, taken apart.
+వీపు (vīpu) is native Dravidian. DEDR 5455 lists the Telugu word for "the back" in an entry with Kota and Kolami words for the backbone.
 
 What you've built.
 Two more, both of them old.
@@ -81,6 +87,9 @@ You'll want to know: పెదవి.
 పెదవి (pedavi) విరుచు — to twist the lip — is the Telugu way of saying somebody sneered. The face does the talking, and the language just reports it.
 It is the part that shapes the sounds you have been making all along. Every ప in this book has been made with two పెదవులు.
 
+The word, taken apart.
+పెదవి (pedavi) is native Dravidian, one word with Kolami pedave, "lip" (DEDR 4400). DEDR lists no Tamil or Kannada match.
+
 What you've built.
 Three.
 
@@ -114,6 +123,9 @@ You'll want to know: గోరు.
 It goes on the end of వేలు, which you already have. వేలి గోరు (gōru) is the fingernail said in full, when the plain word would be unclear.
 గోరువెచ్చని, "nail-warm", is the Telugu word for lukewarm water — the temperature you test by dipping a fingertip. A measurement made with the body, before there were thermometers.
 
+The word, taken apart.
+గోరు (gōru) is native Dravidian, one word with Tamil ukir and Kannada ugur, "nail, claw" (DEDR 561). The Telugu form has a g- in front, like its Gondi and Kui cousins.
+
 What you've built.
 Four.
 
@@ -146,6 +158,9 @@ You'll want to know: ఎముక.
 ఎముక (emuka) is the bone, inherited, and it covers the whole family of them.
 It carries the same weight English gives it: ఎముకలు విరిగేలా, "until the bones break", is how you describe work that took everything a body had. The bone stands for the last thing left when the rest is gone.
 That closes the body words. మెడ (meḍa), వీపు (vīpu), పెదవి (pedavi), గోరు (gōru) and ఎముక (emuka) join కాలు, పన్ను, వేలు and the rest, and between them you can tell a doctor where it hurts.
+
+The word, taken apart.
+ఎముక (emuka) is native Dravidian, one word with Tamil elumpu and Kannada elubu, "bone" (DEDR 839). DEDR compares Sanskrit eḍūka, "a monument holding bones".
 
 What you've built.
 Five: మెడ (meḍa), వీపు (vīpu), పెదవి (pedavi), గోరు (gōru), ఎముక (emuka). Enough to answer a వైద్యుడు with.

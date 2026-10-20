@@ -14,7 +14,8 @@ romanization: "polīs"
 concept_tag: GU-TOWN-POLICE
 prerequisites: [GU-C84-clinic, GU-C84-bank]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "polīs ← English police"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C84-bank]
 <!-- hl-knowledge: introduces=[GU-LEX-C84-TOWN-03]; assesses=[] -->
 
 **પોલીસ** (*polīs*) — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પોલીસ** (*polīs*) is a loan from English *police*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

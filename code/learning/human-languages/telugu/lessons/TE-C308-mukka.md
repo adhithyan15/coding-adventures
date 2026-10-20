@@ -14,7 +14,8 @@ romanization: "mukka"
 concept_tag: TE-VASTUVU308-MUKKA
 prerequisites: [TE-C307-kunkuma, TE-C308-gunta]
 sounds: []
-roots: []
+roots: [dravidian-muri-break]
+etymology_hook: "mukka: native Dravidian; DEDR 4975 lists mukka 'piece' with Tamil muri 'to break'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C308-gunta]
 <!-- hl-knowledge: introduces=[TE-LEX-C308-VASTUVU308-02]; assesses=[] -->
 
 **ముక్క** — *mukka* — "a piece".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముక్క** (*mukka*) is native Dravidian. DEDR 4975 lists *mukka*, "piece, bit", under *muri*, "to break", one word with Tamil *muri*, "to break off". DEDR compares Prakrit *muria*, "broken".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

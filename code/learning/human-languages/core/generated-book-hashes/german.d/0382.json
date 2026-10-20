@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:33dc6358434dc6b0",
+  "lessonIds": [
+    "GE-C382-verbot",
+    "GE-C382-zulaessig",
+    "GE-C382-strafbar",
+    "GE-C382-verstossen",
+    "GE-C382-verstoss"
+  ],
+  "tex": "german/book/chapters/ch382-gegen-die-regeln.tex"
+}

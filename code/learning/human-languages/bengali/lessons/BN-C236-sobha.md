@@ -14,7 +14,8 @@ romanization: "sôbhā"
 concept_tag: BN-KAJ236-SOBHA
 prerequisites: [BN-C236-kormi, BN-C236-chukti]
 sounds: []
-roots: []
+roots: [sanskrit-sabha]
+etymology_hook: "sôbhā ← Sanskrit sabhā 'assembly', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C236-chukti]
 <!-- hl-knowledge: introduces=[BN-LEX-C236-KAJ236-04]; assesses=[] -->
 
 **সভা** — *sôbhā* — "an assembly, a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সভা** (*sôbhā*) is Sanskrit *sabhā*, "assembly", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

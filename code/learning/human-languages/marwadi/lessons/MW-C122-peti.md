@@ -14,7 +14,8 @@ romanization: "peṭī"
 concept_tag: MW-THINGS122-PETI
 prerequisites: [MW-C121-talo, MW-C122-dabbo]
 sounds: []
-roots: []
+roots: [sanskrit-peta]
+etymology_hook: "peṭī ← Sanskrit peṭa 'basket, bag', non-Aryan (CDIAL 8164, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C122-dabbo]
 <!-- hl-knowledge: introduces=[MW-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **पेटी** — *peṭī* — "a trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेटी** (*peṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *peṭa*, "basket, bag". CDIAL gives no Marwari form in this entry (CDIAL 8164); the match is through Gujarati *peṭī*. CDIAL calls the word group non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

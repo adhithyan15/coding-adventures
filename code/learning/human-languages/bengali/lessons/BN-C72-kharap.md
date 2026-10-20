@@ -14,7 +14,8 @@ romanization: "khārāp"
 concept_tag: BN-ADJ72-KHARAP
 prerequisites: [BN-C72-notun, BN-C72-purono]
 sounds: []
-roots: []
+roots: [arabic-kharab]
+etymology_hook: "khārāp ← Arabic kharāb 'ruin, desolation', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C72-purono]
 <!-- hl-knowledge: introduces=[BN-LEX-C72-ADJ72-05]; assesses=[] -->
 
 **খারাপ** — *khārāp* — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খারাপ** (*khārāp*) is a loan from Arabic *kharāb*, "ruin, desolation", which reached Bengali through Persian. Its Arabic root is *kh-r-b* (Lane). In Bengali it means "bad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

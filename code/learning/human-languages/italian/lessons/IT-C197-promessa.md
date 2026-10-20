@@ -13,7 +13,8 @@ gloss: "a promise"
 concept_tag: IT-COSE197-PROMESSA
 prerequisites: [IT-C196-scelta, IT-C197-consiglio]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "promessa — 'a thing promised', from promettere ← Latin promittere — English promise"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C197-consiglio]
 <!-- hl-knowledge: introduces=[IT-LEX-C197-COSE197-02]; assesses=[] -->
 
 **la promessa** — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**promessa** is the past participle of *promettere*, "to promise", used as a noun: a thing promised. *promettere* ← Latin *promittere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

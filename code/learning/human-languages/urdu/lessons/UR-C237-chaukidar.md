@@ -14,7 +14,8 @@ romanization: "chaukīdār"
 concept_tag: UR-KAM237-CHAUKIDAR
 prerequisites: [UR-C237-mistri, UR-C237-bera]
 sounds: []
-roots: []
+roots: [sanskrit-catushka, persian-dar-holder]
+etymology_hook: "chaukīdār: chaukī 'a post' (CDIAL 4629) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C237-bera]
 <!-- hl-knowledge: introduces=[UR-LEX-C237-KAM237-03]; assesses=[] -->
 
 **چوکیدار** — *chaukīdār* — "a watchman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوکیدار** (*chaukīdār*) is "holder of the post". *chaukī*, "a guard post", is listed by CDIAL under Sanskrit *catuṣka*, "set of four; a square courtyard" (CDIAL 4629), and *-dār*, "holder", is Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

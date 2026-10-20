@@ -13,7 +13,8 @@ gloss: "a chair with a back"
 concept_tag: LA-THINGS139-CATHEDRA
 prerequisites: [LA-C138-amica, LA-C138-armarium]
 sounds: []
-roots: []
+roots: [cathedra-latin]
+etymology_hook: "cathedra 'chair' — from Greek kathedra: kata 'down' + hedra 'seat'; English cathedral"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C138-armarium]
 <!-- hl-knowledge: introduces=[LA-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **cathedra, cathedrae** — "a chair with a back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cathedra** was borrowed from Greek *kathedra*, "a seat, a chair" (Lewis & Short), from *kata*, "down", and *hedra*, "seat" (EtymDB 2.1). A bishop's *cathedra* gave English *cathedral* its name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

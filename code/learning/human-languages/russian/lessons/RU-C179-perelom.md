@@ -14,7 +14,8 @@ romanization: "perelóm"
 concept_tag: RU-ZDOROV179-PERELOM
 prerequisites: [RU-C179-rana, RU-C179-sinyak]
 sounds: []
-roots: []
+roots: [slavic-lomiti]
+etymology_hook: "перелом is пере- 'across' + лом 'a break', from ломать 'to break'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C179-sinyak]
 <!-- hl-knowledge: introduces=[RU-LEX-C179-ZDOROV179-05]; assesses=[] -->
 
 **перелом** (*perelóm*) — "a fracture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**перелом** is *пере-*, "across, through", with *лом*, "a break", from *ломать*, "to break": a break right through the bone.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

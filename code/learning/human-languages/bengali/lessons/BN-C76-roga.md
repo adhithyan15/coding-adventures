@@ -14,7 +14,8 @@ romanization: "rogā"
 concept_tag: BN-ADJ76-ROGA
 prerequisites: [BN-C75-tok, BN-C76-mota]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "rogā: rog 'illness' ← Sanskrit roga 'disease', with the ending -ā, so 'sickly, thin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C76-mota]
 <!-- hl-knowledge: introduces=[BN-LEX-C76-ADJ76-02]; assesses=[] -->
 
 **রোগা** — *rogā* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রোগা** (*rogā*) is *rog*, "illness", with the adjective ending *-ā*: "sickly", and so "thin". *Rog* is Sanskrit *roga*, "disease", a tatsama; CDIAL has the entry but no Bengali form (CDIAL 10829).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to sweep, then the Malayalam for to fo
 You'll want to know: പൊതിയുക.
 പൊതിയുക — potiyuka — "to wrap".
 
+The word, taken apart.
+പൊതിയുക (potiyuka) is native Dravidian, one word with Tamil putai, Kannada pode and Telugu podugu (DEDR 4509).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to fold, then the Malayalam for to wra
 
 You'll want to know: കത്തിക്കുക.
 കത്തിക്കുക — kattikkuka — "to light, to burn".
+
+The word, taken apart.
+കത്തിക്കുക (kattikkuka) is native Dravidian, the causative of the verb "to kindle, burn"; DEDR 1207 lists the root with Kannada kattu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for to wrap, then the Malayalam for to lig
 You'll want to know: കെടുത്തുക.
 കെടുത്തുക — keṭuttuka — "to put out, to switch off".
 
+The word, taken apart.
+കെടുത്തുക (keṭuttuka) is native Dravidian, the causative of the verb "to be extinguished, be spoilt"; DEDR 1942 lists the root with Tamil keṭu and Kannada keḍu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for to light, then the Malayalam for to pu
 You'll want to know: കെട്ടുക.
 കെട്ടുക — keṭṭuka — "to tie".
 
+The word, taken apart.
+കെട്ടുക (keṭṭuka) is native Dravidian, one word with Tamil kaṭṭu, Kannada kaṭṭu and Telugu kaṭṭu (DEDR 1147). DEDR 1147 compares Sanskrit ghaṭṭa.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for to put out, then the Malayalam for to 
 
 You'll want to know: അളക്കുക.
 അളക്കുക — aḷakkuka — "to measure".
+
+The word, taken apart.
+അളക്കുക (aḷakkuka) is native Dravidian, one word with Tamil aḷa, Kannada aḷe and Telugu alavi (DEDR 295).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "takharraja"
 concept_tag: AR-VERB-TAKHARRAJA
 prerequisites: [AR-C256-aada, AR-C257-rafada]
 sounds: []
-roots: []
+roots: [kh-r-j]
+etymology_hook: "takharraja: built on the root kh-r-j, 'to go out' (Lane); takharraja is Form V, 'to come out trained', to graduate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C257-rafada]
 <!-- hl-knowledge: introduces=[AR-LEX-C257-ACT257-02]; assesses=[] -->
 
 **تخرج** — *takharraja* — "to graduate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تخرج** (*takharraja*) is built on the native Arabic root *kh-r-j*, "to go out" (Lane). *Takharraja* is Form V, "to come out trained", to graduate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

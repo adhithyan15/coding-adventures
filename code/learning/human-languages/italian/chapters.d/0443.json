@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "I punti cardinali",
+  "label": "ch:it-i-punti-cardinali",
+  "canDo": "I can place things on the compass: northern, southern, eastern, western, and a landmark.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C443-punto-di-riferimento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can place things on the compass: northern, southern, eastern, western, and a landmark.",
+    "assesses": [
+      "IT-LEX-C443-CARDINALI-03",
+      "IT-LEX-C443-CARDINALI-04",
+      "IT-LEX-C443-CARDINALI-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "ilāichī"
 concept_tag: UR-CHIZ207-ILAICHI
 prerequisites: [UR-C206-tufan, UR-C207-laung]
 sounds: []
-roots: []
+roots: [sanskrit-ela]
+etymology_hook: "ilāichī: often linked with Sanskrit elā 'cardamom' (CDIAL 2522), but CDIAL lists no ilāichī and its shape is unexplained"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C207-laung]
 <!-- hl-knowledge: introduces=[UR-LEX-C207-CHIZ207-02]; assesses=[] -->
 
 **الائچی** — *ilāichī* — "cardamom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الائچی** (*ilāichī*) is usually linked with Sanskrit *elā*, "cardamom", a word CDIAL takes from Dravidian (CDIAL 2522). CDIAL lists no Hindi form under it, and the shape of *ilāichī* is not explained.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

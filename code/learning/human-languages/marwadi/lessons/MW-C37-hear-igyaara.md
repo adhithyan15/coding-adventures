@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-ELEVEN
 prerequisites: [MW-W37-i]
 sounds: [consonant-cluster, long-aa]
 roots: [sanskrit-ekadasha]
-etymology_hook: Sanskrit ekadasha, one-and-ten, worn down until only the opening vowel of one is left.
+etymology_hook: "igyārā ← Sanskrit ekādaśa 'eleven', a tadbhava (CDIAL 2485, Hindi and Gujarati rows)"
 duration:
   max_seconds: 165
 requires:
@@ -52,6 +52,11 @@ first of the nine words that fill the gap.
 Say it in three beats: *i-gyā-rā*. The middle beat carries a **gy** cluster that
 has to stay one sound, not two — the tongue is already at the palate for the
 **y** while the **g** is still closing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*igyārā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ekādaśa*, "eleven". CDIAL gives no Marwari form in this entry (CDIAL 2485); the match is through Hindi *igārah* and Gujarati *agyār*. It is *eka*, "one", and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-IGYAARA-01] -->

@@ -13,7 +13,8 @@ gloss: "kind, dear"
 concept_tag: GE-QUAL218-LIEB
 prerequisites: [GE-C217-ledig, GE-C218-lecker]
 sounds: []
-roots: []
+roots: [germanic-leubaz]
+etymology_hook: "lieb ← Old High German liob ← Proto-Germanic *leubaz 'dear' — the same word as English lief"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C218-lecker]
 <!-- hl-knowledge: introduces=[GE-LEX-C218-QUAL218-02]; assesses=[] -->
 
 **lieb** — "kind, dear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lieb** ← Middle High German *liep* ← Old High German *liob* ← Proto-Germanic *\*leubaz*, "dear" — inherited, the same word as English *lief*. (EtymDB 2.1) English *love* shares the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

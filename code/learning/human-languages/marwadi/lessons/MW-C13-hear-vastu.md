@@ -11,8 +11,8 @@ gloss: item or thing
 concept_tag: MW-SHOPPING-ITEM
 prerequisites: [MW-C13-dukan]
 sounds: [voiced-v, voiceless-s, short-u]
-roots: []
-etymology_hook: A word for the item itself follows the shop, by ear first.
+roots: [sanskrit-vastu]
+etymology_hook: "vastu ← Sanskrit vastu 'existing thing, affair', a tatsama (CDIAL 11449)"
 duration:
   max_seconds: 145
 requires:
@@ -49,6 +49,11 @@ its cue.
 
 Say the two beats once from an item cue. The word can name the thing being
 bought; no buying sentence is claimed yet.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vastu* is Sanskrit *vastu*, "existing thing, affair", taken over whole as a learned loan, a tatsama (CDIAL 11449).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01] -->

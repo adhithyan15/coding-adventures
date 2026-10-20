@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:b7ca6e221fdfe8da",
+  "lessonIds": [
+    "IT-C470-piovigginare",
+    "IT-C470-schiarirsi",
+    "IT-C470-pozzanghera",
+    "IT-C470-fradicio",
+    "IT-C470-impermeabile",
+    "IT-R470-ripasso-469-470",
+    "IT-R470-ripasso-final-470"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch470.txt",
+  "json": "italian/narration/ch470.json",
+  "textHash": "fnv1a64:a53ccf073cc42b38",
+  "jsonHash": "fnv1a64:123dc22352f0925b",
+  "findings": []
+}

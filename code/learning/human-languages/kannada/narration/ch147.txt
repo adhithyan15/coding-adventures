@@ -12,6 +12,9 @@ Before the new one: say the Kannada for golden, then the Kannada for silver.
 You'll want to know: ಕುಡಿ.
 ಕುಡಿ — kuḍi — "to drink".
 
+The word, taken apart.
+ಕುಡಿ (kuḍi) is native Dravidian, one word with Tamil kuṭi and Malayalam kuṭi (DEDR 1654). DEDR lists kuḍi itself, "to drink". DEDR 1654 compares Sanskrit kuṭī.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for silver, then the Kannada for to drink.
 
 You'll want to know: ಓಡು.
 ಓಡು — ōḍu — "to run".
+
+The word, taken apart.
+ಓಡು (ōḍu) is native Dravidian, one word with Tamil ōṭu and Telugu ōḍu (DEDR 1041). DEDR lists ōḍu itself, "to run, flee".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to drink, then the Kannada for to run.
 You'll want to know: ಮಲಗು.
 ಮಲಗು — malagu — "to sleep, to lie down".
 
+The word, taken apart.
+ಮಲಗು (malagu) is native Dravidian, one word with Tulu malaguni, "to lie down" (DEDR 4735). DEDR lists malagu itself, "to recline, lie down", and points to Tamil malar, "to lie on the back" (DEDR 4740).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to run, then the Kannada for to sleep.
 You'll want to know: ಕತ್ತರಿಸು.
 ಕತ್ತರಿಸು — kattarisu — "to cut".
 
+The word, taken apart.
+ಕತ್ತರಿಸು (kattarisu) is kattari, "scissors", from Sanskrit kartarī (CDIAL 2858), made into a verb with -isu: "to scissor", to cut.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to sleep, then the Kannada for to cut.
 
 You'll want to know: ಒಡೆ.
 ಒಡೆ — oḍe — "to break".
+
+The word, taken apart.
+ಒಡೆ (oḍe) is native Dravidian, one word with Tamil oṭi and Telugu oḍapi (DEDR 946). DEDR lists Kannada oḍi, "to be broken, burst".
 
 What you've built.
 One more word for this chapter.

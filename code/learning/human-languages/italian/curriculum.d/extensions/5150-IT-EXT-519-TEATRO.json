@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-519-TEATRO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a theatre and its audience.",
+  "prerequisites": []
+}

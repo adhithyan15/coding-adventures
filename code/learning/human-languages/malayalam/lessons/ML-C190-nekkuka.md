@@ -14,7 +14,8 @@ romanization: "ñekkuka"
 concept_tag: ML-VERB-NEKKUKA
 prerequisites: [ML-C190-pakarttuka, ML-C190-olikkuka2]
 sounds: []
-roots: []
+roots: [dravidian-neri-crush]
+etymology_hook: "ñekkuka: native Dravidian, one word with Tamil ñeri (DEDR 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C190-olikkuka2]
 <!-- hl-knowledge: introduces=[ML-LEX-C190-KRIYA190-03]; assesses=[] -->
 
 **ഞെക്കുക** — *ñekkuka* — "to press (a button)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഞെക്കുക** (*ñekkuka*) is native Dravidian, one word with Tamil *ñeri* (DEDR 2927).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

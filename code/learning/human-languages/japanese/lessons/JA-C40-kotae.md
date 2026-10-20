@@ -14,7 +14,8 @@ romanization: "kotae"
 concept_tag: JA-HOME40-KOTAE
 prerequisites: [JA-C40-shukudai, JA-C40-mondai]
 sounds: []
-roots: []
+roots: [japanese-kotaeru]
+etymology_hook: "kotae: native, the noun from kotaeru 'to answer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C40-mondai]
 <!-- hl-knowledge: introduces=[JA-LEX-C40-HOME40-05]; assesses=[] -->
 
 **こたえ** — *kotae* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こたえ** (*kotae*) is native: the noun made from *kotaeru*, "to answer", by its stem (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

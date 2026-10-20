@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 66,
-  "sourceHash": "fnv1a64:87b96d254eb90816",
+  "sourceHash": "fnv1a64:6611514b1a1afbac",
   "lessonIds": [
     "UR-C66-suraj",
     "UR-C66-chad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch66.txt",
   "json": "urdu/narration/ch66.json",
-  "textHash": "fnv1a64:66636ab2edda4757",
-  "jsonHash": "fnv1a64:88a493633780542e",
+  "textHash": "fnv1a64:e71ae8ab850c3d4f",
+  "jsonHash": "fnv1a64:a2eab67c61631075",
   "findings": []
 }

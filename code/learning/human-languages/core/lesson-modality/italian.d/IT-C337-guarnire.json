@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C337-guarnire",
+    "language": "italian",
+    "chapter": 337,
+    "sequence": 19420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81901536bc73b090"
+  },
+  "findings": []
+}

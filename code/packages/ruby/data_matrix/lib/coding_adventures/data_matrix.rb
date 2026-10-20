@@ -966,7 +966,7 @@ module CodingAdventures
 
     def encode_and_layout(data, opts = {})
       grid = encode(data, opts)
-      {grid: grid, scene: nil} # rubocop:disable Style/HashLiteralBraces -- standardrb wants spaces
+      {grid: grid, scene: nil}
     end
 
     # =========================================================================

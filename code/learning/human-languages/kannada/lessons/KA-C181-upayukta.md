@@ -14,7 +14,8 @@ romanization: "upayukta"
 concept_tag: KA-GUNA181-UPAYUKTA
 prerequisites: [KA-C180-sthaliya, KA-C180-kaddaya]
 sounds: []
-roots: []
+roots: [sanskrit-upayukta]
+etymology_hook: "upayukta ← Sanskrit upayukta 'used, suitable', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C180-kaddaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C181-GUNA181-01]; assesses=[] -->
 
 **ಉಪಯುಕ್ತ** — *upayukta* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಪಯುಕ್ತ** (*upayukta*) is Sanskrit *upayukta*, "employed, suitable", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

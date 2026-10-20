@@ -13,7 +13,8 @@ gloss: "dry"
 concept_tag: IT-QUALITA128-ASCIUTTO
 prerequisites: [IT-C128-pericoloso, IT-C128-bagnato]
 sounds: []
-roots: []
+roots: [exsugere-latin]
+etymology_hook: "asciutto ← Latin exsuctus 'sucked dry' — Spanish enjuto is its sister"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C128-bagnato]
 <!-- hl-knowledge: introduces=[IT-LEX-C128-QUALITA128-03]; assesses=[] -->
 
 **asciutto** — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**asciutto** ← Latin *exsuctus*, "sucked out, dried" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

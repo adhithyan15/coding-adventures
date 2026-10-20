@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-282-AFIRMAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-282-AFIRMAR"
+  ],
+  "after": []
+}

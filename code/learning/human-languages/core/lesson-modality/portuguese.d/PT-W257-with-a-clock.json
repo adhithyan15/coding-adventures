@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PT-W257-with-a-clock",
+    "language": "portuguese",
+    "chapter": 257,
+    "sequence": 15380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fbcf26ae963c9db4",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}

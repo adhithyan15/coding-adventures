@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 117,
-  "sourceHash": "fnv1a64:c700ec714c9ce2ec",
+  "sourceHash": "fnv1a64:7e1e51123fcd7e12",
   "lessonIds": [
     "GU-C117-kadhi",
     "GU-C117-bhajiya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch117.txt",
   "json": "gujarati/narration/ch117.json",
-  "textHash": "fnv1a64:4be841ec39f2b5c7",
-  "jsonHash": "fnv1a64:ff8e099c50498309",
+  "textHash": "fnv1a64:4f7812d41a057d20",
+  "jsonHash": "fnv1a64:04955919df837e5d",
   "findings": []
 }

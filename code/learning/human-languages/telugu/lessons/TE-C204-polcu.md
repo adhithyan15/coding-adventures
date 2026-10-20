@@ -14,7 +14,8 @@ romanization: "pōlcu"
 concept_tag: TE-VERB-POLCU
 prerequisites: [TE-C203-puyu, TE-C203-kuriyu]
 sounds: []
-roots: []
+roots: [dravidian-pol-resemble]
+etymology_hook: "pōlcu: native Dravidian; DEDR 4597 lists pōl(u)cu 'to compare' with Tamil pōl 'to resemble'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C203-kuriyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C204-KRIYA204-01]; assesses=[] -->
 
 **పోల్చు** — *pōlcu* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోల్చు** (*pōlcu*) is native Dravidian. DEDR 4597 lists *pōlcu*, "to compare, liken", with Tamil *pōl*, "to resemble", and Kannada *pōlisu*, "to compare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cārj māḍu"
 concept_tag: KA-VERB-CARJ-MADU
 prerequisites: [KA-C274-himpade, KA-C274-sahi-madu]
 sounds: []
-roots: []
+roots: [english-charge, maadu-do-dravidian]
+etymology_hook: "cārj māḍu: English charge + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C274-sahi-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C275-KRIYE275-01]; assesses=[] -->
 
 **ಚಾರ್ಜ್ ಮಾಡು** — *cārj māḍu* — "to charge (a phone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಾರ್ಜ್ ಮಾಡು** (*cārj māḍu*) is English *charge* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

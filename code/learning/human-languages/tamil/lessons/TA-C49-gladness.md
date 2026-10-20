@@ -11,7 +11,8 @@ romanization: "santōṣam"
 concept_tag: TA-COURTESY-GLADNESS
 prerequisites: [TA-C49-respect, TA-C47-certainly, TA-C48-journey]
 sounds: []
-roots: []
+roots: [santosha-sanskrit]
+etymology_hook: "சந்தோஷம் ← Sanskrit saṁtoṣa 'satisfaction' (CDIAL 12895)"
 duration:
   max_seconds: 210
 requires:

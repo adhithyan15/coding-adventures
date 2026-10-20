@@ -13,7 +13,8 @@ gloss: "an eagle"
 concept_tag: LA-THINGS131-AQUILA
 prerequisites: [LA-C130-fulgur, LA-C131-nebula]
 sounds: []
-roots: []
+roots: [aquila-latin]
+etymology_hook: "aquila 'eagle' — perhaps from aquilus 'dark brown'; English eagle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C131-nebula]
 <!-- hl-knowledge: introduces=[LA-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **aquila, aquilae** — "an eagle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aquila** may come from *aquilus*, "dark brown" (Lewis & Short), after the bird's colour, but this is uncertain. English *eagle* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

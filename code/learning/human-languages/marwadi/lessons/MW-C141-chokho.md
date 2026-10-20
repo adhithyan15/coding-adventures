@@ -14,7 +14,8 @@ romanization: "chokho"
 concept_tag: MW-QUAL141-CHOKHO
 prerequisites: [MW-C140-kiri, MW-C140-bichhu]
 sounds: []
-roots: []
+roots: [sanskrit-coksha]
+etymology_hook: "chokho ← Sanskrit cokṣa 'pure, clean', a tadbhava (CDIAL 4918, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C140-bichhu]
 <!-- hl-knowledge: introduces=[MW-LEX-C141-QUAL141-01]; assesses=[] -->
 
 **चोखो** — *chokho* — "good, fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चोखो** (*chokho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cokṣa*, "pure, clean". CDIAL lists Old Marwari *cokha* under it (CDIAL 4918). The Old Marwari row means "well".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

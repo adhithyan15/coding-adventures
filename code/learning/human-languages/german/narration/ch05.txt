@@ -89,6 +89,7 @@ The three pronouns line up with the three articles, which is the whole reason Ge
 Article: der. Pronoun: er. English: he.
 Article: die. Pronoun: sie. English: she.
 Article: das. Pronoun: es. English: it.
+All three pronouns are inherited. Es is kin to English it, and sie is usually linked to English she, whose own history is disputed.
 
 Grammar Lens: all three take -t.
 One ending covers all three — attach -t to the stem:
@@ -121,6 +122,9 @@ Say wohnen: the w is an English v, and the h only stretches the o. VOH-nen.
 You'll want to know: wir.
 wir — "we." Said veer, with the w as a v and the soft trailing r, so it rhymes with mir and dir.
 It is English we, wearing German pronunciation. Nothing else to learn.
+
+The word, taken apart.
+wir from Old High German wir from Proto-Germanic wīz, "we" — inherited, the same word as English we. (EtymDB 2.1).
 
 Grammar Lens: wir takes -en.
 Attach -en to the stem:
@@ -160,6 +164,7 @@ German never lost the distinction, so it needs no invention:
 [a table of 2 rows, read aloud]
 one person. Informal: du. Formal: Sie.
 several people. Informal: ihr. Formal: Sie.
+Ihr from Old High German ir from Proto-Germanic jīz (EtymDB 2.1), the same word as English ye.
 
 Grammar Lens: ihr takes -t.
 Attach -t to the stem:
@@ -221,6 +226,9 @@ in — "in."
 Same spelling, same meaning, near enough the same sound: a short i as in English bit. This is one of the small handful of words German and English never bothered to change.
 You have already met its neighbour auf ("on"). Between them they cover most of what English does with in and on.
 
+The word, taken apart.
+in from Old High German in from Proto-Germanic in — inherited, the same word as English in. (EtymDB 2.1).
+
 You'll want to know: Ich wohne in …
 Put a place after it and the sentence is finished:
 Ich wohne in Berlin. — "I live in Berlin."
@@ -269,7 +277,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "Wo wohnst du?" — no "do" needed]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "wo", "wie", "wer", "wann"]
+[your turn — say: the two of the family you own — "wo", "wie"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -329,6 +337,9 @@ English: what. German: was.
 English: that. German: das.
 English: it. German: es.
 Third time you have seen this pair, and the last new word it gives you.
+
+The word, taken apart.
+was from Old High German waz from Proto-Germanic hwat — inherited, the same word as English what, with German s where English kept t. (EtymDB 2.1).
 
 You'll want to know: Was machst du?
 Was machst du? — "What are you doing?"
@@ -439,6 +450,9 @@ Piece: -e. Where it came from: the ich ending.
 Piece: Deutsch. Where it came from: the last lesson.
 This is the first sentence in the book that was not handed to you. You built it: a pronoun, a stem, an ending, a noun. Change any piece and it still works.
 Remember there is no separate "am …-ing" in German. Ich lerne covers both "I learn" and "I am learning," so this one line does the work of two English tenses.
+
+The phrase, taken apart.
+Ich lerne Deutsch is three inherited words: lernen from Old High German lernēn, and Deutsch from Old High German diutisc, "of the people" from Proto-Germanic þiudiskaz (EtymDB 2.1). lernen is a cousin of English learn.
 
 Grammar Lens: swap the pieces.
 The same slots take other words, and you already have all of them:

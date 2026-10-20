@@ -14,7 +14,8 @@ romanization: "nyāyādhīśaḥ"
 concept_tag: SA-PPL179-NYAYADHISAH
 prerequisites: [SA-C179-sainikah, SA-C179-raksakah]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya, sanskrit-adhisha]
+etymology_hook: "nyāyādhīśa ← nyāya 'justice, rule' + adhīśa 'lord'; MW lacks the compound, so the 'judge' pairing is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C179-raksakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C179-PPL179-03]; assesses=[] -->
 
 **न्यायाधीशः** — *nyāyādhīśaḥ* — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nyāyādhīśa* is a compound of *nyāya*, "rule, justice, judicial sentence", and *adhīśa*, "lord, master" (MW). MW does not list the compound, so using it for a court judge is a modern pairing. *Nyāya* is built on *ni-* and the root √i, "to go" (CDIAL 7614).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

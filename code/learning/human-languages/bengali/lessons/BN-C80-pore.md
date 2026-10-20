@@ -14,7 +14,8 @@ romanization: "pôre"
 concept_tag: BN-TIME80-PORE
 prerequisites: [BN-C80-deri, BN-C80-age]
 sounds: []
-roots: []
+roots: [sanskrit-para]
+etymology_hook: "pôre: para 'later' with the ending -e; Sanskrit para, param 'after'; CDIAL has no Bengali form (CDIAL 7793)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C80-age]
 <!-- hl-knowledge: introduces=[BN-LEX-C80-TIME80-03]; assesses=[] -->
 
 **পরে** — *pôre* — "after, later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরে** (*pôre*) is *pôr*, "later", with the ending *-e*. It goes back to Sanskrit *para*, "further, later", whose *param* means "after"; CDIAL has that entry but lists no Bengali form under it (CDIAL 7793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

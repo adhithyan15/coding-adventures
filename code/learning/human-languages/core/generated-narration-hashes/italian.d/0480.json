@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:0df71df894b4e363",
+  "lessonIds": [
+    "IT-C480-offendersi",
+    "IT-C480-rancore",
+    "IT-C480-perdono",
+    "IT-C480-pentirsi",
+    "IT-C480-sfogarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch480.txt",
+  "json": "italian/narration/ch480.json",
+  "textHash": "fnv1a64:97460839738e2d3c",
+  "jsonHash": "fnv1a64:c88576e24c44a7fa",
+  "findings": []
+}

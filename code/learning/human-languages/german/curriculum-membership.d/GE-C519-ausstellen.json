@@ -1,0 +1,11 @@
+{
+  "id": "GE-C519-ausstellen",
+  "pathSegment": "GE-PATH-519-GALERIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-519-GALERIE",
+      "order": 1
+    }
+  ]
+}

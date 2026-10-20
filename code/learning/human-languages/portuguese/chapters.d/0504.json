@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Coleções e artesanato",
+  "label": "ch:pt-colecoes-e-artesanato",
+  "canDo": "I can talk about collecting and crafts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C504-olaria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about collecting and crafts.",
+    "assesses": [
+      "PT-LEX-C504-OLARIA-03",
+      "PT-LEX-C504-OLARIA-04",
+      "PT-LEX-C504-OLARIA-05"
+    ]
+  }
+}

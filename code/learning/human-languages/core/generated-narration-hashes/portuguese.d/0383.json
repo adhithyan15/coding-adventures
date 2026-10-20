@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:179262ad54086ab2",
+  "lessonIds": [
+    "PT-C383-excecao",
+    "PT-C383-requisito",
+    "PT-C383-excluir",
+    "PT-C383-infracao",
+    "PT-C383-transgredir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch383.txt",
+  "json": "portuguese/narration/ch383.json",
+  "textHash": "fnv1a64:2d038f6e0357022f",
+  "jsonHash": "fnv1a64:ceff1e1de40d2910",
+  "findings": []
+}

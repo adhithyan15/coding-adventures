@@ -14,7 +14,8 @@ romanization: "dāḍhī"
 concept_tag: GU-THINGS125-DADHI
 prerequisites: [GU-C124-kapal, GU-C125-bhamar]
 sounds: []
-roots: []
+roots: [indo-aryan-damshtra]
+etymology_hook: "dāḍhī 'beard, chin' ← *dāṁṣṭra 'fang, tusk, beard', beside Sanskrit daṁṣṭra 'tusk' (CDIAL 6250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C125-bhamar]
 <!-- hl-knowledge: introduces=[GU-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **દાઢી** (*dāḍhī*) — "a beard, a chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **દાઢી** (*dāḍhī*), "beard, chin", under a reconstructed *\*dāṁṣṭra*, "fang, tusk, beard", beside Sanskrit *daṁṣṭra*, "tusk, fang" (CDIAL 6250). It holds that the sense could move from "fang" to "beard", and does not rule out some Dravidian or Munda influence.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

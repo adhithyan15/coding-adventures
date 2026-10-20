@@ -6,7 +6,7 @@ sequence: 630
 chapter: 31
 type: phrase
 headword: ശുഭ മധ്യാഹ്നം
-gloss: "good afternoon" (śubha madhyāhnaṁ), a formal greeting built on a noon synonym rather than the everyday afternoon compound
+gloss: '"good afternoon" (śubha madhyāhnaṁ), a formal greeting built on a noon synonym rather than the everyday afternoon compound'
 romanization: "śubha madhyāhnaṁ"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [ML-C17-paathira, ML-C28-uchakazhinju]
@@ -57,6 +57,11 @@ Malayalam had this "middle"-based noon-word all along — ML-C17 simply
 didn't highlight it, teaching **ഉച്ച** ("peak, high") instead.
 And this greeting is **not** built on ML-C28's **ഉച്ചകഴിഞ്ഞ്**
 compound (the actual TIME-AFTERNOON phrase already taught) at all.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are Sanskrit, taken whole: *śubha*, "bright, auspicious, good" (CDIAL 12532), and *madhyāhna*, "midday" (CDIAL 9818), which is *madhya*, "middle", joined to *ahar*, "day".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01] -->

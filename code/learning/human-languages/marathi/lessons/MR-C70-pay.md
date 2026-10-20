@@ -14,7 +14,8 @@ romanization: "pāy"
 concept_tag: MR-BODY70-PAY
 prerequisites: [MR-C61-dahava, MR-C70-hat]
 sounds: []
-roots: []
+roots: [sanskrit-pada-foot]
+etymology_hook: "pāy ← Sanskrit pāda 'foot', a tadbhava (CDIAL 8056)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C70-hat]
 <!-- hl-knowledge: introduces=[MR-LEX-C70-BODY70-02]; assesses=[] -->
 
 **पाय** — *pāy* — "a foot, a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाय** (*pāy*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pāda*, "foot" (CDIAL 8056).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

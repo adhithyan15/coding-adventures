@@ -14,7 +14,8 @@ romanization: "qeymat"
 concept_tag: FA-CHIZ274-QEYMAT
 prerequisites: [FA-C274-bokhari, FA-C274-qafase]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "qeymat ← Arabic qīma 'value, price', root q-w-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C274-qafase]
 <!-- hl-knowledge: introduces=[FA-LEX-C274-CHIZ274-03]; assesses=[] -->
 
 **قیمت** — *qeymat* — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qeymat* is borrowed from Arabic *qīma*, "value, price". Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

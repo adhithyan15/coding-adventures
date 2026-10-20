@@ -13,7 +13,8 @@ gloss: "a judge"
 concept_tag: IT-COSE161-GIUDICE
 prerequisites: [IT-C160-marciapiede, IT-C161-tribunale]
 sounds: []
-roots: []
+roots: [iudex-latin]
+etymology_hook: "giudice ← Latin iudex, iudicem 'a judge' — English judge is a cousin, through French"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C161-tribunale]
 <!-- hl-knowledge: introduces=[IT-LEX-C161-COSE161-02]; assesses=[] -->
 
 **il giudice** — "a judge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**giudice** ← Latin *iudex*, "a judge" (*iudicem*) — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

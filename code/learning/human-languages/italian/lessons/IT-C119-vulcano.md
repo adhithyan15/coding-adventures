@@ -13,7 +13,8 @@ gloss: "a volcano"
 concept_tag: IT-NATURA119-VULCANO
 prerequisites: [IT-C119-onda, IT-C119-deserto]
 sounds: []
-roots: []
+roots: [vulcanus-latin]
+etymology_hook: "vulcano — named after Vulcanus, the Roman god of fire"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C119-deserto]
 <!-- hl-knowledge: introduces=[IT-LEX-C119-NATURA119-03]; assesses=[] -->
 
 **il vulcano** — "a volcano".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vulcano** is named after Latin *Vulcanus*, Vulcan, the Roman god of fire. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

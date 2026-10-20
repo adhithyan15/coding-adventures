@@ -14,7 +14,8 @@ romanization: "balb"
 concept_tag: UR-CHIZ165-BALB
 prerequisites: [UR-C164-razai, UR-C164-qalin]
 sounds: []
-roots: []
+roots: [english-bulb]
+etymology_hook: "balb ← English bulb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C164-qalin]
 <!-- hl-knowledge: introduces=[UR-LEX-C165-CHIZ165-01]; assesses=[] -->
 
 **بلب** — *balb* — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بلب** (*balb*) is a loan from English *bulb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

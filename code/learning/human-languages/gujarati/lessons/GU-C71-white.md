@@ -14,7 +14,8 @@ romanization: "saphed"
 concept_tag: GU-COLOUR2-WHITE
 prerequisites: [GU-C70-blue, GU-C70-black]
 sounds: []
-roots: []
+roots: [safed-persian]
+etymology_hook: "saphed: usually traced to Persian safēd 'white'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C70-black]
 <!-- hl-knowledge: introduces=[GU-LEX-C71-COLOUR2-01]; assesses=[] -->
 
 **સફેદ** (*saphed*) — "white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સફેદ** (*saphed*) is a loan, usually traced to Persian *safēd*, "white".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

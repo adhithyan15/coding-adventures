@@ -1,0 +1,11 @@
+{
+  "id": "FR-C479-coupure",
+  "pathSegment": "FR-PATH-479-BLESSURES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-479-BLESSURES",
+      "order": 1
+    }
+  ]
+}

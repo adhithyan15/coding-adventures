@@ -14,7 +14,8 @@ romanization: "sihi"
 concept_tag: KA-QUAL145-SIHI
 prerequisites: [KA-C145-kahi, KA-C145-huli2]
 sounds: []
-roots: []
+roots: [dravidian-tiim-sweet]
+etymology_hook: "sihi: native Dravidian; DEDR 3268 lists sihi 'sweet'; Tamil tīm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C145-huli2]
 <!-- hl-knowledge: introduces=[KA-LEX-C145-QUAL145-03]; assesses=[] -->
 
 **ಸಿಹಿ** — *sihi* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಹಿ** (*sihi*) is native Dravidian, of the root for "sweet", and DEDR 3268 lists *sihi*, "sweet", itself; the entry also has Tamil *tīm*. DEDR 3268 compares, with a query, Prakrit *tiṇisa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

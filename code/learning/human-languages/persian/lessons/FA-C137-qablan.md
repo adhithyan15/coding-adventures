@@ -14,7 +14,8 @@ romanization: "qablan"
 concept_tag: FA-GOZASHTE137-QABLAN
 prerequisites: [FA-C136-che-vaqt, FA-C137-be-tazegi]
 sounds: []
-roots: []
+roots: [arabic-qablan]
+etymology_hook: "qablan ← Arabic qablan 'before, previously', root q-b-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C137-be-tazegi]
 <!-- hl-knowledge: introduces=[FA-LEX-C137-GOZASHTE137-02]; assesses=[] -->
 
 **قبلا** — *qablan* — "already; before". **قبلا ناهار خوردم** — *qablan nâhâr khordam* — "I've already had lunch."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qablan* is borrowed from Arabic *qablan*, "before, previously". Its Arabic root is *q-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

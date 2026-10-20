@@ -14,7 +14,8 @@ romanization: "ottakam"
 concept_tag: TA-THINGS142-OTTAKAM
 prerequisites: [TA-C141-panri, TA-C141-kalutai]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "ஒட்டகம் ← Sanskrit uṣṭra 'camel' (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C141-kalutai]
 <!-- hl-knowledge: introduces=[TA-LEX-C142-THINGS142-01]; assesses=[] -->
 
 **ஒட்டகம்** — *ottakam* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒட்டகம்** (*ottakam*) is a loan from Sanskrit *uṣṭra*, "camel" (CDIAL 2387). The word came through a Prakrit form with *-ṭṭ-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: WORD-IS
 prerequisites: [HI-C02-naam]
 sounds: [matra-ai]
 roots: [asti]
+etymology_hook: "hai: usually traced to Sanskrit asti 'is', the same verb as English is"
 duration:
   max_seconds: 180
 requires:

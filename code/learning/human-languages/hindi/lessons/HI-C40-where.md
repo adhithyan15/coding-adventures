@@ -15,6 +15,7 @@ concept_tag: HI-DEIXIS-WHERE
 prerequisites: [HI-C40-who]
 sounds: []
 roots: []
+etymology_hook: "kahāṁ: question stem k- (kyā, kaun) + the place ending -hāṁ of yahāṁ; CDIAL has no entry, so its history is open"
 duration:
   max_seconds: 210
 requires:
@@ -43,18 +44,24 @@ reviews_of: [HI-C40-who]
 
 **कहाँ** — *kahā̃* — where? — asking about a place.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no place: it asks your listener to
+point one out.
 
-Its partner is **कौन** *kaun*, which you will meet just now. The two of them
-differ by one sound at the front — **k-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is **कौन** *kaun*, which you met in the last lesson: both open with
+**k-**, the asking sound. Its other partners, **यहाँ** *yahā̃* and **वहाँ**
+*vahā̃*, differ from it only at the front. That is the whole system, and the
+last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कहाँ** (*kahāṁ*) pairs the question stem *k-* of **क्या** and **कौन** with the place ending *-hāṁ* of **यहाँ**, "here", and **वहाँ**, "there". CDIAL has no entry for it, so its older history is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "कहाँ" three times, picturing something different each time]
+- [YOU SAY: "कहाँ" three times, asking about a different place each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

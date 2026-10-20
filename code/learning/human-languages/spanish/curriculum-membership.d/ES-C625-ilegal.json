@@ -1,0 +1,11 @@
+{
+  "id": "ES-C625-ilegal",
+  "pathSegment": "ES-PATH-625-LEGAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-625-LEGAL",
+      "order": 1
+    }
+  ]
+}

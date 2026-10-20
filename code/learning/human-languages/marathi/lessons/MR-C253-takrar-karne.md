@@ -14,7 +14,8 @@ romanization: "takrār karṇe"
 concept_tag: MR-VERB-TAKRAR-KARNE
 prerequisites: [MR-C253-kalpana-karne, MR-C253-kalavne]
 sounds: []
-roots: []
+roots: [arabic-takrar, sanskrit-karoti]
+etymology_hook: "takrār: usually traced, through Persian, to Arabic takrār 'repetition'; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C253-kalavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C253-ACT253-05]; assesses=[] -->
 
 **तक्रार करणे** — *takrār karṇe* — "to complain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तक्रार**, "a complaint", is usually traced through Persian to Arabic *takrār*, "repetition", whose root is *k-r-r* (Lane). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

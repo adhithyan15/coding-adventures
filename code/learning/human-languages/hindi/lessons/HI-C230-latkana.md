@@ -14,7 +14,8 @@ romanization: "laṭkānā"
 concept_tag: HI-VERB-LATKANA
 prerequisites: [HI-C230-jhukna, HI-C230-latakna]
 sounds: []
-roots: []
+roots: [indo-aryan-latta]
+etymology_hook: "laṭkānā: causing form of laṭaknā, probably with *laṭṭa 'hanging' (CDIAL 10918); no Hindi form listed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C230-latakna]
 <!-- hl-knowledge: introduces=[HI-LEX-C230-ACT230-03]; assesses=[] -->
 
 **लटकाना** — *laṭkānā* — "to hang (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लटकाना** (*laṭkānā*) is the causing form of *laṭaknā*, "to hang". It probably belongs with a reconstructed *\*laṭṭa*, "hanging, tangled", where CDIAL lists Sindhi *laṭkaṇu*, "to dangle" (CDIAL 10918), but not the Hindi verbs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

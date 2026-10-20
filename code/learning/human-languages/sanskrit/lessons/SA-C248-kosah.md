@@ -14,7 +14,8 @@ romanization: "kośaḥ"
 concept_tag: SA-THG248-KOSAH
 prerequisites: [SA-C247-dhvajah, SA-C247-patahah]
 sounds: []
-roots: []
+roots: [sanskrit-kosha]
+etymology_hook: "kośa 'bucket, case, treasury'; MW hesitantly links it to kukṣi 'belly' (CDIAL 3539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C247-patahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C248-THG248-01]; assesses=[] -->
 
 **कोशः** — *kośaḥ* — "a sheath, a treasury".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kośa* is a Rigvedic word for a bucket, then a case, a sheath and a store-room (CDIAL 3539), and so a treasury. MW suggests, with question marks, a root √kuś and a link with *kukṣi*, "belly"; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

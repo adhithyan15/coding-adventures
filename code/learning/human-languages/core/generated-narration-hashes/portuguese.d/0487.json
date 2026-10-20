@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:0a5ae9dc51be9af5",
+  "lessonIds": [
+    "PT-C487-sintoma",
+    "PT-C487-analises",
+    "PT-C487-diagnostico",
+    "PT-C487-receitar",
+    "PT-C487-tratamento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch487.txt",
+  "json": "portuguese/narration/ch487.json",
+  "textHash": "fnv1a64:1b0f6e00ab1eb804",
+  "jsonHash": "fnv1a64:912b96536fc49d76",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C586-demostrar",
+    "language": "spanish",
+    "chapter": 586,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d39a3559ee7cc424"
+  },
+  "findings": []
+}

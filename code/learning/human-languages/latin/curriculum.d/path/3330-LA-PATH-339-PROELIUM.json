@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-339-PROELIUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-339-PROELIUM"
+  ],
+  "after": []
+}

@@ -13,7 +13,8 @@ gloss: "to get on (a vehicle)"
 concept_tag: GE-VERB-EINSTEIGEN
 prerequisites: [GE-C178-duschen, GE-C178-einschlafen]
 sounds: []
-roots: []
+roots: [germanic-stigana]
+etymology_hook: "einsteigen — ein- 'in' + the verb 'to climb': to climb in"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C178-einschlafen]
 <!-- hl-knowledge: introduces=[GE-LEX-C178-VERB178-03]; assesses=[] -->
 
 **einsteigen** — "to get on (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**einsteigen** is *ein-*, "in", + the verb "to climb", Old High German *stīgan* (EtymDB 2.1): to climb into a vehicle. English *stile* and *stirrup* share the root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vadhu"
 concept_tag: ML-VASTU211-VADHU
 prerequisites: [ML-C211-dampatikal, ML-C211-varan]
 sounds: []
-roots: []
+roots: [sanskrit-vadhu]
+etymology_hook: "vadhu ← Sanskrit vadhū 'bride, young wife', a tatsama (CDIAL 11250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C211-varan]
 <!-- hl-knowledge: introduces=[ML-LEX-C211-VASTU211-03]; assesses=[] -->
 
 **വധു** — *vadhu* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വധു** (*vadhu*) ← Sanskrit *vadhū*, "bride, young wife", taken over whole as a tatsama (CDIAL 11250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

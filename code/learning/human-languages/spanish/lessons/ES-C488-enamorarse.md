@@ -10,7 +10,8 @@ gloss: "to fall in love"
 concept_tag: ES-VERB-ENAMORARSE
 prerequisites: [ES-C488-casarse, ES-C488-divorciarse]
 sounds: []
-roots: []
+roots: [amor-latin]
+etymology_hook: "enamorarse — en- + amor 'love' + -ar; amor is Latin amor — English enamoured"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C488-divorciarse]
 > *She fell in love with her neighbour.*
 
 It goes with *de*: *enamorarse de alguien*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enamorarse** is *en-*, *amor*, "love", and *-ar*: to go into love. *Amor* is Latin *amor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

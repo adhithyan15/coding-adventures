@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 11,
-  "sourceHash": "fnv1a64:2d38a805191ad5da",
+  "sourceHash": "fnv1a64:a1ad994fd38dc682",
   "lessonIds": [
     "UR-C11-dil"
   ],
@@ -10,6 +10,6 @@
   "text": "urdu/narration/ch11.txt",
   "json": "urdu/narration/ch11.json",
   "textHash": "fnv1a64:7dd74696340b5b9c",
-  "jsonHash": "fnv1a64:8e3020b19c676e0c",
+  "jsonHash": "fnv1a64:d80f83d77a5f33fa",
   "findings": []
 }

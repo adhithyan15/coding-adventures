@@ -14,7 +14,8 @@ romanization: "tamrīn"
 concept_tag: AR-SIHHA169-TAMRIN
 prerequisites: [AR-C168-suda, AR-C169-mizaj]
 sounds: []
-roots: []
+roots: [m-r-n]
+etymology_hook: "tamrīn: built on the root m-r-n, 'to be supple, to be practised' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C169-mizaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C169-SIHHA169-02]; assesses=[] -->
 
 **تمرين** — *tamrīn* — "an exercise, a workout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تمرين** (*tamrīn*) is built on the native Arabic root *m-r-n*, "to be supple, to be practised" (Lane). *Tamrīn* is the verbal noun of Form II, "training".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

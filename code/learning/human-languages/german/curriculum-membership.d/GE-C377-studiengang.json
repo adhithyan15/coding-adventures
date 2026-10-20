@@ -1,0 +1,11 @@
+{
+  "id": "GE-C377-studiengang",
+  "pathSegment": "GE-PATH-377-HOCHSCHULE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-377-HOCHSCHULE",
+      "order": 3
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 178,
-  "sourceHash": "fnv1a64:4ef32da6265a940e",
+  "sourceHash": "fnv1a64:30ad2df3fedf06a4",
   "lessonIds": [
     "TE-C178-kavalani",
     "TE-C178-porapatuna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch178.txt",
   "json": "telugu/narration/ch178.json",
-  "textHash": "fnv1a64:87bea10cc1bbde61",
-  "jsonHash": "fnv1a64:8ddb470361e96fb4",
+  "textHash": "fnv1a64:531f00e0ca0fe62b",
+  "jsonHash": "fnv1a64:601c5d6487b96991",
   "findings": []
 }

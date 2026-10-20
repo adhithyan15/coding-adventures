@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 143,
-  "sourceHash": "fnv1a64:80d5c067b2b43ad7",
+  "sourceHash": "fnv1a64:19ab128d3dfe302a",
   "lessonIds": [
     "BN-C143-shoktishali",
     "BN-C143-susbadu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch143.txt",
   "json": "bengali/narration/ch143.json",
-  "textHash": "fnv1a64:75f279a3e4f8bd1e",
-  "jsonHash": "fnv1a64:e744ba5831764823",
+  "textHash": "fnv1a64:9885e1233eb81e89",
+  "jsonHash": "fnv1a64:1cced0fea53bbb30",
   "findings": []
 }

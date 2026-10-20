@@ -14,7 +14,8 @@ romanization: "aṭakvũ"
 concept_tag: GU-VERB-ATAKVU
 prerequisites: [GU-C143-bhagvu, GU-C143-pharvu]
 sounds: []
-roots: []
+roots: [indo-aryan-attakk]
+etymology_hook: "aṭakvũ ← *aṭṭakk 'obstruct, stop', a reconstructed form; a tadbhava (CDIAL 182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C143-pharvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C143-ACT143-03]; assesses=[] -->
 
 **અટકવું** (*aṭakvũ*) — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અટકવું** (*aṭakvũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*aṭṭakk*, "obstruct, stop", a form CDIAL reconstructs from its descendants (CDIAL 182).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

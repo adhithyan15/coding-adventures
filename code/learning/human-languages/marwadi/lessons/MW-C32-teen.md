@@ -11,8 +11,8 @@ gloss: three, on the page — three signs the hand has had for twenty chapters
 concept_tag: MW-NUMBER-THREE-WRITTEN
 prerequisites: [MW-C32-hear-teen]
 sounds: [dental-t, long-ii, dental-n]
-roots: []
-etymology_hook: Three signs, all of them older than the shop chapters that will need them.
+roots: [sanskrit-tri]
+etymology_hook: "tīn ← Sanskrit trīṇi 'three', a tadbhava (CDIAL 5994, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -47,6 +47,11 @@ its retroflex **ट**. Then write one and two.
 The **त** here is the dental one, made with the tongue against the teeth — not
 the **ट** of **रोटी**, which is made further back. The two look different on the
 page and sound different in the mouth, and three uses the front one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तीन** (*tīn*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *trīṇi*, "three". CDIAL lists Marwari *tīn* under it (CDIAL 5994). English *three* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TEEN-01, MW-SCRIPT-TTA-01] -->

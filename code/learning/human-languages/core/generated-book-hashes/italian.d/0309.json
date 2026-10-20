@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:174d28b5481d66bd",
+  "lessonIds": [
+    "IT-C309-giovinezza",
+    "IT-C309-maggiorenne",
+    "IT-C309-minorenne",
+    "IT-C309-generazione",
+    "IT-C309-tramandare"
+  ],
+  "tex": "italian/book/chapters/ch309-di-padre-in-figlio.tex"
+}

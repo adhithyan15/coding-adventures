@@ -14,7 +14,8 @@ romanization: "julāī"
 concept_tag: UR-VAQT188-JULAI
 prerequisites: [UR-C188-mai, UR-C188-jun]
 sounds: []
-roots: []
+roots: [english-july]
+etymology_hook: "julāī ← English July"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C188-jun]
 <!-- hl-knowledge: introduces=[UR-LEX-C188-VAQT188-04]; assesses=[] -->
 
 **جولائی** — *julāī* — "July".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جولائی** (*julāī*) is a loan from English *July*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

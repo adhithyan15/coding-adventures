@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Past Portuguese Kept",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0a8dc29c44b56013",
+  "sourceHash": "fnv1a64:89b62b92a7d86a30",
   "lessons": [
     {
       "id": "PT-C15-preterito-perfeito",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88473b948dd3c3bd",
+      "sourceHash": "fnv1a64:a3dca1d978c2052f",
       "notice": null,
       "blocks": [
         {
@@ -223,15 +223,16 @@
             {
               "kind": "table",
               "headers": [
-                "infinitive",
-                "participle"
+                "infinitive ending",
+                "participle ending",
+                "example"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "infinitive: falar. participle: falado.",
-                "infinitive: comer. participle: comido.",
-                "infinitive: partir. participle: partido."
+                "infinitive ending: -ar. participle ending: -ado. example: falado.",
+                "infinitive ending: -er. participle ending: -ido. example: comido.",
+                "infinitive ending: -ir. participle ending: -ido. example: partido."
               ]
             },
             {
@@ -242,6 +243,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tenho is a form of ter from Latin tenere, \"to hold\" (EtymDB 2.1). falado is the participle of falar from Latin fabulari, \"to chat\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: What it actually means",
           "segments": [
@@ -273,7 +285,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way: Why the meanings diverged",
           "segments": [
@@ -307,7 +319,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -356,7 +368,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

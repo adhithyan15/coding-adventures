@@ -11,7 +11,8 @@ romanization: ""
 concept_tag: ES-DOUBLE-NEGATIVE
 prerequisites: [ES-C267-no-verbo, ES-C16-ver]
 sounds: []
-roots: []
+roots: [nasci-latin, non-latin]
+etymology_hook: "no ... nada — nada is Latin (res) nata 'a thing born', once 'anything'; beside no it means nothing"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ already has its negation:
 > **Nada** veo.  ·  **Nadie** habla.  ·  **Nunca** voy.
 
 Both are correct. The first is what people say.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nada** is Latin *(res) nata*, "a thing born": it first meant "anything at all", and beside *no* it came to mean "nothing". *No* is Latin *non*, "not".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-NONADA-01] -->

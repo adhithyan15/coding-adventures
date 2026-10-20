@@ -14,7 +14,8 @@ romanization: "jīrakam"
 concept_tag: SA-THG159-JIRAKAM
 prerequisites: [SA-C158-dipika, SA-C158-kapatam]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jīraka 'cumin' (Suśruta); MW and CDIAL 5234 give no derivation; origin uncertain; Hindi jīrā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C158-kapatam]
 <!-- hl-knowledge: introduces=[SA-LEX-C159-THG159-01]; assesses=[] -->
 
 **जीरकम्** — *jīrakam* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jīraka* "cumin seed" is a word of the medical writer Suśruta, and neither MW nor CDIAL 5234 gives a derivation, so its origin is uncertain. It lives on as Hindi and Bengali *jīrā* and Gujarati *jīrũ* "cumin" (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

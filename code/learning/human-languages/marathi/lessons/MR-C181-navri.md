@@ -14,7 +14,8 @@ romanization: "navrī"
 concept_tag: MR-VASTU181-NAVRI
 prerequisites: [MR-C181-sun, MR-C181-navardev]
 sounds: []
-roots: []
+roots: [sanskrit-navavarika]
+etymology_hook: "navrī ← Sanskrit navavarikā 'newly wed (woman)', a tadbhava (CDIAL 7013)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C181-navardev]
 <!-- hl-knowledge: introduces=[MR-LEX-C181-VASTU181-03]; assesses=[] -->
 
 **नवरी** — *navrī* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नवरी** (*navrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *navavarikā*, "newly wed (woman)" (CDIAL 7013). It is *nava*, "new", and *vara*, "bridegroom". CDIAL glosses the Marathi word "bride".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

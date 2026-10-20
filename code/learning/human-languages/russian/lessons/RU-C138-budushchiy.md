@@ -14,7 +14,8 @@ romanization: "búdushchiy"
 concept_tag: RU-FUT138-BUDUSHCHIY
 prerequisites: [RU-C137-proshlyy, RU-C137-sluchitsya]
 sounds: []
-roots: []
+roots: [pie-bhuh]
+etymology_hook: "будущий is from буду 'I will be', a form of быть 'to be'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C137-sluchitsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C138-FUT138-01]; assesses=[] -->
 
 **будущий** (*búdushchiy*) — "future, next". One Russian future is **буду** and an infinitive: **Я буду читать.** — *ya búdu chitát* — "I will read." **в будущем году** is "next year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**будущий** is built on *буду*, "I will be", a form of *быть*, "to be", a cousin of English *be*: "what will be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

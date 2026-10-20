@@ -14,7 +14,8 @@ romanization: "farāwila"
 concept_tag: AR-THINGS120-FARAWILA
 prerequisites: [AR-C120-murabba, AR-C120-rumman]
 sounds: []
-roots: []
+roots: [italian-fragola]
+etymology_hook: "farāwila: modern loan, usually traced to Italian fragola 'strawberry' (EtymDB gives Greek fraoula)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C120-rumman]
 <!-- hl-knowledge: introduces=[AR-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **فراولة** — *farāwila* — "strawberries".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فراولة** (*farāwila*) is a modern loan, usually traced to Italian *fragola*, "strawberry"; EtymDB links it with Greek *fraoula*, a borrowing of the same Italian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

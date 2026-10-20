@@ -14,7 +14,8 @@ romanization: "paúk"
 concept_tag: RU-VESHCH196-PAUK
 prerequisites: [RU-C195-dub, RU-C196-krysa]
 sounds: []
-roots: []
+roots: [pie-h2enk]
+etymology_hook: "паук is па- + *ǫkŭ 'hook': the crook-legged one; Latin uncus 'hooked' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C196-krysa]
 <!-- hl-knowledge: introduces=[RU-LEX-C196-VESHCH196-02]; assesses=[] -->
 
 **паук** (*paúk*) — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**паук** is *па-* with *\*ǫkŭ*, "a hook", for the spider's bent legs (Vasmer). Vasmer relates the root to Greek *ónkos*, "a hook", and Latin *uncus*, "hooked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

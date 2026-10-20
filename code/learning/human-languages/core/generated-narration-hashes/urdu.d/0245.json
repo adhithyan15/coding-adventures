@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 245,
-  "sourceHash": "fnv1a64:f24bbca8f35470fa",
+  "sourceHash": "fnv1a64:3402c1a659691110",
   "lessonIds": [
     "UR-C245-barsat",
     "UR-C245-rozana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch245.txt",
   "json": "urdu/narration/ch245.json",
-  "textHash": "fnv1a64:34de6aa13e556204",
-  "jsonHash": "fnv1a64:710c848c7310551a",
+  "textHash": "fnv1a64:59c8d3271c9d25dd",
+  "jsonHash": "fnv1a64:dfc5c958b313c102",
   "findings": []
 }

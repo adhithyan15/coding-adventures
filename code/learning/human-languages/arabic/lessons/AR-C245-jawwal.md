@@ -14,7 +14,8 @@ romanization: "jawwāl"
 concept_tag: AR-SHAY245-JAWWAL
 prerequisites: [AR-C245-maqas, AR-C245-hatif]
 sounds: []
-roots: []
+roots: [j-w-l]
+etymology_hook: "jawwāl: built on the root j-w-l, 'to roam, to go about' (Lane); jawwāl is the faʿʿāl adjective, 'much roaming'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C245-hatif]
 <!-- hl-knowledge: introduces=[AR-LEX-C245-SHAY245-04]; assesses=[] -->
 
 **جوال** — *jawwāl* — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جوال** (*jawwāl*) is built on the native Arabic root *j-w-l*, "to roam, to go about" (Lane). *Jawwāl* is the *faʿʿāl* adjective, "much roaming"; the mobile phone is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

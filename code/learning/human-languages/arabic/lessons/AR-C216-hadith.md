@@ -14,7 +14,8 @@ romanization: "ḥadīth"
 concept_tag: AR-SHAY216-HADITH
 prerequisites: [AR-C215-taksi, AR-C216-qasida]
 sounds: []
-roots: []
+roots: [ḥ-d-th]
+etymology_hook: "ḥadīth: built on the root ḥ-d-th, 'to be new' (Lane); ḥadīth is a new thing told: talk, a report"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C216-qasida]
 <!-- hl-knowledge: introduces=[AR-LEX-C216-SHAY216-02]; assesses=[] -->
 
 **حديث** — *ḥadīth* — "a conversation, a talk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حديث** (*ḥadīth*) is built on the native Arabic root *ḥ-d-th*, "to be new; to tell" (Lane). *Ḥadīth* is a new thing told: talk, a report.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

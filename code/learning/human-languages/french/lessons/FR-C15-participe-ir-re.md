@@ -48,12 +48,12 @@ participle with its own vowel:
 | infinitive ends in | participle ends in | example |
 |---|---|---|
 | **-er** | **-é** | *parler* → *parlé* |
-| **-ir** | **-i** | *finir* → *fini* |
-| **-re** | **-u** | *vendre* → *vendu* |
+| **-ir** | **-i** | *fini*, "finished" |
+| **-re** | **-u** | *vendu*, "sold" |
 
-*finir* ("to finish") and *vendre* ("to sell") are the standard examples, and
-they are here as **examples of the pattern** rather than words to add to your
-vocabulary — neither has appeared in this book yet. What you want from this
+*fini* and *vendu* are the standard examples, and they are here as **examples
+of the pattern** rather than words to add to your vocabulary — neither verb has
+had a lesson of its own in this book yet. What you want from this
 lesson is the shape: when you meet a verb, its infinitive ending already tells
 you what its participle will look like.
 
@@ -67,7 +67,7 @@ becomes an *-er* verb.
 
 [PAUSE 1s]
 - [YOU SAY: the three endings — "é, i, u"]
-- [YOU SAY: the three pairs — "parler parlé, finir fini, vendre vendu"]
+- [YOU SAY: the three participles — "parlé, fini, vendu"]
 - [YOU SAY: the useful half — "-er is the big one, and the only one still growing"]
 
 ## Wrap-up Recall

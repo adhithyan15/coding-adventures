@@ -14,7 +14,8 @@ romanization: "chásto"
 concept_tag: RU-TIME85-OFTEN
 prerequisites: [RU-C85-date, RU-C85-century]
 sounds: []
-roots: []
+roots: [slavic-chestu]
+etymology_hook: "часто is the adverb of частый 'dense, frequent'; Lithuanian kimštas 'stuffed' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C85-century]
 <!-- hl-knowledge: introduces=[RU-LEX-C85-TIME85-05]; assesses=[] -->
 
 **часто** (*chásto*) — "often".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**часто** is *частый*, "dense, frequent", made into an adverb with *-о*. *частый* ← Proto-Slavic *\*čęstŭ*, which Vasmer relates to Lithuanian *kimštas*, "stuffed full": often is "thickly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

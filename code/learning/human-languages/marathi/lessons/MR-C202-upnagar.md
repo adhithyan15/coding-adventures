@@ -14,7 +14,8 @@ romanization: "upnagar"
 concept_tag: MR-JAGA202-UPNAGAR
 prerequisites: [MR-C202-prades, MR-C202-rajdhani]
 sounds: []
-roots: []
+roots: [sanskrit-upa, sanskrit-nagara]
+etymology_hook: "upnagar: Sanskrit upa 'near, under' + nagara 'town' (CDIAL 6924); a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C202-rajdhani]
 <!-- hl-knowledge: introduces=[MR-LEX-C202-JAGA202-04]; assesses=[] -->
 
 **उपनगर** — *upnagar* — "a suburb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उपनगर** (*upnagar*) is a modern compound of Sanskrit parts: *upa*, "near, under", and *nagara*, "town" (CDIAL 6924).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a vine"
 concept_tag: LA-RES250-VITIS
 prerequisites: [LA-C249-corium, LA-C249-linum]
 sounds: []
-roots: []
+roots: [vitis-latin]
+etymology_hook: "vītis 'vine' — usually traced to PIE *weh1itis 'a twining plant'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C249-linum]
 <!-- hl-knowledge: introduces=[LA-LEX-C250-RES250-01]; assesses=[] -->
 
 **vītis, vītis** — "a vine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vītis** is inherited, usually traced to Proto-Indo-European *\*weh1itis*, "a twining plant", from *\*weh1y-*, "to twist, to weave" (EtymDB 2.1); *vieō*, "to plait", is from the same root (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

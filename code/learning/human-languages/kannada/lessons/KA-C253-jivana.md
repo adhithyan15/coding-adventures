@@ -14,7 +14,8 @@ romanization: "jīvana"
 concept_tag: KA-KARANA253-JIVANA
 prerequisites: [KA-C253-ghatane, KA-C253-nenapu]
 sounds: []
-roots: []
+roots: [sanskrit-jivana]
+etymology_hook: "jīvana ← Sanskrit jīvana 'vivifying; life', a tatsama (CDIAL 5243)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C253-nenapu]
 <!-- hl-knowledge: introduces=[KA-LEX-C253-KARANA253-04]; assesses=[] -->
 
 **ಜೀವನ** — *jīvana* — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೀವನ** (*jīvana*) is Sanskrit *jīvana*, "vivifying; life", taken over whole as a learned loan, a tatsama (CDIAL 5243).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

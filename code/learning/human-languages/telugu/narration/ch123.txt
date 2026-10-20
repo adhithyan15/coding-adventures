@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a horse, then the Telugu for an elephant.
 You'll want to know: పులి.
 పులి — puli — "a tiger".
 
+The word, taken apart.
+పులి (puli) is native Dravidian, one word with Tamil puli and Kannada puli (DEDR 4307). DEDR compares Prakrit pulli, "tiger".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for an elephant, then the Telugu for a tiger.
 
 You'll want to know: సింహం.
 సింహం — siṁhaṁ — "a lion".
+
+The word, taken apart.
+సింహం (siṁhaṁ) is Sanskrit siṁha, "lion", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13384).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a tiger, then the Telugu for a lion.
 You'll want to know: ఎలుగుబంటి.
 ఎలుగుబంటి — elugubaṇṭi — "a bear".
 
+The word, taken apart.
+ఎలుగుబంటి (elugubaṇṭi) is built on native elugu, "bear", one word with Tamil eṇku, "bear" (DEDR 857).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a lion, then the Telugu for a bear.
 You'll want to know: కోతి.
 కోతి — kōti — "a monkey".
 
+The word, taken apart.
+కోతి (kōti) is native Dravidian, one word with Tamil kuraṅku and Kannada kōti (DEDR 1769).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a bear, then the Telugu for a monkey.
 
 You'll want to know: కుందేలు.
 కుందేలు — kundēlu — "a rabbit".
+
+The word, taken apart.
+కుందేలు (kundēlu) is native Dravidian. DEDR 1728 lists the Telugu word for "hare" under the verb for squatting, with Tamil kuntu, "to sit on the heels".
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-472-DIFETTI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the good and bad sides of someone's character.",
+  "prerequisites": []
+}

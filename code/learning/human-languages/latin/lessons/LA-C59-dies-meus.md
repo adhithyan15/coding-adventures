@@ -45,8 +45,8 @@ know every form.
 ## Reading
 <!-- hl-knowledge: introduces=[LA-SKILL-C59-ACCOUNT-READING-05]; assesses=[LA-GRAMMAR-C59-OBJECT-A-01, LA-GRAMMAR-C59-OBJECT-M-02, LA-GRAMMAR-C59-PLACE-03, LA-LEX-C55-ORDINAL-02, LA-LEX-C48-DENY-03, LA-LEX-C54-BODY-02, LA-LEX-C54-BODY-01] -->
 
-> Nōmen meum est Mārcus. Ego sum discipulus. Domus mea bona est. Canis meus
-> hic est, et fēlēs mea ibi est. Māne prīma hōra est. Ego stō, lac bibō, et
+> Mihi nōmen est Mārcus. Ego sum discipulus. Domus mea bona est. Canis meus
+> hīc est, et fēlēs mea ibi est. Māne prīma hōra est. Ego stō, lac bibō, et
 > mel et ōvum edō. Portam aperiō et portam claudō, et ad scholam ambulō.
 > Schola mea bona est. In scholā sedeō. Magister meus bonus est. Magistrum
 > videō et audiō. Prīmum librum accipiō et legō. Secundum librum nōn accipiō,

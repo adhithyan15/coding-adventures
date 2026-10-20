@@ -14,7 +14,8 @@ romanization: "zawja"
 concept_tag: AR-FAMILY55-ZAWJA
 prerequisites: [AR-C55-khal, AR-C55-zawj]
 sounds: []
-roots: []
+roots: [z-w-j]
+etymology_hook: "zawja: feminine of zawj 'a mate' (Lane: z-w-j), usually traced to Greek zeugos 'yoke' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C55-zawj]
 <!-- hl-knowledge: introduces=[AR-LEX-C55-FAMILY55-05]; assesses=[] -->
 
 **زوجة** — *zawja* — "a wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زوجة** (*zawja*) is the feminine of *zawj*, "a mate", which Lane lists under *z-w-j*. *Zawj* is usually traced, through Aramaic *zūgā*, to Greek *zeugos*, "yoke, pair" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

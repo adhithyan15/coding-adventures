@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 212,
-  "sourceHash": "fnv1a64:4a66b775dd134565",
+  "sourceHash": "fnv1a64:bd201def9a6d798b",
   "lessonIds": [
     "TE-C212-tirika",
     "TE-C212-ventane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch212.txt",
   "json": "telugu/narration/ch212.json",
-  "textHash": "fnv1a64:1e666f3a21e2b9d3",
-  "jsonHash": "fnv1a64:0e06872d55b032e6",
+  "textHash": "fnv1a64:0537d5caa3990b38",
+  "jsonHash": "fnv1a64:93f4357c9f018f0c",
   "findings": []
 }

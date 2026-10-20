@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 353,
-  "sourceHash": "fnv1a64:a9fbd1f6333b5aa8",
+  "sourceHash": "fnv1a64:a31ad3a58e005e1c",
   "lessonIds": [
     "ES-C353-hospital",
     "ES-C353-banco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch353.txt",
   "json": "spanish/narration/ch353.json",
-  "textHash": "fnv1a64:17fe1f4e5e7be358",
-  "jsonHash": "fnv1a64:71d82e54b8e9b7fd",
+  "textHash": "fnv1a64:a4ddffde3bee0859",
+  "jsonHash": "fnv1a64:5817dfa75f9624c3",
   "findings": []
 }

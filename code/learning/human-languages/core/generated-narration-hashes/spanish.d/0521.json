@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:819dbd8419adbadb",
+  "lessonIds": [
+    "ES-C521-investigar",
+    "ES-C521-pista",
+    "ES-C521-prueba",
+    "ES-C521-averiguar",
+    "ES-C521-sospechar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch521.txt",
+  "json": "spanish/narration/ch521.json",
+  "textHash": "fnv1a64:e3696d34a7212955",
+  "jsonHash": "fnv1a64:9e69146dc255d179",
+  "findings": []
+}

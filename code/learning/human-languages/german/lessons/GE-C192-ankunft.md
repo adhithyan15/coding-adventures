@@ -13,7 +13,8 @@ gloss: "an arrival"
 concept_tag: GE-THING192-ANKUNFT
 prerequisites: [GE-C191-zeichnen, GE-C192-abfahrt]
 sounds: []
-roots: []
+roots: [kwemana-germanic]
+etymology_hook: "Ankunft — an- 'at' + kunft 'a coming', from kommen 'to come'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C192-abfahrt]
 <!-- hl-knowledge: introduces=[GE-LEX-C192-THING192-02]; assesses=[] -->
 
 **die Ankunft** — "an arrival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Ankunft** is *an-*, "at", + an old noun for "a coming", built on *kommen* (EtymDB 2.1). An arrival is a coming-at.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

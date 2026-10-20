@@ -1,0 +1,11 @@
+{
+  "id": "GE-C349-beherrschen",
+  "pathSegment": "GE-PATH-349-STELLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-349-STELLE",
+      "order": 4
+    }
+  ]
+}

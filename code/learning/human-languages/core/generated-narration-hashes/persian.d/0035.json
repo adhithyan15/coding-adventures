@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 35,
-  "sourceHash": "fnv1a64:e3a2a356b3c9a7e4",
+  "sourceHash": "fnv1a64:72ea2a529bc24fda",
   "lessonIds": [
     "FA-C35-khordan",
     "FA-C35-nushidan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch35.txt",
   "json": "persian/narration/ch35.json",
-  "textHash": "fnv1a64:0c10f2079c1a2a91",
-  "jsonHash": "fnv1a64:115b486e526320f5",
+  "textHash": "fnv1a64:f4fe066313c9fef0",
+  "jsonHash": "fnv1a64:ec926fd85eff3243",
   "findings": []
 }

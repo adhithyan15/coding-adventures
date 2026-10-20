@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES169-DOSSIER
 prerequisites: [FR-C168-conseil, FR-C169-carte-postale]
 sounds: []
 roots: []
+etymology_hook: "dossier — from the word for 'back', Latin dorsum: a bundle labelled on its back"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C169-carte-postale]
 <!-- hl-knowledge: introduces=[FR-LEX-C169-CHOSES169-02]; assesses=[] -->
 
 **le dossier** — "a folder, a file".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dossier** — built from the word for "back", ← Latin *dorsum* (Lewis & Short), with *-ier*: a bundle labelled on its back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

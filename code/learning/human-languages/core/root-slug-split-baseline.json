@@ -11,14 +11,6 @@
       ]
     },
     {
-      "key": "ananda|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "ananda",
-        "ananda-sanskrit"
-      ]
-    },
-    {
       "key": "asti|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -107,14 +99,6 @@
       ]
     },
     {
-      "key": "dicere|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "dicere",
-        "dicere-latin"
-      ]
-    },
-    {
       "key": "dies|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -195,14 +179,6 @@
       ]
     },
     {
-      "key": "habitare|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "habitare",
-        "habitare-latin"
-      ]
-    },
-    {
       "key": "ille|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -277,14 +253,6 @@
       ]
     },
     {
-      "key": "merces|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "merces",
-        "merces-latin"
-      ]
-    },
-    {
       "key": "naaman|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -298,22 +266,6 @@
       "slugs": [
         "namas",
         "sanskrit-namas"
-      ]
-    },
-    {
-      "key": "ne-negative|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "ne-negative",
-        "pie-ne-negative"
-      ]
-    },
-    {
-      "key": "ne|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "ne",
-        "pie-ne"
       ]
     },
     {
@@ -485,14 +437,6 @@
       ]
     },
     {
-      "key": "s-l-m|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "s-l-m",
-        "semitic-s-l-m"
-      ]
-    },
-    {
       "key": "salus|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -554,14 +498,6 @@
       "slugs": [
         "sic",
         "sic-latin"
-      ]
-    },
-    {
-      "key": "sperare|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "sperare",
-        "sperare-latin"
       ]
     },
     {

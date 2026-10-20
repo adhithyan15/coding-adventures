@@ -14,7 +14,8 @@ romanization: "khūbānī"
 concept_tag: UR-CHIZ252-KHUBANI
 prerequisites: [UR-C251-barsati, UR-C252-papita]
 sounds: []
-roots: []
+roots: [persian-khubani]
+etymology_hook: "khūbānī: usually traced to Persian khūbānī 'apricot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C252-papita]
 <!-- hl-knowledge: introduces=[UR-LEX-C252-CHIZ252-02]; assesses=[] -->
 
 **خوبانی** — *khūbānī* — "an apricot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خوبانی** (*khūbānī*) is a loan, usually traced to Persian *khūbānī*, "apricot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

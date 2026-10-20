@@ -14,7 +14,8 @@ romanization: "citra"
 concept_tag: KA-VASTU191-CITRA
 prerequisites: [KA-C190-hasige, KA-C190-kodali]
 sounds: []
-roots: []
+roots: [sanskrit-citra]
+etymology_hook: "citra ← Sanskrit citra 'conspicuous, bright, variegated', a tatsama (CDIAL 4803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C190-kodali]
 <!-- hl-knowledge: introduces=[KA-LEX-C191-VASTU191-01]; assesses=[] -->
 
 **ಚಿತ್ರ** — *citra* — "a picture, a painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿತ್ರ** (*citra*) is Sanskrit *citra*, "conspicuous, bright, variegated", taken over whole as a learned loan, a tatsama (CDIAL 4803). What is bright with colour became a picture.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

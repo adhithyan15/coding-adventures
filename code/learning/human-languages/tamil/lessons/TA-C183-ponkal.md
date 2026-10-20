@@ -14,7 +14,8 @@ romanization: "poṅkal"
 concept_tag: TA-PORUL183-PONKAL
 prerequisites: [TA-C182-catti, TA-C182-muti]
 sounds: []
-roots: []
+roots: [dravidian-ponku-boil-over]
+etymology_hook: "பொங்கல் — native Dravidian (DEDR 4469); Kannada poṅgu 'to boil over', Telugu poṅgu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C182-muti]
 <!-- hl-knowledge: introduces=[TA-LEX-C183-PORUL183-01]; assesses=[] -->
 
 **பொங்கல்** — *poṅkal* — "pongal, a rice and lentil dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொங்கல்** (*poṅkal*) is native Dravidian. DEDR 4469 lists Kannada *poṅgu*, "to boil over" and Telugu *poṅgu*. It is named for *poṅku*, "to boil over": the pot is let boil over at the festival.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

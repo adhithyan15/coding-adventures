@@ -14,6 +14,7 @@ concept_tag: GE-VERB-PARKEN
 prerequisites: [GE-C183-naehen, GE-C183-niesen]
 sounds: []
 roots: []
+etymology_hook: "parken ← English to park, from park, Old French parc 'enclosure' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C183-niesen]
 <!-- hl-knowledge: introduces=[GE-LEX-C184-VERB184-01]; assesses=[] -->
 
 **parken** — "to park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parken** is taken from English *to park*, built on *park*, which came from Old French *parc*, "enclosure" (EtymDB 2.1). A car park is an enclosure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

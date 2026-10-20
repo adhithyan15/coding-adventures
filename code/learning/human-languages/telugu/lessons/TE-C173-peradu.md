@@ -14,7 +14,8 @@ romanization: "peraḍu"
 concept_tag: TE-STHALAM173-PERADU
 prerequisites: [TE-C172-eppatiki, TE-C173-varanda]
 sounds: []
-roots: []
+roots: [telugu-peradu-backyard]
+etymology_hook: "peraḍu: origin uncertain; the nearest is peḍalu 'backyard' under peḍa 'back' (DEDR 4146)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C173-varanda]
 <!-- hl-knowledge: introduces=[TE-LEX-C173-STHALAM173-02]; assesses=[] -->
 
 **పెరడు** — *peraḍu* — "a backyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **పెరడు** (*peraḍu*) is uncertain. DEDR has no entry for it; the nearest is *peḍalu*, "backyard", which DEDR 4146 lists under *peḍa*, "back". DEDR 4205 also has Kannada *peṟagu*, "backside", and *pittil*, "backyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

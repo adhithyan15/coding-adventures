@@ -14,7 +14,8 @@ romanization: "ṭīkā"
 concept_tag: HI-THG256-TIKA
 prerequisites: [HI-C256-ghav, HI-C256-patti]
 sounds: []
-roots: []
+roots: [indo-aryan-tikka]
+etymology_hook: "ṭīkā ← *ṭikka 'mark, spot'; CDIAL glosses it 'caste-mark' (CDIAL 5458)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C256-patti]
 <!-- hl-knowledge: introduces=[HI-LEX-C256-THG256-04]; assesses=[] -->
 
 **टीका** — *ṭīkā* — "an injection, a vaccination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टीका** (*ṭīkā*) comes from a reconstructed *\*ṭikka*, "mark, spot", and CDIAL glosses the Hindi word "caste-mark" (CDIAL 5458). Hindi now also uses it for an injection.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

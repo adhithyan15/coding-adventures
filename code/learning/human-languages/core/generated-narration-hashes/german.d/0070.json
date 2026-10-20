@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 70,
-  "sourceHash": "fnv1a64:38aeb19379658a86",
+  "sourceHash": "fnv1a64:513ea9070a69b147",
   "lessonIds": [
     "GE-C70-banane",
     "GE-C70-kartoffel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch70.txt",
   "json": "german/narration/ch70.json",
-  "textHash": "fnv1a64:0987463b1cb50aaf",
-  "jsonHash": "fnv1a64:4ac21b492441894b",
+  "textHash": "fnv1a64:f36cf151d45574a2",
+  "jsonHash": "fnv1a64:a2e681ff0ad3fe99",
   "findings": []
 }

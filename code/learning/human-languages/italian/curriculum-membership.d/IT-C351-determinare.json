@@ -1,0 +1,11 @@
+{
+  "id": "IT-C351-determinare",
+  "pathSegment": "IT-PATH-351-ORIGINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-351-ORIGINE",
+      "order": 3
+    }
+  ]
+}

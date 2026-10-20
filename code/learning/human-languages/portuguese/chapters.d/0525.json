@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Na biblioteca",
+  "label": "ch:pt-na-biblioteca",
+  "canDo": "I can talk about borrowing books, publishers and translation.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C525-tradutor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about borrowing books, publishers and translation.",
+    "assesses": [
+      "PT-LEX-C525-BIBLIOTECA-03",
+      "PT-LEX-C525-BIBLIOTECA-04",
+      "PT-LEX-C525-BIBLIOTECA-05"
+    ]
+  }
+}

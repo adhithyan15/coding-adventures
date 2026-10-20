@@ -1,0 +1,11 @@
+{
+  "id": "LA-C357-existimo",
+  "pathSegment": "LA-PATH-357-SENTENTIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-357-SENTENTIA",
+      "order": 1
+    }
+  ]
+}

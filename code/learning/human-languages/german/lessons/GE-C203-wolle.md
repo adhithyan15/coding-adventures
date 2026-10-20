@@ -13,7 +13,8 @@ gloss: "wool"
 concept_tag: GE-THING203-WOLLE
 prerequisites: [GE-C203-groesse, GE-C203-stoff]
 sounds: []
-roots: []
+roots: [germanic-wullo]
+etymology_hook: "Wolle ← Old High German wolla — the same word as English wool"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C203-stoff]
 <!-- hl-knowledge: introduces=[GE-LEX-C203-THING203-04]; assesses=[] -->
 
 **die Wolle** — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Wolle** ← Old High German *wolla* — inherited, the same word as English *wool*. EtymDB 2.1 has the German word but not its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

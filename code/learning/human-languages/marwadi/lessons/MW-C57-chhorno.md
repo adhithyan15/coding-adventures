@@ -14,7 +14,8 @@ romanization: "chhoṛṇo"
 concept_tag: MW-VERB-CHHORNO
 prerequisites: [MW-C56-batano, MW-C57-pairno]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati]
+etymology_hook: "chhoṛṇo ← Sanskrit kṣoṭayati 'throws', a tadbhava (CDIAL 3747, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C57-pairno]
 <!-- hl-knowledge: introduces=[MW-LEX-C57-VERBS57-02]; assesses=[] -->
 
 **छोड़णो** — *chhoṛṇo* — "to leave, to let go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छोड़णो** (*chhoṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣoṭayati*, "throws". CDIAL lists Marwari *choṛṇo* under it (CDIAL 3747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

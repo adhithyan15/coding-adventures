@@ -14,7 +14,8 @@ romanization: "magar"
 concept_tag: FA-NAFY136-MAGAR
 prerequisites: [FA-C136-aya, FA-C136-aslan]
 sounds: []
-roots: []
+roots: [persian-magar]
+etymology_hook: "magar ← Middle Persian magar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C136-aslan]
 <!-- hl-knowledge: introduces=[FA-LEX-C136-NAFY136-04]; assesses=[] -->
 
 **مگر** — *magar* — "surely ... not?; unless". It asks for a "yes": **مگر خسته نیستی** — *magar khaste nisti* — "Aren't you tired?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*magar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *magar*, "perhaps; lest" (EtymDB). EtymDB analyses it as *ma*, "not", with *agar*, "if".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

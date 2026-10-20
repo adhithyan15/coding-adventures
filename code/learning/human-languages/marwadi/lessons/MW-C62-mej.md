@@ -14,7 +14,8 @@ romanization: "mej"
 concept_tag: MW-HOME62-MEJ
 prerequisites: [MW-C62-khirki, MW-C62-kursi]
 sounds: []
-roots: []
+roots: [persian-mez]
+etymology_hook: "mej: usually traced to Persian mēz, which many take from Portuguese mesa 'table'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C62-kursi]
 <!-- hl-knowledge: introduces=[MW-LEX-C62-HOME62-03]; assesses=[] -->
 
 **मेज** — *mej* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेज** (*mej*) is a loan, usually traced to Persian *mēz*, "table". Many take the Persian word from Portuguese *mesa*, "table"; Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

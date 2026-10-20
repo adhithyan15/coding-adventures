@@ -14,7 +14,8 @@ romanization: "qabul shodan"
 concept_tag: FA-VERB-QABUL-SHODAN
 prerequisites: [FA-C220-ejaze-dadan, FA-C220-tamam-kardan]
 sounds: []
-roots: []
+roots: [arabic-qabul]
+etymology_hook: "qabul ← Arabic qabūl 'acceptance, reception', root q-b-l (Lane), + Persian shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C220-tamam-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C220-KONESH220-03]; assesses=[] -->
 
 **قبول شدن** — *qabul shodan* — "to pass (an exam); to be accepted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qabul shodan* pairs *qabul*, borrowed from Arabic *qabūl*, "acceptance, reception" (root *q-b-l*, Lane), with the Persian verb *shodan*, "to become". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

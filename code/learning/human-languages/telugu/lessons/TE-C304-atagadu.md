@@ -14,7 +14,8 @@ romanization: "āṭagāḍu"
 concept_tag: TE-VASTUVU304-ATAGADU
 prerequisites: [TE-C304-prakrti, TE-C304-krida]
 sounds: []
-roots: []
+roots: [dravidian-aadu-move]
+etymology_hook: "āṭagāḍu: native āṭa 'game' (DEDR 347) + -gāḍu 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C304-krida]
 <!-- hl-knowledge: introduces=[TE-LEX-C304-VASTUVU304-03]; assesses=[] -->
 
 **ఆటగాడు** — *āṭagāḍu* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆటగాడు** (*āṭagāḍu*) is native Dravidian: *āṭa*, "play, game", from *āḍu*, "to play" (DEDR 347), with *-gāḍu*, "one who does".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

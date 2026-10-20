@@ -1,0 +1,11 @@
+{
+  "id": "LA-C370-temeritas",
+  "pathSegment": "LA-PATH-370-AUCTORITAS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-370-AUCTORITAS",
+      "order": 4
+    }
+  ]
+}

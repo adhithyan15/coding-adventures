@@ -14,7 +14,8 @@ romanization: "khanati"
 concept_tag: SA-VERB-KHANATI
 prerequisites: [SA-C203-sobhate, SA-C204-sucayati]
 sounds: []
-roots: []
+roots: [sanskrit-khanati]
+etymology_hook: "khanati ← root √khan 'dig'; Hindi khannā 'to dig' (CDIAL 3811)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C204-sucayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C204-ACT204-02]; assesses=[] -->
 
 **खनति** — *khanati* — "digs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khanati* is the present of the root √khan, "to dig, dig up" (MW), a Rigvedic verb. It lives on as Hindi *khannā*, "to dig, scrape", and Gujarati *khaṇvũ*, "to dig" (CDIAL 3811).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

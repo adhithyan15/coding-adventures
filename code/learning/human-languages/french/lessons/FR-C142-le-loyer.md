@@ -13,7 +13,8 @@ gloss: "the rent"
 concept_tag: FR-LIRE142-LE-LOYER
 prerequisites: [FR-C142-lhoraire, FR-C142-lavis]
 sounds: []
-roots: []
+roots: [locus-latin]
+etymology_hook: "loyer ← Latin locarium 'rent for a place', from locus — English local"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C142-lavis]
 <!-- hl-knowledge: introduces=[FR-LEX-C142-LIRE142-03]; assesses=[] -->
 
 **le loyer** — "the rent". The money for a **chambre**, paid every **mois**: **Le loyer est de 400 euros par mois.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**loyer** ← Old French *loier* ← Latin *locarium*, "rent for a place", from *locus*, "a place" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

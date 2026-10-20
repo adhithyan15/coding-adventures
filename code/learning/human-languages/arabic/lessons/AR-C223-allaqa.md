@@ -14,7 +14,8 @@ romanization: "ʿallaqa"
 concept_tag: AR-VERB-ALLAQA
 prerequisites: [AR-C223-kawa, AR-C223-tawa]
 sounds: []
-roots: []
+roots: [ʿ-l-q]
+etymology_hook: "ʿallaqa: built on the root ʿ-l-q, 'to cling, to hang' (Lane); ʿallaqa is Form II, 'to hang up'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C223-tawa]
 <!-- hl-knowledge: introduces=[AR-LEX-C223-ACT223-05]; assesses=[] -->
 
 **علق** — *ʿallaqa* — "to hang (up)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علق** (*ʿallaqa*) is built on the native Arabic root *ʿ-l-q*, "to cling, to hang" (Lane). *ʿAllaqa* is Form II, "to hang up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

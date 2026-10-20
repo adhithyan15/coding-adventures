@@ -14,7 +14,8 @@ romanization: "bāḷehaṇṇu"
 concept_tag: KA-THINGS123-BALEHANNU
 prerequisites: [KA-C122-mamsa, KA-C123-tarakari]
 sounds: []
-roots: []
+roots: [dravidian-vazhai-plantain, dravidian-pazhu-ripen]
+etymology_hook: "bāḷehaṇṇu: native bāḷe 'plantain' (DEDR 5373; Tamil vāḻai) + haṇṇu 'fruit' (DEDR 4004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C123-tarakari]
 <!-- hl-knowledge: introduces=[KA-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **ಬಾಳೆಹಣ್ಣು** — *bāḷehaṇṇu* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಳೆಹಣ್ಣು** (*bāḷehaṇṇu*) is native Dravidian: *bāḷe*, "plantain" (DEDR 5373, with Tamil *vāḻai*), and *haṇṇu*, "fruit" (DEDR 4004, older Kannada *paṇṇu*). DEDR 5373 compares Sanskrit *vārabuṣā*. DEDR 4004 compares Sanskrit *phala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

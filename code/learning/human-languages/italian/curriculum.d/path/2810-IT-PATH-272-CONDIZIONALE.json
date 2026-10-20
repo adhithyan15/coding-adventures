@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-272-CONDIZIONALE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-272-CONDIZIONALE"
+  ],
+  "after": []
+}

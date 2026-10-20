@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a decision, then the Marathi for a possi
 You'll want to know: अर्ज.
 अर्ज — arj — "an application, a form".
 
+The word, taken apart.
+अर्ज (arj) is a loan from Arabic ʿarḍ, "a presenting, a petition", which reached Marathi through Persian. Its Arabic root is ʿ-r-ḍ (Lane). Persian says ʿarz.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a possibility, then the Marathi for an a
 
 You'll want to know: पाकीट.
 पाकीट — pākīṭ — "an envelope; a wallet".
+
+The word, taken apart.
+पाकीट (pākīṭ) is a loan from English packet.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for an application, then the Marathi for an 
 You'll want to know: पत्ता.
 पत्ता — pattā — "an address".
 
+The word, taken apart.
+The origin of पत्ता (pattā), "address", is not settled. CDIAL has no entry for it in this sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for an envelope; a wallet, then the Marathi 
 You'll want to know: पगार.
 पगार — pagār — "a salary".
 
+The word, taken apart.
+पगार (pagār) is a loan from Portuguese pagar, "to pay".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an address, then the Marathi for a salar
 
 You'll want to know: मार्गदर्शक.
 मार्गदर्शक — mārgadarśak — "a guide".
+
+The word, taken apart.
+मार्गदर्शक (mārgadarśak) is a compound of Sanskrit parts: mārga, "track, road" (CDIAL 10071), and darśaka, "one who shows", from dṛś, "to see".
 
 What you've built.
 One more word for this chapter.

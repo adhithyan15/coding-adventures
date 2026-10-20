@@ -14,7 +14,8 @@ romanization: "sā̃tār"
 concept_tag: BN-ACT103-SATAR
 prerequisites: [BN-C102-bachano, BN-C103-nama]
 sounds: []
-roots: []
+roots: [sanskrit-samtara]
+etymology_hook: "sāṁtār ← Sanskrit saṁtāra 'crossing over', a tadbhava (CDIAL 12888)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C103-nama]
 <!-- hl-knowledge: introduces=[BN-LEX-C103-ACT103-02]; assesses=[] -->
 
 **সাঁতার** — *sā̃tār* — "swimming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাঁতার** (*sāṁtār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṁtāra*, "crossing over" (CDIAL 12888).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

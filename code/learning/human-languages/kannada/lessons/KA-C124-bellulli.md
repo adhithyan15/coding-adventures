@@ -14,7 +14,8 @@ romanization: "beḷḷuḷḷi"
 concept_tag: KA-THINGS124-BELLULLI
 prerequisites: [KA-C124-badanekayi, KA-C124-sunthi]
 sounds: []
-roots: []
+roots: [dravidian-vel-white, dravidian-ulli-onion]
+etymology_hook: "beḷḷuḷḷi: native beḷ 'white' (DEDR 5496) + uḷḷi 'onion' (DEDR 705): 'white onion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C124-sunthi]
 <!-- hl-knowledge: introduces=[KA-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **ಬೆಳ್ಳುಳ್ಳಿ** — *beḷḷuḷḷi* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಳ್ಳುಳ್ಳಿ** (*beḷḷuḷḷi*) is native Dravidian, "white onion": *beḷ*, "white" (DEDR 5496), and *uḷḷi*, "onion" (DEDR 705). Tamil *veḷḷ-uḷḷi* is built the same way. DEDR 705 compares Sanskrit *ūlī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

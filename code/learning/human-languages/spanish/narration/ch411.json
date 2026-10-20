@@ -4,7 +4,7 @@
   "chapter": 411,
   "title": "Ice Cream",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:afc57907a77499ab",
+  "sourceHash": "fnv1a64:1a5aa45adb8bdfbf",
   "lessons": [
     {
       "id": "ES-C411-helado",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8f54552951bda13",
+      "sourceHash": "fnv1a64:28648c169be7f3ab",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Helado is the participle of helar, to freeze: its first sense is “frozen.” Used as a noun with el, it names ice cream. Hielo, helar and helado all continue the Latin cold-family already met in the ice lesson. The silent h links their modern spelling even though it makes no sound."
+              "text": "Helado is the participle of helar ( from Latin gelāre), to freeze: its first sense is “frozen.” Used as a noun with el, it names ice cream. Hielo, helar and helado all continue the Latin cold-family already met in the ice lesson. The silent h links their modern spelling even though it makes no sound."
             }
           ]
         },

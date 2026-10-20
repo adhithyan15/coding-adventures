@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a guest house, then the Sanskrit for a 
 You'll want to know: वर्तते.
 वर्तते — vartate — "is present, exists".
 
+The word, taken apart.
+vartate is the present of the root √vṛt, "to turn, roll", and then "to proceed, take place, exist" (MW). MW compares Latin vertere, "to turn", and German werden, "to become". It is the verb inside parivartayati, "changes".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a stay abroad, a journey, then the Sans
 
 You'll want to know: जायते.
 जायते — jāyate — "is born, arises".
+
+The word, taken apart.
+jāyate is the present of the root √jan, "to be born" (MW), the root of jantu, "creature". MW compares Latin gignere, "to beget". It lives on as Gujarati jāvũ, "to be born" (CDIAL 5204).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for is present, then the Sanskrit for is bo
 You'll want to know: म्रियते.
 म्रियते — mriyate — "dies".
 
+The word, taken apart.
+mriyate is the present of the root √mṛ, "to die" (MW; CDIAL 10383). The root is inherited from Indo-European: MW compares Latin morior, "I die", and mors, "death". Hindi marnā probably continues the sister form marate, CDIAL 9871 says.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for is born, then the Sanskrit for dies.
 You'll want to know: नश्यति.
 नश्यति — naśyati — "is lost, perishes".
 
+The word, taken apart.
+naśyati is the present of the root √naś, "to be lost, perish, vanish" (MW). MW compares Latin nex, "violent death", and nocēre, "to harm". It lives on as Hindi nasnā, "to be lost, flee" (CDIAL 7027).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for dies, then the Sanskrit for is lost.
 
 You'll want to know: कुप्यति.
 कुप्यति — kupyati — "gets angry".
+
+The word, taken apart.
+kupyati is the present of the root √kup, "to be moved, swell with rage" (MW). It first meant "is agitated" and then "is angry" (CDIAL 3299). Hindi kupnā means "to become angry".
 
 What you've built.
 One more word for this chapter.

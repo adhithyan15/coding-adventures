@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Numbers One to Five",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3adbe5e6f6e6e12b",
+  "sourceHash": "fnv1a64:9f9d002df58eae00",
   "lessons": [
     {
       "id": "AR-C19-wahid-khamsa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00cf1cee74a73022",
+      "sourceHash": "fnv1a64:5b603ede8c1d95d2",
       "notice": null,
       "blocks": [
         {

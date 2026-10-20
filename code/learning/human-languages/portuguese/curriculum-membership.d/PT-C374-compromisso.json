@@ -1,0 +1,11 @@
+{
+  "id": "PT-C374-compromisso",
+  "pathSegment": "PT-PATH-374-INTENCAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-374-INTENCAO",
+      "order": 4
+    }
+  ]
+}

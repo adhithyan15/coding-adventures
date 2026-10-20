@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C543-retrasar",
+    "language": "spanish",
+    "chapter": 543,
+    "sequence": 16770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbf794653fe6e826"
+  },
+  "findings": []
+}

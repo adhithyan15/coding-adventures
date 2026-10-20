@@ -13,7 +13,8 @@ gloss: "a story, a play"
 concept_tag: LA-RES219-FABULA
 prerequisites: [LA-C219-spectaculum, LA-C219-histrio]
 sounds: []
-roots: []
+roots: [fabula-latin, fari-latin]
+etymology_hook: "fābula 'story' — built on fārī 'to speak': what is told; English fable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C219-histrio]
 <!-- hl-knowledge: introduces=[LA-LEX-C219-RES219-05]; assesses=[] -->
 
 **fābula, fābulae** — "a story, a play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fābula** is built on *fārī*, "to speak" (Lewis & Short), with *-bula*, an ending for a means or result: what is told. English *fable* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

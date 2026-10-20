@@ -1,0 +1,19 @@
+{
+  "chapter": 702,
+  "title": "Mojarse",
+  "label": "ch:es-mojarse",
+  "canDo": "I can say I got caught in the rain: soaked, with puddles, mud and a raincoat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C702-impermeable",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 702: I can say I got caught in the rain: soaked, with puddles, mud and a raincoat.",
+    "assesses": [
+      "ES-LEX-C702-MOJARSE-03",
+      "ES-LEX-C702-MOJARSE-04",
+      "ES-LEX-C702-MOJARSE-05"
+    ]
+  }
+}

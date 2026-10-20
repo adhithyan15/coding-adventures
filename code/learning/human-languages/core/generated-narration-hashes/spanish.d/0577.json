@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 577,
+  "sourceHash": "fnv1a64:5a94be413f22ea44",
+  "lessonIds": [
+    "ES-C577-argumentar",
+    "ES-C577-objecion",
+    "ES-C577-convencido",
+    "ES-C577-razonable",
+    "ES-C577-logico"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch577.txt",
+  "json": "spanish/narration/ch577.json",
+  "textHash": "fnv1a64:858fc9f8755b3834",
+  "jsonHash": "fnv1a64:a674035f8a041552",
+  "findings": []
+}

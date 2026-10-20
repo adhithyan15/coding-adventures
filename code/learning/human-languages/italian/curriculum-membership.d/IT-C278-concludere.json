@@ -1,0 +1,11 @@
+{
+  "id": "IT-C278-concludere",
+  "pathSegment": "IT-PATH-278-PRINCIPIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-278-PRINCIPIO",
+      "order": 2
+    }
+  ]
+}

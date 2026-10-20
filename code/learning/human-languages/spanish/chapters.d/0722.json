@@ -1,0 +1,19 @@
+{
+  "chapter": 722,
+  "title": "Valientes y cobardes",
+  "label": "ch:es-valientes-y-cobardes",
+  "canDo": "I can talk about courage, fear and daring to do something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C722-atreverse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 722: I can talk about courage, fear and daring to do something.",
+    "assesses": [
+      "ES-LEX-C722-VALOR-03",
+      "ES-LEX-C722-VALOR-04",
+      "ES-LEX-C722-VALOR-05"
+    ]
+  }
+}

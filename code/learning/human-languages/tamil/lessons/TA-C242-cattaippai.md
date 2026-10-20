@@ -14,7 +14,8 @@ romanization: "caṭṭaippai"
 concept_tag: TA-PORUL242-CATTAIPPAI
 prerequisites: [TA-C242-atai, TA-C242-kalcattai]
 sounds: []
-roots: []
+roots: [dravidian-sattai-jacket, dravidian-pai-bag]
+etymology_hook: "சட்டைப்பை — native: caṭṭai 'shirt' (DEDR 2310) + pai 'bag' (DEDR 4450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C242-kalcattai]
 <!-- hl-knowledge: introduces=[TA-LEX-C242-PORUL242-03]; assesses=[] -->
 
 **சட்டைப்பை** — *caṭṭaippai* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சட்டைப்பை** (*caṭṭaippai*) is native: *caṭṭai*, "shirt" (DEDR 2310), and *pai*, "bag" (DEDR 4450): "the shirt bag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

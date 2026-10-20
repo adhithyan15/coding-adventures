@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a boat, then the Telugu for a train.
 You'll want to know: కారు.
 కారు — kāru — "a car".
 
+The word, taken apart.
+కారు (kāru) is a loan from English car, with Telugu's added -u.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a train, then the Telugu for a car.
 
 You'll want to know: సైకిలు.
 సైకిలు — sāikilu — "a bicycle".
+
+The word, taken apart.
+సైకిలు (sāikilu) is a loan from English cycle, short for bicycle.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a car, then the Telugu for a bicycle.
 You'll want to know: విమానం.
 విమానం — vimānaṁ — "an aeroplane".
 
+The word, taken apart.
+విమానం (vimānaṁ) is Sanskrit vimāna, "car of the gods", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 11823).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a bicycle, then the Telugu for an aeropla
 You'll want to know: ధాన్యం.
 ధాన్యం — dhānyaṁ — "grain".
 
+The word, taken apart.
+ధాన్యం (dhānyaṁ) is Sanskrit dhānya, "grain, corn", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 6778).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an aeroplane, then the Telugu for grain.
 
 You'll want to know: గోధుమలు.
 గోధుమలు — gōdhumalu — "wheat".
+
+The word, taken apart.
+గోధుమలు (gōdhumalu) is Sanskrit godhūma, "wheat" (CDIAL 4287), with the vowel shortened and the Telugu plural ending -lu.
 
 What you've built.
 One more word for this chapter.

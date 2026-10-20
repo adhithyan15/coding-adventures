@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Grâce à toi",
+  "label": "ch:fr-grace-a-toi",
+  "canDo": "I can say what something is due to: because of and thanks to, indeed and from then on, and name its origin.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C348-origine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say what something is due to: because of and thanks to, indeed and from then on, and name its origin.",
+    "assesses": [
+      "FR-LEX-C348-GRACE-03",
+      "FR-LEX-C348-GRACE-04",
+      "FR-LEX-C348-GRACE-05"
+    ]
+  }
+}

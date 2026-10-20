@@ -12,6 +12,9 @@ Before the new one: say the Tamil for a fish, then the Tamil for meat.
 You'll want to know: காய்கறி.
 காய்கறி — kāykaṟi — "vegetables".
 
+The word, taken apart.
+காய்கறி (kāykaṟi) is native: kāy, "unripe fruit" (DEDR 1459, which compares Indo-Aryan kacca, "raw"), and kaṟi, "vegetables, curry" (DEDR 1391; Malayalam kaṟi).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for meat, then the Tamil for vegetables.
 
 You'll want to know: வாழைப்பழம்.
 வாழைப்பழம் — vāḻaippaḻam — "a banana".
+
+The word, taken apart.
+வாழைப்பழம் (vāḻaippaḻam) is native: vāḻai, "plantain" (DEDR 5373; Malayalam vāḻa, Kannada bāḻe), and paḻam, "fruit" (DEDR 4004). DEDR compares Sanskrit (lexicons) vārabuṣā, "plantain", and phala, "fruit".
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Say எனக்குத் தமிழ் பிடிக்கும், the
 You'll want to know: மாம்பழம்.
 மாம்பழம் — māmpaḻam — "a mango".
 
+The word, taken apart.
+மாம்பழம் (māmpaḻam) is native: mā, "mango" (DEDR 4782; Malayalam mā), and paḻam, "fruit" (DEDR 4004). DEDR compares Sanskrit mākanda, "mango tree", and phala, "fruit". English mango came, through Portuguese, from the Malayalam form māṅṅa.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Tamil for a banana, then the Tamil for a mango.
 You'll want to know: தேங்காய்.
 தேங்காய் — tēṅkāy — "a coconut".
 
+The word, taken apart.
+தேங்காய் (tēṅkāy) is native Dravidian. DEDR 3408 lists Malayalam teṅṅu, "coconut tree", Kannada teṅgu and Telugu teṅkāya. It is teṅ, "coconut palm", with kāy, "fruit".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Tamil for a mango, then the Tamil for a coconut.
 
 You'll want to know: வெங்காயம்.
 வெங்காயம் — veṅkāyam — "an onion".
+
+The word, taken apart.
+வெங்காயம் (veṅkāyam) begins with native veṇ, "white" (DEDR 5496). The second part is not settled, so the origin of the whole word is uncertain.
 
 What you've built.
 One more word for this chapter.

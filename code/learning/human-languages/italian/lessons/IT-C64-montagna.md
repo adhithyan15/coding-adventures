@@ -13,7 +13,8 @@ gloss: "a mountain"
 concept_tag: IT-NATURA1-MONTAGNA
 prerequisites: [IT-C64-fiore, IT-C64-foglia]
 sounds: []
-roots: []
+roots: [mons-latin]
+etymology_hook: "montagna ← Vulgar Latin montania, built on mons 'mountain'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C64-foglia]
 <!-- hl-knowledge: introduces=[IT-LEX-C64-NATURA1-04]; assesses=[] -->
 
 **la montagna** — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**montagna** ← Vulgar Latin *montania*, built on Latin *mons*, "mountain" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

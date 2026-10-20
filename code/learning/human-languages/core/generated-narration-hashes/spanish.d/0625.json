@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 625,
+  "sourceHash": "fnv1a64:84388b8ab808eefb",
+  "lessonIds": [
+    "ES-C625-vigente",
+    "ES-C625-ilegal",
+    "ES-C625-infringir",
+    "ES-C625-denunciar",
+    "ES-C625-denuncia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch625.txt",
+  "json": "spanish/narration/ch625.json",
+  "textHash": "fnv1a64:5833638c1ef4a5a6",
+  "jsonHash": "fnv1a64:827d4618342b4ebe",
+  "findings": []
+}

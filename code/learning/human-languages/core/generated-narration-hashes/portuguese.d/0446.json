@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:3d1d876a420bc548",
+  "lessonIds": [
+    "PT-C446-arraial",
+    "PT-C446-romaria",
+    "PT-C446-procissao",
+    "PT-C446-padroeiro",
+    "PT-C446-desfilar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch446.txt",
+  "json": "portuguese/narration/ch446.json",
+  "textHash": "fnv1a64:ef8417ce4f36413e",
+  "jsonHash": "fnv1a64:cbba580c28f67a3d",
+  "findings": []
+}

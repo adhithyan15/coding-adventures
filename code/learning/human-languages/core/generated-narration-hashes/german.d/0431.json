@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:b9c6ce3cd328fef8",
+  "lessonIds": [
+    "GE-C431-beschwerde",
+    "GE-C431-beschweren",
+    "GE-C431-reklamieren",
+    "GE-C431-meckern",
+    "GE-C431-unzufrieden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch431.txt",
+  "json": "german/narration/ch431.json",
+  "textHash": "fnv1a64:700f9769f0a79e51",
+  "jsonHash": "fnv1a64:7c199d77791ae88c",
+  "findings": []
+}

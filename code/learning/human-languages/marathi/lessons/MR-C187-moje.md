@@ -14,7 +14,8 @@ romanization: "moje"
 concept_tag: MR-VASTU187-MOJE
 prerequisites: [MR-C186-modak, MR-C187-vijar]
 sounds: []
-roots: []
+roots: [persian-moza]
+etymology_hook: "moje: plural of mojā 'sock', usually traced to Persian mōza 'sock, stocking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C187-vijar]
 <!-- hl-knowledge: introduces=[MR-LEX-C187-VASTU187-02]; assesses=[] -->
 
 **मोजे** — *moje* — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोजे** (*moje*) is the plural of **मोजा**, "sock", a loan usually traced to Persian *mōza*, "sock, stocking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

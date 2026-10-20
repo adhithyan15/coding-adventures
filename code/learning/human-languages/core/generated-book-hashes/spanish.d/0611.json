@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 611,
+  "sourceHash": "fnv1a64:7138bbfd478dd774",
+  "lessonIds": [
+    "ES-C611-condicion",
+    "ES-C611-siempre-que",
+    "ES-C611-a-menos-que",
+    "ES-C611-con-tal-de-que",
+    "ES-C611-en-caso-de-que"
+  ],
+  "tex": "spanish/book/chapters/ch611-con-una-condicion.tex"
+}

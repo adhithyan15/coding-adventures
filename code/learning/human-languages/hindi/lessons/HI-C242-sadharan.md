@@ -14,7 +14,8 @@ romanization: "sādhāraṇ"
 concept_tag: HI-QUAL242-SADHARAN
 prerequisites: [HI-C241-kimti, HI-C241-anokha]
 sounds: []
-roots: []
+roots: [sanskrit-sadharana]
+etymology_hook: "sādhāraṇ ← Sanskrit sādhāraṇa 'common, general', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C241-anokha]
 <!-- hl-knowledge: introduces=[HI-LEX-C242-QUAL242-01]; assesses=[] -->
 
 **साधारण** — *sādhāraṇ* — "ordinary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साधारण** (*sādhāraṇ*) is Sanskrit *sādhāraṇa*, "common, general", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

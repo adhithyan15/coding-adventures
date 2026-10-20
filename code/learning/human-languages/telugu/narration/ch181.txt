@@ -12,6 +12,9 @@ Before the new one: say the Telugu for pink, then the Telugu for orange.
 You'll want to know: గొప్ప.
 గొప్ప — goppa — "great, eminent".
 
+The word, taken apart.
+The origin of గొప్ప (goppa) is uncertain. DEDR and CDIAL list no word of this shape meaning "great".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for orange, then the Telugu for great.
 
 You'll want to know: వాసన.
 వాసన — vāsana — "a smell".
+
+The word, taken apart.
+వాసన (vāsana) is Sanskrit vāsana, "perfuming", from vāsa, "perfume" (CDIAL 11592), taken over as a learned loan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for great, then the Telugu for a smell.
 You'll want to know: ఆసక్తికరమైన.
 ఆసక్తికరమైన — āsaktikaramaina — "interesting".
 
+The word, taken apart.
+ఆసక్తికరమైన (āsaktikaramaina) is Sanskrit āsakti, "attachment, interest", from āsakta, "attached to" (CDIAL 1477), with kara, "making", and native aina, "which is" (DEDR 333).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a smell, then the Telugu for interesting.
 You'll want to know: అద్భుతమైన.
 అద్భుతమైన — adbhutamaina — "wonderful, amazing".
 
+The word, taken apart.
+అద్భుతమైన (adbhutamaina) is Sanskrit adbhuta, "wonderful" (CDIAL 240), with native aina, "which is", from agu, "to be" (DEDR 333).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for interesting, then the Telugu for wonderfu
 
 You'll want to know: మామూలు.
 మామూలు — māmūlu — "ordinary, usual".
+
+The word, taken apart.
+మామూలు (māmūlu) is a loan from Arabic maʿmūl, "customary, usual", which came through Persian and Hindustani.
 
 What you've built.
 One more word for this chapter.

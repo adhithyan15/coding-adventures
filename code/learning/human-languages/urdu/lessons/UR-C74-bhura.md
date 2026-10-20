@@ -14,7 +14,8 @@ romanization: "bhūrā"
 concept_tag: UR-ADJ74-BHURA
 prerequisites: [UR-C74-hara, UR-C74-pila]
 sounds: []
-roots: []
+roots: [indo-aryan-bhrura]
+etymology_hook: "bhūrā ← *bhrūra 'brown', a reconstructed form; a tadbhava (CDIAL 9690)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C74-pila]
 <!-- hl-knowledge: introduces=[UR-LEX-C74-ADJ74-03]; assesses=[] -->
 
 **بھورا** — *bhūrā* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھورا** (*bhūrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhrūra*, "brown", a form CDIAL reconstructs from its descendants (CDIAL 9690). CDIAL compares an Indo-European form behind English *brown*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

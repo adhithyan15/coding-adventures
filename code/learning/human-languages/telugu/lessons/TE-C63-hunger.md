@@ -11,7 +11,8 @@ romanization: "ākali"
 concept_tag: TE-NOUN-HUNGER
 prerequisites: [TE-C62-mirror]
 sounds: []
-roots: []
+roots: [dravidian-aakali-hunger]
+etymology_hook: "ākali: native Dravidian; DEDR 2429 lists it with Kui saki and Kuwi hakki 'hunger'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C62-mirror]
 The word is inherited, and it is among the first a child in a Telugu house learns to say — usually loudly, and usually before *bhōjanaṁ* is anywhere near ready.
 
 ఆకలిగా ఉందా? is a real greeting in a house you are close to. It gets asked before మీరు ఎలా ఉన్నారు? has a chance.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆకలి** (*ākali*) is native Dravidian. DEDR 2429 lists the Telugu word, "hunger, appetite", with Kui *saki* and Kuwi *hakki*, "hunger"; it has no Tamil or Kannada match.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "to think, to have an opinion"
 concept_tag: ES-VERB-OPINAR
 prerequisites: [ES-C492-elegir, ES-C492-cumplir]
 sounds: []
-roots: []
+roots: [opinari]
+etymology_hook: "opinar ← Latin opinari 'to think, to suppose' — the verb of opinión; English opine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C492-cumplir]
 > ¿Qué opinas del plan?
 >
 > *What do you think of the plan?*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**opinar** ← Latin *opinari*, "to think, to suppose" (EtymDB 2.1) — a learned word, the verb of *opinión*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

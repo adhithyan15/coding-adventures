@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 31,
-  "sourceHash": "fnv1a64:86c222a1b29a6a3d",
+  "sourceHash": "fnv1a64:00d0c2bd73259143",
   "lessonIds": [
     "IT-C31-che",
     "IT-C31-penso-che",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch31.txt",
   "json": "italian/narration/ch31.json",
-  "textHash": "fnv1a64:82a3567772300e2c",
-  "jsonHash": "fnv1a64:8e591a12a9b28aa9",
+  "textHash": "fnv1a64:04da61888a2eabec",
+  "jsonHash": "fnv1a64:463468476c47ccd2",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "mritô"
 concept_tag: BN-GUN219-MRITO
 prerequisites: [BN-C219-nokol, BN-C219-jibonto]
 sounds: []
-roots: []
+roots: [sanskrit-mrta]
+etymology_hook: "mritô ← Sanskrit mṛta 'dead', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C219-jibonto]
 <!-- hl-knowledge: introduces=[BN-LEX-C219-GUN219-03]; assesses=[] -->
 
 **মৃত** — *mritô* — "dead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মৃত** (*mritô*) is Sanskrit *mṛta*, "dead", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

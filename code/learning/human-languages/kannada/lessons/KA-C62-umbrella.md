@@ -11,7 +11,8 @@ romanization: "koḍe"
 concept_tag: KA-NOUN-UMBRELLA
 prerequisites: [KA-C62-broom, KA-C60-bird]
 sounds: []
-roots: []
+roots: [dravidian-kutai-umbrella]
+etymology_hook: "koḍe: native Dravidian, one word with Tamil kuṭai and Telugu goḍugu (DEDR 1663)"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,11 @@ with it, and joining them would be inventing a story. Kannada gives you plenty
 of real ones; this is not one.
 
 Put ದಯವಿಟ್ಟು in front of any of this chapter's five and you have asked for it properly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊಡೆ** (*koḍe*) is native Dravidian, one word with Tamil *kuṭai* and Telugu *goḍugu* (DEDR 1663). DEDR 1663 compares Sanskrit *utkūṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cā̃dī"
 concept_tag: HI-THG246-CADI
 prerequisites: [HI-C245-jora, HI-C246-loha]
 sounds: []
-roots: []
+roots: [sanskrit-candrika]
+etymology_hook: "cāṁdī ← Sanskrit candrikā 'moonlight', a tadbhava (CDIAL 4669)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C246-loha]
 <!-- hl-knowledge: introduces=[HI-LEX-C246-THG246-02]; assesses=[] -->
 
 **चाँदी** — *cā̃dī* — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाँदी** (*cāṁdī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *candrikā*, "moonlight" (CDIAL 4669). CDIAL reconstructs a sense "silver" for the Sanskrit word, beside "moonlight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

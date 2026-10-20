@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C302-abschied",
+    "language": "german",
+    "chapter": 302,
+    "sequence": 16590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1017f53b2244dac"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C356-desempregado",
+    "language": "portuguese",
+    "chapter": 356,
+    "sequence": 20300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d006af60a63a971"
+  },
+  "findings": []
+}

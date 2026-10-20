@@ -6,15 +6,15 @@ sequence: 730
 chapter: 39
 type: grammar
 headword: hablan
-gloss: "they speak" — and, across most of the Spanish-speaking world, "you all speak"
+gloss: '"they speak" — and, across most of the Spanish-speaking world, "you all speak"'
 concept_tag: ES-GRAMMAR-AR-PRESENT-PLURAL
 prerequisites: [ES-C07-hablamos]
 sounds: []
-roots: [fabulari-latin]
+roots: [fabulari-latin, merces-latin]
 teaches_cells: [ES-CELL-IND-PRES-3PL-CONJ1]
-etymology_hook: "ustedes is vuestras mercedes, the plural of the phrase behind usted — so it takes a third-person form for exactly the reason usted does"
+etymology_hook: "hablan — the -n is Latin -nt; ustedes is vuestras mercedes 'your graces', so it takes usted's form"
 duration:
-  max_seconds: 250
+  max_seconds: 270
 requires:
   knowledge: [ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-AR-PRESENT-3SG, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED]
 introduces:
@@ -64,6 +64,11 @@ graces". Same origin, same consequence.
 > "how do I talk to more than one person?"
 
 Spain uses a different word for friends, and it has the next chapter to itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ustedes** is *vuestras mercedes*, "your graces", worn down. *Merced* is Latin *merces*, *mercedis*, "pay, reward" (Lewis & Short), which came to mean favour, then grace. The *-n* of *hablan* is the Latin *-nt* of *amant*, "they love".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-3PL, ES-LEX-USTEDES, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-AR-PRESENT-1PL, ES-ETYMON-VUESTRA-MERCED, ES-LEX-USTED] -->

@@ -14,7 +14,8 @@ romanization: "qafaza"
 concept_tag: AR-VERB-QAFAZA
 prerequisites: [AR-C259-baththa, AR-C259-tabaa2]
 sounds: []
-roots: []
+roots: [q-f-z]
+etymology_hook: "qafaza: built on the root q-f-z, 'to leap' (Lane); qafaza is the plain verb, 'he jumped'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C259-tabaa2]
 <!-- hl-knowledge: introduces=[AR-LEX-C259-ACT259-04]; assesses=[] -->
 
 **قفز** — *qafaza* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قفز** (*qafaza*) is built on the native Arabic root *q-f-z*, "to leap" (Lane). *Qafaza* is the plain verb, "he jumped".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Tout à coup",
+  "label": "ch:fr-tout-a-coup",
+  "canDo": "I can say that something happened all of a sudden, without warning, abruptly, on the spot or straight after.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C270-dans-la-foulee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say that something happened all of a sudden, without warning, abruptly, on the spot or straight after.",
+    "assesses": [
+      "FR-LEX-C270-SOUDAIN-03",
+      "FR-LEX-C270-SOUDAIN-04",
+      "FR-LEX-C270-SOUDAIN-05"
+    ]
+  }
+}

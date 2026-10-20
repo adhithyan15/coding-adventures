@@ -14,7 +14,8 @@ romanization: "apnā"
 concept_tag: HI-DET-REFLEXIVE-POSSESSIVE
 prerequisites: [HI-C84-tumhara]
 sounds: []
-roots: []
+roots: [indo-aryan-atmanaka]
+etymology_hook: "apnā ← *ātmanaka 'own', a reconstructed form; a tadbhava (CDIAL 1135)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ a preference:
 
 Both would be "I do my work." The first is what an English speaker builds, and
 a Hindi ear hears it as a mistake straight away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अपना** (*apnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ātmanaka*, "own", a form CDIAL reconstructs from its descendants (CDIAL 1135). It is built on *ātman*, "self", the word behind the respectful *āp*, "you".
 
 ## Grammar Lens: one word covering every person
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-04, HI-LEX-C84-POSS-01, HI-LEX-C84-POSS-03] -->

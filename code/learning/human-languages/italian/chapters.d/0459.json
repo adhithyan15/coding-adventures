@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "In banca",
+  "label": "ch:it-in-banca",
+  "canDo": "I can manage money at the bank: withdrawing cash, a withdrawal, being charged, a bank transfer and instalments.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C459-rata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can manage money at the bank: withdrawing cash, a withdrawal, being charged, a bank transfer and instalments.",
+    "assesses": [
+      "IT-LEX-C459-BANCA-03",
+      "IT-LEX-C459-BANCA-04",
+      "IT-LEX-C459-BANCA-05"
+    ]
+  }
+}

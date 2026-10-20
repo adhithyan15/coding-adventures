@@ -13,7 +13,8 @@ gloss: "therefore"
 concept_tag: PT-PORQUE152-PORTANTO
 prerequisites: [PT-C151-noutro-lado, PT-C151-la-em-cima]
 sounds: []
-roots: []
+roots: [tantus]
+etymology_hook: "portanto — por 'for' + tanto 'so much' (← Latin tantum)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C151-la-em-cima]
 <!-- hl-knowledge: introduces=[PT-LEX-C152-PORQUE152-01]; assesses=[] -->
 
 **portanto** — "therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**portanto** is built from *por*, "for", and *tanto*, "so much" (← Latin *tantum*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

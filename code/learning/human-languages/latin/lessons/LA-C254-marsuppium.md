@@ -13,7 +13,8 @@ gloss: "a money bag"
 concept_tag: LA-RES254-MARSUPPIUM
 prerequisites: [LA-C254-sarcina, LA-C254-pera]
 sounds: []
-roots: []
+roots: [marsuppium-latin]
+etymology_hook: "marsuppium 'money bag' — from Greek marsypion 'little bag'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C254-pera]
 <!-- hl-knowledge: introduces=[LA-LEX-C254-RES254-03]; assesses=[] -->
 
 **marsuppium, marsuppiī** — "a money bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marsuppium** was borrowed from Greek *marsypion*, "a little bag, a purse", a diminutive of *marsipos*, "a bag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

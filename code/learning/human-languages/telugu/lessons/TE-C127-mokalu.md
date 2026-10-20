@@ -14,7 +14,8 @@ romanization: "mōkālu"
 concept_tag: TE-THINGS127-MOKALU
 prerequisites: [TE-C126-mukham, TE-C127-naluka]
 sounds: []
-roots: []
+roots: [dravidian-kal-leg]
+etymology_hook: "mōkālu: native Dravidian; DEDR 4990 lists mō kālu 'knee', with Tamil muḻaṅ kāl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C127-naluka]
 <!-- hl-knowledge: introduces=[TE-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **మోకాలు** — *mōkālu* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మోకాలు** (*mōkālu*) is native Dravidian. DEDR 4990 lists *mō kālu*, "knee", the joint of the leg, with Tamil *muḻaṅ kāl*, "knee".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

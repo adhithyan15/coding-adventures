@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-399-ACCOUNT",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-399-ACCOUNT"
+  ],
+  "after": []
+}

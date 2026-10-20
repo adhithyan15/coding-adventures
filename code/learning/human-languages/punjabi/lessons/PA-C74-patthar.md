@@ -14,7 +14,8 @@ romanization: "patthar"
 concept_tag: PA-NATURE74-PATTHAR
 prerequisites: [PA-C74-daria, PA-C74-jhil]
 sounds: []
-roots: []
+roots: [sanskrit-prastara]
+etymology_hook: "patthar ← Sanskrit prastara 'anything strewn; flat surface; rock, stone', a tadbhava (CDIAL 8857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C74-jhil]
 <!-- hl-knowledge: introduces=[PA-LEX-C74-NATURE74-05]; assesses=[] -->
 
 **ਪੱਥਰ** — *patthar* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੱਥਰ** (*patthar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prastara*, "anything strewn; flat surface; rock, stone" (CDIAL 8857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

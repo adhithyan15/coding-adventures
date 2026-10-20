@@ -14,7 +14,8 @@ romanization: "jaraḍi"
 concept_tag: KA-VASTU192-JARADI
 prerequisites: [KA-C192-onake, KA-C192-miksi]
 sounds: []
-roots: []
+roots: [dravidian-cali-sift]
+etymology_hook: "jaraḍi: native Dravidian, one word with Tamil cali (DEDR 2370)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C192-miksi]
 <!-- hl-knowledge: introduces=[KA-LEX-C192-VASTU192-04]; assesses=[] -->
 
 **ಜರಡಿ** — *jaraḍi* — "a sieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜರಡಿ** (*jaraḍi*) is native Dravidian, one word with Tamil *cali* (DEDR 2370). DEDR lists *jaraḍe*, *jallaḍi*, "sieve", beside *jallisu*, "to sift". DEDR 2370 compares Sanskrit *cālana*, "a sieve" (CDIAL 4771).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

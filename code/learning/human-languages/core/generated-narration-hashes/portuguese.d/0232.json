@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 232,
-  "sourceHash": "fnv1a64:7c846489190fb47e",
+  "sourceHash": "fnv1a64:20f8df3cb4507033",
   "lessonIds": [
     "PT-C232-pesar",
     "PT-C232-verificar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch232.txt",
   "json": "portuguese/narration/ch232.json",
-  "textHash": "fnv1a64:7aefdb3c63684f69",
-  "jsonHash": "fnv1a64:7235ede1ea27522a",
+  "textHash": "fnv1a64:b293e78a92c4fce3",
+  "jsonHash": "fnv1a64:6f480ef154055877",
   "findings": []
 }

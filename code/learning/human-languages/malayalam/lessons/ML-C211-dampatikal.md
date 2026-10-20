@@ -14,7 +14,8 @@ romanization: "dampatikaḷ"
 concept_tag: ML-VASTU211-DAMPATIKAL
 prerequisites: [ML-C210-baikku, ML-C210-taksi]
 sounds: []
-roots: []
+roots: [sanskrit-dampati]
+etymology_hook: "dampatikaḷ ← Sanskrit dampatī 'husband and wife' + the Malayalam plural"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C210-taksi]
 <!-- hl-knowledge: introduces=[ML-LEX-C211-VASTU211-01]; assesses=[] -->
 
 **ദമ്പതികൾ** — *dampatikaḷ* — "a married couple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ദമ്പതികൾ** (*dampatikaḷ*) is Sanskrit *dampatī*, "the lord and lady of the house, a married pair", with the Malayalam plural *-kaḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

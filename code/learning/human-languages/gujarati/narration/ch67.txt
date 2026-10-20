@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for ice, then the Gujarati for fog.
 You'll want to know: ગાય.
 ગાય (gāy) — "a cow". It gives દૂધ.
 
+The word, taken apart.
+ગાય (gāy) is a tadbhava of Sanskrit gāvī, "cow", a form of go (CDIAL 4147).
+
 What you've built.
 One more word for cow, buffalo and goat.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for fog, then the Gujarati for a cow.
 
 You'll want to know: ભેંસ.
 ભેંસ (bhẽs) — "a buffalo".
+
+The word, taken apart.
+ભેંસ (bhẽs) is a tadbhava of Sanskrit mahiṣī, "buffalo cow", the feminine of mahiṣa, "great, powerful; buffalo" (CDIAL 9964).
 
 What you've built.
 One more word for cow, buffalo and goat.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a cow, then the Gujarati for a buffalo.
 You'll want to know: બકરી.
 બકરી (bakrī) — "a goat".
 
+The word, taken apart.
+બકરી (bakrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from barkara, "kid, lamb; goat" (CDIAL 9153).
+
 What you've built.
 One more word for cow, buffalo and goat.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a buffalo, then the Gujarati for a goat
 You'll want to know: કૂતરો.
 કૂતરો (kūtro) — "a dog".
 
+The word, taken apart.
+કૂતરો (kūtro) is a tadbhava, a word inherited and reshaped by sound change. It comes from kuttira, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3277).
+
 What you've built.
 One more word for cow, buffalo and goat.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a goat, then the Gujarati for a dog.
 
 You'll want to know: ઉંદર.
 ઉંદર (undar) — "a mouse, a rat".
+
+The word, taken apart.
+ઉંદર (undar) is a tadbhava of Sanskrit undura, "rat, mouse" (CDIAL 2095). CDIAL reports that the Sanskrit word itself came from Austroasiatic.
 
 What you've built.
 One more word for cow, buffalo and goat.

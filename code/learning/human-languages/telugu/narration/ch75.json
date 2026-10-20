@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Today, Yesterday, When",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3fddc880760b01dc",
+  "sourceHash": "fnv1a64:34d17c6fa4d0cc2e",
   "lessons": [
     {
       "id": "TE-C75-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b1843bfa3bad474",
+      "sourceHash": "fnv1a64:d016fb7c5d4bd1e7",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇవాళ (ivāḷa) begins with the near-pointing i-, \"this\", of DEDR 410. DEDR does not list the word itself, and where its second part comes from is not recorded."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -137,7 +148,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -168,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e68e24e049665aad",
+      "sourceHash": "fnv1a64:a639b89158d65a33",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిన్న (ninna) is native Dravidian, one word with Kannada ninne and Malayalam innalē (DEDR 3758). DEDR lists Telugu ninna, \"yesterday\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -286,7 +308,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -317,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd527e063b2f8b83",
+      "sourceHash": "fnv1a64:62eec2b4506fade1",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +380,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎప్పుడు వస్తారు? (eppuḍu vastāru?) is native Dravidian: eppuḍu, \"what time, when\", which DEDR 5151 and 4559 list, with the question base e- and the time word poddu; and vastāru, from vaccu, \"to come\" (DEDR 5270)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -368,7 +401,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -435,7 +468,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -466,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:390e0fd2e912991f",
+      "sourceHash": "fnv1a64:34e0f4ea20c0487e",
       "notice": null,
       "blocks": [
         {
@@ -507,6 +540,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ముందు (mundu) is native Dravidian, one word with Tamil muṉ and Kannada munnu, \"front, before\" (DEDR 5020), which lists mundu itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -517,7 +561,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -584,7 +628,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -615,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fda571afdee3ec4",
+      "sourceHash": "fnv1a64:442bc360eb46e23a",
       "notice": null,
       "blocks": [
         {
@@ -656,6 +700,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంవత్సరం (saṁvatsaraṁ) is Sanskrit saṁvatsara, \"year\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 13011)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -666,7 +721,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -733,7 +788,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

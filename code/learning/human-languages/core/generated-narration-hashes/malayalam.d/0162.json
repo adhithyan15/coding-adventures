@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 162,
-  "sourceHash": "fnv1a64:51d1fff9e0307016",
+  "sourceHash": "fnv1a64:10db770929175ec9",
   "lessonIds": [
     "ML-C162-karati",
     "ML-C162-kurukkan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch162.txt",
   "json": "malayalam/narration/ch162.json",
-  "textHash": "fnv1a64:e4c161594155a34d",
-  "jsonHash": "fnv1a64:d98f7108c315c952",
+  "textHash": "fnv1a64:e529433565bdf374",
+  "jsonHash": "fnv1a64:bfb9a5b121591906",
   "findings": []
 }

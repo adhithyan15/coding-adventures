@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Una vida nueva",
+  "label": "ch:es-una-vida-nueva",
+  "canDo": "I can say that someone found a warm welcome, settled in, established themselves, emigrated and adapted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R551-repaso-544-551",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can say that someone found a warm welcome, settled in, established themselves, emigrated and adapted.",
+    "assesses": [
+      "ES-LEX-C551-TRASLADO-03",
+      "ES-LEX-C551-TRASLADO-04",
+      "ES-LEX-C551-TRASLADO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "chāowā"
 concept_tag: BN-VERB-CHAOWA
 prerequisites: [BN-C51-shekha, BN-C51-bhola]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "chāowā ← *cāh 'see, look for, desire', a reconstructed form whose source is uncertain (CDIAL 4775)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C51-bhola]
 <!-- hl-knowledge: introduces=[BN-LEX-C51-VERBS51-03]; assesses=[] -->
 
 **চাওয়া** — *chāowā* — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাওয়া** (*chāowā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāh*, "see, look for, desire", a form CDIAL reconstructs from its descendants (CDIAL 4775). Its source is uncertain: CDIAL reports J. Bloch's view that it is a deformed form of a verb from Sanskrit *cakṣate*, "sees", and leaves the question open.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

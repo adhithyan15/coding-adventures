@@ -14,7 +14,8 @@ romanization: "bhramati"
 concept_tag: SA-VERB-BHRAMATI
 prerequisites: [SA-C138-karsati, SA-C138-nudati]
 sounds: []
-roots: []
+roots: [sanskrit-bhramati]
+etymology_hook: "bhramati ← √bhram 'wander, whirl' (CDIAL 9648), which MW compares with Latin fremere; bhramara 'bee' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C138-nudati]
 <!-- hl-knowledge: introduces=[SA-LEX-C138-ACT138-04]; assesses=[] -->
 
 **भ्रमति** — *bhramati* — "wanders".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhramati* comes from the root √bhram "move to and fro, whirl, wander" (CDIAL 9648), which MW compares with Greek *bremō* and Latin *fremere* "roar". *bhramara* "the black bee" is filed under the same root (MW), and Gujarati kept the verb as *bhamvũ* "to wander" (CDIAL 9648).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

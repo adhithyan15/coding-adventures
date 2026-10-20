@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Páginas da história",
+  "label": "ch:pt-paginas-da-historia",
+  "canDo": "I can tell history: ancestors, battles, invasions, conquests and revolutions.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C329-revolucao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can tell history: ancestors, battles, invasions, conquests and revolutions.",
+    "assesses": [
+      "PT-LEX-C329-BATALHA-03",
+      "PT-LEX-C329-BATALHA-04",
+      "PT-LEX-C329-BATALHA-05"
+    ]
+  }
+}

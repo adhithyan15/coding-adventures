@@ -14,7 +14,8 @@ romanization: "urumu"
 concept_tag: TE-THINGS121-URUMU
 prerequisites: [TE-C120-aku, TE-C120-matti]
 sounds: []
-roots: []
+roots: [dravidian-urumu-thunder]
+etymology_hook: "urumu: native Dravidian, one word with Tamil uṟumu 'to growl, roar' (DEDR 718)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C120-matti]
 <!-- hl-knowledge: introduces=[TE-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **ఉరుము** — *urumu* — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉరుము** (*urumu*) is native Dravidian, one word with Tamil *uṟumu*, "to growl, roar" (DEDR 718), which lists the Telugu *uṟumu*, "to thunder; thunder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C380-semestre",
+  "pathSegment": "IT-PATH-380-UNIVERSITA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-380-UNIVERSITA",
+      "order": 4
+    }
+  ]
+}

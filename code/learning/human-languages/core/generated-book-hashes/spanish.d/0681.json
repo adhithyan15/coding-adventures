@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 681,
+  "sourceHash": "fnv1a64:b3886b4fcc613947",
+  "lessonIds": [
+    "ES-C681-mercadillo",
+    "ES-C681-centro-comercial",
+    "ES-C681-grandes-almacenes",
+    "ES-C681-festivo",
+    "ES-C681-atender"
+  ],
+  "tex": "spanish/book/chapters/ch681-de-compras.tex"
+}

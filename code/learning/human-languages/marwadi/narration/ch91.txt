@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for dawn, then the Marwadi for the day after
 You'll want to know: पछै.
 पछै — pachhai — "afterwards, later".
 
+The word, taken apart.
+पछै (pachhai) is a tadbhava, a word inherited and reshaped by sound change. It comes from paśca, "hinder part", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari pāchaï under it (CDIAL 7990). CDIAL says this form was drawn from Sanskrit paścāt, "behind, afterwards".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for the day after tomorrow; the day before y
 
 You'll want to know: सोमवार.
 सोमवार — somvār — "Monday".
+
+The word, taken apart.
+सोमवार (somvār) is a Sanskrit compound, a tatsama: soma, "the moon" (CDIAL 13608), and vāra, "day of the week", whose inherited Old Marwari form is bāra, "turn, time" (CDIAL 11547).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for afterwards, then the Marwadi for Monday.
 You'll want to know: मंगळवार.
 मंगळवार — maṅgaḷvār — "Tuesday".
 
+The word, taken apart.
+मंगळवार (maṅgaḷvār) is a Sanskrit compound: maṅgala, "the planet Mars" (CDIAL 9706), and vāra, "day of the week" (CDIAL 11547). Marwadi says the l curled back.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for Monday, then the Marwadi for Tuesday.
 You'll want to know: गुरुवार.
 गुरुवार — guruvār — "Thursday".
 
+The word, taken apart.
+गुरुवार (guruvār) is a Sanskrit compound, a tatsama: guru, "heavy", also the name of the planet Jupiter (CDIAL 4209), and vāra, "day of the week" (CDIAL 11547).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for Tuesday, then the Marwadi for Thursday.
 
 You'll want to know: सुकरवार.
 सुकरवार — sukarvār — "Friday".
+
+The word, taken apart.
+सुकरवार (sukarvār) is a Sanskrit compound, lightly reshaped, a semi-tatsama: śukra, "bright", also the planet Venus (CDIAL 12506), and vāra, "day of the week" (CDIAL 11547). Marwadi says the ś as s and splits the kr with a vowel.
 
 What you've built.
 One more word for this chapter.

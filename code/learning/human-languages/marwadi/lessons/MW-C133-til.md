@@ -14,7 +14,8 @@ romanization: "til"
 concept_tag: MW-THINGS133-TIL
 prerequisites: [MW-C133-mug, MW-C133-moth]
 sounds: []
-roots: []
+roots: [sanskrit-tila]
+etymology_hook: "til ← Sanskrit tila 'sesame', prob. from Munda (CDIAL 5827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C133-moth]
 <!-- hl-knowledge: introduces=[MW-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **तिल** — *til* — "sesame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तिल** (*til*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tila*, "sesame". CDIAL lists Old Marwari *tila* under it (CDIAL 5827). The Old Marwari row means "small particle", a sense the Sanskrit word also had. CDIAL thinks the Sanskrit word itself probably came from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

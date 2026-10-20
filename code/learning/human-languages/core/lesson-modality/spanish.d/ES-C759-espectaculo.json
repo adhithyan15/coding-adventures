@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C759-espectaculo",
+    "language": "spanish",
+    "chapter": 759,
+    "sequence": 27920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf196de4c278a2df"
+  },
+  "findings": []
+}

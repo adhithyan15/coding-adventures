@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-341-OBIEZIONE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can disagree politely: raise an objection, answer back and contradict what someone said.",
+  "prerequisites": []
+}

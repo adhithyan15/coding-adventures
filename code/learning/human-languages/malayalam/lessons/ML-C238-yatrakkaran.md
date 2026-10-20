@@ -14,7 +14,8 @@ romanization: "yātrakkāran"
 concept_tag: ML-STHALAM238-YATRAKKARAN
 prerequisites: [ML-C238-vimanattavalam, ML-C238-reyilve]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "yātrakkāran: Sanskrit yātrā 'journey' (CDIAL 10456) + -kkāran 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C238-reyilve]
 <!-- hl-knowledge: introduces=[ML-LEX-C238-STHALAM238-04]; assesses=[] -->
 
 **യാത്രക്കാരൻ** — *yātrakkāran* — "a passenger, a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യാത്രക്കാരൻ** (*yātrakkāran*) is *yātra*, "journey", from Sanskrit *yātrā* (CDIAL 10456), with *-kkāran*, the ending for a person who does something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāchhe"
 concept_tag: BN-PLACE81-KACHHE
 prerequisites: [BN-C80-somoy, BN-C80-dupur]
 sounds: []
-roots: []
+roots: [sanskrit-kaksha]
+etymology_hook: "kāchhe: probably from kakṣa 'side' (CDIAL 2588), as Nepali kāch 'side' and Assamese kāxe 'beside'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C80-dupur]
 <!-- hl-knowledge: introduces=[BN-LEX-C81-PLACE81-01]; assesses=[] -->
 
 **কাছে** — *kāchhe* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাছে** (*kāchhe*), "near", probably goes back to Sanskrit *kakṣa*, "armpit, side", through Middle Indo-Aryan *kaccha* (CDIAL 2588). CDIAL has no Bengali row for it, but under that entry it lists Nepali *kāch*, "side, edge", and Assamese *kāxe*, "by the side of", and says some postpositions probably grew from the sense "side". The ending *-e* means "at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kome"
 concept_tag: JA-FOOD36-KOME
 prerequisites: [JA-C36-kuri, JA-C36-mame]
 sounds: []
-roots: []
+roots: [japanese-kome]
+etymology_hook: "kome: native Japanese, inherited, not borrowed; kanji 米 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C36-mame]
 <!-- hl-knowledge: introduces=[JA-LEX-C36-FOOD36-05]; assesses=[] -->
 
 **こめ** — *kome* — "uncooked rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こめ** (*kome*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "alaṅkari"
 concept_tag: TA-VERB-ALANKARI
 prerequisites: [TA-C165-palaku, TA-C165-kontatu]
 sounds: []
-roots: []
+roots: [sanskrit-alankara]
+etymology_hook: "அலங்கரி — a verb from Sanskrit alaṅkāra 'ornament', a well-established loan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C165-kontatu]
 <!-- hl-knowledge: introduces=[TA-LEX-C165-ACT165-03]; assesses=[] -->
 
 **அலங்கரி** — *alaṅkari* — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அலங்கரி** (*alaṅkari*) is a verb made from Sanskrit *alaṅkāra*, "ornament", a well-established loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

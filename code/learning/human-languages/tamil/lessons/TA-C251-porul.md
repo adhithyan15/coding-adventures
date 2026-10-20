@@ -14,7 +14,8 @@ romanization: "poruḷ"
 concept_tag: TA-VELAI251-PORUL
 prerequisites: [TA-C251-mottam, TA-C251-pattiyal]
 sounds: []
-roots: []
+roots: [dravidian-porul-thing]
+etymology_hook: "பொருள் — native Dravidian (DEDR 4544); Malayalam poruḷ 'riches, meaning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C251-pattiyal]
 <!-- hl-knowledge: introduces=[TA-LEX-C251-VELAI251-03]; assesses=[] -->
 
 **பொருள்** — *poruḷ* — "a thing, an item".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பொருள்** (*poruḷ*) is native Dravidian. DEDR 4544 lists Malayalam *poruḷ*, "riches, meaning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

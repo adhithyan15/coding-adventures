@@ -14,7 +14,8 @@ romanization: "toyāle"
 concept_tag: BN-JINIS163-TOYALE
 prerequisites: [BN-C163-asbab, BN-C163-shmpu]
 sounds: []
-roots: []
+roots: [portuguese-toalha]
+etymology_hook: "toyāle ← Portuguese toalha 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C163-shmpu]
 <!-- hl-knowledge: introduces=[BN-LEX-C163-JINIS163-04]; assesses=[] -->
 
 **তোয়ালে** — *toyāle* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তোয়ালে** (*toyāle*) is a loan from Portuguese *toalha*, "towel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

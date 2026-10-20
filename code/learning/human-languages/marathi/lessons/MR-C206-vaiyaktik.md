@@ -14,7 +14,8 @@ romanization: "vaiyaktik"
 concept_tag: MR-GUN206-VAIYAKTIK
 prerequisites: [MR-C206-sarvajanik, MR-C206-khajgi]
 sounds: []
-roots: []
+roots: [sanskrit-vyakti]
+etymology_hook: "vaiyaktik: a modern word built on Sanskrit vyakti 'an individual' with -ika"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C206-khajgi]
 <!-- hl-knowledge: introduces=[MR-LEX-C206-GUN206-03]; assesses=[] -->
 
 **वैयक्तिक** — *vaiyaktik* — "personal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वैयक्तिक** (*vaiyaktik*) is a modern word built on Sanskrit *vyakti*, "an individual", with the adjective ending *-ika*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

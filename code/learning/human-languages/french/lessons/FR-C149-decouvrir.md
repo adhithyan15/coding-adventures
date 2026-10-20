@@ -13,7 +13,8 @@ gloss: "to discover"
 concept_tag: FR-VERB-DECOUVRIR
 prerequisites: [FR-C148-plier, FR-C148-posseder]
 sounds: []
-roots: []
+roots: [cooperire-latin]
+etymology_hook: "découvrir ← Old French descovrir 'to uncover' — English discover"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C148-posseder]
 <!-- hl-knowledge: introduces=[FR-LEX-C149-VERBES149-01]; assesses=[] -->
 
 **découvrir** — "to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**découvrir** ← Old French *descovrir*, "to uncover", from *des-* and the verb for "to cover", ← Latin *cooperire*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

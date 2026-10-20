@@ -14,7 +14,8 @@ romanization: "dhovũ"
 concept_tag: GU-VERB-DHOVU
 prerequisites: [GU-C54-ramvu, GU-C55-randhvu]
 sounds: []
-roots: []
+roots: [indo-aryan-dhauvati]
+etymology_hook: "dhovũ ← *dhauvati 'washes', a reconstructed form; a tadbhava (CDIAL 6886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C55-randhvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C55-HOUSEWORK-02]; assesses=[] -->
 
 **ધોવું** (*dhovũ*) — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ધોવું** (*dhovũ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhauvati*, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

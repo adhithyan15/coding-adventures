@@ -14,7 +14,8 @@ romanization: "oi"
 concept_tag: JA-THINGS71-OI
 prerequisites: [JA-C71-ana, JA-C71-ine]
 sounds: []
-roots: []
+roots: [japanese-oi]
+etymology_hook: "oi: native Japanese, inherited, not borrowed; kanji 甥 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C71-ine]
 <!-- hl-knowledge: introduces=[JA-LEX-C71-THINGS71-04]; assesses=[] -->
 
 **おい** — *oi* — "a nephew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おい** (*oi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

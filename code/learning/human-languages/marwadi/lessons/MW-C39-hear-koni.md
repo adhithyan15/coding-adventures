@@ -12,7 +12,7 @@ concept_tag: MW-RESPONSE-NO
 prerequisites: [MW-R38-count-twenty]
 sounds: [long-ii]
 roots: []
-etymology_hook: Hindi says nahin; Marwari says koni, and the difference is one of the words a Rajasthani ear listens for.
+etymology_hook: "konī 'no': origin not settled; CDIAL has no entry for it (Marwari na 'not' is CDIAL 6906)"
 duration:
   max_seconds: 180
 requires:
@@ -61,6 +61,11 @@ accent.
 
 Keep your pencil down: the spelling is the next lesson's, and it needs no sign
 you have not already made.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *konī* is not settled. CDIAL, searched by form and by meaning, has no entry for it. It lists Marwari *na*, "not", under Sanskrit *na* (CDIAL 6906), but nothing that explains the *ko-* of *konī*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KONI-01, MW-LEX-HAAN-01] -->

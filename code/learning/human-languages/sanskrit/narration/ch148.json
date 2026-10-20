@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "Barber, Cook, Gardener, Fisherman, Cowherd",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a64f19159eda7b65",
+  "sourceHash": "fnv1a64:9e55ce577fae5fdb",
   "lessons": [
     {
       "id": "SA-C148-napitah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba79443eebc171d0",
+      "sourceHash": "fnv1a64:aeaeb14a64660ca8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāpita \"a barber\" is old, in the Śatapatha Brāhmaṇa. CDIAL 13792, after EWA, links it with the root √snā \"bathe\", through a form snāpitṛ \"one who bathes others\", which MW also queries. It lives on as Hindi nāū and nāī \"barber\" (CDIAL 13792)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3b1e95bf9880b85",
+      "sourceHash": "fnv1a64:7810d18cdf7d877c",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pācaka is built from the root √pac \"cook, bake\" with the agent suffix -aka (MW): \"one who cooks\". MW sets √pac beside Latin coquo \"I cook\", the source of English cook and kitchen, and Greek pessō."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54141d67e24ea181",
+      "sourceHash": "fnv1a64:eff2eb72d1bfbcb2",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mālākāra is built from mālā \"garland\" and kāra \"maker\", from the root √kṛ \"do, make\" (CDIAL 10093): \"a garland-maker\", and so \"a gardener, a florist\" (MW). CDIAL 10092 takes mālā itself from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6d90ae8b97be6e7",
+      "sourceHash": "fnv1a64:74235da41a37b978",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhīvara \"a fisherman\" appears from the Mahābhārata on, also as the name of a caste (CDIAL 6819). Neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi dhīmar and Punjabi jhīwar \"fisherman\" (CDIAL 6819)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58574602f122bb06",
+      "sourceHash": "fnv1a64:6401895a0f406751",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gopāla is built from go \"cow\" and pāla \"guard, keeper\" (CDIAL 4293): \"the cow-keeper\", already in the Vājasaneyi Saṃhitā. MW sets go beside Greek bous, Latin bos and English cow: one inherited Indo-European word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

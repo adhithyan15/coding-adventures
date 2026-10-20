@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 255,
-  "sourceHash": "fnv1a64:0f3016cd1e6fefc6",
+  "sourceHash": "fnv1a64:777f1220752d537b",
   "lessonIds": [
     "PT-C255-corredor",
     "PT-C255-quintal",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "portuguese/narration/ch255.txt",
   "json": "portuguese/narration/ch255.json",
-  "textHash": "fnv1a64:b1d2a0eb85ef2877",
-  "jsonHash": "fnv1a64:27208e4b7c2a3d6e",
+  "textHash": "fnv1a64:d39e789e716cb948",
+  "jsonHash": "fnv1a64:0cafedb7781d48d3",
   "findings": []
 }

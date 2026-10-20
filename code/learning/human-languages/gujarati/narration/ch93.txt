@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a year, then the Gujarati for a moment.
 You'll want to know: મોસમ.
 મોસમ (mosam) — "a season, the weather".
 
+The word, taken apart.
+મોસમ (mosam) is a loan from Arabic mawsim, "a season, a time of assembly", which reached Gujarati through Persian. Its Arabic root is w-s-m (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a moment, then the Gujarati for a seaso
 
 You'll want to know: ઉનાળો.
 ઉનાળો (unāḷo) — "summer".
+
+The word, taken apart.
+ઉનાળો (unāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uṣṇakāla, "hot season" (CDIAL 2391). It is uṣṇa, "hot", and kāla, "time".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a season, then the Gujarati for summer.
 You'll want to know: શિયાળો.
 શિયાળો (śiyāḷo) — "winter".
 
+The word, taken apart.
+શિયાળો (śiyāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śītakāla, "cold season" (CDIAL 12486). It is śīta, "cold", and kāla, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for summer, then the Gujarati for winter.
 You'll want to know: ચોમાસું.
 ચોમાસું (comāsũ) — "the monsoon, the rainy season".
 
+The word, taken apart.
+ચોમાસું (comāsũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caturmāsa, "period of four months" (CDIAL 4616). It is catur, "four", and māsa, "month".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for winter, then the Gujarati for the monso
 
 You'll want to know: વસંત.
 વસંત (vasant) — "spring".
+
+The word, taken apart.
+વસંત (vasant) is Sanskrit vasanta, "spring season", taken over whole as a learned loan, a tatsama (CDIAL 11439).
 
 What you've built.
 One more word for this chapter.

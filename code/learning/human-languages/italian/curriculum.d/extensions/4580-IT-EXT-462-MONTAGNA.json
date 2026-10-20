@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-462-MONTAGNA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a mountain walk: the summit, the slope, a ravine, a cave and climbing.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C356-candidato",
+    "language": "italian",
+    "chapter": 356,
+    "sequence": 20500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2a28a2ba18cfb51"
+  },
+  "findings": []
+}

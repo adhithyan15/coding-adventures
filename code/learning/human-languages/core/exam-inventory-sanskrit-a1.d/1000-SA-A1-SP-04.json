@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-SP-04",
+  "category": "Spatial notions",
+  "label": "origin: where you are from",
+  "probe": [
+    "SA-LEX-C59-ORIGIN-01",
+    "SA-LEX-C59-ORIGIN-02",
+    "SA-GRAMMAR-ABLATIVE-ORIGIN-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG3-07",
+    "A1-F1-03"
+  ],
+  "note": "Closed by SA-C59-desha, SA-C59-bharatam and SA-C59-bharatat. `kutaḥ` had been taught since chapter 18 with nothing to answer it; the answer needed both a country to name and the -at ablative to name it FROM, and the lesson teaches the ending rather than the phrase."
+}

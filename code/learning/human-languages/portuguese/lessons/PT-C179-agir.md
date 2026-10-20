@@ -13,7 +13,8 @@ gloss: "to act"
 concept_tag: PT-VERB-AGIR
 prerequisites: [PT-C178-recomendar, PT-C178-respirar]
 sounds: []
-roots: []
+roots: [agere-latin]
+etymology_hook: "agir ← Latin agere 'to do, to drive' — English act and agent share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C178-respirar]
 <!-- hl-knowledge: introduces=[PT-LEX-C179-VERBOS179-01]; assesses=[] -->
 
 **agir** — "to act".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agir** ← Latin *agere*, "to do, to drive" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

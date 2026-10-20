@@ -14,7 +14,8 @@ romanization: "gajaḥ"
 concept_tag: SA-ANIMAL-ELEPHANT
 prerequisites: [SA-C78-bread, SA-C78-payasam]
 sounds: []
-roots: []
+roots: [sanskrit-gaja]
+etymology_hook: "gaja 'elephant' appears from the Ṣaḍviṃśa Brāhmaṇa on; its origin is not settled (MW; CDIAL 3956)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C78-payasam]
 <!-- hl-knowledge: introduces=[SA-LEX-C79-ANIMALS-01]; assesses=[] -->
 
 **गजः** (*gajaḥ*) — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Gaja* appears from the Ṣaḍviṃśa Brāhmaṇa onward (CDIAL 3956). Its origin is not
+settled: MW gives no root for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

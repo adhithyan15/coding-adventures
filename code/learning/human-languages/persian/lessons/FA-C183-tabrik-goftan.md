@@ -14,7 +14,8 @@ romanization: "tabrik goftan"
 concept_tag: FA-VERB-TABRIK-GOFTAN
 prerequisites: [FA-C183-ezdevaj-kardan, FA-C183-jashn-gereftan]
 sounds: []
-roots: []
+roots: [arabic-tabrik, old-persian-gaub]
+etymology_hook: "tabrik ← Arabic tabrīk 'blessing' (root b-r-k, Lane), + Persian goftan 'to say'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C183-jashn-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C183-KONESH183-03]; assesses=[] -->
 
 **تبریک گفتن** — *tabrik goftan* — "to congratulate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tabrik goftan* is "to say a blessing": *tabrik* is borrowed from Arabic *tabrīk*, "blessing, congratulation" (EtymDB; root *b-r-k*, Lane), and *goftan*, "to say", is native (Middle Persian *guftan*, EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

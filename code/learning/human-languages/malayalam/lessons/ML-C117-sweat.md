@@ -11,7 +11,8 @@ romanization: "viyarppŭ"
 concept_tag: ML-BODY-SWEAT
 prerequisites: [ML-C116-worry, ML-C117-thirst]
 sounds: []
-roots: []
+roots: [dravidian-veyar-sweat]
+etymology_hook: "viyarppŭ: native Dravidian, one word with Tamil veyar and Kannada bemar(u) (DEDR 5486)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C117-thirst]
 <!-- hl-knowledge: introduces=[ML-LEX-C117-BODY-02]; assesses=[] -->
 
 **വിയർപ്പ്** (*viyarppŭ*) — "sweat". The **ർ** is the *chillu r* you learned to write.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിയർപ്പ്** (*viyarppŭ*) is native Dravidian, one word with Tamil *veyar* and Kannada *bemar(u)* (DEDR 5486).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

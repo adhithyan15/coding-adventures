@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 82,
-  "sourceHash": "fnv1a64:74682052b9975e9b",
+  "sourceHash": "fnv1a64:149dee889cda7317",
   "lessonIds": [
     "JA-C82-machikado",
     "JA-C82-shinai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch82.txt",
   "json": "japanese/narration/ch82.json",
-  "textHash": "fnv1a64:ca385650eba78a59",
-  "jsonHash": "fnv1a64:14870b0d77eac5ae",
+  "textHash": "fnv1a64:a423c6bddb8d7985",
+  "jsonHash": "fnv1a64:70ce7cce24206fa0",
   "findings": []
 }

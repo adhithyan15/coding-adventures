@@ -14,7 +14,8 @@ romanization: "pachās"
 concept_tag: UR-NUMBERS85-PACHAS
 prerequisites: [UR-C85-tis, UR-C85-chalis]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat]
+etymology_hook: "pachās ← Sanskrit pañcāśat 'fifty', a tadbhava (CDIAL 7682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C85-chalis]
 <!-- hl-knowledge: introduces=[UR-LEX-C85-NUMBERS85-04]; assesses=[] -->
 
 **پچاس** — *pachās* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پچاس** (*pachās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcāśat*, "fifty" (CDIAL 7682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C297-fuggire",
+    "language": "italian",
+    "chapter": 297,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7ede2bb6d7e8079"
+  },
+  "findings": []
+}

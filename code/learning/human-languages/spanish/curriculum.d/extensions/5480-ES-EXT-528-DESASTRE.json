@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-528-DESASTRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a disaster in the news: an earthquake, a flood, a tragedy.",
+  "prerequisites": []
+}

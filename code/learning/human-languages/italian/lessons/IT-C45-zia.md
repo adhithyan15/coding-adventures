@@ -14,6 +14,7 @@ concept_tag: IT-FAMIGLIA2-ZIA
 prerequisites: [IT-C44-marito, IT-C45-moglie]
 sounds: []
 roots: []
+etymology_hook: "zia ← Late Latin thia 'aunt', from Greek theia 'aunt'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C45-moglie]
 <!-- hl-knowledge: introduces=[IT-LEX-C45-FAMIGLIA2-02]; assesses=[] -->
 
 **la zia** — "an aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zia** ← Late Latin *thia*, "aunt" — inherited; Latin took it from Greek *theia*, "aunt". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

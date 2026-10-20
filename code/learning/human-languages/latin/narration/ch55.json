@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Numerī Ōrdinis",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fc84c94883ff08d4",
+  "sourceHash": "fnv1a64:9b53b205d4a14b86",
   "lessons": [
     {
       "id": "LA-C55-primus",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfcd958b20f70262",
+      "sourceHash": "fnv1a64:408a6f434b3b0df2",
       "notice": null,
       "blocks": [
         {
@@ -259,7 +259,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like prīmus, it is not built on its own number. There is no duo in it. It comes from sequī, \"to follow\" — so second place is the place that comes after, named by what it does rather than by where it falls in a count."
+              "text": "Like prīmus, it is not built on its own number. There is no duo in it. It comes from the Latin verb \"to follow\" (a later chapter teaches it) — so second place is the place that comes after, named by what it does rather than by where it falls in a count."
             },
             {
               "kind": "speech",
@@ -324,7 +324,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did the root behind secundus mean? (To follow — sequī.) So what is second place, in Latin's own terms? (The place that comes after.) And why is a second on a clock called that? (It is the pars minūta secunda — the second cutting of the hour, after the minute.)"
+              "text": "What did the root behind secundus mean? (To follow.) So what is second place, in Latin's own terms? (The place that comes after.) And why is a second on a clock called that? (It is the pars minūta secunda — the second cutting of the hour, after the minute.)"
             }
           ]
         }
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cfa73ac6992adb5",
+      "sourceHash": "fnv1a64:978d0f23201ce533",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
             },
             {
               "kind": "speech",
-              "text": "Quattuor is four, and quārtus is quattuor with the middle squeezed out and an ending put on. After the odd pair at the front, that is the shape the series keeps: the number you already know, wearing an ending, behaving like a describing word and agreeing with whatever it counts."
+              "text": "Quattuor is four, and quārtus is quattuor with the middle squeezed out and an ending put on. Quattuor is inherited, a cousin of English four (EtymDB 2.1). After the odd pair at the front, that is the shape the series keeps: the number you already know, wearing an ending, behaving like a describing word and agreeing with whatever it counts."
             },
             {
               "kind": "speech",
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f577b411c4f36ccf",
+      "sourceHash": "fnv1a64:d16b3d7d5913edb1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -755,7 +755,7 @@
             },
             {
               "kind": "speech",
-              "text": "Quīnque is five; quīntus is that number with the ending on it, exactly as quārtus was. Two in a row now behave the same way."
+              "text": "Quīnque is five; quīntus is that number with the ending on it, exactly as quārtus was. Two in a row now behave the same way. Quīnque is inherited, a cousin of English five (EtymDB 2.1)."
             },
             {
               "kind": "speech",

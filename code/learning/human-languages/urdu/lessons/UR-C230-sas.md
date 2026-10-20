@@ -14,7 +14,8 @@ romanization: "sās"
 concept_tag: UR-CHIZ230-SAS
 prerequisites: [UR-C230-poti, UR-C230-sasur]
 sounds: []
-roots: []
+roots: [sanskrit-shvashru]
+etymology_hook: "sās ← Sanskrit śvaśrū 'husband's or wife's mother', a tadbhava (CDIAL 12759)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C230-sasur]
 <!-- hl-knowledge: introduces=[UR-LEX-C230-CHIZ230-03]; assesses=[] -->
 
 **ساس** — *sās* — "a mother-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساس** (*sās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvaśrū*, "husband's or wife's mother" (CDIAL 12759).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

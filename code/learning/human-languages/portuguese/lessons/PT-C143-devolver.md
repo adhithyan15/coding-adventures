@@ -13,7 +13,8 @@ gloss: "to give back"
 concept_tag: PT-VERB-DEVOLVER
 prerequisites: [PT-C143-apanhar, PT-C143-alcancar]
 sounds: []
-roots: []
+roots: [volvere-latin]
+etymology_hook: "devolver ← Latin devolvere 'to roll down, to hand down' — English devolve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C143-alcancar]
 <!-- hl-knowledge: introduces=[PT-LEX-C143-VERBOS143-04]; assesses=[] -->
 
 **devolver** — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**devolver** ← Latin *devolvere*, "to roll down, to hand down" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

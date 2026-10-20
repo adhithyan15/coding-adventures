@@ -13,7 +13,8 @@ gloss: "an example"
 concept_tag: FR-CHOSES251-EXEMPLE
 prerequisites: [FR-C251-resultat, FR-C251-difference]
 sounds: []
-roots: []
+roots: [exemplum]
+etymology_hook: "exemple ← Latin exemplum 'a sample, a pattern' — English example"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C251-difference]
 <!-- hl-knowledge: introduces=[FR-LEX-C251-CHOSES251-03]; assesses=[] -->
 
 **l'exemple** — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**exemple** ← Latin *exemplum*, "a sample, a pattern" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

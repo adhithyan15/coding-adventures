@@ -14,7 +14,8 @@ romanization: "bigyān"
 concept_tag: BN-JINIS256-BIGYAN
 prerequisites: [BN-C256-songskriti, BN-C256-itihas]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana]
+etymology_hook: "bigyān ← Sanskrit vijñāna 'discernment, knowledge', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C256-itihas]
 <!-- hl-knowledge: introduces=[BN-LEX-C256-JINIS256-03]; assesses=[] -->
 
 **বিজ্ঞান** — *bigyān* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিজ্ঞান** (*bigyān*) is Sanskrit *vijñāna*, "discernment, knowledge", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

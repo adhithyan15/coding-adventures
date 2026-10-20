@@ -1,0 +1,11 @@
+{
+  "id": "FR-C512-refrain",
+  "pathSegment": "FR-PATH-512-CHANT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-512-CHANT",
+      "order": 3
+    }
+  ]
+}

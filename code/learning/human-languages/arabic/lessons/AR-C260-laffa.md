@@ -14,7 +14,8 @@ romanization: "laffa"
 concept_tag: AR-VERB-LAFFA
 prerequisites: [AR-C260-alsaqa, AR-C260-harraka]
 sounds: []
-roots: []
+roots: [l-f-f]
+etymology_hook: "laffa: built on the root l-f-f, 'to wrap, to roll up' (Lane); laffa is the plain verb, 'he wrapped'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C260-harraka]
 <!-- hl-knowledge: introduces=[AR-LEX-C260-ACT260-05]; assesses=[] -->
 
 **لف** — *laffa* — "to wrap, to roll up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لف** (*laffa*) is built on the native Arabic root *l-f-f*, "to wrap, to roll up" (Lane). *Laffa* is the plain verb, "he wrapped".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

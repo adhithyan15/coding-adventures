@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:8f2db9b22f43c517",
+  "sourceHash": "fnv1a64:2654e4a9fb05a3de",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:212926a3742fab75",
+      "sourceHash": "fnv1a64:14c50097c5f67dec",
       "notice": null,
       "blocks": [
         {
@@ -189,6 +189,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare from Latin precari, \"to pray, to ask\" (Lewis & Short) — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,7 +224,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -244,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fff7af07176f487",
+      "sourceHash": "fnv1a64:100f96eaee1d029c",
       "notice": null,
       "blocks": [
         {
@@ -285,6 +296,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare from Latin precari, \"to pray, to ask\" (Lewis & Short) — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -309,7 +331,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -340,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b95956e0aacaae19",
+      "sourceHash": "fnv1a64:41df45dc4e27e076",
       "notice": null,
       "blocks": [
         {
@@ -381,6 +403,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prego is \"I pray, I ask\": the first-person form of pregare from Latin precari, \"to pray, to ask\" (Lewis & Short) — inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -405,7 +438,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -436,7 +469,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19f496b617226a81",
+      "sourceHash": "fnv1a64:2a20d38962f7e1f5",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +584,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gives come, and which Spanish and French words are its siblings? (quōmodo becomes cómo, comment.) What two jobs does come do? (\"How?\" and \"like/as.\") Next: the verb it pairs with — stare."
+              "text": "What Latin word gives come, and which Spanish and French words are its siblings? (quōmodo becomes cómo, comment.) What two jobs does come do? (\"How?\" and \"like/as.\") Next: the verb it pairs with, the one that means \"to stand.\""
             }
           ]
         }
@@ -570,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2be6300b8ae38736",
+      "sourceHash": "fnv1a64:366623d86c962d84",
       "notice": null,
       "blocks": [
         {
@@ -586,7 +619,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like Spanish, Italian has two verbs for \"to be\" — essere (identity) and stare (state). \"How are you?\" runs on stare. Spanish's estar is this very verb, with a front e added on."
+              "text": "Like Spanish, Italian has two verbs for \"to be\" — one for identity, which comes much later, and stare (state). \"How are you?\" runs on stare. Spanish's estar is this very verb, with a front e added on."
             }
           ]
         },
@@ -619,7 +652,7 @@
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: essere vs stare, and the two forms you need",
+          "title": "Grammar Lens: the two be-verbs, and the two forms you need",
           "segments": [
             {
               "kind": "table",
@@ -631,7 +664,7 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "verb: essere. from: Latin esse. job: identity — sono Marco, \"I am Marco\".",
+                "verb: the identity one (later). from: Latin esse. job: identity — \"I am Marco\".",
                 "verb: stare. from: Latin stāre. job: state / how you are — sto bene, \"I'm well\"."
               ]
             },
@@ -702,7 +735,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is stare, and which Spanish verb is its twin? (\"To stand,\" stāre — Spanish estar.) Which Italian be-verb is for how you feel — essere or stare? (stare.) Next: ask it — Come stai?"
+              "text": "What Latin verb is stare, and which Spanish verb is its twin? (\"To stand,\" stāre — Spanish estar.) Which Italian be-verb is for how you feel — the identity one, or stare? (stare.) Next: ask it — Come stai?"
             }
           ]
         }
@@ -721,7 +754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de7dd82da90f3fb9",
+      "sourceHash": "fnv1a64:d7408637e6b321a5",
       "notice": null,
       "blocks": [
         {
@@ -757,6 +790,10 @@
             {
               "kind": "speech",
               "text": "stai = “you are / stand,” the tu form of stare."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited from Latin: come from quōmodo, “in what way,” and stare from Latin stāre, “to stand” (EtymDB 2.1)."
             },
             {
               "kind": "speech",
@@ -857,7 +894,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bbec1c70fdf6237",
+      "sourceHash": "fnv1a64:37db996c62637ac0",
       "notice": null,
       "blocks": [
         {
@@ -919,6 +956,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Come sta? is built from come, \"how\" from Latin quomodo, and sta, \"stands\", a form of stare from Latin stare, \"to stand\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -967,7 +1015,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -998,7 +1046,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f7567dab36a56c5",
+      "sourceHash": "fnv1a64:08290d05f626bfd3",
       "notice": null,
       "blocks": [
         {
@@ -1022,7 +1070,7 @@
             },
             {
               "kind": "speech",
-              "text": "Va comes from andare, “to go.” Unlike stai / sta, this question does not force you to choose an informal or formal ending, so it is useful in either setting."
+              "text": "Va is a form of the Italian verb “to go.” Unlike stai / sta, this question does not force you to choose an informal or formal ending, so it is useful in either setting."
             }
           ]
         },
@@ -1041,16 +1089,27 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish also uses the “stand” picture in ¿cómo estás?; French and German use a “go” picture. Italian keeps both, which makes it a bridge between them. The comparison is only a memory aid: in Italian, simply connect stai with stare and va with andare."
+              "text": "Spanish also uses the “stand” picture in ¿cómo estás?; French and German use a “go” picture. Italian keeps both, which makes it a bridge between them. The comparison is only a memory aid: in Italian, simply connect stai with stare and va with “go.”"
             },
             {
               "kind": "speech",
-              "text": "You will learn all six forms of andare much later. For now, va is one ready-made piece inside this question."
+              "text": "You will learn the whole verb “to go” much later. For now, va is one ready-made piece inside this question."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Come va? is built from come, \"how\" from Latin quomodo, and va, \"goes\" from Latin vadit, \"goes\". (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1099,7 +1158,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1111,7 +1170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which question uses “stand”? (Come stai?) Which uses “go”? (Come va?) What infinitive owns va? (Andare.) Must Come va? choose between tu and Lei? (No.) Next: answer with the original Italian “so-so.”"
+              "text": "Which question uses “stand”? (Come stai?) Which uses “go”? (Come va?) What does va mean? (It goes.) Must Come va? choose between tu and Lei? (No.) Next: answer with the original Italian “so-so.”"
             }
           ]
         }
@@ -1284,7 +1343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d64ec33c1db54b5",
+      "sourceHash": "fnv1a64:1390b525d15bf60e",
       "notice": null,
       "blocks": [
         {
@@ -1321,6 +1380,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "male from Latin male, \"badly\", from malus, \"bad\" — inherited. The rest of the phrase comes apart in later lessons. (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1345,7 +1415,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1376,7 +1446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0527551163af08cc",
+      "sourceHash": "fnv1a64:57e410b03428c0fa",
       "notice": null,
       "blocks": [
         {
@@ -1438,11 +1508,11 @@
             },
             {
               "kind": "speech",
-              "text": "stare — \"to be\" from stand (= Spanish estar); vs essere (identity)."
+              "text": "stare — \"to be\" from stand (= Spanish estar); not the identity be-verb."
             },
             {
               "kind": "speech",
-              "text": "Come stai? / sta? / va? — informal, formal, and the \"how's it going?\" form (va from andare, \"to go\")."
+              "text": "Come stai? / sta? / va? — informal, formal, and the \"how's it going?\" form (va, \"it goes\")."
             },
             {
               "kind": "speech",
@@ -1512,7 +1582,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb carries Come stai?, and what does it literally ask? (stare, \"to stand\" — \"how do you stand?\") What does prego answer, and from what root? (grazie; from pregare, \"to pray.\") Italian can ask \"how are you\" two ways — which verbs? (stare, stand; andare becomes va, go.) Next chapter: introducing yourself — mi chiamo, come ti chiami."
+              "text": "Which verb carries Come stai?, and what does it literally ask? (stare, \"to stand\" — \"how do you stand?\") What does prego answer, and from what root? (grazie; from pregare, \"to pray.\") Italian can ask \"how are you\" two ways — which verbs? (stare, stand; va, go.) Next chapter: introducing yourself — saying your name and asking someone theirs."
             }
           ]
         }

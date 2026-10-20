@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 53,
-  "sourceHash": "fnv1a64:f8229a7017b0a77a",
+  "sourceHash": "fnv1a64:f100388f3032a201",
   "lessonIds": [
     "TE-C53-sky",
     "TE-C53-sun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch53.txt",
   "json": "telugu/narration/ch53.json",
-  "textHash": "fnv1a64:ec2853ff518f6ede",
-  "jsonHash": "fnv1a64:478d2b0bc4cfc66f",
+  "textHash": "fnv1a64:ac7a636ee83ad6a9",
+  "jsonHash": "fnv1a64:c23883f2b5ff9e65",
   "findings": []
 }

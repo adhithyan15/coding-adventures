@@ -14,7 +14,8 @@ romanization: "patjhaṛ"
 concept_tag: PA-TIME100-PATJHAR
 prerequisites: [PA-C100-barsat, PA-C100-basant]
 sounds: []
-roots: []
+roots: [sanskrit-patra, indo-aryan-jhatati]
+etymology_hook: "patjhaṛ: pat 'leaf' (cf. patt, CDIAL 7733) + jhaṛ, from jhaṛṇā 'to fall off' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C100-basant]
 <!-- hl-knowledge: introduces=[PA-LEX-C100-TIME100-03]; assesses=[] -->
 
 **ਪਤਝੜ** — *patjhaṛ* — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਤਝੜ** (*patjhaṛ*) is built from two inherited words: *pat*, "leaf", as in Punjabi *patt*, from Sanskrit *pattra* (CDIAL 7733), and *jhaṛ*, from *jhaṛṇā*, "to fall off", which CDIAL lists under a reconstructed *\*jhaṭati*, "falls" (CDIAL 5328). Autumn is "leaf-fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vimānam"
 concept_tag: SA-TRAVEL-PLANE
 prerequisites: [SA-C75-chariot, SA-C75-boat]
 sounds: []
-roots: []
+roots: [sanskrit-vimana]
+etymology_hook: "vimāna ← vi + the root √mā 'measure': 'traversing', then the gods' aerial car (MW; CDIAL 11823)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C75-boat]
 
 **विमानम्** (*vimānam*) — "an aeroplane". In the old stories it was a vehicle of the
 gods that crossed the **आकाशः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vimāna* is built from *vi* and the root √mā, "to measure": first "measuring out,
+traversing", then the self-moving aerial car of the gods (MW, CDIAL 11823). Its
+use for an aeroplane is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

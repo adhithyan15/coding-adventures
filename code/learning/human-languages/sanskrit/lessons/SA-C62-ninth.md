@@ -14,7 +14,8 @@ romanization: "navamaḥ"
 concept_tag: SA-ORDINAL-NINTH
 prerequisites: [SA-C62-eighth, SA-C61-rtu, SA-C55-gantum, SA-C42-much, SA-C19-nine, SA-C15-new]
 sounds: []
-roots: []
+roots: [sanskrit-navama]
+etymology_hook: "navama 'ninth' ← navan 'nine' + the ordinal ending -ma, not nava 'new' (MW; CDIAL 7006)"
 duration:
   max_seconds: 220
 requires:

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C497-hamecon",
+    "language": "french",
+    "chapter": 497,
+    "sequence": 27290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23eaae4de266b554"
+  },
+  "findings": []
+}

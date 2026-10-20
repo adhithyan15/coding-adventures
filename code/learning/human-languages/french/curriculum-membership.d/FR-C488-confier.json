@@ -1,0 +1,11 @@
+{
+  "id": "FR-C488-confier",
+  "pathSegment": "FR-PATH-488-CALINS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-488-CALINS",
+      "order": 4
+    }
+  ]
+}

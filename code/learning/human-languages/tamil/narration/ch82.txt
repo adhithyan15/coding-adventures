@@ -24,6 +24,9 @@ You already know this word. Think of முதலில் (mutalil), "first of 
 இல் is the ending that means "in" or "at". Take it off and what is left is முதல் (mutal), first — and it was standing there in your mouth the whole time, carrying the meaning, without ever being named.
 முதல் நாள் (mutal nāḷ), the first day. முதல் பாதை (mutal pātai), the first road.
 
+The word, taken apart.
+முதல் (mutal) is native Dravidian: mutal, "beginning, first" (DEDR 4950).
+
 Across the family: the word four languages built on.
 முதல் (mutal) is one of the oldest words in this family, and its sisters did four different things with it:
 [a table of 4 rows, read aloud]
@@ -64,6 +67,9 @@ You'll want to know: இரண்டாவது.
 இரண்டாவது (iraṇḍāvadu) — "second".
 இரண்டு answers how many. இரண்டாவது (iraṇḍāvadu) answers which one in the line.
 இரண்டாவது நாள் (iraṇḍāvadu nāḷ), the second day. இரண்டாவது கதவு (iraṇḍāvadu kadavu), the second door.
+
+The word, taken apart.
+இரண்டாவது (iraṇḍāvadu) is native: iraṇṭu, "two" (DEDR 474), with the ordinal ending -āvatu. That ending is usually analysed as ā, "to become" (DEDR 333), with -atu, "the one": "the one that became two".
 
 Grammar Lens: one ending, and one word that does not take it.
 [a table of 1 row, read aloud]
@@ -109,6 +115,9 @@ The ending is the same ending. முதல் (mutal) takes -ஆவது exact
 The stem is the exception. The ending is not.
 Both forms are current: முதல் (mutal) நாள் and முதலாவது (mutalāvadu) நாள் are both the first day, and முதல் (mutal) is the shorter and commoner of the two in front of a noun.
 
+The word, taken apart.
+முதலாவது (mutalāvadu) is native: mutal, "first" (DEDR 4950), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mutal, then mutalāvadu]
@@ -142,6 +151,9 @@ You'll want to know: மூன்றாவது.
 Three is the number the Dravidian family never quarrelled over — Tamil mūṉṟu, Malayalam mūnnŭ, Kannada mūru, Telugu mūḍu, all keeping the long ū at the front. The ordinal keeps it too, because the ending only touches the end of the word.
 மூன்றாவது கதவு (mūṉṟāvadu kadavu), the third door.
 
+The word, taken apart.
+மூன்றாவது (mūṉṟāvadu) is native: mūṉṟu, "three" (DEDR 5052; Malayalam mūnnu), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mūṉṟu, then mūṉṟāvadu]
@@ -174,6 +186,9 @@ Warm-up.
 You'll want to know: நான்காவது.
 நான்காவது (nāṉkāvadu) — "fourth". நான்கு (nāṉku) takes -ஆவது, and nothing else changes.
 நான்காவது நாற்காலி (nāṉkāvadu nāṟkāli), the fourth chair.
+
+The word, taken apart.
+நான்காவது (nāṉkāvadu) is native: nāṉku, "four" (DEDR 3655), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
 
 Guided Practice.
 [pause 1 second]
@@ -209,6 +224,9 @@ You'll want to know: ஐந்தாவது.
 That is the first five. Count the work: four of them were built from numbers you already count with, and the fifth — முதல் (mutal) — was a word you had been saying since you learned mutalil, without knowing it was a number word.
 Nothing in this chapter was a word you had to learn.
 இடது பக்கம் முதல் (mutal) பாதை is now sayable in its useful half: முதல் (mutal) பாதை, the first road, with இடது for which side of the street.
+
+The word, taken apart.
+ஐந்தாவது (aindāvadu) is native: aintu, "five" (DEDR 2826), with the ordinal ending -āvatu, from ā, "to become" (DEDR 333).
 
 Guided Practice.
 [pause 1 second]

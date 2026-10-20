@@ -11,8 +11,8 @@ gloss: thank you (polite)
 concept_tag: JA-WORD-ARIGATOU-GOZAIMASU
 prerequisites: [JA-W03-su]
 sounds: [mora, dakuten, long-o]
-roots: [gozaru]
-etymology_hook: Politeness in Japanese is not a different word but a different verb ending — and sometimes a different verb.
+roots: [gozaru, arigatashi]
+etymology_hook: "gozaimasu ← gozaru: Sino-Japanese go-za 御座 'seat' + native aru 'to be', plus polite -masu"
 duration:
   max_seconds: 225
 requires:
@@ -69,6 +69,11 @@ say," has the respectful form *ossharu* and the humble form *mōsu*. Same act,
 three verbs, chosen by who is doing what to whom. That is **keigo**, and this
 lesson is only its front door. Their spellings belong in later, separately
 taught script lessons.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ありがとうございます** (*arigatō gozaimasu*) joins two pieces. *Arigatō* comes from *arigataku*, "in a way hard to come by" (JMdict). *Gozaimasu*, the polite "to be", comes from *gozaru*, built from the honorific *go* and *za*, "seat", both borrowed from Chinese, with native *aru*, "to be"; *-masu* is the polite ending (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->

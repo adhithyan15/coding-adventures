@@ -7,11 +7,12 @@ chapter: 55
 type: word
 headword: नऊ
 romanization: naū
-gloss: nine — the same word as new, in Sanskrit and in English both
+gloss: nine — kin to English nine, and not the Sanskrit look-alike that means new
 concept_tag: MR-LEX-NAU
 prerequisites: [MR-C55-saha, MR-C55-saat, MR-C55-aath]
 sounds: [standalone-vowel-u]
-roots: []
+roots: [sanskrit-nava-nine]
+etymology_hook: "naū ← Sanskrit nava 'nine', a tadbhava; the same ancient word as English nine (CDIAL 6984)"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,9 @@ further than that.
 
 > **नऊ** — *naū* — **9**
 
-Sanskrit **नव** (*nava*) — Latin *novem*, English **nine**. And **नव** also meant
-**new**, in Sanskrit exactly as *novem* and *novus* are a pair in Latin. Nine is
-the new number: the one that starts the count over after eight.
+Sanskrit **नव** (*nava*), "nine" — Latin *novem*, English **nine** (CDIAL 6984).
+Sanskrit has a second **नव**, "**new**," like Latin *novus* and English *new*,
+but CDIAL gives it a separate entry (6983): the two only sound alike.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-EXCLAM-KITI, MR-LEX-CHANGLA, MR-SCRIPT-COMMA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-NAU, MR-LEX-NUMBERS-ONE-TO-FIVE] -->

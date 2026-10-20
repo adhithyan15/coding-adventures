@@ -14,7 +14,8 @@ romanization: "sandūk"
 concept_tag: MW-THINGS122-SANDUK
 prerequisites: [MW-C122-dabbo, MW-C122-peti]
 sounds: []
-roots: []
+roots: [arabic-sanduq]
+etymology_hook: "sandūk ← Arabic ṣandūq 'chest, box', through Persian (Lane, root ṣ-n-d-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C122-peti]
 <!-- hl-knowledge: introduces=[MW-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **संदूक** — *sandūk* — "a chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संदूक** (*sandūk*) is a loan from Arabic *ṣandūq*, "chest, box", which reached Marwadi through Persian. Its Arabic root is *ṣ-n-d-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

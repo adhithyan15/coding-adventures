@@ -14,7 +14,8 @@ romanization: "bôrông"
 concept_tag: BN-KARON190-BORONG
 prerequisites: [BN-C189-khad, BN-C189-jhorna]
 sounds: []
-roots: []
+roots: [sanskrit-varam]
+etymology_hook: "bôrông ← Sanskrit varam 'better than', a tatsama (CDIAL 11308)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C189-jhorna]
 <!-- hl-knowledge: introduces=[BN-LEX-C190-KARON190-01]; assesses=[] -->
 
 **বরং** — *bôrông* — "rather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বরং** (*bôrông*) is Sanskrit *varam*, "better than", taken over whole as a learned loan, a tatsama (CDIAL 11308). It is the adverb of *vara*, "choice, boon", whose inherited form *bar*, "boon", CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

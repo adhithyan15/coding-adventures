@@ -1,0 +1,11 @@
+{
+  "id": "PT-C514-espada",
+  "pathSegment": "PT-PATH-514-RINGUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-514-RINGUE",
+      "order": 2
+    }
+  ]
+}

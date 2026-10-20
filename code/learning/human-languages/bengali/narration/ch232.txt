@@ -12,6 +12,9 @@ Before the new one: say the Bengali for fine flour, then the Bengali for semolin
 You'll want to know: শসা.
 শসা — shôsā — "a cucumber".
 
+The word, taken apart.
+The origin of শসা (shôsā) is not settled: CDIAL has no entry for it in this sense, and a search by the gloss "cucumber" finds only words of other shapes, such as Bengali khirā (CDIAL 3697).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for semolina, then the Bengali for a cucumbe
 
 You'll want to know: মাশরুম.
 মাশরুম — māshrum — "a mushroom".
+
+The word, taken apart.
+মাশরুম (māshrum) is a loan from English mushroom.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a cucumber, then the Bengali for a mushr
 You'll want to know: ভুট্টা.
 ভুট্টা — bhuṭṭā — "maize, a corn cob".
 
+The word, taken apart.
+ভুট্টা (bhuṭṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhṛṣṭa, "fried, roasted" (CDIAL 9594). CDIAL lists Bengali bhuṭā, "maize cob".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a mushroom, then the Bengali for maize.
 You'll want to know: ছোলা.
 ছোলা — chholā — "chickpeas".
 
+The word, taken apart.
+ছোলা (chholā) probably belongs with chōll, "to peel, skin", a form CDIAL reconstructs and reports Burrow as taking from Dravidian (CDIAL 5073). Under it CDIAL lists Bengali cholā, "to skin", and Oriya cholā, "gram", which it explains, with a query, as "husked". It has no Bengali row for the pulse itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for maize, then the Bengali for chickpeas.
 
 You'll want to know: ইন্টারনেট.
 ইন্টারনেট — inṭārneṭ — "the internet".
+
+The word, taken apart.
+ইন্টারনেট (inṭārneṭ) is a loan from English internet.
 
 What you've built.
 One more word for this chapter.

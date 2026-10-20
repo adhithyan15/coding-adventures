@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C286-naulum",
+    "language": "latin",
+    "chapter": 286,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1acccd3c53c215e"
+  },
+  "findings": []
+}

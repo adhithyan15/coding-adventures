@@ -14,7 +14,8 @@ romanization: "deri"
 concept_tag: BN-TIME80-DERI
 prerequisites: [BN-C79-ekhon, BN-C79-sobsomoy]
 sounds: []
-roots: []
+roots: [persian-der]
+etymology_hook: "deri: usually traced to Persian dēr 'late; a long time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C79-sobsomoy]
 <!-- hl-knowledge: introduces=[BN-LEX-C80-TIME80-01]; assesses=[] -->
 
 **দেরি** — *deri* — "lateness; late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দেরি** (*deri*) is a loan, usually traced to Persian *dēr*, "late; a long time". Bengali adds the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

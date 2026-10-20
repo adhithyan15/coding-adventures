@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:e16a2810580ae1e6",
+  "lessonIds": [
+    "GE-C352-entlassen",
+    "GE-C352-arbeitslos",
+    "GE-C352-arbeitslosigkeit",
+    "GE-C352-probezeit",
+    "GE-C352-einarbeiten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch352.txt",
+  "json": "german/narration/ch352.json",
+  "textHash": "fnv1a64:c2b53f24caf11235",
+  "jsonHash": "fnv1a64:e8b089eb0a92b350",
+  "findings": []
+}

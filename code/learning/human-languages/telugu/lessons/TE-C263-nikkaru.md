@@ -14,7 +14,8 @@ romanization: "nikkaru"
 concept_tag: TE-VASTUVU263-NIKKARU
 prerequisites: [TE-C263-ruci, TE-C263-pyantu]
 sounds: []
-roots: []
+roots: [english-knickers]
+etymology_hook: "nikkaru ← English knickers"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C263-pyantu]
 <!-- hl-knowledge: introduces=[TE-LEX-C263-VASTUVU263-04]; assesses=[] -->
 
 **నిక్కరు** — *nikkaru* — "shorts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిక్కరు** (*nikkaru*) is a loan from English *knickers*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

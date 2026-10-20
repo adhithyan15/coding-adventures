@@ -14,7 +14,8 @@ romanization: "phōṭṭō eṭukkuka"
 concept_tag: ML-VERB-PHOTTO-ETUKKUKA
 prerequisites: [ML-C308-cavittuka, ML-C308-sekharikkuka]
 sounds: []
-roots: []
+roots: [english-photo, dravidian-ezhu-rise]
+etymology_hook: "phōṭṭō eṭukkuka: English photo + native eṭukkuka 'to take up' (DEDR 851)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C308-sekharikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C308-KRIYA308-04]; assesses=[] -->
 
 **ഫോട്ടോ എടുക്കുക** — *phōṭṭō eṭukkuka* — "to take a photo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫോട്ടോ എടുക്കുക** (*phōṭṭō eṭukkuka*) joins English *photo* to native *eṭukkuka*, "to take up" (DEDR 851, with Tamil *eḻu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

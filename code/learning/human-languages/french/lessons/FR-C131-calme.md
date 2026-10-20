@@ -14,6 +14,7 @@ concept_tag: FR-QUALITES83-CALME
 prerequisites: [FR-C131-ouvert, FR-C131-ferme]
 sounds: []
 roots: []
+etymology_hook: "calme ← Italian calma, from Greek kauma 'burning heat': the still midday hour — English calm"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C131-ferme]
 <!-- hl-knowledge: introduces=[FR-LEX-C131-QUALITES83-05]; assesses=[] -->
 
 **calme** — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calme** ← Italian *calma* ← Late Latin *cauma*, "the heat of midday", from Greek *kauma*, "burning heat" (EtymDB 2.1) — borrowed: the still hour when the sun was hottest.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

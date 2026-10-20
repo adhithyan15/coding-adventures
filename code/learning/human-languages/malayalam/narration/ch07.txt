@@ -19,6 +19,9 @@ quantity: 5. said: añcŭ.
 Say onnŭ. Count up aloud, one word to each beat: raṇṭŭ, mūnnŭ, nālŭ, añcŭ.
 [repeat that twice]
 
+The word, taken apart.
+All five are native Dravidian, and Tamil keeps the same five: onnŭ with Tamil oṉṟu (DEDR 990), raṇṭŭ with Tamil iraṇṭu (DEDR 474), mūnnŭ with Tamil mūṉṟu (DEDR 5052), nālŭ with Tamil nālu (DEDR 3655) and añcŭ with Tamil añcu (DEDR 2826).
+
 Why it's said this way.
 Malayalam and Tamil were once one language, and the family resemblance is still audible. Malayalam onnŭ sits beside Tamil onru; raṇṭŭ beside irandu; mūnnŭ beside moonru; and nālŭ beside naanku. You do not need to learn the Tamil forms. Listen only for the shared bones.
 
@@ -187,7 +190,7 @@ Sounds you'll need.
 quantity: 6. said: āṟŭ.
 quantity: 7. said: ēḻŭ.
 quantity: 8. said: eṭṭŭ.
-quantity: 9. said: ombatŭ.
+quantity: 9. said: ompatŭ.
 quantity: 10. said: pattŭ.
 Say the row once slowly, then once at counting speed.
 [repeat that twice]
@@ -196,21 +199,21 @@ Why it's said this way — seven keeps a rare sound.
 The middle sound of ēḻŭ is the curled zh heard in the name Tamil in its native form. Malayalam and Tamil kept it; Kannada and Telugu hardened it. Practise only the sound now: e-zhu. The written letter waits for a later micro-lesson.
 
 The word, taken apart — nine is one short of ten.
-Ompathu grew from an old word for one plus pattŭ, ten: one short of ten. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ.
+Ompatŭ is usually read as an old word for one plus pattŭ, ten: one short of ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR sets it beside both "one" and an older word for nine. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ompatŭ.
 
 Guided Practice.
-[your turn — say: āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ]
+[your turn — say: āṟŭ, ēḻŭ, eṭṭŭ, ompatŭ, pattŭ]
 [pause 8 seconds for the answer]
 [your turn — hear: ēḻŭ, then say the number — seven]
 [pause 8 seconds for the answer]
-[your turn — hear: ombatŭ, then say the number — nine]
+[your turn — hear: ompatŭ, then say the number — nine]
 [pause 8 seconds for the answer]
 [your turn — recall: say -ikkŭ, then say]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ombatŭ built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer.
+Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ompatŭ built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer.
 
 
 Lesson 9 of 16.
@@ -250,20 +253,20 @@ Read ൬ ൭ ൮ (six, seven, eight). Two shapes finish the sequence.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script.
-൯ means 9: ombatŭ.
+൯ means 9: ompatŭ.
 ൰ means 10: pattŭ.
 Point through ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) and say the words once.
 
 Writing — observe and trace.
 Trace ൯ once and ൰ once with their models visible. Circle the one you hear:
-[your turn — hear: ombatŭ]
+[your turn — hear: ompatŭ]
 [pause 8 seconds for the answer]
 . (൯.)
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 [pause 3 seconds]
-Which shape means ten? (൰.) Read ൯. (Ompathu.) This lesson added two shapes, not five.
+Which shape means ten? (൰.) Read ൯. (Ompatŭ.) This lesson added two shapes, not five.
 
 
 Lesson 11 of 16.
@@ -285,7 +288,7 @@ Together with the familiar chandrakkala, they begin and finish ഏഴ്, ēḻ�
 numeral: ൬. word: ആറ്. said: āṟŭ.
 numeral: ൭. word: ഏഴ്. said: ēḻŭ.
 numeral: ൮. word: എട്ട്. said: eṭṭŭ.
-numeral: ൯. word: ഒമ്പത്. said: ombatŭ.
+numeral: ൯. word: ഒമ്പത്. said: ompatŭ.
 numeral: ൰. word: പത്ത്. said: pattŭ.
 
 Writing — observe and trace.
@@ -341,7 +344,7 @@ Warm-up.
 Cover the answer line. Every sound and shape has already had a supported turn.
 
 Writing — dictation and transcription.
-[your turn — hear: āṟŭ — ēḻŭ — ombatŭ]
+[your turn — hear: āṟŭ — ēḻŭ — ompatŭ]
 [pause 8 seconds for the answer]
 Write the three numerals from sound alone. For ēḻŭ, also write the word. Then uncover: ൬ — ൭ ഏഴ് — ൯. Compare and repair one place.
 
@@ -368,7 +371,7 @@ Now check against ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to fiv
 
 Why it's said this way — meaning and history.
 Which word preserves the rare zh? (ഏഴ്, ēḻŭ, seven.)
-Which word means one short of ten? (ഒമ്പത്, ombatŭ, nine.)
+Which word is usually read as one short of ten? (ഒമ്പത്, ompatŭ, nine.)
 Which first-five word shifted furthest from older aintu? (അഞ്ച്, añcŭ.)
 
 Writing — independent dictation.

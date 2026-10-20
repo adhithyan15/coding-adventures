@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 61,
-  "sourceHash": "fnv1a64:a9bbd37369a9c781",
+  "sourceHash": "fnv1a64:c45572127959faaa",
   "lessonIds": [
     "KA-C61-curd",
     "KA-C61-ghee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch61.txt",
   "json": "kannada/narration/ch61.json",
-  "textHash": "fnv1a64:918862b03d73ff4e",
-  "jsonHash": "fnv1a64:1111f67ce0e1ab04",
+  "textHash": "fnv1a64:297b5a7da49be43c",
+  "jsonHash": "fnv1a64:02b4bb32cea2a30f",
   "findings": []
 }

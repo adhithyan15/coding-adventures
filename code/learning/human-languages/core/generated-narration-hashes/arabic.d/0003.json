@@ -1,24 +1,24 @@
 {
   "language": "arabic",
   "chapter": 3,
-  "sourceHash": "fnv1a64:40706d5aba5281a6",
+  "sourceHash": "fnv1a64:160ca762deffc33f",
   "lessonIds": [
     "AR-C03-haajj",
     "AR-W07-hook-family-ha-kha",
     "AR-W08-kaf-and-ra",
-    "AR-W09-khayr-bikhayr",
     "AR-C03-kayfa",
     "AR-C03-hal",
     "AR-C03-kayfa-haluka",
     "AR-C03-bi-khayr",
     "AR-C03-al-hamdu-lillah",
+    "AR-W09-khayr-bikhayr",
     "AR-C03-practice"
   ],
   "voiceLessons": 5,
   "drivablePrefix": 1,
   "text": "arabic/narration/ch03.txt",
   "json": "arabic/narration/ch03.json",
-  "textHash": "fnv1a64:5b4fe99d7aa8056c",
-  "jsonHash": "fnv1a64:c43e246e2cd5307c",
+  "textHash": "fnv1a64:66ab7ce6179cc3fe",
+  "jsonHash": "fnv1a64:3697c5a4a8fbbfda",
   "findings": []
 }

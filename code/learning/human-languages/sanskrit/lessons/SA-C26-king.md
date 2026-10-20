@@ -14,7 +14,8 @@ romanization: "rājā"
 concept_tag: SA-PERSON-KING
 prerequisites: [SA-C26-student, SA-C24-fruit, SA-C25-head, SA-C20-people]
 sounds: []
-roots: []
+roots: [sanskrit-rajan]
+etymology_hook: "rājan 'king' ← the root √rāj 'rule'; MW compares Latin rēx, Gothic reiks, English rich (CDIAL 10679)"
 duration:
   max_seconds: 210
 requires:
@@ -45,9 +46,16 @@ reviews_of: [SA-C26-student]
 
 **राजा** (*rājā*) — "a king".
 
-**राजा** is a king, and it belongs to the same *-ṛ*-shaped family as पिता and माता — the stem is *rājan-*.
+**राजा** is a king, and its nominative ends in *-ā* like पिता and माता, but it belongs to another family: the stem is *rājan-*.
 
 Its cousin in Rome is *rēx*, in its other forms *rēgem*: *regal*, *royal*, *regent*, *rex*. In Gaul, chieftains' names ended in *-rīx* — Vercingetorix. English borrowed *raj* and *maharaja* back from India in the nineteenth century, so the word has now entered English twice, three thousand years apart, by two different doors.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Rājan* is built on the root √rāj, "to rule" (MW, CDIAL 10679). It is inherited:
+MW compares Latin *rēx*, Gothic *reiks* "ruler" and English *rich*, which first
+meant "powerful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -60,7 +68,7 @@ One word, two arrivals in English, with millennia between them.
 [PAUSE 1s]
 - [YOU SAY: *rājā*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *rājā*, then *pitā*, and name the family both stems share]
+- [YOU SAY: *rājā*, then *pitā*, and name the stem behind each (*rājan-*, *pitṛ-*)]
 - [YOU RECALL: say *phalam*]
 - [YOU READ: **शिरः**]
 

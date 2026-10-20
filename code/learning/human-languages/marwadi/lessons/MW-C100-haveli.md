@@ -14,7 +14,8 @@ romanization: "havelī"
 concept_tag: MW-LOC100-HAVELI
 prerequisites: [MW-C100-darvajo, MW-C100-pol]
 sounds: []
-roots: []
+roots: [arabic-hawali]
+etymology_hook: "havelī: usually traced to Persian havēlī, from Arabic ḥawālī 'surroundings' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C100-pol]
 <!-- hl-knowledge: introduces=[MW-LEX-C100-LOC100-03]; assesses=[] -->
 
 **हवेली** — *havelī* — "a mansion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हवेली** (*havelī*) is a loan, usually traced to Persian *havēlī*, "mansion". Persian took it from Arabic *ḥawālī*, "surroundings" (Lane, root *ḥ-w-l*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

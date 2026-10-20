@@ -11,7 +11,8 @@ romanization: "yāru"
 concept_tag: KA-DEIXIS-WHO
 prerequisites: [KA-C41-there, KA-C38-hrudaya]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "yāru: native Dravidian, on the question base yā- (DEDR 5151); Tamil yār"
 duration:
   max_seconds: 210
 requires:
@@ -40,23 +41,28 @@ reviews_of: [KA-C41-there]
 
 **ಯಾರು** — *yāru* — who? — asking about a person.
 
-Say it, and picture the thing it lands on as you say it. That is the whole word:
-it does not mean anything on its own, it means whatever the speaker is pointing at.
+Say it with an asking voice. It points at no one: it asks your listener to
+name the person.
 
-Its partner is **ಎಲ್ಲಿ** *elli*, which you will meet in a moment. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+*yāru* opens with **yā-**, not with the **i-** of near or the **a-** of far
+that the four words before it share. It is the one word in this chapter outside
+that pattern, so learn it as itself: the asking word for people.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾರು** (*yāru*) is native Dravidian, built on the question base *yā-*. DEDR 5151 lists Kannada *yār* with Tamil *yār*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-05, KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಯಾರು" three times, picturing something different each time]
+- [YOU SAY: "ಯಾರು" three times, asking about a different person each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *hṛdaya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-05] -->
 
-[PAUSE 3s] What is *yāru*? (who? — asking about a person.) What sound does it start with, and does
-that sound mean near, far, or a question? (**e-** — ask.)
+[PAUSE 3s] What is *yāru*? (who? — asking about a person.) What sound does it start with: the i- of
+near, the a- of far, or neither? (**Neither** — **yā-**; it asks about a person.)

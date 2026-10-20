@@ -14,7 +14,8 @@ romanization: "cikkani"
 concept_tag: TE-GUNAM261-CIKKANI
 prerequisites: [TE-C260-dayagala, TE-C261-sahajamaina]
 sounds: []
-roots: []
+roots: [dravidian-jigatu-sticky]
+etymology_hook: "cikkani: native Dravidian; DEDR 2488 lists cikkana 'thickness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C261-sahajamaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C261-GUNAM261-02]; assesses=[] -->
 
 **చిక్కని** — *cikkani* — "thick (of a liquid)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిక్కని** (*cikkani*) is native Dravidian. DEDR 2488 lists *cikkana*, "thickness", with Kannada *jigi*, "thickness, viscidity". DEDR compares Sanskrit *cikka*, "bird-lime" (CDIAL 4780), which CDIAL reports as taken from Dravidian, or else from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

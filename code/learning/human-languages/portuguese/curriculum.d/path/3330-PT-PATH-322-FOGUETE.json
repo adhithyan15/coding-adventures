@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-322-FOGUETE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-322-FOGUETE"
+  ],
+  "after": []
+}

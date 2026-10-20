@@ -14,7 +14,8 @@ romanization: "karagu"
 concept_tag: KA-VERB-KARAGU
 prerequisites: [KA-C203-badu, KA-C203-bisu]
 sounds: []
-roots: []
+roots: [dravidian-karai-melt]
+etymology_hook: "karagu: native Dravidian, one word with Tamil karai (DEDR 1292)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C203-bisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C203-KRIYE203-05]; assesses=[] -->
 
 **ಕರಗು** — *karagu* — "to melt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರಗು** (*karagu*) is native Dravidian, one word with Tamil *karai* (DEDR 1292). DEDR lists *karagu* itself, "to be dissolved, melt away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

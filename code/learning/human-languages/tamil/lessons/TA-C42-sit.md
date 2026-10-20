@@ -11,7 +11,8 @@ romanization: "uṭkār"
 concept_tag: TA-VERB-SIT
 prerequisites: [TA-C42-come]
 sounds: []
-roots: []
+roots: [dravidian-ul-inside]
+etymology_hook: "உட்கார் — probably uḷ 'inside' (DEDR 698) + a verb; DEDR has no entry for it, so its origin is uncertain"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TA-C42-come]
 **உட்கார்** (*uṭkār*) — "sit".
 
 Built from *uḷ*, 'inside', and *kār* — to settle oneself in. Tamil often builds a verb from a place-word plus an action this way.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**உட்கார்** (*uṭkār*) looks like a compound whose first part is *uḷ*, "inside", the native word for being within (DEDR 698), and it is usually taken that way. But DEDR has no entry for the verb itself, and the second part is not clear, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

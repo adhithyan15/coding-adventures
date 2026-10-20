@@ -14,7 +14,8 @@ romanization: "karmakaraḥ"
 concept_tag: SA-PPL149-KARMAKARAH
 prerequisites: [SA-C148-dhivarah, SA-C148-gopalah]
 sounds: []
-roots: []
+roots: [sanskrit-karman]
+etymology_hook: "karmakara ← karman 'work' + kara 'doer', both from √kṛ 'do' (MW; CDIAL 2887): 'one who works for hire'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C148-gopalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C149-PPL149-01]; assesses=[] -->
 
 **कर्मकरः** — *karmakaraḥ* — "a worker, a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*karmakara* is built from *karman* "work, action" and *kara* "doer", both from the root √kṛ "do, make" (MW; CDIAL 2887): "a workman, a hired labourer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

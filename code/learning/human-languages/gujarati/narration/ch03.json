@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Nine Doorway Forms",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8190d1ca9bfcaa8e",
+  "sourceHash": "fnv1a64:b95e1c394fea3ab5",
   "lessons": [
     {
       "id": "GU-C03-chhip",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d6ee2161d612d76",
+      "sourceHash": "fnv1a64:68b8a7fbba4bf1d2",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છીપ (chīp) goes back to sippī, \"shell\", a form CDIAL reconstructs from its descendants (CDIAL 13417). CDIAL takes the word from Dravidian, comparing Tamil cippi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,7 +120,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -140,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5f7065e6420c525",
+      "sourceHash": "fnv1a64:4b4563bbd152d4f0",
       "notice": null,
       "blocks": [
         {
@@ -190,6 +201,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કણ (kaṇ) is inherited from Sanskrit kaṇa, \"a grain of corn\", and has come down with almost no change (CDIAL 2661)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -220,7 +242,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -251,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad4ec1bcb2833031",
+      "sourceHash": "fnv1a64:44f6ced22db66973",
       "notice": null,
       "blocks": [
         {
@@ -301,6 +323,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શક (śak) is a loan from Arabic shakk, \"doubt\", which reached Gujarati through Persian. Its Arabic root is sh-k-k (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -331,7 +364,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

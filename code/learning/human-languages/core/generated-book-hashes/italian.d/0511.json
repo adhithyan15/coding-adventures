@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:5188d177b18493ab",
+  "lessonIds": [
+    "IT-C511-segnare",
+    "IT-C511-pareggio",
+    "IT-C511-pareggiare",
+    "IT-C511-classifica",
+    "IT-C511-eliminare"
+  ],
+  "tex": "italian/book/chapters/ch511-il-risultato.tex"
+}

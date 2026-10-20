@@ -18,8 +18,8 @@ Welcher Hund?, Welche Katze?, Welches Brot?
 Said VEL-cher, with the soft ich-sound of ich and nicht in the middle.
 
 The word, taken apart: what-like.
-welcher is two ancient pieces: hwa- — the what you already meet at the front of every W-word — and -lîk, "like, bodily form", the ancestor of English -ly and of the word like itself. What-like.
-English built its own word out of the very same two: hwā + līc gave hwilc, which wore down to which. So both languages ask "which one" by asking "what kind", and the shared seam is still visible if you set wel-cher beside wh-ich.
+welcher from Proto-Germanic hwilīkaz (EtymDB 2.1), two ancient pieces: hwa- — the what at the front of every W-word — and -lîk, "like, bodily form", the ancestor of English -ly and of the word like itself. What-like.
+English built its own word out of the very same two: hwā + līc gave hwilc, which wore down to which. So both languages ask "which one" by asking "what kind", and the seam shows if you set wel-cher beside wh-ich.
 
 Guided Practice.
 [pause 1 second]
@@ -91,6 +91,9 @@ den — "the", for a der-word that is the thing being done to.
 Der Hund ist hier. becomes Ich habe den Hund.
 The dog standing is der Hund; the dog being had is den Hund. German writes the difference on the article rather than on the noun.
 
+The word, taken apart.
+den is a form of der, inherited from the Germanic pointing word behind English the and that.
+
 Grammar Lens: one row of three moves.
 When a noun is the thing being done to, only the der-words change shape.
 [a table of 3 rows, read aloud]
@@ -98,7 +101,6 @@ naming it: der Hund. doing something to it: den Hund.
 naming it: die Milch. doing something to it: die Milch.
 naming it: das Brot. doing something to it: das Brot.
 That is the whole announcement, and it is smaller than German's reputation suggests. Die and das stand still. So do their ein and kein partners — eine, keine, ein, kein — while ein becomes einen and kein becomes keinen on exactly the row where der becomes den.
-Three words you already say, all moving together, all on one row. Nothing new has been added; a pattern has been pointed at.
 
 Why it's said this way.
 English ran this system too and threw nearly all of it away. Three survivors remain, all pronouns: whom, him, them. "Whom did you see" is precisely what den does. English kept the marking only where it was shortest; German kept it on the article, where it stays visible on every noun.
@@ -178,6 +180,9 @@ Es gibt Kaffee. — "There is coffee."
 Es gibt einen Hund. — "There is a dog."
 Es gibt keinen Kaffee. — "There is no coffee."
 The phrase never changes shape. Whether one thing exists or twenty, it stays es gibt — the es is the same empty subject as in the weather, standing in a slot German insists on filling.
+
+The phrase, taken apart.
+gibt is a form of the verb "to give" from Old High German geban from Proto-Germanic gebaną — inherited, the same verb as English give. (EtymDB 2.1).
 
 Grammar Lens: what follows it is an object.
 Because geben means give, the thing that exists is grammatically the thing being given — so it takes the done-to form this chapter has taught.

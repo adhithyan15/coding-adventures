@@ -13,7 +13,8 @@ gloss: "fast"
 concept_tag: PT-ADJ3-RAPIDO
 prerequisites: [PT-C65-curto, PT-C65-quente]
 sounds: []
-roots: []
+roots: [rapere-latin]
+etymology_hook: "rápido ← Latin rapidus 'swift', from rapere 'to seize' — English rapid"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C65-quente]
 <!-- hl-knowledge: introduces=[PT-LEX-C66-ADJ3-01]; assesses=[] -->
 
 **rápido** — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rápido** ← Latin *rapidus*, "swift" (EtymDB 2.1), from *rapere*, "to seize" — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

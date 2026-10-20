@@ -14,7 +14,8 @@ romanization: "sā̃p"
 concept_tag: HI-NOUN-SNAKE
 prerequisites: [HI-C60-monkey]
 sounds: []
-roots: []
+roots: [sanskrit-sarpa]
+etymology_hook: "sāṁp ← Sanskrit sarpa 'snake', on sṛp- 'to creep'; a tadbhava (CDIAL 13271)"
 duration:
   max_seconds: 210
 requires:

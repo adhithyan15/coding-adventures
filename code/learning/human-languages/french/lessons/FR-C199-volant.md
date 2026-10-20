@@ -13,7 +13,8 @@ gloss: "a steering wheel"
 concept_tag: FR-CHOSES199-VOLANT
 prerequisites: [FR-C199-bagages, FR-C199-siege]
 sounds: []
-roots: []
+roots: [volare-latin]
+etymology_hook: "volant — 'flying', from Latin volare 'to fly' — English volatile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C199-siege]
 <!-- hl-knowledge: introduces=[FR-LEX-C199-CHOSES199-05]; assesses=[] -->
 
 **le volant** — "a steering wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**volant** is the present participle of the verb for "to fly", ← Latin *volare* (Lewis & Short), used as a noun: a thing that spins freely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

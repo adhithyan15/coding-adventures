@@ -13,7 +13,8 @@ gloss: "hair (on the head)"
 concept_tag: PT-CORPO3-CABELO
 prerequisites: [PT-C31-joelho, PT-C32-costas]
 sounds: []
-roots: []
+roots: [capillus-latin]
+etymology_hook: "cabelo ← Latin capillus 'hair of the head' — English capillary shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C32-costas]
 <!-- hl-knowledge: introduces=[PT-LEX-C32-CORPO3-02]; assesses=[] -->
 
 **o cabelo** — "hair (on the head)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cabelo** ← Latin *capillus*, "hair of the head" (EtymDB 2.1) — inherited. The Latin *-p-* between vowels became *-b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

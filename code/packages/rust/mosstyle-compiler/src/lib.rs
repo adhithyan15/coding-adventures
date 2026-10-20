@@ -63,6 +63,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
 mod _grammar;
+pub mod v2;
 
 // ===========================================================================
 // Style IR types
@@ -276,6 +277,10 @@ pub enum ErrorKind {
     /// (`{x:Bind …}`, `{ThemeResource …}`) that a string would otherwise
     /// smuggle into the generated page.
     PlatformValue,
+    /// A value has the wrong type for its property: a unit on a length, a CSS
+    /// function where a colour belongs, a word outside a closed set (UI90
+    /// §3.2). Raised by the v2 checker, [`v2::check`].
+    TypeMismatch,
     /// The AST has an unexpected shape (internal error).
     InternalError,
 }

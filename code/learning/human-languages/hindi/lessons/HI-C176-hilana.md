@@ -14,7 +14,8 @@ romanization: "hilānā"
 concept_tag: HI-VERB-HILANA
 prerequisites: [HI-C175-jalna, HI-C175-bujhana]
 sounds: []
-roots: []
+roots: [indo-aryan-hillati]
+etymology_hook: "hilānā: the causing form of hilnā 'to shake', from a reconstructed *hillati 'moves, shakes' (CDIAL 14120)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C175-bujhana]
 <!-- hl-knowledge: introduces=[HI-LEX-C176-ACT176-01]; assesses=[] -->
 
 **हिलाना** — *hilānā* — "to shake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिलाना** (*hilānā*) is the causing form of *hilnā*, "to shake, move", which CDIAL lists under a reconstructed *\*hillati*, "moves, shakes" (CDIAL 14120).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

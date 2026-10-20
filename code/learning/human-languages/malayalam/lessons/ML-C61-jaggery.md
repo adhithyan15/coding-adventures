@@ -11,7 +11,8 @@ romanization: "śarkkara"
 concept_tag: ML-NOUN-JAGGERY
 prerequisites: [ML-C61-curd, ML-C59-smoke]
 sounds: []
-roots: []
+roots: [borrowed-sanskrit-sarkara]
+etymology_hook: "śarkkara ← Sanskrit śarkarā 'candied sugar', a tatsama (CDIAL 12338)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Sanskrit *śarkārā*, whose first meaning was gravel or grit — the sweetener 
 That word travelled further than most. Arabic took it as *sukkar*, Latin as *saccharum*, and English ended with *sugar* and *saccharine*, so an English speaker half owns this shelf-word already.
 
 Kerala's own ശർക്കര is dark and soft, boiled down from palm sap or cane, and it is what sweetens the festival rice pudding rather than white sugar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശർക്കര** (*śarkkara*) ← Sanskrit *śarkarā*, "candied sugar", taken over whole as a tatsama (CDIAL 12338). The older Sanskrit sense is "gravel, grit" (CDIAL 12337). English *sugar* comes from the same word, through Persian and Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

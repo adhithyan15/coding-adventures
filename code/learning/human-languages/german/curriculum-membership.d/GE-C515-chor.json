@@ -1,0 +1,11 @@
+{
+  "id": "GE-C515-chor",
+  "pathSegment": "GE-PATH-515-CHOR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-515-CHOR",
+      "order": 0
+    }
+  ]
+}

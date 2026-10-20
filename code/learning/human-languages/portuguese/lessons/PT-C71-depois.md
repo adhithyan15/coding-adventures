@@ -13,7 +13,8 @@ gloss: "afterwards, later"
 concept_tag: PT-QUANDO2-DEPOIS
 prerequisites: [PT-C71-nunca, PT-C71-agora]
 sounds: []
-roots: []
+roots: [post-latin]
+etymology_hook: "depois ← Latin de 'from' + post 'after' — English post-, as in postpone, shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C71-agora]
 <!-- hl-knowledge: introduces=[PT-LEX-C71-QUANDO2-03]; assesses=[] -->
 
 **depois** — "afterwards, later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**depois** ← Latin *de post*, "from after" (Lewis & Short) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

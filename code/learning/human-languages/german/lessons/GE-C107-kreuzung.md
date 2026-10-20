@@ -13,7 +13,8 @@ gloss: "a crossroads"
 concept_tag: GE-ORT107-KREUZUNG
 prerequisites: [GE-C107-buero, GE-C107-ecke]
 sounds: []
-roots: []
+roots: [crux-latin]
+etymology_hook: "Kreuzung — the verb 'to cross' + -ung; the cross ← Old High German chrūzi ← Latin crux"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C107-ecke]
 <!-- hl-knowledge: introduces=[GE-LEX-C107-ORT107-03]; assesses=[] -->
 
 **die Kreuzung** — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Kreuzung** is the verb "to cross" + *-ung*: a crossing. The verb is built on the word for "a cross", Old High German *chrūzi* ← Latin *crux* (EtymDB 2.1), a borrowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

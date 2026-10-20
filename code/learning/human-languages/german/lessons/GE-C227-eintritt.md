@@ -13,7 +13,8 @@ gloss: "admission, entry"
 concept_tag: GE-THING227-EINTRITT
 prerequisites: [GE-C227-beziehung, GE-C227-eindruck]
 sounds: []
-roots: []
+roots: [germanic-tredana]
+etymology_hook: "Eintritt — ein- 'in' + Tritt 'a step': stepping in"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C227-eindruck]
 <!-- hl-knowledge: introduces=[GE-LEX-C227-THING227-04]; assesses=[] -->
 
 **der Eintritt** — "admission, entry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Eintritt** comes from the verb "to step in" (EtymDB 2.1): *ein-*, "in", + the word for "a step", from Old High German *tretan*, English *tread*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

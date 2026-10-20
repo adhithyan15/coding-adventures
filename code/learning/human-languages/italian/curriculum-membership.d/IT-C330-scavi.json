@@ -1,0 +1,11 @@
+{
+  "id": "IT-C330-scavi",
+  "pathSegment": "IT-PATH-330-SCAVI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-330-SCAVI",
+      "order": 3
+    }
+  ]
+}

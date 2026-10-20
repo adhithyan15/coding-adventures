@@ -14,7 +14,8 @@ romanization: "karumpalakai"
 concept_tag: TA-PORUL221-KARUMPALAKAI
 prerequisites: [TA-C221-talaikkavacam, TA-C221-cakkaram]
 sounds: []
-roots: []
+roots: [dravidian-karu-black, sanskrit-phalaka]
+etymology_hook: "கரும்பலகை — native karu 'black' (DEDR 1278) + palakai 'board' ← Sanskrit phalaka (CDIAL 9053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C221-cakkaram]
 <!-- hl-knowledge: introduces=[TA-LEX-C221-PORUL221-03]; assesses=[] -->
 
 **கரும்பலகை** — *karumpalakai* — "a blackboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கரும்பலகை** (*karumpalakai*) is native *karu*, "black" (DEDR 1278), and *palakai*, "board", from Sanskrit *phalaka* (CDIAL 9053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "On One Condition",
+  "label": "ch:la-on-one-condition",
+  "canDo": "I can set a condition, say but if, provided that and only if, and concede however much.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C390-quamvis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can set a condition, say but if, provided that and only if, and concede however much.",
+    "assesses": [
+      "LA-LEX-C390-CONDICIO-03",
+      "LA-LEX-C390-CONDICIO-04",
+      "LA-LEX-C390-CONDICIO-05"
+    ]
+  }
+}

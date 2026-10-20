@@ -1,0 +1,11 @@
+{
+  "id": "IT-C264-ripasso-racconto",
+  "pathSegment": "IT-PATH-264-ORDINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-264-ORDINE",
+      "order": 3
+    }
+  ]
+}

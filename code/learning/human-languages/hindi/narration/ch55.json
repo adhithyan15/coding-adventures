@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:77de51c909476aad",
+  "sourceHash": "fnv1a64:348e4d821072638d",
   "lessons": [
     {
       "id": "HI-C55-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25e5bbcb457f313d",
+      "sourceHash": "fnv1a64:9791f386e03e6f29",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7605402930f9c84c",
+      "sourceHash": "fnv1a64:bf92a5c19c017586",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fc2a8a92b422e14",
+      "sourceHash": "fnv1a64:d0a7518a87cf26ad",
       "notice": null,
       "blocks": [
         {
@@ -321,7 +321,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit तारा (tārā), 'star', from the reconstructed h₂stḗr — the same root as Latin stella, Greek astḗr, and English star."
+              "text": "CDIAL files it under Sanskrit tāraka, 'belonging to the stars', a form beside tārā, 'fixed star' (CDIAL 5798). That family is usually traced to the reconstructed h₂stḗr — the same root as Latin stella, Greek astḗr, and English star. CDIAL itself compares Vedic stṛ-, 'star'."
             },
             {
               "kind": "speech",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:041b5acf0acf2574",
+      "sourceHash": "fnv1a64:9e1b0763f5af966d",
       "notice": null,
       "blocks": [
         {
@@ -462,6 +462,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बादल (bādal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārdala, \"rainy day, bad weather\" (CDIAL 11567)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -472,7 +483,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -530,7 +541,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -561,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d977952e0407020",
+      "sourceHash": "fnv1a64:002c5f4d531adc8f",
       "notice": null,
       "blocks": [
         {
@@ -602,6 +613,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसमान (āsmān) is a loan, usually traced to Persian āsmān, \"sky\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -612,7 +634,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -670,7 +692,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

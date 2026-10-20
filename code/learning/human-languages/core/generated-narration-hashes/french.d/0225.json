@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 225,
-  "sourceHash": "fnv1a64:714aedd16a0bc9d0",
+  "sourceHash": "fnv1a64:1ea238b6032dff28",
   "lessonIds": [
     "FR-C225-experience",
     "FR-C225-choix",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch225.txt",
   "json": "french/narration/ch225.json",
-  "textHash": "fnv1a64:b20e42c5a0b723ca",
-  "jsonHash": "fnv1a64:52c904d7d497b0fe",
+  "textHash": "fnv1a64:da90ecd6a65477ec",
+  "jsonHash": "fnv1a64:b13c66a508688304",
   "findings": []
 }

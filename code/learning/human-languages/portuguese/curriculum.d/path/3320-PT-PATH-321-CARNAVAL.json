@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-321-CARNAVAL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-321-CARNAVAL"
+  ],
+  "after": []
+}

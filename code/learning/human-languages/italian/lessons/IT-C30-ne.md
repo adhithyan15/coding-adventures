@@ -66,6 +66,11 @@ This is why *né* comes after *non* in this book rather than before it. Without
 The accent is doing the same job it did on *sì*: it separates **né** from **ne**,
 a different unstressed word.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**né** ← Latin *nec*, "and not, nor" — inherited. (EtymDB 2.1)
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-NE-02] -->
 

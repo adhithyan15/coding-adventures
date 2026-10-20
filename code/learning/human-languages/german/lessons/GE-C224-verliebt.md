@@ -13,7 +13,8 @@ gloss: "in love"
 concept_tag: GE-QUAL224-VERLIEBT
 prerequisites: [GE-C223-ungluecklich, GE-C223-verheiratet]
 sounds: []
-roots: []
+roots: [germanic-leubaz]
+etymology_hook: "verliebt — ver- + lieben 'to love': fallen in love"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C223-verheiratet]
 <!-- hl-knowledge: introduces=[GE-LEX-C224-QUAL224-01]; assesses=[] -->
 
 **verliebt** — "in love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**verliebt** is the participle of *ver-* + *lieben*, "to love": fallen in love. *lieben* is built on Proto-Germanic *\*leubaz*, "dear". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

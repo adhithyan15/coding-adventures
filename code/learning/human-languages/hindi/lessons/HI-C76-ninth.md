@@ -14,8 +14,8 @@ romanization: "nauvā̃ / nauvī̃"
 concept_tag: HI-ORDINAL-NINTH
 prerequisites: [HI-C76-eighth, HI-C75-fourth, HI-C69-verb-last, HI-C69-ticket, HI-C21-six-nine-ten-history, HI-C31-suprabhat]
 sounds: []
-roots: []
-etymology_hook: "nau gives nauvan; the cardinal ends in a diphthong rather than a consonant and the ending attaches anyway, which is the strongest evidence that -van is a suffix and not a reshaping"
+roots: [sanskrit-navama]
+etymology_hook: "nauvāṁ ← Sanskrit navama 'ninth', a tadbhava (CDIAL 7006)"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +61,11 @@ added, not fused.
 Compare *cauthā*, where *cār* had to change shape to accept its ending. That is a
 fused form. This is not. Same language, two different ages of word-making, and
 you can hear which is which.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नौवाँ** (*nauvāṁ*) comes from Sanskrit *navama*, "ninth" (CDIAL 7006), the ordinal built on *nava*, "nine".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-04] -->

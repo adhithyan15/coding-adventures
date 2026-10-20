@@ -13,7 +13,8 @@ gloss: "to wash"
 concept_tag: FR-VERB-LAVER
 prerequisites: [FR-C59-rire, FR-C60-pleurer]
 sounds: []
-roots: []
+roots: [lavare-latin]
+etymology_hook: "laver ← Latin lavare 'to wash' — English lavatory and lavender share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C60-pleurer]
 <!-- hl-knowledge: introduces=[FR-LEX-C60-VERBES12-02]; assesses=[] -->
 
 **laver** — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**laver** ← Latin *lavare*, "to wash" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

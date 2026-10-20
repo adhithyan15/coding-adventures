@@ -14,7 +14,8 @@ romanization: "ḍākghar"
 concept_tag: HI-THINGS152-DAKGHAR
 prerequisites: [HI-C151-kamar, HI-C152-khun]
 sounds: []
-roots: []
+roots: [sanskrit-ghara]
+etymology_hook: "ḍāk 'post' ← *ḍakka 'relay, post' (CDIAL 5519) + ghar 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C152-khun]
 <!-- hl-knowledge: introduces=[HI-LEX-C152-THINGS152-02]; assesses=[] -->
 
 **डाकघर** — *ḍākghar* — "a post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाकघर** (*ḍākghar*) is "post-house": *ḍāk*, "the post", from a reconstructed *\*ḍakka*, "relay, post", which CDIAL asks may belong with *\*ḍakk*, "shout" (CDIAL 5519), with *ghar*, "house", from *ghara* (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "dark, obscure"
 concept_tag: LA-PULCHER-OBSCURUS
 prerequisites: [LA-C96-vacuus, LA-C96-clarus]
 sounds: []
-roots: []
+roots: [obscurus-latin]
+etymology_hook: "obscūrus 'dark' — ob- 'over' + a root for 'covered', from PIE *(s)kewH- 'to cover'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C96-clarus]
 <!-- hl-knowledge: introduces=[LA-LEX-C96-PULCHER-05]; assesses=[] -->
 
 **obscūrus, obscūra, obscūrum** — "dark, obscure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**obscūrus** is usually traced to Proto-Indo-European *\*(s)kewH-*, "to cover" (EtymDB 2.1), with the prefix *ob-*, "over": covered over, so dark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

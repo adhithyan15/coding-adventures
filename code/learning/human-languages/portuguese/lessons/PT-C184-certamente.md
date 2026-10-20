@@ -13,7 +13,8 @@ gloss: "certainly"
 concept_tag: PT-PORQUE184-CERTAMENTE
 prerequisites: [PT-C183-meio, PT-C184-felizmente]
 sounds: []
-roots: []
+roots: [certus-latin]
+etymology_hook: "certamente — certo 'sure' (← Latin certus) + -mente '-ly'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C184-felizmente]
 <!-- hl-knowledge: introduces=[PT-LEX-C184-PORQUE184-02]; assesses=[] -->
 
 **certamente** — "certainly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**certamente** is built from *certo*, "sure" (← Latin *certus*), and *-mente*, "-ly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,7 @@ sounds: [open-a]
 roots: [stare-latin]
 etymology_hook: "Come sta? keeps the standing metaphor of Come stai? but changes the social register"
 duration:
-  max_seconds: 218
+  max_seconds: 245
 requires:
   knowledge: [IT-ETYMON-COME-STAI-02]
 introduces:
@@ -58,6 +58,11 @@ respect.
 An answer can return the formal pronoun:
 
 > **Bene, grazie. E Lei?** — “Well, thank you. And you?”
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Come sta?** is built from *come*, "how" ← Latin *quomodo*, and *sta*, "stands", a form of *stare* ← Latin *stare*, "to stand". (EtymDB 2.1)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02] -->

@@ -14,7 +14,8 @@ romanization: "apāyakāri"
 concept_tag: KA-QUAL144-APAYAKARI
 prerequisites: [KA-C143-prasiddha, KA-C143-suraksita]
 sounds: []
-roots: []
+roots: [sanskrit-apaya]
+etymology_hook: "apāyakāri: Sanskrit apāya 'misfortune' (CDIAL 481) + kārin 'causing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C143-suraksita]
 <!-- hl-knowledge: introduces=[KA-LEX-C144-QUAL144-01]; assesses=[] -->
 
 **ಅಪಾಯಕಾರಿ** — *apāyakāri* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಪಾಯಕಾರಿ** (*apāyakāri*) is Sanskrit *apāya*, "departure, misfortune" (CDIAL 481), and *kārin*, "causing": "causing misfortune".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

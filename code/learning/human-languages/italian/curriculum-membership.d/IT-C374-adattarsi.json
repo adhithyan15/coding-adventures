@@ -1,0 +1,11 @@
+{
+  "id": "IT-C374-adattarsi",
+  "pathSegment": "IT-PATH-374-IMPREVISTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-374-IMPREVISTO",
+      "order": 4
+    }
+  ]
+}

@@ -11,7 +11,8 @@ romanization: "bā"
 concept_tag: KA-VERB-COME
 prerequisites: [KA-C41-there, KA-C41-who, KA-C42-jnaana]
 sounds: []
-roots: []
+roots: [baa-come-dravidian]
+etymology_hook: "bā: native Dravidian, one word with Tamil varu and Malayalam varuka (DEDR 5270)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: []
 **ಬಾ** (*bā*) — "come".
 
 One syllable, and a whole sentence. The commonest thing said at a doorway.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾ** (*bā*) is native Dravidian, one word with Tamil *varu* and Malayalam *varuka* (DEDR 5270). DEDR gives Kannada *bar*, *bā*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [KA-C02-hesaru, KA-C01-namaskara]
 sounds: [long-ii]
 roots: [niin-dravidian]
+etymology_hook: "nīnu, nīvu: native Dravidian (DEDR 3684, 3688); Tamil nī and nīm, Telugu nīvu and mīru"
 duration:
   max_seconds: 180
 requires:
@@ -46,6 +47,8 @@ reviews_of: [KA-C02-nanna-hesaru]
 
 **ನೀನು** (*nīnu*, familiar "you") ← Proto-Dravidian **\*nīn** — the same native
 root as Tamil *nī*. **ನೀವು** (*nīvu*) is the respectful/plural "you."
+
+DEDR 3684 lists Kannada *nīn(u)* with Tamil *nī*; DEDR 3688 lists the plural *nīvu* with Tamil *nīm* and Telugu *mīru*.
 
 ## Grammar Lens: respect by the plural
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C02-NIINU-NIIVU-02]; assesses=[] -->

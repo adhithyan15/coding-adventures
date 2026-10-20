@@ -14,7 +14,8 @@ romanization: "letát"
 concept_tag: RU-VERB-LETAT
 prerequisites: [RU-C142-lovit, RU-C142-tolkat]
 sounds: []
-roots: []
+roots: [slavic-leteti]
+etymology_hook: "летать is the repeated form of лететь 'to fly', Proto-Slavic *letěti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C142-tolkat]
 <!-- hl-knowledge: introduces=[RU-LEX-C143-ACT143-01]; assesses=[] -->
 
 **летать** (*letát*) — "to fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**летать** is the repeated-action partner of *лететь*, "to fly", Proto-Slavic *\*letěti* — inherited (Vasmer). The same root is in *самолёт*, "aeroplane".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

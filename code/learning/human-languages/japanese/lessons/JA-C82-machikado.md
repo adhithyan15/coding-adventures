@@ -14,7 +14,8 @@ romanization: "machikado"
 concept_tag: JA-LOC82-MACHIKADO
 prerequisites: [JA-C81-aida, JA-C81-chihou]
 sounds: []
-roots: []
+roots: [japanese-machi, japanese-kado]
+etymology_hook: "machikado: native compound of machi 'town, street' + kado 'corner'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C81-chihou]
 <!-- hl-knowledge: introduces=[JA-LEX-C82-LOC82-01]; assesses=[] -->
 
 **まちかど** — *machikado* — "a street corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まちかど** (*machikado*) is a native compound, inherited rather than borrowed: *machi*, "town, street", and *kado*, "corner", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

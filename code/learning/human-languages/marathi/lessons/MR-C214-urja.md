@@ -14,7 +14,8 @@ romanization: "ūrjā"
 concept_tag: MR-VASTU214-URJA
 prerequisites: [MR-C213-talghar, MR-C213-mala]
 sounds: []
-roots: []
+roots: [sanskrit-urja]
+etymology_hook: "ūrjā: Sanskrit ūrjā 'strength, vigour', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C213-mala]
 <!-- hl-knowledge: introduces=[MR-LEX-C214-VASTU214-01]; assesses=[] -->
 
 **ऊर्जा** — *ūrjā* — "energy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऊर्जा** (*ūrjā*) is Sanskrit *ūrjā*, "strength, vigour", taken over whole, a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "grey"
 concept_tag: LA-QUAL149-CANUS
 prerequisites: [LA-C148-purpureus, LA-C149-fuscus]
 sounds: []
-roots: []
+roots: [canus-latin]
+etymology_hook: "cānus 'grey' — inherited, usually traced to PIE *kas- 'grey'; English hare is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C149-fuscus]
 <!-- hl-knowledge: introduces=[LA-LEX-C149-QUAL149-02]; assesses=[] -->
 
 **cānus, cāna, cānum** — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cānus** is inherited from Proto-Italic *\*kaznos*, "grey", usually traced to Proto-Indo-European *\*kas-*, "grey, white" (EtymDB 2.1). English *hare*, the grey animal, is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

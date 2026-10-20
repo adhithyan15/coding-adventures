@@ -14,7 +14,8 @@ romanization: "dajāja"
 concept_tag: AR-ANIMALS81-DAJAJA
 prerequisites: [AR-C81-jamal, AR-C81-himar]
 sounds: []
-roots: []
+roots: [d-j-j]
+etymology_hook: "dajāja: one bird of dajāj 'fowls', an old noun listed by Lane under d-j-j: a hen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C81-himar]
 <!-- hl-knowledge: introduces=[AR-LEX-C81-ANIMALS81-03]; assesses=[] -->
 
 **دجاجة** — *dajāja* — "a hen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دجاجة** (*dajāja*) is one bird of *dajāj*, "fowls", an old native noun, filed under the root *d-j-j* (Lane): a hen.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

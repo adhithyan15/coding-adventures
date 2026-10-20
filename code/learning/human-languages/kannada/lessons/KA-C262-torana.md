@@ -14,7 +14,8 @@ romanization: "tōraṇa"
 concept_tag: KA-VASTU262-TORANA
 prerequisites: [KA-C261-halli, KA-C261-jirale]
 sounds: []
-roots: []
+roots: [sanskrit-torana]
+etymology_hook: "tōraṇa ← Sanskrit tōraṇa 'arched or festooned doorway', a tatsama (CDIAL 5976)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C261-jirale]
 <!-- hl-knowledge: introduces=[KA-LEX-C262-VASTU262-01]; assesses=[] -->
 
 **ತೋರಣ** — *tōraṇa* — "a festoon of mango leaves (over a doorway)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೋರಣ** (*tōraṇa*) is Sanskrit *tōraṇa*, "arched or festooned doorway", taken over whole as a learned loan, a tatsama (CDIAL 5976).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

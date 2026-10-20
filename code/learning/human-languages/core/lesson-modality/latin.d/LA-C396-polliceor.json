@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C396-polliceor",
+    "language": "latin",
+    "chapter": 396,
+    "sequence": 21200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b78792f57e10dfaf"
+  },
+  "findings": []
+}

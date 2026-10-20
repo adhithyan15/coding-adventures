@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-279-REDIGER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-279-REDIGER"
+  ],
+  "after": []
+}

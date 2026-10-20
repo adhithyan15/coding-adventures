@@ -12,6 +12,9 @@ Before the new one: say the Hindi for fire, then the Hindi for ash.
 You'll want to know: कोयला.
 कोयला — koylā — "coal".
 
+The word, taken apart.
+कोयला (koylā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kokila, "lighted coal, charcoal" (CDIAL 3484). CDIAL notes that the Sanskrit word was made over from a Middle Indo-Aryan koila, which has been traced to Munda.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for ash, then the Hindi for coal.
 
 You'll want to know: गैस.
 गैस — gais — "gas".
+
+The word, taken apart.
+गैस (gais) is a loan from English gas.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for coal, then the Hindi for gas.
 You'll want to know: कड़ाही.
 कड़ाही — kaṛāhī — "a wok".
 
+The word, taken apart.
+कड़ाही (kaṛāhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭāha, "boiler, saucepan" (CDIAL 2638).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for gas, then the Hindi for a wok.
 You'll want to know: बेलन.
 बेलन — belan — "a rolling pin".
 
+The word, taken apart.
+बेलन (belan) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vellana, "shaking; rolling-pin" (CDIAL 12120).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a wok, then the Hindi for a rolling pin.
 
 You'll want to know: छलनी.
 छलनी — chalnī — "a sieve".
+
+The word, taken apart.
+छलनी (chalnī) belongs with Hindi cālnī, "sieve", which CDIAL lists under Sanskrit cālanī, "strainer, sieve" (CDIAL 4771).
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C282-comunicado",
+  "pathSegment": "PT-PATH-282-AFIRMAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-282-AFIRMAR",
+      "order": 3
+    }
+  ]
+}

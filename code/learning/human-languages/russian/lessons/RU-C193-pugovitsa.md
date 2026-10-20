@@ -14,7 +14,8 @@ romanization: "púgovitsa"
 concept_tag: RU-VESHCH193-PUGOVITSA
 prerequisites: [RU-C193-remen, RU-C193-karman]
 sounds: []
-roots: []
+roots: [slavic-pugy]
+etymology_hook: "пуговица ← Old Russian пугы 'a button'; usually compared with Latvian puoga 'a button'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C193-karman]
 <!-- hl-knowledge: introduces=[RU-LEX-C193-VESHCH193-04]; assesses=[] -->
 
 **пуговица** (*púgovitsa*) — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пуговица** ← Old Russian *pugŭvĭ*, *пугы*, "a button", with *-ица*. It is usually compared with Latvian *puoga*, "a button", and Sanskrit *puñja-*, "a lump" (Vasmer), though Persson separated the Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tāḻnna"
 concept_tag: ML-QUAL168-TALNNA
 prerequisites: [ML-C168-vitiyulla, ML-C168-itunniya, ML-C88-compound-numbers]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "tāḻnna: native Dravidian, 'having sunk low'; Tamil tāḻ (DEDR 3178)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C168-itunniya]
 <!-- hl-knowledge: introduces=[ML-LEX-C168-QUAL168-03]; assesses=[] -->
 
 **താഴ്ന്ന** — *tāḻnna* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താഴ്ന്ന** (*tāḻnna*) is native Dravidian, a past form of the verb "to sink, come low"; DEDR 3178 lists the root with Tamil *tāḻ* and Kannada *tāḻ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

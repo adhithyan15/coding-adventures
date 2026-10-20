@@ -12,6 +12,9 @@ Before the new one: say the German for stingy, then the German for cosy.
 You'll want to know: gerecht.
 gerecht — "fair, even-handed".
 
+The word, taken apart.
+gerecht from Middle High German gereht from Old High German gireht — inherited, built on the word for "right", Proto-Germanic rehtaz, English right. EtymDB 2.1 lists Gothic garaihts, "righteous", beside it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the German for cosy, then the German for fair.
 
 You'll want to know: geschieden.
 geschieden — "divorced".
+
+The word, taken apart.
+geschieden is the past participle of the verb "to separate, to part", Old High German sceidan from Proto-Germanic skaiþaną (EtymDB 2.1): separated.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the German for fair, then the German for divorced.
 You'll want to know: gleichzeitig.
 gleichzeitig — "at the same time".
 
+The word, taken apart.
+gleichzeitig is gleich, "same", + Zeit, "time", + -ig: at the same time. Both are inherited; Zeit from Proto-Germanic tīdiz. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the German for divorced, then the German for at the same
 You'll want to know: großzügig.
 großzügig — "generous".
 
+The word, taken apart.
+großzügig is the word for "great" + Zug, here "a trait", + -ig: of great traits, generous. The word for "great" from Old High German grōz from Proto-Germanic grautaz. (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the German for at the same time, then the German for gen
 
 You'll want to know: günstig.
 günstig — "good value, favourable".
+
+The word, taken apart.
+günstig is built on the word for "favour", Middle High German gunst, from the verb "to grant, not to begrudge" — inherited. Good value is a favourable price. EtymDB 2.1 has no source for it.
 
 What you've built.
 One more word for this chapter.

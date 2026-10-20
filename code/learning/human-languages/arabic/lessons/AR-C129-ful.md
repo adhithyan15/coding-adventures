@@ -14,7 +14,8 @@ romanization: "fūl"
 concept_tag: AR-THINGS129-FUL
 prerequisites: [AR-C128-adas, AR-C128-hummus]
 sounds: []
-roots: []
+roots: [f-w-l]
+etymology_hook: "fūl: built on the root f-w-l, 'beans' (Lane); Lane lists fūl under f-w-l"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C128-hummus]
 <!-- hl-knowledge: introduces=[AR-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **فول** — *fūl* — "beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فول** (*fūl*) is built on the native Arabic root *f-w-l*, "beans" (Lane). Lane lists *fūl* under *f-w-l*; Hebrew *pol*, "bean", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

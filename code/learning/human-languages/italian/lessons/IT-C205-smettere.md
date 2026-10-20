@@ -13,7 +13,8 @@ gloss: "to stop (doing)"
 concept_tag: IT-VERB-SMETTERE
 prerequisites: [IT-C205-finire, IT-C205-continuare]
 sounds: []
-roots: []
+roots: [mittere-latin]
+etymology_hook: "smettere — s- 'off' + mettere 'to put': to put down, to leave off"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C205-continuare]
 <!-- hl-knowledge: introduces=[IT-LEX-C205-VERBI205-04]; assesses=[] -->
 
 **smettere** — "to stop (doing)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**smettere** is *s-*, "off", plus *mettere*, "to put": to put (a thing) down. *mettere* ← Latin *mittere*. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

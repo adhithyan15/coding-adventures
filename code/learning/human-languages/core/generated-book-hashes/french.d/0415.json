@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:1fcb27aabdb2782e",
+  "lessonIds": [
+    "FR-C415-station",
+    "FR-C415-rame",
+    "FR-C415-carnet",
+    "FR-C415-tramway",
+    "FR-C415-trottinette",
+    "FR-R415-revision-408-415"
+  ],
+  "tex": "french/book/chapters/ch415-en-ville-sans-voiture.tex"
+}

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACERCARSE
 prerequisites: [ES-C443-interesar, ES-C340-cerca, ES-C340-lejos]
 sounds: [soft-c, stress-final]
 roots: [circa-latin]
+etymology_hook: "acercarse — a- + cerca 'near' + -ar; cerca is Latin circa 'around' — English circle"
 duration:
   max_seconds: 270
 requires:

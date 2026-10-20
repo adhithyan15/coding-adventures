@@ -14,7 +14,8 @@ romanization: "sādaram"
 concept_tag: SA-COURTESY-SADARA
 prerequisites: [SA-C37-peace, SA-C35-honey, SA-C36-all]
 sounds: []
-roots: []
+roots: [sanskrit-sadara]
+etymology_hook: "sādaram 'respectfully' ← sa- 'with' + ādara 'regard', from ā + the root √dṛ (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C37-peace]
 **सादरम्** is *sa-*, "with", joined to *ādara*, "regard, esteem" — so, "with regard".
 
 It goes at the front of a request, where English would put its politeness at the end of a letter. Set beside **कृपया** it makes a request about as courteous as Sanskrit gets: *sādaram kṛpayā*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sādaram* is built from *sa-*, "with", and *ādara*, "regard, respect", a noun MW
+derives from *ā* and the root √dṛ.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 159,
-  "sourceHash": "fnv1a64:0f55f1370ffba3ae",
+  "sourceHash": "fnv1a64:676eb7d9496afef5",
   "lessonIds": [
     "ML-C159-katrika",
     "ML-C159-currika",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch159.txt",
   "json": "malayalam/narration/ch159.json",
-  "textHash": "fnv1a64:5b5d393105ed9627",
-  "jsonHash": "fnv1a64:8ed06029a93e5fe7",
+  "textHash": "fnv1a64:3aa320dc4936817e",
+  "jsonHash": "fnv1a64:00a0fbe439069a2d",
   "findings": []
 }

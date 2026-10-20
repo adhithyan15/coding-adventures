@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 165,
-  "sourceHash": "fnv1a64:a05684dc184fd934",
+  "sourceHash": "fnv1a64:ac2b5bccd1e3af2e",
   "lessonIds": [
     "SA-C165-dhulih",
     "SA-C165-dhumah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch165.txt",
   "json": "sanskrit/narration/ch165.json",
-  "textHash": "fnv1a64:0b2561d33ad27a50",
-  "jsonHash": "fnv1a64:c07d594104024bdb",
+  "textHash": "fnv1a64:476c1ebf2367b4ba",
+  "jsonHash": "fnv1a64:68faaa525e56c94c",
   "findings": []
 }

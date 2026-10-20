@@ -13,7 +13,8 @@ gloss: "to look for"
 concept_tag: FR-VERB-CHERCHER
 prerequisites: [FR-C63-couper, FR-C63-oublier]
 sounds: []
-roots: []
+roots: [circare-latin]
+etymology_hook: "chercher ← Late Latin circare 'to go around', from circus — English search is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C63-oublier]
 <!-- hl-knowledge: introduces=[FR-LEX-C63-VERBES15-04]; assesses=[] -->
 
 **chercher** — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chercher** ← Old French *cerchier* ← Late Latin *circare*, "to go around", from *circus*, "a ring" (Lewis & Short) — inherited. English *search* came from the same Old French verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

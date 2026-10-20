@@ -14,6 +14,7 @@ concept_tag: GE-QUAL214-FROEHLICH
 prerequisites: [GE-C213-fantastisch, GE-C213-feucht]
 sounds: []
 roots: []
+etymology_hook: "fröhlich — the word for 'glad' + -lich; glad ← Old High German frō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C213-feucht]
 <!-- hl-knowledge: introduces=[GE-LEX-C214-QUAL214-01]; assesses=[] -->
 
 **fröhlich** — "cheerful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fröhlich** is the word for "glad", Middle High German *vrō* ← Old High German *frō* (EtymDB 2.1), + *-lich*: merry. English *frolic* came from the Dutch cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

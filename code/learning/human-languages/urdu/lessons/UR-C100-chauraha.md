@@ -14,7 +14,8 @@ romanization: "chaurāhā"
 concept_tag: UR-LOC100-CHAURAHA
 prerequisites: [UR-C98-gali, UR-C98-mor]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "chaurāhā: usually explained as chau 'four' + rāh 'road' (Persian); CDIAL lists only cauhaṭṭā (CDIAL 4626)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C98-mor]
 <!-- hl-knowledge: introduces=[UR-LEX-C100-LOC100-01]; assesses=[] -->
 
 **چوراہا** — *chaurāhā* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوراہا** (*chaurāhā*) is usually explained as *chau-*, "four", with Persian *rāh*, "road". CDIAL does not list it; it lists *cauhaṭṭā*, "a crossing of market streets", from *catur-*, "four" (CDIAL 4626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pairṇo"
 concept_tag: MW-VERB-PAIRNO
 prerequisites: [MW-C56-rokno, MW-C56-batano]
 sounds: []
-roots: []
+roots: [sanskrit-paridadhati]
+etymology_hook: "pairṇo ← Sanskrit paridadhāti 'sets round; puts on clothes', a tadbhava (CDIAL 7835, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C56-batano]
 <!-- hl-knowledge: introduces=[MW-LEX-C57-VERBS57-01]; assesses=[] -->
 
 **पैरणो** — *pairṇo* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैरणो** (*pairṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paridadhāti*, "sets round; puts on clothes". CDIAL lists Old Marwari *paharaï* under it (CDIAL 7835). Hindi has *pahirnā*; Marwadi has dropped the *h*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

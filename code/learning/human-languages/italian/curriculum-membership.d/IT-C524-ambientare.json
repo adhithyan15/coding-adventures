@@ -1,0 +1,11 @@
+{
+  "id": "IT-C524-ambientare",
+  "pathSegment": "IT-PATH-524-ROMANZO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-524-ROMANZO",
+      "order": 2
+    }
+  ]
+}

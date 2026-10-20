@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 212,
-  "sourceHash": "fnv1a64:3c283353150305de",
+  "sourceHash": "fnv1a64:63b5999450ec6b84",
   "lessonIds": [
     "GE-C212-bewoelkt",
     "GE-C212-blond",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch212.txt",
   "json": "german/narration/ch212.json",
-  "textHash": "fnv1a64:86eee34fe8ed9b3c",
-  "jsonHash": "fnv1a64:a301785129b09bb7",
+  "textHash": "fnv1a64:c2e3f729e8392f1d",
+  "jsonHash": "fnv1a64:3df89df13556f6d0",
   "findings": []
 }

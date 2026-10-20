@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "What Hands Work With",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b2d474201c2e1cb",
+  "sourceHash": "fnv1a64:855798025f166b68",
   "lessons": [
     {
       "id": "HI-C62-rope",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6c2c8acda6314d1",
+      "sourceHash": "fnv1a64:5cb34c2ebcb73270",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db837379eb70413c",
+      "sourceHash": "fnv1a64:133292a7a7c8cc47",
       "notice": null,
       "blocks": [
         {
@@ -190,11 +190,11 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit सूची (sūcī), 'needle', on सूच् (sūc-), 'to point out, to indicate'. A needle is named for the fact that it points."
+              "text": "From Sanskrit sūcī, 'needle', on सूच् (sūc-), 'to point out, to indicate'. A needle is named for the fact that it points."
             },
             {
               "kind": "speech",
-              "text": "The same root gives सूचना, the word on every notice board and news bulletin for 'information' — a thing pointed out to you. A tailor's tool and a public announcement, off one small Sanskrit word about pointing."
+              "text": "The same root gives Hindi's everyday word for 'information', the one on every notice board and news bulletin — a thing pointed out to you. A tailor's tool and a public announcement, off one small Sanskrit word about pointing."
             }
           ]
         },
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d357cf41ea2312c",
+      "sourceHash": "fnv1a64:834ff22a9654c0b6",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +340,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टोकरी (ṭokrī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭokka, \"basket\", a form CDIAL reconstructs from its descendants (CDIAL 5477). The -r- is an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +361,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +419,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a905990a095e0bf9",
+      "sourceHash": "fnv1a64:5b49b91bb017b35f",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a359695c32f4b779",
+      "sourceHash": "fnv1a64:5e4ca5a595531cd0",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +631,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लकड़ी (lakṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lakuṭa, \"club, stick\" (CDIAL 10875). It came through a variant lakkuṭa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +652,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -688,7 +710,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

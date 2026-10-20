@@ -13,7 +13,8 @@ gloss: "to approach"
 concept_tag: LA-VERB-APPROPINQUO
 prerequisites: [LA-C169-propero, LA-C169-recedo]
 sounds: []
-roots: []
+roots: [appropinquare-latin, prope-latin]
+etymology_hook: "appropinquō 'to approach' — ad 'to' + propinquō 'to come near', from prope 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C169-recedo]
 <!-- hl-knowledge: introduces=[LA-LEX-C169-ACT169-05]; assesses=[] -->
 
 **appropinquō, appropinquāre** — "to approach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**appropinquō** is *ad*, "to", with *propinquō*, "to come near" (EtymDB 2.1), from *propinquus*, "near", built on *prope*, "near".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

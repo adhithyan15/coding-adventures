@@ -2,8 +2,8 @@
   "version": 1,
   "language": "marwadi",
   "level": "A1",
-  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY EXAMINING OR LANGUAGE BODY. core/exam-levels.json records for marwadi that no suitable complete external pre-A1-to-C2 ladder has been identified, and this project has found none either: Marwadi may have no external syllabus at all, and this file must not be read as inventing one. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT MARWADI: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL: what an A1 candidate must be able to handle, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE MARWADI EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's three article points are answered by the single fact that Marwadi has none, that its four copula-and-attribute points land on one hai, that its politeness demand is answered by the enclitic particle saa rather than by a pronoun, and that eight separate past-tense points collapse into one absence -- all of that is chosen here. (3) THE COVERAGE NUMBER is a measure of the corpus against this list. It is not an exam-readiness claim and cannot become one while every scope dimension is partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED, because exam-levels.json's caveat for marwadi is about the missing ladder and says nothing about register. What the measurement found is that this track's frontmatter is UNUSUALLY INFORMATIVE: 39 of 257 lessons declare something other than neutral across six values, where latin and portuguese are uniformly neutral and had to be read entirely from bodies. THE CAVEAT ITSELF IS STALE, AND IN THE TRACK'S FAVOUR, AND IS RECORDED AS STALE RATHER THAN DEFERRED TO -- it says the mapping does not claim that the current STARTER CHAPTER reaches the destination, and the track now has 257 lessons across 31 chapters, an assessment spec, task shapes and four-skill scored practice. MW-A1-REG-04 records that. The rest of the caveat stands. WHAT THIS TRACK DOES DIFFERENTLY, said here because the numbers below do not show it: every item runs HEAR, then BUILD IN THE SCRIPT, then PERFORM ACROSS FOUR SCORED SKILLS, and the practice lessons re-run cumulative lists that GROW -- family four, seven, ten, twelve; shopping three, five, seven; food three, five, seven. Seven lessons in ten are a second, third or fourth pass over material already introduced. That is an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on, and MW-A1-SAU-04 enumerates it. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
-  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Marwadi is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED. Like latin/ and persian/ and unlike italian/ and portuguese/, the marwadi/ track ships assessment-spec.md, assessment.json, task-shapes/ and track.json, so a project-internal contract does bound this file. It is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.marwadi -- exam 'Coding Adventures Marwadi Assessment -- project-defined equivalent', basis 'editorial', mapping 'cefr', with the no-external-ladder caveat that MW-A1-REG-04 records as partly stale. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 312 lesson files in code/learning/human-languages/marwadi/lessons/, which introduce 272 distinct atoms between them -- 140 SCRIPT, 90 LEX, 30 PERFORMANCE, 3 DIALOGUE, and single-figure counts of ANSWER, QUESTION, COURTESY, FAREWELL, PHRASE, REGISTER and RESPONSE. All 312 declare variety: central-marwari-devanagari; track.json expands that to contemporary central Marwari in Devanagari, with regional variation named explicitly. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi content syllabus was performed for this file. See `about`.",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. Marwadi may have no external syllabus at all: no complete external pre-A1-to-C2 ladder has been identified, and nothing here is attributable to DELE, the Instituto Cervantes or another awarding body. The Spanish A1 inventory lends only a language-neutral point structure; every Marwadi exponent is this project's editorial judgement. Coverage measures exact introduced atoms in 901 lessons across 151 chapters and is NO READINESS, ATTAINMENT, MOCK-EXAM OR HUMAN-VALIDATION CLAIM while every scope dimension remains partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED: 39 lessons use one of six non-neutral register values and all 901 declare central-marwari-devanagari. WHAT THIS TRACK DOES DIFFERENTLY is an expanding-interval retrieval schedule: introduction lessons feed cumulative first and second passes rather than a one-pass word list. NOT SEARCHED, BY INSTRUCTION: no new external Marwadi syllabus search was performed for this reconciliation; the project backlog records that sourcing question as settled.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: core/exam-inventory-es-a1.json supplies the language-neutral A1 demand structure and attributes nothing about Marwadi to DELE or the Instituto Cervantes. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED in marwadi/assessment-spec.md, assessment.json, task-shapes/ and track.json; it is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json retains the no-external-ladder caveat. CORPUS EVIDENCE: every probe was checked against 901 direct lesson owners introducing 838 distinct atoms -- 630 LEX, 155 SCRIPT, 31 PERFORMANCE, 4 GRAMMAR, 3 DIALOGUE, 3 SKILL, 2 QUESTION, 2 ANSWER, 2 CONJ and one each of COURTESY, FAREWELL, FUNCTION, PHRASE, REGISTER and RESPONSE. All 901 lessons declare central-marwari-devanagari. NOT SEARCHED, BY INSTRUCTION: no external Marwadi content syllabus search was repeated for this evidence reconciliation.",
   "anchors": [
     {
       "id": "ES-A1-PROXY",
@@ -20,7 +20,7 @@
     {
       "id": "MW-CORPUS",
       "kind": "project-owned",
-      "title": "code/learning/human-languages/marwadi/ -- 257 lessons across 31 chapters, curriculum.d and chapters.d",
+      "title": "code/learning/human-languages/marwadi/ -- 901 lessons across 151 chapters, curriculum.d and chapters.d",
       "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
     },
     {
@@ -33,7 +33,7 @@
       "id": "ED-MARWADI",
       "kind": "editorial",
       "title": "This project's unaided judgement about Marwadi",
-      "note": "Every Marwadi exponent below, and every judgement about what counts. Deciding that saa answers the proxy's politeness demand, that the five imperatives cover giving an instruction while the absence of any conjugated lexical verb leaves the present tense empty, and that a market curriculum with no numerals is the headline of this file -- all of that is chosen here. It is a working default to be corrected, not a standard."
+      "note": "Every Marwadi exponent below, and every judgement about what counts. Deciding that saa answers the proxy's politeness demand, that the five imperatives cover giving an instruction while the absence of any conjugated lexical verb leaves the present tense empty, and that exact later vocabulary atoms close a notion but not an untaught sentence frame -- all of that is chosen here. It is a working default to be corrected, not a standard."
     }
   ],
   "proxy": {
@@ -45,25 +45,25 @@
     "communicative-functions": {
       "status": "partial",
       "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the Council of Europe CEFR Companion Volume A1 descriptors",
-      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Marwadi is our choice every time. Two functions are enumerated that the proxy has no A1 slot for and this track demands anyway: saying that you have understood and that you have not (MW-A1-F2-15, empty), and softening an imperative (MW-A1-V-08, covered). The column's most useful finding is asymmetric: this track can accept, agree, comply and thank, and cannot decline, refuse or disagree at all, because it has no negator."
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Marwadi is our choice every time. Two functions are enumerated that the proxy has no A1 slot for and this track demands anyway: saying that you have understood and that you have not (MW-A1-F2-15, still empty), and softening an imperative (MW-A1-V-08, covered). The track can accept, agree, comply, thank and decline an offer; it still lacks productive opinion, knowledge, ability, preference, repair, permission and disagreement frames."
     },
     "grammar": {
       "status": "partial",
       "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
-      "note": "Walking the Spanish grammar column surfaced demands no reading of the Marwadi corpus alone would have named: that no lexical verb is ever conjugated for a person, that nothing in 257 files is plural, that the word order is verb-final on every page and never named, and that a negator does not exist. It does not close, because Marwadi makes demands Spanish cannot see -- the postposition, the aspirated/unaspirated and retroflex/dental contrasts, the enclitic respect particle -- and those are enumerated here on the project's judgement and, where the proxy has no slot at all, marked marwadiSpecific."
+      "note": "Walking the Spanish grammar column surfaced demands no vocabulary census alone would name. The 901-lesson course now teaches hundreds of nouns, adjectives and dictionary-form verbs plus the negator koni, but it still never conjugates a lexical verb for a person, teaches a plural or an agreement paradigm, or explains its pervasive verb-final word order. Marwadi-specific postpositions, sound contrasts and the respect particle remain editorial mappings where the proxy has no direct slot."
     },
     "phonology-orthography": {
       "status": "partial",
       "source": "The Devanagari block of Unicode for the sign inventory, code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and marwadi/pronunciation-reference.md",
-      "note": "THE DIMENSION THIS TRACK IS STRONGEST IN AND THE PROXY IS WEAKEST FOR. Spanish's orthography column is about an alphabet the learner already has; Marwadi's demand is a different writing system, and the track meets most of it -- 27 consonant signs, all nine dependent vowel signs, the virama, the anusvara and the nukta, each isolated in the chapter where the first word needing it arrives. Two gaps are sharp and specific: only TWO of eleven independent vowel signs exist, so a word beginning with any other vowel cannot be written (aap is drilled from chapter 7 and is unwritable), and neither the Devanagari digits nor the danda is taught at all."
+      "note": "THE DIMENSION THIS TRACK IS STRONGEST IN AND THE PROXY IS WEAKEST FOR. The course teaches its consonant and dependent-vowel inventory, virama, anusvara, nukta and all ten Devanagari digits. Five of eleven independent vowel letters now have isolated owners rather than the old two; the remaining six and an explicit lesson on the danda and borrowed punctuation keep this dimension partial."
     },
     "lexicon": {
       "status": "partial",
       "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's general and specific notion inventories)",
-      "note": "Walked at the granularity of the proxy's numbered subsections. It does not close: which Marwadi words an A1 candidate must hold is what a syllabus would say and there is none. What it does show is a corpus organised entirely around one scenario -- the market counter -- and unusually complete inside it: twelve kinship words, seven shopping words, five transport words, six weather words, six foods, four price words. Outside it there is almost nothing: no numeral, no colour, no part of the day, no body part but the hand, no school word, no work word and no art word."
+      "note": "Walked at the granularity of the proxy's numbered subsections. It does not close: no external syllabus says which Marwadi words an A1 candidate must hold, and grouped fields remain partial. The corpus now introduces 630 distinct lexical atoms spanning numbers, body and health, school, time and calendar, location, colours, work, home, food, nature and qualities. Real gaps remain specific: proper place names and origin, measurement units, meals of the day, identity documents, full media/service/work/arts subdomains, and productive sentence frames that isolated vocabulary cannot supply."
     }
   },
-  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and its note is written as a work queue. Every atom named in every probe was checked mechanically against the 228 atoms the marwadi track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. TWO HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. First, this track splits one word across several atoms by SKILL: paani has a LEX atom on the lesson that hears it and a SCRIPT atom on the lesson that writes it, and a PERFORMANCE atom on the lesson that scores both. Probing a vocabulary point therefore names the LEX atom and probing a script point names the SCRIPT one; they are the same word reached by two doors, and no point is counted twice for it. Second, this track carries whole PHRASES on single LEX atoms -- MW-LEX-PRICE-QUESTION-01 is the entire sentence ye kitne ku hai?. So a covered functional point often means the learner has a memorised utterance rather than a productive pattern, and the notes say so wherever it matters; MW-A1-ART-02 and MW-A1-V-06 are the clearest cases. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT: haan without a word for no leaves polarity uncovered; ye without vo leaves the far demonstrative uncovered; mhaaro without mhaari leaves possessive agreement uncovered; kaiso without kathe leaves the interrogative adverbs uncovered. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `marwadiSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by a direct lesson owner. `probe: null` means the point remains uncovered or only partially taught, never skipped; its note states the remaining joint. Every probe is checked mechanically against the 838 distinct atoms introduced by the Marwadi track, and no atom is invented to fill an inventory slot. Skill-specific atoms stay separate: a vocabulary point names LEX evidence, a writing point names SCRIPT evidence, and a scored performance names PERFORMANCE evidence. Whole learned phrases can close only the exact memorised function they teach, not a productive grammar pattern. A POINT IS NOT COVERED BY ONE TAUGHT HALF: one ordinal is not an ordinal series; dictionary-form know, think, can, like and want do not create conjugated communicative frames; school, media, health, work, leisure and arts vocabulary does not close grouped subdomains whose other parts are absent. `derivedFrom` records proxy provenance and `anchorIds` records evidence kind so the editorial mapping can be audited rather than trusted.",
   "points": [
     {
       "id": "MW-A1-N-01",
@@ -96,13 +96,19 @@
       "derivedFrom": [
         "A1-N-01"
       ],
-      "note": "Not one settlement, region or country name in 257 files. Jodhpur, Marwar, Rajasthan: none of them, in a course about the language of that region."
+      "note": "Not one settlement, region or country name has a direct owner in the current 901-lesson corpus. Jodhpur, Marwar, Rajasthan: none of them, in a course about the language of that region."
     },
     {
       "id": "MW-A1-N-03",
       "category": "Naam (the noun)",
       "label": "common nouns naming periods of time",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C78-TIME78-01",
+        "MW-LEX-C78-TIME78-02",
+        "MW-LEX-C78-TIME78-03",
+        "MW-LEX-C90-TIME90-01",
+        "MW-LEX-C90-TIME90-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -111,7 +117,7 @@
       "derivedFrom": [
         "A1-N-02"
       ],
-      "note": "din, raat, subah, saanjh: ZERO occurrences between them. The track teaches six weather words and no word for a part of the day, so a learner can say it is hot and cannot say when."
+      "note": "Closed by direct chapter-78 and chapter-90 owners: din, raat, savero, dopar and aathan teach day, night, morning, midday/afternoon and evening. The probe names their introduced atoms rather than incidental mentions in the later cumulative reviews."
     },
     {
       "id": "MW-A1-N-04",
@@ -328,7 +334,7 @@
       "derivedFrom": [
         "A1-DEM-02"
       ],
-      "note": "vo returns ZERO occurrences as a demonstrative in 257 files (the seven raw matches are the -vo ending of dikhavo and lavo). Marwadi's deixis is two-way and the track teaches the near half. Half a system."
+      "note": "vo still has no direct demonstrative owner in the current 901-lesson corpus (incidental text matches include the -vo ending of dikhavo and lavo). Marwadi's deixis is two-way and the track teaches the near half. Half a system."
     },
     {
       "id": "MW-A1-DEM-03",
@@ -468,7 +474,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "STILL ABSENT, and the reason is worth recording because it is NOT the reason it looks like. Marwari's first four ordinals -- pahlo, dujo, tijo, chautho -- need no sign this track has not taught: प ह ल ो, द ू ज ो, त ी ज ो and च ौ थ ो are all in the corpus already, so this is not a script debt and would cost the hand nothing. It was left uncovered by HL-C350 because no citable Marwari-specific source for the ordinal series was found: the Rajasthani numeral list this track cites for the cardinals prints no ordinals, and the comparative dictionary is a cognate list rather than a paradigm. Ordinals are the weakest column in the whole corpus -- twenty tracks enumerate one and eighteen leave it uncovered -- so this is a shared gap, and here it is a SOURCING gap rather than a teaching one. aakhri (final, last) is taught in chapter 29 and remains the only ordering word in the corpus. RE-CHECKED by HL-C354's ordinal sweep and STILL UNSOURCED: the sweep searched again for a citable Marwari-specific ordinal series and found none, so no series was invented and this point stays open. What changed around it is that the block is now the ONLY reason: the teens tranche taught the four signs the numbers needed and the ordinals needed none of them, so the sourcing gap is not merely the main reason, it is the sole one."
+      "note": "STILL PARTIAL, not absent: MW-C102-dujo now directly teaches dujo as another / the second, and aakhri (final, last) remains available from chapter 29. One ordinal plus a boundary word is not the requested ordinal series. RE-CHECKED by HL-C354's ordinal sweep and STILL UNSOURCED: there is no citable Marwari-specific source for the full pahlo, dujo, tijo, chautho paradigm. All needed signs are taught, so the remaining gap is sourcing and breadth, not a script debt."
     },
     {
       "id": "MW-A1-Q-03",
@@ -571,7 +577,9 @@
       "id": "MW-A1-PRON-05",
       "category": "Sarvanaam (pronouns)",
       "label": "the reflexive: aapno",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C102-DEF102-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -580,7 +588,7 @@
       "derivedFrom": [
         "A1-PRON-04"
       ],
-      "note": "Absent."
+      "note": "Closed by MW-C102-apno, which directly introduces aapno as our own / one's own. The inventory credits that exact reflexive-possessive atom and does not infer a wider reflexive paradigm."
     },
     {
       "id": "MW-A1-PRON-06",
@@ -649,7 +657,10 @@
       "id": "MW-A1-ADV-01",
       "category": "Kriya-visheshan (adverbs)",
       "label": "place deictics: here and there",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C82-PLACE82-01",
+        "MW-LEX-C82-PLACE82-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -659,13 +670,16 @@
         "A1-ADV-01",
         "A1-NG3-01"
       ],
-      "note": "Absent. Five places are taught (market, home, temple, shop, stall) and there is no way to say that anything is at one."
+      "note": "Closed by honest wiring, not new vocabulary: MW-C82-athai and MW-C82-bathai directly introduce aṭhai (here) and baṭhai (there). MW-C96-uthai later adds over there, but the point needs only the exact here/there pair."
     },
     {
       "id": "MW-A1-ADV-02",
       "category": "Kriya-visheshan (adverbs)",
       "label": "time deictics: aaj, kaal",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C79-TIME79-03",
+        "MW-LEX-C79-TIME79-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -674,7 +688,7 @@
       "derivedFrom": [
         "A1-ADV-02"
       ],
-      "note": "Both ZERO occurrences. pachhe (later) is taught in chapter 9 and is the only time adverb in the corpus, and it arrives welded into the farewell pachhe milsoo."
+      "note": "Closed by MW-C79-aj and MW-C79-kal: aaj is today and kaal is yesterday/tomorrow. The later time chapters add a much wider calendar, but these two direct atoms satisfy this bounded deictic point."
     },
     {
       "id": "MW-A1-ADV-03",
@@ -745,7 +759,10 @@
       "id": "MW-A1-ADV-07",
       "category": "Kriya-visheshan (adverbs)",
       "label": "interrogative adverbs: kaiso, and where",
-      "probe": null,
+      "probe": [
+        "MW-LEX-KAISO-01",
+        "MW-LEX-C96-LOC96-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -754,13 +771,16 @@
       "derivedFrom": [
         "A1-ADV-07"
       ],
-      "note": "kaiso (how) is taught in chapter 7, inside the wellbeing question, and kathe (where) is absent. Half a point, and the missing half is what a market course needs most."
+      "note": "Closed by the old kaiso atom and the later direct owner MW-C96-kathai. The point stays tied to those two introduced interrogatives; the surrounding chapter-96 location words are useful retrieval context, not substitute evidence."
     },
     {
       "id": "MW-A1-ADV-08",
       "category": "Kriya-visheshan (adverbs)",
       "label": "asking why, and answering it",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C117-WHY117-01",
+        "MW-LEX-C117-WHY117-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -769,7 +789,7 @@
       "derivedFrom": [
         "A1-ADV-08"
       ],
-      "note": "kyun and kyunki are both absent; see MW-A1-CJ-06."
+      "note": "Closed lexically by MW-C117-kyu and MW-C117-kyukai, the direct owners for why and because. This does not close MW-A1-CJ-06: isolated question/answer words are not instruction in composing a causal clause."
     },
     {
       "id": "MW-A1-V-01",
@@ -861,7 +881,7 @@
         "A1-V-10",
         "A1-V-14"
       ],
-      "note": "EIGHT PROXY POINTS, ONE ABSENCE. hua appears once, inside the whole-learned question ye kitno hua?, and is never taken apart. Nothing in 257 files reports anything that has already happened."
+      "note": "EIGHT PROXY POINTS, ONE ABSENCE. hua appears inside the whole-learned question ye kitno hua?, and is never taken apart. Nothing with a direct owner in the current 901-lesson corpus reports anything that has already happened."
     },
     {
       "id": "MW-A1-V-06",
@@ -885,7 +905,11 @@
       "id": "MW-A1-V-07",
       "category": "Kriya (the verb)",
       "label": "the infinitive, and the form a dictionary lists",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C50-FAMILY50-05",
+        "MW-LEX-C57-VERBS57-03",
+        "MW-LEX-C57-VERBS57-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -894,7 +918,7 @@
       "derivedFrom": [
         "A1-V-12"
       ],
-      "note": "No verb in the corpus is ever cited in a base form. Every one arrives as a fixed imperative, which means a learner cannot look one up."
+      "note": "Closed by the additive verb course. MW-C50-khano explicitly discusses khaano as an infinitive (and names the alternate -bo infinitive), while MW-C57-bolno and MW-C57-likhno reinforce the productive dictionary-form shape with speak and write. This point credits the form, not a conjugated present tense."
     },
     {
       "id": "MW-A1-V-08",
@@ -1090,7 +1114,10 @@
       "id": "MW-A1-CJ-01",
       "category": "Yojak (joining and subordination)",
       "label": "copulative coordination: ar",
-      "probe": null,
+      "probe": [
+        "MW-CONJ-AR-01",
+        "MW-GRAMMAR-COORDINATE-AND-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1099,7 +1126,7 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "THE JOINING COLUMN IS FLAT ZERO, WHICH MAKES IT THE ELEVENTH TRACK IN THIS SERIES TO REPORT ONE. ar (the Marwadi and), ane and Hindi's aur all return ZERO occurrences in 257 files. A learner who has twelve kinship words, seven foods and seven shopping words cannot say bread and tea."
+      "note": "Chapter 151 directly teaches source-verified ar and uses it between two already-known nouns. The probe requires both the connector and the coordination frame, not an incidental prose occurrence."
     },
     {
       "id": "MW-A1-CJ-02",
@@ -1114,13 +1141,16 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Still uncovered. The negator now exists (MW-A1-ADV-05) so the old note's reason no longer holds, but neither coordinator does: there is no ar and no ya either (MW-A1-CJ-01, MW-A1-CJ-03), so negative coordination is blocked on the joining column rather than on the negator."
+      "note": "Still uncovered. The negator and ar now exist, but chapter 151 teaches no neither/nor construction and the inventory does not infer negative coordination from its separate ingredients."
     },
     {
       "id": "MW-A1-CJ-03",
       "category": "Yojak (joining and subordination)",
-      "label": "disjunctive coordination: ya",
-      "probe": null,
+      "label": "disjunctive coordination: source-attested ar in an alternative question",
+      "probe": [
+        "MW-CONJ-AR-01",
+        "MW-GRAMMAR-ALTERNATIVE-CHOICE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1129,13 +1159,16 @@
       "derivedFrom": [
         "A1-CO-03"
       ],
-      "note": "Zero occurrences, and it is the word a stall conversation needs most after the numbers: this one or that one."
+      "note": "The Government of India's Linguistic Survey identifies Marwari ar with 'and / or' value. Chapter 151 teaches its alternative value separately in an offered choice; no Hindi ya is imported."
     },
     {
       "id": "MW-A1-CJ-04",
       "category": "Yojak (joining and subordination)",
       "label": "adversative coordination: pan",
-      "probe": null,
+      "probe": [
+        "MW-CONJ-PAN-01",
+        "MW-GRAMMAR-ADVERSATIVE-PAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1144,7 +1177,7 @@
       "derivedFrom": [
         "A1-CO-04"
       ],
-      "note": "pan and par both return ZERO occurrences. The bargaining exchange in chapter 31 runs five turns and never once sets one against another."
+      "note": "Chapter 151 teaches source-verified pan between two complete familiar copular statements. The probe requires both the connector and the contrast frame."
     },
     {
       "id": "MW-A1-CJ-05",
@@ -1164,8 +1197,11 @@
     {
       "id": "MW-A1-CJ-06",
       "category": "Yojak (joining and subordination)",
-      "label": "causal clauses: kyunki",
-      "probe": null,
+      "label": "causal clauses: kyunkai",
+      "probe": [
+        "MW-LEX-C117-WHY117-05",
+        "MW-GRAMMAR-CAUSAL-KYUNKAI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1174,7 +1210,7 @@
       "derivedFrom": [
         "A1-SUB-06"
       ],
-      "note": "Zero. A learner can say this is very expensive and cannot say why anything is anything."
+      "note": "Chapter 117 owns kyunkai as vocabulary; chapter 151 adds the missing two-clause reason frame. Both atoms are required so an isolated word cannot stand in for productive causal joining."
     },
     {
       "id": "MW-A1-CJ-07",
@@ -1189,7 +1225,7 @@
       "derivedFrom": [
         "A1-SUB-03"
       ],
-      "note": "ke returns ZERO occurrences in 257 files."
+      "note": "ke still has no direct owner in the current 901-lesson corpus."
     },
     {
       "id": "MW-A1-CJ-08",
@@ -1369,7 +1405,7 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "No verb of thinking or saying exists in the corpus."
+      "note": "NOW LEXICALLY PARTIAL: MW-C57-sochno, MW-C57-bolno and MW-C56-batano teach dictionary forms for think, speak and tell. No lesson conjugates one into an opinion statement or teaches a turn-giving opinion frame, so isolated infinitives do not close this communicative function."
     },
     {
       "id": "MW-A1-F2-03",
@@ -1548,7 +1584,7 @@
         "A1-F2-15",
         "A1-NG7-01"
       ],
-      "note": "No verb of knowing or thinking anywhere in 257 files. Three proxy points and one absence."
+      "note": "NOW LEXICALLY PARTIAL: MW-C105-janno and MW-C57-sochno teach to know and to think, and MW-C116-gyan teaches knowledge. None is conjugated into I know / I do not know, and ignorance is not expressed, so three functional proxy demands remain open."
     },
     {
       "id": "MW-A1-F2-14",
@@ -1565,7 +1601,7 @@
         "A1-F2-17",
         "A1-NG6-09"
       ],
-      "note": "Absent."
+      "note": "NOW LEXICALLY PARTIAL: MW-C114-sakno directly teaches to be able to. The course still has no conjugated can/cannot statement and no ability question, so one dictionary-form atom cannot close a two-way function."
     },
     {
       "id": "MW-A1-F2-15",
@@ -1579,7 +1615,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "THE REPAIR COLUMN, CHECKED SEPARATELY, AND THERE IS NOTHING. No verb of understanding, no word for again, no way to negate. samajh, phir and dhire all return zero occurrences. A learner standing at the counter this course is built around, who mishears the price, has been given no move at all -- and the price is the one thing they most need to hear correctly. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
+      "note": "THE REPAIR COLUMN, CHECKED SEPARATELY, AND THERE IS NOTHING that closes it. The later course adds know and think, and koni now supplies polarity, but it still has no verb of understanding and no repair words for again or slowly. A learner who mishears the price still has no taught move that says I understand / I do not understand or asks for repetition."
     },
     {
       "id": "MW-A1-F3-01",
@@ -1595,13 +1631,16 @@
         "A1-F3-01",
         "A1-SV-01"
       ],
-      "note": "No experiencer construction and no verb of liking. Seven food words and no way to say you like any of them."
+      "note": "NOW LEXICALLY PARTIAL: MW-C113-pasand teaches a liking/choice and MW-C113-lagno teaches to seem or feel to someone. No lesson builds the experiencer construction or a conjugated I like statement, so the function remains uncovered."
     },
     {
       "id": "MW-A1-F3-02",
       "category": "Kaam: pasand ar chaah",
       "label": "ask about a preference by offering alternatives",
-      "probe": null,
+      "probe": [
+        "MW-GRAMMAR-ALTERNATIVE-CHOICE-01",
+        "MW-FUNCTION-ASK-PREFERENCE-ALTERNATIVES-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1610,7 +1649,7 @@
       "derivedFrom": [
         "A1-F3-02"
       ],
-      "note": "Needs ya; see MW-A1-CJ-03."
+      "note": "Chapter 151 uses source-attested ar in a two-item question and requires the learner to offer and answer the choice. It does not claim the separate ability to state a preference."
     },
     {
       "id": "MW-A1-F3-03",
@@ -1640,7 +1679,7 @@
       "derivedFrom": [
         "A1-F3-04"
       ],
-      "note": "chaahiye, the one word that would let a learner ask for a thing without an imperative, is absent. The track asks for things by commanding instead, which works at a stall and nowhere else."
+      "note": "NOW LEXICALLY PARTIAL: MW-C111-chavno teaches to want and the same chapter adds wish, mind and hope nouns. No lesson conjugates want or builds a first-person wish/request frame; the counter dialogue still asks through imperatives."
     },
     {
       "id": "MW-A1-F3-05",
@@ -2164,13 +2203,20 @@
       "derivedFrom": [
         "A1-NG2-04"
       ],
-      "note": "Absent, and unreachable without numerals. A market course with no kilo and no metre."
+      "note": "NOW REACHABLE BUT STILL PARTIAL: cardinals and the verb tolno (to weigh) are taught. Kilo, metre and other units remain absent, and no measurement question or answer frame combines a number with a unit."
     },
     {
       "id": "MW-A1-NG-04",
       "category": "Aam dhaarna (general notions)",
       "label": "relative position, distance, and direction",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C81-PLACE81-01",
+        "MW-LEX-C81-PLACE81-02",
+        "MW-LEX-C96-LOC96-03",
+        "MW-LEX-C96-LOC96-04",
+        "MW-LEX-C97-LOC97-05",
+        "MW-LEX-C98-LOC98-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2181,7 +2227,7 @@
         "A1-NG3-03",
         "A1-NG3-05"
       ],
-      "note": "Three proxy points, no exponent between them. The track calls its chapter 10 set direction and travel words and they are place NOUNS -- market, home, temple -- with nothing to relate them by."
+      "note": "Closed by the later direct location owners: dur/najik supply distance, agai/larai supply front/behind position, and davo/jimano supply left/right orientation. Chapters 81 and 96-98 teach a wider set, but the probe records one exact pair for each of the three proxy demands."
     },
     {
       "id": "MW-A1-NG-05",
@@ -2246,13 +2292,19 @@
       "derivedFrom": [
         "A1-NG4-01"
       ],
-      "note": "Absent; see MW-A1-N-03. Also unreachable without numerals."
+      "note": "NOW PARTIAL: chapters 78 and 90 teach parts of the day and the course has cardinals plus ghanto (hour) and minat (minute). It still never tells clock time or combines a number with an hour expression, so the clock half keeps this point open."
     },
     {
       "id": "MW-A1-NG-09",
       "category": "Aam dhaarna (general notions)",
       "label": "locating in time: today, weekdays, months, seasons",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C79-TIME79-03",
+        "MW-LEX-C91-TIME91-02",
+        "MW-LEX-C92-TIME92-03",
+        "MW-LEX-C94-TIME94-03",
+        "MW-LEX-C94-TIME94-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2261,7 +2313,7 @@
       "derivedFrom": [
         "A1-NG4-02"
       ],
-      "note": "ZERO of it. Six weather words are taught, including garmi and thandi -- which the lessons note the source also uses for summer and winter -- so the track holds two season senses inside weather words and teaches no season, no month and no day."
+      "note": "Closed by direct owners for every named part: aaj (today), somvar (Monday), Chait (a month), and unaalo/siyaalo (the hot and cold seasons). The inventory uses representative atoms while chapters 79 and 91-95 teach the broader calendar."
     },
     {
       "id": "MW-A1-NG-10",
@@ -2302,7 +2354,12 @@
       "id": "MW-A1-NG-12",
       "category": "Aam dhaarna (general notions)",
       "label": "colour",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C88-WORLD88-01",
+        "MW-LEX-C77-ADJ77-01",
+        "MW-LEX-C77-ADJ77-02",
+        "MW-LEX-C77-ADJ77-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2311,7 +2368,7 @@
       "derivedFrom": [
         "A1-NG5-03"
       ],
-      "note": "Not one colour word in 257 files -- and the track teaches seven clothing and shopping words, where the first question at a cloth stall is which colour."
+      "note": "Closed by MW-C88-rang, the noun colour, together with the direct red, blue and black atoms in chapter 77. Chapter 145 later broadens the palette; those extra shades are not needed to prove the bounded notion exists."
     },
     {
       "id": "MW-A1-NG-13",
@@ -2326,7 +2383,7 @@
       "derivedFrom": [
         "A1-NG5-04"
       ],
-      "note": "Unreachable without numerals."
+      "note": "NOW REACHABLE BUT STILL OPEN: the course has cardinals and baras (year), but no age question and no person + number + years frame. Vocabulary that could assemble an age is not instruction in stating one."
     },
     {
       "id": "MW-A1-NG-14",
@@ -2341,7 +2398,7 @@
       "derivedFrom": [
         "A1-NG5-05"
       ],
-      "note": "Absent, and a shop that cannot be open or closed is a gap this curriculum will feel."
+      "note": "NOW PARTIAL: MW-C54-kholno teaches to open, while door, gate and way nouns arrive later. Closed and a paired way-in/way-out expression are still absent, and no shop-opening sentence is taught."
     },
     {
       "id": "MW-A1-NG-15",
@@ -2380,13 +2437,16 @@
         "A1-NG6-08",
         "A1-NG6-10"
       ],
-      "note": "Five proxy points, no exponent between them. The evaluative vocabulary of this track is entirely about price."
+      "note": "NOW PARTIAL: chapters 141-149 add attractive/unattractive and interesting character/quality words. The grouped proxy point also requires acceptability, correctness and ease; those notions still have no exact owner, so the new adjectives cannot close the whole five-part demand."
     },
     {
       "id": "MW-A1-NG-17",
       "category": "Aam dhaarna (general notions)",
       "label": "quality: good and bad",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C73-ADJ73-03",
+        "MW-LEX-C73-ADJ73-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2395,13 +2455,16 @@
       "derivedFrom": [
         "A1-NG6-04"
       ],
-      "note": "thik is fine and there is no good and no bad. See MW-A1-F2-04."
+      "note": "Closed by MW-C73-achho and MW-C73-maro, direct owners for good and bad. This lexical notion does not by itself close the communicative function MW-A1-F2-04, which still needs a productive evaluation move."
     },
     {
       "id": "MW-A1-NG-18",
       "category": "Aam dhaarna (general notions)",
       "label": "verbal expression: saying, speaking, writing",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C57-VERBS57-03",
+        "MW-LEX-C57-VERBS57-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2410,13 +2473,19 @@
       "derivedFrom": [
         "A1-NG7-02"
       ],
-      "note": "No verb of speaking or writing, which is a curious absence in a track that spends 41 lessons teaching the learner to write."
+      "note": "Closed by MW-C57-bolno and MW-C57-likhno, the direct dictionary-form owners for speaking and writing. The point is lexical; it does not imply that either verb is conjugated in a sentence."
     },
     {
       "id": "MW-A1-NE-01",
       "category": "Khaas dhaarna (specific notions)",
       "label": "parts of the body",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C44-BODY44-01",
+        "MW-LEX-C44-BODY44-02",
+        "MW-LEX-C44-BODY44-03",
+        "MW-LEX-C44-BODY44-04",
+        "MW-LEX-C44-BODY44-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2425,13 +2494,20 @@
       "derivedFrom": [
         "A1-NE01-01"
       ],
-      "note": "haath (hand) is taught in chapter 10 as a travel word and is the ONLY body part in 257 files. One is not the set."
+      "note": "Closed by the first direct body chapter: pag, matho, baal, daant and galo teach foot, head, hair, tooth and throat. Chapters 45-46 add ten more parts, but chapter 44 already turns the former one-word trace into a real set."
     },
     {
       "id": "MW-A1-NE-02",
       "category": "Khaas dhaarna (specific notions)",
       "label": "physical characteristics, and character",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C144-QUAL144-03",
+        "MW-LEX-C144-QUAL144-04",
+        "MW-LEX-C144-QUAL144-05",
+        "MW-LEX-C146-QUAL146-05",
+        "MW-LEX-C147-QUAL147-02",
+        "MW-LEX-C147-QUAL147-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2441,13 +2517,19 @@
         "A1-NE01-02",
         "A1-NE02-01"
       ],
-      "note": "Absent."
+      "note": "Closed on both halves: chapter 144 teaches young, thin/weak and short as physical characteristics; chapters 146-147 teach lazy, honest and kind as character. The probe keeps the two proxy demands visibly paired."
     },
     {
       "id": "MW-A1-NE-03",
       "category": "Khaas dhaarna (specific notions)",
       "label": "actions and positions of the body",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C52-VERBS52-01",
+        "MW-LEX-C52-VERBS52-02",
+        "MW-LEX-C52-VERBS52-03",
+        "MW-LEX-C52-VERBS52-04",
+        "MW-LEX-C52-VERBS52-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2456,7 +2538,7 @@
       "derivedFrom": [
         "A1-NE01-03"
       ],
-      "note": "Absent."
+      "note": "Closed by chapter 52's direct body-action set: sit, sleep, get up, walk and run. These are dictionary-form lexical atoms; no present-tense sentence is inferred from them."
     },
     {
       "id": "MW-A1-NE-04",
@@ -2471,7 +2553,7 @@
       "derivedFrom": [
         "A1-NE03-01"
       ],
-      "note": "No surname, no address, no telephone number, no age. See MW-A1-F1-03."
+      "note": "STILL OPEN after the numeral expansion: the course can now state numbers in isolation, but it teaches no surname, address, telephone-number field, age question, or age frame. See MW-A1-F1-03."
     },
     {
       "id": "MW-A1-NE-05",
@@ -2487,7 +2569,7 @@
         "A1-NE03-02",
         "A1-NE03-03"
       ],
-      "note": "Absent."
+      "note": "NOW PARTIAL: later chapters teach many personal objects, including clothes, a pocket, ring, watch, cap, key, book and pen. Passport, identity card and any other personal document remain absent, so the two-part point stays null."
     },
     {
       "id": "MW-A1-NE-06",
@@ -2521,7 +2603,11 @@
       "id": "MW-A1-NE-07",
       "category": "Khaas dhaarna (specific notions)",
       "label": "social relationships beyond the family",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C50-FAMILY50-02",
+        "MW-LEX-C50-FAMILY50-03",
+        "MW-LEX-C50-FAMILY50-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2530,7 +2616,7 @@
       "derivedFrom": [
         "A1-NE04-02"
       ],
-      "note": "dost, the friend, is absent; so are neighbour, colleague and shopkeeper -- the last of which is the person every one of these lessons is talking to."
+      "note": "Closed by chapter 50's direct non-family relationship set: paadosi (neighbour), paavno (guest) and maastar (teacher). Friend, colleague and shopkeeper remain useful future vocabulary, but are not required to prove that this one bounded field is now taught."
     },
     {
       "id": "MW-A1-NE-08",
@@ -2545,7 +2631,7 @@
       "derivedFrom": [
         "A1-NE04-03"
       ],
-      "note": "Absent."
+      "note": "NOW PARTIAL: chhutti (holiday) and melo (fair) provide occasion-adjacent vocabulary. No named celebration or family, social or religious occasion is taught, so one holiday and one fair do not close the broader proxy demand."
     },
     {
       "id": "MW-A1-NE-09",
@@ -2601,7 +2687,7 @@
       "derivedFrom": [
         "A1-NE05-01"
       ],
-      "note": "Absent, and behind MW-A1-N-03: no part of the day exists to name a meal after."
+      "note": "STILL OPEN for meals, although its old blocker is gone: morning, midday and evening are now taught. Breakfast, lunch, dinner and any other meal-of-the-day name remain absent."
     },
     {
       "id": "MW-A1-NE-12",
@@ -2640,7 +2726,7 @@
         "A1-NE06-06",
         "A1-NE06-07"
       ],
-      "note": "SEVEN PROXY POINTS AND NOT ONE EXPONENT. No school, no teacher, no pupil, no book, no lesson and no classroom language -- which is the more striking because 41 of the 257 lessons are writing lessons: the track teaches handwriting and has no word for it."
+      "note": "NOW PARTIAL across the seven grouped proxy demands: school, teacher, book, pen, question, answer and word all have direct owners. Student, timetable, examination, marks, productive classroom language and a fuller teaching-material/furniture field remain absent, so a handful of school nouns cannot close the whole grouped point."
     },
     {
       "id": "MW-A1-NE-14",
@@ -2660,7 +2746,7 @@
         "A1-NE07-05",
         "A1-NE07-06"
       ],
-      "note": "SIX PROXY POINTS, NO EXPONENT. dukan (shop) is taught as a place to buy from, never as a place to work in, and the shopkeeper on the other side of every counter in this curriculum has no name."
+      "note": "NOW PARTIAL: teacher and doctor name professions; shop and school can be workplaces; naukri names a job; and later adjectives describe worker qualities. Unemployment/job-seeking, work rights and obligations, productive working-activity frames, and the shopkeeper still have no owner, so six grouped proxy demands are not complete."
     },
     {
       "id": "MW-A1-NE-15",
@@ -2678,7 +2764,7 @@
         "A1-NE08-03",
         "A1-NE08-04"
       ],
-      "note": "Four proxy points, no exponent."
+      "note": "NOW PARTIAL: khel/khelno, git, sangit, gavano, nachno and chhutti cover games, play, song/music, singing/dance and a holiday. The four grouped demands also include sport plus shows and exhibitions, which remain absent."
     },
     {
       "id": "MW-A1-NE-16",
@@ -2698,7 +2784,7 @@
         "A1-NE09-05",
         "A1-NE09-06"
       ],
-      "note": "Six proxy points, no exponent."
+      "note": "NOW PARTIAL: akhbar and khabar cover printed press/news, and chitthi covers written correspondence. Telephone use, television/radio, internet and an e-mail-address dictation frame remain absent, so six grouped media demands stay open."
     },
     {
       "id": "MW-A1-NE-17",
@@ -2736,7 +2822,7 @@
         "A1-NE11-03",
         "A1-NE11-04"
       ],
-      "note": "Four proxy points, no exponent."
+      "note": "NOW PARTIAL: pulis, daktar, davai, tesan and related direct owners introduce security, health and transport-service vocabulary. Post-office and bank vocabulary are still absent, and the grouped services point therefore remains null."
     },
     {
       "id": "MW-A1-NE-19",
@@ -2810,7 +2896,7 @@
         "A1-NE13-03",
         "A1-NE13-04"
       ],
-      "note": "Four proxy points, no exponent. thik in the wellbeing answer is the nearest and it is about mood."
+      "note": "NOW PARTIAL: chapters 47-48 directly teach fever, illness, pain, medicine and doctor. No health-care centre or hygiene vocabulary is taught, so the four grouped health/illness, care-centre, medicine and hygiene demands are not all satisfied."
     },
     {
       "id": "MW-A1-NE-23",
@@ -2826,7 +2912,7 @@
         "A1-NE14-01",
         "A1-NE14-02"
       ],
-      "note": "Absent."
+      "note": "NOW PARTIAL: bus, vehicle, cart, rickshaw, horse, boat, bicycle, station, road and hotel give the course travel objects and one accommodation noun. Travel documents and an accommodation exchange remain absent."
     },
     {
       "id": "MW-A1-NE-24",
@@ -2864,7 +2950,7 @@
         "A1-NE15-03",
         "A1-NE15-04"
       ],
-      "note": "Three proxy points, no exponent: the buyer and the seller are never named, though both are in every dialogue."
+      "note": "NOW PARTIAL: shop, market, weekly market, goods, buy and sell supply commerce vocabulary. Buyer and seller are still unnamed, and the business/industry parts of the three grouped proxy demands have no exact owner."
     },
     {
       "id": "MW-A1-NE-26",
@@ -2915,7 +3001,7 @@
         "A1-NE18-05",
         "A1-NE18-06"
       ],
-      "note": "SIX PROXY POINTS AND NO EXPONENT, and this is the one to fix first if the track wants a cultural spine: Rajasthan's folk music, its miniature painting and its puppet theatre are all absent, and so is any word for song, dance or story."
+      "note": "NOW PARTIAL: git, sangit, gavano and nachno directly teach song, music, singing and dance. The six grouped arts demands still lack architecture/sculpture/painting, literature, photography, cinema/theatre and a named cultural work, so the music slice cannot close the whole point."
     },
     {
       "id": "MW-A1-NE-29",
@@ -2939,7 +3025,11 @@
       "id": "MW-A1-NE-30",
       "category": "Khaas dhaarna (specific notions)",
       "label": "the universe and the sky",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C69-NATURE69-01",
+        "MW-LEX-C69-NATURE69-02",
+        "MW-LEX-C69-NATURE69-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2948,13 +3038,17 @@
       "derivedFrom": [
         "A1-NE20-01"
       ],
-      "note": "sooraj, chaand, taaro: absent. Six weather words and no sun."
+      "note": "Closed by MW-C69-taro, MW-C69-suraj and MW-C69-chad: star, sun and moon are each direct introduced atoms, not words inferred from a cumulative review."
     },
     {
       "id": "MW-A1-NE-31",
       "category": "Khaas dhaarna (specific notions)",
       "label": "country, town and city",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C84-TOWN84-01",
+        "MW-LEX-C84-TOWN84-02",
+        "MW-LEX-C89-WORLD89-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -2963,7 +3057,7 @@
       "derivedFrom": [
         "A1-NE20-02"
       ],
-      "note": "gaon, shahar, desh: absent. bajar (market) is the largest place this track can name."
+      "note": "Closed exactly by the nouns named in the old note: MW-C84-gav teaches village, MW-C84-sahar teaches city, and MW-C89-des teaches country. Proper place names remain separately open at MW-A1-N-02."
     },
     {
       "id": "MW-A1-NE-32",
@@ -3027,7 +3121,10 @@
       "id": "MW-A1-NE-35",
       "category": "Khaas dhaarna (specific notions)",
       "label": "flora",
-      "probe": null,
+      "probe": [
+        "MW-LEX-C67-SCHOOL67-03",
+        "MW-LEX-C67-SCHOOL67-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -3036,7 +3133,7 @@
       "derivedFrom": [
         "A1-NE20-06"
       ],
-      "note": "Absent. sabji (vegetables) is a food word."
+      "note": "Closed by the direct tree and leaf atoms in MW-C67-rukh and MW-C67-patto. The point does not count sabji as flora and does not infer a botanical field from food vocabulary."
     },
     {
       "id": "MW-A1-LIP-01",
@@ -3163,7 +3260,7 @@
       "derivedFrom": [
         "A1-O1-02"
       ],
-      "note": "ONLY TWO EXIST IN THIS TRACK: aa (chapter 2, for aabhaar) and ii (chapter 6). Devanagari has eleven. So a learner can write any vowel INSIDE a word and can begin a word with only two of them -- ek, aap and unnho are unwritable, and aap is a word this track teaches and drills from chapter 7. The nearest miss in the script column."
+      "note": "STILL PARTIAL, now five of eleven: aa and ii are joined by the independently taught short i, short a and short u in chapters 37-38. The remaining independent vowel letters still have no isolated owner, so full dependent-matra coverage does not close this separate demand."
     },
     {
       "id": "MW-A1-LIP-06",
@@ -3366,7 +3463,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "MEASURED, NOT IMPORTED. core/exam-levels.json's caveat for marwadi says nothing about register; it is about the missing external ladder. So this column was read out of lesson bodies and frontmatter directly. The frontmatter here is UNUSUALLY INFORMATIVE compared with the other tracks in this batch: 39 of 257 lessons declare something other than neutral, across six values -- neutral-familiar (13), familiar (12), respectful (6), polite-formal (3), neutral-friendly (3), formal (2) -- and all 257 declare variety: central-marwari-devanagari, which track.json expands to contemporary central Marwari with regional variation named explicitly. Latin and Portuguese, by contrast, are uniformly neutral and their register columns had to be read entirely from bodies."
+      "note": "MEASURED, NOT IMPORTED. core/exam-levels.json's caveat for marwadi says nothing about register; it is about the missing external ladder. The current frontmatter remains unusually informative: 39 of 901 lessons declare something other than neutral across six values -- neutral-familiar (13), familiar (12), respectful (6), polite-formal (3), neutral-friendly (3), formal (2) -- and all 901 declare variety central-marwari-devanagari, which track.json expands to contemporary central Marwari with regional variation named explicitly."
     },
     {
       "id": "MW-A1-REG-04",
@@ -3380,7 +3477,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "Recorded rather than deferred to, following the precedent of the track whose caveat was found overstated. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping 'does not claim that the current STARTER CHAPTER reaches it'. The track has 257 lessons across 31 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and its practice lessons are already scored across four separate skills -- 25 PERFORMANCE atoms carry exactly that. The caveat describes a track that no longer exists. The rest of it stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this file does not claim one."
+      "note": "Recorded rather than deferred to. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping does not claim the current STARTER CHAPTER reaches it. The track now has 901 lessons across 151 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and introduces 31 PERFORMANCE atoms. The starter-chapter description describes a track that no longer exists; the rest stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this partial inventory claims neither readiness nor attainment."
     },
     {
       "id": "MW-A1-SAU-01",
@@ -3454,7 +3551,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "THE TRACK'S OWN METHOD, AND WHY ITS REINFORCEMENT WINDOWS COME BACK CLEAN. Every item runs the same cycle: a listening-speaking lesson hears it, a word or writing lesson builds it from signs the hand already owns, and a practice-mix lesson performs it across four scored skills. 70 of the 257 lessons are listening-speaking, 41 are writing and 74 are practice-mix, so roughly seven lessons in ten are a second, third or fourth pass over material already introduced -- and the practice lessons re-run cumulative lists that GROW (family four, seven, ten, twelve; shopping three, five, seven; food three, five, seven), which is an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on. No proxy point exists for a teaching method; it is enumerated because it is the reason this track's numbers below are what they are."
+      "note": "THE TRACK'S OWN METHOD, AND WHY ITS REINFORCEMENT WINDOWS COME BACK CLEAN. The original transaction sequence cycles from listening-speaking through word or writing work into scored practice, and later chapters preserve repeated practice and review windows. The current 901 lessons comprise 610 word, 101 practice-mix, 94 listening-speaking, 54 writing, 19 review, 19 phrase, 3 reading and 1 vocabulary lesson. Cumulative reviews repeatedly return to material introduced earlier: an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on. No proxy point exists for a teaching method; it is enumerated because it is an explicit project-owned design choice, not external syllabus evidence."
     }
   ]
 }

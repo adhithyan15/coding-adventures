@@ -1,0 +1,11 @@
+{
+  "id": "SA-C269-media-first-retrieval",
+  "pathSegment": "SA-PATH-269-MEDIA269",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-269-MEDIA269",
+      "order": 4
+    }
+  ]
+}

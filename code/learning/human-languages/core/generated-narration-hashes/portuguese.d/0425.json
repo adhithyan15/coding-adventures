@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:3e13d6f6c214ac33",
+  "lessonIds": [
+    "PT-C425-albergue",
+    "PT-C425-pousada",
+    "PT-C425-estalagem",
+    "PT-C425-residencial",
+    "PT-C425-campismo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch425.txt",
+  "json": "portuguese/narration/ch425.json",
+  "textHash": "fnv1a64:aee3111b89a21b96",
+  "jsonHash": "fnv1a64:433ab0ce2495c979",
+  "findings": []
+}

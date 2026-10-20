@@ -13,7 +13,8 @@ gloss: "an accident"
 concept_tag: GE-THING155-UNFALL
 prerequisites: [GE-C155-visum, GE-C155-stau]
 sounds: []
-roots: []
+roots: [germanic-fallana]
+etymology_hook: "Unfall ← Middle High German unval 'mishap': un- 'bad' + the word for 'a fall'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C155-stau]
 <!-- hl-knowledge: introduces=[GE-LEX-C155-THING155-05]; assesses=[] -->
 
 **der Unfall** — "an accident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Unfall** ← Middle High German *unval*, "mishap" (EtymDB 2.1): *un-*, "ill, bad", + the noun of *fallen*. An accident is a bad fall.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a guided tour"
 concept_tag: PT-COISAS197-VISITA-GUIADA
 prerequisites: [PT-C196-tambor, PT-C197-paisagem]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "visita guiada — 'guided visit': visitar ← Latin visitare; the guide verb is Germanic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C197-paisagem]
 <!-- hl-knowledge: introduces=[PT-LEX-C197-COISAS197-02]; assesses=[] -->
 
 **a visita guiada** — "a guided tour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**visita guiada** is "guided visit": *visita* from *visitar* (← Latin *visitare*), and *guiada*, "guided", from the verb "to guide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

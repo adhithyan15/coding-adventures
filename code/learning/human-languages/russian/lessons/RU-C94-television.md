@@ -14,7 +14,8 @@ romanization: "televízor"
 concept_tag: RU-THINGS94-TELEVISION
 prerequisites: [RU-C92-holidays, RU-C92-rug]
 sounds: []
-roots: []
+roots: [tele-greek, videre-latin]
+etymology_hook: "телевизор is Greek tēle 'far' + Latin visor 'seer', from videre 'to see': a far-seer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C92-rug]
 <!-- hl-knowledge: introduces=[RU-LEX-C94-THINGS94-01]; assesses=[] -->
 
 **телевизор** (*televízor*) — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**телевизор** is an international coinage: Greek *tēle*, "far", with *-визор*, from Latin *vīsor*, "one who sees", from *vidēre*, "to see": a far-seer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

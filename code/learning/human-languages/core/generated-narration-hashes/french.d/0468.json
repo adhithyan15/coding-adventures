@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:9add16c8c654fd7c",
+  "lessonIds": [
+    "FR-C468-sincere",
+    "FR-C468-menteur",
+    "FR-C468-naif",
+    "FR-C468-ruse",
+    "FR-C468-mentir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch468.txt",
+  "json": "french/narration/ch468.json",
+  "textHash": "fnv1a64:cdf5d5cd1e2fe1ba",
+  "jsonHash": "fnv1a64:b72d4d03027641fa",
+  "findings": []
+}

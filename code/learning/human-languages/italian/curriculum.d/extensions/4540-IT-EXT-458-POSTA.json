@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-458-POSTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can send things by post: a registered letter, the shipping, the sender, the postage and delivery.",
+  "prerequisites": []
+}

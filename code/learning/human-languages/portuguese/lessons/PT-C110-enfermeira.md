@@ -13,7 +13,8 @@ gloss: "a nurse"
 concept_tag: PT-TRABALHO110-ENFERMEIRA
 prerequisites: [PT-C109-pimenta, PT-C109-planeta]
 sounds: []
-roots: []
+roots: [infirmus]
+etymology_hook: "enfermeira — built from an old word for 'sick' (← Latin infirmus 'weak') + -eira"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C109-planeta]
 <!-- hl-knowledge: introduces=[PT-LEX-C110-TRABALHO110-01]; assesses=[] -->
 
 **a enfermeira** — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enfermeira** is built from an old word for "sick" and *-eira*. That word ← Latin *infirmus*, "weak, not strong" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

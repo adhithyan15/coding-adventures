@@ -61,9 +61,9 @@ So *freut mich* says, warmly, "this makes me glad."
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-FREUT-MICH-02, GE-LEX-MICH-01] -->
 
 German literally says "[it] gladdens **me**" — the *meeting* is what does the
-gladdening, and you (**mich**) are on the receiving end. Two common variants:
-**sehr erfreut** ("much pleased") and the plain **angenehm** ("pleasant /
-agreeable"), both usable as "pleased to meet you."
+gladdening, and you (**mich**) are on the receiving end. A common variant is
+the plain **angenehm** ("pleasant / agreeable"), also usable as "pleased to meet
+you."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-FREUT-MICH-01, GE-LEX-FREUT-MICH-02, GE-ETYMON-FREUEN-FROH-03] -->
@@ -71,7 +71,7 @@ agreeable"), both usable as "pleased to meet you."
 [PAUSE 1s]
 - [YOU SAY: "freut mich" (*froyt mikh*)]
 - [YOU SAY: the root — *froh* ("glad"), as in *Frohe Weihnachten*]
-- [YOU SAY: a variant — "sehr erfreut" or "angenehm"]
+- [YOU SAY: the variant — "angenehm"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-FREUT-MICH-02, GE-ETYMON-FREUEN-FROH-03, GE-LEX-MICH-01] -->

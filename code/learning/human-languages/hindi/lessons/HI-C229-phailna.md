@@ -14,7 +14,8 @@ romanization: "phailnā"
 concept_tag: HI-VERB-PHAILNA
 prerequisites: [HI-C229-sametna, HI-C229-phailana]
 sounds: []
-roots: []
+roots: [sanskrit-prathita]
+etymology_hook: "phailnā: CDIAL lists it under *praghirati 'flows forth' (8486) and prathita 'spread out' (8651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C229-phailana]
 <!-- hl-knowledge: introduces=[HI-LEX-C229-ACT229-04]; assesses=[] -->
 
 **फैलना** — *phailnā* — "to spread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फैलना** (*phailnā*) is inherited, but CDIAL lists it in two places: under a reconstructed *\*praghirati*, "flows forth" (CDIAL 8486), and under Sanskrit *prathita*, "spread out" (CDIAL 8651).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

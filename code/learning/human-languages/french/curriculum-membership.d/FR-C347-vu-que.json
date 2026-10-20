@@ -1,0 +1,11 @@
+{
+  "id": "FR-C347-vu-que",
+  "pathSegment": "FR-PATH-347-PUISQUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-347-PUISQUE",
+      "order": 2
+    }
+  ]
+}

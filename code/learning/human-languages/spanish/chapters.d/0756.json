@@ -1,0 +1,19 @@
+{
+  "chapter": 756,
+  "title": "El partido",
+  "label": "ch:es-el-partido",
+  "canDo": "I can follow a football match: the striker, scoring, the score, the referee and a draw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C756-empatar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 756: I can follow a football match: the striker, scoring, the score, the referee and a draw.",
+    "assesses": [
+      "ES-LEX-C756-PARTIDO-03",
+      "ES-LEX-C756-PARTIDO-04",
+      "ES-LEX-C756-PARTIDO-05"
+    ]
+  }
+}

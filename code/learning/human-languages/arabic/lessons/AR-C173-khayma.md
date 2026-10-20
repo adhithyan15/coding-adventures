@@ -14,7 +14,8 @@ romanization: "khayma"
 concept_tag: AR-MAKAN173-KHAYMA
 prerequisites: [AR-C172-muqabil, AR-C173-bustan]
 sounds: []
-roots: []
+roots: [kh-y-m]
+etymology_hook: "khayma: an old native noun Lane files under kh-y-m; Lane's khayma is a tent or booth"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C173-bustan]
 <!-- hl-knowledge: introduces=[AR-LEX-C173-MAKAN173-02]; assesses=[] -->
 
 **خيمة** — *khayma* — "a tent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خيمة** (*khayma*), "a tent", is an old native noun, filed under the root *kh-y-m* (Lane). Lane's *khayma* is a tent or booth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "architecture-11.16.1-corpus.json",
+  "fixtures": [
+    "empty",
+    "minimal-service",
+    "services-and-edge",
+    "nested-groups",
+    "labeled-edge",
+    "title-and-accessibility",
+    "quoted-titles",
+    "junction-split",
+    "sibling-alignments",
+    "custom-service-icon-text",
+    "arrow-directions",
+    "group-edge-endpoints",
+    "perpendicular-port-routing",
+    "namespaced-service-icon",
+    "numeric-identifiers-preserve-order",
+    "reserved-prefix-identifiers",
+    "prototype-group-name",
+    "layout-config",
+    "front-matter-config"
+  ]
+}

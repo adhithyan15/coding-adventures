@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sesto al Decimo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:848c5838f42323a5",
+  "sourceHash": "fnv1a64:c6c4846331e42a2d",
   "lessons": [
     {
       "id": "IT-C27-sesto",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:412555c9594b676d",
+      "sourceHash": "fnv1a64:cdcab7ad2228d921",
       "notice": null,
       "blocks": [
         {
@@ -304,6 +304,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "settimo from Latin septimus, \"seventh\" (Lewis & Short) — inherited; EtymDB 2.1 has no row for settimo."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know: al settimo cielo",
           "segments": [
@@ -322,7 +333,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -362,7 +373,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -767,7 +778,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14af28d86d917ce6",
+      "sourceHash": "fnv1a64:6ec682eb14600c1e",
       "notice": null,
       "blocks": [
         {
@@ -833,11 +844,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say non c'è male — R4, recognition at distance, eighty lessons back or more",
+              "instruction": "say the Italian for not bad — R4, recognition at distance, eighty lessons back or more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *non c'è male* — **R4**, recognition at distance, eighty lessons back or more]"
+              "source": "[YOU RECALL: say the Italian for not bad — **R4**, recognition at distance, eighty lessons back or more]"
             },
             {
               "kind": "prompt",

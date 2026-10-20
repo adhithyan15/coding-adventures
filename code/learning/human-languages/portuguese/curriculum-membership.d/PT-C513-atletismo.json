@@ -1,0 +1,11 @@
+{
+  "id": "PT-C513-atletismo",
+  "pathSegment": "PT-PATH-513-CORRIDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-513-CORRIDA",
+      "order": 1
+    }
+  ]
+}

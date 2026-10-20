@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:c29ca4b7e0c823c4",
+  "lessonIds": [
+    "PT-C410-curva",
+    "PT-C410-lomba",
+    "PT-C410-atalho",
+    "PT-C410-alcatrao",
+    "PT-C410-serpentear"
+  ],
+  "tex": "portuguese/book/chapters/ch410-estradas-do-campo.tex"
+}

@@ -11,8 +11,8 @@ gloss: wife
 concept_tag: MW-FAMILY-WIFE
 prerequisites: [MW-R09-maternal-three]
 sounds: [unaspirated-p, dental-t, dental-n, long-ii]
-roots: []
-etymology_hook: The source also gives bāī sā; this lesson begins with patnī and keeps the alternative visible.
+roots: [sanskrit-patni]
+etymology_hook: "patnī ← Sanskrit patnī 'mistress, wife', a tatsama (CDIAL 7742)"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,11 @@ Then recall the last three-word four-skill checkpoint.
 
 The same source also gives *bāī sā*. That documented alternative is not an
 error; this step secures one form at a time. Writing still waits.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*patnī* is Sanskrit *patnī*, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATNI-01, MW-LEX-PATI-01] -->

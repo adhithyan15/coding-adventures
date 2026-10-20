@@ -13,7 +13,8 @@ gloss: "a period, a season"
 concept_tag: PT-TEMPO212-EPOCA
 prerequisites: [PT-C212-inicio, PT-C212-prazo]
 sounds: []
-roots: []
+roots: [epocha-latin]
+etymology_hook: "época ← Medieval Latin epocha, from Greek epoche 'a pause, a fixed point' — English epoch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C212-prazo]
 <!-- hl-knowledge: introduces=[PT-LEX-C212-TEMPO212-04]; assesses=[] -->
 
 **a época** — "a period, a season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**época** ← Medieval Latin *epocha*, "epoch" (EtymDB 2.1) — a learned borrowing from Medieval Latin. Latin took it from Greek *epochē*, "a pause, a fixed point".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

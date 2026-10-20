@@ -14,7 +14,8 @@ romanization: "moṭā"
 concept_tag: PA-ADJ82-MOTA
 prerequisites: [PA-C82-saf, PA-C82-mittha]
 sounds: []
-roots: []
+roots: [indo-aryan-mutta]
+etymology_hook: "moṭā ← *mōṭṭa, in a word group CDIAL heads *muṭṭa 'defective' (CDIAL 10187)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C82-mittha]
 <!-- hl-knowledge: introduces=[PA-LEX-C82-ADJ82-05]; assesses=[] -->
 
 **ਮੋਟਾ** — *moṭā* — "fat, thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਮੋਟਾ** (*moṭā*), as *moṭṭā*, "fat", under a reconstructed *\*mōṭṭa*, in a large group of words it heads *\*muṭṭa*, "defective" (CDIAL 10187).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

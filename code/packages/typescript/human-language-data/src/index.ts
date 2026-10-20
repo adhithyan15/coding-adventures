@@ -47,6 +47,25 @@ export {
   type RootNamespace,
 } from "./root-ledger.js";
 export {
+  LEXICAL_ATOM,
+  WORD_LESSON_TYPES,
+  introducesNewWord,
+  hasEtymologyHook,
+  hasVisibleEtymology,
+  statesOrigin,
+  blockStatesOrigin,
+  hasEmptyEtymologyBlock,
+  takenApartOriginSignals,
+  TAKEN_APART_ORIGIN_SIGNALS,
+  measureEtymologyCoverage,
+  renderEtymologyCoverage,
+  type EtymologyGap,
+  type TakenApartOriginSignal,
+  type TrackEtymologyCoverage,
+  type EtymologyCoverageReport,
+  type EtymologyCoverageSummary,
+} from "./etymology-coverage.js";
+export {
   PERSON_LABELS,
   FULL_GRID_ROWS,
   personRowCount,

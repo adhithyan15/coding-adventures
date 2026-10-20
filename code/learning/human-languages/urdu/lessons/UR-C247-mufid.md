@@ -14,7 +14,8 @@ romanization: "mufīd"
 concept_tag: UR-SIFAT247-MUFID
 prerequisites: [UR-C247-mumkin, UR-C247-namumkin]
 sounds: []
-roots: []
+roots: [arabic-mufid]
+etymology_hook: "mufīd ← Arabic mufīd 'giving benefit', through Persian (Lane, root f-y-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C247-namumkin]
 <!-- hl-knowledge: introduces=[UR-LEX-C247-SIFAT247-04]; assesses=[] -->
 
 **مفید** — *mufīd* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مفید** (*mufīd*) is a loan from Arabic *mufīd*, "giving benefit", which reached Urdu through Persian. Its Arabic root is *f-y-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "fair, righteous"
 concept_tag: LA-QUAL266-IUSTUS
 prerequisites: [LA-C266-diversus, LA-C266-similis]
 sounds: []
-roots: []
+roots: [iustus-latin, ius-latin]
+etymology_hook: "iūstus 'fair' — built on iūs, iūris 'law, right'; English justice"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C266-similis]
 <!-- hl-knowledge: introduces=[LA-LEX-C266-QUAL266-04]; assesses=[] -->
 
 **iūstus, iūsta, iūstum** — "fair, righteous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iūstus** is built on *iūs*, *iūris*, "law, right" (Lewis & Short), which is usually traced to Proto-Indo-European *\*h2yewos*, "rule, right" (EtymDB 2.1). English *justice* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

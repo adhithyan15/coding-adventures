@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:7f074f9d10a491a9",
+  "lessonIds": [
+    "LA-C545-sonus",
+    "LA-C545-sono",
+    "LA-C545-resono",
+    "LA-C545-symphonia",
+    "LA-C545-concentus"
+  ],
+  "tex": "latin/book/chapters/ch545-sound-and-harmony.tex"
+}

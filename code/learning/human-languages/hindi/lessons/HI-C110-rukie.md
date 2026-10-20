@@ -14,7 +14,8 @@ romanization: "rukie"
 concept_tag: HI-AGAIN-WAIT
 prerequisites: [HI-C110-zorse, HI-C110-ekminat]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "rukie: ruknā 'to stop', listed by CDIAL under a reconstructed *rokk 'stop' (CDIAL 10827)"
 duration:
   max_seconds: 200
 requires:
@@ -43,8 +44,13 @@ reviews_of: [HI-C110-ekminat]
 
 **रुकिए** (*rukie*) — "please wait", "please stop".
 
-It is **रुकना**, "to stop", with the respectful ending of **बोलिए**. **रुकिए, एक मिनट** — "wait,
-one minute".
+**रुक** (*ruk*, the stem of the verb "to stop") + *-ie*, the respectful ending of **बोलिए** → **रुकिए**.
+**रुकिए, एक मिनट** — "wait, one minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुकिए** (*rukie*) is the verb *ruknā*, "to stop", with the respectful ending *-ie*. CDIAL lists *ruknā* under a reconstructed *\*rokk*, "stop", whose link with Sanskrit *rudh-*, "to obstruct", it calls not clear (CDIAL 10827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chimṭo"
 concept_tag: MW-THINGS121-CHIMTO
 prerequisites: [MW-C121-parat, MW-C121-katoro]
 sounds: []
-roots: []
+roots: [indo-aryan-cimb]
+etymology_hook: "chimṭo ← *cimb 'pinch', reconstructed (CDIAL 4822, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C121-katoro]
 <!-- hl-knowledge: introduces=[MW-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **चिमटो** — *chimṭo* — "tongs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिमटो** (*chimṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cimb*, "pinch", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4822); the match is through Hindi *cimṭā* and Gujarati *cimṭo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

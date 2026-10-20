@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C496-kinderwagen",
+    "language": "german",
+    "chapter": 496,
+    "sequence": 26560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a6574cddc5c3deb"
+  },
+  "findings": []
+}

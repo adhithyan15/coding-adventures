@@ -1,0 +1,19 @@
+{
+  "chapter": 712,
+  "title": "Mi estado de ánimo",
+  "label": "ch:es-mi-estado-de-animo",
+  "canDo": "I can describe my mood and cheer up a friend who is down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C712-alivio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 712: I can describe my mood and cheer up a friend who is down.",
+    "assesses": [
+      "ES-LEX-C712-ANIMO-03",
+      "ES-LEX-C712-ANIMO-04",
+      "ES-LEX-C712-ANIMO-05"
+    ]
+  }
+}

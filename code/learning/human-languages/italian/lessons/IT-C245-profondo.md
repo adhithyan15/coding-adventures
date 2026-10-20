@@ -13,7 +13,8 @@ gloss: "deep"
 concept_tag: IT-QUAL245-PROFONDO
 prerequisites: [IT-C245-liscio, IT-C245-ruvido]
 sounds: []
-roots: []
+roots: [fundus-latin]
+etymology_hook: "profondo ← Latin profundus, pro + fundus 'bottom' — English profound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C245-ruvido]
 <!-- hl-knowledge: introduces=[IT-LEX-C245-QUAL245-03]; assesses=[] -->
 
 **profondo** — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profondo** ← Latin *profundus*, "deep", from *pro-* and *fundus*, "bottom" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

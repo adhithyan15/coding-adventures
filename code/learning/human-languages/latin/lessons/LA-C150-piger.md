@@ -13,7 +13,8 @@ gloss: "lazy"
 concept_tag: LA-QUAL150-PIGER
 prerequisites: [LA-C149-prudens, LA-C150-cautus]
 sounds: []
-roots: []
+roots: [piger-latin]
+etymology_hook: "piger 'lazy' — kin to piget 'it irks'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C150-cautus]
 <!-- hl-knowledge: introduces=[LA-LEX-C150-QUAL150-02]; assesses=[] -->
 
 **piger, pigra, pigrum** — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piger** belongs with *piget*, "it irks, it annoys" (Lewis & Short): one who finds work irksome. Where *piget* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

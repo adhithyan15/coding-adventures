@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 285,
-  "sourceHash": "fnv1a64:dff20cf2a0a68398",
+  "sourceHash": "fnv1a64:b3eb0b8beaf5e9da",
   "lessonIds": [
     "TE-C285-bedirincu",
     "TE-C285-heccarincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch285.txt",
   "json": "telugu/narration/ch285.json",
-  "textHash": "fnv1a64:cd8f8f725760499d",
-  "jsonHash": "fnv1a64:dbda5b7e2a547716",
+  "textHash": "fnv1a64:eb380f4a49f973a0",
+  "jsonHash": "fnv1a64:1f15a96d60114ca3",
   "findings": []
 }

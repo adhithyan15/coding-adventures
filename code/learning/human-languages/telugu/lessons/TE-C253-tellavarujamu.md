@@ -14,7 +14,8 @@ romanization: "tellavārujāmu"
 concept_tag: TE-SAMAYAM253-TELLAVARUJAMU
 prerequisites: [TE-C253-prastutam, TE-C253-purvam]
 sounds: []
-roots: []
+roots: [teliyu-become-clear-dravidian, sanskrit-yama]
+etymology_hook: "tellavārujāmu: native tella 'white, clear' (DEDR 3433) + jāmu ← Sanskrit yāma 'night watch' (CDIAL 10467)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C253-purvam]
 <!-- hl-knowledge: introduces=[TE-LEX-C253-SAMAYAM253-05]; assesses=[] -->
 
 **తెల్లవారుజాము** — *tellavārujāmu* — "dawn, the early hours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెల్లవారుజాము** (*tellavārujāmu*) joins *tellavāru*, "to dawn", built on native *tella*, "white, clear" (DEDR 3433), and *jāmu*, "a watch", from Sanskrit *yāma*, "night watch of three hours" (CDIAL 10467).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

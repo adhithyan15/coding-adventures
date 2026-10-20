@@ -14,7 +14,8 @@ romanization: "kavi"
 concept_tag: TE-PANI275-KAVI
 prerequisites: [TE-C275-pujari, TE-C275-kalakarudu]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kavi ← Sanskrit kavi 'wise; wise man, poet', a tatsama (CDIAL 2964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C275-kalakarudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C275-PANI275-03]; assesses=[] -->
 
 **కవి** — *kavi* — "a poet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కవి** (*kavi*) is Sanskrit *kavi*, "wise; wise man, poet", taken over whole as a learned loan, a tatsama (CDIAL 2964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

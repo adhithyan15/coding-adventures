@@ -14,9 +14,10 @@ romanization: "bacce ko"
 concept_tag: HI-NOUN-OBLIQUE
 prerequisites: [HI-C91-ko, HI-C84-uska]
 sounds: []
-roots: []
+roots: [persian-bacca, sanskrit-kaksha]
+etymology_hook: "baccā: usually traced to Persian bacca; ko: listed by CDIAL under kakṣa 'armpit' (CDIAL 14342)"
 duration:
-  max_seconds: 240
+  max_seconds: 256
 requires:
   knowledge: [HI-LEX-C91-NOUN-05, HI-LEX-C91-NOUN-01, HI-LEX-C84-POSS-01, HI-LEX-C90-ROUT-01]
 introduces:
@@ -64,6 +65,8 @@ it — possessives, adjectives, and now nouns — and it is always the same **-�
 
 So the track has taught this bend four times on four kinds of word, and this is
 the fourth and last kind.
+
+**बच्चा** is usually traced to Persian *bacca*, "child".
 
 ## Grammar Lens: how to tell the two -ए apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-06, HI-LEX-C91-NOUN-01, HI-LEX-C90-ROUT-01] -->

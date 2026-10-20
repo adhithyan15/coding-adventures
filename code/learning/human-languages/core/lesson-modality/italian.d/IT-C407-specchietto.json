@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C407-specchietto",
+    "language": "italian",
+    "chapter": 407,
+    "sequence": 23220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72d547bc2de4888c"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "beṭā"
 concept_tag: UR-FAMILY43-BETA
 prerequisites: [UR-C42-abbu, UR-C43-ammi]
 sounds: []
-roots: []
+roots: [indo-aryan-bitta]
+etymology_hook: "beṭā: CDIAL lists it under a reconstructed *beṭṭa, beside Prakrit biṭṭa 'boy'; no agreed Sanskrit source"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C43-ammi]
 <!-- hl-knowledge: introduces=[UR-LEX-C43-FAMILY43-02]; assesses=[] -->
 
 **بیٹا** — *beṭā* — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیٹا** (*beṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*beṭṭa*, "boy", a form CDIAL reconstructs from its descendants (CDIAL 9238). CDIAL lists it in an entry headed *\*biḍḍa*, "defective", beside Prakrit *biṭṭa*, "boy"; no Sanskrit source is agreed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

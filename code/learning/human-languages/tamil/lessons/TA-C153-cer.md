@@ -14,7 +14,8 @@ romanization: "cēr"
 concept_tag: TA-VERB-CER
 prerequisites: [TA-C153-iranku, TA-C153-tirumpu]
 sounds: []
-roots: []
+roots: [dravidian-ceer-join]
+etymology_hook: "சேர் — native Dravidian (DEDR 2814); Malayalam cēruka 'to join, to come close'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C153-tirumpu]
 <!-- hl-knowledge: introduces=[TA-LEX-C153-ACT153-04]; assesses=[] -->
 
 **சேர்** — *cēr* — "to join, to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**சேர்** (*cēr*) is native Dravidian. DEDR 2814 lists Malayalam *cēruka*, "to join, to come close".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

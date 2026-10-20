@@ -14,6 +14,7 @@ concept_tag: FR-ANIMAUX38-CANARD
 prerequisites: [FR-C86-serpent, FR-C86-poule]
 sounds: []
 roots: []
+etymology_hook: "canard — Old French cane 'duck' + -ard; cane is of uncertain, probably imitative, origin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C86-poule]
 <!-- hl-knowledge: introduces=[FR-LEX-C86-ANIMAUX38-05]; assesses=[] -->
 
 **le canard** — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canard** — built from Old French *cane*, "a duck", with *-ard* (EtymDB 2.1). Where *cane* itself came from is uncertain; it is usually taken to imitate the bird's cackle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

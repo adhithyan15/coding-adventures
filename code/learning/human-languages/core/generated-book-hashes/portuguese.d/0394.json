@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:23e411d73e671be2",
+  "lessonIds": [
+    "PT-C394-garantia",
+    "PT-C394-garantir",
+    "PT-C394-reembolso",
+    "PT-C394-reembolsar",
+    "PT-C394-credito"
+  ],
+  "tex": "portuguese/book/chapters/ch394-garantias-e-reembolsos.tex"
+}

@@ -14,7 +14,8 @@ romanization: "valattŭ"
 concept_tag: ML-STHALAM197-VALATTU
 prerequisites: [ML-C197-tunikkata, ML-C197-itattu]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "valattŭ: native Dravidian, valam 'the right, the strong side' (DEDR 5276) + the place ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C197-itattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C197-STHALAM197-04]; assesses=[] -->
 
 **വലത്ത്** — *valattŭ* — "on the right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വലത്ത്** (*valattŭ*) is native Dravidian: *valam*, "the right or strong side" (DEDR 5276, with Tamil *val*, "strong"), with the place ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

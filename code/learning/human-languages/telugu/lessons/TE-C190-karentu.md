@@ -14,7 +14,8 @@ romanization: "kareṇṭu"
 concept_tag: TE-VASTUVU190-KARENTU
 prerequisites: [TE-C189-abhiruci, TE-C189-navala]
 sounds: []
-roots: []
+roots: [english-current]
+etymology_hook: "kareṇṭu ← English current"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C189-navala]
 <!-- hl-knowledge: introduces=[TE-LEX-C190-VASTUVU190-01]; assesses=[] -->
 
 **కరెంటు** — *kareṇṭu* — "electricity, power".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కరెంటు** (*kareṇṭu*) is a loan from English *current*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

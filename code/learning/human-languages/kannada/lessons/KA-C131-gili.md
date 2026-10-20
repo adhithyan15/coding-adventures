@@ -14,7 +14,8 @@ romanization: "giḷi"
 concept_tag: KA-THINGS131-GILI
 prerequisites: [KA-C131-havu, KA-C131-ame]
 sounds: []
-roots: []
+roots: [dravidian-kili-parrot]
+etymology_hook: "giḷi: native Dravidian, one word with Tamil kiḷi and Telugu ciluka (DEDR 1584)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C131-ame]
 <!-- hl-knowledge: introduces=[KA-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **ಗಿಳಿ** — *giḷi* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಿಳಿ** (*giḷi*) is native Dravidian, one word with Tamil *kiḷi* and Telugu *ciluka* (DEDR 1584). DEDR lists Kannada *giḷi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

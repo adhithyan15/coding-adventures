@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-516-BUEHNE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-516-BUEHNE"
+  ],
+  "after": []
+}

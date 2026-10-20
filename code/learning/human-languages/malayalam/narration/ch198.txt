@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for on the right, then the Malayalam for s
 You'll want to know: തെക്ക്.
 തെക്ക് — tekkŭ — "south".
 
+The word, taken apart.
+തെക്ക് (tekkŭ) is native Dravidian, one word with Tamil teṉ (DEDR 3449).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for straight ahead, then the Malayalam for
 
 You'll want to know: കിഴക്ക്.
 കിഴക്ക് — kiḻakkŭ — "east".
+
+The word, taken apart.
+കിഴക്ക് (kiḻakkŭ) is native Dravidian, built on kīḻ, "below"; DEDR 1619 glosses it as the lowland of the Tamil country beyond the hills, and so the east, beside Tamil kīḻ and Kannada kīḻ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for south, then the Malayalam for east.
 You'll want to know: പടിഞ്ഞാറ്.
 പടിഞ്ഞാറ് — paṭiññāṟŭ — "west".
 
+The word, taken apart.
+പടിഞ്ഞാറ് (paṭiññāṟŭ) is native Dravidian, "where the sun falls": DEDR 2910 cites Malayalam paṭi ñāṟu, "setting sun", built on the word for "sun", with Tamil ñāyiṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for east, then the Malayalam for west.
 You'll want to know: എതിരെ.
 എതിരെ — etire — "against; opposite, facing".
 
+The word, taken apart.
+എതിരെ (etire) is native Dravidian, one word with Tamil etir, Kannada idir and Telugu eduru (DEDR 795).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for west, then the Malayalam for against.
 
 You'll want to know: ചുറ്റും.
 ചുറ്റും — cuṟṟuṁ — "around".
+
+The word, taken apart.
+ചുറ്റും (cuṟṟuṁ) is native Dravidian, built on the verb "to go round"; DEDR 2715 lists the root with Tamil cuṟṟu, Kannada suttu and Telugu cuṭṭu.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "bāḷ"
 concept_tag: MW-BODY44-BAL
 prerequisites: [MW-C44-pag, MW-C44-matho]
 sounds: []
-roots: []
+roots: [sanskrit-vala]
+etymology_hook: "bāḷ ← Sanskrit vāla 'hair of tail, tail, hair', a tadbhava (CDIAL 11572, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C44-matho]
 <!-- hl-knowledge: introduces=[MW-LEX-C44-BODY44-03]; assesses=[] -->
 
 **बाळ** — *bāḷ* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाळ** (*bāḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāla*, "hair of tail, tail, hair". CDIAL gives no Marwari form in this entry (CDIAL 11572); the match is through Hindi *bāl* and Gujarati *vāḷ*. Marwadi, like Gujarati, says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

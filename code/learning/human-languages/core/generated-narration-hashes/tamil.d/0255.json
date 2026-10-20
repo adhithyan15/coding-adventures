@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 255,
-  "sourceHash": "fnv1a64:31adb423da7e6f3b",
+  "sourceHash": "fnv1a64:96f541cdde126aa9",
   "lessonIds": [
     "TA-C255-cuvaci",
     "TA-C255-kunamaku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch255.txt",
   "json": "tamil/narration/ch255.json",
-  "textHash": "fnv1a64:8172f1f9eb8e8585",
-  "jsonHash": "fnv1a64:14124205c31756a7",
+  "textHash": "fnv1a64:d8161687f2245793",
+  "jsonHash": "fnv1a64:fecbc5418e6003e7",
   "findings": []
 }

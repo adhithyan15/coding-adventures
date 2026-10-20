@@ -12,6 +12,9 @@ Before the new one: say the Bengali for society, then the Bengali for religion.
 You'll want to know: ঝামেলা.
 ঝামেলা — jhāmelā — "a hassle".
 
+The word, taken apart.
+CDIAL has no Bengali row for ঝামেলা (jhāmelā), but it lists Hindi jhamelā, "wrangling", and Nepali jhamelā, "entanglement, quarrel", under jhamm, "entanglement", a form it reconstructs (CDIAL 5340). The Bengali word appears to be the same one: "a tangle".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for religion, then the Bengali for a hassle.
 
 You'll want to know: সমাধান.
 সমাধান — sômādhān — "a solution".
+
+The word, taken apart.
+সমাধান (sômādhān) is Sanskrit samādhāna, "putting together; settling", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a hassle, then the Bengali for a solutio
 You'll want to know: আটা.
 আটা — āṭā — "wholemeal flour".
 
+The word, taken apart.
+আটা (āṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ārta, "flour", a form CDIAL reconstructs from its descendants (CDIAL 1338). CDIAL lists Bengali āṭā, "flour", and compares Persian ārd, "flour".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a solution, then the Bengali for wholeme
 You'll want to know: ময়দা.
 ময়দা — môydā — "fine flour".
 
+The word, taken apart.
+ময়দা (môydā) is a loan, usually traced to Persian maida, "fine flour".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for wholemeal flour, then the Bengali for fi
 
 You'll want to know: সুজি.
 সুজি — suji — "semolina".
+
+The word, taken apart.
+সুজি (suji) is a tadbhava, a word inherited and reshaped by sound change. It comes from sūjjī, "coarse wheat meal", a form CDIAL reconstructs from its descendants (CDIAL 13552). CDIAL lists Bengali suji, "coarse flour".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "tuḷasi"
 concept_tag: ML-VASTU253-TULASI
 prerequisites: [ML-C253-rosappu, ML-C253-cemparatti]
 sounds: []
-roots: []
+roots: [sanskrit-tulasi]
+etymology_hook: "tuḷasi: DEDR 3357 sets it beside Tamil tuḻāy and compares Sanskrit tulasī; the direction of borrowing is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C253-cemparatti]
 <!-- hl-knowledge: introduces=[ML-LEX-C253-VASTU253-05]; assesses=[] -->
 
 **തുളസി** — *tuḷasi* — "holy basil, tulsi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുളസി** (*tuḷasi*) is the holy basil's name across the south: DEDR 3357 sets it beside Tamil *tuḻāy* and Kannada *toḷaci*, and compares Sanskrit *tulasī*. Which way the word travelled is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

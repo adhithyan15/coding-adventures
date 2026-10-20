@@ -14,7 +14,8 @@ romanization: "mâlidan"
 concept_tag: FA-VERB-MALIDAN
 prerequisites: [FA-C147-pahn-kardan, FA-C147-kubidan]
 sounds: []
-roots: []
+roots: [persian-malidan]
+etymology_hook: "mâlidan: inherited, usually traced to Middle Persian mālīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C147-kubidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C147-KONESH147-04]; assesses=[] -->
 
 **مالیدن** — *mâlidan* — "to rub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâlidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *mālīdan*, "to rub".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

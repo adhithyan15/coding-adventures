@@ -11,7 +11,8 @@ gloss: "a date — and the second ordinal ending, the one a calendar uses"
 concept_tag: TA-ORDINAL-DATE
 prerequisites: [TA-C83-eleventh, TA-C83-seventh, TA-W34-read-eppothu, TA-C67-cap, TA-C16-thamizh-maadangal]
 sounds: []
-roots: []
+roots: [sanskrit-tithi]
+etymology_hook: "தேதி ← Sanskrit tithi 'a lunar day' (CDIAL 5810)"
 duration:
   max_seconds: 230
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C83-eleventh, TA-C83-seventh, TA-W34-read-eppothu, TA-C67-cap]
 <!-- hl-knowledge: introduces=[TA-LEX-C83-ORDINAL-09]; assesses=[] -->
 
 **தேதி** (*tēdi*) — "**a date**", the day-number on a calendar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**தேதி** (*tēdi*) is a loan from Sanskrit *tithi*, "a lunar day" (CDIAL 5810).
 
 ## Grammar Lens: a second ending, for one job
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C83-ORDINAL-08]; assesses=[TA-LEX-C83-ORDINAL-09, TA-GRAMMAR-C82-ORDINAL-04, TA-LEX-C82-ORDINAL-03] -->

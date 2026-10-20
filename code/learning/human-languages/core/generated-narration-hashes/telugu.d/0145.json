@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 145,
-  "sourceHash": "fnv1a64:ee8bae6545e729e9",
+  "sourceHash": "fnv1a64:fa1fb9748f0f38b0",
   "lessonIds": [
     "TE-C145-nercuko",
     "TE-C145-nerpu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch145.txt",
   "json": "telugu/narration/ch145.json",
-  "textHash": "fnv1a64:78f085bb350e0a0d",
-  "jsonHash": "fnv1a64:dcfa00430b614e5b",
+  "textHash": "fnv1a64:5eeb5a923dbfe072",
+  "jsonHash": "fnv1a64:54d21bb8c3da4b2e",
   "findings": []
 }

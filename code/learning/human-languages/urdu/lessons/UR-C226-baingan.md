@@ -14,7 +14,8 @@ romanization: "baiṅgan"
 concept_tag: UR-CHIZ226-BAINGAN
 prerequisites: [UR-C226-dhaniya, UR-C226-pudina]
 sounds: []
-roots: []
+roots: [sanskrit-vatingana]
+etymology_hook: "baiṅgan ← Sanskrit vātiṅgaṇa 'the egg-plant', a tadbhava (CDIAL 11503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C226-pudina]
 <!-- hl-knowledge: introduces=[UR-LEX-C226-CHIZ226-03]; assesses=[] -->
 
 **بینگن** — *baiṅgan* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بینگن** (*baiṅgan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vātiṅgaṇa*, "the egg-plant" (CDIAL 11503). CDIAL thinks the plant names go back to one source, perhaps Dravidian, and notes that Persian *badingān* came from here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gaīkāl"
 concept_tag: GU-WEEK2-YESTERDAY
 prerequisites: [GU-C79-sunday, GU-C79-tomorrow]
 sounds: []
-roots: []
+roots: [sanskrit-gata, kalya-time]
+etymology_hook: "gaīkāl: gaī 'gone' (Old Gujarati gayaü ← gata, CDIAL 4008) + kāl ← kalya (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C79-tomorrow]
 <!-- hl-knowledge: introduces=[GU-LEX-C79-WEEK2-04]; assesses=[] -->
 
 **ગઈકાલ** (*gaīkāl*) — "yesterday". Literally "the gone **કાલ**".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગઈકાલ** (*gaīkāl*) is "the gone *kāl*": *gaī*, "gone", whose Old Gujarati form *gayaü* CDIAL lists under Sanskrit *gata*, "gone" (CDIAL 4008), and *kāl*, from *kalya*, "dawn; tomorrow" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

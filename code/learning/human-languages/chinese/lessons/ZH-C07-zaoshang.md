@@ -11,8 +11,8 @@ gloss: morning — and a syllable with no tone at all
 concept_tag: TIME-MORNING
 prerequisites: [ZH-W07-shang]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: 早上 is the first word in this book with a syllable that carries no tone mark, because it carries no tone.
+roots: [middle-chinese-tsawx, middle-chinese-dzyangh]
+etymology_hook: "zǎoshang: 'early' + 'above', two words inherited from Middle Chinese tsawX and dzyangH"
 duration:
   max_seconds: 240
 requires:
@@ -47,6 +47,9 @@ The parts add up again, though less tidily than 再见 did. **早** is *early*;
 **上** on its own means *up* or *on top*. Early-up, the early part of the day.
 Take that as a hook rather than a definition: what you need is that the two
 characters you just wrote make the word for morning.
+
+Both halves are inherited from Middle Chinese: *tsawX*, "early, dawn", and
+*dzyangH*, "above" (Guangyun, in Baxter's transcription).
 
 ## Sounds you'll need — the syllable with no tone
 <!-- hl-knowledge: introduces=[ZH-TONE-NEUTRAL]; assesses=[ZH-LEX-ZAOSHANG] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 105,
-  "sourceHash": "fnv1a64:70e05f63c1cb8a9b",
+  "sourceHash": "fnv1a64:01031de3ba1e9b55",
   "lessonIds": [
     "MW-C105-raivno",
     "MW-C105-bachno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch105.txt",
   "json": "marwadi/narration/ch105.json",
-  "textHash": "fnv1a64:b07a9a92d0029b44",
-  "jsonHash": "fnv1a64:0e8f6003bec64a88",
+  "textHash": "fnv1a64:a3f5b76e112d81ed",
+  "jsonHash": "fnv1a64:e30f3ac0282f41fe",
   "findings": []
 }

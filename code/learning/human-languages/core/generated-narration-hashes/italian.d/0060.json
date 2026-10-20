@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 60,
-  "sourceHash": "fnv1a64:71d07b16fd78e8e3",
+  "sourceHash": "fnv1a64:b1ee6d4ae7543dd6",
   "lessonIds": [
     "IT-C60-tornare",
     "IT-C60-studiare",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "italian/narration/ch60.txt",
   "json": "italian/narration/ch60.json",
-  "textHash": "fnv1a64:bd5963ec1eacb784",
-  "jsonHash": "fnv1a64:adf758c7dcca2efc",
+  "textHash": "fnv1a64:28e14232e19ed7ab",
+  "jsonHash": "fnv1a64:0223f7eb536b54a3",
   "findings": []
 }

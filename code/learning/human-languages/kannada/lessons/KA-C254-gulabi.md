@@ -14,7 +14,8 @@ romanization: "gulābi"
 concept_tag: KA-GUNA254-GULABI
 prerequisites: [KA-C254-cupada, KA-C254-kandu]
 sounds: []
-roots: []
+roots: [persian-gulab]
+etymology_hook: "gulābi ← Persian gulābī 'rose-coloured', from gulāb 'rose'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C254-kandu]
 <!-- hl-knowledge: introduces=[KA-LEX-C254-GUNA254-05]; assesses=[] -->
 
 **ಗುಲಾಬಿ** — *gulābi* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಲಾಬಿ** (*gulābi*) is a loan from Persian *gulābī*, "rose-coloured", from *gulāb*, "rose", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

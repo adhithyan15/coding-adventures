@@ -14,7 +14,8 @@ romanization: "sūryāstamayaṁ"
 concept_tag: TE-SAMAYAM171-SURYASTAMAYAM
 prerequisites: [TE-C170-tedi, TE-C170-varantam]
 sounds: []
-roots: []
+roots: [sanskrit-surya, sanskrit-astamaya]
+etymology_hook: "sūryāstamayaṁ: Sanskrit sūrya 'sun' (CDIAL 13574) + astamaya 'setting' (CDIAL 974)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C170-varantam]
 <!-- hl-knowledge: introduces=[TE-LEX-C171-SAMAYAM171-01]; assesses=[] -->
 
 **సూర్యాస్తమయం** — *sūryāstamayaṁ* — "sunset".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సూర్యాస్తమయం** (*sūryāstamayaṁ*) is Sanskrit: *sūrya*, "sun" (CDIAL 13574), and *astamaya*, "setting of the sun" (CDIAL 974), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

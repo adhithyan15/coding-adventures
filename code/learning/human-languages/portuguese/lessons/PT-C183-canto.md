@@ -13,7 +13,8 @@ gloss: "a corner"
 concept_tag: PT-LUGAR183-CANTO
 prerequisites: [PT-C183-centro, PT-C183-lado]
 sounds: []
-roots: []
+roots: [canthus-latin]
+etymology_hook: "canto ← Latin canthus 'iron rim of a wheel': the edge became a corner"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C183-lado]
 <!-- hl-knowledge: introduces=[PT-LEX-C183-LUGAR183-04]; assesses=[] -->
 
 **o canto** — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canto** ← Latin *canthus*, "iron rim of a wheel" (Lewis & Short) — inherited. The edge became a corner.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

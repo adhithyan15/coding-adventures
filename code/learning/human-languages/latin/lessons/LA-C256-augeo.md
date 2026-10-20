@@ -13,7 +13,8 @@ gloss: "to increase"
 concept_tag: LA-VERB-AUGEO
 prerequisites: [LA-C256-plaudo, LA-C256-transeo]
 sounds: []
-roots: []
+roots: [augere-latin]
+etymology_hook: "augeō 'to increase' — inherited, usually traced to PIE *h2ewg- 'to increase'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C256-transeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C256-ACT256-03]; assesses=[] -->
 
 **augeō, augēre** — "to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**augeō** is inherited, usually traced to Proto-Indo-European *\*h2ewg-*, "to increase, to grow" (EtymDB 2.1); Greek *auxō*, "to increase", is a cousin (Lewis & Short), and so is English *eke*, as in to eke out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

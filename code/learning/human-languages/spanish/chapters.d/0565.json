@@ -1,0 +1,19 @@
+{
+  "chapter": 565,
+  "title": "Capítulo uno",
+  "label": "ch:es-capitulo-uno",
+  "canDo": "I can talk about how a story is built: the plot, the storyline, the chapter, the episode and the ending.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C565-desenlace",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 565: I can talk about how a story is built: the plot, the storyline, the chapter, the episode and the ending.",
+    "assesses": [
+      "ES-LEX-C565-ESCENA-03",
+      "ES-LEX-C565-ESCENA-04",
+      "ES-LEX-C565-ESCENA-05"
+    ]
+  }
+}

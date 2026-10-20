@@ -14,7 +14,8 @@ romanization: "tab"
 concept_tag: FA-BODY30-TAB
 prerequisites: [FA-C30-ghalb, FA-C30-bazu]
 sounds: []
-roots: []
+roots: [persian-tab]
+etymology_hook: "tab: inherited, usually traced to Middle Persian tab"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C30-bazu]
 <!-- hl-knowledge: introduces=[FA-LEX-C30-BODY30-03]; assesses=[] -->
 
 **تب** — *tab* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tab* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tab*, "fever". It belongs with the old verb root *tap-*, "to be hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

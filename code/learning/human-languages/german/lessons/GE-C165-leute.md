@@ -13,7 +13,8 @@ gloss: "people"
 concept_tag: GE-THING165-LEUTE
 prerequisites: [GE-C164-baby, GE-C164-mensch]
 sounds: []
-roots: []
+roots: [germanic-liudiz]
+etymology_hook: "Leute ← Old High German liuti 'people' ← Proto-Germanic *liudiz — inherited"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C164-mensch]
 <!-- hl-knowledge: introduces=[GE-LEX-C165-THING165-01]; assesses=[] -->
 
 **die Leute** — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Leute** ← Middle High German *liute* ← Old High German *liuti*, "people" ← Proto-Germanic *\*liudiz* — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

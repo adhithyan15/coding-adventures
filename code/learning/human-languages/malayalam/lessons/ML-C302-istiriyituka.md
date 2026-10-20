@@ -14,7 +14,8 @@ romanization: "istiriyiṭuka"
 concept_tag: ML-VERB-ISTIRIYITUKA
 prerequisites: [ML-C301-skeyil, ML-C302-tunnuka]
 sounds: []
-roots: []
+roots: [portuguese-estirar, dravidian-idu-put]
+etymology_hook: "istiriyiṭuka: istiri 'ironing', usually traced to Portuguese estirar 'to stretch out', + native iṭuka (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C302-tunnuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-02]; assesses=[] -->
 
 **ഇസ്തിരിയിടുക** — *istiriyiṭuka* — "to iron (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇസ്തിരിയിടുക** (*istiriyiṭuka*) joins *istiri*, "ironing", usually traced to Portuguese *estirar*, "to stretch out, smooth", to native *iṭuka*, "to put, do" (DEDR 442).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 505,
+  "title": "Sur le terrain",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5b647073fed96263",
+  "lessons": [
+    {
+      "id": "FR-C505-arbitre",
+      "sequence": 27690,
+      "title": "l'arbitre — referee, umpire",
+      "headword": "l'arbitre",
+      "romanization": "l'arbitre",
+      "gloss": "referee, umpire",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78999cf26a89a3d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for sweat, then the French for to warm up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'arbitre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'arbitre — \"referee, umpire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'arbitre a donné un carton rouge. The referee gave a red card."
+            },
+            {
+              "kind": "speech",
+              "text": "The same form for a man and a woman: un arbitre, une arbitre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'arbitre is a learned borrowing from Latin arbiter \"a witness, a judge\" (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'arbitre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'arbitre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'arbitre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'arbitre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'arbitre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'arbitre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for sweat, then the French for to warm up, then say l'arbitre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for sweat, then the French for to warm up, then say *l'arbitre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'arbitre mean? (\"Referee, umpire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C505-sifflet",
+      "sequence": 27700,
+      "title": "le sifflet — whistle",
+      "headword": "le sifflet",
+      "romanization": "le sifflet",
+      "gloss": "whistle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:701eda1e0b663a3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to warm up, then the French for referee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le sifflet",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le sifflet — \"whistle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Au coup de sifflet, les joueurs sont sortis. At the whistle, the players went off."
+            },
+            {
+              "kind": "speech",
+              "text": "Le coup de sifflet final — the final whistle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le sifflet is built on siffler \"to whistle\", which goes back to Late Latin sīfilāre, a form of Latin sībilāre \"to hiss, to whistle\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le sifflet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le sifflet*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le sifflet, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le sifflet*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le sifflet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le sifflet*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to warm up, then the French for referee, then say le sifflet again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to warm up, then the French for referee, then say *le sifflet* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le sifflet mean? (\"Whistle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C505-siffler",
+      "sequence": 27710,
+      "title": "siffler — to whistle; to boo",
+      "headword": "siffler",
+      "romanization": "siffler",
+      "gloss": "to whistle; to boo",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12721cbb72c13527",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for referee, then the French for whistle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: siffler",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "siffler — \"to whistle; to boo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le public a sifflé l'équipe après la défaite. The crowd booed the team after the defeat."
+            },
+            {
+              "kind": "speech",
+              "text": "In France, a crowd that whistles is booing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "siffler is inherited from Late Latin sīfilāre, a form of Latin sībilāre \"to hiss, to whistle\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siffler",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siffler*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siffler, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siffler*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with siffler",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *siffler*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for referee, then the French for whistle, then say siffler again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for referee, then the French for whistle, then say *siffler* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does siffler mean? (\"To whistle; to boo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C505-terrain",
+      "sequence": 27720,
+      "title": "le terrain — pitch, ground; plot of land",
+      "headword": "le terrain",
+      "romanization": "le terrain",
+      "gloss": "pitch, ground; plot of land",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d4cf6680201e92e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for whistle, then the French for to whistle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le terrain",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le terrain — \"pitch, ground; plot of land\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les joueurs entrent sur le terrain. The players come onto the pitch."
+            },
+            {
+              "kind": "speech",
+              "text": "Un terrain de foot — a football pitch. Also a plot: acheter un terrain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le terrain is inherited from Latin terrēnum \"land, ground\" (EtymDB), from terra \"earth\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le terrain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le terrain*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le terrain, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le terrain*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le terrain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le terrain*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for whistle, then the French for to whistle, then say le terrain again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for whistle, then the French for to whistle, then say *le terrain* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le terrain mean? (\"Pitch, ground; plot of land\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C505-marquer",
+      "sequence": 27730,
+      "title": "marquer — to score; to mark",
+      "headword": "marquer",
+      "romanization": "marquer",
+      "gloss": "to score; to mark",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2887374b8fad6451",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to whistle, then the French for pitch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: marquer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "marquer — \"to score; to mark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle a marqué deux buts dans le match. She scored two goals in the match."
+            },
+            {
+              "kind": "speech",
+              "text": "Marquer un but — to score a goal. Also to note down: marquer une adresse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "marquer is built on marque \"a mark, a sign\", a word of Germanic origin related to English mark."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marquer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marquer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marquer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marquer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with marquer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *marquer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to whistle, then the French for pitch, then say marquer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to whistle, then the French for pitch, then say *marquer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does marquer mean? (\"To score; to mark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R505-revision-498-505",
+      "sequence": 27740,
+      "title": "Retour sur les chapitres 498–505",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 498-505",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc35aa68a9cc8335",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for climbing and to climb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "climbing, to climb, water bottle, torch, campfire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: climbing, to climb, water bottle, torch, campfire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "board game, dice, pawn, chessboard, to cheat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: board game, dice, pawn, chessboard, to cheat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "belote, to deal, to bet, bet, chance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: belote, to deal, to bet, bet, chance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to collect, collector, scale model, model-making, to put together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to collect, collector, scale model, model-making, to put together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blurred, sharp, snapshot, to frame, tripod",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: blurred, sharp, snapshot, to frame, tripod]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardening, to garden, to sow, to water, watering can",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gardening, to garden, to sow, to water, watering can]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weight training, dumbbell, to stretch, sweat, to warm up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: weight training, dumbbell, to stretch, sweat, to warm up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "referee, whistle, to whistle, pitch, to score",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: referee, whistle, to whistle, pitch, to score]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Climbing? (l'escalade.) To climb? (grimper.) Water bottle? (la gourde.) Torch? (la lampe de poche.) Campfire? (le feu de camp.) Board game? (le jeu de société.) Dice? (le dé.) Pawn? (le pion.) Chessboard? (l'échiquier.) To cheat? (tricher.) Belote? (la belote.) To deal? (distribuer.) To bet? (parier.) Bet? (le pari.) Chance? (le hasard.) To collect? (collectionner.) Collector? (le collectionneur.) Scale model? (la maquette.) Model-making? (le modélisme.) To put together? (assembler.) Blurred? (flou.) Sharp? (net.) Snapshot? (le cliché.) To frame? (cadrer.) Tripod? (le trépied.) Gardening? (le jardinage.) To garden? (jardiner.) To sow? (semer.) To water? (arroser.) Watering can? (l'arrosoir.) Weight training? (la musculation.) Dumbbell? (l'haltère.) To stretch? (étirer.) Sweat? (la sueur.) To warm up? (échauffer.) Referee? (l'arbitre.) Whistle? (le sifflet.) To whistle? (siffler.) Pitch? (le terrain.) To score? (marquer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

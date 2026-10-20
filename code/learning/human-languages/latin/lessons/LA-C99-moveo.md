@@ -13,7 +13,8 @@ gloss: "to move"
 concept_tag: LA-VERB-MOVEO
 prerequisites: [LA-C99-narro, LA-C99-laudo]
 sounds: []
-roots: []
+roots: [movere-latin]
+etymology_hook: "moveō 'to move' — inherited, usually traced to PIE *mew- 'to move'; English move"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C99-laudo]
 <!-- hl-knowledge: introduces=[LA-LEX-C99-VERBA5-05]; assesses=[] -->
 
 **moveō, movēre** — "to move".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moveō** is inherited, usually traced to Proto-Indo-European *\*mew-*, "to move, to push away" (EtymDB 2.1). English *move* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

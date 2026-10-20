@@ -13,7 +13,8 @@ gloss: "the return"
 concept_tag: PT-COISAS166-REGRESSO
 prerequisites: [PT-C165-fio, PT-C166-ligacao]
 sounds: []
-roots: []
+roots: [gradi-latin]
+etymology_hook: "regresso ← Latin regressus 'a going back' — English regress"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C166-ligacao]
 <!-- hl-knowledge: introduces=[PT-LEX-C166-COISAS166-02]; assesses=[] -->
 
 **o regresso** — "the return".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**regresso** ← Latin *regressus*, "a going back" (Lewis & Short) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

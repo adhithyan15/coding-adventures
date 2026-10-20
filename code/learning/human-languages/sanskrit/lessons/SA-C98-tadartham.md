@@ -14,7 +14,8 @@ romanization: "tadartham"
 concept_tag: SA-WHY98-TADARTHAM
 prerequisites: [SA-C98-tasmat, SA-C98-hetuh]
 sounds: []
-roots: []
+roots: [sanskrit-tad, sanskrit-artha]
+etymology_hook: "tadartham ← tad 'that' + artha 'purpose, sake', as an adverb: 'for that end' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C98-hetuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C98-WHY98-04]; assesses=[] -->
 
 **तदर्थम्** — *tadartham* — "for that reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tadartham* is a compound of *tad* "that" and *artha* "aim, purpose, sake", used in the accusative as an adverb: "for that end, on that account" (MW). The pronoun *tad* is inherited from PIE *\*tód* (EtymDB), the same word as English *that*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

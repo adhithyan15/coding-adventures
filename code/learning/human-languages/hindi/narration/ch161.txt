@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to wash, then the Hindi for to bathe.
 You'll want to know: पकाना.
 पकाना — pakānā — "to cook".
 
+The word, taken apart.
+पकाना (pakānā) is the causing form of paknā, "to be cooked, to ripen", which CDIAL lists under Sanskrit pakva, "cooked, ripe" (CDIAL 7621).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to bathe, then the Hindi for to cook.
 
 You'll want to know: काटना.
 काटना — kāṭnā — "to cut".
+
+The word, taken apart.
+काटना (kāṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, "cuts" (CDIAL 2854).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to cook, then the Hindi for to cut.
 You'll want to know: तोड़ना.
 तोड़ना — toṛnā — "to break".
 
+The word, taken apart.
+तोड़ना (toṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from troṭayati, "breaks, tears" (CDIAL 6079).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to cut, then the Hindi for to break.
 You'll want to know: गिरना.
 गिरना — girnā — "to fall".
 
+The word, taken apart.
+गिरना (girnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from girati, "drips, falls", a form CDIAL reconstructs from its descendants (CDIAL 4159).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to break, then the Hindi for to fall.
 
 You'll want to know: उड़ना.
 उड़ना — uṛnā — "to fly".
+
+The word, taken apart.
+उड़ना (uṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍayate, "flies up", which CDIAL lists as the second form in its entry for uḍḍīyate, "flies up" (CDIAL 1697).
 
 What you've built.
 One more word for this chapter.

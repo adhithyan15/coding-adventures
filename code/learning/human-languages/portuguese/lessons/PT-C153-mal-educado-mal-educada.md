@@ -13,7 +13,8 @@ gloss: "rude"
 concept_tag: PT-QUAL153-MAL-EDUCADO-MAL-EDUCADA
 prerequisites: [PT-C153-desconfortavel, PT-C153-educado-educada]
 sounds: []
-roots: []
+roots: [educare-latin]
+etymology_hook: "mal-educado — mal 'badly' (← Latin male) + educado 'brought up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C153-educado-educada]
 <!-- hl-knowledge: introduces=[PT-LEX-C153-QUAL153-04]; assesses=[] -->
 
 **mal-educado / mal-educada** — "rude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mal-educado** is built from *mal*, "badly" (← Latin *male*), and *educado*, "brought up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

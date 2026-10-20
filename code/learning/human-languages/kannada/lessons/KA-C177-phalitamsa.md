@@ -14,7 +14,8 @@ romanization: "phalitāṃśa"
 concept_tag: KA-KARANA177-PHALITAMSA
 prerequisites: [KA-C177-nikharavagi, KA-C177-sahajavagi]
 sounds: []
-roots: []
+roots: [sanskrit-phala, sanskrit-amsha]
+etymology_hook: "phalitāṃśa: Sanskrit phalita 'bearing fruit' (CDIAL 9060a) + aṃśa 'part' (CDIAL 2)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C177-sahajavagi]
 <!-- hl-knowledge: introduces=[KA-LEX-C177-KARANA177-03]; assesses=[] -->
 
 **ಫಲಿತಾಂಶ** — *phalitāṃśa* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫಲಿತಾಂಶ** (*phalitāṃśa*) is Sanskrit *phalita*, "bearing fruit, resulting" (CDIAL 9060a), and *aṃśa*, "share, part" (CDIAL 2): "the part that came of it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

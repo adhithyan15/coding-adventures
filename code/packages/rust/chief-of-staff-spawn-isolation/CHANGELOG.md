@@ -4,6 +4,38 @@
 
 ### Added
 
+- `open_trusted_file(path)` (Windows; D18S P2.8c) opens a file an agent
+  will be granted to read.
+  - The rules are the executable's, without a digest: absolute, a regular
+    file, not a reparse point, owned by the user, Administrators, SYSTEM
+    or TrustedInstaller, and writable by no one else by its access list.
+  - It is opened sharing read and write but not delete, so while the
+    handle is held the file can be neither renamed nor deleted.
+  - `check_trusted_file(file)` makes the same check on a file already
+    open. The applier re-runs it after changing a granted file's access
+    list.
+  - New native test in `tests/verified_exec_windows.rs`.
+
+- `spawn_lock()` and `spawn(&mut Command)` (D18S P2.8b-1): one
+  process-wide spawn lock. The Windows applier holds it across its
+  inheritable span; every std spawn the supervisor makes goes through
+  `spawn`, so on Windows no std child (which inherits every inheritable
+  handle) can be created while a broker's key handles are inheritable.
+  On Unix it changes nothing. Tested: a spawn waits while the lock is held.
+- `VerifiedExecutable` on Windows (D18S step 8, P2.8a). The file is opened
+  sharing read only, so while it is held no one can write, rename or
+  delete it. A reparse point at the last component is opened as itself
+  and refused. The digest is checked through the handle, as on Unix. Its
+  owner must be this user, Administrators, SYSTEM or TrustedInstaller, and
+  no other principal may hold a write-class right on it: the share mode
+  keeps out new handles, not a writable mapping made earlier.
+  `tests/verified_exec_windows.rs` covers the digest and path refusals and
+  the held file's immutability, and a file Everyone may write refused.
+- `VerifiedExecutable::digest`: the SHA-256 it was pinned to (D18S P2.7b).
+  The broker launcher uses it to refuse a Seatbelt shim that is a copy of
+  the broker.
+- `VerifiedExecutable` is built on macOS too, for the Seatbelt shim and
+  the agents it launches (D18S step 7, P2.7a). Its checks are the same.
 - `VerifiedExecutable::descriptor`: a duplicate of the descriptor that was
   hashed, for the confinement to execute (P2.6d-3).
 

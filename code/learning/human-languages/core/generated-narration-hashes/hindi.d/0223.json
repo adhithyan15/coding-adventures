@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 223,
-  "sourceHash": "fnv1a64:222587facca5efe3",
+  "sourceHash": "fnv1a64:192fde101650bd5c",
   "lessonIds": [
     "HI-C223-adat",
     "HI-C223-sauq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch223.txt",
   "json": "hindi/narration/ch223.json",
-  "textHash": "fnv1a64:3c3d94aa57e6a250",
-  "jsonHash": "fnv1a64:c77a77be80504a9f",
+  "textHash": "fnv1a64:25cbc318bd76ac61",
+  "jsonHash": "fnv1a64:0cb295a6cbd19676",
   "findings": []
 }

@@ -10,7 +10,8 @@ gloss: "the interview"
 concept_tag: ES-REF-ENTREVISTA
 prerequisites: [ES-C490-empleo, ES-C490-sueldo]
 sounds: []
-roots: []
+roots: [videre-latin]
+etymology_hook: "entrevista — entre 'between' + vista 'a view', like French entrevue — English interview"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C490-sueldo]
 > *I have an interview on Thursday.*
 
 *Una entrevista de trabajo* — a job interview.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**entrevista** is built from *entre*, "between", and *vista*, "a sight, a view", like French *entrevue*: two people seeing each other.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

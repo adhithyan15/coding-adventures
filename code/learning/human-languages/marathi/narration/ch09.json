@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:691054fb1a1b51d6",
+  "sourceHash": "fnv1a64:ef58f162ff412937",
   "lessons": [
     {
       "id": "MR-C02-naav",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a57d4393416db623",
+      "sourceHash": "fnv1a64:764adf8ff5dbd20d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:456cc7be7d690145",
+      "sourceHash": "fnv1a64:116830bb1cab4762",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c42f00bf175a11d5",
+      "sourceHash": "fnv1a64:0edabd060bdfee65",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -316,7 +316,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आहे (āhe, \"is\") descends from Sanskrit अस्ति (ásti, \"is\"), on the root √as (\"to be\"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi."
+              "text": "आहे (āhe, \"is\") is listed by CDIAL under Sanskrit अस्ति (ásti, \"is\"), on the root √as (\"to be\"), though Bloch gives it another origin (CDIAL 977). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family."
             }
           ]
         },
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c921ac70e91b947d",
+      "sourceHash": "fnv1a64:47da8307e76c9c14",
       "notice": null,
       "blocks": [
         {
@@ -443,6 +443,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each word is inherited. CDIAL lists माझं (mājhaṁ) under the Sanskrit first-person base ma- (CDIAL 9691) and नाव (nāv) under Sanskrit nāman, \"name\" (CDIAL 7067). आहे (āhe) it lists under asti, \"is\", though Bloch gives it another origin (CDIAL 977)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -453,7 +464,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -484,7 +495,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -515,7 +526,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72204b6f78589b31",
+      "sourceHash": "fnv1a64:2a5ddfa5d1493d05",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -648,7 +659,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:122744e37c4c8b59",
+      "sourceHash": "fnv1a64:913698f0152c3efc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -773,7 +784,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f1e3ee62732790d",
+      "sourceHash": "fnv1a64:a1cd5d3cfa964a9b",
       "notice": null,
       "blocks": [
         {
@@ -826,6 +837,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All inherited: तुमचं, like तुम्ही, from Sanskrit yuṣmad-, \"you\" (CDIAL 10511); नाव (nāv) from nāman, \"name\" (CDIAL 7067); काय (kāy) from kādṛk, \"of what sort\" (CDIAL 3196)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -836,7 +858,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -867,7 +889,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -898,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6e3d32b94fc62ae",
+      "sourceHash": "fnv1a64:e2633d72a6a698e8",
       "notice": null,
       "blocks": [
         {
@@ -936,7 +958,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The heart of it is आनंद (ānand, \"joy, bliss\"), pure Sanskrit: आ- (ā-, \"fully\") + नन्द (nand, \"to rejoice\"). It is the ānanda of the scriptural phrase sat-cit-ānanda (\"being–consciousness–bliss\") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy."
+              "text": "The heart of it is आनंद (ānand, \"joy, bliss\"), Sanskrit ānanda, \"happiness\", a tatsama (CDIAL 1172): आ- (ā-, \"fully\") + नन्द (nand, \"to rejoice\"). It is the ānanda of the scriptural phrase sat-cit-ānanda (\"being–consciousness–bliss\") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy."
             }
           ]
         },

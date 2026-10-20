@@ -14,7 +14,8 @@ romanization: "ataḥ"
 concept_tag: SA-WHY98-ATAH
 prerequisites: [SA-C97-karanam, SA-C97-yatah]
 sounds: []
-roots: []
+roots: [sanskrit-atas]
+etymology_hook: "ataḥ ← pronoun base a- 'this' + -tas 'from': 'from this, hence', so 'therefore' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C97-yatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C98-WHY98-01]; assesses=[] -->
 
 **अतः** — *ataḥ* — "therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ataḥ* is built from the pronoun base *a-* "this" and the ending *-tas* "from": "from this", hence "therefore" (MW). It is the same *-tas* that you met in *yataḥ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

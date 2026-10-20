@@ -12,6 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [TE-C04-vellu, TE-C03-nenu]
 sounds: [velli-participle]
 roots: [vellu-go-dravidian, vaccu-come-dravidian]
+etymology_hook: "veḷḷi vastānu: native veḷḷu 'go' (DEDR 5393) + vaccu 'come' (DEDR 5270)"
 duration:
   max_seconds: 200
 requires:
@@ -65,6 +66,8 @@ The warm reply is **వెళ్ళి రండి** (*veḷḷi raṇḍi*, "g
 The whole south — and, in Bengali, well beyond it — prefers a promise of return
 to a blunt farewell. The languages are not all related; the habit travelled
 anyway.
+
+Both verbs are native Dravidian: *veḷḷu* (DEDR 5393) and *vaccu* (DEDR 5270).
 
 ## Grammar Lens: the "having …d" participle
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C04-VELLI-VASTAANU-03]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "feshâr dâdan"
 concept_tag: FA-VERB-FESHAR-DADAN
 prerequisites: [FA-C223-harakat-kardan, FA-C224-kharandan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "feshâr dâdan: Persian feshâr 'pressure' (feshordan, EtymDB) + dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C224-kharandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C224-KONESH224-02]; assesses=[] -->
 
 **فشار دادن** — *feshâr dâdan* — "to press, to squeeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*feshâr dâdan* is "to give pressure": *feshâr* is built on *feshordan*, "to press" (EtymDB), a native verb. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

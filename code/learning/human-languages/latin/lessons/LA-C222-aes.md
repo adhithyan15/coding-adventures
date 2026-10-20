@@ -13,7 +13,8 @@ gloss: "bronze; money"
 concept_tag: LA-RES222-AES
 prerequisites: [LA-C222-aurum, LA-C222-argentum]
 sounds: []
-roots: []
+roots: [aes-latin]
+etymology_hook: "aes 'bronze' — usually traced to Proto-Italic *aos 'copper'; English ore is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C222-argentum]
 <!-- hl-knowledge: introduces=[LA-LEX-C222-RES222-03]; assesses=[] -->
 
 **aes, aeris** — "bronze; money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aes** is usually traced to Proto-Italic *\*aos*, "copper, bronze" (EtymDB 2.1); Gothic *aiz*, "bronze", and English *ore* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

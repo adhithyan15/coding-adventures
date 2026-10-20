@@ -14,7 +14,8 @@ romanization: "javān"
 concept_tag: HI-QUAL157-JAVAN
 prerequisites: [HI-C157-amir, HI-C157-garib, HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat, HI-C80-sundar-badsurat]
 sounds: []
-roots: []
+roots: [persian-javan]
+etymology_hook: "javān: usually traced to Persian javān 'young', though CDIAL lists Hindi juwān under inherited *yuvāna (10510)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C157-garib]
 <!-- hl-knowledge: introduces=[HI-LEX-C157-QUAL157-04]; assesses=[] -->
 
 **जवान** — *javān* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जवान** (*javān*) is usually taken as a loan from Persian *javān*, "young". That may not be the whole story: CDIAL lists a Hindi *juwān*, "a youth", under *\*yuvāna*, "young", a form it builds on the Sanskrit *yuvan*, "young" (CDIAL 10510). So Hindi may have this word by an inherited road as well as a borrowed one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

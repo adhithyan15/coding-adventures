@@ -14,7 +14,8 @@ romanization: "ājobā"
 concept_tag: MR-FAMILY75-AJOBA
 prerequisites: [MR-C74-mulga, MR-C74-mulgi]
 sounds: []
-roots: []
+roots: [sanskrit-aryaka]
+etymology_hook: "ājobā: built on ājā 'grandfather', which CDIAL lists under Sanskrit āryaka 'respectable man' (CDIAL 1348)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C74-mulgi]
 <!-- hl-knowledge: introduces=[MR-LEX-C75-FAMILY75-01]; assesses=[] -->
 
 **आजोबा** — *ājobā* — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आजोबा** (*ājobā*) is built on Marathi *ājā*, "grandfather", with an added *-bā*. CDIAL lists *ājā* under Sanskrit *āryaka*, "respectable man, grandfather" (CDIAL 1348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

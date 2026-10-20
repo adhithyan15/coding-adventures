@@ -1,0 +1,11 @@
+{
+  "id": "FR-C523-palpitant",
+  "pathSegment": "FR-PATH-523-SERIES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-523-SERIES",
+      "order": 4
+    }
+  ]
+}

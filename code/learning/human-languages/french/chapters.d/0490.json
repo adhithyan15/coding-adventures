@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "La famille au sens large",
+  "label": "ch:fr-la-famille-au-sens-large",
+  "canDo": "I can talk about godparents and older and younger siblings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C490-cadet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about godparents and older and younger siblings.",
+    "assesses": [
+      "FR-LEX-C490-PARRAIN-03",
+      "FR-LEX-C490-PARRAIN-04",
+      "FR-LEX-C490-PARRAIN-05"
+    ]
+  }
+}

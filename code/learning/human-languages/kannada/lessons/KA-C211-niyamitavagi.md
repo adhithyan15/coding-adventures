@@ -14,7 +14,8 @@ romanization: "niyamitavāgi"
 concept_tag: KA-KALA211-NIYAMITAVAGI
 prerequisites: [KA-C210-biduvu, KA-C210-yugadi]
 sounds: []
-roots: []
+roots: [sanskrit-niyamita]
+etymology_hook: "niyamitavāgi: Sanskrit niyamita 'regulated' + the adverb ending -āgi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C210-yugadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C211-KALA211-01]; assesses=[] -->
 
 **ನಿಯಮಿತವಾಗಿ** — *niyamitavāgi* — "regularly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಯಮಿತವಾಗಿ** (*niyamitavāgi*) is *niyamita*, "regulated", from Sanskrit *niyamita*, "restrained, fixed by rule", with the adverb ending *-āgi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

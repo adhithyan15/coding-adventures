@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "El comienzo",
+  "label": "ch:es-el-comienzo",
+  "canDo": "I can say when something began, started and ended, using formal and everyday words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C542-finalizar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can say when something began, started and ended, using formal and everyday words.",
+    "assesses": [
+      "ES-LEX-C542-COMIENZO-03",
+      "ES-LEX-C542-COMIENZO-04",
+      "ES-LEX-C542-COMIENZO-05"
+    ]
+  }
+}

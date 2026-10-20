@@ -80,7 +80,7 @@ mardi = mar-DEE, with the r made at the back of the throat, as in quatre.
 The familiar -di closes it, so only the first syllable is new.
 
 The word, taken apart.
-mardi is Martis diēs, "the day of Mars" — the god of war, and the red planet named for him.
+mardi is Latin Martis diēs, "the day of Mars" — the god of war, and the red planet named for him.
 
 Why it's said this way: the war-god, translated.
 English Tuesday is named for Tiw, the Germanic war-god. French mardi is named for Mars, the Roman one. Different gods, different sounds — and the same day, because it is the same slot in the same week.
@@ -113,7 +113,7 @@ mercredi = mair-kruh-DEE, three syllables with the weight at the end.
 Two throat-r sounds in one word, one in each of the first two syllables. Take it slowly; this word is worth drilling on its own.
 
 The word, taken apart.
-mercredi is Mercuriī diēs, "the day of Mercury" — the messenger of the gods, and the swiftest planet. English kept the god's name in mercurial, "quick-changing," and gave it to the metal that runs like water.
+mercredi is Latin Mercuriī diēs, "the day of Mercury" — the messenger of the gods, and the swiftest planet. English kept the god's name in mercurial, "quick-changing," and gave it to the metal that runs like water.
 
 Why it's said this way.
 Apply the key from mardi. English Wednesday is Woden's day — and Woden is the god the Romans matched to Mercury, both of them travellers, guides and carriers of the dead. Same day, same role, two names. English still spells the d it stopped pronouncing.
@@ -145,7 +145,7 @@ vowel-eu — the rounded eu you learned in deux.
 Together: jeudi = zheu-DEE.
 
 The word, taken apart.
-jeudi is Jovis diēs, "the day of Jove" — Jove being the other name of Jupiter, king of the gods and the largest planet. English keeps Jove in the phrase by Jove, and keeps the god's temperament in jovial: cheerful, the way people born under Jupiter were said to be.
+jeudi is Latin Jovis diēs, "the day of Jove" — Jove being the other name of Jupiter, king of the gods and the largest planet. English keeps Jove in the phrase by Jove, and keeps the god's temperament in jovial: cheerful, the way people born under Jupiter were said to be.
 
 Why it's said this way.
 The key once more. English Thursday is Thor's day — Thor, the thunder-god, matched to Jupiter, who also threw the lightning. Two pantheons, one sky-king, one day. Every weekday so far has agreed on the god's job and disagreed on the god's name.
@@ -176,7 +176,7 @@ nasal-en — the opening en is nasal, sent through the nose like the un of lundi
 The r is the throat-r again, and the ending is the familiar DEE.
 
 The word, taken apart.
-vendredi is Veneris diēs, "the day of Venus" — goddess of love and the brightest thing in the sky after the Sun and Moon. Her name is still in English venerate, "to hold in reverence."
+vendredi is Latin Veneris diēs, "the day of Venus" — goddess of love and the brightest thing in the sky after the Sun and Moon. Her name is still in English venerate, "to hold in reverence."
 
 Why it's said this way.
 The last application of the key, and the cleanest. English Friday is Frigg's day — Frigg, the Germanic goddess of love and marriage, matched to Venus. Five days, five gods, and every single pairing made by role.
@@ -257,6 +257,9 @@ English kept Sunday, the star. French dropped it entirely for "the Lord's day." 
 samedi — the planet replaced by the Sabbath, a day of rest.
 dimanche — the Sun replaced by the Lord, a day of worship.
 Five days of Roman sky, then two days where a later faith wrote over it. The French week is a record of both.
+
+The word, taken apart.
+dimanche from Old French diemenche from Latin dies Dominica, "the Lord's day" — inherited. (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

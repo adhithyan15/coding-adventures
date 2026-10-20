@@ -12,6 +12,9 @@ Before the new one: say the Portuguese for which, then the Portuguese for nor.
 You'll want to know: recentemente.
 recentemente — "recently". Recentemente, viajei. — "Recently I travelled." The ending -mente makes an adverb, the way English uses -ly.
 
+The word, taken apart.
+recentemente is built from recente, "recent" ( from Latin recens, "fresh", Lewis & Short), and -mente, "-ly", from Latin mente, "with a mind".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Portuguese for nor, then the Portuguese for recently
 
 You'll want to know: anteontem.
 anteontem — "the day before yesterday". One day further back than yesterday: Anteontem escrevi uma mensagem. — "The day before yesterday I wrote a message." escrevi is the one-word past, like falei.
+
+The word, taken apart.
+anteontem is built from ante, "before", and ontem, "yesterday", which goes back to Latin ad noctem, "at night" (EtymDB 2.1 lists Galician onte and Spanish anoche as its cousins).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Portuguese for recently, then the Portuguese for the
 You'll want to know: antigamente.
 antigamente — "formerly, in the old days". It points to a long stretch of the past, not to one day: Antigamente, a loja era aqui. — "In the old days the shop was here." era is the past of ser for how things used to be.
 
+The word, taken apart.
+antigamente is built from the word for "old" and -mente, "-ly". That word from Latin antiquus, "former, old" (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Portuguese for the day before yesterday, then the Po
 You'll want to know: o passado.
 o passado — "the past". The same word describes time gone by: a semana passada — "last week", o mês passado — "last month".
 
+The word, taken apart.
+passado is "passed": the participle of the verb "to pass" (EtymDB 2.1), which goes back to Latin passus, "a step".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Portuguese for formerly, then the Portuguese for the
 
 You'll want to know: acontecer.
 acontecer — "to happen". O que aconteceu? — "What happened?" Like falar, its past is one word: falou, aconteceu.
+
+The word, taken apart.
+acontecer is built from a- and an older verb (EtymDB 2.1) from Vulgar Latin contingescere, from Latin contingere, "to touch, to befall" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

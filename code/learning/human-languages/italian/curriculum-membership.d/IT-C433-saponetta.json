@@ -1,0 +1,11 @@
+{
+  "id": "IT-C433-saponetta",
+  "pathSegment": "IT-PATH-433-CAMERA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-433-CAMERA",
+      "order": 3
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b01bb320fb980b2c",
+  "sourceHash": "fnv1a64:71c666c22dc77c8a",
   "lessons": [
     {
       "id": "FR-C05-parler",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a351c377f4daa1ec",
+      "sourceHash": "fnv1a64:1dc6a0b4e8d14cb9",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is parler from, and its English cousins? (parabolāre from parabola — parable, parole.) Which three present-tense endings are silent? (-e, -es, -ent — je/tu/ils all sound parl.) Why does French keep je/tu when Spanish drops yo/tú? (The endings are silent, so the pronoun carries the person.) Next: habiter, \"to live.\""
+              "text": "What Latin word is parler from, and its English cousins? (parabolāre from parabola — parable, parole.) Which three present-tense endings are silent? (-e, -es, -ent — je/tu/ils all sound parl.) Why does French keep je/tu when Spanish drops yo/tú? (The endings are silent, so the pronoun carries the person.) Next: the verb \"to live.\""
             }
           ]
         }
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76d075164bb1b8cf",
+      "sourceHash": "fnv1a64:aeff713cdf2b10a5",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "A second -er verb — snap it into the exact template you just learned. habiter (\"to live, to dwell\") lets you say where you live, the answer to a où (\"where\") question."
+              "text": "A second -er verb — snap it into the exact template you just learned. habiter (\"to live, to dwell\") lets you say where you live, the answer to a \"where?\" question."
             }
           ]
         },
@@ -264,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "Note j'habite — je elides to j' before the vowel of habite (the h is silent, so it counts as a vowel). Now you can answer où questions:"
+              "text": "Note j'habite — je elides to j' before the vowel of habite (the h is silent, so it counts as a vowel). Now you can say where you live:"
             },
             {
               "kind": "speech",
@@ -325,7 +325,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is habiter from, and what does it literally involve? (habitāre, \"keep having a place\" — from habēre, \"to have.\") English cousins? (Habitat, inhabit, habitation.) Say \"I live in Paris.\" (J'habite à Paris.) Next: travailler, \"to work.\""
+              "text": "What Latin verb is habiter from, and what does it literally involve? (habitāre, \"keep having a place\" — from habēre, \"to have.\") English cousins? (Habitat, inhabit, habitation.) Say \"I live in Paris.\" (J'habite à Paris.) Next: the verb \"to work.\""
             }
           ]
         }
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95c9a431bc6b9cbf",
+      "sourceHash": "fnv1a64:55539f4b19c078c7",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did travailler originally mean, and from what device? (\"To torture,\" from tripalium, three stakes.) What two English words share the root? (Travail and travel.) Its Spanish twin? (Trabajar — same tripaliāre.) Next: build your first full sentence — Je parle français."
+              "text": "What did travailler originally mean, and from what device? (\"To torture,\" from tripalium, three stakes.) What two English words share the root? (Travail and travel.) Its Spanish twin? (Trabajar — same tripaliāre.) Next: build your first full sentence — \"I speak French.\""
             }
           ]
         }
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b721118886f5685",
+      "sourceHash": "fnv1a64:49dfa7931f3d83dd",
       "notice": null,
       "blocks": [
         {
@@ -723,7 +723,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— Tu parles français? — Oui, je parle un peu. (Do you speak French? — Yes, I speak a little.) — Où habites-tu? — J'habite à Lyon. Et je travaille à Paris. — Merci! — De rien."
+              "text": "— Tu parles français? — Oui, je parle français. (Do you speak French? — Yes, I speak French.) — Tu habites à Lyon? — Oui, j'habite à Lyon. Je travaille à Paris. — Merci! — De rien."
             }
           ]
         },
@@ -791,7 +791,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Tu parles français? — Oui, je parle un peu.\""
+              "text": "\"Tu parles français? — Oui, je parle français.\""
             }
           ]
         },
@@ -808,7 +808,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which -er endings are silent, and what follows from that? (-e, -es, -ent — so French keeps its subject pronouns.) Give \"I\" forms of the three verbs. (Je parle, j'habite, je travaille.) Say \"I live in Paris and I work in Lyon.\" (J'habite à Paris et je travaille à Lyon.) French now moves in real sentences."
+              "text": "Which -er endings are silent, and what follows from that? (-e, -es, -ent — so French keeps its subject pronouns.) Give \"I\" forms of the three verbs. (Je parle, j'habite, je travaille.) Say \"I live in Paris. I work in Lyon.\" (J'habite à Paris. Je travaille à Lyon.) French now moves in real sentences."
             }
           ]
         }

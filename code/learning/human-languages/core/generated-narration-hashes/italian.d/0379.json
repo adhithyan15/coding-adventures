@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:44b48e19ac405e34",
+  "lessonIds": [
+    "IT-C379-liceo",
+    "IT-C379-frequentare",
+    "IT-C379-assenza",
+    "IT-C379-pagella",
+    "IT-C379-preside"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch379.txt",
+  "json": "italian/narration/ch379.json",
+  "textHash": "fnv1a64:1eafd1c40c0b4e90",
+  "jsonHash": "fnv1a64:7a0c899699eb80ef",
+  "findings": []
+}

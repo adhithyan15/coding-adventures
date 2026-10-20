@@ -1,0 +1,11 @@
+{
+  "id": "PT-C475-irritar",
+  "pathSegment": "PT-PATH-475-NERVOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-475-NERVOS",
+      "order": 1
+    }
+  ]
+}

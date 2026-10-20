@@ -14,7 +14,8 @@ romanization: "pālak"
 concept_tag: UR-CHIZ226-PALAK2
 prerequisites: [UR-C226-baingan, UR-C226-kaddu]
 sounds: []
-roots: []
+roots: [sanskrit-palakya]
+etymology_hook: "pālak ← Sanskrit pālakyā 'Beta bengalensis, a leaf vegetable', a tadbhava (CDIAL 8126)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C226-kaddu]
 <!-- hl-knowledge: introduces=[UR-LEX-C226-CHIZ226-05]; assesses=[] -->
 
 **پالک** — *pālak* — "spinach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پالک** (*pālak*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pālakyā*, "Beta bengalensis, a leaf vegetable" (CDIAL 8126).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

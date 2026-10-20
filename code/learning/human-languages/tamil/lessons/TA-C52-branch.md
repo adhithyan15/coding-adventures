@@ -11,7 +11,8 @@ romanization: "kiḷai"
 concept_tag: TA-NOUN-BRANCH
 prerequisites: [TA-C52-tree, TA-C50-kolam, TA-C51-sun]
 sounds: []
-roots: []
+roots: [dravidian-kilar-rise]
+etymology_hook: "கிளை — native Dravidian (DEDR 1583); Malayalam kiḷa 'bud, sprout'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C52-tree]
 Both sisters reach for a word of a different shape here — Malayalam *kompŭ*, Telugu *komma* — where Tamil says கிளை.
 
 And a கிளை is not only what grows off a tree. A family has them: the branch of a house, the people who come off one trunk. When Tamil calls somebody your *kiḷai*, it is the tree word doing the work, and a bank branch is a *kiḷai* too.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கிளை** (*kiḷai*) is native Dravidian. DEDR 1583 lists Malayalam *kiḷa*, "bud, sprout". The entry gathers words for rising and shooting up: a branch is what shoots out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

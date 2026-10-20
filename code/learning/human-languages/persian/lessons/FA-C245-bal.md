@@ -14,7 +14,8 @@ romanization: "bâl"
 concept_tag: FA-CHIZ245-BAL
 prerequisites: [FA-C245-qu, FA-C245-lane]
 sounds: []
-roots: []
+roots: [persian-bal]
+etymology_hook: "bâl ← Middle Persian bāl (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C245-lane]
 <!-- hl-knowledge: introduces=[FA-LEX-C245-CHIZ245-03]; assesses=[] -->
 
 **بال** — *bâl* — "a wing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâl* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *bāl*, "wing" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

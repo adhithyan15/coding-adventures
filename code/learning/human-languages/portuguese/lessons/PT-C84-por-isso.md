@@ -13,7 +13,8 @@ gloss: "that is why, so"
 concept_tag: PT-PORQUE84-POR-ISSO
 prerequisites: [PT-C84-motivo, PT-C84-entao]
 sounds: []
-roots: []
+roots: [ipse-latin]
+etymology_hook: "por isso — 'for that': isso ← Latin ipsum 'itself'; por ← Latin pro 'for'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C84-entao]
 <!-- hl-knowledge: introduces=[PT-LEX-C84-PORQUE84-04]; assesses=[] -->
 
 **por isso** — "that is why, so".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**por isso** is "for that": *isso*, "that" ← Latin *ipsum*, "itself" (EtymDB 2.1), and *por*, "for", which goes back to Latin *pro*, "for", mixed with *per*, "through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

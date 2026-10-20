@@ -13,7 +13,8 @@ gloss: "a nurse"
 concept_tag: GE-BERUF124-KRANKENSCHWESTER
 prerequisites: [GE-C123-mahlzeit, GE-C124-joghurt]
 sounds: []
-roots: []
+roots: [germanic-krangaz, germanic-swestr]
+etymology_hook: "Krankenschwester — krank 'ill' + Schwester 'sister': a sister of the sick"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C124-joghurt]
 <!-- hl-knowledge: introduces=[GE-LEX-C124-BERUF124-02]; assesses=[] -->
 
 **die Krankenschwester** — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Krankenschwester** is *krank*, "ill", + *Schwester*, "sister": the sister who tends the sick, a title from nursing orders. *Schwester* ← Proto-Germanic *\*swestēr* (EtymDB 2.1), the same word as English *sister*; *krank* ← Old High German *krank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

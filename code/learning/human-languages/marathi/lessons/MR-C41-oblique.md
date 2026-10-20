@@ -11,7 +11,8 @@ gloss: the oblique stem — the one shape change that stands between every noun 
 concept_tag: MR-GRAMMAR-OBLIQUE
 prerequisites: [MR-C41-kholi, MR-C05-rahne]
 sounds: [matra-aa]
-roots: []
+roots: [grha-sanskrit]
+etymology_hook: "gharā-: the oblique of ghar, usually taken from Sanskrit gṛha 'house' (CDIAL 4428)"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +63,11 @@ the next three chapters works without it. Every one of the five postpositions
 they teach — *madhye*, *var*, *khālī*, *javaḷ* and *samor* — demands the oblique
 before it, and a Marathi sentence that skips it is not merely clumsy: it is
 wrong.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घरा-** (*gharā-*) is **घर**, "house", in its oblique shape. **घर** is usually taken as a popular form of Sanskrit *gṛha*, "house", though CDIAL calls the sound change difficult (CDIAL 4428).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-OBLIQUE, MR-LEX-GHAR, MR-LEX-KHOLI, MR-LEX-RAHNE, MR-A1-MESSAGE-LINE-THINK] -->

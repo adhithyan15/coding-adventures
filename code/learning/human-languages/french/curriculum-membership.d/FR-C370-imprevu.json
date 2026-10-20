@@ -1,0 +1,11 @@
+{
+  "id": "FR-C370-imprevu",
+  "pathSegment": "FR-PATH-370-IMPREVU",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-370-IMPREVU",
+      "order": 0
+    }
+  ]
+}

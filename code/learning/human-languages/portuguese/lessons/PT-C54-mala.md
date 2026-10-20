@@ -14,6 +14,7 @@ concept_tag: PT-COISAS3-MALA
 prerequisites: [PT-C54-oculos, PT-C54-caixa]
 sounds: []
 roots: []
+etymology_hook: "mala ← French malle 'trunk', a word of Germanic origin — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C54-caixa]
 <!-- hl-knowledge: introduces=[PT-LEX-C54-COISAS3-03]; assesses=[] -->
 
 **a mala** — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mala** ← French *malle*, "trunk" (EtymDB 2.1) — borrowed. The French word is of Germanic origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

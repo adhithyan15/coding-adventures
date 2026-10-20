@@ -14,7 +14,8 @@ romanization: "baṇṇa haccu"
 concept_tag: KA-VERB-BANNA-HACCU
 prerequisites: [KA-C277-anisu, KA-C277-abhyasa-madu]
 sounds: []
-roots: []
+roots: [sanskrit-varna, dravidian-pattu-hold]
+etymology_hook: "baṇṇa haccu: tadbhava of Sanskrit varṇa 'colour' (CDIAL 11338) + native haccu 'to apply' (DEDR 4034)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C277-abhyasa-madu]
 <!-- hl-knowledge: introduces=[KA-LEX-C277-KRIYE277-04]; assesses=[] -->
 
 **ಬಣ್ಣ ಹಚ್ಚು** — *baṇṇa haccu* — "to paint (apply colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಣ್ಣ ಹಚ್ಚು** (*baṇṇa haccu*) is *baṇṇa*, "colour", a tadbhava of Sanskrit *varṇa*, "colour" (CDIAL 11338), through Prakrit *vaṇṇa*, and native *haccu*, "to apply, put to", which DEDR 4034 lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

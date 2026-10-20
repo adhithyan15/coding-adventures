@@ -13,7 +13,8 @@ gloss: "to want"
 concept_tag: PT-VERB-QUERER
 prerequisites: [PT-C82-oficio, PT-C82-levar]
 sounds: []
-roots: []
+roots: [quaerere-latin]
+etymology_hook: "querer ← Latin quaerere 'to seek, to ask' — English query and question"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C82-levar]
 <!-- hl-knowledge: introduces=[PT-LEX-C83-QUERER83-01]; assesses=[] -->
 
 **querer** — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**querer** ← Latin *quaerere*, "to seek, to ask" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

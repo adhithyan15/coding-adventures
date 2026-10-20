@@ -14,7 +14,8 @@ romanization: "khælnā"
 concept_tag: BN-WORLD89-KHLNA
 prerequisites: [BN-C89-desh, BN-C89-golpo]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khælnā ← *khell 'play', a reconstructed form; a tadbhava (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C89-golpo]
 <!-- hl-knowledge: introduces=[BN-LEX-C89-WORLD89-05]; assesses=[] -->
 
 **খেলনা** — *khælnā* — "a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খেলনা** (*khælnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khell*, "play", a form CDIAL reconstructs from its descendants (CDIAL 3918). *Khælnā* is the verb *khælā*, "to play", with a noun ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

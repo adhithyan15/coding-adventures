@@ -14,7 +14,8 @@ romanization: "tāḻvara"
 concept_tag: ML-STHALAM279-TALVARA
 prerequisites: [ML-C279-myusiyam, ML-C279-jim]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "tāḻvara: native tāḻ 'low' (DEDR 3178) + a second part of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C279-jim]
 <!-- hl-knowledge: introduces=[ML-LEX-C279-STHALAM279-04]; assesses=[] -->
 
 **താഴ്വര** — *tāḻvara* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താഴ്വര** (*tāḻvara*) begins with native *tāḻ*, "low" (DEDR 3178, with Tamil *tāḻ*); the origin of the second part is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

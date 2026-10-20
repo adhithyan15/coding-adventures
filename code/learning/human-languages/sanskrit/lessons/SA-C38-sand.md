@@ -14,7 +14,8 @@ romanization: "sikatā"
 concept_tag: SA-EARTH-SIKATA
 prerequisites: [SA-C38-stone, SA-C36-slowly, SA-C37-congratulations]
 sounds: []
-roots: []
+roots: [sanskrit-sikata]
+etymology_hook: "sikatā 'sand': MW suggests √sic 'pour'; CDIAL 13386 takes it from sika 'sand', with Iranian cousins"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C38-stone]
 It has long been tied to *sic*, "to pour, to sprinkle": sand is the stuff that pours.
 
 Set it beside नदी and you have the two halves of a bank — the water, and what the water leaves at its edge.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW links *sikatā* to the root √sic, "to pour", but CDIAL 13386 takes it as a
+collective form of *sika*, "sand", and points to Iranian cousins such as Old
+Persian *thikā*, "gravel". The root story is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

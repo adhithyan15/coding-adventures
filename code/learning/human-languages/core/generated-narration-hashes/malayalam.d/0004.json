@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 4,
-  "sourceHash": "fnv1a64:e2cba7fde41fc6d1",
+  "sourceHash": "fnv1a64:44644c7e665d3234",
   "lessonIds": [
     "ML-S110-letter-va",
     "ML-C04-uduppu",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch04.txt",
   "json": "malayalam/narration/ch04.json",
-  "textHash": "fnv1a64:1a7a9ecd7075981b",
-  "jsonHash": "fnv1a64:8ccaee28d1a93382",
+  "textHash": "fnv1a64:91ae9a5d25a3c874",
+  "jsonHash": "fnv1a64:59700a8ec7f4136e",
   "findings": []
 }

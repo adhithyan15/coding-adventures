@@ -14,7 +14,8 @@ romanization: "rōkali"
 concept_tag: TE-VASTUVU270-ROKALI
 prerequisites: [TE-C270-penam, TE-C270-rolu]
 sounds: []
-roots: []
+roots: [dravidian-urai-rub]
+etymology_hook: "rōkali: DEDR 665 lists rōkali 'pestle', with a query"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C270-rolu]
 <!-- hl-knowledge: introduces=[TE-LEX-C270-VASTUVU270-05]; assesses=[] -->
 
 **రోకలి** — *rōkali* — "a pestle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 665 lists a nasalised **రోకలి** (*rōkali*), "a large wooden pestle", with a query, under the word for "to rub", one word with Tamil *urai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

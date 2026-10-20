@@ -14,7 +14,8 @@ romanization: "bogaḷu"
 concept_tag: KA-VERB-BOGALU
 prerequisites: [KA-C239-bheti-kodu, KA-C239-appiko]
 sounds: []
-roots: []
+roots: [dravidian-bogalu-bark]
+etymology_hook: "bogaḷu: native Dravidian (DEDR 5204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C239-appiko]
 <!-- hl-knowledge: introduces=[KA-LEX-C240-KRIYE240-01]; assesses=[] -->
 
 **ಬೊಗಳು** — *bogaḷu* — "to bark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೊಗಳು** (*bogaḷu*) is native Dravidian (DEDR 5204). DEDR lists *bogaḷu*, "to bark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

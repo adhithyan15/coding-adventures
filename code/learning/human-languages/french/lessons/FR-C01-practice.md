@@ -63,7 +63,7 @@ Two threads run through it all: **register** (*salut* vs *bonjour*) and
   *bonsoir*)]
 - [YOU SAY: bonjour, bonsoir, bonne nuit — and say why each takes *bon* or
   *bonne*]
-- [YOU SAY: answer "how are you" in one word — *bien*, then *très bien*]
+- [YOU SAY: answer "how are you" in one word — *bien*]
 
 [REPEAT x2] Run bonjour → bonsoir → bonne nuit without hesitating on
 *bon*/*bonne*.
@@ -80,4 +80,5 @@ chapter-level retrieval of the tiny trace-to-dictation runway, not a new word.
 
 [PAUSE 3s] French *bonjour* is singular; the Spanish morning greeting is
 plural — name it. (*Buenos días*.) Next chapter: introducing yourself —
-*je m'appelle…* — and French's own formal/informal "you," **tu** vs **vous**.
+"my name is…" — and French's own two words for "you," one familiar and one
+formal.

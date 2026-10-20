@@ -13,7 +13,8 @@ gloss: "a fiancé, a bridegroom"
 concept_tag: PT-COISAS221-NOIVO
 prerequisites: [PT-C221-genro, PT-C221-nora]
 sounds: []
-roots: []
+roots: [novus-latin]
+etymology_hook: "noivo ← Vulgar Latin *novius 'newly wed', from novus 'new'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C221-nora]
 <!-- hl-knowledge: introduces=[PT-LEX-C221-COISAS221-03]; assesses=[] -->
 
 **o noivo** — "a fiancé, a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**noivo** ← Vulgar Latin *\*novius*, "newly wed" (EtymDB 2.1), from Latin *novus*, "new" — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -94,8 +94,8 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 38 XAML, 83 SwiftUI,
-50 Compose, 108 Qt, and 91 Flutter drops; any new property or increase above
+property. Fresh `native-complete` reports currently contain 29 XAML, 57 SwiftUI,
+40 Compose, 81 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -114,6 +114,22 @@ calendar-event text omissions tracked by #17146 (#17128). Qt now passes the
 event surface's supported color and font size to descendant text and lowers
 the authored hidden/ellipsis/nowrap trio as native clipping and right elision,
 retiring those final five omissions (#17146).
+Qt controls now lower their 15 exact `width: 100%` declarations to
+`Layout.fillWidth: true`, reducing the Qt inventory from 108 to 93. The three
+remaining Qt width omissions belong to `Text` geometry, while other
+percentages and mixed fixed/fill states remain explicit debt (#17338).
+Qt now also treats the ten non-inset CSS shadows paired with supported
+`elevation` tokens as consumed by their emitted native `MultiEffect` depth,
+reducing its inventory from 93 to 83. The inset theme-toggle moon and any raw
+shadow without elevation remain explicit drawing-effect debt (#17386).
+Compose now treats the ten non-inset CSS shadows paired with supported
+`elevation` tokens as consumed by their emitted native depth, reducing its
+inventory from 50 to 40. The inset theme-toggle moon and any raw shadow without
+elevation remain explicit drawing-effect debt (#17356).
+SwiftUI now lowers supported `raised` and `overlay` elevation tokens to native
+`.shadow` modifiers and consumes only their paired non-inset CSS fallbacks,
+reducing its inventory from 83 to 63. The inset theme-toggle moon, standalone
+raw shadows, and unsupported elevation values remain explicit debt (#17365).
 Flutter rounded surfaces now preserve all 15 supported fixed `border-radius`
 declarations across draggable cards, calendar events, text chips, inputs, and
 the timeline grid. The shared text-surface wrapper also paints eight coupled
@@ -126,9 +142,22 @@ rather than being guessed into a native alignment (#17237).
 Flutter leaf widgets now also preserve all 16 authored `width: 100%`
 declarations when their parent supplies a finite horizontal constraint. Bounded
 columns use `SizedBox(width: double.infinity)` and rows use one parent-owned
-`Expanded`, reducing the measured inventory from 107 to 91. The seven calendar
-weekday `14.2857%` widths remain explicit until fractional row sizing has a safe
-native lowering (#17251).
+`Expanded`, reducing the measured inventory from 107 to 91 (#17251). Flutter
+now also lowers the calendar's `14.2857%` widths to proportional direct-row flex
+shares and fractional children of a native wrapping layout. The seven-column
+header and wrapped day grid therefore remain intact while the seven remaining
+`width` omissions and the grid's `flex-wrap` omission are retired, reducing the
+measured inventory from 91 to 83. Invalid or unbounded percentages remain
+explicit debt (#17289). Flutter drag-and-drop bodies now apply authored `gap`
+after dynamic child lists are evaluated, retiring the remaining four Flutter
+gap omissions and reducing the inventory from 83 to 79 (#17301).
+Conditional drag/drop bodies use the same child-list decision for helper
+definition and invocation, so a leading `If`/`Else` cannot produce an undefined
+`_mosaicWithGap`, and a following ordinary child cannot disappear (#17313).
+Flutter's ten non-inset `box-shadow` declarations that accompany supported
+`elevation` tokens now leave the report when their native shadows are emitted,
+reducing the inventory from 79 to 69. The inset theme-toggle moon shadow remains
+explicit drawing-effect debt (#17308).
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and
@@ -205,6 +234,11 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
+The prepared `task-app-v0.5.8` patch preserves the timeline milestone and
+legend-swatch diamond rotations (#17675), reducing measured Qt style drops from
+83 to 81. Publication and immutable asset auditing remain pending in #17682.
+Downloadable coverage is unchanged.
+
 TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
 `task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump
 the patch version, new usable capabilities bump the minor version, and breaking
@@ -224,6 +258,37 @@ The `task-app-v0.5.2` patch rolls forward the compatible native-fidelity and
 regression-gate fixes accumulated since v0.5.1. It retains the same verified
 web/native artifact matrix and the same explicit CI-only boundary for Static
 HTML, Web Components, and Paint.
+
+The `task-app-v0.5.3` patch preserves Flutter's seven-column calendar geometry,
+evaluated drag-and-drop spacing, and complete conditional drag/drop bodies. It
+also reconciles natively emitted elevation shadows with the degradation report
+and rolls forward the matching style-ratchet correction. The downloadable
+web/native artifact matrix remains unchanged: Static HTML, Web Components, and
+Paint are CI-only, while signing, notarization, and installers remain #13977.
+
+The `task-app-v0.5.4` patch preserves authored fill widths on Qt controls and
+reconciles supported elevation-backed shadows across Compose Desktop and
+SwiftUI. The downloadable web/native artifact matrix remains unchanged: Static
+HTML, Web Components, and Paint are CI-only, while signing, notarization, and
+installers remain #13977.
+
+The `task-app-v0.5.5` patch preserves the seven-column XAML calendar and
+reconciles Qt elevation-shadow reporting. The downloadable artifact matrix
+remains unchanged: Static HTML, Web Components, and Paint are CI-only, while
+signing, notarization, and installers remain #13977. Publication and the
+immutable asset audit are tracked in #17469.
+
+The `task-app-v0.5.6` patch corrects SwiftUI drag-body gap reporting and tightens
+the style regression gate from 63 to 59 allowances. Emitted drag behavior and
+downloadable artifact coverage remain unchanged. Publication and the immutable
+asset audit are tracked in #17491; the same CI-only and signing limitations apply.
+
+The published `task-app-v0.5.7` patch preserves timeline and calendar milestone
+diamond rotations in SwiftUI and tightens its style regression gate from 59 to
+57 allowances. Publication and the immutable asset audit completed in #17610:
+all thirteen assets and twelve checksum entries were verified. Downloadable coverage
+is unchanged: Static HTML, Web Components, and Paint remain CI-only; signing,
+notarization, and installers remain #13977.
 
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI

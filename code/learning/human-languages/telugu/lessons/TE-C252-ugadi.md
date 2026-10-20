@@ -14,7 +14,8 @@ romanization: "ugādi"
 concept_tag: TE-SAMAYAM252-UGADI
 prerequisites: [TE-C251-injeksanu, TE-C251-tika]
 sounds: []
-roots: []
+roots: [sanskrit-yuga, sanskrit-adi]
+etymology_hook: "ugādi: Sanskrit yugādi 'beginning of an age': yuga (CDIAL 10482) + ādi 'beginning' (CDIAL 1152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C251-tika]
 <!-- hl-knowledge: introduces=[TE-LEX-C252-SAMAYAM252-01]; assesses=[] -->
 
 **ఉగాది** — *ugādi* — "Ugadi, the Telugu New Year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉగాది** (*ugādi*) is Sanskrit *yugādi*, "the beginning of an age": *yuga*, "yoke; age" (CDIAL 10482), and *ādi*, "beginning" (CDIAL 1152).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

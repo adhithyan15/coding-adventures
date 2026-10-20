@@ -14,7 +14,8 @@ romanization: "lāl"
 concept_tag: GU-COLOUR1-RED
 prerequisites: [GU-C69-sparrow, GU-C69-fish]
 sounds: []
-roots: []
+roots: [persian-lal]
+etymology_hook: "lāl: usually traced to Persian lāl 'red'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C69-fish]
 <!-- hl-knowledge: introduces=[GU-LEX-C70-COLOUR1-01]; assesses=[] -->
 
 **લાલ** (*lāl*) — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**લાલ** (*lāl*) is a loan, usually traced to Persian *lāl*, "red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

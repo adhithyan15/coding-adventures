@@ -14,7 +14,8 @@ romanization: "camāḷi"
 concept_tag: TA-VERB-CAMALI
 prerequisites: [TA-C231-eccari, TA-C231-kencu]
 sounds: []
-roots: []
+roots: [tamil-samali-manage]
+etymology_hook: "சமாளி — origin uncertain; no DEDR entry; perhaps Indo-Aryan sambhāḷ- 'take care' (CDIAL 12962)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C231-kencu]
 <!-- hl-knowledge: introduces=[TA-LEX-C231-ACT231-05]; assesses=[] -->
 
 **சமாளி** — *camāḷi* — "to manage, to cope with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **சமாளி** (*camāḷi*) is uncertain. DEDR has no entry for it. It may be Indo-Aryan *sambhāḷ-*, "take care", as in Marathi (CDIAL 12962).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

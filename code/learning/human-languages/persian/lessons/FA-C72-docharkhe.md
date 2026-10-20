@@ -14,7 +14,8 @@ romanization: "docharkhe"
 concept_tag: FA-TOWN72-DOCHARKHE
 prerequisites: [FA-C71-polis, FA-C72-ghayegh]
 sounds: []
-roots: []
+roots: [persian-charkh]
+etymology_hook: "docharkhe: Persian do 'two' + charkh 'wheel'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C72-ghayegh]
 <!-- hl-knowledge: introduces=[FA-LEX-C72-TOWN72-02]; assesses=[] -->
 
 **دوچرخه** — *docharkhe* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*docharkhe* is built from *do*, "two", and *charkh*, "wheel": "two-wheeler". Both parts are native; *charkh* is usually traced to Middle Persian *čarx*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

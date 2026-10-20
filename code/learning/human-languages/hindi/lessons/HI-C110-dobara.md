@@ -14,7 +14,8 @@ romanization: "dobārā"
 concept_tag: HI-AGAIN-AGAIN
 prerequisites: [HI-C109-akela, HI-C109-thanda]
 sounds: []
-roots: []
+roots: [persian-dobara]
+etymology_hook: "dobārā: usually traced to Persian dobāra 'twice, a second time'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C109-thanda]
 **दोबारा** (*dobārā*) — "again, a second time".
 
 **दोबारा बोलिए** — "please say it again". It is **दो**, "two", and **बार**, "a time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दोबारा** (*dobārā*) is a loan, usually traced to Persian *dobāra*, "twice, a second time". It is built from *do*, "two", and *bār*, "a time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

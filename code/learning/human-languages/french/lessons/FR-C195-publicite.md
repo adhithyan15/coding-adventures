@@ -13,7 +13,8 @@ gloss: "advertising"
 concept_tag: FR-CHOSES195-PUBLICITE
 prerequisites: [FR-C195-dialecte, FR-C195-nouvelle]
 sounds: []
-roots: []
+roots: [publicus-latin]
+etymology_hook: "publicité ← Medieval Latin publicitas, from publicus 'of the people' — English publicity"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C195-nouvelle]
 <!-- hl-knowledge: introduces=[FR-LEX-C195-CHOSES195-03]; assesses=[] -->
 
 **la publicité** — "advertising".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**publicité** ← Medieval Latin *publicitas*, from *publicus*, "of the people" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

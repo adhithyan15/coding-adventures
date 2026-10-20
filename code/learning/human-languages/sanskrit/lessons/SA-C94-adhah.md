@@ -14,7 +14,8 @@ romanization: "adhaḥ"
 concept_tag: SA-LOC94-ADHAH
 prerequisites: [SA-C94-bahih, SA-C94-upari]
 sounds: []
-roots: []
+roots: [sanskrit-adhas]
+etymology_hook: "adhaḥ = adhas 'below, down' (MW), which MW compares with Latin infra; Pali adho (CDIAL 246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C94-upari]
 <!-- hl-knowledge: introduces=[SA-LEX-C94-LOC94-03]; assesses=[] -->
 
 **अधः** — *adhaḥ* — "below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adhaḥ* is *adhas* "below, down", with the final *s* said as *ḥ* at the end of a phrase (MW). MW compares Latin *infra* "below", the *infra-* of English *infrared*, so it is inherited from Indo-European. Pali kept it as *adho* (CDIAL 246).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

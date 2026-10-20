@@ -1,0 +1,11 @@
+{
+  "id": "ES-C626-culpable",
+  "pathSegment": "ES-PATH-626-JUICIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-626-JUICIO",
+      "order": 3
+    }
+  ]
+}

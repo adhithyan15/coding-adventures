@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-F-16",
+  "category": "Relating socially",
+  "label": "introduce yourself and respond to an introduction",
+  "probe": [
+    "SA-PATTERN-MY-NAME-IS",
+    "SA-PATTERN-WHATS-YOUR-NAME",
+    "SA-LEX-ANANDAH"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F5-04",
+    "A1-F5-05"
+  ],
+  "note": "The chapter-2 pair, and ānandaḥ — 'meeting you is a joy' — as the response."
+}

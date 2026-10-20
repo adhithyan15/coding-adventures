@@ -14,7 +14,8 @@ romanization: "karaṭumuraṭāṉa"
 concept_tag: TA-GUNAM241-KARATUMURATANA
 prerequisites: [TA-C241-apurvamana, TA-C241-camamana]
 sounds: []
-roots: []
+roots: [dravidian-karadu-rough]
+etymology_hook: "கரடுமுரடான — native Dravidian (DEDR 1265); Kannada karaḍu 'rough, uneven'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C241-camamana]
 <!-- hl-knowledge: introduces=[TA-LEX-C241-GUNAM241-04]; assesses=[] -->
 
 **கரடுமுரடான** — *karaṭumuraṭāṉa* — "rough, uneven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**கரடுமுரடான** (*karaṭumuraṭāṉa*) is native Dravidian. DEDR 1265 lists Kannada *karaḍu*, "rough, uneven". *Karaṭu*, "roughness", is doubled with a rhyming partner, *muraṭu*. The entry compares Sanskrit *karkaśa*, "rough, harsh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

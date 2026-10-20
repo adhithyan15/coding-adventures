@@ -13,7 +13,8 @@ gloss: "anger"
 concept_tag: FR-SENTIR7-COLERE
 prerequisites: [FR-C55-joie, FR-C55-peur]
 sounds: []
-roots: []
+roots: [cholera-latin]
+etymology_hook: "colère ← Latin cholera, from Greek khole 'bile' — anger was blamed on bile; English choleric"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C55-peur]
 <!-- hl-knowledge: introduces=[FR-LEX-C55-SENTIR7-03]; assesses=[] -->
 
 **la colère** — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colère** ← Latin *cholera*, "a bilious illness", from Greek *kholera*, built on *khole*, "bile" — a learned borrowing: anger was blamed on bile. (EtymDB 2.1 traces Italian *collera* to the same Latin word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

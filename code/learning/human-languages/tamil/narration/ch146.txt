@@ -12,6 +12,9 @@ Before the new one: say the Tamil for dirty, then the Tamil for fast.
 You'll want to know: கசப்பு.
 கசப்பு — kacappu — "bitter".
 
+The word, taken apart.
+கசப்பு (kacappu) is native Dravidian. DEDR 1249 lists Malayalam kaśakka, "to be bitter". The entry compares Sanskrit kaṣāya, "astringent" (CDIAL 2974).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for fast, then the Tamil for bitter.
 
 You'll want to know: புளிப்பு.
 புளிப்பு — puḷippu — "sour".
+
+The word, taken apart.
+புளிப்பு (puḷippu) is native Dravidian. DEDR 4322 lists Kannada puḷi, huḷi and Telugu puli. It is the noun of puḷi, "to turn sour".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for bitter, then the Tamil for sour.
 You'll want to know: காரம்.
 காரம் — kāram — "spicy".
 
+The word, taken apart.
+காரம் (kāram) is native Dravidian. DEDR 1466 lists Malayalam kāram, "caustic". The entry adds that the word was probably influenced by Sanskrit kṣāra, "caustic".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for sour, then the Tamil for spicy.
 You'll want to know: பணக்கார.
 பணக்கார — paṇakkāra — "rich".
 
+The word, taken apart.
+பணக்கார (paṇakkāra) is paṇam, "money", from Sanskrit paṇa, "a coin" (CDIAL 7715), with -kāra, "the one who has": "moneyed".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for spicy, then the Tamil for rich.
 
 You'll want to know: ஏழை.
 ஏழை — ēḻai — "poor".
+
+The word, taken apart.
+ஏழை (ēḻai) is native Dravidian. DEDR 911 lists Malayalam ēḻa, "a poor person".
 
 What you've built.
 One more word for this chapter.

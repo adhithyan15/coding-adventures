@@ -14,7 +14,8 @@ romanization: "sel"
 concept_tag: FA-CHIZ244-SEL
 prerequisites: [FA-C243-khatere, FA-C244-zelzele]
 sounds: []
-roots: []
+roots: [arabic-sayl]
+etymology_hook: "sel ← Arabic sayl 'torrent, flood', root s-y-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C244-zelzele]
 <!-- hl-knowledge: introduces=[FA-LEX-C244-CHIZ244-02]; assesses=[] -->
 
 **سیل** — *sel* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sel* is borrowed from Arabic *sayl*, "torrent, flood". Its Arabic root is *s-y-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 40,
-  "sourceHash": "fnv1a64:d196d993a7097acf",
+  "sourceHash": "fnv1a64:9805f8a13910cd90",
   "lessonIds": [
     "ES-C07-hablais"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch40.txt",
   "json": "spanish/narration/ch40.json",
-  "textHash": "fnv1a64:87f7771d0928ef18",
-  "jsonHash": "fnv1a64:8d2c89efc7af1e87",
+  "textHash": "fnv1a64:311d0fa024ce734b",
+  "jsonHash": "fnv1a64:892c3ac205793701",
   "findings": []
 }

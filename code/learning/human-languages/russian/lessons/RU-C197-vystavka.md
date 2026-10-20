@@ -14,7 +14,8 @@ romanization: "výstavka"
 concept_tag: RU-VESHCH197-VYSTAVKA
 prerequisites: [RU-C196-zhuk, RU-C197-khobbi]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "выставка is from выставить 'to put on show', вы- 'out' + ставить 'to set'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C197-khobbi]
 <!-- hl-knowledge: introduces=[RU-LEX-C197-VESHCH197-02]; assesses=[] -->
 
 **выставка** (*výstavka*) — "an exhibition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выставка** comes from *выставить*, "to put out on show", *вы-*, "out", with *ставить*, "to set", from *стать*, "to stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

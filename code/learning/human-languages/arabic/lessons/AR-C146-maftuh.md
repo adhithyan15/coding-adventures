@@ -14,7 +14,8 @@ romanization: "maftūḥ"
 concept_tag: AR-QUAL146-MAFTUH
 prerequisites: [AR-C146-khatir, AR-C146-amin]
 sounds: []
-roots: []
+roots: [f-t-ḥ]
+etymology_hook: "maftūḥ: built on the root f-t-ḥ, 'to open' (Lane); maftūḥ is the passive participle, 'opened'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C146-amin]
 <!-- hl-knowledge: introduces=[AR-LEX-C146-QUAL146-04]; assesses=[] -->
 
 **مفتوح** — *maftūḥ* — "open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مفتوح** (*maftūḥ*) is built on the native Arabic root *f-t-ḥ*, "to open" (Lane). *Maftūḥ* is the passive participle, "opened".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,7 @@ concept_tag: PT-COISAS218-CAIS
 prerequisites: [PT-C218-lanche, PT-C218-gorjeta]
 sounds: []
 roots: []
+etymology_hook: "cais ← French quai, from Gaulish — English quay is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C218-gorjeta]
 <!-- hl-knowledge: introduces=[PT-LEX-C218-COISAS218-04]; assesses=[] -->
 
 **o cais** — "a platform, a quay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cais** ← French *quai*, "quay" (EtymDB 2.1) — borrowed. The French word is Gaulish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

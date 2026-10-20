@@ -10,7 +10,8 @@ gloss: "to damage, to harm"
 concept_tag: ES-VERB-DANAR
 prerequisites: [ES-C504-proteger, ES-C504-fabrica]
 sounds: []
-roots: []
+roots: [damnum-latin]
+etymology_hook: "dañar ← Latin damnare 'to condemn', from damnum 'loss': -mn- became ñ — English damage"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C504-fabrica]
 > *The sun can damage your skin.*
 
 *El daño* is the damage.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dañar** ← Latin *damnare*, "to condemn, to fine" (EtymDB 2.1), from *damnum*, "loss" — inherited: the *-mn-* became *ñ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

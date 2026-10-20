@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-291-NOTRUF",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-291-NOTRUF"
+  ],
+  "after": []
+}

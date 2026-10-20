@@ -14,7 +14,8 @@ romanization: "ghurūb"
 concept_tag: AR-WAQT233-GHURUB
 prerequisites: [AR-C233-fajr, AR-C233-shuruq]
 sounds: []
-roots: []
+roots: [gh-r-b]
+etymology_hook: "ghurūb: built on the root gh-r-b, 'to set (of the sun)' (Lane); ghurūb is the verbal noun, 'setting'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C233-shuruq]
 <!-- hl-knowledge: introduces=[AR-LEX-C233-WAQT233-04]; assesses=[] -->
 
 **غروب** — *ghurūb* — "sunset".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غروب** (*ghurūb*) is built on the native Arabic root *gh-r-b*, "to set (of the sun)" (Lane). *Ghurūb* is the verbal noun, "setting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

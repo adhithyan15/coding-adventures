@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 660,
+  "sourceHash": "fnv1a64:9f5a8fbe2125d33b",
+  "lessonIds": [
+    "ES-C660-alojamiento",
+    "ES-C660-alojarse",
+    "ES-C660-hospedarse",
+    "ES-C660-hostal",
+    "ES-C660-albergue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch660.txt",
+  "json": "spanish/narration/ch660.json",
+  "textHash": "fnv1a64:b1b98543711a8f2e",
+  "jsonHash": "fnv1a64:3667e05d32ead848",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "vartate"
 concept_tag: SA-VERB-VARTATE
 prerequisites: [SA-C231-atithigrham, SA-C231-pravasah]
 sounds: []
-roots: []
+roots: [sanskrit-vartate]
+etymology_hook: "vartate ← root √vṛt 'turn, move on, exist'; MW compares Latin vertere and German werden"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C231-pravasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C232-ACT232-01]; assesses=[] -->
 
 **वर्तते** — *vartate* — "is present, exists".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vartate* is the present of the root √vṛt, "to turn, roll", and then "to proceed, take place, exist" (MW). MW compares Latin *vertere*, "to turn", and German *werden*, "to become". It is the verb inside *parivartayati*, "changes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

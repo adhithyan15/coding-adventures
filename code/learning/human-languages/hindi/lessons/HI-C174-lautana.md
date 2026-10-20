@@ -15,6 +15,7 @@ concept_tag: HI-VERB-LAUTANA
 prerequisites: [HI-C173-cunna, HI-C173-magna]
 sounds: []
 roots: []
+etymology_hook: "lauṭānā: the causing form of lauṭnā 'to come back'; origin uncertain, CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C173-magna]
 <!-- hl-knowledge: introduces=[HI-LEX-C174-ACT174-01]; assesses=[] -->
 
 **लौटाना** — *lauṭānā* — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लौटाना** (*lauṭānā*) is the causing form of *lauṭnā*, "to come back": to give back is to make something return. The origin of *lauṭnā* is uncertain, and CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

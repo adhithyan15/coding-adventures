@@ -14,7 +14,8 @@ romanization: "pāṭu"
 concept_tag: TA-VERB-PATU
 prerequisites: [TA-C150-uta, TA-C150-campal]
 sounds: []
-roots: []
+roots: [dravidian-paadu-sing]
+etymology_hook: "பாடு — native Dravidian (DEDR 4065); Malayalam pāṭuka, Kannada pāḍu, Telugu pāḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C150-campal]
 <!-- hl-knowledge: introduces=[TA-LEX-C150-QUAL150-03]; assesses=[] -->
 
 **பாடு** — *pāṭu* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாடு** (*pāṭu*) is native Dravidian. DEDR 4065 lists Malayalam *pāṭuka*, Kannada *pāḍu* and Telugu *pāḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

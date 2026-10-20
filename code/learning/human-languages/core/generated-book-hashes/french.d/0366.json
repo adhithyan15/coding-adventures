@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:6888fb911d5d6fd7",
+  "lessonIds": [
+    "FR-C366-benevole",
+    "FR-C366-benevolat",
+    "FR-C366-association",
+    "FR-C366-solidarite",
+    "FR-C366-communaute"
+  ],
+  "tex": "french/book/chapters/ch366-donner-un-coup-de-main.tex"
+}

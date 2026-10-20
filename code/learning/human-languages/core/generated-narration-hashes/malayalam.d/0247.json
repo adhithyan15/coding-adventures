@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 247,
-  "sourceHash": "fnv1a64:1e8ed2cc71a81301",
+  "sourceHash": "fnv1a64:a1a793d6421dbb03",
   "lessonIds": [
     "ML-C247-iratta",
     "ML-C247-prayamaya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch247.txt",
   "json": "malayalam/narration/ch247.json",
-  "textHash": "fnv1a64:4ee74090b0149504",
-  "jsonHash": "fnv1a64:10997e3ac5087404",
+  "textHash": "fnv1a64:df4bad8603f851e2",
+  "jsonHash": "fnv1a64:a212d1207340fc96",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "anoḷkhī"
 concept_tag: MR-GUN259-ANOLKHI
 prerequisites: [MR-C258-ratrabhar, MR-C258-divasbhar]
 sounds: []
-roots: []
+roots: [sanskrit-upalaksha]
+etymology_hook: "anoḷkhī: an- 'not' + oḷakh 'acquaintance' ← upalakṣa (CDIAL 2224) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C258-divasbhar]
 <!-- hl-knowledge: introduces=[MR-LEX-C259-GUN259-01]; assesses=[] -->
 
 **अनोळखी** — *anoḷkhī* — "unknown, unfamiliar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अनोळखी** (*anoḷkhī*) is *an-*, "not", and **ओळख**, "acquaintance", which CDIAL lists under Sanskrit *upalakṣa*, "distinguishing" (CDIAL 2224), with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

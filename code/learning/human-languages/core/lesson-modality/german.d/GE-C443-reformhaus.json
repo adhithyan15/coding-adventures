@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C443-reformhaus",
+    "language": "german",
+    "chapter": 443,
+    "sequence": 23840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4a49046ff20ea43"
+  },
+  "findings": []
+}

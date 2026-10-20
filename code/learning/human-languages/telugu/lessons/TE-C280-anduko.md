@@ -14,7 +14,8 @@ romanization: "andukō"
 concept_tag: TE-VERB-ANDUKO
 prerequisites: [TE-C279-olucu, TE-C280-ruddu]
 sounds: []
-roots: []
+roots: [dravidian-andu-reach]
+etymology_hook: "andukō: native andu 'to reach, take' (DEDR 149) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C280-ruddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C280-KRIYA280-02]; assesses=[] -->
 
 **అందుకో** — *andukō* — "to receive, to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అందుకో** (*andukō*) is native Dravidian: *andu*, "to reach, take with the hand", one word with Kannada *andu*, "to reach" (DEDR 149), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

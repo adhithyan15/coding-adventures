@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 654,
+  "sourceHash": "fnv1a64:0a4c1c67bd03bf37",
+  "lessonIds": [
+    "ES-C654-despegar",
+    "ES-C654-aterrizar",
+    "ES-C654-piloto",
+    "ES-C654-tripulacion",
+    "ES-C654-azafata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch654.txt",
+  "json": "spanish/narration/ch654.json",
+  "textHash": "fnv1a64:e84d50c997e4555f",
+  "jsonHash": "fnv1a64:a42ea15ddcf806a8",
+  "findings": []
+}

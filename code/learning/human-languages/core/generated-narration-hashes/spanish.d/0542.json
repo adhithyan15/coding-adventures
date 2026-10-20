@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:a44f62a62521420d",
+  "lessonIds": [
+    "ES-C542-comenzar",
+    "ES-C542-iniciar",
+    "ES-C542-comienzo",
+    "ES-C542-arranque",
+    "ES-C542-finalizar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch542.txt",
+  "json": "spanish/narration/ch542.json",
+  "textHash": "fnv1a64:6bd4eca3b530db0f",
+  "jsonHash": "fnv1a64:6e2007cbb9c3dd96",
+  "findings": []
+}

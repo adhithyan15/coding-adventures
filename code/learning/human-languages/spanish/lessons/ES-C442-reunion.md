@@ -11,6 +11,7 @@ concept_tag: ES-EVENT-REUNION
 prerequisites: [ES-C442-concertar, ES-C390-sala, ES-C440-celebrar]
 sounds: [written-accent, stress-final]
 roots: [unus-latin]
+etymology_hook: "reunión — re- 'again' + unir, from Latin unus 'one': a making-one-again"
 duration:
   max_seconds: 270
 requires:

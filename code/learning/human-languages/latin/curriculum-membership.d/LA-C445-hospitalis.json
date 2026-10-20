@@ -1,0 +1,11 @@
+{
+  "id": "LA-C445-hospitalis",
+  "pathSegment": "LA-PATH-445-DEVERTICULUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-445-DEVERTICULUM",
+      "order": 4
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 108,
-  "sourceHash": "fnv1a64:c5521394d34a5219",
+  "sourceHash": "fnv1a64:41ea84e65932222f",
   "lessonIds": [
     "KA-C108-kelage",
     "KA-C108-horage",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch108.txt",
   "json": "kannada/narration/ch108.json",
-  "textHash": "fnv1a64:d4c3b60bee822c81",
-  "jsonHash": "fnv1a64:ae27dfba01668320",
+  "textHash": "fnv1a64:310e55ba6a2cfe46",
+  "jsonHash": "fnv1a64:438936703d3ae58a",
   "findings": []
 }

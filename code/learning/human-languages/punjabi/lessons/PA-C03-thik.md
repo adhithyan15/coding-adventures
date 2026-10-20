@@ -11,7 +11,8 @@ gloss: "fine, well — and the reply maiṁ ṭhīk hāṁ"
 concept_tag: WORD-WELL
 prerequisites: [PA-C03-main, PA-C03-tusi-kivein-ho, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava, PA-S03-retroflex-row]
 sounds: [retroflex-tha, bihari-ii]
-roots: []
+roots: [indo-aryan-thikka]
+etymology_hook: "ṭhīk ← *ṭhīkka 'firm, right', which CDIAL derives, probably, from sthita 'standing' (CDIAL 5503)"
 duration:
   max_seconds: 220
 requires:
@@ -52,6 +53,8 @@ a hallmark of Indian sound.
 with Hindi and Urdu), one of the most useful in the language: *ṭhīk hai* ("OK /
 agreed"), *sab ṭhīk?* ("all well?"). Not every word has a far-flung cognate, and
 that is worth seeing too: *ṭhīk* is Indian to the core.
+
+CDIAL lists it under a reconstructed *\*ṭhīkka*, "firm, right", which it derives, probably, from Sanskrit *sthita*, "standing" (CDIAL 5503).
 
 ## Grammar Lens: the reply
 <!-- hl-knowledge: introduces=[PA-PHRASE-I-AM-FINE-03]; assesses=[PA-PHRASE-HOW-ARE-YOU-03, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-LEX-THIK-03] -->

@@ -14,7 +14,8 @@ romanization: "môshā"
 concept_tag: BN-THINGS122-MOSHA
 prerequisites: [BN-C121-bok, BN-C122-machhi]
 sounds: []
-roots: []
+roots: [sanskrit-mashaka]
+etymology_hook: "môshā ← Sanskrit maśaka 'mosquito', a tadbhava (CDIAL 9917)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C122-machhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **মশা** — *môshā* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মশা** (*môshā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *maśaka*, "mosquito" (CDIAL 9917).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

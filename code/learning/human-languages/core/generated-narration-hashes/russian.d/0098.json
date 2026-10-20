@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 98,
-  "sourceHash": "fnv1a64:9df3fae303246d0e",
+  "sourceHash": "fnv1a64:75e80ddaff2f881d",
   "lessonIds": [
     "RU-C98-frying-pan",
     "RU-C98-bucket",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch98.txt",
   "json": "russian/narration/ch98.json",
-  "textHash": "fnv1a64:e9c264bb8788750f",
-  "jsonHash": "fnv1a64:a3a69aabf46e36f9",
+  "textHash": "fnv1a64:03c8d5d26fe11892",
+  "jsonHash": "fnv1a64:897377f8dcdaefd8",
   "findings": []
 }

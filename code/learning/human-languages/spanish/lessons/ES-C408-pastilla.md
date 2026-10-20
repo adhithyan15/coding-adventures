@@ -10,8 +10,8 @@ gloss: pill or tablet
 concept_tag: ES-HEALTH-PASTILLA
 prerequisites: [ES-C408-doctor]
 sounds: [stress-penultimate, ll-y]
-roots: [pasta-spanish, diminutive-illa]
-etymology_hook: "pastilla is pasta plus the diminutive family -illa, a little formed portion; the medicinal tablet is one later use of that physical shape"
+roots: [pastillus-latin]
+etymology_hook: "pastilla ← Latin pastillus 'a little loaf, a lozenge'; it only looks like pasta + -illa"
 duration:
   max_seconds: 220
 requires:
@@ -39,8 +39,9 @@ what you take: **la pastilla**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-PASTILLA]; assesses=[] -->
 
-**Pastilla** belongs transparently with **pasta** and the small-form ending
-**-illa**: a little formed portion. The older physical idea survives in a bar
+**Pastilla** looks like **pasta** plus the small-form ending **-illa**, but it
+comes from Latin *pastillus*, a little loaf or lozenge (EtymDB 2.1, Lewis &
+Short). The older physical idea survives in a bar
 of soap or a mint. In the clinic, **una pastilla** is a small medicinal tablet.
 
 Do not overtranslate the shape. In this health frame, **pastilla** means the
@@ -59,5 +60,5 @@ pill or tablet, not pasta to eat.
 
 [PAUSE 3s] Pill or tablet? (*La pastilla*.)
 
-Sources: [DLE: pastilla](https://dle.rae.es/pastilla); [RAE, derivation and
-composition: *pastilla* from *pasta*](https://webfrl.rae.es/BRAE_DB_PDF/TOMO_V/XXIII/Alemany_333_349.pdf).
+Sources: EtymDB 2.1 (Fourrier & Sagot 2020), *pastilla* ← Latin *pastillus*;
+Lewis & Short, *pastillus*, a diminutive of *pānis*.

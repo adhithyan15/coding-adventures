@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C289-pubblico",
+    "language": "italian",
+    "chapter": 289,
+    "sequence": 16950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fef22b5f1eef6b09"
+  },
+  "findings": []
+}

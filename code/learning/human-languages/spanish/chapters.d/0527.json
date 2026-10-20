@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "En la carretera",
+  "label": "ch:es-en-la-carretera",
+  "canDo": "I can describe a road accident: two cars crashed, someone was run over or fell, and who came out unhurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R527-repaso-520-527",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can describe a road accident: two cars crashed, someone was run over or fell, and who came out unhurt.",
+    "assesses": [
+      "ES-LEX-C527-CHOQUE-03",
+      "ES-LEX-C527-CHOQUE-04",
+      "ES-LEX-C527-CHOQUE-05"
+    ]
+  }
+}

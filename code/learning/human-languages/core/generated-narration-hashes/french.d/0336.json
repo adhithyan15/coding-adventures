@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:5b275de0b6ada20b",
+  "lessonIds": [
+    "FR-C336-desaccord",
+    "FR-C336-objecter",
+    "FR-C336-objection",
+    "FR-C336-retorquer",
+    "FR-C336-contredire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch336.txt",
+  "json": "french/narration/ch336.json",
+  "textHash": "fnv1a64:8e734bbcd0311abf",
+  "jsonHash": "fnv1a64:beabcca05ba028e0",
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "a shoulder"
 concept_tag: IT-CORPO2-SPALLA
 prerequisites: [IT-C38-lingua, IT-C38-collo]
 sounds: []
-roots: []
+roots: [spatula-latin]
+etymology_hook: "spalla ← Latin spatula 'a flat piece', the shoulder blade — English spatula is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C38-collo]
 <!-- hl-knowledge: introduces=[IT-LEX-C38-CORPO2-03]; assesses=[] -->
 
 **la spalla** — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spalla** ← Vulgar Latin *spatla*, from Latin *spatula*, "a flat, broad piece" — inherited: the flat shoulder blade. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

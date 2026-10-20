@@ -14,7 +14,8 @@ romanization: "shiyāl"
 concept_tag: BN-THINGS120-SHIYAL
 prerequisites: [BN-C120-maphlar, BN-C120-har]
 sounds: []
-roots: []
+roots: [sanskrit-shrgala]
+etymology_hook: "shiyāl ← Sanskrit śṛgāla 'jackal', a tadbhava (CDIAL 12578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C120-har]
 <!-- hl-knowledge: introduces=[BN-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **শিয়াল** — *shiyāl* — "a jackal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিয়াল** (*shiyāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛgāla*, "jackal" (CDIAL 12578).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

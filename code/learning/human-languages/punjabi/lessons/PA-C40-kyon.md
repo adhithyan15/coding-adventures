@@ -11,8 +11,8 @@ gloss: why - the one member of the k- family this book never named
 concept_tag: PA-Q-KYON
 prerequisites: [PA-C40-ki-write, PA-C03-kivein]
 sounds: [bindi-nasal, aunkar-u]
-roots: []
-etymology_hook: The book's own mnemonic for the k- question family names four of its members and leaves this one out.
+roots: [ka-interrogative]
+etymology_hook: "kyoṁ: built on the old question stem ka-, as kī ← kim is (CDIAL 3164); CDIAL has no entry for kyoṁ itself"
 duration:
   max_seconds: 250
 requires:
@@ -54,6 +54,8 @@ the one it left out — so a reader could ask several things and never **why**.
 
 That is not a small omission. *Why* is the question that asks for a reason, and
 the next lesson is the word that answers it.
+
+Like every word in the family, it is built on the old question stem *ka-*, which CDIAL lists under Sanskrit *kim*, "what, why" (CDIAL 3164); it has no entry for *kyoṁ* itself.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-Q-KYON-01, PA-LEX-KIVEIN-03] -->

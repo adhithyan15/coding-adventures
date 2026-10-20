@@ -1,0 +1,11 @@
+{
+  "id": "IT-C312-albero-genealogico",
+  "pathSegment": "IT-PATH-312-ANTENATI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-312-ANTENATI",
+      "order": 4
+    }
+  ]
+}

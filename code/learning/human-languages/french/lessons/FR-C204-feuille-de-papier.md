@@ -14,6 +14,7 @@ concept_tag: FR-TRAV204-FEUILLE-DE-PAPIER
 prerequisites: [FR-C204-imprimante, FR-C204-telephone-portable]
 sounds: []
 roots: []
+etymology_hook: "feuille de papier — feuille + de + papier: a leaf of paper"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C204-telephone-portable]
 <!-- hl-knowledge: introduces=[FR-LEX-C204-TRAV204-05]; assesses=[] -->
 
 **la feuille de papier** — "a sheet of paper".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**feuille de papier** — *feuille*, "a leaf, a sheet", *de*, "of", and *papier*, "paper". *Feuille* ← Latin *folia*, "leaves", and *papier* ← Latin *papyrus* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

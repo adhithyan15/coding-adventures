@@ -12,6 +12,9 @@ Before the new one: say the Latin for true, then the Latin for uncertain.
 You'll want to know: calvus, calva, calvum.
 calvus, calva, calvum — "bald".
 
+The word, taken apart.
+calvus is inherited, usually traced to Proto-Indo-European klh2wos, "bald" (EtymDB 2.1); German kahl, "bald", is often compared (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for uncertain, then the Latin for bald.
 
 You'll want to know: barbātus, barbāta, barbātum.
 barbātus, barbāta, barbātum — "bearded".
+
+The word, taken apart.
+barbātus is built on barba, "beard" (Lewis & Short), with -ātus, "provided with": bearded.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for bald, then the Latin for bearded.
 You'll want to know: venustus, venusta, venustum.
 venustus, venusta, venustum — "charming".
 
+The word, taken apart.
+venustus is built on venus, "charm, loveliness", the word that is also the goddess's name, Venus (Lewis & Short). It is usually traced to Proto-Indo-European wenh1-, "to desire, to love".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for bearded, then the Latin for charming.
 You'll want to know: dēfessus, dēfessa, dēfessum.
 dēfessus, dēfessa, dēfessum — "worn out".
 
+The word, taken apart.
+dēfessus is the participle of dēfetīscor, "to grow weary" (Lewis & Short): dē-, "completely", with the verb behind fessus, "tired".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for charming, then the Latin for worn out.
 
 You'll want to know: vigil, vigilis.
 vigil, vigilis — "wakeful, watchful".
+
+The word, taken apart.
+vigil is built on vigeō, "to be lively, to thrive" (Lewis & Short), usually traced to Proto-Indo-European weg-, "to be fresh, to be awake" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

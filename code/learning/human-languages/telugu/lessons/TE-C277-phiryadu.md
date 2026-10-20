@@ -14,7 +14,8 @@ romanization: "phiryādu"
 concept_tag: TE-PANI277-PHIRYADU
 prerequisites: [TE-C276-vyakaranam, TE-C276-nallaballa]
 sounds: []
-roots: []
+roots: [persian-faryad]
+etymology_hook: "phiryādu ← Persian faryād 'complaint, outcry', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C276-nallaballa]
 <!-- hl-knowledge: introduces=[TE-LEX-C277-PANI277-01]; assesses=[] -->
 
 **ఫిర్యాదు** — *phiryādu* — "a complaint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫిర్యాదు** (*phiryādu*) is a loan from Persian *faryād*, "outcry, complaint", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Auf dem Campingplatz",
+  "label": "ch:ge-auf-dem-campingplatz",
+  "canDo": "I can talk about camping: the campsite, the caravan, the camper van, setting things up and taking them down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C425-abbauen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about camping: the campsite, the caravan, the camper van, setting things up and taking them down.",
+    "assesses": [
+      "GE-LEX-C425-CAMPING-03",
+      "GE-LEX-C425-CAMPING-04",
+      "GE-LEX-C425-CAMPING-05"
+    ]
+  }
+}

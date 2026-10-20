@@ -13,6 +13,9 @@ You'll want to know: ನಕ್ಷೆ.
 ನಕ್ಷೆ (nakṣe) — "a map". The ಕ್ಷ is k and ṣ joined, the same pair as in ಕ್ಷಮಿಸಿ.
 ನಕ್ಷೆ ತೋರಿಸಿ (nakṣe tōrisi) — "please show me the map".
 
+The word, taken apart.
+ನಕ್ಷೆ (nakṣe) came through Hindustani naqśā, "a map, a plan", which goes back to Arabic naqš, "a drawing, an engraving".
+
 What you've built.
 Something to point at when words run out.
 
@@ -72,6 +75,9 @@ Before the new one: say the Kannada for a map, then the Kannada for a ticket.
 You'll want to know: ಬಸ್.
 ಬಸ್ (bas) — "a bus". The ‑್ at the end keeps the last s bare, with no vowel after it.
 
+The word, taken apart.
+ಬಸ್ (bas) is a loan from English bus.
+
 What you've built.
 The everyday way to travel.
 
@@ -102,6 +108,9 @@ You'll want to know: ನಿಲ್ದಾಣ.
 ನಿಲ್ದಾಣ (nildāṇa) — "a station, a stop", from ನಿಲ್ಲು (nillu), "to stop, to stand", which you know.
 ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿ? (bas nildāṇa elli?) — "where is the bus stop?"
 
+The word, taken apart.
+ನಿಲ್ದಾಣ (nildāṇa) is nil, "to stand, stop" (DEDR 3675), native, and -dāṇa, "place", a reshaped form of Sanskrit sthāna, "place of abode" (CDIAL 13753). It is "the stopping place".
+
 What you've built.
 Where the bus stands.
 
@@ -131,6 +140,9 @@ Before the new one: say the Kannada for a bus, then the Kannada for a station.
 You'll want to know: ಹತ್ತಿರ.
 ಹತ್ತಿರ (hattira) — "near".
 ಹತ್ತಿರ ಇದೆಯಾ? (hattira ideyā?) — "is it near?"
+
+The word, taken apart.
+The origin of ಹತ್ತಿರ (hattira) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 What you've built.
 The answer you hope for.

@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Kichern und grinsen",
+  "label": "ch:ge-kichern-und-grinsen",
+  "canDo": "I can describe different ways of laughing and smiling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R473-review-466-473",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can describe different ways of laughing and smiling.",
+    "assesses": [
+      "GE-LEX-C473-KICHERN-03",
+      "GE-LEX-C473-KICHERN-04",
+      "GE-LEX-C473-KICHERN-05"
+    ]
+  }
+}

@@ -13,7 +13,8 @@ gloss: "a wound"
 concept_tag: IT-SAL185-FERITA
 prerequisites: [IT-C185-muscolo, IT-C185-pollice]
 sounds: []
-roots: []
+roots: [ferire-latin]
+etymology_hook: "ferita — 'a thing struck', from ferire 'to wound' ← Latin ferire 'to strike'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C185-pollice]
 <!-- hl-knowledge: introduces=[IT-LEX-C185-SAL185-03]; assesses=[] -->
 
 **la ferita** — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ferita** is the past participle of *ferire*, "to wound", used as a noun: a thing struck. *ferire* ← Latin *ferire*, "to strike". (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

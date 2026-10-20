@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 240,
-  "sourceHash": "fnv1a64:461c5a250b32b8a6",
+  "sourceHash": "fnv1a64:66b0f6eadc575db1",
   "lessonIds": [
     "AR-C240-muattal",
     "AR-C240-jahiz",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch240.txt",
   "json": "arabic/narration/ch240.json",
-  "textHash": "fnv1a64:23e050903b133457",
-  "jsonHash": "fnv1a64:d21991e8069a3ab8",
+  "textHash": "fnv1a64:eaacd46ca05cf3ba",
+  "jsonHash": "fnv1a64:706e2c1bb5e9126b",
   "findings": []
 }

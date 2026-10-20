@@ -14,7 +14,8 @@ romanization: "ōṭŭ"
 concept_tag: ML-VASTU257-OTU
 prerequisites: [ML-C256-asayam, ML-C256-upadesam]
 sounds: []
-roots: []
+roots: [dravidian-otu-shell]
+etymology_hook: "ōṭŭ: native Dravidian, one word with Tamil ōṭu and Kannada ōḍu (DEDR 1042)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C256-upadesam]
 <!-- hl-knowledge: introduces=[ML-LEX-C257-VASTU257-01]; assesses=[] -->
 
 **ഓട്** — *ōṭŭ* — "a roof tile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓട്** (*ōṭŭ*) is native Dravidian, one word with Tamil *ōṭu* and Kannada *ōḍu* (DEDR 1042). Its first sense is a shell or potsherd.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

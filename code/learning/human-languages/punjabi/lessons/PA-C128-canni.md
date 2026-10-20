@@ -14,7 +14,8 @@ romanization: "cānṇī"
 concept_tag: PA-THINGS128-CANNI
 prerequisites: [PA-C128-tufan, PA-C128-dharti]
 sounds: []
-roots: []
+roots: [indo-aryan-candrana]
+etymology_hook: "cānṇī ← *cāndraṇa 'moonlight', a reconstructed form; a tadbhava (CDIAL 4745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C128-dharti]
 <!-- hl-knowledge: introduces=[PA-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **ਚਾਨਣੀ** — *cānṇī* — "moonlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਾਨਣੀ** (*cānṇī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāndraṇa*, "moonlight", a form CDIAL reconstructs from its descendants (CDIAL 4745). It is built on Sanskrit *candra*, "moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

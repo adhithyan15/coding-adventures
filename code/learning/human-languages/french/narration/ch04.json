@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c0e33cc0295efa33",
+  "sourceHash": "fnv1a64:59eb9d5a5dfb4f97",
   "lessons": [
     {
       "id": "FR-C04-au-revoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:317c40c39a615c33",
+      "sourceHash": "fnv1a64:e3f1488338fc4a65",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does au revoir literally mean? (\"Until the seeing-again.\") What Latin verb is voir from, and two English cousins? (vidēre — vision, video, revise.) Which other language builds its goodbye the same \"see again\" way? (German auf Wiedersehen.) Next: à plus tard."
+              "text": "What does au revoir literally mean? (\"Until the seeing-again.\") What Latin verb is voir from, and two English cousins? (vidēre — vision, video, revise.) Which other language builds its goodbye the same \"see again\" way? (German auf Wiedersehen.) Next: \"see you later.\""
             }
           ]
         }
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a1391697504b159",
+      "sourceHash": "fnv1a64:c89ed3534101853f",
       "notice": null,
       "blocks": [
         {
@@ -261,8 +261,8 @@
               "rowCount": 3,
               "utterances": [
                 "French: à plus tard / à plus. Spanish: hasta luego. \"until / to …\": later.",
-                "French: à bientôt. Spanish: hasta pronto. \"until / to …\": soon.",
-                "French: à demain. Spanish: hasta mañana. \"until / to …\": tomorrow."
+                "French: à + \"soon\" (next lesson). Spanish: hasta pronto. \"until / to …\": soon.",
+                "French: à + \"tomorrow\" (the lesson after). Spanish: hasta mañana. \"until / to …\": tomorrow."
               ]
             }
           ]
@@ -320,7 +320,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does à plus tard literally mean? (\"To more late.\") What Spanish word is tard identical to at the root, and what does each mean now? (tarde — French \"late\", Spanish \"afternoon\".) What preposition carries French's soft goodbyes, like Spanish hasta? (à.) Next: à bientôt."
+              "text": "What does à plus tard literally mean? (\"To more late.\") What Spanish word is tard identical to at the root, and what does each mean now? (tarde — French \"late\", Spanish \"afternoon\".) What preposition carries French's soft goodbyes, like Spanish hasta? (à.) Next: \"see you soon.\""
             }
           ]
         }
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e13874e71f5c6638",
+      "sourceHash": "fnv1a64:9ae607e434324280",
       "notice": null,
       "blocks": [
         {
@@ -473,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two words hide inside bientôt? (bien \"well\" + tôt \"early\" becomes soon.) What does the circumflex on ô usually mark? (A dropped s — tost becomes tôt.) What's the Spanish equivalent of à bientôt? (hasta pronto.) Next: à demain."
+              "text": "What two words hide inside bientôt? (bien \"well\" + tôt \"early\" becomes soon.) What does the circumflex on ô usually mark? (A dropped s — tost becomes tôt.) What's the Spanish equivalent of à bientôt? (hasta pronto.) Next: \"until tomorrow.\""
             }
           ]
         }
@@ -492,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:905873b3be8612be",
+      "sourceHash": "fnv1a64:629d2fd5043d2f2a",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +519,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nasal-in — demain = duh-MAN: the -ain is a nasal (like pain, main); the final consonant is silent. ah duh-MAN."
+              "text": "nasal-in — demain = duh-MAN: the -ain is the nasal you heard in bien; the final consonant is silent. ah duh-MAN."
             }
           ]
         },
@@ -618,11 +618,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"demain\" from de mane \"from morning\"; Spanish \"mañana\" from maneana — same māne",
+              "instruction": "\"demain\" from dē māne \"from morning\"; Spanish \"mañana\" from maneana — same māne",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"demain\" ← *de mane* \"from morning\"; Spanish \"mañana\" ← *maneana* — same *māne*]"
+              "source": "[YOU SAY: \"demain\" ← *dē māne* \"from morning\"; Spanish \"mañana\" ← *maneana* — same *māne*]"
             },
             {
               "kind": "prompt",
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:655a1339604a2422",
+      "sourceHash": "fnv1a64:70de677e586c1bf2",
       "notice": null,
       "blocks": [
         {
@@ -720,7 +720,7 @@
             },
             {
               "kind": "speech",
-              "text": "— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Très bien. Bon… à demain, Marc. — Oui, à demain, Chloé. Au revoir!"
+              "text": "— Salut! Je m'appelle Chloé. Comment tu t'appelles? — Je m'appelle Marc. Enchanté. — Ça va? — Ça va bien, merci, et toi? — Bien. Bon… à demain, Marc. — Oui, à demain, Chloé. Au revoir!"
             }
           ]
         },
@@ -792,7 +792,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does au revoir literally promise? (A re-seeing — \"until we see again.\") Which preposition carries French's soft goodbyes? (à — like Spanish hasta.) You can now hold a whole short French exchange, hello to goodbye. Next chapter: numbers, or everyday courtesies (s'il vous plaît)."
+              "text": "What does au revoir literally promise? (A re-seeing — \"until we see again.\") Which preposition carries French's soft goodbyes? (à — like Spanish hasta.) You can now hold a whole short French exchange, hello to goodbye. Next chapter: your first verbs — to speak, to live somewhere, to work."
             }
           ]
         }
@@ -812,7 +812,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:33ade3aa97306e70",
+      "sourceHash": "fnv1a64:44ae788675989b7e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -835,7 +835,7 @@
             },
             {
               "kind": "speech",
-              "text": "French sprinkles little marks over its vowels, and they are not decoration — each does a specific job. You've read them since enchanté and très. Three of them ride on e, and one of the three hides a word you already know in English."
+              "text": "French sprinkles little marks over its vowels, and they are not decoration — each does a specific job. You've read one since enchanté, and another on the à of your goodbyes. Three of them ride on e, and one of the three hides a word you already know in English."
             }
           ]
         },
@@ -846,11 +846,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "é — accent aigu (rising stroke, like Spanish's). It fixes the sound: é = a crisp \"ay\" (no glide). café, enchanté, été (\"summer\")."
+              "text": "é — accent aigu (rising stroke, like Spanish's). It fixes the sound: é = a crisp \"ay\" (no glide). enchanté, été (\"summer\")."
             },
             {
               "kind": "speech",
-              "text": "è — accent grave (falling stroke). è = an open \"eh\" as in bed. très (\"very\"), mère (\"mother\"), père. The grave also just separates look-alikes: a (\"has\") vs à (\"to\"); ou (\"or\") vs où (\"where\") — same job as Spanish tu/tú."
+              "text": "è — accent grave (falling stroke). è = an open \"eh\" as in bed. première (\"first\" — English borrowed it as premiere), Genève (\"Geneva\"). The grave also just separates look-alikes: a (\"has\") vs à (\"to\") — same job as Spanish tu/tú."
             },
             {
               "kind": "speech",
@@ -875,7 +875,7 @@
                 "English kept it"
               ],
               "columns": 3,
-              "rowCount": 8,
+              "rowCount": 7,
               "utterances": [
                 "French (hat): forêt. the lost s: forest. English kept it: forest.",
                 "French (hat): hôpital. the lost s: hospital. English kept it: hospital.",
@@ -883,8 +883,7 @@
                 "French (hat): bête. the lost s: beste. English kept it: beast.",
                 "French (hat): fête. the lost s: feste. English kept it: feast.",
                 "French (hat): pâte. the lost s: paste. English kept it: paste / pasta.",
-                "French (hat): goût. the lost s: gust. English kept it: (Latin gustus, cf. gusto).",
-                "French (hat): être. the lost s: estre. English kept it: (Latin stāre, cf. stare/estar)."
+                "French (hat): goût. the lost s: gust. English kept it: (Latin gustus, cf. gusto)."
               ]
             },
             {
@@ -918,11 +917,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"é\" = ay (café), \"è\" = eh (très) — hear the two sounds",
+              "instruction": "\"é\" = ay (enchanté), \"è\" = eh (première) — hear the two sounds",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"é\" = *ay* (*café*), \"è\" = *eh* (*très*) — hear the two sounds]"
+              "source": "[YOU SAY: \"é\" = *ay* (*enchanté*), \"è\" = *eh* (*première*) — hear the two sounds]"
             },
             {
               "kind": "prompt",
@@ -936,11 +935,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"à\" vs \"a\", \"où\" vs \"ou\" — the grave that only separates",
+              "instruction": "\"à\" vs \"a\" — the grave that only separates",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"à\" vs \"a\", \"où\" vs \"ou\" — the grave that only separates]"
+              "source": "[YOU SAY: \"à\" vs \"a\" — the grave that only separates]"
             }
           ]
         },
@@ -1133,7 +1132,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:2de51ab3c2c783ac",
+      "sourceHash": "fnv1a64:75790fa07aee30c8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1167,7 +1166,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "French loves to fuse vowel pairs into one sound: ai = eh, au = oh, ou = oo, oi = wa. Usually that's what you want. But sometimes two vowels really should be sounded separately — and the tréma is how the spelling says so: \"break these apart; pronounce the marked vowel on its own.\""
+              "text": "French loves to fuse vowel pairs into one sound: a-i says eh, a-u oh, o-u oo, o-i wa. Usually that's what you want. But sometimes two vowels really should be sounded separately — and the tréma is how the spelling says so: \"break these apart; pronounce the marked vowel on its own.\""
             },
             {
               "kind": "speech",
@@ -1179,7 +1178,7 @@
             },
             {
               "kind": "speech",
-              "text": "maïs = ma-EES (\"corn\") — vs mais (meh, \"but\"). The two dots are the only difference, and they flip the meaning."
+              "text": "maïs = ma-EES (\"corn\"). Without the dots the same letters blend to meh, a different word: the dots flip the meaning."
             },
             {
               "kind": "speech",
@@ -1187,7 +1186,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the tréma is the opposite of a blend instruction: where ai says \"merge,\" aï says \"don't.\""
+              "text": "So the tréma is the opposite of a blend instruction: where a-i says \"merge,\" aï says \"don't.\""
             }
           ]
         },
@@ -1225,11 +1224,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"maïs\" (ma-EES, corn) vs \"mais\" (meh, but) — the dots flip it",
+              "instruction": "\"maïs\" (ma-EES, corn), then the blended meh the dots forbid",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"maïs\" (ma-EES, corn) vs \"mais\" (meh, but) — the dots flip it]"
+              "source": "[YOU SAY: \"maïs\" (ma-EES, corn), then the blended *meh* the dots forbid]"
             }
           ]
         },

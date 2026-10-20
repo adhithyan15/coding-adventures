@@ -14,7 +14,8 @@ romanization: "andhakāraḥ"
 concept_tag: SA-THG224-ANDHAKARAH
 prerequisites: [SA-C224-kendram, SA-C224-attalika]
 sounds: []
-roots: []
+roots: [sanskrit-andhakara]
+etymology_hook: "andhakāra = andha 'blind, dark' + kāra 'making' (CDIAL 386); Gujarati ãdhārũ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C224-attalika]
 <!-- hl-knowledge: introduces=[SA-LEX-C224-THG224-03]; assesses=[] -->
 
 **अन्धकारः** — *andhakāraḥ* — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*andhakāra* is built on *andha*, "blind, dark", and *kāra*, "making", from the root √kṛ (CDIAL 386): what makes blind. It lives on as Gujarati *ãdhārũ* and Marathi *ãdhār*, "darkness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

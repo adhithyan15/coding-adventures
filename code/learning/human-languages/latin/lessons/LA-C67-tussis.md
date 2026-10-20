@@ -13,7 +13,8 @@ gloss: "a cough"
 concept_tag: LA-MORBUS-TUSSIS
 prerequisites: [LA-C66-sanus, LA-C67-febris]
 sounds: []
-roots: []
+roots: [tussis-latin]
+etymology_hook: "tussis 'cough' — probably from PIE *(s)tewd- 'to push, to strike'; medical pertussis is built on it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C67-febris]
 <!-- hl-knowledge: introduces=[LA-LEX-C67-MORBUS-02]; assesses=[] -->
 
 **tussis, tussis** — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tussis** is probably inherited, from a Proto-Indo-European root *\*(s)tewd-*, "to push, to strike" (EtymDB 2.1). Doctors still say *pertussis*, "whooping cough", built from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

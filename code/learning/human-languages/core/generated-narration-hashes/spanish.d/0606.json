@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 606,
+  "sourceHash": "fnv1a64:6385270754206556",
+  "lessonIds": [
+    "ES-C606-solidaridad",
+    "ES-C606-voluntariado",
+    "ES-C606-asociacion",
+    "ES-C606-caridad",
+    "ES-C606-participar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch606.txt",
+  "json": "spanish/narration/ch606.json",
+  "textHash": "fnv1a64:d41950ad990b663b",
+  "jsonHash": "fnv1a64:75f3bee49ca73663",
+  "findings": []
+}

@@ -13,7 +13,8 @@ gloss: "traffic"
 concept_tag: GE-THING242-VERKEHR
 prerequisites: [GE-C241-ursache, GE-C241-verhalten]
 sounds: []
-roots: []
+roots: [germanic-karzijana]
+etymology_hook: "Verkehr — ver- + the verb 'to turn': coming and going, then traffic"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C241-verhalten]
 <!-- hl-knowledge: introduces=[GE-LEX-C242-THING242-01]; assesses=[] -->
 
 **der Verkehr** — "traffic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Verkehr** is *ver-* + the verb "to turn", Old High German *kēran* (EtymDB 2.1): turning to and fro, dealings, then traffic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

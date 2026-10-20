@@ -11,8 +11,9 @@ concept_tag: VERB-FUTURE
 prerequisites: [ES-C10-ir-a-futuro]
 sounds: [vowel-e]
 roots: [habere]
+etymology_hook: "hablaré — hablar + he 'I have': late Latin built the future as cantare habeo, 'I have to sing'"
 duration:
-  max_seconds: 240
+  max_seconds: 273
 requires:
   knowledge: [ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-LEX-HABLAR]
 introduces:
@@ -64,15 +65,13 @@ This is the one Spanish tense built on the **complete infinitive**. Nothing is
 chopped off. Every other tense you have met removes the *-ar* first; this one
 leaves it alone and simply adds to the end.
 
-**Where the ending comes from.** It is a verb in its own right, worn down.
-Latin speakers said *hablare habeo* — literally "**I have** to speak," in the
-sense of "I am to speak," a thing still ahead of me. Said often enough, the
-*habeo* shrank onto the back of the infinitive and stopped being a separate
-word:
+**Where the ending comes from.** It is a verb, worn down. Late Latin said
+*cantare habeo*, "**I have** to sing": a thing still ahead of me. Old Spanish
+said *hablar he*, "I have to speak", and the *he* shrank onto the infinitive:
 
 ```
-hablare habeo   →   hablar é   →   hablaré
-"I have to speak"                  "I will speak"
+hablar he          →   hablaré
+"I have to speak"       "I will speak"
 ```
 
 So the Spanish future is an obligation that turned into a prediction — the

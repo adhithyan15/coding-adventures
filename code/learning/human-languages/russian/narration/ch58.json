@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Sky, Sun, Moon, Star, Cloud",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e71aacb7b884af42",
+  "sourceHash": "fnv1a64:ec1639ae79716a45",
   "lessons": [
     {
       "id": "RU-C58-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54e33817f6543cbc",
+      "sourceHash": "fnv1a64:513ee74be47da2d4",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "небо (nébo) — borrowed from Church Slavonic, says Vasmer; the native East Slavic form is нёбо, now \"the palate\". Both go back to Proto-Slavic nebo, a cousin of Sanskrit nábhas, \"mist, sky\", Greek néphos, \"cloud\", and Latin nebula, \"mist\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d6180b2b6f6fa2a",
+      "sourceHash": "fnv1a64:369fa673722b00b0",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "солнце (sólntse) from Proto-Slavic sŭlnĭce, a diminutive of sŭlnĭ, \"sun\", built like сердце, \"heart\" (Vasmer). Vasmer lists Lithuanian sáulė, \"sun\", and Sanskrit svar, \"sun, light\"; Latin sōl and English sun go back to the same PIE word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5de7305abc2e89e8",
+      "sourceHash": "fnv1a64:08841d7cdb4aa25e",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "луна (luná) from Proto-Slavic luna, from louksnā, \"the bright one\" — inherited. Vasmer lists Latin lūna, Old Prussian lauxnos, \"stars\", and Greek lýchnos, \"a lamp\", all from a root \"to shine\", with луч, \"a ray\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f66f15bce1bb2b37",
+      "sourceHash": "fnv1a64:de1e3d07437fe17c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "звезда (zvezdá) from Proto-Slavic gvězda — inherited; г before ě became з. Vasmer relates it to Lithuanian žvaigždė, \"star\", and Latvian zvaigzne, from a root \"to shine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:584abe21244168ed",
+      "sourceHash": "fnv1a64:ab198d931603ea88",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "облако (óblako) — borrowed from Church Slavonic, says Vasmer; the native form was Old Russian obolokŭ. Both are ob-volkŭ, \"what is drawn over\", from the root of волочь, \"to drag\", a cousin of Greek hélkō, \"I drag\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

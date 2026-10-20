@@ -14,7 +14,8 @@ romanization: "maitānaṁ"
 concept_tag: ML-STHALAM279-MAITANAM
 prerequisites: [ML-C278-kettitam, ML-C278-jilla]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "maitānaṁ ← Persian maidān 'open ground', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C278-jilla]
 <!-- hl-knowledge: introduces=[ML-LEX-C279-STHALAM279-01]; assesses=[] -->
 
 **മൈതാനം** — *maitānaṁ* — "a sports ground, a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മൈതാനം** (*maitānaṁ*) ← Persian *maidān*, "an open ground, a square", by way of Hindustani, with Malayalam's noun ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

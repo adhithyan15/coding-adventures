@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-442-HISTORICO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-442-HISTORICO"
+  ],
+  "after": []
+}

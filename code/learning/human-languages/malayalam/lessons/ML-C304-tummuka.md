@@ -14,7 +14,8 @@ romanization: "tummuka"
 concept_tag: ML-VERB-TUMMUKA
 prerequisites: [ML-C303-vilapesuka, ML-C304-svasikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tummu-sneeze]
+etymology_hook: "tummuka: native Dravidian, one word with Tamil tummu and Telugu tummu (DEDR 3336)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C304-svasikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C304-KRIYA304-02]; assesses=[] -->
 
 **തുമ്മുക** — *tummuka* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുമ്മുക** (*tummuka*) is native Dravidian, one word with Tamil *tummu* and Telugu *tummu* (DEDR 3336).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

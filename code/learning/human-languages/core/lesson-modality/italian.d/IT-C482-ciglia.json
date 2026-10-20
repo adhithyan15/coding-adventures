@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C482-ciglia",
+    "language": "italian",
+    "chapter": 482,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9ade5374a2c8705"
+  },
+  "findings": []
+}

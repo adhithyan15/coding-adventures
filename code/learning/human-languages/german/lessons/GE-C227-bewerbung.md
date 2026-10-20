@@ -13,7 +13,8 @@ gloss: "an application"
 concept_tag: GE-THING227-BEWERBUNG
 prerequisites: [GE-C226-beschreibung, GE-C226-besuch]
 sounds: []
-roots: []
+roots: [germanic-hwerbana]
+etymology_hook: "Bewerbung — bewerben 'to apply' + -ung"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C226-besuch]
 <!-- hl-knowledge: introduces=[GE-LEX-C227-THING227-01]; assesses=[] -->
 
 **die Bewerbung** — "an application".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bewerbung** is *bewerben*, "to apply", + *-ung*. The verb is built on Old High German *werban* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

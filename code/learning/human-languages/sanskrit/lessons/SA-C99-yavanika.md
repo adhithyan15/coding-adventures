@@ -14,7 +14,8 @@ romanization: "yavanikā"
 concept_tag: SA-THINGS99-YAVANIKA
 prerequisites: [SA-C99-upadhanam, SA-C99-kambalah]
 sounds: []
-roots: []
+roots: [sanskrit-yavanika]
+etymology_hook: "yavanikā 'curtain': MW lists it under yavana 'Greek', beside yavanikā 'Greek woman'; the link is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C99-kambalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C99-THINGS99-04]; assesses=[] -->
 
 **यवनिका** — *yavanikā* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW lists *yavanikā* "a screen of cloth, a curtain" under *yavana* "Ionian, Greek", beside *yavanikā* "a Greek woman", which suggests "the Greek cloth". MW also records a form *javanikā*, so the link with the Greeks is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

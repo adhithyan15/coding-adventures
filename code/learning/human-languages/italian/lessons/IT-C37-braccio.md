@@ -13,7 +13,8 @@ gloss: "an arm"
 concept_tag: IT-CORPO1-BRACCIO
 prerequisites: [IT-C35-molto-poco, IT-C35-abbastanza]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "braccio ← Latin bracchium 'arm' — English bracelet comes from the same word"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [IT-C35-abbastanza]
 <!-- hl-knowledge: introduces=[IT-LEX-C37-CORPO1-01]; assesses=[] -->
 
 **il braccio** — "an arm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**braccio** ← Latin *bracchium*, "arm" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

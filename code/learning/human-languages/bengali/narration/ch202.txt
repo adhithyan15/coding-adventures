@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a cloth bag, then the Bengali for a glas
 You'll want to know: ভাটা.
 ভাটা — bhāṭā — "low tide".
 
+The word, taken apart.
+ভাটা (bhāṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhraṣṭa, "fallen" (CDIAL 9655). CDIAL lists Bengali bhāṭā, "low-lying land, ebb-tide".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a glass, then the Bengali for low tide.
 
 You'll want to know: চোর.
 চোর — chor — "a thief".
+
+The word, taken apart.
+চোর (chor) is inherited from Sanskrit cora, "thief", and has come down with almost no change (CDIAL 4931).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for low tide, then the Bengali for a thief.
 You'll want to know: ডাকাত.
 ডাকাত — ḍākāt — "a robber".
 
+The word, taken apart.
+ডাকাত (ḍākāt) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍākka, "robber, robbery", a form CDIAL reconstructs from its descendants (CDIAL 5543). CDIAL lists Bengali ḍakāit and ḍāku, "robber", and reports a view that the word is non-Aryan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a thief, then the Bengali for a robber.
 You'll want to know: মামলা.
 মামলা — māmlā — "a lawsuit".
 
+The word, taken apart.
+মামলা (māmlā) is a loan from Arabic muʿāmala, "dealing, transaction", which reached Bengali through Persian. Its Arabic root is ʿ-m-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a robber, then the Bengali for a lawsuit
 
 You'll want to know: ভোট.
 ভোট — bhoṭ — "a vote".
+
+The word, taken apart.
+ভোট (bhoṭ) is a loan from English vote.
 
 What you've built.
 One more word for this chapter.

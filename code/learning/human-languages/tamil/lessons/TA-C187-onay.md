@@ -14,7 +14,8 @@ romanization: "ōnāy"
 concept_tag: TA-PORUL187-ONAY
 prerequisites: [TA-C187-kalai, TA-C187-kanru]
 sounds: []
-roots: []
+roots: [dravidian-naay-dog]
+etymology_hook: "ஓநாய் — native Dravidian (DEDR 1026); Malayalam ō-nāy 'wolf'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C187-kanru]
 <!-- hl-knowledge: introduces=[TA-LEX-C187-PORUL187-04]; assesses=[] -->
 
 **ஓநாய்** — *ōnāy* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஓநாய்** (*ōnāy*) is native Dravidian. DEDR 1026 lists Malayalam *ō-nāy*, "wolf". Its second half is *nāy*, "dog".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "already, now"
 concept_tag: LA-QUANTUM-IAM
 prerequisites: [LA-C104-mox, LA-C105-raro]
 sounds: []
-roots: []
+roots: [iam-latin]
+etymology_hook: "iam 'already' — probably from PIE *Hyām, an old adverb"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C105-raro]
 <!-- hl-knowledge: introduces=[LA-LEX-C105-QUANTUM-02]; assesses=[] -->
 
 **iam** — "already, now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iam** is probably inherited, from a Proto-Indo-European adverb *\*Hyām*, "already, then" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

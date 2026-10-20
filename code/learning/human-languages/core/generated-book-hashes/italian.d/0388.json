@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:bc8787f0fc3037c1",
+  "lessonIds": [
+    "IT-C388-scadere",
+    "IT-C388-valido",
+    "IT-C388-rinnovare",
+    "IT-C388-rinnovo",
+    "IT-C388-tessera"
+  ],
+  "tex": "italian/book/chapters/ch388-documenti-in-regola.tex"
+}

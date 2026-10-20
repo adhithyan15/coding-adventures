@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C555-vejez",
+    "language": "spanish",
+    "chapter": 555,
+    "sequence": 17380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6e83292b14de5dd"
+  },
+  "findings": []
+}

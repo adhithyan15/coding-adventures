@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a fly, then the Gujarati for a bee.
 You'll want to know: પતંગિયું.
 પતંગિયું (patangiyũ) — "a butterfly".
 
+The word, taken apart.
+પતંગિયું (patangiyũ) is built on Sanskrit pataṅga, "insect", a word used in the Veda for flying things (CDIAL 7721). CDIAL explains the Sanskrit word as a word for "wing" crossed with some non-Aryan word, and lists no Gujarati form there.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a bee, then the Gujarati for a butterfl
 
 You'll want to know: ખિસકોલી.
 ખિસકોલી (khiskolī) — "a squirrel".
+
+The word, taken apart.
+The origin of ખિસકોલી (khiskolī) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a butterfly, then the Gujarati for a sq
 You'll want to know: મરઘી.
 મરઘી (marghī) — "a hen".
 
+The word, taken apart.
+મરઘી (marghī) is a loan, usually traced to Persian murgh, "bird, fowl".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a squirrel, then the Gujarati for a hen
 You'll want to know: ગાલ.
 ગાલ (gāl) — "a cheek".
 
+The word, taken apart.
+ગાલ (gāl) is a tadbhava of Sanskrit galla, "cheek" (CDIAL 4089). CDIAL compares gaṇḍa, "cheek", and reports a view that the word came from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a hen, then the Gujarati for a cheek.
 
 You'll want to know: કપાળ.
 કપાળ (kapāḷ) — "a forehead".
+
+The word, taken apart.
+કપાળ (kapāḷ) is a tadbhava. CDIAL lists it under kappāla, a variant of Sanskrit kapāla, "skull, cranium" (CDIAL 2744). CDIAL takes the Sanskrit word as Indo-European but thinks the variant forms suggest some Austroasiatic influence.
 
 What you've built.
 One more word for this chapter.

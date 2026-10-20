@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [GU-C02-shun, GU-W02-bha]
 sounds: [e-sign]
 roots: [ka-interrogative]
+etymology_hook: "kem: on the old interrogative stem ka-, like koṇ and kyāre; CDIAL has no entry for kem itself"
 duration:
   max_seconds: 240
 requires:

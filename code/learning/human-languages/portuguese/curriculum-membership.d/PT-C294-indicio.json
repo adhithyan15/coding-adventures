@@ -1,0 +1,11 @@
+{
+  "id": "PT-C294-indicio",
+  "pathSegment": "PT-PATH-294-INVESTIGAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-294-INVESTIGAR",
+      "order": 4
+    }
+  ]
+}

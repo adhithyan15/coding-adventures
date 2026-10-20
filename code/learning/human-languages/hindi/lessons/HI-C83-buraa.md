@@ -14,7 +14,8 @@ romanization: "burā"
 concept_tag: HI-ADJ-BAD
 prerequisites: [HI-C41-good, HI-C82-motaa]
 sounds: []
-roots: []
+roots: [indo-aryan-bura]
+etymology_hook: "burā ← *bura 'defective', a form CDIAL reconstructs (CDIAL 9289)"
 duration:
   max_seconds: 240
 requires:
@@ -64,6 +65,8 @@ A second everyday one: **बुरा लगना** — *burā lagnā*, "to fee
 *to strike one as bad*. Hindi describes being offended as something the remark
 does, not something you do.
 
+**बुरा** comes from a reconstructed *\*bura*, "defective" (CDIAL 9289).
+
 ## Grammar Lens: a pair that behaves identically
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C83-CHAR-01, HI-LEX-C41-ADJ-03, HI-GRAMMAR-C41-ADJ-SYSTEM] -->
 
@@ -88,6 +91,6 @@ of the six words ahead do **not** bend.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C83-CHAR-01, HI-LEX-C41-ADJ-03, HI-LEX-C82-BODY-03] -->
 
-[PAUSE 3s] What does **बुरा मत मानो** literally say? (Do not consider it bad.)
+[PAUSE 3s] What does Hindi's "no offence" literally say? (Do not consider it bad.)
 Does **बुरा** bend? (Yes — it ends in **-आ**.) And **मोटा**, from the last
 chapter? (Also yes — same ending, same behaviour.)

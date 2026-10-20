@@ -13,7 +13,8 @@ gloss: "the metal lead"
 concept_tag: LA-RES222-PLUMBUM
 prerequisites: [LA-C222-aes, LA-C222-ferrum]
 sounds: []
-roots: []
+roots: [plumbum-latin]
+etymology_hook: "plumbum 'lead' — related to Greek molybdos; both probably loans; English plumber"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C222-ferrum]
 <!-- hl-knowledge: introduces=[LA-LEX-C222-RES222-05]; assesses=[] -->
 
 **plumbum, plumbī** — "the metal lead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**plumbum** is related to Greek *molybdos*, "lead" (Lewis & Short), but neither came straight from the other; both are thought to be loans from an unknown language. English *plumb* and *plumber* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lāvṇo"
 concept_tag: MW-VERB-LAVNO
 prerequisites: [MW-C55-sikhno, MW-C55-bhulno]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "lāvṇo 'bring': CDIAL lists Hindi lānā 'to bring' under labhate 'takes', crossed with dadāti (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C55-bhulno]
 <!-- hl-knowledge: introduces=[MW-LEX-C55-VERBS55-04]; assesses=[] -->
 
 **लावणो** — *lāvṇo* — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL gives no Marwari row for **लावणो** (*lāvṇo*), "to bring". It lists Hindi *lānā*, "to bring", under Sanskrit *labhate*, "takes", in forms it explains as crossed with *dadāti*, "gives" (CDIAL 10948). The match is through Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

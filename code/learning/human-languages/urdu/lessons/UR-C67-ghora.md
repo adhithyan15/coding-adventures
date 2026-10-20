@@ -14,7 +14,8 @@ romanization: "ghoṛā"
 concept_tag: UR-NATURE67-GHORA
 prerequisites: [UR-C67-kutta, UR-C67-billi]
 sounds: []
-roots: []
+roots: [sanskrit-ghotaka]
+etymology_hook: "ghoṛā ← Sanskrit ghoṭa 'horse', which CDIAL calls non-Aryan, probably Dravidian (CDIAL 4516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C67-billi]
 <!-- hl-knowledge: introduces=[UR-LEX-C67-NATURE67-04]; assesses=[] -->
 
 **گھوڑا** — *ghoṛā* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گھوڑا** (*ghoṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghoṭa*, "horse" (CDIAL 4516). CDIAL calls the word non-Aryan, probably Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

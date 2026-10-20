@@ -14,7 +14,8 @@ romanization: "tolagiñcu"
 concept_tag: TE-VERB-TOLAGINCU
 prerequisites: [TE-C282-sandarsincu, TE-C283-charj-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-tolai-perish]
+etymology_hook: "tolagiñcu: native Dravidian; DEDR 3519 lists tolagincu 'to remove' with Kannada tolagisu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C283-charj-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C283-KRIYA283-02]; assesses=[] -->
 
 **తొలగించు** — *tolagiñcu* — "to remove, to delete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తొలగించు** (*tolagiñcu*) is native Dravidian. DEDR 3519 lists a nasalised *tolagiñcu*, "to remove", with Kannada *tolagisu*, "to cause to go away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

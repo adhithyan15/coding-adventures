@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 128,
-  "sourceHash": "fnv1a64:ae2a418741dd2b44",
+  "sourceHash": "fnv1a64:0a8a38b31e5d0563",
   "lessonIds": [
     "SA-C128-bhayankarah",
     "SA-C128-mithya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch128.txt",
   "json": "sanskrit/narration/ch128.json",
-  "textHash": "fnv1a64:214ba5eade057d8c",
-  "jsonHash": "fnv1a64:1cd0dc3556de9dd9",
+  "textHash": "fnv1a64:ca15b620b18173ad",
+  "jsonHash": "fnv1a64:749c7a369fa09cf5",
   "findings": []
 }

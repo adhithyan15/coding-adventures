@@ -11,7 +11,8 @@ romanization: "mosaru"
 concept_tag: KA-NOUN-CURD
 prerequisites: [KA-C60-bird, KA-C59-wind]
 sounds: []
-roots: []
+roots: [dravidian-mosaru-curd]
+etymology_hook: "mosaru: native Dravidian, one word with Tamil mucar (DEDR 4902)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C60-bird]
 ಮೊಸರು is what ಹಾಲು becomes when it is left overnight with a spoonful of yesterday's ಮೊಸರು in it. The ಹಸು from the last chapter is the front of that chain and this is the end of it.
 
 It closes a meal rather than opening one. ಮೊಸರು over ಅನ್ನ is the last thing on the plate, and a Kannada speaker will tell you the meal is not finished without it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಸರು** (*mosaru*) is native Dravidian, one word with Tamil *mucar* (DEDR 4902). DEDR gives Kannada *mosar(u)*. DEDR 4902 compares Sanskrit *moraṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

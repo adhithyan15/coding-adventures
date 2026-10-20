@@ -14,7 +14,8 @@ romanization: "māmā"
 concept_tag: GU-FAMILY2-MAMA
 prerequisites: [GU-C52-kaka, GU-C52-kaki]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmā ← Sanskrit māma 'uncle', a nursery word; similar words in Dravidian (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C52-kaki]
 <!-- hl-knowledge: introduces=[GU-LEX-C52-FAMILY2-03]; assesses=[] -->
 
 **મામા** (*māmā*) — "uncle (mother's brother)". Gujarati names the side of the family.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મામા** (*māmā*) is a tadbhava of Sanskrit *māma*, "uncle" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

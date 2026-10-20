@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 78,
-  "sourceHash": "fnv1a64:f1826606413573f4",
+  "sourceHash": "fnv1a64:9c0bc49ced9878d1",
   "lessonIds": [
     "FA-C78-safar",
     "FA-C78-musighi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch78.txt",
   "json": "persian/narration/ch78.json",
-  "textHash": "fnv1a64:de6824b8bce6bcd5",
-  "jsonHash": "fnv1a64:c0e09437002701c5",
+  "textHash": "fnv1a64:e2584cb33670e80b",
+  "jsonHash": "fnv1a64:0f91a1015fd53fbc",
   "findings": []
 }

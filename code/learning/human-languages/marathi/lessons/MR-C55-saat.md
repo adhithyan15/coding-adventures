@@ -11,7 +11,8 @@ gloss: seven — Sanskrit sapta with the p worn away, which is what happened to 
 concept_tag: MR-LEX-SAAT
 prerequisites: [MR-R54-how-much, MR-C55-saha]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-sapta]
+etymology_hook: "sāt ← Sanskrit sapta 'seven', a tadbhava; the same ancient word as English seven (CDIAL 13139)"
 duration:
   max_seconds: 210
 requires:

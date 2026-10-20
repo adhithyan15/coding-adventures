@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 225,
-  "sourceHash": "fnv1a64:e2358dcaf2dad999",
+  "sourceHash": "fnv1a64:fdb1570989fb8369",
   "lessonIds": [
     "IT-C225-decisione",
     "IT-C225-possibilita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch225.txt",
   "json": "italian/narration/ch225.json",
-  "textHash": "fnv1a64:2753a6d5633c6c43",
-  "jsonHash": "fnv1a64:64bde604a37fe394",
+  "textHash": "fnv1a64:aa33e055e6c7fc74",
+  "jsonHash": "fnv1a64:16a563dc97c5ad5a",
   "findings": []
 }

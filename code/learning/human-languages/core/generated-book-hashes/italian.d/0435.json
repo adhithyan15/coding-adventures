@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:b1de933cd39194a9",
+  "lessonIds": [
+    "IT-C435-riscaldamento",
+    "IT-C435-termosifone",
+    "IT-C435-condizionatore",
+    "IT-C435-rinfrescare",
+    "IT-C435-scaldabagno"
+  ],
+  "tex": "italian/book/chapters/ch435-caldo-e-freddo-in-camera.tex"
+}

@@ -14,7 +14,8 @@ romanization: "udhār lenā"
 concept_tag: UR-VERB-UDHAR-LENA
 prerequisites: [UR-C148-chunna, UR-C148-badalna]
 sounds: []
-roots: []
+roots: [sanskrit-uddhara, sanskrit-labhate]
+etymology_hook: "udhār ← Sanskrit uddhāra 'a loan' (CDIAL 2018); lenā ← labhate 'takes' (CDIAL 10948)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C148-badalna]
 <!-- hl-knowledge: introduces=[UR-LEX-C148-ACT148-03]; assesses=[] -->
 
 **ادھار لینا** — *udhār lenā* — "to borrow".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ادھار لینا** (*udhār lenā*) joins *udhār*, "a debt, credit", and *lenā*, "to take". *udhār* comes from Sanskrit *uddhāra*, "a raising; a loan" (CDIAL 2018), and *lenā* from Sanskrit *labhate*, "catches, takes" (CDIAL 10948).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

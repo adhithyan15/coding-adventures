@@ -1,0 +1,11 @@
+{
+  "id": "FR-C300-garrot",
+  "pathSegment": "FR-PATH-300-SECOURS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-300-SECOURS",
+      "order": 3
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "āparēṣanu"
 concept_tag: TE-AROGYAM288-APARESANU
 prerequisites: [TE-C287-bima, TE-C287-atyavasaram]
 sounds: []
-roots: []
+roots: [english-operation]
+etymology_hook: "āparēṣanu ← English operation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C287-atyavasaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C288-AROGYAM288-01]; assesses=[] -->
 
 **ఆపరేషను** — *āparēṣanu* — "an operation, surgery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆపరేషను** (*āparēṣanu*) is a loan from English *operation*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "śītaḥ"
 concept_tag: SA-QUAL155-SITAH
 prerequisites: [SA-C155-jirnah, SA-C155-usnah]
 sounds: []
-roots: []
+roots: [sanskrit-shita]
+etymology_hook: "śīta 'cold' ← √śyai 'congeal, freeze' (MW; CDIAL 12485); śītala 'cool' is built on it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C155-usnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C155-QUAL155-04]; assesses=[] -->
 
 **शीतः** — *śītaḥ* — "chilly, cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śīta* "cold, chilly" comes from the root √śyai "congeal, freeze" (MW; CDIAL 12485), already in the Rigveda. *śītala* "cool" is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

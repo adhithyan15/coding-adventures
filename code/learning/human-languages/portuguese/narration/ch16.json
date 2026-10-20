@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Ser and Estar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4afd61b609648215",
+  "sourceHash": "fnv1a64:e4fafb08b4493ca3",
   "lessons": [
     {
       "id": "PT-C16-ser",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa6f3f2e51a00a9b",
+      "sourceHash": "fnv1a64:91684957ad26ba71",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Portuguese has two verbs for “to be.” Begin with ser, used for identity and what something is; the choice against estar comes later."
+              "text": "Portuguese has two verbs for “to be.” Begin with ser, used for identity and what something is; the choice against the other one comes later."
             }
           ]
         },
@@ -93,6 +93,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ser from Latin sedere, \"to sit\" — inherited (EtymDB 2.1). Most of its forms, sou and era among them, come from Latin esse, \"to be\", and fui is Latin fui, \"I was\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -141,7 +152,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -172,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7764be3627c0bc0e",
+      "sourceHash": "fnv1a64:c4ae3c1e0f4c09bb",
       "notice": null,
       "blocks": [
         {
@@ -218,28 +229,28 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The entire preterite is shared with ir, “to go”:"
+              "text": "The entire preterite is shared with Portuguese’s verb “to go”:"
             },
             {
               "kind": "table",
               "headers": [
                 "person",
                 "ser",
-                "ir"
+                "“to go”"
               ],
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "person: eu. ser: fui. ir: fui.",
-                "person: tu. ser: foste. ir: foste.",
-                "person: ele. ser: foi. ir: foi.",
-                "person: nós. ser: fomos. ir: fomos.",
-                "person: eles. ser: foram. ir: foram."
+                "person: eu. ser: fui. “to go”: fui.",
+                "person: tu. ser: foste. “to go”: foste.",
+                "person: ele. ser: foi. “to go”: foi.",
+                "person: nós. ser: fomos. “to go”: fomos.",
+                "person: eles. ser: foram. “to go”: foram."
               ]
             },
             {
               "kind": "speech",
-              "text": "Fui professor means “I was a teacher”; fui ao Brasil means “I went to Brazil.” What follows disambiguates them. Fuī already belonged to ser’s ancestor; ir borrowed the row after Latin īre’s own perfect wore away. Spanish made the same Iberian choice."
+              "text": "Fui professor means “I was a teacher”; fui ao Brasil means “I went to Brazil.” What follows disambiguates them. Fuī already belonged to ser’s ancestor; the “go” verb borrowed the row after Latin īre’s own perfect wore away. Spanish made the same Iberian choice."
             }
           ]
         },
@@ -305,7 +316,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which Latin verb gives the infinitive? (Sedēre, “sit.”) Which gives sou and era? (Esse.) What two verbs share fui? (Ser and ir.) Which borrowed it? (Ir.) Next: put ser beside estar."
+              "text": "Which Latin verb gives the infinitive? (Sedēre, “sit.”) Which gives sou and era? (Esse.) What two verbs share fui? (Ser and the verb “to go”.) Which borrowed it? (The “go” verb.) Next: put ser beside the other verb for “to be.”"
             }
           ]
         }
@@ -324,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dd33802727f65c5",
+      "sourceHash": "fnv1a64:890519b082ae4ba7",
       "notice": null,
       "blocks": [
         {
@@ -382,7 +393,7 @@
               "utterances": [
                 "ser: Ele é médico. — He is a doctor. estar: Ele está doente. — He is ill.",
                 "ser: Sou português. — I’m Portuguese. estar: Estou em Lisboa. — I’m in Lisbon.",
-                "ser: A neve é branca. — Snow is white. estar: O café está frio. — The coffee is cold."
+                "ser: A neve é branca. — Snow is white. estar: A água está fria. — The water is cold."
               ]
             },
             {

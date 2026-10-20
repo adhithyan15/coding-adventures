@@ -14,7 +14,8 @@ romanization: "ulṭī"
 concept_tag: UR-SEHAT154-ULTI
 prerequisites: [UR-C154-dharkan, UR-C154-pasina]
 sounds: []
-roots: []
+roots: [indo-aryan-ullatati]
+etymology_hook: "ulṭī: 'overturning', from ulaṭnā 'to be overturned', under *ullaṭati 'turns over' (CDIAL 2368)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C154-pasina]
 <!-- hl-knowledge: introduces=[UR-LEX-C154-SEHAT154-04]; assesses=[] -->
 
 **الٹی** — *ulṭī* — "vomiting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الٹی** (*ulṭī*) is "an overturning", from *ulaṭnā*, "to be overturned", which CDIAL lists under a reconstructed *\*ullaṭati*, "turns over", in its form *\*ullaṭyate*, "is upset" (CDIAL 2368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

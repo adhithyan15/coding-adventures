@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 774,
+  "sourceHash": "fnv1a64:d6a918be10e29292",
+  "lessonIds": [
+    "ES-C774-sotano",
+    "ES-C774-desvan",
+    "ES-C774-cajon",
+    "ES-C774-espejo",
+    "ES-C774-persiana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch774.txt",
+  "json": "spanish/narration/ch774.json",
+  "textHash": "fnv1a64:98ab4fab62bf1358",
+  "jsonHash": "fnv1a64:221ff8ac1a83cb79",
+  "findings": []
+}

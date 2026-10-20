@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Reis e rainhas",
+  "label": "ch:pt-reis-e-rainhas",
+  "canDo": "I can talk about kings and queens, kingdoms, thrones and crowns.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C327-coroa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about kings and queens, kingdoms, thrones and crowns.",
+    "assesses": [
+      "PT-LEX-C327-REINO-03",
+      "PT-LEX-C327-REINO-04",
+      "PT-LEX-C327-REINO-05"
+    ]
+  }
+}

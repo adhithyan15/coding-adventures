@@ -12,6 +12,9 @@ Before the new one: say the Marathi for purple, then the Marathi for orange.
 You'll want to know: करडा.
 करडा — karḍā — "grey".
 
+The word, taken apart.
+The origin of करडा (karḍā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for orange, then the Marathi for grey.
 
 You'll want to know: सोनेरी.
 सोनेरी — sonerī — "golden".
+
+The word, taken apart.
+सोनेरी (sonerī) is a tadbhava, a word inherited and reshaped by sound change. It comes from suvarṇadhara, "containing gold", a form CDIAL reconstructs from its descendants (CDIAL 13522). It is built on suvarṇa, "gold".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for grey, then the Marathi for golden.
 You'll want to know: चढणे.
 चढणे — caḍhṇe — "to climb".
 
+The word, taken apart.
+चढणे (caḍhṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, "rises", a form CDIAL reconstructs from its descendants (CDIAL 4578).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for golden, then the Marathi for to climb.
 You'll want to know: उतरणे.
 उतरणे — utarṇe — "to get down, to get off".
 
+The word, taken apart.
+उतरणे (utarṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uttarati, "passes over; alights, descends" (CDIAL 1770). CDIAL traces the sense from "crosses over" to "lands" to "alights" and so "descends".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to climb, then the Marathi for to get do
 
 You'll want to know: पोहोचणे.
 पोहोचणे — pohocṇe — "to arrive".
+
+The word, taken apart.
+पोहोचणे (pohocṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prabhūta, "much, great" (CDIAL 8716). CDIAL glosses the Marathi verb "to arrive".
 
 What you've built.
 One more word for this chapter.

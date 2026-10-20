@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:91c3a857ae8606a3",
+  "sourceHash": "fnv1a64:4e1372bc75e4a708",
   "lessons": [
     {
       "id": "HI-C37-chai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3759955e0a90336",
+      "sourceHash": "fnv1a64:5f447014acd2b2c6",
       "notice": null,
       "blocks": [
         {
@@ -84,7 +84,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चाय is Chinese. In most of China the word for the leaf is chá, which Persian took as چای (chāy) and handed to Hindi."
+              "text": "चाय is Chinese. In most of China the word for the leaf is chá, which Persian took as چای (chāy) and Hindi borrowed."
             },
             {
               "kind": "speech",

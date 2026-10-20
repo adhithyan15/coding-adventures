@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-TWENTY
 prerequisites: [UR-C29-practice]
 sounds: [rtl, long-i]
 roots: [sanskrit-vimshati, proto-indo-european-wikmtih]
-etymology_hook: "bees continues Sanskrit vimshati from Proto-Indo-European *wikmtih1, twenty -- Latin viginti -- and it is taught before the numbers under it because Urdu's eleven to nineteen are nine separate irregular words rather than a rule."
+etymology_hook: "bīs ← Sanskrit viṃśati 'twenty' (CDIAL 11616), from PIE *wīḱm̥tih₁, like Latin vīgintī"
 duration:
   max_seconds: 285
 requires:
@@ -43,7 +43,7 @@ reviews_of: [UR-C29-practice, UR-C29-das]
 
 > **بیس** — *bīs* — **twenty**
 
-**بیس** goes back through Sanskrit *vimshati* to the Indo-European word for
+**بیس** goes back through Sanskrit *viṃśati*, "twenty" (CDIAL 11616), to the Indo-European word for
 twenty, the same word behind Latin **vīgintī** and, through it, English
 **vigesimal**.
 

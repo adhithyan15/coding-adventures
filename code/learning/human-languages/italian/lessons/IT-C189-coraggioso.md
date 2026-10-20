@@ -13,7 +13,8 @@ gloss: "brave"
 concept_tag: IT-QUAL189-CORAGGIOSO
 prerequisites: [IT-C189-allegro, IT-C189-timido]
 sounds: []
-roots: []
+roots: [cor-latin]
+etymology_hook: "coraggioso — full of courage; the word ← Old Provençal coratge, from cor 'heart'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C189-timido]
 <!-- hl-knowledge: introduces=[IT-LEX-C189-QUAL189-03]; assesses=[] -->
 
 **coraggioso** — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coraggioso** — built from the word for "courage" with *-oso*, "full of". That word ← Old Provençal *coratge*, built on Latin *cor*, "heart" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

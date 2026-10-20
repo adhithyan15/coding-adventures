@@ -1,0 +1,11 @@
+{
+  "id": "PT-C337-logico",
+  "pathSegment": "PT-PATH-337-ARGUMENTAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-337-ARGUMENTAR",
+      "order": 1
+    }
+  ]
+}

@@ -15,11 +15,7 @@ Hindi does not split those two. A person is lambā, a road is lambā, a film is 
 
 The word, taken apart.
 लंबा (lambā) is Sanskrit लम्ब (lamba), "hanging down, drooping." The idea began as what dangles — and a thing that dangles is measured by how far down it reaches.
-That root travelled. Latin limbus is a hanging border or hem, and English took it twice:
-[a table of 2 rows, read aloud]
-word: limb. the hanging thing: what hangs off the trunk.
-word: limbo. the hanging thing: the edge, the hem of things.
-So लंबा (lambā) and English limb are the same old idea about hanging, arrived at from opposite ends of a continent.
+CDIAL glosses the Sanskrit word "pendent", and notes that Sanskrit already used it for "long" in compounds (CDIAL 10951).
 
 Grammar Lens: this one ends in -आ, so it bends.
 Nothing new here — the shape you already learned, meeting a new word:
@@ -35,9 +31,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the form you would use about a woman (lambī)]
 [pause 8 seconds for the answer]
-[your turn — say: "लंबा (lambā) रास्ता" — a long road, the same word doing the other job]
-[pause 8 seconds for the answer]
-[your turn — say: which English word for an arm or a leg comes from the same root (limb)]
+[your turn — say: "लंबा (lambā) दिन" — a long day, the same word doing the other job]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -57,11 +51,11 @@ You'll want to know: पतला.
 It works for a person, for a sheet of paper, and for a soup that has too much water in it. English needs thin, slim, slender and watery for that range; Hindi uses one word and lets the noun decide which English word you would have reached for.
 
 The word, taken apart.
-पतला (patlā) goes back to Sanskrit पत्र and the root पत् (pat), "to fall." A thin thing is one that has fallen flat — flattened out until there is hardly anything left of it.
-The same root is sitting in two Hindi words you may already recognise:
+पतला (patlā) goes back to Sanskrit pattrala, "leafy", which CDIAL takes to have meant "leaf-like, thin" (CDIAL 7736). It is built on पत्र (pattra), "leaf" (first "wing-feather"), from the root पत् (pat), "to fly". A thin thing is as flat as a leaf.
+The leaf word is still in everyday Hindi:
 [a table of 2 rows, read aloud]
-word: पत्ता (pattā). the falling in it: a leaf — the thing that falls.
-word: patjhaṛ. the falling in it: autumn — literally the leaf-fall.
+word: पत्ता (pattā). what it is: a leaf.
+word: patjhaṛ. what it is: autumn: pat, "leaf", with jhaṛ, "fall".
 Autumn in Hindi is named exactly the way American English names it: fall. Two languages that never discussed it reached for the same picture.
 
 Grammar Lens: the second of the three.
@@ -83,7 +77,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did the Sanskrit root पत् mean? (To fall.) What is a thin thing, by that picture? (Something flattened, fallen out flat.) Which English name for autumn matches the Hindi one? (Fall.)
+What did pattrala, behind पतला (patlā), mean? (Leafy, leaf-like.) What is a thin thing, by that picture? (Something as flat as a leaf.) Which English name for autumn matches the Hindi one? (Fall.)
 
 
 Lesson 3 of 6.
@@ -104,7 +98,7 @@ thing: a voice. पतला (patlā): reedy. मोटा (moṭā): deep.
 That last row is the one to keep. A मोटी आवाज़ is a deep voice, not a fat one — the metaphor runs from the thickness of the string to the lowness of the note, exactly as it does on any instrument.
 
 The word, taken apart.
-मोटा (moṭā) is from Sanskrit मूर्त by way of Prakrit, carrying the sense of something solid, with body to it — a shape that has taken form rather than staying an outline.
+मोटा (moṭā) comes from a reconstructed mōṭṭa, one of a group of related forms that CDIAL heads muṭṭa, "defective" (CDIAL 10187): words for things stumpy, blunt or lumpish. CDIAL glosses the Hindi word "fat", and it means something thick, with body to it.
 Hindi extends it to mean rough or approximate, which follows from the same picture: a मोटा (moṭā) estimate is one drawn with a thick line rather than a thin one, so it has no fine detail. English does this with broadly, and the metaphor is identical.
 
 Grammar Lens: all three of them, and the rule holds.
@@ -147,7 +141,7 @@ This is the clearest case in the chapter of a word existing because another word
 word: choṭā. about a thing: small. about a person: younger.
 word: नाटा (nāṭā). about a thing: —. about a person: short in height.
 Choṭā bhāī is a younger brother regardless of how tall he is. Hindi took the size word for a person's age and left the height meaning without an owner, and नाटा (nāṭā) is what filled the hole.
-Sanskrit नत (nata) is behind it, meaning bent, bowed, stooping — the same root as namaste, where the bowing is a greeting. A nāṭā person is pictured as one closer to the ground.
+CDIAL traces it to a reconstructed naṭṭa, "defective", one of its groups of words for things stunted or lacking, and glosses the Hindi word "short, dwarfish" (CDIAL 6935).
 A note on using it. नाटा (nāṭā) is plain rather than polite, and about a person it can land as blunt. When you want neutral, Hindi says qad meṅ choṭā, "short in height" — which spells out the height part that choṭā on its own leaves ambiguous. Recognise नाटा (nāṭā); reach for the longer phrase.
 
 Grammar Lens: the fourth of four, and the rule has not moved.
@@ -171,7 +165,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why can choṭā not mean short about a person? (About a person it means younger.) What did the Sanskrit root behind नाटा (nāṭā) mean? (Bent or bowed — the same idea as the bow in namaste.)
+Why can choṭā not mean short about a person? (About a person it means younger.) What does CDIAL reconstruct behind नाटा (nāṭā)? (naṭṭa, "defective": something stunted.)
 
 
 Lesson 5 of 6.

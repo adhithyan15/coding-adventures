@@ -14,7 +14,8 @@ romanization: "aṭiccuvāruka"
 concept_tag: ML-VERB-ATICCUVARUKA
 prerequisites: [ML-C264-tekkuka, ML-C264-tutaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-adi-sweep, dravidian-varu-scoop]
+etymology_hook: "aṭiccuvāruka: native Dravidian, 'sweep and scoop up': aṭikka 'to sweep' (DEDR 73) + vāruka (DEDR 5362)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C264-tutaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C264-KRIYA264-04]; assesses=[] -->
 
 **അടിച്ചുവാരുക** — *aṭiccuvāruka* — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടിച്ചുവാരുക** (*aṭiccuvāruka*) is native Dravidian, "sweep and gather up": the verb "to sweep the ground" (DEDR 73) and the verb "to scoop up" (DEDR 5362, with Tamil *vāru*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

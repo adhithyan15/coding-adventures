@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to carry, then the Marathi for to hit; t
 You'll want to know: श्वास घेणे.
 श्वास घेणे — śvās gheṇe — "to breathe".
 
+The word, taken apart.
+श्वास is Sanskrit śvāsa, "breath, breathing", a tatsama (CDIAL 12769). घेणे comes from Sanskrit gṛbhāyati, "takes, seizes" (CDIAL 4236).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to hit; to kill, then the Marathi for to
 
 You'll want to know: सोडून देणे.
 सोडून देणे — soḍūn deṇe — "to give up".
+
+The word, taken apart.
+सोडून is "having let go", from सोडणे, which comes from Sanskrit kṣoṭayati, "throws" (CDIAL 3747). देणे comes from Sanskrit dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to breathe, then the Marathi for to give
 You'll want to know: अदलाबदल करणे.
 अदलाबदल करणे — adlābadal karṇe — "to exchange".
 
+The word, taken apart.
+अदलाबदल is a rhyming pair built on badal, "exchange", a loan from Arabic badal, "a substitute", through Persian; its root is b-d-l (Lane). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to give up, then the Marathi for to exch
 You'll want to know: घसरणे.
 घसरणे — ghasarṇe — "to slip".
 
+The word, taken apart.
+The origin of घसरणे (ghasarṇe) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to exchange, then the Marathi for to sli
 
 You'll want to know: संशय घेणे.
 संशय घेणे — saṁśay gheṇe — "to suspect".
+
+The word, taken apart.
+संशय is Sanskrit saṁśaya, "danger, doubt", a tatsama (CDIAL 13030). घेणे comes from Sanskrit gṛbhāyati, "takes, seizes" (CDIAL 4236).
 
 What you've built.
 One more word for this chapter.

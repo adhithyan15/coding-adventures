@@ -14,7 +14,8 @@ romanization: "svapiti"
 concept_tag: SA-VERB-SLEEP
 prerequisites: [SA-C71-falls, SA-C72-cooks]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "svapiti 'sleeps' ← the root √svap; MW compares Latin somnus and Greek hupnos; Hindi sonā (CDIAL 13902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C72-cooks]
 <!-- hl-knowledge: introduces=[SA-LEX-C72-HOUSEWORK-02]; assesses=[] -->
 
 **स्वपिति** (*svapiti*) — "(he, she) sleeps", the verb of **निद्रा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Svapiti* is the present of the root √svap, "to sleep". It is inherited: MW
+compares Greek *hupnos* and Latin *somnus*, "sleep". It lives on as Hindi *sonā*,
+"to sleep" (CDIAL 13902).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

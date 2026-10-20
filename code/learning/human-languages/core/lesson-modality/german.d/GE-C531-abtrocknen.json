@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C531-abtrocknen",
+    "language": "german",
+    "chapter": 531,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50fbe28c22d76181"
+  },
+  "findings": []
+}

@@ -358,6 +358,28 @@ Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
 
+### D18S Windows applier native acceptance
+
+The `build-windows-os-suites` gate MUST also include affected packages
+`rust/chief-of-staff-windows-sandbox` and `rust/chief-of-staff-spawn-isolation`.
+The first holds the D18S Windows AppContainer applier, whose
+`tests/confinement.rs` runs only on Windows. The second holds
+`VerifiedExecutable`'s Windows half, tested by `tests/verified_exec_windows.rs`.
+Without the gate, a change to either compiles and lints on `windows-2025` but
+never runs those tests: the job is green and proves nothing about them.
+
+It MUST also include `rust/chief-of-staff-daemon-secret-file` and
+`rust/chief-of-staff-agent-broker` (D18S P2.8b-1). The first holds the Windows
+owner-only key-file policy a broker's keys pass through; the second holds the
+broker's Windows key adoption. Both have tests that run only on Windows.
+
+It MUST also include `rust/chief-of-staff-broker-launcher`,
+`rust/chief-of-staff-process-supervisor` and `rust/chief-of-staff-broker-e2e`
+(D18S P2.8b-2). The launcher holds the Windows broker launch through the
+applier, and the supervisor holds the broker child it ends. `broker-e2e`'s
+supervised tests run the confined broker end to end on Windows. A change to
+any of the three must run those tests natively.
+
 ### Closure compiler native Windows acceptance
 
 The Windows general package-test step is conditional on

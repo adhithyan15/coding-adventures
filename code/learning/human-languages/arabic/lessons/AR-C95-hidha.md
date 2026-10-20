@@ -14,7 +14,8 @@ romanization: "ḥidhāʾ"
 concept_tag: AR-CLOTHES95-HIDHA
 prerequisites: [AR-C95-khatam, AR-C95-qubbaa]
 sounds: []
-roots: []
+roots: [ḥ-dh-w]
+etymology_hook: "ḥidhāʾ: built on the root ḥ-dh-w, 'to cut a sandal to a pattern' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C95-qubbaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C95-CLOTHES95-04]; assesses=[] -->
 
 **حذاء** — *ḥidhāʾ* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حذاء** (*ḥidhāʾ*) is built on the native Arabic root *ḥ-dh-w*, "to cut a sandal to a pattern" (Lane). Lane's verb *ḥadhā* is to measure and cut a sandal by a pattern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

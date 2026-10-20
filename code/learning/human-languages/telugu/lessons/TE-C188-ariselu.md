@@ -14,7 +14,8 @@ romanization: "ariselu"
 concept_tag: TE-VASTUVU188-ARISELU
 prerequisites: [TE-C187-kokila, TE-C188-prasadam]
 sounds: []
-roots: []
+roots: [dravidian-arici-rice]
+etymology_hook: "ariselu: DEDR 215 lists arise 'sweetmeat of rice flour', with a query, under arici 'rice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C188-prasadam]
 <!-- hl-knowledge: introduces=[TE-LEX-C188-VASTUVU188-02]; assesses=[] -->
 
 **అరిసెలు** — *ariselu* — "rice-flour sweets; made with jaggery at Sankranti".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 215 lists *arise*, "a sweetmeat of rice, flour and jaggery", with a query, beside Tamil *arici*, "rice"; **అరిసెలు** (*ariselu*) is its plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

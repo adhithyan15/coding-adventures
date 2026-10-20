@@ -14,7 +14,8 @@ romanization: "pichhône"
 concept_tag: BN-PLACE82-PICHHONE
 prerequisites: [BN-C81-niche, BN-C81-samne]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pichhône: CDIAL lists pichā 'the rear' under *paśca 'hinder part', crossed with pṛṣṭha 'back' (CDIAL 7990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C81-samne]
 <!-- hl-knowledge: introduces=[BN-LEX-C82-PLACE82-01]; assesses=[] -->
 
 **পিছনে** — *pichhône* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পিছনে** (*pichhône*) is a form of *pichhôn*, "the back". CDIAL lists Bengali *pichā*, "the rear", under *\*paśca*, "hinder part", crossed with Sanskrit *pṛṣṭha*, "back" (CDIAL 7990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

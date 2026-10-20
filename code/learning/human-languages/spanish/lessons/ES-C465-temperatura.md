@@ -11,6 +11,7 @@ concept_tag: ES-ASK-TEMPERATURA
 prerequisites: [ES-C465-anotar, ES-C334-calor, ES-C334-frio]
 sounds: [stress-penultimate, r-tap]
 roots: [temperare-latin]
+etymology_hook: "temperatura ← Latin temperare 'to mix in proportion' — English temper, temperate"
 duration:
   max_seconds: 275
 requires:

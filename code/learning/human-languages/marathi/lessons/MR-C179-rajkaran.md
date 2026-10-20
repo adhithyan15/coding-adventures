@@ -14,7 +14,8 @@ romanization: "rājkāraṇ"
 concept_tag: MR-VASTU179-RAJKARAN
 prerequisites: [MR-C179-mahapaur, MR-C179-nivadnuk]
 sounds: []
-roots: []
+roots: [sanskrit-rajan, sanskrit-karana]
+etymology_hook: "rājkāraṇ: Sanskrit rāja 'king' + kāraṇa 'cause, affair' (CDIAL 3057); a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C179-nivadnuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C179-VASTU179-05]; assesses=[] -->
 
 **राजकारण** — *rājkāraṇ* — "politics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राजकारण** (*rājkāraṇ*) is a modern compound of Sanskrit parts: *rāja*, "king, state", and *kāraṇa*, "cause, affair" (CDIAL 3057).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

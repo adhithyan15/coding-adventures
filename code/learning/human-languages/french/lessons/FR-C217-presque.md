@@ -14,6 +14,7 @@ concept_tag: FR-POURQUOI217-PRESQUE
 prerequisites: [FR-C216-la-haut, FR-C216-banlieue]
 sounds: []
 roots: []
+etymology_hook: "presque — près 'near' + que: nearly"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C216-banlieue]
 <!-- hl-knowledge: introduces=[FR-LEX-C217-POURQUOI217-01]; assesses=[] -->
 
 **presque** — "almost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**presque** — *près*, "near", and *que*, "that": nearly. *Près* ← Latin *presse*, "closely" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

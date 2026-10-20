@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-409-FILAS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report trouble on the road: a traffic jam, slowing down, a collision, crashing into something and a diversion.",
+  "prerequisites": []
+}

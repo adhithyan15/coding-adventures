@@ -14,7 +14,8 @@ romanization: "iṟaṅku"
 concept_tag: TA-VERB-IRANKU
 prerequisites: [TA-C152-vilu, TA-C153-eru]
 sounds: []
-roots: []
+roots: [dravidian-iranku-descend]
+etymology_hook: "இறங்கு — native Dravidian (DEDR 516); Malayalam iṟaṅṅuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C153-eru]
 <!-- hl-knowledge: introduces=[TA-LEX-C153-ACT153-02]; assesses=[] -->
 
 **இறங்கு** — *iṟaṅku* — "to get down, to get off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**இறங்கு** (*iṟaṅku*) is native Dravidian. DEDR 516 lists Malayalam *iṟaṅṅuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

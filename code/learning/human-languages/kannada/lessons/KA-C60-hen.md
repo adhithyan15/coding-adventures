@@ -11,7 +11,8 @@ romanization: "kōḷi"
 concept_tag: KA-NOUN-HEN
 prerequisites: [KA-C60-goat, KA-C58-less]
 sounds: []
-roots: []
+roots: [dravidian-kozhi-fowl]
+etymology_hook: "kōḷi: native Dravidian, one word with Tamil kōḻi and Telugu kōḍi (DEDR 2248)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C60-goat]
 ಕೋಳಿ is the domestic fowl, hen or cock alike; the word does not divide them, and where the difference matters a second word goes in front of it.
 
 It is also the clock of the ಹಳ್ಳಿ. A ಕೋಳಿ wakes a house before ಬೆಳಗ್ಗೆ is properly under way, which is a large part of why nobody there needed a ಗಂಟೆ to do the same job.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೋಳಿ** (*kōḷi*) is native Dravidian, one word with Tamil *kōḻi* and Telugu *kōḍi* (DEDR 2248). DEDR gives the older Kannada *kōḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

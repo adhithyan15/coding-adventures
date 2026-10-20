@@ -205,14 +205,14 @@ Lesson 8 of 13.
 
 Warm-up.
 [pause 2 seconds]
-One word that is cognate with English "welcome" — not just a translation of it.
+One word that is partly cognate with English "welcome", not only a translation of it.
 
 Sounds you'll need.
 svā, ga, tam. It opens on sv- said as one push, carries the long ā in that first beat, and ends on a bare m with no vowel after it — the mouth simply closes.
 
 The word, taken apart.
-svāgatam = su ("well, good") + āgata ("come," from ā "toward" + the root √gam "to go/come") — "well come," which is exactly what English welcome means too. Two deep Indo-European threads surface:
-su- "good" is the twin of Greek eu- — the eu of euphoria, eulogy, euphemism. Sanskrit su- and Greek eu- are the same prefix.
+svāgatam = su ("well, good") + āgata ("come," from ā "toward" + the root √gam "to go/come") — "well come," which is exactly what English welcome means too. Two Indo-European threads surface:
+su- "good" does the work of Greek eu- — the eu of euphoria, eulogy, euphemism; MW sets the two prefixes side by side.
 the root √gam "to go/come" is PIE gʷem- — the very root of English come (and of Latin venīre, hence venue, convene).
 So svāgatam and welcome are not just parallel ideas but partly cognate ones.
 
@@ -225,14 +225,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the two parts (su "well" + āgata "come")]
 [pause 8 seconds for the answer]
-[your turn — say: the English word that is su-'s Greek twin (eu-, as in euphoria)]
+[your turn — say: the Greek prefix MW sets beside su- (eu-, as in euphoria)]
 [pause 8 seconds for the answer]
 [your turn — say: the English cousin of the root √gam (come)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Svāgatam literally means what, and name two of its far-flung cousins. ("Well come" = welcome; Greek eu- (from su-) and English come (from √gam).)
+Svāgatam literally means what, and name two of its far-flung cousins. ("Well come" = welcome; Greek eu- (beside su-) and English come (cousin of √gam).)
 
 
 Lesson 9 of 13.
@@ -288,6 +288,9 @@ You can greet, thank, and welcome. Now the smallest reply of all.
 Sounds you'll need.
 ām — one beat. A long ā, then the lips close on m with no vowel after it. Say it and stop.
 
+The word, taken apart.
+Ām is an old Sanskrit particle of assent (MW). It lives on in the daughter languages' everyday "yes", with an h- added in front: Hindi and Marathi hāṃ (CDIAL 1235).
+
 Why it's said this way.
 Classical Sanskrit, like Latin, leans on more than a bare "yes": one answers by echoing the verb, or with ām, evam ("so it is"), or bāḍham ("certainly"). The blunt yes/no habit of English is not universal — these old languages preferred to say what they meant. Ām is the plain agreement, and the one to reach for first.
 
@@ -316,7 +319,7 @@ Sounds you'll need.
 na — one short beat, the a closer to English cup than to car.
 
 The word, taken apart.
-Na ("no, not") you have already met wearing other clothes: it is Proto-Indo-European ne "not," the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṇ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years.
+Na ("no, not") you have already met wearing other clothes: it is Proto-Indo-European ne "not," the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṃ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years.
 
 Guided Practice.
 [pause 1 second]
@@ -329,7 +332,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the ancient root of na, and name three of its living cousins. (PIE ne "not"; English no/not/none, Latin nōn, German nein, Hindi nahīṇ — any three.)
+What is the ancient root of na, and name three of its living cousins. (PIE ne "not"; English no/not/none, Latin nōn, German nein, Hindi nahīṃ — any three.)
 
 
 Lesson 12 of 13.

@@ -14,7 +14,8 @@ romanization: "mahāmārg"
 concept_tag: MR-VASTU266-MAHAMARG
 prerequisites: [MR-C265-vacan, MR-C266-injin]
 sounds: []
-roots: []
+roots: [sanskrit-maha, sanskrit-marga]
+etymology_hook: "mahāmārg: Sanskrit mahā 'great' + mārga 'road' (CDIAL 10071); a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C266-injin]
 <!-- hl-knowledge: introduces=[MR-LEX-C266-VASTU266-02]; assesses=[] -->
 
 **महामार्ग** — *mahāmārg* — "a highway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महामार्ग** (*mahāmārg*) is a modern compound of Sanskrit parts: *mahā*, "great", and *mārga*, "track, road" (CDIAL 10071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

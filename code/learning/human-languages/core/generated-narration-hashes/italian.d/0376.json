@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:178f4f00e58e21c0",
+  "lessonIds": [
+    "IT-C376-rischio",
+    "IT-C376-rischioso",
+    "IT-C376-probabile",
+    "IT-C376-improbabile",
+    "IT-C376-probabilita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch376.txt",
+  "json": "italian/narration/ch376.json",
+  "textHash": "fnv1a64:080e9da1452edf36",
+  "jsonHash": "fnv1a64:73644e9e48420194",
+  "findings": []
+}

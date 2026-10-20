@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 216,
-  "sourceHash": "fnv1a64:351a69933a5e6fdc",
+  "sourceHash": "fnv1a64:28c93e8ffcedaacc",
   "lessonIds": [
     "GE-C216-gruendlich",
     "GE-C216-haeufig",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch216.txt",
   "json": "german/narration/ch216.json",
-  "textHash": "fnv1a64:9cac2b82f8e50852",
-  "jsonHash": "fnv1a64:e55f85d9312fc9ee",
+  "textHash": "fnv1a64:ded945095b7e20d8",
+  "jsonHash": "fnv1a64:ad047e778cc85963",
   "findings": []
 }

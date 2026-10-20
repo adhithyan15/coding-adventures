@@ -13,7 +13,8 @@ gloss: "an answer"
 concept_tag: GE-DINGE-ANTWORT
 prerequisites: [GE-C102-null, GE-C102-wort]
 sounds: []
-roots: []
+roots: [germanic-wurda]
+etymology_hook: "Antwort ← Old High German antwurti, 'counter-word': ant- 'against' + Wort"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C102-wort]
 <!-- hl-knowledge: introduces=[GE-LEX-C102-DINGE-03]; assesses=[] -->
 
 **die Antwort** — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Antwort** ← Old High German *antwurti* ← Proto-Germanic *\*andawurdiją* (EtymDB 2.1): *ant-*, "against", + *Wort* — a word given back. English *answer* pairs the same "against" with a verb meaning "to swear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

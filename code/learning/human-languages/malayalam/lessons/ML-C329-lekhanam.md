@@ -14,7 +14,8 @@ romanization: "lēkhanaṁ"
 concept_tag: ML-VASTU329-LEKHANAM
 prerequisites: [ML-C328-kotali, ML-C328-manvetti]
 sounds: []
-roots: []
+roots: [sanskrit-lekhana]
+etymology_hook: "lēkhanaṁ ← Sanskrit lēkhana 'scraping; writing', a tatsama (CDIAL 11103)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C328-manvetti]
 <!-- hl-knowledge: introduces=[ML-LEX-C329-VASTU329-01]; assesses=[] -->
 
 **ലേഖനം** — *lēkhanaṁ* — "an article".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലേഖനം** (*lēkhanaṁ*) ← Sanskrit *lēkhana*, "scraping; writing", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11103). Writing began as scratching lines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

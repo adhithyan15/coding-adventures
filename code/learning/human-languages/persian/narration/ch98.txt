@@ -12,6 +12,9 @@ Before the new one: say the Persian for a necklace, then the Persian for boots.
 You'll want to know: صندل.
 صندل — sandal — "sandals".
 
+The word, taken apart.
+sandal is a loan, usually traced to French sandale, "sandal". (EtymDB lists sandal, "sandalwood", a different word spelled the same.)
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for boots, then the Persian for sandals.
 
 You'll want to know: خورش.
 خورش — khoresh — "a stew".
+
+The word, taken apart.
+khoresh is khor-, the present stem of khordan, "to eat", with the noun ending -esh: "what is eaten". The verb is inherited: EtymDB traces it to Middle Persian xwar-.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for sandals, then the Persian for a stew.
 You'll want to know: سوپ.
 سوپ — sup — "soup".
 
+The word, taken apart.
+sup is borrowed from French soupe, "soup" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a stew, then the Persian for soup.
 You'll want to know: سالاد.
 سالاد — sâlâd — "a salad".
 
+The word, taken apart.
+sâlâd is a loan, usually traced to French salade, "salad".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for soup, then the Persian for a salad.
 
 You'll want to know: کباب.
 کباب — kabâb — "a kebab".
+
+The word, taken apart.
+kabâb is borrowed from Arabic kabāb, "roasted meat". Its Arabic root is k-b-b (Lane).
 
 What you've built.
 One more word for this chapter.

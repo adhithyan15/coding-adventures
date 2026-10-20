@@ -14,7 +14,8 @@ romanization: "murgī"
 concept_tag: HI-NOUN-HEN
 prerequisites: [HI-C60-snake]
 sounds: []
-roots: []
+roots: [persian-murgh]
+etymology_hook: "murgī: usually traced to Persian murgh 'bird, fowl'"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C60-snake]
 Persian مرغ (*murgh*) meant a bird of any kind, and Hindi narrowed it to the one bird a household actually keeps. मुर्गा (*murgā*) is the cock, मुर्गी the hen.
 
 This one earns its place at dawn. A मुर्गा wakes a village well before any clock does, which is a large part of why nobody in that village ever needed a घंटा to do the same job. And note what it is not: चिड़िया, which you already own, stays with the small wild birds.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुर्गी** (*murgī*) is a loan, usually traced to Persian *murgh*, "bird, fowl". Hindi names the hen with *-ī* and the cock *murgā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

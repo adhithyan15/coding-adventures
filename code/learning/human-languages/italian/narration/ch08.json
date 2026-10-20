@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Telling Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3b64ad9201c59d15",
+  "sourceHash": "fnv1a64:ce472055ae3ffaf9",
   "lessons": [
     {
       "id": "IT-C08-ora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2eb36e64123bc560",
+      "sourceHash": "fnv1a64:345df1ea9fc230dc",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is ora from, and its sisters? (Latin hōra from Greek hṓrā; French heure, German Uhr, English hour.) Why \"sono le due\" but \"è l'una\"? (Plural hours take sono le …; one o'clock is singular è l'una.) What word does the le stand in for? (ore, \"hours\" — feminine.) Next: mezzogiorno and mezzanotte — noon and midnight."
+              "text": "What word is ora from, and its sisters? (Latin hōra from Greek hṓrā; French heure, German Uhr, English hour.) Why \"sono le due\" but \"è l'una\"? (Plural hours take sono le …; one o'clock is singular è l'una.) What word does the le stand in for? (ore, \"hours\" — feminine.) Next: noon and midnight."
             }
           ]
         }

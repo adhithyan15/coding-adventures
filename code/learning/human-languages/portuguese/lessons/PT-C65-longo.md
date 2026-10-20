@@ -13,7 +13,8 @@ gloss: "long"
 concept_tag: PT-ADJ2-LONGO
 prerequisites: [PT-C65-bonito, PT-C65-feio]
 sounds: []
-roots: []
+roots: [longus-latin]
+etymology_hook: "longo ← Latin longus 'long' — English longitude shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C65-feio]
 <!-- hl-knowledge: introduces=[PT-LEX-C65-ADJ2-03]; assesses=[] -->
 
 **longo** — "long".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**longo** ← Latin *longus*, "long" (EtymDB 2.1) — inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

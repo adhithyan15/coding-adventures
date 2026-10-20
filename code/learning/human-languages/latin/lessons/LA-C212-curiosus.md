@@ -13,7 +13,8 @@ gloss: "inquisitive, painstaking"
 concept_tag: LA-QUAL212-CURIOSUS
 prerequisites: [LA-C211-frustra, LA-C211-rursus]
 sounds: []
-roots: []
+roots: [curiosus-latin, cura-latin]
+etymology_hook: "cūriōsus 'inquisitive' — built on cūra 'care': full of care; English curious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C211-rursus]
 <!-- hl-knowledge: introduces=[LA-LEX-C212-QUAL212-01]; assesses=[] -->
 
 **cūriōsus, cūriōsa, cūriōsum** — "inquisitive, painstaking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cūriōsus** is built on *cūra*, "care" (Lewis & Short), with *-ōsus*, "full of": full of care, so careful or prying. English *curious* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

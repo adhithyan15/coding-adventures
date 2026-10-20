@@ -90,4 +90,4 @@ a day's work.
 (*labōrāre* — labor, laboratory, elaborate.) How does its root differ from Spanish
 *trabajar* and French *travailler*? (Those are from *tripalium*, "torture"; Italian
 is from *labor*, "toil.") Say "I work in Milan." (*Lavoro a Milano.*) Next: your
-first sentence — **Parlo italiano**.
+first sentence — "I speak Italian."

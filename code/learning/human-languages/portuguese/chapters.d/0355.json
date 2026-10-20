@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Procuro emprego",
+  "label": "ch:pt-procuro-emprego",
+  "canDo": "I can look for a job: find a vacancy, send a CV and an application, and talk about being hired.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C355-contratar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can look for a job: find a vacancy, send a CV and an application, and talk about being hired.",
+    "assesses": [
+      "PT-LEX-C355-CANDIDATURA-03",
+      "PT-LEX-C355-CANDIDATURA-04",
+      "PT-LEX-C355-CANDIDATURA-05"
+    ]
+  }
+}

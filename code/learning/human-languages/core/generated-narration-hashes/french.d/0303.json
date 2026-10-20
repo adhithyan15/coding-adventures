@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:b77dc0e20c380135",
+  "lessonIds": [
+    "FR-C303-tremblement-de-terre",
+    "FR-C303-avalanche",
+    "FR-C303-eboulement",
+    "FR-C303-effondrer",
+    "FR-C303-decombres"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch303.txt",
+  "json": "french/narration/ch303.json",
+  "textHash": "fnv1a64:48750d14d899ece5",
+  "jsonHash": "fnv1a64:f4fa0c8d6ef0fad4",
+  "findings": []
+}

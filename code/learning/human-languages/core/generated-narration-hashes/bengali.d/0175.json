@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 175,
-  "sourceHash": "fnv1a64:2143b4362d01e0f5",
+  "sourceHash": "fnv1a64:d6db918c5fbed18b",
   "lessonIds": [
     "BN-C175-durgondho",
     "BN-C175-jharon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch175.txt",
   "json": "bengali/narration/ch175.json",
-  "textHash": "fnv1a64:39be7ab192b391eb",
-  "jsonHash": "fnv1a64:b340531b19d2ac78",
+  "textHash": "fnv1a64:d47eddeec9470c4e",
+  "jsonHash": "fnv1a64:b378b8790b6b1adc",
   "findings": []
 }

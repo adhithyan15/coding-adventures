@@ -4,7 +4,7 @@
   "chapter": 353,
   "title": "Five Buildings You May Have To Find",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a9fbd1f6333b5aa8",
+  "sourceHash": "fnv1a64:a31ad3a58e005e1c",
   "lessons": [
     {
       "id": "ES-C353-hospital",
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adf6bed4466ebd43",
+      "sourceHash": "fnv1a64:9677d3cb266d7a7d",
       "notice": null,
       "blocks": [
         {
@@ -704,7 +704,7 @@
             },
             {
               "kind": "speech",
-              "text": "A mouseîon is a seat of the Moûsai, the Muses — nine goddesses who between them owned poetry, song, dance, history and astronomy. To a Greek those were one field, and the Muse was who you asked for help before starting."
+              "text": "A mouseîon is a seat of the Moûsai, the Muses — nine goddesses who between them owned poetry, song, dance, history and astronomy. To a Greek those were one field, and the Muse was who you asked for help before starting. Museo from Latin museum, from Greek mouseîon (EtymDB 2.1)."
             },
             {
               "kind": "speech",

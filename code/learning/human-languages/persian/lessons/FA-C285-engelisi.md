@@ -15,6 +15,7 @@ concept_tag: FA-KAR285-ENGELISI
 prerequisites: [FA-C285-shimi, FA-C285-adabiyat]
 sounds: []
 roots: []
+etymology_hook: "engelisi: Engelis 'England, the English' + -i; a European name, as in French anglais"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C285-adabiyat]
 <!-- hl-knowledge: introduces=[FA-LEX-C285-KAR285-04]; assesses=[] -->
 
 **انگلیسی** — *engelisi* — "English (the language)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*engelisi* is *Engelis*, "England, the English", with the ending *-i*. *Engelis* is a loan from European languages, whose name for the English appears as French *anglais* and Italian *inglese*; which one passed it to Persian is not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

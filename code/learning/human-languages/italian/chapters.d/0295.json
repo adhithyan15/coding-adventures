@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Le indagini",
+  "label": "ch:it-le-indagini",
+  "canDo": "I can follow an investigation: investigating, the inspector, the clues and the footprints.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C295-impronta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can follow an investigation: investigating, the inspector, the clues and the footprints.",
+    "assesses": [
+      "IT-LEX-C295-INDAGINE-03",
+      "IT-LEX-C295-INDAGINE-04",
+      "IT-LEX-C295-INDAGINE-05"
+    ]
+  }
+}

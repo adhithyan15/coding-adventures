@@ -13,7 +13,8 @@ gloss: "to fear"
 concept_tag: IT-VERB-TEMERE
 prerequisites: [IT-C147-riscaldare, IT-C148-tacere]
 sounds: []
-roots: []
+roots: [timere-latin]
+etymology_hook: "temere ← Latin timere 'to fear' — English timid shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C148-tacere]
 <!-- hl-knowledge: introduces=[IT-LEX-C148-VERBI148-02]; assesses=[] -->
 
 **temere** — "to fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**temere** ← Latin *timere*, "to fear" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

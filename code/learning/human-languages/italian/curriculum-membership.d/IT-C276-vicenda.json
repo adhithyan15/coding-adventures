@@ -1,0 +1,11 @@
+{
+  "id": "IT-C276-vicenda",
+  "pathSegment": "IT-PATH-276-VICENDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-276-VICENDA",
+      "order": 1
+    }
+  ]
+}

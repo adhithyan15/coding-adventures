@@ -11,7 +11,8 @@ romanization: "aṭaṭā"
 concept_tag: TA-NOTATALL-ADADA
 prerequisites: [TA-C96-notatall, TA-C96-isthatso]
 sounds: []
-roots: []
+roots: [tamil-adada-exclamation]
+etymology_hook: "அடடா — an exclamation of surprise or pity; DEDR has no entry, and its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C96-isthatso]
 
 Said to bad news it is sympathy; said to good news it is delight. **அடடா, அப்படியா?** — "oh
 dear, is that so?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**அடடா** (*aṭaṭā*) is an exclamation, a sound of surprise or pity rather than a word built from parts. DEDR has no entry for it; the nearest is the exclamation *aṭā* (DEDR 70). Its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

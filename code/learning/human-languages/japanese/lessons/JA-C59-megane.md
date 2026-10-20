@@ -14,7 +14,8 @@ romanization: "megane"
 concept_tag: JA-CLOTHES59-MEGANE
 prerequisites: [JA-C59-boushi, JA-C59-kutsushita]
 sounds: []
-roots: []
+roots: [japanese-me-eye, japanese-kane-metal]
+etymology_hook: "megane: native me 'eye' + kane 'metal' (voiced); 眼鏡 is read as a whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C59-kutsushita]
 <!-- hl-knowledge: introduces=[JA-LEX-C59-CLOTHES59-03]; assesses=[] -->
 
 **めがね** — *megane* — "glasses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**めがね** (*megane*) is native, inherited rather than borrowed, usually taken apart as *me*, "eye", and *kane*, "metal", voiced to *gane*. JMdict writes it with characters for "eye" and "mirror", read as a whole, and marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

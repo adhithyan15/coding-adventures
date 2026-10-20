@@ -14,7 +14,8 @@ romanization: "caturaḥ"
 concept_tag: SA-QUAL129-CATURAH
 prerequisites: [SA-C129-pracinah, SA-C129-virah]
 sounds: []
-roots: []
+roots: [sanskrit-catura-clever]
+etymology_hook: "catura 'swift', then 'clever' (MW); CDIAL 4594 compares caṭula; origin uncertain; Pali catura"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C129-virah]
 <!-- hl-knowledge: introduces=[SA-LEX-C129-QUAL129-05]; assesses=[] -->
 
 **चतुरः** — *caturaḥ* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*catura* first meant "swift, quick" and then "dexterous, clever" (MW). MW cites only a grammarians' root √cat, and CDIAL 4594 compares *caṭula* "fickle", so its origin is uncertain. Pali kept it as *catura* "clever" (CDIAL 4594).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

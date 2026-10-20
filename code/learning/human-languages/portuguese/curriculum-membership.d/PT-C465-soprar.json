@@ -1,0 +1,11 @@
+{
+  "id": "PT-C465-soprar",
+  "pathSegment": "PT-PATH-465-TEMPORAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-465-TEMPORAL",
+      "order": 1
+    }
+  ]
+}

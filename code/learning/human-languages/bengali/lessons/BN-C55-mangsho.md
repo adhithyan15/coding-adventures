@@ -14,7 +14,8 @@ romanization: "māngsho"
 concept_tag: BN-VERBS55-MANGSHO
 prerequisites: [BN-C55-daka, BN-C55-paowa]
 sounds: []
-roots: []
+roots: [sanskrit-mamsa]
+etymology_hook: "māngsho ← Sanskrit māṁsa 'flesh', a tatsama; CDIAL lists the inherited form mās (CDIAL 9982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C55-paowa]
 <!-- hl-knowledge: introduces=[BN-LEX-C55-VERBS55-04]; assesses=[] -->
 
 **মাংস** — *māngsho* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাংস** (*māngsho*) is Sanskrit *māṁsa*, "flesh", taken over whole as a learned loan, a tatsama (CDIAL 9982). The word inherited from it is *mās*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naḍumu"
 concept_tag: TE-AROGYAM250-NADUMU
 prerequisites: [TE-C250-cilamanda, TE-C250-toda]
 sounds: []
-roots: []
+roots: [dravidian-natu-middle]
+etymology_hook: "naḍumu: native Dravidian, one word with Tamil naṭu and Kannada naḍu (DEDR 3584)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C250-toda]
 <!-- hl-knowledge: introduces=[TE-LEX-C250-AROGYAM250-05]; assesses=[] -->
 
 **నడుము** — *naḍumu* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నడుము** (*naḍumu*) is native Dravidian, one word with Tamil *naṭu* and Kannada *naḍu* (DEDR 3584). DEDR lists Telugu *naḍumu*, "middle, waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

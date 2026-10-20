@@ -14,7 +14,8 @@ romanization: "chahârdah"
 concept_tag: FA-CLOTHES75-CHAHARDAH
 prerequisites: [FA-C75-kamarband, FA-C75-davazdah]
 sounds: []
-roots: []
+roots: [pie-kwetwores, proto-indo-european-dekm]
+etymology_hook: "chahârdah: Persian chahâr 'four' + dah 'ten'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C75-davazdah]
 <!-- hl-knowledge: introduces=[FA-LEX-C75-CLOTHES75-04]; assesses=[] -->
 
 **چهارده** — *chahârdah* — "fourteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chahârdah* is *chahâr*, "four", with *dah*, "ten": four-and-ten. Both numbers are inherited from Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

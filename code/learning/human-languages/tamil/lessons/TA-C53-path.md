@@ -11,7 +11,8 @@ romanization: "pātai"
 concept_tag: TA-NOUN-PATH
 prerequisites: [TA-C53-field, TA-C51-star, TA-C52-root]
 sounds: []
-roots: []
+roots: [sanskrit-patha]
+etymology_hook: "பாதை — probably from Sanskrit patha 'path' (CDIAL 7743); DEDR has no native entry for it"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TA-C53-field]
 Something you can put your foot on: a track worn into the ground, a lane, a road.
 
 Tamil has *vaḻi* as well, and the two overlap less than they look as though they should. *vaḻi* is the way — the route, the means, the manner of going about something. பாதை stays physical. Malayalam's everyday path-word is വഴി, the same one; Telugu's is *bāṭa*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பாதை** (*pātai*) is probably a loan from Sanskrit *patha*, "path" (CDIAL 7743), with the Tamil *-ai* ending. DEDR has no native entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

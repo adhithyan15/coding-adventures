@@ -14,6 +14,7 @@ concept_tag: GE-THING202-BUERSTE
 prerequisites: [GE-C202-buegeleisen, GE-C202-shampoo]
 sounds: []
 roots: []
+etymology_hook: "Bürste ← Old High German bursta 'bristles' — a cousin of English bristle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C202-shampoo]
 <!-- hl-knowledge: introduces=[GE-LEX-C202-THING202-04]; assesses=[] -->
 
 **die Bürste** — "a brush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Bürste** ← Old High German *bursta*, "bristles" (EtymDB 2.1) — inherited. English *bristle* comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "an elephant"
 concept_tag: LA-ANIMALIA3-ELEPHANTUS
 prerequisites: [LA-C92-gallina, LA-C92-asinus]
 sounds: []
-roots: []
+roots: [elephantus-latin]
+etymology_hook: "elephantus 'elephant' — borrowed from Greek elephas, elephantos 'elephant, ivory'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C92-asinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C92-ANIMALIA3-04]; assesses=[] -->
 
 **elephantus, elephantī** — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**elephantus** was borrowed from Greek *elephas*, *elephantos*, "elephant, ivory" (Lewis & Short). Where Greek got the word is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

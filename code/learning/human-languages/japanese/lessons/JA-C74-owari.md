@@ -14,7 +14,8 @@ romanization: "owari"
 concept_tag: JA-TIME74-OWARI
 prerequisites: [JA-C74-maishuu, JA-C74-shuumatsu]
 sounds: []
-roots: []
+roots: [japanese-owaru]
+etymology_hook: "owari: native, the noun from owaru 'to end'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C74-shuumatsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C74-TIME74-03]; assesses=[] -->
 
 **おわり** — *owari* — "the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おわり** (*owari*) is native: the noun made from *owaru*, "to end", by its stem (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

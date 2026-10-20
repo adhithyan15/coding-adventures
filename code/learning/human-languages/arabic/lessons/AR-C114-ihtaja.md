@@ -14,7 +14,8 @@ romanization: "iḥtāja"
 concept_tag: AR-VERB-IHTAJA
 prerequisites: [AR-C114-khutta, AR-C114-haja]
 sounds: []
-roots: []
+roots: [ḥ-w-j]
+etymology_hook: "iḥtāja: built on the root ḥ-w-j, 'to need' (Lane); iḥtāja is Form VIII, 'to be in need'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C114-haja]
 <!-- hl-knowledge: introduces=[AR-LEX-C114-WANT114-04]; assesses=[] -->
 
 **احتاج** — *iḥtāja* — "to need".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**احتاج** (*iḥtāja*) is built on the native Arabic root *ḥ-w-j*, "to need" (Lane). *Iḥtāja* is Form VIII, "to be in need".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

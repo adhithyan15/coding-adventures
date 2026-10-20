@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:49b97eef585892e2",
+  "lessonIds": [
+    "PT-C315-funeral",
+    "PT-C315-enterrar",
+    "PT-C315-enterro",
+    "PT-C315-cemiterio",
+    "PT-C315-tumulo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch315.txt",
+  "json": "portuguese/narration/ch315.json",
+  "textHash": "fnv1a64:13d6db4de074d45a",
+  "jsonHash": "fnv1a64:7cb6b859b4875d7f",
+  "findings": []
+}

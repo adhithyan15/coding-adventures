@@ -13,7 +13,8 @@ gloss: "sometimes"
 concept_tag: GE-WO-MANCHMAL
 prerequisites: [GE-C94-sofort, GE-C95-heute]
 sounds: []
-roots: []
+roots: [germanic-mela]
+etymology_hook: "manchmal — 'many a' + Mal 'time': many a time"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C95-heute]
 <!-- hl-knowledge: introduces=[GE-LEX-C95-WO-02]; assesses=[] -->
 
 **manchmal** — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**manchmal** is "many a" + the word for "a time", Old High German *māl* ← Proto-Germanic *\*mēlą* (EtymDB 2.1): many a time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

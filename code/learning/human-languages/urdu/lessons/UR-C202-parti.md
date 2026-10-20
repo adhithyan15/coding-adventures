@@ -14,7 +14,8 @@ romanization: "pārṭī"
 concept_tag: UR-CHIZ202-PARTI
 prerequisites: [UR-C201-tash, UR-C201-daur]
 sounds: []
-roots: []
+roots: [english-party]
+etymology_hook: "pārṭī ← English party"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C201-daur]
 <!-- hl-knowledge: introduces=[UR-LEX-C202-CHIZ202-01]; assesses=[] -->
 
 **پارٹی** — *pārṭī* — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پارٹی** (*pārṭī*) is a loan from English *party*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

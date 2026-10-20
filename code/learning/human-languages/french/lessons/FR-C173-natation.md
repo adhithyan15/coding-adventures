@@ -13,7 +13,8 @@ gloss: "swimming"
 concept_tag: FR-CHOSES173-NATATION
 prerequisites: [FR-C173-raquette, FR-C173-salle-de-sport]
 sounds: []
-roots: []
+roots: [natare-latin]
+etymology_hook: "natation ← Latin natatio 'swimming', from natare 'to swim' — English natatorium"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C173-salle-de-sport]
 <!-- hl-knowledge: introduces=[FR-LEX-C173-CHOSES173-04]; assesses=[] -->
 
 **la natation** — "swimming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**natation** ← Latin *natatio*, "swimming", from *natare*, "to swim" — a learned borrowing. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

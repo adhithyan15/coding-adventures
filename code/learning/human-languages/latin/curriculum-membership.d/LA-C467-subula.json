@@ -1,0 +1,11 @@
+{
+  "id": "LA-C467-subula",
+  "pathSegment": "LA-PATH-467-SUTRINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-467-SUTRINA",
+      "order": 2
+    }
+  ]
+}

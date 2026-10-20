@@ -14,7 +14,8 @@ romanization: "lekkapeṭṭu"
 concept_tag: TE-VERB-LEKKAPETTU
 prerequisites: [TE-C146-vesuko, TE-C146-pilucu, TE-C82-eleventh, TE-C82-tenth]
 sounds: []
-roots: []
+roots: [sanskrit-lekhya]
+etymology_hook: "lekkapeṭṭu: lekka 'count', usually from Sanskrit lekhya 'writing' (CDIAL 11108) + native peṭṭu 'put' (DEDR 4390)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C146-pilucu]
 <!-- hl-knowledge: introduces=[TE-LEX-C146-ACT146-04]; assesses=[] -->
 
 **లెక్కపెట్టు** — *lekkapeṭṭu* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**లెక్కపెట్టు** (*lekkapeṭṭu*) is *lekka*, "count, account", usually traced to Sanskrit *lekhya*, "to be written; a document" (CDIAL 11108), and native *peṭṭu*, "to put" (DEDR 4390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

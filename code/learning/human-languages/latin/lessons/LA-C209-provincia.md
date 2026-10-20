@@ -13,7 +13,8 @@ gloss: "a province"
 concept_tag: LA-LOC209-PROVINCIA
 prerequisites: [LA-C208-iamdudum, LA-C209-regio]
 sounds: []
-roots: []
+roots: [provincia-latin]
+etymology_hook: "prōvincia 'province' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C209-regio]
 <!-- hl-knowledge: introduces=[LA-LEX-C209-LOC209-02]; assesses=[] -->
 
 **prōvincia, prōvinciae** — "a province".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**prōvincia** has no sure origin; Lewis & Short call it doubtful. A link with *vincō*, "to conquer", is popular but not proven.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

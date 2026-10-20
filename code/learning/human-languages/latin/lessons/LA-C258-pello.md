@@ -13,7 +13,8 @@ gloss: "to push, to drive"
 concept_tag: LA-VERB-PELLO
 prerequisites: [LA-C257-spatior, LA-C258-somnio]
 sounds: []
-roots: []
+roots: [pellere-latin]
+etymology_hook: "pellō 'to push' — usually traced to PIE *pel- 'to drive'; English repel"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C258-somnio]
 <!-- hl-knowledge: introduces=[LA-LEX-C258-ACT258-02]; assesses=[] -->
 
 **pellō, pellere** — "to push, to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pellō** is inherited, usually traced to Proto-Indo-European *\*pel-*, "to drive, to thrust". Greek *pallō*, "to brandish, to shake", is a cousin (Lewis & Short). English *repel* and *pulse* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

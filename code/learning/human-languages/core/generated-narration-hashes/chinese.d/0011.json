@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 11,
-  "sourceHash": "fnv1a64:950d48762c305900",
+  "sourceHash": "fnv1a64:dff44ba0c9c7175f",
   "lessonIds": [
     "ZH-W11-qing",
     "ZH-C11-qing",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch11.txt",
   "json": "chinese/narration/ch11.json",
-  "textHash": "fnv1a64:5f75dec7bff77680",
-  "jsonHash": "fnv1a64:1d54e19cc104c9a0",
+  "textHash": "fnv1a64:73f8c56b7753d780",
+  "jsonHash": "fnv1a64:0f0874ce07d933f3",
   "findings": []
 }

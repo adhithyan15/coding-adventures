@@ -14,7 +14,8 @@ romanization: "khiṛkī"
 concept_tag: MW-HOME62-KHIRKI
 prerequisites: [MW-C61-kado, MW-C61-mithai]
 sounds: []
-roots: []
+roots: [sanskrit-khatakkika]
+etymology_hook: "khiṛkī ← Sanskrit khaṭakkikā 'side door', a tadbhava (CDIAL 3770, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C61-mithai]
 <!-- hl-knowledge: introduces=[MW-LEX-C62-HOME62-01]; assesses=[] -->
 
 **खिड़की** — *khiṛkī* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खिड़की** (*khiṛkī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṭakkikā*, "side door". CDIAL gives no Marwari form in this entry (CDIAL 3770); the match is through Hindi *khiṛkī*. CDIAL thinks it first meant something made of matting.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "pustakaṁ"
 concept_tag: TE-NOUN-BOOK
 prerequisites: [TE-C46-salt]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka]
+etymology_hook: "pustakaṁ ← Sanskrit pustaka 'book', which CDIAL 8413 takes from Iranian (Persian pōst 'skin')"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C46-salt]
 Sanskrit *pustaka* is the source, but the trail behind it leaves India altogether. Middle Persian *post* meant "hide, skin" — the thing written on before paper.
 
 So the Telugu word for a book carries an animal skin folded up inside it, and it arrived by the same north-western road as రోజు, which turned out to be Persian too. Two of these five walked in from outside; three were always here.
+
+CDIAL 8413 takes Sanskrit *pustaka* from Iranian, comparing Sogdian *pwstk*, "book", and Persian *pōst*, "skin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

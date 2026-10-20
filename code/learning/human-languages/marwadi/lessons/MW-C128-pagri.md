@@ -14,7 +14,8 @@ romanization: "pagṛī"
 concept_tag: MW-THINGS128-PAGRI
 prerequisites: [MW-C127-hal, MW-C127-bailgari]
 sounds: []
-roots: []
+roots: [indo-aryan-pagga]
+etymology_hook: "pagṛī ← *paggā 'headdress', reconstructed (CDIAL 7644, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C127-bailgari]
 <!-- hl-knowledge: introduces=[MW-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **पगड़ी** — *pagṛī* — "a turban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पगड़ी** (*pagṛī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*paggā*, "headdress", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7644); the match is through Hindi *pagṛī*. CDIAL thinks a source in Sanskrit *pragraha* scarcely likely, and explains the *ṛ* as an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

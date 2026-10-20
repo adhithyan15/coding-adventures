@@ -14,6 +14,7 @@ concept_tag: IT-VERB-CONTROLLARE
 prerequisites: [IT-C234-lasciare, IT-C234-perdere]
 sounds: []
 roots: []
+etymology_hook: "controllare ← French contrôler, from contre-rôle 'a counter-roll' — English control"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C234-perdere]
 <!-- hl-knowledge: introduces=[IT-LEX-C235-VERBI235-01]; assesses=[] -->
 
 **controllare** — "to check".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**controllare** ← French *contrôler* — borrowed. EtymDB 2.1 has no row for *controllare*; it derives the French verb from Old French *contrerole*, "a counter-roll", a register kept to check another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

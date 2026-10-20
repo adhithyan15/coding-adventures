@@ -14,7 +14,8 @@ romanization: "býstryy"
 concept_tag: RU-TEMP-FAST
 prerequisites: [RU-C66-cold, RU-C66-warm]
 sounds: []
-roots: []
+roots: [slavic-bystru]
+etymology_hook: "быстрый ← Proto-Slavic *bystrŭ; Vasmer compares Old Norse bysja 'to gush out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C66-warm]
 <!-- hl-knowledge: introduces=[RU-LEX-C66-TEMP-04]; assesses=[] -->
 
 **быстрый** (*býstryy*) — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**быстрый** ← Proto-Slavic *\*bystrŭ* — inherited; Serbo-Croatian *бистар* means "clear". Vasmer compares Old Norse *bysja*, "to gush out", and Norwegian *buse*, "to rush forward", but other links are proposed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

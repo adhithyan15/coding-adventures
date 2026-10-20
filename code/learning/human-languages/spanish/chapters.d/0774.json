@@ -1,0 +1,19 @@
+{
+  "chapter": 774,
+  "title": "La casa de mis abuelos",
+  "label": "ch:es-la-casa-de-mis-abuelos",
+  "canDo": "I can describe an old house as I remember it: the cellar, the attic, a drawer, a mirror and the blinds.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C774-persiana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 774: I can describe an old house as I remember it: the cellar, the attic, a drawer, a mirror and the blinds.",
+    "assesses": [
+      "ES-LEX-C774-DESVAN-03",
+      "ES-LEX-C774-DESVAN-04",
+      "ES-LEX-C774-DESVAN-05"
+    ]
+  }
+}

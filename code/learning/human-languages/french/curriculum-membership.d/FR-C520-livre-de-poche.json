@@ -1,0 +1,11 @@
+{
+  "id": "FR-C520-livre-de-poche",
+  "pathSegment": "FR-PATH-520-LIBRAIRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-520-LIBRAIRE",
+      "order": 3
+    }
+  ]
+}

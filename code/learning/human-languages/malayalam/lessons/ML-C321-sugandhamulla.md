@@ -14,7 +14,8 @@ romanization: "sugandhamuḷḷa"
 concept_tag: ML-GUNAM321-SUGANDHAMULLA
 prerequisites: [ML-C320-atipoli, ML-C321-pulliyulla]
 sounds: []
-roots: []
+roots: [sanskrit-sugandha, dravidian-ul-be]
+etymology_hook: "sugandhamuḷḷa: Sanskrit sugandha 'fragrant' (CDIAL 13454) + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C321-pulliyulla]
 <!-- hl-knowledge: introduces=[ML-LEX-C321-GUNAM321-02]; assesses=[] -->
 
 **സുഗന്ധമുള്ള** — *sugandhamuḷḷa* — "fragrant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സുഗന്ധമുള്ള** (*sugandhamuḷḷa*) joins Sanskrit *sugandha*, "fragrant, perfume" (CDIAL 13454): *su*, "good", and *gandha*, "smell", to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

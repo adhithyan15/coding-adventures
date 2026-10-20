@@ -14,7 +14,8 @@ romanization: "kurai"
 concept_tag: TA-VERB-KURAI
 prerequisites: [TA-C258-uruku, TA-C258-pari]
 sounds: []
-roots: []
+roots: [dravidian-kurai-bark]
+etymology_hook: "குரை — native Dravidian (DEDR 1796); Malayalam kura 'barking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C258-pari]
 <!-- hl-knowledge: introduces=[TA-LEX-C258-ACT258-03]; assesses=[] -->
 
 **குரை** — *kurai* — "to bark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குரை** (*kurai*) is native Dravidian. DEDR 1796 lists Malayalam *kura*, "barking", and compares Sanskrit *kurkura*, "dog" (CDIAL 3329).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

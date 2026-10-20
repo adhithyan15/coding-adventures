@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 220,
-  "sourceHash": "fnv1a64:3e6559da726a08ac",
+  "sourceHash": "fnv1a64:1be1d19c2d662eef",
   "lessonIds": [
     "PT-C220-jornalista",
     "PT-C220-arquiteto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch220.txt",
   "json": "portuguese/narration/ch220.json",
-  "textHash": "fnv1a64:ca3bd70195d3bcd7",
-  "jsonHash": "fnv1a64:89f83e9df548d757",
+  "textHash": "fnv1a64:314d448205c61161",
+  "jsonHash": "fnv1a64:49f54f346f48ba97",
   "findings": []
 }

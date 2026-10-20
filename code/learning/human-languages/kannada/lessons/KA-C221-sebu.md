@@ -14,7 +14,8 @@ romanization: "sēbu"
 concept_tag: KA-VASTU221-SEBU
 prerequisites: [KA-C220-phyan, KA-C220-kasa]
 sounds: []
-roots: []
+roots: [persian-seb]
+etymology_hook: "sēbu ← Persian sēb 'apple', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C220-kasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C221-VASTU221-01]; assesses=[] -->
 
 **ಸೇಬು** — *sēbu* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೇಬು** (*sēbu*) is a loan from Persian *sēb*, "apple", which came through Hindustani. Kannada adds *-u* at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

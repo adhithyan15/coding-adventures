@@ -10,7 +10,7 @@ gloss: this is — the phrase that introduces somebody else, using a das that st
 concept_tag: GE-INTRODUCE-OTHERS
 prerequisites: [GE-C36-ihr-her, GE-C16-er-ist, GE-C02-freut-mich, GE-C22-hund-katze-more]
 sounds: []
-roots: []
+roots: [germanic-brother]
 etymology_hook: "das ist meine Schwester keeps das even in front of a die-word, because that das is not the article but the old pointing word behind it — the demonstrative *þat that also gave English that"
 duration:
   max_seconds: 240
@@ -50,6 +50,11 @@ you already have.
 > **Das ist meine Schwester.** — "This is my sister."
 
 And the reply is one you have owned since your first introduction: **Freut mich.**
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Das ist mein Bruder** — *mein* ← Old High German *mīn* ← Proto-Germanic *\*mīnaz*, English *mine*; *Bruder* ← Proto-Germanic *\*brōþēr*, English *brother*. (EtymDB 2.1)
 
 ## Grammar Lens: the das that ignores gender
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DAS-IST-01, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-ARTIKEL-03, GE-LEX-MEIN-01] -->

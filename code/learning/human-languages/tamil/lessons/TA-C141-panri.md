@@ -14,7 +14,8 @@ romanization: "paṉṟi"
 concept_tag: TA-THINGS141-PANRI
 prerequisites: [TA-C141-pucci, TA-C141-cilanti]
 sounds: []
-roots: []
+roots: [dravidian-panri-pig]
+etymology_hook: "பன்றி — native Dravidian (DEDR 4039); Malayalam panni, Kannada pandi, Telugu pandi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C141-cilanti]
 <!-- hl-knowledge: introduces=[TA-LEX-C141-THINGS141-04]; assesses=[] -->
 
 **பன்றி** — *paṉṟi* — "a pig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**பன்றி** (*paṉṟi*) is native Dravidian. DEDR 4039 lists Malayalam *panni*, Kannada *pandi* and Telugu *pandi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

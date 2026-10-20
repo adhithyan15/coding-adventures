@@ -13,7 +13,8 @@ gloss: "pain"
 concept_tag: FR-SANTE5-DOULEUR
 prerequisites: [FR-C52-coude, FR-C52-poignet]
 sounds: []
-roots: []
+roots: [dolor-latin]
+etymology_hook: "douleur ← Latin dolor 'pain, grief' — English dolorous shares it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C52-poignet]
 <!-- hl-knowledge: introduces=[FR-LEX-C53-SANTE5-01]; assesses=[] -->
 
 **la douleur** — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**douleur** ← Old French *dolor* ← Latin *dolor*, "pain, grief" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

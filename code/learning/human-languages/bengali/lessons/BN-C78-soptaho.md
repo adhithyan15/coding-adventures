@@ -14,7 +14,8 @@ romanization: "sôptāhô"
 concept_tag: BN-TIME78-SOPTAHO
 prerequisites: [BN-C78-sondhya, BN-C78-sokal]
 sounds: []
-roots: []
+roots: [sanskrit-saptaha]
+etymology_hook: "sôptāhô ← Sanskrit saptāha 'period of seven days', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C78-sokal]
 <!-- hl-knowledge: introduces=[BN-LEX-C78-TIME78-04]; assesses=[] -->
 
 **সপ্তাহ** — *sôptāhô* — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সপ্তাহ** (*sôptāhô*) is Sanskrit *saptāha*, "period of seven days", taken over whole as a learned loan, a tatsama. It is *sapta*, "seven", + *aha*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

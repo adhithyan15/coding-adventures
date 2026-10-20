@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 64,
-  "sourceHash": "fnv1a64:c4735f96c5ad558a",
+  "sourceHash": "fnv1a64:a055ffae3ab8e887",
   "lessonIds": [
     "BN-C64-kolom",
     "BN-C64-kagoj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch64.txt",
   "json": "bengali/narration/ch64.json",
-  "textHash": "fnv1a64:915fb5bc2437826a",
-  "jsonHash": "fnv1a64:9611dfbb70406d6e",
+  "textHash": "fnv1a64:61f1e3382fef0146",
+  "jsonHash": "fnv1a64:cfb771635435254e",
   "findings": []
 }

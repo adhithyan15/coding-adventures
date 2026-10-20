@@ -14,6 +14,7 @@ concept_tag: FR-VERB-TOUCHER
 prerequisites: [FR-C205-secher, FR-C206-casser]
 sounds: []
 roots: []
+etymology_hook: "toucher ← probably Vulgar Latin *toccare 'to knock' — English touch"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C206-casser]
 <!-- hl-knowledge: introduces=[FR-LEX-C206-VERBES206-02]; assesses=[] -->
 
 **toucher** — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**toucher** ← Vulgar Latin *\*toccare*, "to knock", imitating the sound of a tap — inherited; the account is the usual one, not certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

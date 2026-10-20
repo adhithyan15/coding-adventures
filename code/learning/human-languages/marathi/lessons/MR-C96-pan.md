@@ -14,7 +14,8 @@ romanization: "pān"
 concept_tag: MR-NATURE96-PAN
 prerequisites: [MR-C95-jhad, MR-C96-phul]
 sounds: []
-roots: []
+roots: [sanskrit-parna]
+etymology_hook: "pān ← Sanskrit parṇa 'plumage, foliage; leaf', a tadbhava (CDIAL 7918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C96-phul]
 <!-- hl-knowledge: introduces=[MR-LEX-C96-NATURE96-02]; assesses=[] -->
 
 **पान** — *pān* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पान** (*pān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *parṇa*, "plumage, foliage; leaf" (CDIAL 7918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

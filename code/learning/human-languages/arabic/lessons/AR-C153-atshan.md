@@ -14,7 +14,8 @@ romanization: "ʿaṭshān"
 concept_tag: AR-QUAL153-ATSHAN
 prerequisites: [AR-C153-kasul, AR-C153-shuja, AR-C28-jaa, AR-C29-qala, AR-C29-raa]
 sounds: []
-roots: []
+roots: [ʿ-ṭ-sh]
+etymology_hook: "ʿaṭshān: built on the root ʿ-ṭ-sh, 'to thirst' (Lane); ʿaṭshān is the faʿlān adjective of a passing state, 'thirsty'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C153-shuja]
 <!-- hl-knowledge: introduces=[AR-LEX-C153-QUAL153-03]; assesses=[] -->
 
 **عطشان** — *ʿaṭshān* — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عطشان** (*ʿaṭshān*) is built on the native Arabic root *ʿ-ṭ-sh*, "to thirst" (Lane). *ʿAṭshān* is the *faʿlān* adjective of a passing state, "thirsty".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

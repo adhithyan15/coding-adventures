@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:636f2cdcf8774035",
+  "sourceHash": "fnv1a64:3b6fe96224885b6f",
   "lessons": [
     {
       "id": "LA-C01-salve",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5c761263c9e7dfc4",
+      "sourceHash": "fnv1a64:bcbff7d458e09b35",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "salvē vs. salvēte: Latin changes the ending to mark one listener (-e) versus many (-ēte). This is the feature that defines Latin — meaning carried in endings, not in word order or extra words. English lost almost all of it; its Romance grandchildren kept some. You will meet it in every chapter."
+              "text": "salvē vs. salvēte: Latin changes the ending to mark one listener (-e) or many (-ēte). This is the feature that defines Latin — meaning carried in endings, not in word order or extra words. English lost almost all of it; its Romance grandchildren kept some. You will meet it in every chapter."
             }
           ]
         },
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41aa314194bfcf7b",
+      "sourceHash": "fnv1a64:3d860db560cbb3ce",
       "notice": null,
       "blocks": [
         {
@@ -454,7 +454,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Avē is the more formal greeting — \"hail\" — from avēre \"to fare well, to be eager.\" It survives in English essentially unchanged inside the prayer \"Ave Maria\" (\"Hail, Mary\"), and stands in Catullus's famous avē atque valē — \"hail and farewell\" — spoken at his brother's grave, pairing the word you say on arrival with the one you say on leaving (next lesson)."
+              "text": "Avē is the more formal greeting — \"hail\" — from avēre \"to fare well, to be eager.\" It survives in English essentially unchanged inside the prayer \"Ave Maria\" (\"Hail, Mary\"), and stands in Catullus's famous avē atque valē — \"hail and farewell\" — spoken at his brother's grave, pairing the word you say on arrival with the one you say on leaving (next lesson). Romans heard avē as a form of avēre; many scholars now think it began as a Punic greeting meaning \"live!\"."
             }
           ]
         },
@@ -541,7 +541,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f679d775cd6e1a52",
+      "sourceHash": "fnv1a64:47ff7cf1e7c594b2",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Valē (singular) / valēte (plural) is the imperative of valēre, \"to be strong, to be well.\" So goodbye in Latin literally wishes you strength. The root is an English gold mine: value, valid, valiant, valour, valence, prevail, convalesce, ambivalent (\"strong both ways\"). And the Romance children carry valēre as their verb \"to be worth\": Spanish valer, Italian valere, French valoir."
+              "text": "Valē (singular) / valēte (plural) is the imperative of valēre, \"to be strong, to be well.\" So goodbye in Latin literally wishes you strength. Valēre is inherited, usually traced to Proto-Indo-European walh₂-, \"to be strong\" (EtymDB 2.1). The root is an English gold mine: value, valid, valiant, valour, valence, prevail, convalesce, ambivalent (\"strong both ways\"). And the Romance children carry valēre as their verb \"to be worth\": Spanish valer, Italian valere, French valoir."
             }
           ]
         },
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:574ae9fd19f3d699",
+      "sourceHash": "fnv1a64:39a63b9c22a80513",
       "notice": null,
       "blocks": [
         {
@@ -800,7 +800,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:496857b345c870eb",
+      "sourceHash": "fnv1a64:6c324f7f64ddb7f5",
       "notice": null,
       "blocks": [
         {
@@ -838,7 +838,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Classical Latin had no simple \"yes.\" To agree you said ita (\"thus, so\"), sīc (\"so, in this way\"), certē (\"certainly\"), or you just repeated the verb — asked \"are you coming?\", you answered \"I'm coming.\" It was sīc that hardened into the Romance \"yes\": Spanish and Italian sí / sì, French si (the emphatic yes). \"No\" is easier: nōn (\"not\"), from older ne-oenum \"not one thing\" — the ancient negative ne- that also gives English no, not, none, never, and which you will meet again as Sanskrit na and Hindi nahīṇ."
+              "text": "Classical Latin had no simple \"yes.\" To agree you said ita (\"thus, so\"), sīc (\"so, in this way\"), certē (\"certainly\"), or you repeated the verb — asked \"are you coming?\", you answered \"I'm coming.\" It was sīc that hardened into the Romance \"yes\": Spanish and Italian sí / sì, French si (the emphatic yes). \"No\" is easier: nōn (\"not\"), from older ne-oenum \"not one thing\" — the ancient negative ne- that also gives English no, not, none, never, and which you will meet again as Sanskrit na and Hindi nahīṇ."
             }
           ]
         },
@@ -925,7 +925,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c79e3844fce2766",
+      "sourceHash": "fnv1a64:75562322f3bb7e46",
       "notice": null,
       "blocks": [
         {
@@ -1089,7 +1089,7 @@
             },
             {
               "kind": "speech",
-              "text": "Catullus wrote avē atque valē at his brother's grave. Translate it, and say what each verb literally wishes. (\"Hail and farewell\"; avē \"fare well\" on meeting, valē \"be strong\" on parting.)"
+              "text": "Catullus wrote avē atque valē at his brother's tomb. Translate it, and say what each verb literally wishes. (\"Hail and farewell\"; avē \"fare well\" on meeting, valē \"be strong\" on parting.)"
             },
             {
               "kind": "activity",

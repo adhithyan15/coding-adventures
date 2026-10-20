@@ -14,6 +14,7 @@ concept_tag: FR-VILLE52-PARC
 prerequisites: [FR-C100-voiture, FR-C100-pont]
 sounds: []
 roots: []
+etymology_hook: "parc ← Medieval Latin parricus 'an enclosure', probably Frankish — English park"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C100-pont]
 <!-- hl-knowledge: introduces=[FR-LEX-C100-VILLE52-03]; assesses=[] -->
 
 **le parc** — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parc** ← Old French *parc*, "a pen for animals" ← Medieval Latin *parricus*, "an enclosure", probably from Frankish *\*parrik* — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

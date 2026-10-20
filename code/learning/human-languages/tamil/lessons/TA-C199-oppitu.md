@@ -14,7 +14,8 @@ romanization: "oppiṭu"
 concept_tag: TA-VERB-OPPITU
 prerequisites: [TA-C199-maru, TA-C199-vivati]
 sounds: []
-roots: []
+roots: [dravidian-o-suit, dravidian-idu-put]
+etymology_hook: "ஒப்பிடு — native: oppu 'likeness', from o 'to resemble' (DEDR 924) + iṭu 'to put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C199-vivati]
 <!-- hl-knowledge: introduces=[TA-LEX-C199-ACT199-05]; assesses=[] -->
 
 **ஒப்பிடு** — *oppiṭu* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ஒப்பிடு** (*oppiṭu*) is native: *oppu*, "likeness", from *o*, "to resemble" (DEDR 924), and *iṭu*, "to put" (DEDR 442): "set side by side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

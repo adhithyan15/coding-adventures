@@ -14,7 +14,8 @@ romanization: "shākh"
 concept_tag: UR-THINGS124-SHAKH
 prerequisites: [UR-C123-bij, UR-C123-jar]
 sounds: []
-roots: []
+roots: [persian-shakh]
+etymology_hook: "shākh: usually traced to Persian shākh 'branch, bough'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C123-jar]
 <!-- hl-knowledge: introduces=[UR-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **شاخ** — *shākh* — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاخ** (*shākh*) is a loan, usually traced to Persian *shākh*, "branch, bough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

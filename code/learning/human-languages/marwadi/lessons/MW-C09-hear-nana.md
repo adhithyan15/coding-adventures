@@ -11,8 +11,8 @@ gloss: maternal grandfather
 concept_tag: MW-FAMILY-MATERNAL-GRANDFATHER
 prerequisites: [MW-R08-script-close]
 sounds: [dental-n, long-aa]
-roots: []
-etymology_hook: A repeated familiar sound adds the maternal grandfather without adding a sign.
+roots: [indo-aryan-nanna]
+etymology_hook: "nānā ← *nānna 'term of respect for an older relative', reconstructed (CDIAL 7059)"
 duration:
   max_seconds: 135
 requires:
@@ -49,6 +49,11 @@ only the family side.
 
 Listen twice. Say it once. Keep *dādā* and *nānā* tied to their meanings before
 writing enters.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nānā* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "term of respect for an older relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7059); the match is through Hindi *nānā*. CDIAL compares Vedic *nanā*, "mother".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-LEX-DADA-01] -->

@@ -13,7 +13,8 @@ gloss: "to dream"
 concept_tag: LA-VERB-SOMNIO
 prerequisites: [LA-C257-observo, LA-C257-spatior]
 sounds: []
-roots: []
+roots: [somniare-latin, somnium-latin, somnus-latin]
+etymology_hook: "somniō 'to dream' — the verb made from somnium 'a dream'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C257-spatior]
 <!-- hl-knowledge: introduces=[LA-LEX-C258-ACT258-01]; assesses=[] -->
 
 **somniō, somniāre** — "to dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**somniō** is the verb made from *somnium*, "a dream" (Lewis & Short), which is built on *somnus*, "sleep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

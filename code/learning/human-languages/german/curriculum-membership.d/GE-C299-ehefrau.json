@@ -1,0 +1,11 @@
+{
+  "id": "GE-C299-ehefrau",
+  "pathSegment": "GE-PATH-299-EHE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-299-EHE",
+      "order": 2
+    }
+  ]
+}

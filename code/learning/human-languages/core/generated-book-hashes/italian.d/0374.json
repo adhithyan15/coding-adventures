@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:6bbb6e19fd0972af",
+  "lessonIds": [
+    "IT-C374-imprevisto",
+    "IT-C374-prevedibile",
+    "IT-C374-imprevedibile",
+    "IT-C374-alternativa",
+    "IT-C374-adattarsi"
+  ],
+  "tex": "italian/book/chapters/ch374-gli-imprevisti.tex"
+}

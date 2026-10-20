@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 307,
-  "sourceHash": "fnv1a64:2d36140272092289",
+  "sourceHash": "fnv1a64:720867fb9bdb9571",
   "lessonIds": [
     "KA-C307-godamu",
     "KA-C307-phalaka",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch307.txt",
   "json": "kannada/narration/ch307.json",
-  "textHash": "fnv1a64:241a5b713d59ee52",
-  "jsonHash": "fnv1a64:4fdbb3b1c19e82a6",
+  "textHash": "fnv1a64:8ee1418601f4eecc",
+  "jsonHash": "fnv1a64:50d42f700edb94cd",
   "findings": []
 }

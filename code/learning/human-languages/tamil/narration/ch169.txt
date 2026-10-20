@@ -12,6 +12,9 @@ Before the new one: say the Tamil for to slip, then the Tamil for to yawn.
 You'll want to know: கணுக்கால்.
 கணுக்கால் — kaṇukkāl — "an ankle".
 
+The word, taken apart.
+கணுக்கால் (kaṇukkāl) is native Dravidian. DEDR 1160 lists Malayalam kaṇu, "joint". The entry lists kaṇukkāl, "ankle": kaṇu, "joint", and kāl, "leg".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Tamil for to yawn, then the Tamil for an ankle.
 
 You'll want to know: இடுப்பு.
 இடுப்பு — iṭuppu — "the waist, the hip".
+
+The word, taken apart.
+இடுப்பு (iṭuppu) is native Dravidian. DEDR 448 lists Malayalam iṭa, "middle, waist". The entry lists iṭuppu, "waist, hips", under iṭai, "middle".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Tamil for an ankle, then the Tamil for the waist.
 You'll want to know: தொண்டை.
 தொண்டை — toṇṭai — "the throat".
 
+The word, taken apart.
+தொண்டை (toṇṭai) is native Dravidian. DEDR 3498 lists Malayalam toṇṭa, "windpipe, throat".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Tamil for the waist, then the Tamil for the throat.
 You'll want to know: இதயம்.
 இதயம் — itayam — "the heart".
 
+The word, taken apart.
+இதயம் (itayam) is a loan from Sanskrit hṛdaya, "heart" (CDIAL 14152). Tamil dropped the h, and ṛ became i.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Tamil for the throat, then the Tamil for the heart.
 
 You'll want to know: இரத்தம்.
 இரத்தம் — irattam — "blood".
+
+The word, taken apart.
+இரத்தம் (irattam) is a loan from Sanskrit rakta, "red; blood" (CDIAL 10539). Tamil puts a vowel before an initial r, so rakta became irattam.
 
 What you've built.
 One more word for this chapter.

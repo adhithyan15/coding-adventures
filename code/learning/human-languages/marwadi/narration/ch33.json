@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Six To Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:acacea28ec63c6ba",
+  "sourceHash": "fnv1a64:74aa7482be88cf56",
   "lessons": [
     {
       "id": "MW-C33-hear-chha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bce2fbe19068701a",
+      "sourceHash": "fnv1a64:2bbab93f1fb18a8f",
       "notice": null,
       "blocks": [
         {
@@ -73,6 +73,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chha is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit ṣaṣ, \"six\": CDIAL lists Marwari cha under a variant it reconstructs, kṣaṭ (CDIAL 12803)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -119,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:982df69fc76af6e9",
+      "sourceHash": "fnv1a64:b933f50fd01e3313",
       "notice": null,
       "blocks": [
         {
@@ -165,6 +176,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छ (chha) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit ṣaṣ, \"six\": CDIAL lists Marwari cha under a variant it reconstructs, kṣaṭ (CDIAL 12803)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -184,7 +206,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -229,7 +251,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81a46f2c8dfd4246",
+      "sourceHash": "fnv1a64:ed65e2b558f447ab",
       "notice": null,
       "blocks": [
         {
@@ -279,6 +301,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sāt is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sapta, \"seven\". CDIAL lists Marwari sāt under it (CDIAL 13139). English seven is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -325,7 +358,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:6ffc8216a4bf5959",
+      "sourceHash": "fnv1a64:608956960320e192",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -378,6 +411,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सात (sāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sapta, \"seven\". CDIAL lists Marwari sāt under it (CDIAL 13139). English seven is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -388,7 +432,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -433,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07aa3a187ca1bb44",
+      "sourceHash": "fnv1a64:f4e9029d91c05152",
       "notice": null,
       "blocks": [
         {
@@ -483,6 +527,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āṭh is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭā, \"eight\". CDIAL lists Marwari āṭh under it (CDIAL 941). English eight is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -529,7 +584,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:3628ef2b4db7fcfd",
+      "sourceHash": "fnv1a64:edec123c03e8eb0b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -582,6 +637,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आठ (āṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṣṭā, \"eight\". CDIAL lists Marwari āṭh under it (CDIAL 941). English eight is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -592,7 +658,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -637,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38a406e5818f0715",
+      "sourceHash": "fnv1a64:35d290a47243d42d",
       "notice": null,
       "blocks": [
         {
@@ -687,6 +753,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "no is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, \"nine\". CDIAL lists Old Marwari nova under it (CDIAL 6984). English nine is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -734,7 +811,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:baf6a269a536c41e",
+      "sourceHash": "fnv1a64:b49e654ca271ef0a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -784,6 +861,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नो (no) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nava, \"nine\". CDIAL lists Old Marwari nova under it (CDIAL 6984). English nine is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -794,7 +882,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -840,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8c3f6a2d02ea82c",
+      "sourceHash": "fnv1a64:b300d7ca38b75f03",
       "notice": null,
       "blocks": [
         {
@@ -894,6 +982,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from daśa, \"ten\". CDIAL lists Marwari das under it (CDIAL 6227). English ten is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -940,7 +1039,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:a6cbfe32266027a3",
+      "sourceHash": "fnv1a64:eabcdbca81f3db4b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -993,6 +1092,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दस (das) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from daśa, \"ten\". CDIAL lists Marwari das under it (CDIAL 6227). English ten is the same ancient word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1003,7 +1113,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

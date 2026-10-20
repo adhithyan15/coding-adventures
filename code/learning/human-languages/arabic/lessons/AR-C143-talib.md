@@ -14,7 +14,8 @@ romanization: "ṭālib"
 concept_tag: AR-THINGS143-TALIB
 prerequisites: [AR-C143-mimhah, AR-C143-saff, AR-C12-al-fusul, AR-C12-al-fusul]
 sounds: []
-roots: []
+roots: [ṭ-l-b]
+etymology_hook: "ṭālib: built on the root ṭ-l-b, 'to seek, to ask for' (Lane); ṭālib is the active participle, 'one who seeks'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C143-saff]
 <!-- hl-knowledge: introduces=[AR-LEX-C143-THINGS143-03]; assesses=[] -->
 
 **طالب** — *ṭālib* — "a student".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طالب** (*ṭālib*) is built on the native Arabic root *ṭ-l-b*, "to seek, to ask for" (Lane). *Ṭālib* is the active participle, "one who seeks".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

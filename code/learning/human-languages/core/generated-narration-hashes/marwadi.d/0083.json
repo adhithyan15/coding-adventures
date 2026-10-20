@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 83,
-  "sourceHash": "fnv1a64:34059328dbacd765",
+  "sourceHash": "fnv1a64:a9ff83212c70f952",
   "lessonIds": [
     "MW-C83-pul",
     "MW-C83-hotal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch83.txt",
   "json": "marwadi/narration/ch83.json",
-  "textHash": "fnv1a64:e963354716b184a7",
-  "jsonHash": "fnv1a64:3548f0dd1478c575",
+  "textHash": "fnv1a64:804e9fdaaec30594",
+  "jsonHash": "fnv1a64:a637e5150818fc52",
   "findings": []
 }

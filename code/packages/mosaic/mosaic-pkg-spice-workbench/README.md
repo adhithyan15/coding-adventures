@@ -13,6 +13,13 @@ sweep inputs, kind conversion, and source-order controls; their Rust document re
 source. The same adapter owns versioned `spice-mosaic/schematic` JSON import
 and export through protocol-2 awaited file effects; malformed imports leave the
 current document untouched. Schematic edits expose disabled-aware Undo and Redo
-controls for the active workbench session. Data-bound
-Path geometry remains a native XAML follow-up; vendor-dialect controls are
-later phases.
+controls for the active workbench session. Vendor-dialect controls are later
+phases.
+
+## Backends
+
+The waveform traces draw with a data-bound `Path`. It binds on XAML (#14682)
+and on Qt, Flutter and Compose (#16926), and runs on HTML, Web Components and
+React, so the workbench compiles on seven of Mosaic's eight backends; SwiftUI
+waits on #13206. Each native emitter's `spice_workbench_compiles_to_*` test
+(XAML, Qt, Flutter, Compose) pins this.

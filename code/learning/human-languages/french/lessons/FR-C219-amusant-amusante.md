@@ -14,6 +14,7 @@ concept_tag: FR-QUAL219-AMUSANT-AMUSANTE
 prerequisites: [FR-C218-tranquille, FR-C219-ennuyeux-ennuyeuse]
 sounds: []
 roots: []
+etymology_hook: "amusant — 'amusing', from the verb in s'amuser"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C219-ennuyeux-ennuyeuse]
 <!-- hl-knowledge: introduces=[FR-LEX-C219-QUAL219-02]; assesses=[] -->
 
 **amusant / amusante** — "fun, amusing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**amusant** is the present participle of the verb in *s'amuser*, "to amuse": amusing. *Amuser* ← Old French *amuser*, "to keep idle", from *muser*, "to gape" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

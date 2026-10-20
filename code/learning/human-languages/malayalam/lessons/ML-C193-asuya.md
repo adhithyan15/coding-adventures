@@ -14,7 +14,8 @@ romanization: "asūya"
 concept_tag: ML-AROGYAM193-ASUYA
 prerequisites: [ML-C192-ara, ML-C193-apakatam]
 sounds: []
-roots: []
+roots: [sanskrit-asuya]
+etymology_hook: "asūya ← Sanskrit asūyā 'envy, jealousy', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C193-apakatam]
 <!-- hl-knowledge: introduces=[ML-LEX-C193-AROGYAM193-02]; assesses=[] -->
 
 **അസൂയ** — *asūya* — "jealousy, envy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അസൂയ** (*asūya*) ← Sanskrit *asūyā*, "envy, jealousy", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

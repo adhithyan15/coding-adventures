@@ -14,7 +14,8 @@ romanization: "bakrī"
 concept_tag: HI-NOUN-GOAT
 prerequisites: [HI-C54-bird, HI-C52-vegetable, HI-C53-lip]
 sounds: []
-roots: []
+roots: [sanskrit-barkara]
+etymology_hook: "bakrī ← Sanskrit barkara 'kid, goat', a tadbhava (CDIAL 9153)"
 duration:
   max_seconds: 210
 requires:

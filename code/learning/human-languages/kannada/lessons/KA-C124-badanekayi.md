@@ -14,7 +14,8 @@ romanization: "badanekāyi"
 concept_tag: KA-THINGS124-BADANEKAYI
 prerequisites: [KA-C123-irulli, KA-C124-alugadde]
 sounds: []
-roots: []
+roots: [dravidian-vazhutalai-brinjal, dravidian-kaay-unripe]
+etymology_hook: "badanekāyi: native badane 'brinjal' (DEDR 5301) + kāyi 'unripe fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C124-alugadde]
 <!-- hl-knowledge: introduces=[KA-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **ಬದನೆಕಾಯಿ** — *badanekāyi* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬದನೆಕಾಯಿ** (*badanekāyi*) is native Dravidian: *badane*, "brinjal", (DEDR 5301, with Tamil *vaḻutalai*), and *kāyi*, "fruit" (DEDR 1459). The old *v-* has become *b-*. DEDR 5301 compares Sanskrit *bhaṇṭākī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

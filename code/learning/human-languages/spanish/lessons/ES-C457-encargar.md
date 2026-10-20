@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ENCARGAR
 prerequisites: [ES-C457-medicamento, ES-C456-cargo, ES-C431-pedido]
 sounds: [g-hard, rolled-rr, stress-final]
 roots: [carrus-latin]
+etymology_hook: "encargar — en- + cargar 'to load', Latin carricare: to load a task onto someone"
 duration:
   max_seconds: 275
 requires:
@@ -65,7 +66,7 @@ put on you.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-02, ES-LEX-C456-CUENTA-02] -->
 
-**en-** plus **cargar**, and *cargar* is the *carricare* from the lesson on
+**en-** plus **cargar**, and *cargar* is Latin *carricare*, met in the lesson on
 **el cargo** — to load a cart.
 
 So *encargar* is to **load a task onto somebody**, and every sense follows

@@ -14,6 +14,7 @@ concept_tag: FR-CHOSES193-FAUTEUIL
 prerequisites: [FR-C193-drap, FR-C193-tiroir]
 sounds: []
 roots: []
+etymology_hook: "fauteuil ← Old French faudestuel, from Frankish *faldistol 'a folding stool'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C193-tiroir]
 <!-- hl-knowledge: introduces=[FR-LEX-C193-CHOSES193-03]; assesses=[] -->
 
 **le fauteuil** — "an armchair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fauteuil** ← Old French *faudestuel* ← Frankish *\*faldistol*, "a folding stool" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

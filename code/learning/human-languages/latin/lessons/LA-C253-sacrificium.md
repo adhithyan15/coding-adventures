@@ -13,7 +13,8 @@ gloss: "a sacrifice"
 concept_tag: LA-RES253-SACRIFICIUM
 prerequisites: [LA-C253-feriae, LA-C253-convivium]
 sounds: []
-roots: []
+roots: [sacrificium-latin, sacer-latin, facere-latin]
+etymology_hook: "sacrificium 'sacrifice' — sacer 'holy' + faciō 'to make'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C253-convivium]
 <!-- hl-knowledge: introduces=[LA-LEX-C253-RES253-03]; assesses=[] -->
 
 **sacrificium, sacrificiī** — "a sacrifice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sacrificium** is built from *sacer*, "holy", and *faciō*, "to make" (EtymDB 2.1): to make something holy. *sacer* is usually traced to Proto-Indo-European *\*sh2kros*, "sacred" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

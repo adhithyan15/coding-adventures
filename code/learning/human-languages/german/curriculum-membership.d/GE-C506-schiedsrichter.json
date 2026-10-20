@@ -1,0 +1,11 @@
+{
+  "id": "GE-C506-schiedsrichter",
+  "pathSegment": "GE-PATH-506-FUSSBALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-506-FUSSBALL",
+      "order": 3
+    }
+  ]
+}

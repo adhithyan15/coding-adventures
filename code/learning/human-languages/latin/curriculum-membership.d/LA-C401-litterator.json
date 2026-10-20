@@ -1,0 +1,11 @@
+{
+  "id": "LA-C401-litterator",
+  "pathSegment": "LA-PATH-401-PRAECEPTOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-401-PRAECEPTOR",
+      "order": 3
+    }
+  ]
+}

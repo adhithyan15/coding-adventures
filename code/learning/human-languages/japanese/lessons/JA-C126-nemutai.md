@@ -14,7 +14,8 @@ romanization: "nemutai"
 concept_tag: JA-QUAL126-NEMUTAI
 prerequisites: [JA-C125-yutaka, JA-C126-shiawase]
 sounds: []
-roots: []
+roots: [japanese-nemui]
+etymology_hook: "nemutai: native, on the root of nemui 'sleepy' and nemuru 'to sleep'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C126-shiawase]
 <!-- hl-knowledge: introduces=[JA-LEX-C126-QUAL126-02]; assesses=[] -->
 
 **ねむたい** — *nemutai* — "drowsy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ねむたい** (*nemutai*) is native, built on the same root as *nemui*, "sleepy", and *nemuru*, "to sleep" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

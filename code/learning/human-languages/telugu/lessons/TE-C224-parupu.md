@@ -14,7 +14,8 @@ romanization: "parupu"
 concept_tag: TE-VASTUVU224-PARUPU
 prerequisites: [TE-C224-cetta, TE-C224-nela]
 sounds: []
-roots: []
+roots: [dravidian-padu-lie]
+etymology_hook: "parupu: native Dravidian; DEDR 3852 lists paṟupu 'mattress, bed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C224-nela]
 <!-- hl-knowledge: introduces=[TE-LEX-C224-VASTUVU224-04]; assesses=[] -->
 
 **పరుపు** — *parupu* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరుపు** (*parupu*) is native Dravidian. DEDR 3852 lists *paṟupu*, "mattress, bed, bedding", under *paḍu*, "to fall, lie", one word with Kannada *paḍu*, "to lie down".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

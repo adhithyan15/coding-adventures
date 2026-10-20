@@ -1,0 +1,11 @@
+{
+  "id": "GE-C466-eifersucht",
+  "pathSegment": "GE-PATH-466-NEID",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-466-NEID",
+      "order": 0
+    }
+  ]
+}

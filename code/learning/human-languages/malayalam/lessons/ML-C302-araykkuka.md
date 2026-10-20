@@ -14,7 +14,8 @@ romanization: "araykkuka"
 concept_tag: ML-VERB-ARAYKKUKA
 prerequisites: [ML-C302-murikkuka, ML-C302-ariyuka]
 sounds: []
-roots: []
+roots: [dravidian-arai-grind]
+etymology_hook: "araykkuka: native Dravidian, 'to grind'; DEDR 228, with Tamil arai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C302-ariyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-05]; assesses=[] -->
 
 **അരയ്ക്കുക** — *araykkuka* — "to grind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അരയ്ക്കുക** (*araykkuka*) is native Dravidian, DEDR 228 lists Malayalam *arekka*, "to grind to powder", beside Tamil *arai*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

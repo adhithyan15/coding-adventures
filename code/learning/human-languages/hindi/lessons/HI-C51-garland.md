@@ -14,7 +14,8 @@ romanization: "mālā"
 concept_tag: HI-NOUN-GARLAND
 prerequisites: [HI-C51-flower, HI-C49-day-after, HI-C50-favour]
 sounds: []
-roots: []
+roots: [sanskrit-mala-garland]
+etymology_hook: "mālā ← Sanskrit mālā 'garland', which CDIAL takes from Dravidian, as in Tamil mālai (CDIAL 10092)"
 duration:
   max_seconds: 210
 requires:

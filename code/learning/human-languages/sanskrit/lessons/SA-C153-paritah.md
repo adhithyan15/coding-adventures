@@ -14,7 +14,8 @@ romanization: "paritaḥ"
 concept_tag: SA-LOC153-PARITAH
 prerequisites: [SA-C153-tatah, SA-C153-ubhayatah]
 sounds: []
-roots: []
+roots: [sanskrit-pari]
+etymology_hook: "paritaḥ ← pari 'around' + -tas 'from' (MW; CDIAL 7830): 'round about, all around'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C153-ubhayatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C153-LOC153-04]; assesses=[] -->
 
 **परितः** — *paritaḥ* — "all around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paritaḥ* is built from the prefix *pari* "around, about" and the ending *-tas* (MW; CDIAL 7830): "from all around, all around". MW sets *pari* beside Greek *peri* "around", as in *perimeter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

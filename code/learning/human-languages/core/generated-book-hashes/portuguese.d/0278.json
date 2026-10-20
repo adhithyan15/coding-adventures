@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:78edaab0b2298346",
+  "lessonIds": [
+    "PT-C278-noticiario",
+    "PT-C278-telejornal",
+    "PT-C278-apresentador",
+    "PT-C278-em-direto",
+    "PT-C278-transmissao"
+  ],
+  "tex": "portuguese/book/chapters/ch278-o-noticiario-da-noite.tex"
+}

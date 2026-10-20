@@ -14,7 +14,8 @@ romanization: "ḍoke"
 concept_tag: MR-BODY72-DOKE
 prerequisites: [MR-C72-rakta, MR-C72-gudgha]
 sounds: []
-roots: []
+roots: [indo-aryan-doka]
+etymology_hook: "ḍoke ← *ḍōkka 'head', a form CDIAL reconstructs (CDIAL 5566)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C72-gudgha]
 <!-- hl-knowledge: introduces=[MR-LEX-C72-BODY72-03]; assesses=[] -->
 
 **डोके** — *ḍoke* — "the head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डोके** (*ḍoke*) goes back to *\*ḍōkka*, "head", a form CDIAL reconstructs beside *\*ḍōka* (CDIAL 5566).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

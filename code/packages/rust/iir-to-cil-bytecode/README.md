@@ -305,3 +305,15 @@ checks all three refusals through both public APIs and confirms that textual
 emission still accepts the same programs. The opt-in strict scalar API is
 separate: it can lower typed `input_i64`, `input_more` and `input_str` to the
 simulator's reserved host MemberRefs.
+
+## LANG83 operation support
+
+`iir_to_cil_bytecode::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" describes the textual `emit_il` path (real `ilasm` + CoreCLR); the binary simulator path is narrower. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b the textual path also lowers `write_i64`
+(`Console.Write(int64)`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
+`MIN / -1` branches before `div`/`rem`, then a floor fix-up) and `trap`
+(`Console.Out.Flush()` then `throw new Exception(kind)`); the binary
+simulator path refuses them with a typed error.

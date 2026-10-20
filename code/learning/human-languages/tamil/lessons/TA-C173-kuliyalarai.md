@@ -14,7 +14,8 @@ romanization: "kuḷiyalaṟai"
 concept_tag: TA-IDAM173-KULIYALARAI
 prerequisites: [TA-C172-natkatti, TA-C173-camaiyalarai]
 sounds: []
-roots: []
+roots: [dravidian-kuli-bathe, dravidian-arai-chamber]
+etymology_hook: "குளியலறை — native: kuḷiyal 'bathing' (DEDR 1832) + aṟai 'room' (DEDR 322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TA-C173-camaiyalarai]
 <!-- hl-knowledge: introduces=[TA-LEX-C173-IDAM173-02]; assesses=[] -->
 
 **குளியலறை** — *kuḷiyalaṟai* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**குளியலறை** (*kuḷiyalaṟai*) is native: *kuḷiyal*, "bathing" (DEDR 1832), and *aṟai*, "room" (DEDR 322).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

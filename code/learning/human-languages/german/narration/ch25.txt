@@ -46,6 +46,9 @@ Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took 
 ich sagte, ich habe gesagt.
 Both are "I said." Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive.
 
+The word, taken apart.
+sagte is the stem of sagen + the past ending -te. sagen from Old High German sagēn from Proto-Germanic sagjaną, the same verb as English say. (EtymDB 2.1).
+
 Sounds you'll need.
 long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it.
 final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two.
@@ -81,6 +84,9 @@ Mach- plus -te. Notice what the two pasts of this verb have in common: the stem.
 That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list.
 er machte das, er hat das gemacht.
 Same person, same event, two tenses.
+
+The word, taken apart.
+machte is the stem of machen + the past ending -te. machen is the same verb as English make, which EtymDB 2.1 traces to Proto-Germanic makōną.
 
 Guided Practice.
 [pause 1 second]
@@ -142,6 +148,9 @@ ich hatte — "I had."
 Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short.
 English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job.
 Haben has a Perfekt of its own as well — ich habe gehabt, "I have had" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one.
+
+The word, taken apart.
+hatte is the past of haben from Old High German habēn from Proto-Germanic habjaną, the same verb as English have. (EtymDB 2.1).
 
 Sounds you'll need.
 d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh.

@@ -12,7 +12,7 @@ gloss: the question particle, recovered without pinyin
 prerequisites: [ZH-W19-ma-delayed]
 sounds: [tone-neutral]
 roots: []
-etymology_hook: The six-stroke written form now carries the toneless syllable that turns a statement into a question.
+etymology_hook: "ma: usually traced, with some doubt, to Middle Chinese mju 'not have' at the end of a question"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,11 @@ Recall your four looking-and-reading scores.
 [YOU COVER: the pinyin]
 
 [YOU READ: 吗, give it no tone at all, then say what it does rather than what it means]
+
+**吗** is usually explained as coming from Middle Chinese *mju*, "not have"
+(Guangyun, in Baxter's transcription), tagged onto the end of a question, and
+later written with this character for its sound. The account is common but not
+settled.
 
 ## Grammar lens — one character, every statement
 <!-- hl-knowledge: introduces=[ZH-GRAMMAR-MA-QUESTION-01]; assesses=[ZH-SCRIPT-MA-01, ZH-LEX-KANSHU-01] -->

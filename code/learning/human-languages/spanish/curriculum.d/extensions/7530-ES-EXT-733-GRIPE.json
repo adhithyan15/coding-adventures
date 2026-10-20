@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-733-GRIPE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I have a cold or the flu and that I keep sneezing.",
+  "prerequisites": []
+}

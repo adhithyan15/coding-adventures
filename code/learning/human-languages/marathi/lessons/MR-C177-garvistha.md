@@ -14,7 +14,8 @@ romanization: "garviṣṭha"
 concept_tag: MR-GUN177-GARVISTHA
 prerequisites: [MR-C177-krur, MR-C177-namra]
 sounds: []
-roots: []
+roots: [sanskrit-garva]
+etymology_hook: "garviṣṭha: Sanskrit garviṣṭha 'most proud', from garva 'pride'; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C177-namra]
 <!-- hl-knowledge: introduces=[MR-LEX-C177-GUN177-05]; assesses=[] -->
 
 **गर्विष्ठ** — *garviṣṭha* — "arrogant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गर्विष्ठ** (*garviṣṭha*) is Sanskrit *garviṣṭha*, "most proud", a tatsama built on *garva*, "pride". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

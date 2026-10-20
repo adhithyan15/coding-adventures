@@ -12,6 +12,9 @@ Before the new one: say the Urdu for cricket, then the Urdu for football.
 You'll want to know: بانسری.
 بانسری — bāṅsurī — "a flute".
 
+The word, taken apart.
+بانسری (bāṅsurī) belongs with Hindi bãsī, "flute", which CDIAL lists under Sanskrit vaṃśī, "flute, pipe", built on vaṃśa, "bamboo" (CDIAL 11180). CDIAL does not list bāṅsurī itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for football, then the Urdu for a flute.
 
 You'll want to know: ناچ.
 ناچ — nāch — "a dance".
+
+The word, taken apart.
+ناچ (nāch) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtya, "dancing" (CDIAL 7582). It is built on nṛt-, "to dance", the root of nāchnā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a flute, then the Urdu for a dance.
 You'll want to know: نمائش.
 نمائش — numāish — "an exhibition".
 
+The word, taken apart.
+نمائش (numāish) is a loan, usually traced to Persian numāyish, "display, a showing". It is built on numūdan, "to show".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a dance, then the Urdu for an exhibition.
 You'll want to know: میلہ.
 میلہ — melā — "a fair".
 
+The word, taken apart.
+میلہ (melā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mela, "meeting" (CDIAL 10331). It is built on mil-, "to meet", the root of milnā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for an exhibition, then the Urdu for a fair.
 
 You'll want to know: جشن.
 جشن — jashn — "a celebration".
+
+The word, taken apart.
+جشن (jashn) is a loan, usually traced to Persian jashn, "a feast, a festival".
 
 What you've built.
 One more word for this chapter.

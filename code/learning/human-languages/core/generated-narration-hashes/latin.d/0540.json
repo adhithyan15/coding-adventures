@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:98ac9879b520097d",
+  "lessonIds": [
+    "LA-C540-pupa",
+    "LA-C540-trochus",
+    "LA-C540-turbo",
+    "LA-C540-harpastum",
+    "LA-C540-natatio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch540.txt",
+  "json": "latin/narration/ch540.json",
+  "textHash": "fnv1a64:d751cab7da1e67a3",
+  "jsonHash": "fnv1a64:b680d12a0de2f8c4",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "dokme"
 concept_tag: FA-CHIZ240-DOKME
 prerequisites: [FA-C239-sabad, FA-C239-zobale]
 sounds: []
-roots: []
+roots: [turkic-dugme]
+etymology_hook: "dokme: a loan, usually traced to Turkic düğme 'button'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C239-zobale]
 <!-- hl-knowledge: introduces=[FA-LEX-C240-CHIZ240-01]; assesses=[] -->
 
 **دکمه** — *dokme* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dokme* is a loan, usually traced to Turkic *düğme*, "button".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

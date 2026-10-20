@@ -14,7 +14,8 @@ romanization: "kharokhar"
 concept_tag: MR-KARAN203-KHAROKHAR
 prerequisites: [MR-C202-varati, MR-C203-nakki]
 sounds: []
-roots: []
+roots: [sanskrit-khara]
+etymology_hook: "kharokhar: kharā 'true, pure' ← khara 'hard, sharp' (CDIAL 3819), doubled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C203-nakki]
 <!-- hl-knowledge: introduces=[MR-LEX-C203-KARAN203-02]; assesses=[] -->
 
 **खरोखर** — *kharokhar* — "really".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खरोखर** (*kharokhar*) is *kharā*, "true", doubled with a linking **-ो-**. CDIAL lists Marathi *kharā*, "pure, good, firm", under Sanskrit *khara*, "hard, sharp" (CDIAL 3819).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

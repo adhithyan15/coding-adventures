@@ -14,7 +14,8 @@ romanization: "baikkŭ"
 concept_tag: ML-VASTU210-BAIKKU
 prerequisites: [ML-C210-sirru, ML-C210-laisansu]
 sounds: []
-roots: []
+roots: [english-bike]
+etymology_hook: "baikkŭ ← English bike"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C210-laisansu]
 <!-- hl-knowledge: introduces=[ML-LEX-C210-VASTU210-04]; assesses=[] -->
 
 **ബൈക്ക്** — *baikkŭ* — "a motorbike".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബൈക്ക്** (*baikkŭ*) ← English *bike*, short for *bicycle*, used in Kerala for a motorbike.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhaĩs"
 concept_tag: MW-NATURE70-BHAIS
 prerequisites: [MW-C70-billi, MW-C70-gay]
 sounds: []
-roots: []
+roots: [sanskrit-mahishi]
+etymology_hook: "bhaĩs ← Sanskrit mahiṣī 'buffalo cow', a tadbhava (CDIAL 9964, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C70-gay]
 <!-- hl-knowledge: introduces=[MW-LEX-C70-NATURE70-05]; assesses=[] -->
 
 **भैंस** — *bhaĩs* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भैंस** (*bhaĩs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahiṣī*, "buffalo cow". CDIAL lists Old Marwari *bhaïṃsa* under it (CDIAL 9964). The Sanskrit word first meant "great, powerful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

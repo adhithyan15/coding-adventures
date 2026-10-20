@@ -12,6 +12,7 @@ concept_tag: GREETING-EVENING
 prerequisites: [AR-C01-sabah-al-khayr]
 sounds: [hamza-glottal-stop]
 roots: [m-s-w, kh-y-r]
+etymology_hook: "masāʾ al-khayr: masāʾ 'evening' (root m-s-w) + al-khayr 'the good' (root kh-y-r): 'evening of goodness'"
 reviews_of: [AR-C01-sabah-al-khayr, AR-C01-al]
 duration:
   max_seconds: 240

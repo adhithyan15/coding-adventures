@@ -14,7 +14,8 @@ romanization: "bhāre"
 concept_tag: GU-SIZE-HEAVY
 prerequisites: [GU-C72-long, GU-C72-short]
 sounds: []
-roots: []
+roots: [sanskrit-bhara]
+etymology_hook: "bhāre: on bhār 'load, weight' ← Sanskrit bhāra 'burden, weight' (CDIAL 9459); bhārī 'heavy' ← bhārika (CDIAL 9465)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C72-short]
 <!-- hl-knowledge: introduces=[GU-LEX-C72-SIZE-05]; assesses=[] -->
 
 **ભારે** (*bhāre*) — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભારે** (*bhāre*) is built on Gujarati *bhār*, "load, weight", which CDIAL lists under Sanskrit *bhāra*, "burden, weight" (CDIAL 9459). It lists Gujarati *bhārī*, "heavy", under *bhārika*, "forming a load, heavy" (CDIAL 9465).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

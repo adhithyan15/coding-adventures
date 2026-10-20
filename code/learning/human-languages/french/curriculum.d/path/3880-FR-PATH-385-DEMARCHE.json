@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-385-DEMARCHE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-385-DEMARCHE"
+  ],
+  "after": []
+}

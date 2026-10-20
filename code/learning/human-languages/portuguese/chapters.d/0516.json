@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "A orquestra",
+  "label": "ch:pt-a-orquestra",
+  "canDo": "I can talk about an orchestra and its instruments.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C516-harpa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about an orchestra and its instruments.",
+    "assesses": [
+      "PT-LEX-C516-ORQUESTRA-03",
+      "PT-LEX-C516-ORQUESTRA-04",
+      "PT-LEX-C516-ORQUESTRA-05"
+    ]
+  }
+}

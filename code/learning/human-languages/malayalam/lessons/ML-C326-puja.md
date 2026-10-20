@@ -14,7 +14,8 @@ romanization: "pūja"
 concept_tag: ML-VASTU326-PUJA
 prerequisites: [ML-C326-vetikkettu, ML-C326-dipavali]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pūja ← Sanskrit pūjā 'honour, worship', a tatsama (CDIAL 8317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C326-dipavali]
 <!-- hl-knowledge: introduces=[ML-LEX-C326-VASTU326-03]; assesses=[] -->
 
 **പൂജ** — *pūja* — "a puja, worship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂജ** (*pūja*) ← Sanskrit *pūjā*, "honour, worship", taken over whole as a tatsama (CDIAL 8317).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

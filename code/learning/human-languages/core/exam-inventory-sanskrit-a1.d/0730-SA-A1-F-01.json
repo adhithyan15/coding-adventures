@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-01",
+  "category": "Giving and asking for information",
+  "label": "identify yourself by name",
+  "probe": [
+    "SA-PATTERN-MY-NAME-IS",
+    "SA-LEX-NAMA",
+    "SA-LEX-MAMA"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F1-01",
+    "A1-F1-03",
+    "A1-NE03-01"
+  ],
+  "note": "mama nāma … asti. Name only: age, address and telephone number are all untaught, so 'personal information' is a third answered."
+}

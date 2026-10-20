@@ -13,7 +13,8 @@ gloss: "fear"
 concept_tag: FR-SENTIR7-PEUR
 prerequisites: [FR-C54-malade, FR-C55-joie]
 sounds: []
-roots: []
+roots: [pavor-latin]
+etymology_hook: "peur ← Latin pavor 'fear, fright' — the v between vowels dropped out"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [FR-C55-joie]
 <!-- hl-knowledge: introduces=[FR-LEX-C55-SENTIR7-02]; assesses=[] -->
 
 **la peur** — "fear". **j'ai peur**: I am afraid.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**peur** ← Old French *peor* ← Latin *pavor*, "fear, fright" (EtymDB 2.1) — inherited; the *v* between vowels dropped out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

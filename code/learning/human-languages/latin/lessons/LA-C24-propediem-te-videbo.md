@@ -6,7 +6,7 @@ sequence: 480
 chapter: 24
 type: phrase
 headword: propediem tē vidēbō
-gloss: "see you later/soon" — a genuine change of pace from the last few lessons: this one IS solidly attested, twice, in Cicero's own letters
+gloss: '"see you later/soon" — a genuine change of pace from the last few lessons: this one IS solidly attested, twice, in Cicero''s own letters'
 concept_tag: FAREWELL-LATER
 prerequisites: [LA-C05-dies-lunae-veneris, LA-C01-vale, LA-C01-gratias]
 sounds: [macron-long-vowel, future-tense-bo]
@@ -46,15 +46,15 @@ one is different: a genuine, repeated Ciceronian phrase.
 **Propediem tē vidēbō** — "**I shall see you soon**" — is genuinely
 attested, not once but **twice**, in **Cicero**'s own letters:
 
-- **Ad Familiārēs 2.12** (to Caelius): *"Sed, ut spērō, propediem tē
-  vidēbō"* — "**But, as I hope, I shall see you soon.**"
+- **Ad Familiārēs 2.12** (to Caelius): *"…ut spērō, propediem tē
+  vidēbō"* — "**…as I hope, I shall see you soon.**"
 - **Ad Familiārēs 15.6** (to Cato): *"Ego, ut spērō, tē propediem vidēbō"* — the same
   phrase, word order reshuffled, "**I, as I hope, shall see you soon.**"
 
 ## The word, taken apart: propediem — "near the day," built from a word you already know
 <!-- hl-knowledge: introduces=[LA-ETYMON-PROPEDIEM-TE-VIDEBO-02]; assesses=[] -->
 
-**Propediem** breaks down as **prope** ("**near**") + **diem** (accusative
+**Propediem** is built from **prope** ("**near**") + **diem** (accusative
 of **diēs**, "**day**") — literally "**near the day**," meaning "very soon,
 shortly." That's the **same diēs** from your days-of-week lessons
 (*diēs Lūnae*, *diēs Veneris*) — a familiar root showing up in a brand-new
@@ -63,10 +63,12 @@ job.
 ## Grammar Lens: vidēbō — the verb ending doing the work, again
 <!-- hl-knowledge: introduces=[LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03]; assesses=[] -->
 
-**Vidēbō** is the **future tense** of **vidēre**, "to see" — and just like
-*agō* back in "thank you," the **-bō** ending already carries "**I will**,"
-so no separate pronoun for "I" is needed. *Tē* ("you") is simply the direct
-object: "[I] will-see you."
+**vidē-** (the stem of "to see") + **-bō** ("I will") → **vidēbō**
+
+**Vidēbō** is the **future tense** of the verb "to see", which a later chapter
+teaches on its own — and just like *agō* back in "thank you," the **-bō** ending
+already carries "**I will**," so no separate pronoun for "I" is needed. *Tē*
+("you") is simply the direct object: "[I] will-see you."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-LEX-PROPEDIEM-TE-VIDEBO-01, LA-ETYMON-PROPEDIEM-TE-VIDEBO-02, LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03] -->

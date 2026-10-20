@@ -15,6 +15,7 @@ concept_tag: GU-QUALITY-CHEAP
 prerequisites: [GU-C73-old, GU-C73-hot]
 sounds: []
 roots: []
+etymology_hook: "sastũ 'cheap': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C73-hot]
 <!-- hl-knowledge: introduces=[GU-LEX-C73-QUALITY-05]; assesses=[] -->
 
 **સસ્તું** (*sastũ*) — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **સસ્તું** (*sastũ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

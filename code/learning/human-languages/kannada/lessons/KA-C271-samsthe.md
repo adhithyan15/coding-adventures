@@ -14,7 +14,8 @@ romanization: "saṃsthe"
 concept_tag: KA-KELASA271-SAMSTHE
 prerequisites: [KA-C271-danda, KA-C271-muskara]
 sounds: []
-roots: []
+roots: [sanskrit-samstha]
+etymology_hook: "saṃsthe ← Sanskrit saṁsthā 'assembly; standing together', a tatsama (CDIAL 13049)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C271-muskara]
 <!-- hl-knowledge: introduces=[KA-LEX-C271-KELASA271-04]; assesses=[] -->
 
 **ಸಂಸ್ಥೆ** — *saṃsthe* — "an organisation, an institution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಸ್ಥೆ** (*saṃsthe*) is Sanskrit *saṁsthā*, "assembly; standing together", taken over whole as a learned loan, a tatsama, with Kannada's *-e* for the Sanskrit *-ā* (CDIAL 13049). Kannada writes the nasal as *ṃ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: UR-C05-KHUDA
 prerequisites: [UR-C04-practice, UR-C04-kaise-kaisi]
 sounds: [rtl, kh, long-a, short-vowels-unwritten]
 roots: [persian-khoda]
-etymology_hook: Urdu khudā is borrowed from Persian khodā, which continues Middle Persian xwadāy “lord”; Urdu keeps the word inside a familiar parting formula.
+etymology_hook: "khudā: usually traced to Persian khudā 'God', from Middle Persian xwadāy 'lord'"
 duration:
   max_seconds: 200
 requires:

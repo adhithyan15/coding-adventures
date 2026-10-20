@@ -13,7 +13,8 @@ gloss: "a strawberry"
 concept_tag: GE-ESSEN121-ERDBEERE
 prerequisites: [GE-C121-bohnen, GE-C121-gurke]
 sounds: []
-roots: []
+roots: [germanic-ertho]
+etymology_hook: "Erdbeere — the word for 'earth' + the word for 'berry': the berry that grows on the ground"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C121-gurke]
 <!-- hl-knowledge: introduces=[GE-LEX-C121-ESSEN121-03]; assesses=[] -->
 
 **die Erdbeere** — "a strawberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Erdbeere** is the word for "earth", Old High German *erda*, English *earth*, + the word for "berry", English *berry* (EtymDB 2.1): the berry that grows on the ground.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

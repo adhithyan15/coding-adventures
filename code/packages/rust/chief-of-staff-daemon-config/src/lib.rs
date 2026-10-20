@@ -593,22 +593,54 @@ impl HostDefaultsConfig {
 /// [hosts.broker]
 /// executable = "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
 /// sha256 = "<64 lowercase hex digits>"
+/// # macOS only, and required there (D18S P2.7b):
+/// seatbelt_shim = "~/.chief-of-staff/bin/chief-of-staff-seatbelt-shim"
+/// seatbelt_shim_sha256 = "<64 lowercase hex digits>"
 /// ```
 ///
 /// With this table, every host bound to a channel gets its own broker
 /// process, launched before the host and holding only that agent's channel
 /// keys from `[data_plane] channel_keys`. The host's channel requests go to
-/// its broker rather than to the daemon. Without it, nothing changes.
+/// its broker rather than to the daemon. Without it, `channel_keys` must be
+/// empty: the daemon refuses to start otherwise (D18S P2.6d-2c), since it
+/// serves no channel operation itself.
 ///
 /// The digest is the trust anchor, not the path: the daemon hashes the
 /// binary through the descriptor it will execute before every launch, and
 /// refuses one whose bytes differ (S-K1). That is why it is required rather
 /// than optional: a broker run on the strength of a path alone would be
 /// whatever happened to be at that path.
+///
+/// On macOS the broker is confined by the Seatbelt shim, a second binary
+/// that installs the profile and then execs the broker (D18S step 7). It
+/// is pinned the same way, and the two keys come as a pair: one without
+/// the other is refused here, on every platform. Whether the pair is
+/// required is the daemon's call, per platform: macOS requires it, and
+/// Linux, whose applier needs no shim, never opens it.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HostBrokerConfig {
     executable: ConfigPath,
     sha256: [u8; 32],
+    seatbelt_shim: Option<PinnedExecutable>,
+}
+
+/// An executable's path and the SHA-256 its bytes must have.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PinnedExecutable {
+    path: ConfigPath,
+    sha256: [u8; 32],
+}
+
+impl PinnedExecutable {
+    /// Return the executable's path.
+    pub fn path(&self) -> &ConfigPath {
+        &self.path
+    }
+
+    /// Return the SHA-256 the executable's bytes must have.
+    pub fn sha256(&self) -> [u8; 32] {
+        self.sha256
+    }
 }
 
 impl HostBrokerConfig {
@@ -620,6 +652,12 @@ impl HostBrokerConfig {
     /// Return the SHA-256 the executable's bytes must have.
     pub fn sha256(&self) -> [u8; 32] {
         self.sha256
+    }
+
+    /// Return the Seatbelt shim, when `seatbelt_shim` and
+    /// `seatbelt_shim_sha256` are set.
+    pub fn seatbelt_shim(&self) -> Option<&PinnedExecutable> {
+        self.seatbelt_shim.as_ref()
     }
 }
 
@@ -1119,10 +1157,25 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     let host_broker = if document.has_table(HOST_BROKER) {
         let executable =
             ConfigPath::parse(expect_string(document.take(HOST_BROKER, "executable")?)?)?;
-        let sha256 = decode_lower_hex(expect_string(document.take(HOST_BROKER, "sha256")?)?, 32)?
-            .try_into()
-            .map_err(|_| ConfigError::InvalidValue)?;
-        Some(HostBrokerConfig { executable, sha256 })
+        let sha256 = sha256_value(document.take(HOST_BROKER, "sha256")?)?;
+        // A pair: a path with no digest would be trusted on its path alone,
+        // and a digest with no path pins nothing.
+        let seatbelt_shim = match (
+            document.take_optional(HOST_BROKER, "seatbelt_shim"),
+            document.take_optional(HOST_BROKER, "seatbelt_shim_sha256"),
+        ) {
+            (None, None) => None,
+            (Some(path), Some(digest)) => Some(PinnedExecutable {
+                path: ConfigPath::parse(expect_string(path)?)?,
+                sha256: sha256_value(digest)?,
+            }),
+            _ => return Err(ConfigError::Missing),
+        };
+        Some(HostBrokerConfig {
+            executable,
+            sha256,
+            seatbelt_shim,
+        })
     } else {
         None
     };
@@ -1735,6 +1788,13 @@ fn require_closed_inline(fields: BTreeMap<Vec<String>, RawValue>) -> Result<(), 
     } else {
         Err(ConfigError::Unknown)
     }
+}
+
+/// A SHA-256 written as exactly 64 lowercase hex digits.
+fn sha256_value(value: RawValue) -> Result<[u8; 32], ConfigError> {
+    decode_lower_hex(expect_string(value)?, 32)?
+        .try_into()
+        .map_err(|_| ConfigError::InvalidValue)
 }
 
 fn decode_lower_hex(value: String, maximum_bytes: usize) -> Result<Vec<u8>, ConfigError> {
@@ -2477,6 +2537,65 @@ hardware_key_timeout = 60
             0xee, 0xff,
         ];
         assert_eq!(broker.sha256(), [half, half].concat().as_slice());
+        assert!(broker.seatbelt_shim().is_none());
+    }
+
+    #[test]
+    fn a_seatbelt_shim_is_read_as_a_pair() {
+        let shim_digest = "ab".repeat(32);
+        let config = parse_config(&with_broker(&format!(
+            "[hosts.broker]\nexecutable = \"~/.chief-of-staff/bin/chief-of-staff-agent-broker\"\nsha256 = \"{BROKER_DIGEST}\"\nseatbelt_shim = \"~/.chief-of-staff/bin/chief-of-staff-seatbelt-shim\"\nseatbelt_shim_sha256 = \"{shim_digest}\"\n"
+        )))
+        .expect("valid config");
+        let shim = config
+            .host_broker()
+            .and_then(HostBrokerConfig::seatbelt_shim)
+            .expect("a shim");
+        assert_eq!(
+            shim.path().as_str(),
+            "~/.chief-of-staff/bin/chief-of-staff-seatbelt-shim"
+        );
+        assert_eq!(shim.sha256(), [0xab; 32]);
+    }
+
+    #[test]
+    fn a_seatbelt_shim_fails_closed() {
+        let head = format!(
+            "[hosts.broker]\nexecutable = \"~/.chief-of-staff/bin/broker\"\nsha256 = \"{BROKER_DIGEST}\"\n"
+        );
+        let path = "seatbelt_shim = \"~/.chief-of-staff/bin/shim\"\n";
+        let digest = format!("seatbelt_shim_sha256 = \"{BROKER_DIGEST}\"\n");
+        for (rest, error) in [
+            // Half a pair: a path trusted on its own, or a digest pinning
+            // nothing.
+            (path.to_string(), ConfigError::Missing),
+            (digest.clone(), ConfigError::Missing),
+            (
+                format!(
+                    "{path}seatbelt_shim_sha256 = \"{}\"\n",
+                    &BROKER_DIGEST[..62]
+                ),
+                ConfigError::InvalidValue,
+            ),
+            (
+                format!(
+                    "{path}seatbelt_shim_sha256 = \"{}\"\n",
+                    BROKER_DIGEST.to_uppercase()
+                ),
+                ConfigError::InvalidValue,
+            ),
+            (
+                format!("seatbelt_shim = \"relative/shim\"\n{digest}"),
+                ConfigError::UnsafePath,
+            ),
+            (
+                format!("seatbelt_shim = 7\n{digest}"),
+                ConfigError::InvalidType,
+            ),
+        ] {
+            let table = format!("{head}{rest}");
+            assert_eq!(parse_config(&with_broker(&table)), Err(error), "{table}");
+        }
     }
 
     #[test]

@@ -14,7 +14,8 @@ romanization: "pech"
 concept_tag: UR-CHIZ232-PECH
 prerequisites: [UR-C232-baitri, UR-C232-zanjir]
 sounds: []
-roots: []
+roots: [persian-pech]
+etymology_hook: "pech: usually traced to Persian pēch 'a twist, a coil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C232-zanjir]
 <!-- hl-knowledge: introduces=[UR-LEX-C232-CHIZ232-05]; assesses=[] -->
 
 **پیچ** — *pech* — "a screw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیچ** (*pech*) is a loan, usually traced to Persian *pēch*, "a twist, a coil". Urdu uses it for a screw.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -2334,6 +2334,33 @@ fn push_swiftui_animation(
     }
 }
 
+/// Lower Mosaic's portable elevation intent to a SwiftUI shadow.
+///
+/// The y offsets (4 / 16) match the depth constants used by XAML, Compose,
+/// Qt, and Flutter. SwiftUI's shadow API also needs a blur radius and color,
+/// so use the same 8 / 24 softness and 25% black used by Flutter's native
+/// elevation lowering. The authored CSS `box-shadow` value is deliberately
+/// not parsed here: `elevation` is the portable signal, while arbitrary and
+/// inset CSS shadows remain explicit drawing-effect debt.
+fn swiftui_elevation_shadow(value: &str) -> Option<&'static str> {
+    match value.trim().trim_matches('"') {
+        "raised" => Some("color: Color.black.opacity(0.25), radius: 8, x: 0, y: 4"),
+        "overlay" => Some("color: Color.black.opacity(0.25), radius: 24, x: 0, y: 16"),
+        _ => None,
+    }
+}
+
+/// A single centered CSS degree rotation maps to SwiftUI's visual rotation,
+/// which leaves the view's layout footprint alone. Parse and reserialize the
+/// number so authored text never enters generated Swift as executable syntax.
+/// Other transform functions, units and chains stay explicit style debt.
+fn swiftui_rotation_degrees(value: &str) -> Option<String> {
+    let angle = value.trim().trim_matches('"').trim()
+        .strip_prefix("rotate(")?.strip_suffix("deg)")?.trim()
+        .parse::<f64>().ok()?;
+    angle.is_finite().then(|| angle.to_string())
+}
+
 /// Build a SwiftUI view-modifier chain from a slice of [`StyleProp`].
 ///
 /// Each modifier renders on its own line, prefixed by `\n` + an indent of
@@ -2359,7 +2386,9 @@ fn push_swiftui_animation(
 /// | `font-weight: semibold` / `SemiBold` / `600`   | `.fontWeight(.semibold)`                                         |
 /// | `font-weight: medium` / `500`                  | `.fontWeight(.medium)`                                           |
 /// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
+/// | `elevation: raised\|overlay`                    | `.shadow(color:..., radius: 8\|24, x: 0, y: 4\|16)`             |
 /// | `opacity: N`                                   | `.opacity(N)`                                                    |
+/// | `transform: rotate(Ndeg)`                      | `.rotationEffect(.degrees(N))`                                  |
 /// | `text-align: left`/`center`/`right` (base only)| `alignment:` arg of `.frame(...)` (`.leading`/`.center`/`.trailing`) |
 /// | anything else                                  | silently skipped (React emitter does the same for v1)            |
 ///
@@ -2371,7 +2400,7 @@ fn push_swiftui_animation(
 ///
 /// Emitted top-to-bottom: `.foregroundColor` → `.font` → `.fontWeight`
 /// → `.padding` → `.frame(width:,height:,alignment:)` → `.background`
-/// → `.border` → `.opacity`. Content styling and sizing come BEFORE paint
+/// → `.border` → `.rotationEffect` → `.shadow` → `.opacity`. Content styling and sizing come BEFORE paint
 /// so the background fills, and the border strokes, the full frame rather
 /// than a text-sized box. See the inline comment in the emission body.
 ///
@@ -2526,6 +2555,8 @@ fn swiftui_modifier_chain_with_drops(
     // `100vh`/`100%` is not a number, so it cannot share a PropBucket with
     // the point values (#14837).
     let mut min_height_fills = false;
+    let mut elevation = PropBucket::new(layer_count);
+    let mut rotation = PropBucket::new(layer_count);
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
@@ -2692,6 +2723,23 @@ fn swiftui_modifier_chain_with_drops(
             "opacity" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut opacity, v);
+                }
+            }
+            // Elevation is base-only on every native backend. A conditional
+            // shadow would need separate parameter buckets and a no-shadow
+            // sentinel that SwiftUI does not expose as a single modifier.
+            "elevation" if layer_idx.is_none() => {
+                if let Some(args) = swiftui_elevation_shadow(&p.value) {
+                    set(&mut elevation, args.to_string());
+                } else {
+                    dropped.push(p.clone());
+                }
+            }
+            "transform" => {
+                if let Some(degrees) = swiftui_rotation_degrees(&p.value) {
+                    set(&mut rotation, degrees);
+                } else {
+                    dropped.push(p.clone());
                 }
             }
             "text-align"
@@ -3101,7 +3149,29 @@ fn swiftui_modifier_chain_with_drops(
         );
     }
 
-    // 8. .opacity — compositing applies to the fully styled part.
+    // Rotate the complete painted surface, rather than rotating only its
+    // contents before the frame/background exists. Shadows then follow the
+    // rotated silhouette; SwiftUI preserves the original layout footprint.
+    if !rotation.empty() {
+        let degrees = layer_value(&rotation, state_layers, "0");
+        out.push_str(&format!("\n{pad}.rotationEffect(.degrees({degrees}))"));
+        push_swiftui_animation(
+            &mut out, &pad, "transform", &degrees, base_transitions, state_layers,
+        );
+    }
+
+    // 8. .shadow — elevation belongs outside the painted surface so it
+    // follows the final rounded/background/border silhouette.
+    if !elevation.empty() {
+        let args = layer_value(
+            &elevation,
+            state_layers,
+            "color: Color.clear, radius: 0, x: 0, y: 0",
+        );
+        out.push_str(&format!("\n{pad}.shadow({args})"));
+    }
+
+    // 9. .opacity — compositing applies to the fully styled part.
     if !opacity.empty() {
         let expr = layer_value(&opacity, state_layers, "1");
         out.push_str(&format!("\n{pad}.opacity({expr})"));
@@ -3139,9 +3209,9 @@ pub struct DroppedStyleProperty {
 /// of supported names, which would go stale silently the moment a property
 /// stopped being lowered.
 ///
-/// State-layer props are not walked separately: a state block can only set a
-/// property the base lowering also understands, so a drop there is the same
-/// drop, reported once against the part.
+/// Most state-layer properties retain the historical base-only report.
+/// Transform values need their own state audit: a supported base rotation
+/// does not imply a state rotation has a supported unit or function.
 ///
 /// `layout` is needed because not every property is lowered by a modifier.
 /// `gap` is lowered at view-CONSTRUCTION time — `HStack(spacing:)` — which the
@@ -3182,12 +3252,38 @@ pub fn dropped_style_properties(
             {
                 continue;
             }
+            // Web-facing CSS shadows and the portable elevation token are
+            // authored together. A supported elevation tier now emits the
+            // equivalent native depth, so only a non-inset companion is
+            // consumed. Standalone and inset shadows stay honest debt.
+            if drop.name == "box-shadow"
+                && !drop.value.to_ascii_lowercase().contains("inset")
+                && base.iter().any(|prop| {
+                    prop.name == "elevation" && swiftui_elevation_shadow(&prop.value).is_some()
+                })
+            {
+                continue;
+            }
             out.push(DroppedStyleProperty {
                 part: part.name.clone(),
                 reason: swiftui_drop_reason(&drop.name).to_string(),
                 name: drop.name,
                 value: drop.value,
             });
+        }
+        // State names cannot prove value support. Reuse the exact rotation
+        // parser rather than exempting a state because its base lowered.
+        for state in &part.states {
+            for prop in &state.props {
+                if prop.name == "transform" && swiftui_rotation_degrees(&prop.value).is_none() {
+                    out.push(DroppedStyleProperty {
+                        part: part.name.clone(),
+                        name: prop.name.clone(),
+                        value: prop.value.clone(),
+                        reason: format!("state {}: {}", state.state, swiftui_drop_reason(&prop.name)),
+                    });
+                }
+            }
         }
     }
     out
@@ -3252,6 +3348,9 @@ fn constructor_consuming_parts<'a>(
         let in_table = in_table || node.tag == "HostTable";
         let view = match node.tag.as_str() {
             "Column" => Some("VStack"),
+            // Drag wrappers construct their bodies through container(VStack)
+            // too. Classify spacing only here: alignment is separate debt.
+            "HostDraggable" | "HostDropTarget" if property == "gap" => Some("VStack"),
             "Row" if !in_table => Some("HStack"),
             _ => None,
         };
@@ -3298,6 +3397,9 @@ fn swiftui_drop_reason(name: &str) -> &'static str {
              coordinate space"
         }
         "box-shadow" => "no direct equivalent; SwiftUI uses .shadow with separate arguments",
+        "elevation" => {
+            "only the supported Mosaic elevation tokens `raised` and `overlay` lower to SwiftUI shadows"
+        }
         "border-style" => "SwiftUI .border draws a solid stroke only",
         "border-collapse" | "text-overflow" | "white-space" | "overflow" | "cursor" => {
             "no SwiftUI concept"
@@ -4530,12 +4632,14 @@ fn emit_view_tree(
         // primitives backed by SwiftUI's `TextField` and `Button`
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
-        // UI25's legacy `Input` remains the only authored primitive with a
-        // multiline contract. Keep accepting it until the kernel grows a
-        // dedicated multiline control; single-line Input shares HostInput's
-        // native lowering while multiline Input uses TextEditor.
-        "Input" => emit_legacy_input(node, indent, emits)?,
-        "HostInput" => emit_host_input(node, indent, emits)?,
+        // Both text primitives take `multiline: true` (UI29 §2.1, #15930):
+        // a multiline field is a `TextEditor`, a single-line one a
+        // `TextField`. HostInput used to go straight to the `TextField`
+        // path, so every multiline HostInput was drawn as one line here.
+        "Input" | "HostInput" if find_keyword_prop(node, "multiline") == Some("true") => {
+            emit_text_editor(node, indent)?
+        }
+        "Input" | "HostInput" => emit_host_input(node, indent, emits)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
         "HostSurface" => emit_host_surface(node, indent),
 
@@ -5695,9 +5799,6 @@ fn swift_collection_index_expr(
 // UI29 kernel partial — HostInput / HostButton emitters
 // =====================================================================
 
-/// Lower the still-supported UI25 `Input` primitive. `HostInput` deliberately
-/// covers only the single-line kernel surface, while UI25 `Input` also carries
-/// the multiline text-editor contract used by Trestle Notes.
 /// The `.disabled(...)` modifier for a text field, shared by `HostInput`'s
 /// `TextField` and the legacy multiline `TextEditor`.
 ///
@@ -5720,19 +5821,93 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
     Ok(None)
 }
 
-fn emit_legacy_input(
-    node: &LayoutNode,
-    indent: usize,
-    emits: &[EmitDecl],
-) -> Result<String, PipelineEmitError> {
-    if find_keyword_prop(node, "multiline") != Some("true") {
-        return emit_host_input(node, indent, emits);
+/// A text field's `placeholder`, as it reaches SwiftUI.
+///
+/// | authored form          | `TextField` title / `TextEditor` overlay                  |
+/// |------------------------|-----------------------------------------------------------|
+/// | `placeholder : "Text"` | `"Text"` / `Text("Text")` (a `LocalizedStringKey`, as before) |
+/// | `placeholder : 3`      | `"3"` / `Text("3")`                                       |
+/// | `placeholder : slot: s`| `String(describing: s)` / `Text(verbatim: …)`             |
+/// | `placeholder : item`   | `String(describing: item)` (a `For` binding)              |
+/// | `placeholder : ( e )`  | `String(describing: ( e ))`                               |
+///
+/// `String(describing:)` makes the bound forms a `String` whatever the slot
+/// or binding's Swift type is, which is what `TextField`'s
+/// `StringProtocol` title and `Text(verbatim:)` take. This read string
+/// literals only, so every bound placeholder was dropped without a report.
+enum SwiftPlaceholder {
+    /// A Swift string literal, quotes included.
+    Literal(String),
+    /// A Swift expression of type `String`.
+    Bound(String),
+}
+
+impl SwiftPlaceholder {
+    /// The first argument of `TextField(_:text:)`.
+    fn title(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => literal.clone(),
+            SwiftPlaceholder::Bound(expr) => expr.clone(),
+        }
     }
 
+    /// The `Text` view a `TextEditor` overlays while its value is empty.
+    fn text(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => format!("Text({literal})"),
+            SwiftPlaceholder::Bound(expr) => format!("Text(verbatim: {expr})"),
+        }
+    }
+
+    /// The argument of `.accessibilityLabel(...)` when the placeholder
+    /// names an otherwise unlabelled `TextEditor`.
+    fn accessibility_label(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => literal.clone(),
+            SwiftPlaceholder::Bound(_) => self.text(),
+        }
+    }
+}
+
+/// Read a text field's `placeholder` (see [`SwiftPlaceholder`]). An empty
+/// literal is no placeholder; a slot or binding name that is not a Swift
+/// identifier is an `UnsafeSlotName` error, never spliced into the source.
+fn swift_placeholder(node: &LayoutNode) -> Result<Option<SwiftPlaceholder>, PipelineEmitError> {
+    Ok(match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(text)) if !text.is_empty() => Some(
+            SwiftPlaceholder::Literal(format!("\"{}\"", escape_swift_string(text))),
+        ),
+        Some(LayoutPropValue::Number(number)) => {
+            Some(SwiftPlaceholder::Literal(format!("\"{number}\"")))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Some(SwiftPlaceholder::Bound(format!("String(describing: {camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => Some(
+            SwiftPlaceholder::Bound(format!("String(describing: {})", expr.trim())),
+        ),
+        _ => None,
+    })
+}
+
+/// Lower a multiline text field — `HostInput` or the legacy `Input` with
+/// `multiline: true` — to a SwiftUI `TextEditor`.
+///
+/// | Moslayout prop        | SwiftUI surface                                        |
+/// |-----------------------|--------------------------------------------------------|
+/// | `value` + `onChange`  | `TextEditor(text: Binding(get:set:))`, as `TextField`   |
+/// | `placeholder: "..."`  | a `Text` overlay shown while the value is empty         |
+/// | `placeholder: slot: x`| the same overlay, `Text(verbatim: String(describing: x))` |
+/// | `a11y-label`          | `.accessibilityLabel(...)` (placeholder as a fallback)  |
+/// | `disabled`/`read-only`| `.disabled(...)`, shared with `TextField`               |
+/// | `onCommit`            | none: Return inserts a newline in a `TextEditor`        |
+/// | `onCancel`            | `.onExitCommand` on macOS, as `TextField`               |
+fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let child_pad = " ".repeat(indent + 4);
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    let placeholder = swift_placeholder(node)?;
 
     let value_expr = match node.props.iter().find(|p| p.name == "value") {
         Some(p) => match &p.value {
@@ -5772,9 +5947,10 @@ fn emit_legacy_input(
     };
 
     let mut output = format!("{pad}ZStack(alignment: .topLeading) {{\n");
-    if !placeholder.is_empty() {
+    if let Some(placeholder) = &placeholder {
+        let overlay = placeholder.text();
         output.push_str(&format!(
-            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    Text({placeholder_lit})\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
+            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    {overlay}\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
         ));
     }
     output.push_str(&format!("{child_pad}TextEditor(text: {text_binding})"));
@@ -5783,8 +5959,8 @@ fn emit_legacy_input(
     // placeholder unconditionally and drop the authored name (J3b-pre).
     if let Some(label) = swift_accessibility_label(node) {
         output.push_str(&format!(".accessibilityLabel({label})"));
-    } else if !placeholder.is_empty() {
-        output.push_str(&format!(".accessibilityLabel({placeholder_lit})"));
+    } else if let Some(placeholder) = &placeholder {
+        output.push_str(&format!(".accessibilityLabel({})", placeholder.accessibility_label()));
     }
     if let Some(part_name) = &node.part_name {
         output.push_str(&format!(
@@ -5797,6 +5973,16 @@ fn emit_legacy_input(
     if let Some(modifier) = text_field_disabled_modifier(node)? {
         output.push_str(&modifier);
     }
+    // Escape cancels, as on the single-line `TextField`; macOS-only, so it is
+    // guarded exactly as there. There is no `onCommit` counterpart: Return
+    // is a line break in a `TextEditor` (#15930).
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        output.push_str(&format!(
+            "\n{child_pad}#if os(macOS)\n{child_pad}.onExitCommand {{ dispatch(.{case_name}) }}\n{child_pad}#endif"
+        ));
+    }
     output.push_str(&format!("\n{pad}}}\n"));
     Ok(output)
 }
@@ -5808,6 +5994,7 @@ fn emit_legacy_input(
 /// | Moslayout prop                | SwiftUI surface                                 |
 /// |-------------------------------|-------------------------------------------------|
 /// | `placeholder: "..."`          | First arg of `TextField("placeholder", ...)`    |
+/// | `placeholder: slot: x`        | `TextField(String(describing: x), ...)`         |
 /// | `value: slot: x`              | `text: .constant(x)` (see binding nuance below) |
 /// | `read-only: slot: x`          | `.disabled(x)` modifier                         |
 /// | `read-only: true` / `false`   | `.disabled(true)` / `.disabled(false)` modifier |
@@ -5846,10 +6033,11 @@ fn emit_host_input(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // First arg: the placeholder string literal. We escape `\` and `"`
-    // per Swift string-literal rules; everything else passes through.
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    // First arg: the title — the placeholder, literal or bound (see
+    // `swift_placeholder`), or `""` when there is none.
+    let placeholder_arg = swift_placeholder(node)?
+        .map(|placeholder| placeholder.title())
+        .unwrap_or_else(|| "\"\"".to_string());
 
     // `value: slot: x` -> `text: .constant(x)`. If `value` is an Expr
     // (e.g. `value: ( v )` where `v` is a For-loop binding from the
@@ -5897,7 +6085,7 @@ fn emit_host_input(
     };
 
     // The opening `TextField` expression.
-    let mut line = format!("{pad}TextField({placeholder_lit}, text: {text_binding})");
+    let mut line = format!("{pad}TextField({placeholder_arg}, text: {text_binding})");
 
     // Keep the author-owned MLL part identity on the native control. This is
     // the stable cross-platform handle for accessibility and interaction
@@ -8850,6 +9038,24 @@ mod tests {
     use mosmodel_compiler::EmitParam;
     use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in five). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    #[cfg(target_os = "macos")] // its only caller type-checks with the macOS SDK
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     // --- Story fixtures (#14459) ---------------------------------------
 
     /// A fixture value is written as a Swift literal of the slot's declared
@@ -8952,7 +9158,7 @@ mod tests {
     #[test]
     fn generated_typography_typechecks_with_swiftui() {
         let directory = std::env::temp_dir().join(format!("mosaic-swift-font-{}-{}", std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+            unique_nonce()));
         std::fs::create_dir(&directory).unwrap();
         let mut paths = Vec::new();
         for name in ["ScaledFirst", "ScaledSecond"] {
@@ -10004,6 +10210,190 @@ mod tests {
         assert!(out.contains("Text(\"Write something…\")"));
         assert!(out.contains(".accessibilityLabel(\"Write something…\")"));
         assert!(out.contains(".accessibilityIdentifier(\"notes-body-input\")"));
+    }
+
+    /// #15930 — a multiline `HostInput` is a `TextEditor`, like the legacy
+    /// `Input`. SwiftUI sent every HostInput to the `TextField` path, so the
+    /// note-type editor's card templates were single-line here.
+    #[test]
+    fn a_multiline_host_input_emits_a_text_editor_keeping_its_contract() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("front-template-input".to_string()),
+            props: vec![
+                prop_slot_ref("value", "front-template"),
+                prop_keyword("multiline", "true"),
+                prop_string("placeholder", "{{Front}}"),
+                prop_string("a11y-label", "Front template"),
+                prop_keyword("auto-focus", "true"),
+                prop_emit_ref("onChange", "onFrontChange"),
+                prop_emit_ref("onCommit", "onSave"),
+                prop_emit_ref("onCancel", "onDiscard"),
+            ],
+            children: vec![],
+        };
+        let out = from_pipeline(
+            &component(
+                "Editor",
+                vec![slot("front-template", SlotType::Text, true)],
+                vec![
+                    emit("onFrontChange", vec![param("value", EmitPayloadType::Text)]),
+                    emit("onSave", vec![]),
+                    emit("onDiscard", vec![]),
+                ],
+            ),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            out.contains("TextEditor(text: Binding(get: { frontTemplate }, set: { dispatch(.frontChange(value: $0)) }))"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("TextField("), "got:\n{out}");
+        assert!(out.contains("Text(\"{{Front}}\")"), "placeholder overlay:\n{out}");
+        assert!(
+            out.contains(".accessibilityLabel(Text(verbatim: \"Front template\"))"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains(".accessibilityIdentifier(\"front-template-input\")"),
+            "got:\n{out}"
+        );
+        // Return is a line break in a TextEditor, so nothing commits on it.
+        assert!(!out.contains(".onSubmit"), "got:\n{out}");
+        // Escape still cancels, guarded to macOS as on TextField.
+        assert!(
+            out.contains("#if os(macOS)\n") && out.contains(".onExitCommand { dispatch(.discard) }"),
+            "got:\n{out}"
+        );
+        // `auto-focus` is keyed on the HostInput tag, not on TextField.
+        assert!(out.contains(".focused($isFocused)"), "got:\n{out}");
+    }
+
+    /// Lower one text field with a slot-bound placeholder and return the
+    /// generated Swift.
+    fn text_field_with_placeholder(tag: &str, multiline: bool, placeholder: LayoutProp) -> String {
+        let mut props = vec![prop_slot_ref("value", "front-template"), placeholder];
+        if multiline {
+            props.push(prop_keyword("multiline", "true"));
+        }
+        let input = LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some("front-template-input".to_string()),
+            props,
+            children: vec![],
+        };
+        from_pipeline(
+            &component(
+                "Editor",
+                vec![
+                    slot("front-template", SlotType::Text, true),
+                    slot("front-template-placeholder", SlotType::Text, true),
+                ],
+                vec![],
+            ),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap()
+        .output
+    }
+
+    /// A slot-bound placeholder is the `TextField` title. `TextField` takes
+    /// any `StringProtocol` title, and `String(describing:)` makes that hold
+    /// for whatever type the slot or binding has. This path read string
+    /// literals only, so `placeholder : slot: x` (every toolkit `Input`)
+    /// produced `TextField("", …)`, silently.
+    #[test]
+    fn a_slot_bound_placeholder_is_the_text_field_title() {
+        for tag in ["HostInput", "Input"] {
+            let out = text_field_with_placeholder(
+                tag,
+                false,
+                prop_slot_ref("placeholder", "front-template-placeholder"),
+            );
+            assert!(
+                out.contains(
+                    "TextField(String(describing: frontTemplatePlaceholder), text: .constant(frontTemplate))"
+                ),
+                "{tag}:\n{out}"
+            );
+        }
+    }
+
+    /// The multiline (`TextEditor`) shape has no title, so the placeholder
+    /// is an overlay shown while the value is empty, and the fallback
+    /// accessible name. Both now come from the bound value; before, a
+    /// slot-bound placeholder left the editor with neither
+    /// (mosaic-pkg-note-type-editor's card templates).
+    #[test]
+    fn a_slot_bound_placeholder_is_the_text_editor_overlay_and_fallback_name() {
+        for tag in ["HostInput", "Input"] {
+            let out = text_field_with_placeholder(
+                tag,
+                true,
+                prop_slot_ref("placeholder", "front-template-placeholder"),
+            );
+            assert!(
+                out.contains("if frontTemplate.isEmpty {"),
+                "{tag} overlay condition:\n{out}"
+            );
+            assert!(
+                out.contains("Text(verbatim: String(describing: frontTemplatePlaceholder))\n"),
+                "{tag} overlay text:\n{out}"
+            );
+            assert!(
+                out.contains(
+                    ".accessibilityLabel(Text(verbatim: String(describing: frontTemplatePlaceholder)))"
+                ),
+                "{tag} fallback name:\n{out}"
+            );
+        }
+    }
+
+    /// A `For` binding and a parenthesised expression reach the title the
+    /// same way: `String(describing:)` around the authored expression.
+    #[test]
+    fn a_binding_or_expression_placeholder_is_the_text_field_title() {
+        let out = text_field_with_placeholder("HostInput", false, prop_keyword("placeholder", "hint"));
+        assert!(
+            out.contains("TextField(String(describing: hint), text:"),
+            "{out}"
+        );
+        let out = text_field_with_placeholder(
+            "HostInput",
+            false,
+            prop_expr("placeholder", "( hints[0] )"),
+        );
+        assert!(
+            out.contains("TextField(String(describing: ( hints[0] )), text:"),
+            "{out}"
+        );
+    }
+
+    /// A slot name that is not a Swift identifier is refused loudly, never
+    /// spliced into the generated expression.
+    #[test]
+    fn an_unsafe_placeholder_slot_name_is_rejected() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![prop_slot_ref("placeholder", "x), text: y); evil(")],
+            children: vec![],
+        };
+        let err = from_pipeline(
+            &component("Editor", vec![], vec![]),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -13967,6 +14357,64 @@ mod tests {
         assert_eq!(chain, "");
     }
 
+    #[test]
+    fn degree_rotation_wraps_the_painted_surface_before_its_shadow() {
+        let props = vec![
+            sp("width", "12"), sp("height", "12"),
+            sp("background", "#000"), sp("border-width", "1"),
+            sp("transform", "\"rotate(45deg)\""), sp("elevation", "raised"),
+        ];
+        let (chain, drops) = swiftui_modifier_chain_with_drops(&props, &[], &[], 0, None);
+        let rotation = chain.find(".rotationEffect(.degrees(45))").expect("diamond rotation");
+        assert!(chain.find(".frame(").unwrap() < rotation);
+        assert!(chain.find(".background(").unwrap() < rotation);
+        assert!(chain.find(".border(").unwrap() < rotation);
+        assert!(rotation < chain.find(".shadow(").unwrap());
+        assert!(drops.is_empty(), "{drops:?}");
+    }
+
+    #[test]
+    fn degree_rotation_preserves_state_precedence_and_zero_fallback() {
+        let first = vec![sp("transform", "rotate(-22.5deg)")];
+        let second = vec![sp("transform", "rotate(90deg)")];
+        let layers = vec![
+            StateLayer { cond_expr: "first".into(), props: &first, transitions: &[] },
+            StateLayer { cond_expr: "second".into(), props: &second, transitions: &[] },
+        ];
+        let chain = swiftui_modifier_chain(&[sp("transform", "rotate(45deg)")], &layers, 0, None);
+        assert!(chain.contains(".rotationEffect(.degrees(((second) ? 90 : ((first) ? -22.5 : 45))))"), "{chain}");
+        let state_only = swiftui_modifier_chain(&[], &layers[..1], 0, None);
+        assert!(state_only.contains(".degrees(((first) ? -22.5 : 0))"), "{state_only}");
+    }
+
+    #[test]
+    fn unsupported_rotation_forms_remain_explicit_style_drops() {
+        for value in ["rotate(1rad)", "rotate(50%)", "rotate(NaNdeg)",
+            "rotate(infdeg)", "rotate(1e999deg)", "rotate(--2deg)",
+            "rotate(45deg) scale(2)", "rotate(45deg); injected()", "none"] {
+            let props = vec![sp("transform", value)];
+            let (chain, drops) = swiftui_modifier_chain_with_drops(&props, &[], &[], 0, None);
+            assert!(chain.is_empty(), "{value}: {chain}");
+            assert_eq!(drops, props, "{value}");
+        }
+    }
+
+    #[test]
+    fn unsupported_state_rotation_is_visible_in_the_public_report() {
+        let mut style = style_with_part("F", "c", vec![sp("transform", "rotate(45deg)")]);
+        style.parts[0].states.push(StateStyle {
+            slot: None, slot_is_bool: false, state: "hover".into(),
+            props: vec![sp("transform", "scale(2)")], transitions: vec![],
+        });
+        let layout = gap_layout(None, "Box", "c");
+        let drops = dropped_style_properties(&style, &layout);
+        assert_eq!(drops.len(), 1);
+        assert_eq!(drops[0].name, "transform");
+        assert_eq!(drops[0].value, "scale(2)");
+        style.parts[0].states[0].props = vec![sp("transform", "rotate(-22.5deg)")];
+        assert!(dropped_style_properties(&style, &layout).is_empty());
+    }
+
     // ---------------------------------------------------------------------
     // T3 — width+height collapse to a single `.frame(width: N, height: N)`.
     // ---------------------------------------------------------------------
@@ -16447,6 +16895,58 @@ mod tests {
     }
 
     #[test]
+    fn elevation_tokens_emit_native_shadows_after_surface_paint() {
+        let raised = swiftui_modifier_chain(
+            &[
+                sp("background", "#ffffff"),
+                sp("border-radius", "8px"),
+                sp("elevation", "raised"),
+            ],
+            &[],
+            0,
+            None,
+        );
+        assert!(
+            raised.contains(".shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 4)"),
+            "got:\n{raised}"
+        );
+        assert!(
+            raised.find(".cornerRadius(8)").unwrap() < raised.find(".shadow(").unwrap(),
+            "the native shadow must follow the final surface silhouette:\n{raised}"
+        );
+
+        let overlay = swiftui_modifier_chain(&[sp("elevation", "overlay")], &[], 0, None);
+        assert!(
+            overlay.contains(".shadow(color: Color.black.opacity(0.25), radius: 24, x: 0, y: 16)"),
+            "got:\n{overlay}"
+        );
+    }
+
+    #[test]
+    fn native_elevation_consumes_only_its_non_inset_css_companion() {
+        let drops = drops_for(vec![
+            ("elevation", "raised"),
+            ("box-shadow", "0 4px 8px rgba(0,0,0,.2)"),
+        ]);
+        assert!(drops.is_empty(), "got: {drops:?}");
+
+        let inset = drops_for(vec![
+            ("elevation", "raised"),
+            ("box-shadow", "5px -5px 0 0 #fff inset"),
+        ]);
+        assert_eq!(inset.len(), 1, "got: {inset:?}");
+        assert_eq!(inset[0].name, "box-shadow");
+    }
+
+    #[test]
+    fn unsupported_elevation_value_remains_a_drop() {
+        let drops = drops_for(vec![("elevation", "floaty")]);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "elevation");
+        assert!(drops[0].reason.contains("raised"), "got: {drops:?}");
+    }
+
+    #[test]
     fn layout_properties_explain_that_swiftui_uses_view_shape() {
         // These are a different problem from a missing modifier: SwiftUI
         // expresses them by choosing HStack/VStack/Spacer at construction
@@ -16696,6 +17196,35 @@ mod tests {
         for tag in ["Column", "Row"] {
             let drops = gap_drops(&gap_layout(None, tag, "c"));
             assert!(drops.is_empty(), "{tag} applies the gap; got: {drops:?}");
+        }
+    }
+
+    /// Drag bodies use the same vertical stack constructor as Column. Test
+    /// emission as well as reporting so a future primitive change cannot hide
+    /// spacing loss behind the reporter's classification.
+    #[test]
+    fn drag_body_gap_is_emitted_and_not_reported_as_dropped() {
+        for tag in ["HostDraggable", "HostDropTarget"] {
+            let mut node = gap_layout(None, tag, "c");
+            node.children = vec![leaf("Text", vec![]), leaf("Text", vec![])];
+            let style = style_with_part("F", "c", vec![sp("gap", "8px")]);
+            let output = from_pipeline(
+                &component("F", vec![], vec![]),
+                &layout_with("F", node.clone()),
+                &style,
+            )
+            .expect("drag body emits")
+            .output;
+            assert!(output.contains("VStack(spacing: 8) {"), "{tag}: {output}");
+            assert!(gap_drops(&node).is_empty(), "{tag} already emits its gap");
+
+            let unsupported = style_with_part("F", "c", vec![sp("gap", "1rem")]);
+            assert!(dropped_style_properties(&unsupported, &node)
+                .iter()
+                .any(|drop| drop.name == "gap"));
+
+            let reused = container_node("Column", vec![node, gap_layout(None, "Box", "c")]);
+            assert_eq!(gap_drops(&reused).len(), 1, "unsupported reuse must remain visible");
         }
     }
 

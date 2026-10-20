@@ -14,7 +14,8 @@ romanization: "pudinā"
 concept_tag: BN-JINIS249-PUDINA
 prerequisites: [BN-C249-jire, BN-C249-dhone]
 sounds: []
-roots: []
+roots: [persian-pudina]
+etymology_hook: "pudinā: usually traced to Persian pūdina 'mint'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C249-dhone]
 <!-- hl-knowledge: introduces=[BN-LEX-C249-JINIS249-04]; assesses=[] -->
 
 **পুদিনা** — *pudinā* — "mint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুদিনা** (*pudinā*) is a loan, usually traced to Persian *pūdina*, "mint".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

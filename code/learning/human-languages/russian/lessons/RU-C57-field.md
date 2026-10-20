@@ -14,7 +14,8 @@ romanization: "póle"
 concept_tag: RU-NATURE3-FIELD
 prerequisites: [RU-C57-shore, RU-C57-island]
 sounds: []
-roots: []
+roots: [slavic-pole]
+etymology_hook: "поле ← Proto-Slavic *polje, from 'open, empty'; Vasmer compares Latin palam 'openly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C57-island]
 <!-- hl-knowledge: introduces=[RU-LEX-C57-NATURE3-05]; assesses=[] -->
 
 **поле** (*póle*) — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**поле** ← Proto-Slavic *\*polje* — inherited, related to Old Russian *polŭ*, "open, empty" (Vasmer): a field is open land. Vasmer compares Latin *palam*, "openly", and the *-falen* of *Westphalia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

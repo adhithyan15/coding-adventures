@@ -13,7 +13,8 @@ gloss: "chicken"
 concept_tag: IT-CIBO1-POLLO
 prerequisites: [IT-C51-burro, IT-C51-sale]
 sounds: []
-roots: []
+roots: [pullus-latin]
+etymology_hook: "pollo ← Latin pullus 'a chick' — English pullet and poultry share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C51-sale]
 <!-- hl-knowledge: introduces=[IT-LEX-C51-CIBO1-05]; assesses=[] -->
 
 **il pollo** — "chicken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pollo** ← Latin *pullus*, "a young animal, a chick" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

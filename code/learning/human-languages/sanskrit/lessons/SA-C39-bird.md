@@ -14,7 +14,8 @@ romanization: "vihagaḥ"
 concept_tag: SA-ANIMAL-VIHAGA
 prerequisites: [SA-C39-cow, SA-C37-respectfully, SA-C38-ash]
 sounds: []
-roots: []
+roots: [sanskrit-vihaga]
+etymology_hook: "vihaga 'sky-goer, bird' ← viha 'sky, air' + ga 'going', from √gam (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -42,11 +43,17 @@ reviews_of: [SA-C39-cow]
 
 **विहगः** (*vihagaḥ*) — "a bird".
 
-**विहगः** is a bird, and the word says how it moves: *vi-*, "apart, across", with *ga*, "going".
+**विहगः** is a bird, and the word says how it moves: *viha*, "the sky, the air", with *ga*, "going".
 
-That going-piece is the one inside गच्छति, the first doing-word in this book. A **विहगः** is simply the one that goes across.
+That going-piece is the one inside गच्छति, the first doing-word in this book. A **विहगः** is simply the sky-goer.
 
-Across what is unsaid, and does not need saying: आकाशः, the open sky, is the only place it could be.
+*Viha* is a rarer sky-word than आकाशः, but the picture is the same: the open air is where a bird goes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *vihaga* as *viha*, "the sky", with *ga*, "going", a piece built on
+the root √gam: "sky-goer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

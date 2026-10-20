@@ -14,7 +14,8 @@ romanization: "kuṛul"
 concept_tag: BN-THINGS111-KURUL
 prerequisites: [BN-C111-perek, BN-C111-haturi]
 sounds: []
-roots: []
+roots: [sanskrit-kuthara]
+etymology_hook: "kuṛul ← Sanskrit kuṭhāra 'axe', which CDIAL thinks probably Dravidian (CDIAL 3244)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C111-haturi]
 <!-- hl-knowledge: introduces=[BN-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **কুড়ুল** — *kuṛul* — "an axe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুড়ুল** (*kuṛul*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kuṭhāra*, "axe" (CDIAL 3244). CDIAL thinks the word probably Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

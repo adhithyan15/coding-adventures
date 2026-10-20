@@ -14,7 +14,8 @@ romanization: "nārāz"
 concept_tag: UR-SIFAT221-NARAZ
 prerequisites: [UR-C220-natija, UR-C220-halanki]
 sounds: []
-roots: []
+roots: [persian-na, arabic-radi]
+etymology_hook: "nārāz: usually explained as Persian nā- 'not' + Arabic rāḍī 'content' (Lane, root r-ḍ-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C220-halanki]
 <!-- hl-knowledge: introduces=[UR-LEX-C221-SIFAT221-01]; assesses=[] -->
 
 **ناراض** — *nārāz* — "annoyed, cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناراض** (*nārāz*) is usually explained as "not content": the Persian *nā-*, "not", with Arabic *rāḍī*, "satisfied, content" (Lane, root *r-ḍ-y*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

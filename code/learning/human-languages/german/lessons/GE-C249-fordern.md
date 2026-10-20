@@ -14,6 +14,7 @@ concept_tag: GE-VERB-FORDERN
 prerequisites: [GE-C249-erscheinen, GE-C249-erzeugen]
 sounds: []
 roots: []
+etymology_hook: "fordern ← Old High German fordarōn, built on the word for 'further, forward'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [GE-C249-erzeugen]
 <!-- hl-knowledge: introduces=[GE-LEX-C249-VERB249-05]; assesses=[] -->
 
 **fordern** — "to demand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fordern** ← Old High German *fordarōn* (EtymDB 2.1), built on the word for "further, forward": to call for something to be brought forward. English *further* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shutít"
 concept_tag: RU-VERB-SHUTIT
 prerequisites: [RU-C209-sobirat, RU-C209-obeshchat]
 sounds: []
-roots: []
+roots: [slavic-shutu]
+etymology_hook: "шутить is from шут 'a jester'; the origin of шут is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C209-obeshchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C209-ACT209-04]; assesses=[] -->
 
 **шутить** (*shutít*) — "to joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шутить** comes from *шут*, "a jester" (Vasmer). Vasmer reports a suggested link with Lithuanian *siaũsti*, "to frolic", and doubts a loan from German *Schaute*, "a fool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

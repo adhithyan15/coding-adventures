@@ -14,7 +14,8 @@ romanization: "pyāsā"
 concept_tag: UR-QUAL136-PYASA
 prerequisites: [UR-C135-thaka, UR-C135-bhuka]
 sounds: []
-roots: []
+roots: [sanskrit-pipasita]
+etymology_hook: "pyāsā ← *pipāsaka 'thirsty', a form CDIAL reconstructs beside Sanskrit pipāsita; a tadbhava (CDIAL 8200)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C135-bhuka]
 <!-- hl-knowledge: introduces=[UR-LEX-C136-QUAL136-01]; assesses=[] -->
 
 **پیاسا** — *pyāsā* — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیاسا** (*pyāsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *\*pipāsaka*, "thirsty", a form CDIAL reconstructs beside Sanskrit *pipāsita* (CDIAL 8200).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

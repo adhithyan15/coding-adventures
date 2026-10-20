@@ -13,7 +13,8 @@ gloss: "to show"
 concept_tag: IT-VERB-MOSTRARE
 prerequisites: [IT-C142-rompere, IT-C142-nascondere]
 sounds: []
-roots: []
+roots: [monstrare-latin]
+etymology_hook: "mostrare ← Latin monstrare 'to show' — English demonstrate and muster share it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C142-nascondere]
 <!-- hl-knowledge: introduces=[IT-LEX-C142-VERBI142-04]; assesses=[] -->
 
 **mostrare** — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mostrare** ← Latin *monstrare*, "to show" — inherited. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

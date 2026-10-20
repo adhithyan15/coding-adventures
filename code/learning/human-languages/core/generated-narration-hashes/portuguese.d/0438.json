@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:7f6e16d2bc1c4c03",
+  "lessonIds": [
+    "PT-C438-subida",
+    "PT-C438-descida",
+    "PT-C438-ladeira",
+    "PT-C438-ladear",
+    "PT-C438-desembocar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch438.txt",
+  "json": "portuguese/narration/ch438.json",
+  "textHash": "fnv1a64:f32603a73296ce58",
+  "jsonHash": "fnv1a64:490b6cf9fe9ef73b",
+  "findings": []
+}

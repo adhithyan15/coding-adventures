@@ -61,7 +61,8 @@ Its real cousin is the **with-** of **withdraw**, **withstand** and
 - to with**hold** is to hold **back**
 
 That older sense is exactly what *wieder* still carries: **back, again**. So
-when a German says *wieder*, they are saying the *with-* of *withdraw*.
+when a German says *wieder*, they are saying the *with-* of *withdraw*. It comes
+from Old High German *widar*, "against" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIEDER-01, GE-ETYMON-WIEDER-WITH-02] -->

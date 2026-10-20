@@ -6,7 +6,7 @@ sequence: 680
 chapter: 37
 type: word
 headword: dīcō, dīcere
-gloss: "I say" — a verb that originally meant "point out", which is why English got both dictionary and teach from it
+gloss: '"I say" — a verb that originally meant "point out", which is why English got both dictionary and teach from it'
 concept_tag: VERB-SAY
 prerequisites: [LA-C37-venio, LA-C01-vale]
 sounds: [macron-long-vowel, c-as-k]

@@ -11,7 +11,8 @@ romanization: "bennu"
 concept_tag: KA-NOUN-BACK
 prerequisites: [KA-C57-neck, KA-C55-tank]
 sounds: []
-roots: []
+roots: [dravidian-ven-back]
+etymology_hook: "bennu: native Dravidian, one word with Tamil veṉ and Telugu vennu (DEDR 5488)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and it opens with the *b* that has now turned up in ಬಾಗಿಲ�
 ಬೆನ್ನು is the part of a person that faces away, so the language uses it for anything behind you. ಬೆನ್ನ ಹಿಂದೆ, behind the back, is where things are said about you that would not be said in front.
 
 And ಬೆನ್ನು ತಟ್ಟು, to pat the back, means to praise or encourage — the same gesture English named the same way, with no contact between the two languages at any point. Some pictures are simply what bodies do.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆನ್ನು** (*bennu*) is native Dravidian, one word with Tamil *veṉ* and Telugu *vennu* (DEDR 5488). DEDR gives Kannada *ben*, *bennu*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

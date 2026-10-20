@@ -14,7 +14,8 @@ romanization: "parāt"
 concept_tag: MW-THINGS121-PARAT
 prerequisites: [MW-C120-belan, MW-C121-chaklo]
 sounds: []
-roots: []
+roots: [sanskrit-patra-vessel]
+etymology_hook: "parāt ← Sanskrit pātra 'drinking vessel, dish', a tadbhava (CDIAL 8055, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C121-chaklo]
 <!-- hl-knowledge: introduces=[MW-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **परात** — *parāt* — "a wide platter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परात** (*parāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pātra*, "drinking vessel, dish". CDIAL gives no Marwari form in this entry (CDIAL 8055); the match is through Gujarati *parāt*. CDIAL lists the Gujarati form under the Sanskrit word without explaining its *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

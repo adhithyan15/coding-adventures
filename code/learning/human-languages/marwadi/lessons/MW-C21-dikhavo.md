@@ -11,8 +11,8 @@ gloss: show it, written after the breathed kha is isolated
 concept_tag: MW-VERB-SHOW-WRITTEN
 prerequisites: [MW-W21-kha]
 sounds: [voiced-d, short-i, aspirated-kh, long-aa, voiced-v, long-o]
-roots: []
-etymology_hook: Five of its six units were already secure; the sixth arrived on its own one lesson earlier.
+roots: [indo-aryan-drkshati]
+etymology_hook: "dikhāvo 'show': the causative of dekhṇo 'to see' ← *dṛkṣati 'sees' (CDIAL 6507)"
 duration:
   max_seconds: 175
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-W21-kha, MW-W08-da, MW-W07-i-matra, MW-W08-va, MW-W05-o-matra, M
 Three groups, one for each beat you already hear. **ि** is written before
 **द** and read after it, the order you first met in **मंदिर**. **वो** is the
 **व** of **हवा** with the **ो** of **घोड़ो**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिखावो** (*dikhāvo*), "show", is the causing form of the verb "to see". CDIAL lists Marwari *dekhṇo*, "to see", and Old Marwari *dikhāṛaï* under *\*dṛkṣati*, "sees", and its variant *\*dekṣati*, present stems it reconstructs from Sanskrit (CDIAL 6507).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIKHAVO-01] -->

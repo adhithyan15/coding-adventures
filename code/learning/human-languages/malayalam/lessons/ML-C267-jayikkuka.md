@@ -14,7 +14,8 @@ romanization: "jayikkuka"
 concept_tag: ML-VERB-JAYIKKUKA
 prerequisites: [ML-C266-manakkuka, ML-C267-parisilikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-jaya]
+etymology_hook: "jayikkuka ← Sanskrit jaya 'victory' (CDIAL 5141) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C267-parisilikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C267-KRIYA267-02]; assesses=[] -->
 
 **ജയിക്കുക** — *jayikkuka* — "to pass (an exam), to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജയിക്കുക** (*jayikkuka*) is built on Sanskrit *jaya*, "victory" (CDIAL 5141), from *jayati*, "conquers", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shafa"
 concept_tag: AR-THINGS140-SHAFA
 prerequisites: [AR-C140-dimagh, AR-C140-kab]
 sounds: []
-roots: []
+roots: [sh-f-h]
+etymology_hook: "shafa: built on the root sh-f-h, 'a lip' (Lane); shafa is a lip"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C140-kab]
 <!-- hl-knowledge: introduces=[AR-LEX-C140-THINGS140-05]; assesses=[] -->
 
 **شفة** — *shafa* — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شفة** (*shafa*) is built on the native Arabic root *sh-f-h*, "a lip" (Lane). *Shafa* is a lip.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

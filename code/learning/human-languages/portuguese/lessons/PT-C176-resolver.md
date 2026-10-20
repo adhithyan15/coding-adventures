@@ -13,7 +13,8 @@ gloss: "to solve"
 concept_tag: PT-VERB-RESOLVER
 prerequisites: [PT-C176-recusar, PT-C176-arriscar]
 sounds: []
-roots: []
+roots: [solvere-latin]
+etymology_hook: "resolver ← Latin resolvere 'to loosen, to untie' — English resolve"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [PT-C176-arriscar]
 <!-- hl-knowledge: introduces=[PT-LEX-C176-VERBOS176-04]; assesses=[] -->
 
 **resolver** — "to solve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**resolver** ← Latin *resolvere*, "to loosen, to untie" (EtymDB 2.1) — a learned borrowing from Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

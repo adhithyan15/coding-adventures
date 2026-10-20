@@ -14,7 +14,8 @@ romanization: "vṛkka"
 concept_tag: ML-AROGYAM235-VRKKA
 prerequisites: [ML-C235-nattellu, ML-C235-karal]
 sounds: []
-roots: []
+roots: [sanskrit-vrkka]
+etymology_hook: "vṛkka ← Sanskrit vṛkka 'kidneys', a tatsama (CDIAL 12064)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C235-karal]
 <!-- hl-knowledge: introduces=[ML-LEX-C235-AROGYAM235-05]; assesses=[] -->
 
 **വൃക്ക** — *vṛkka* — "a kidney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വൃക്ക** (*vṛkka*) ← Sanskrit *vṛkka*, "kidneys", taken over whole as a tatsama (CDIAL 12064).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

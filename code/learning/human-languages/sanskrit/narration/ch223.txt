@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a shopkeeper, then the Sanskrit for a n
 You'll want to know: यात्रिकः.
 यात्रिकः — yātrikaḥ — "a traveller, a pilgrim".
 
+The word, taken apart.
+yātrika is built on yātrā, "journey, procession", from the root √yā, "to go" (MW), with the suffix -ika: one on a journey (CDIAL 10457). Yātrā lives on as Sindhi jāṭra, "body of pilgrims" (CDIAL 10456).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a newspaper, then the Sanskrit for a tr
 
 You'll want to know: मार्गदर्शकः.
 मार्गदर्शकः — mārgadarśakaḥ — "a guide".
+
+The word, taken apart.
+mārgadarśaka is MW's "way-shower": mārga, "road", with darśaka, "one who shows", from the root √dṛś, "to see". Mārga first meant the track of a wild animal, from mṛga, "deer" (CDIAL 10071).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a traveller, then the Sanskrit for a gu
 You'll want to know: तीर्थम्.
 तीर्थम् — tīrtham — "a holy ford, a place of pilgrimage".
 
+The word, taken apart.
+tīrtha is built on the root √tṝ, "to cross over" (MW): a ford is where you cross a river (CDIAL 5846). Holy bathing places on rivers became places of pilgrimage. √tṝ is also the root of vitarati, "hands out", which you have already met.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a guide, then the Sanskrit for a holy f
 You'll want to know: आश्रमः.
 आश्रमः — āśramaḥ — "a hermitage".
 
+The word, taken apart.
+āśrama is built on ā- and the root √śram, "to toil, exert oneself" (MW), the root of śrama, "toil": a hermitage is a place of religious exertion. It also names the four stages of a life.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a holy ford, then the Sanskrit for a he
 
 You'll want to know: मठः.
 मठः — maṭhaḥ — "a monastery".
+
+The word, taken apart.
+maṭha first meant a hut, the cell of an ascetic or a student (MW), and later a monastery. Its origin is uncertain: CDIAL 9727 sends the reader to maṇḍapa, a word it suspects is non-Aryan. It lives on as Hindi maṛhī, "hut".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pukur"
 concept_tag: BN-NATURE66-PUKUR
 prerequisites: [BN-C66-bon, BN-C66-nodi]
 sounds: []
-roots: []
+roots: [sanskrit-paushkara]
+etymology_hook: "pukur ← Sanskrit pauṣkara 'pertaining to the blue lotus', a tadbhava (CDIAL 8425)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C66-nodi]
 <!-- hl-knowledge: introduces=[BN-LEX-C66-NATURE66-04]; assesses=[] -->
 
 **পুকুর** — *pukur* — "a pond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুকুর** (*pukur*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pauṣkara*, "pertaining to the blue lotus" (CDIAL 8425). It is built on *puṣkara*, "blue lotus".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

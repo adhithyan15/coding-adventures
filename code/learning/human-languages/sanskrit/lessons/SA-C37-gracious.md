@@ -14,7 +14,8 @@ romanization: "prasannaḥ"
 concept_tag: SA-COURTESY-PRASANNA
 prerequisites: [SA-C37-respectfully, SA-C35-salt, SA-C36-likewise]
 sounds: []
-roots: []
+roots: [sanskrit-prasanna]
+etymology_hook: "prasanna 'clear, pleased' ← pra + the root √sad 'sit, settle'; MW compares Latin sedēre (CDIAL 8823)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,13 @@ reviews_of: [SA-C37-respectfully]
 
 **प्रसन्नः** describes a face that has cleared. The one word covers still water, a settled mind and a kindly host, because it is *pra-*, "forth", with *sad*, "to settle": what was cloudy has dropped its silt.
 
-To say that a guest left you **प्रसन्नः** is to say they left you at ease. The offering handed back from a temple, *prasāda*, is this same word — grace, given a physical form.
+To say that a guest left you **प्रसन्नः** is to say they left you at ease. The offering handed back from a temple, *prasāda*, comes from the same root — grace, given a physical form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Prasanna* is the past participle of *pra* + the root √sad, "to sit, settle" (MW,
+CDIAL 8823). That root is inherited: MW compares Latin *sedēre* and English *sit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

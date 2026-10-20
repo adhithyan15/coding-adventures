@@ -14,7 +14,8 @@ romanization: "bigyāpôn"
 concept_tag: BN-PORA147-BIGYAPON
 prerequisites: [BN-C147-notish, BN-C147-bhara]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapana]
+etymology_hook: "bigyāpôn ← Sanskrit vijñāpana 'making known, information', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [BN-C147-bhara]
 
 The advert says **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — "House to
 let." A house is available to rent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিজ্ঞাপন** (*bigyāpôn*) is Sanskrit *vijñāpana*, "making known, information", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

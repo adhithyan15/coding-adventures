@@ -14,6 +14,7 @@ concept_tag: IT-COLORI123-MARRONE
 prerequisites: [IT-C123-rosa, IT-C123-viola]
 sounds: []
 roots: []
+etymology_hook: "marrone, the colour, is the marrone, a big chestnut; that word's origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C123-viola]
 <!-- hl-knowledge: introduces=[IT-LEX-C123-COLORI123-03]; assesses=[] -->
 
 **marrone** — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**marrone**, the colour, is named after the *marrone*, a large sweet chestnut. Where the chestnut word came from is uncertain: EtymDB 2.1 records no origin for it, only that French *marron* was borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

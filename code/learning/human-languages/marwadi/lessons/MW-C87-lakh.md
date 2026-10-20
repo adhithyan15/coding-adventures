@@ -14,7 +14,8 @@ romanization: "lākh"
 concept_tag: MW-NUMBERS87-LAKH
 prerequisites: [MW-C87-nabbai, MW-C87-hajar]
 sounds: []
-roots: []
+roots: [sanskrit-laksha]
+etymology_hook: "lākh ← Sanskrit lakṣa 'stake, mark; a hundred thousand', a tadbhava (CDIAL 10881, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C87-hajar]
 <!-- hl-knowledge: introduces=[MW-LEX-C87-NUMBERS87-04]; assesses=[] -->
 
 **लाख** — *lākh* — "a hundred thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लाख** (*lākh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lakṣa*, "stake, mark; a hundred thousand". CDIAL lists Marwari *lākh* under it (CDIAL 10881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

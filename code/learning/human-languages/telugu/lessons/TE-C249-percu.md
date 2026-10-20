@@ -14,7 +14,8 @@ romanization: "pērcu"
 concept_tag: TE-VERB-PERCU
 prerequisites: [TE-C249-vangu, TE-C249-cacu]
 sounds: []
-roots: []
+roots: [dravidian-peru-load]
+etymology_hook: "pērcu: native Dravidian; DEDR 4446 lists pēr(u)cu 'to pile up' with Tamil piṟakku"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C249-cacu]
 <!-- hl-knowledge: introduces=[TE-LEX-C249-KRIYA249-05]; assesses=[] -->
 
 **పేర్చు** — *pērcu* — "to stack, to pile up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పేర్చు** (*pērcu*) is native Dravidian. DEDR 4446 lists *pērcu*, "to pile up, arrange in a row", with Tamil *piṟakku*, "to heap, pile up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kutâh"
 concept_tag: FA-ADJ59-KUTAH
 prerequisites: [FA-C58-ghadimi, FA-C59-boland]
 sounds: []
-roots: []
+roots: [persian-kutah]
+etymology_hook: "kutâh: inherited, usually traced to Middle Persian kōtāh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C59-boland]
 <!-- hl-knowledge: introduces=[FA-LEX-C59-ADJ59-02]; assesses=[] -->
 
 **کوتاه** — *kutâh* — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kutâh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kōtāh*, "short".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

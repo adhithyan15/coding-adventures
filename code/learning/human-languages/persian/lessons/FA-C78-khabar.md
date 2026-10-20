@@ -14,7 +14,8 @@ romanization: "khabar"
 concept_tag: FA-WORLD78-KHABAR
 prerequisites: [FA-C78-safar, FA-C78-musighi]
 sounds: []
-roots: []
+roots: [arabic-khabar]
+etymology_hook: "khabar ← Arabic ḫabar 'news, report', root ḫ-b-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C78-musighi]
 <!-- hl-knowledge: introduces=[FA-LEX-C78-WORLD78-03]; assesses=[] -->
 
 **خبر** — *khabar* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khabar* is borrowed from Arabic *ḫabar*, "news, report". Its Arabic root is *ḫ-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

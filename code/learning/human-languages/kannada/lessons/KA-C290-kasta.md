@@ -14,7 +14,8 @@ romanization: "kaṣṭa"
 concept_tag: KA-GUNA290-KASTA
 prerequisites: [KA-C290-ardha, KA-C290-purti]
 sounds: []
-roots: []
+roots: [sanskrit-kashta]
+etymology_hook: "kaṣṭa ← Sanskrit kaṣṭa 'bad, difficult', a tatsama (CDIAL 2978)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C290-purti]
 <!-- hl-knowledge: introduces=[KA-LEX-C290-GUNA290-03]; assesses=[] -->
 
 **ಕಷ್ಟ** — *kaṣṭa* — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಷ್ಟ** (*kaṣṭa*) is Sanskrit *kaṣṭa*, "bad, difficult", taken over whole as a learned loan, a tatsama (CDIAL 2978).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

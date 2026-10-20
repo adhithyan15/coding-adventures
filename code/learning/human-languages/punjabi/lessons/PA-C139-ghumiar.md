@@ -14,7 +14,8 @@ romanization: "ghumiār"
 concept_tag: PA-THINGS139-GHUMIAR
 prerequisites: [PA-C139-tarkhan, PA-C139-luhar]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhakara]
+etymology_hook: "ghumiār: CDIAL lists Punjabi kumhār under Sanskrit kumbhakāra 'potter' (3310), but not ghumiār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C139-luhar]
 <!-- hl-knowledge: introduces=[PA-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **ਘੁਮਿਆਰ** — *ghumiār* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਘੁਮਿਆਰ** (*ghumiār*) comes from is not fully settled. CDIAL lists Punjabi *kumhār*, "potter", under Sanskrit *kumbhakāra*, "potter", literally "pot-maker" (CDIAL 3310), but it does not list *ghumiār*, which looks like the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

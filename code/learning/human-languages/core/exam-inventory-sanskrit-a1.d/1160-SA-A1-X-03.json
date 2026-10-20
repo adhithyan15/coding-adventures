@@ -1,0 +1,28 @@
+{
+  "id": "SA-A1-X-03",
+  "category": "Specific notions — the lexical fields",
+  "label": "family",
+  "probe": [
+    "SA-LEX-KUTUMBAM-FAMILY",
+    "SA-LEX-BHRATA-BROTHER",
+    "SA-LEX-BHAGINI-SISTER",
+    "SA-LEX-FATHER",
+    "SA-LEX-MOTHER",
+    "SA-LEX-SON",
+    "SA-LEX-DAUGHTER",
+    "SA-LEX-C51-KIN-01",
+    "SA-LEX-C51-KIN-02",
+    "SA-LEX-C51-KIN-03",
+    "SA-LEX-C51-KIN-04",
+    "SA-LEX-C51-KIN-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE04-01"
+  ],
+  "note": "Twelve kinship atoms across chapters 11, 23 and 51, down to the mother's brother — an Indic kinship distinction the proxy has no slot for."
+}

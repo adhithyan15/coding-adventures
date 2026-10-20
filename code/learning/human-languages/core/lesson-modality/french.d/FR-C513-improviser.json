@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C513-improviser",
+    "language": "french",
+    "chapter": 513,
+    "sequence": 28140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5267cf1293fcfcb8"
+  },
+  "findings": []
+}

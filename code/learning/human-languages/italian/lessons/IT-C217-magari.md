@@ -14,6 +14,7 @@ concept_tag: IT-PERCHE217-MAGARI
 prerequisites: [IT-C217-purtroppo, IT-C217-forse]
 sounds: []
 roots: []
+etymology_hook: "magari ← Greek makari 'would that! blessed be it' — borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C217-forse]
 <!-- hl-knowledge: introduces=[IT-LEX-C217-PERCHE217-03]; assesses=[] -->
 
 **magari** — "maybe, if only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**magari** ← Greek *makari*, "would that! blessed be it" — borrowed. (EtymDB 2.1)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

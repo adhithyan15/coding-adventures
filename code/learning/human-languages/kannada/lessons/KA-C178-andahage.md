@@ -14,7 +14,8 @@ romanization: "andahāge"
 concept_tag: KA-KARANA178-ANDAHAGE
 prerequisites: [KA-C178-bekadare, KA-C178-yavudakku]
 sounds: []
-roots: []
+roots: [dravidian-en-say, dravidian-a-distal-deictic]
+etymology_hook: "andahāge: native anda 'said', from an- 'to say' (DEDR 868), + hāge 'that way' (DEDR 1)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C178-yavudakku]
 <!-- hl-knowledge: introduces=[KA-LEX-C178-KARANA178-05]; assesses=[] -->
 
 **ಅಂದಹಾಗೆ** — *andahāge* — "by the way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂದಹಾಗೆ** (*andahāge*) is native Dravidian: *anda*, "said", from *an-*, "to say" (DEDR 868), and *hāge*, "in that way" (DEDR 1): "as was said".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

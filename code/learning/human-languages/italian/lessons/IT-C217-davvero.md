@@ -13,7 +13,8 @@ gloss: "really"
 concept_tag: IT-PERCHE217-DAVVERO
 prerequisites: [IT-C217-magari, IT-C217-certo]
 sounds: []
-roots: []
+roots: [verus-latin]
+etymology_hook: "davvero — da vero 'from true': truly — vero from Latin verus"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [IT-C217-certo]
 <!-- hl-knowledge: introduces=[IT-LEX-C217-PERCHE217-05]; assesses=[] -->
 
 **davvero** — "really".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**davvero** is *da vero*, "from true": truly. *vero* ← Latin *verus*. EtymDB 2.1 has no row for *davvero*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

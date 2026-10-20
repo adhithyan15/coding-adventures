@@ -63,7 +63,12 @@
 #   python3 recover_romanization.py --write    # write it into the lessons
 # ---------------------------------------------------------------------------
 
-import os, re, sys, unicodedata
+import os
+import re
+import sys
+import unicodedata
+
+from authoring_frontmatter import decode_scalar
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -219,7 +224,7 @@ def fm(text):
     out = {}
     for line in text[3:end].splitlines():
         m = re.match(r"^([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$", line)
-        if m: out[m.group(1)] = m.group(2).strip().strip('"\'')
+        if m: out[m.group(1)] = decode_scalar(m.group(2), m.group(1))
     return out
 
 
