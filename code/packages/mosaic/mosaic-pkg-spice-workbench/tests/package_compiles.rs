@@ -288,7 +288,9 @@ fn multiline_workbench_compiles_in_both_themes() {
     let layout =
         moslayout_compiler::compile(&source("SpiceWorkbench.mll"), Some(&model.descriptor_json))
             .unwrap();
-    assert!(source("SpiceWorkbench.mll").contains("Input [ netlist-input ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostInput [ netlist-input ]"));
+    // Ctrl/Cmd+Enter runs the deck, as the Run button does (UI25 §4).
+    assert!(source("SpiceWorkbench.mll").contains("onCommit : emit: onRun"));
     assert!(source("SpiceWorkbench.mll").contains("multiline : true"));
     assert!(source("SpiceWorkbench.mll").contains("HostTable [ result-table ]"));
     assert!(source("SpiceWorkbench.mll").contains("Path [ waveform-segment ]"));
