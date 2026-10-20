@@ -19,9 +19,10 @@
 //! ```text
 //! IIRModule ──▶ check_module_for(backend) ──Ok──▶ lowering passes ──▶ backend
 //!                        │
-//!                        └──Err(UnsupportedOps)──▶ "llvm cannot lower …
-//!                                                    `i64_div_floor` in `main`
-//!                                                    (not yet lowered; LANG83 PR1b)"
+//!                        └──Err(UnsupportedOps)──▶ "jit cannot lower …
+//!                                                    `mod` in function `main`
+//!                                                    (GenericCirJit does not
+//!                                                    compile this operation …)"
 //! ```
 //!
 //! Instructions that are not registry operations (control flow, calls, heap,
@@ -34,19 +35,23 @@
 //! use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 //! use lang_aot::{check_module_for, Backend};
 //!
+//! // The legacy truncating `mod` runs on the JIT column only through the
+//! // vm-core interpreter fallback, so the JIT declares it `Refused`.
 //! let main = IIRFunction::new("main", vec![], "i64", vec![
 //!     IIRInstr::new("const", Some("a".into()), vec![Operand::Int(-7)], "i64"),
 //!     IIRInstr::new("const", Some("b".into()), vec![Operand::Int(2)], "i64"),
-//!     IIRInstr::new("i64_div_floor", Some("q".into()),
+//!     IIRInstr::new("mod", Some("r".into()),
 //!         vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
-//!     IIRInstr::new("ret", None, vec![Operand::Var("q".into())], "i64"),
+//!     IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
 //! ]);
 //! let mut module = IIRModule::new("m", "test");
 //! module.add_or_replace(main);
 //!
-//! let err = check_module_for(Backend::Llvm, &module).unwrap_err();
-//! assert_eq!(err.refusals[0].op, "i64_div_floor");
-//! assert!(err.to_string().contains("not yet lowered; LANG83 PR1b"));
+//! let err = check_module_for(Backend::Jit, &module).unwrap_err();
+//! assert_eq!(err.refusals[0].op, "mod");
+//! assert!(err.to_string().contains("`mod` in function `main`"));
+//! // Every other column lowers it.
+//! assert!(check_module_for(Backend::Llvm, &module).is_ok());
 //! ```
 
 use std::fmt;
