@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R299-would-and-if-only",
+    "language": "persian",
+    "chapter": 299,
+    "sequence": 15276,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca8f0d031b2ed2a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:7435b280da5bdbbc",
+  "lessonIds": [
+    "FA-C298-agar",
+    "FA-C298-zhakat",
+    "FA-W298-zhe",
+    "FA-C298-agar-baran-biyayad",
+    "FA-C298-bastegi-darad",
+    "FA-R298-if-and-it-depends"
+  ],
+  "tex": "persian/book/chapters/ch298-if-it-rains.tex"
+}

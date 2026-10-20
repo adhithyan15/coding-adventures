@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:e22dc879988c4277",
+  "lessonIds": [
+    "FA-C297-bozorgtar",
+    "FA-C297-mesl",
+    "FA-W297-se",
+    "FA-C297-se-sal-ast-ke",
+    "FA-R297-comparing-and-time"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "persian/narration/ch297.txt",
+  "json": "persian/narration/ch297.json",
+  "textHash": "fnv1a64:830f37a2b85788f6",
+  "jsonHash": "fnv1a64:4081543ffdc7fc59",
+  "findings": []
+}

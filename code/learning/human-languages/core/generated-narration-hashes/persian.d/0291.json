@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:bed11c870d760c58",
+  "lessonIds": [
+    "FA-C291-tarif-kardan",
+    "FA-W291-eyn",
+    "FA-C291-avval-bad",
+    "FA-C291-vaqti",
+    "FA-C291-khandani",
+    "FA-R291-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "persian/narration/ch291.txt",
+  "json": "persian/narration/ch291.json",
+  "textHash": "fnv1a64:eecd6c1673bdf9bf",
+  "jsonHash": "fnv1a64:b5346447ed473e17",
+  "findings": []
+}

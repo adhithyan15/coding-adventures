@@ -1,0 +1,11 @@
+{
+  "id": "FA-R292-opinion-and-result",
+  "pathSegment": "FA-PATH-292-OPINION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-292-OPINION",
+      "order": 2
+    }
+  ]
+}

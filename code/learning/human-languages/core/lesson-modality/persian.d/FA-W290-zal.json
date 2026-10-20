@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "FA-W290-zal",
+    "language": "persian",
+    "chapter": 290,
+    "sequence": 14924,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:98b5442739ea6856",
+    "detachableSegments": [
+      "Script you'll notice: ذ",
+      "Writing: ذ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

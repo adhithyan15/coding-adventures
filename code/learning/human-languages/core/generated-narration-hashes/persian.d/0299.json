@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:5a0f9bbb8634a102",
+  "lessonIds": [
+    "FA-C299-agar-vaqt-dashtam",
+    "FA-C299-dust-dashtam",
+    "FA-R299-would-and-if-only",
+    "FA-W299-shesh-khat"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch299.txt",
+  "json": "persian/narration/ch299.json",
+  "textHash": "fnv1a64:ad5f4921687d010d",
+  "jsonHash": "fnv1a64:50c49ae523bbd8f9",
+  "findings": []
+}

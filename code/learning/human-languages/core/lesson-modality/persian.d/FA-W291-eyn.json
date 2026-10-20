@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "FA-W291-eyn",
+    "language": "persian",
+    "chapter": 291,
+    "sequence": 14956,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:88d7ac35cb84edc2",
+    "detachableSegments": [
+      "Script you'll notice: ع",
+      "Writing: ع"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

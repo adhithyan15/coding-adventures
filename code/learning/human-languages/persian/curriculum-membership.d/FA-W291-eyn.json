@@ -1,0 +1,11 @@
+{
+  "id": "FA-W291-eyn",
+  "pathSegment": "FA-PATH-291-STORY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-291-STORY",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+Persian, chapter 295: A Ticket, And A Missed Train.
+5 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+بلیت رفت و برگشت (bilit-e raft-o bargasht) — a return ticket.
+
+Warm-up.
+[pause 2 seconds]
+Say "a ticket", "a train" and "to come back". (Bilit, qatâr, bargashtan.)
+[pause 1 second]
+You found the station. At the window, one phrase does nearly all the work.
+
+You'll want to know: بلیت رفت و برگشت.
+بلیت رفت و برگشت — bilit-e raft-o bargasht — "a return ticket".
+یک بلیت رفت و برگشت به تهران میخواهم. — yek bilit-e raft-o bargasht be Tehrân mikhâham — I'd like a return ticket to Tehran.
+Mikhâham here is a request, "I'd like", and it is how people ask at the window. Add the day after the place: barâ-ye fardâ, "for tomorrow".
+If you are not coming back by train, the ticket is for the going alone: bilit-e raft. The clerk may check with faqat raft?, "one way only?".
+Say raft-o bargasht as one run. The va, "and", shrinks to -o and leans on the word before it, as -e does.
+
+The phrase, taken apart.
+bilit is the French loan from chapter one hundred and thirteen, billet (EtymDB). The other two words are verbs you already own, with their endings taken off. Raft is the past stem of raftan: "going". Bargasht is the past stem of bargashtan: "coming back", from bar, "back", and gashtan, "to turn". Persian makes nouns this way: a past stem, standing alone, names the action.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: bilit-e raft-o bargasht, as one run]
+[pause 8 seconds for the answer]
+[your turn — say: yek bilit-e raft-o bargasht be Tehrân mikhâham]
+[pause 8 seconds for the answer]
+[your turn — say: the same, for tomorrow —... barâ-ye fardâ]
+[pause 8 seconds for the answer]
+[your turn — answer: faqat raft? — no, a return: na, raft-o bargasht]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"A return ticket"? (Bilit-e raft-o bargasht.) What are raft and bargasht, taken apart? (Two past stems, used as nouns.) "One way only?" (Faqat raft?)
+
+
+Lesson 2 of 5.
+از دست دادن (az dast dâdan) — I missed the train.
+
+Warm-up.
+[pause 2 seconds]
+Say "to lose", then "late". (Gom kardan, dir.) Then ask for a return ticket to Tehran. (Yek bilit-e raft-o bargasht be Tehrân mikhâham.)
+[pause 1 second]
+A ticket does not guarantee the train. Sooner or later something goes wrong, and you have to say what.
+
+You'll want to know: از دست دادن.
+از دست دادن — az dast dâdan — "to miss" a train or a bus, "to lose" a chance.
+قطار را از دست دادم. — qatâr râ az dast dâdam — I missed the train.
+Word for word, "I gave the train from the hand". The train is a particular one, so it takes râ. Only dâdan changes: az dast midaham, I miss; az dast dâdam, I missed.
+
+Grammar Lens: saying what went wrong.
+A problem is reported in the plain past: it happened, and it is done.
+کیف من را گم کردم. — kif-e man râ gom kardam — I lost my bag.
+دیر رسیدم و قطار رفت. — dir residam va qatâr raft — I arrived late, and the train left.
+Then the question that asks for help, in the subjunctive, because the doing has not happened yet:
+چه کار کنم؟ — che kâr konam? — What should I do?
+Che, "what", is the che inside chetor; kâr konam is kâr kardan, "to work, to do", in the subjunctive without be-, as compounds go.
+
+The phrase, taken apart.
+All three words are Persian. Dast is "hand", inherited from Old Persian (EtymDB 2.1). Dâdan is "to give", on the Indo-European root EtymDB also gives for Latin dō. Az is "from". What you let slip from your hand is gone: a train, a chance.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "I missed the train" — qatâr râ az dast dâdam]
+[pause 8 seconds for the answer]
+[your turn — say: "I lost my bag" — kif-e man râ gom kardam]
+[pause 8 seconds for the answer]
+[your turn — say: the cause and the problem — dir residam va qatâr raft]
+[pause 8 seconds for the answer]
+[your turn — say: ask for help, then answer yourself — che kâr konam?... bâyad fardâ beravam]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I missed the train"? (Qatâr râ az dast dâdam.) What is the phrase, word for word? (To give from the hand.) Why is che kâr konam? in the subjunctive? (The doing has not happened yet.)
+
+
+Lesson 3 of 5.
+مسئول (mas'ul) — the person in charge.
+
+Warm-up.
+[pause 2 seconds]
+Say "I missed the train", then "what should I do?". (Qatâr râ az dast dâdam, che kâr konam?)
+[pause 1 second]
+The person who can answer that question has a title of their own.
+
+You'll want to know: مسئول.
+مسئول — mas'ul — "the person in charge"; as a description, "responsible".
+ببخشید، مسئول ایستگاه کجاست؟ — bebakhshid, mas'ul-e istgâh kojâst? — Excuse me, where is the person in charge of the station?
+The ezafe hangs the place on it: mas'ul-e istgâh, mas'ul-e hotel. As a description it follows its noun: او مسئول است, u mas'ul ast, "she is responsible", "she's in charge".
+Say it mas-'ul, with the catch after mas, the same catch as in ta'rif. It is written with a letter of its own, and the next lesson puts it in your hand.
+
+The word, taken apart.
+mas'ul is borrowed from Arabic masʾūl (EtymDB 2.1). The Arabic word is usually read as the passive participle of saʾala, "to ask", which EtymDB lists on its own: masʾūl is "asked", and so the one who has to answer when a thing goes wrong. EtymDB itself does not link the two, so that step is given as the usual account.
+The catch here is not ع. It is the other catch Arabic spells, the glottal stop called hamze, and in Persian the two sound the same.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: mas'ul, slowly, with the catch — mas-'ul]
+[pause 8 seconds for the answer]
+[your turn — say: bebakhshid, mas'ul-e istgâh kojâst?]
+[pause 8 seconds for the answer]
+[your turn — say: the same, at the hotel — mas'ul-e hotel]
+[pause 8 seconds for the answer]
+[your turn — say: "she's in charge" — u mas'ul ast]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"The person in charge of the station"? (Mas'ul-e istgâh.) Which Arabic verb is usually read inside mas'ul? (Saʾala, "to ask".) Is its catch the letter ع? (No: it is hamze.)
+
+
+Lesson 4 of 5.
+ئ (hamze) — the catch inside مسئول (mas'ul).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ئ and Guided Practice.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
+[pause 2 seconds]
+Before the new one: write ی and ع once each, and name them.
+[pause 2 seconds]
+Now say مسئول (mas'ul), "the person in charge". You met it a moment ago. This lesson takes its catch out and puts it in your hand.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ئ.
+ئ — hamze, a glottal catch, written ' in this book's romanization.
+It is the third letter of مسئول (mas'ul), between س and و. It is two pieces. Below sits a small tooth like the tooth of ی in the middle of a word, with no dots: that is the seat. On top sits a little mark like a small hook, the hamze itself. The seat takes the hand of س on its right and joins on to و.
+In Persian the hamze and ع sound alike, a light stop in the throat, so mas'ul and ta'rif share their catch. Spelling keeps them apart, the way it keeps four letters for z. Most words with hamze on this seat came into Persian from Arabic.
+
+Writing: ئ.
+Put your pen on ئ (hamze) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — find: the seat and the mark of ئ (hamze) inside مسئول (mas'ul), and point at each]
+[once you have stopped driving — trace: ئ (hamze) three times, saying the catch as you finish each one]
+[once you have stopped driving — write: مسئ, joined, then the و after it]
+[once you have stopped driving — write: مسئول (mas'ul), then تعریف: two catches, two letters]
+[once you have stopped driving — read: مسئول (mas'ul) aloud once more]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is this — ئ (hamze)? (Hamze on its seat, a catch.) Which word did it come from? (مسئول, mas'ul, "the person in charge".) Which other letter sounds the same in Persian? (ع, 'eyn.)
+
+
+Lesson 5 of 5.
+Review — a bad morning at the station.
+
+Warm-up.
+[pause 2 seconds]
+Ask for a return ticket to Tehran. (Yek bilit-e raft-o bargasht be Tehrân mikhâham.) Then say you missed the train. (Qatâr râ az dast dâdam.)
+
+What you've built.
+Two chapters, and most of a journey: ask the way, follow it, buy the ticket, and when it goes wrong, say what happened and find someone who can help.
+[pause 2 seconds]
+One morning, start to finish:
+— bebakhshid, mas'ul-e istgâh kojâst? — dast-e chap ast. — bebakhshid, qatâr râ az dast dâdam. dir residam va qatâr raft. che kâr konam? — bâyad fardâ beravid. bilit-e raft-o bargasht dârid? — bale.
+The problem is all plain past. The help comes in the subjunctive: konam, beravid.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the traveller's lines of the morning, without stopping]
+[pause 8 seconds for the answer]
+[your turn — say: the reason you were late — dalil in ast ke otobus dir âmad, then with a noun: be khâter-e bârân]
+[pause 8 seconds for the answer]
+[your turn — say: the same story with a lost bag — kif-e man râ gom kardam]
+[pause 8 seconds for the answer]
+[your turn — say: the clerk's advice — bâyad fardâ beravid]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"A return ticket"? (Bilit-e raft-o bargasht.) Who do you ask for when it goes wrong? (The mas'ul.) Which letter carries the catch in مسئول? (ئ, hamze on its seat.)

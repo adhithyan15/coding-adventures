@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:a36431a12549df0d",
+  "lessonIds": [
+    "FA-C290-miravam",
+    "FA-C290-raftam",
+    "FA-C290-gozashte",
+    "FA-W290-zal",
+    "FA-C290-miraftam",
+    "FA-R290-the-past-two-ways"
+  ],
+  "tex": "persian/book/chapters/ch290-the-past-seen-two-ways.tex"
+}

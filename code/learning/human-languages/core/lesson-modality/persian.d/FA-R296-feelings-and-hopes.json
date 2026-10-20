@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R296-feelings-and-hopes",
+    "language": "persian",
+    "chapter": 296,
+    "sequence": 15164,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d41d319ac66d9e42"
+  },
+  "findings": []
+}

@@ -1,0 +1,935 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 298,
+  "title": "If It Rains",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:153272d0af3161bb",
+  "lessons": [
+    {
+      "id": "FA-C298-agar",
+      "sequence": 15212,
+      "title": "اگر … باشد (agar ... bâshad) (agar... bâshad) — if it is",
+      "headword": "اگر … باشد",
+      "romanization": "agar ... bâshad",
+      "gloss": "if it is — agar opens a condition, the condition comes first, and a condition about now or later takes the subjunctive",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a778f13cdb866c49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if\", then \"otherwise\". (Agar, vagarna.) Then the subjunctive of budan for \"she\": \"that she be\". (Bâshad.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Agar has waited since chapter one hundred and fifty-eight. Now you hold the verb shape it asks for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the condition first, in the subjunctive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اگر, agar, opens the condition. The condition usually comes first, then a pause, then what follows from it:"
+            },
+            {
+              "kind": "speech",
+              "text": "اگر هوا خوب باشد، به پارک میرویم. — agar havâ khub bâshad, be pârk miravim — If the weather is good, we'll go to the park."
+            },
+            {
+              "kind": "speech",
+              "text": "The condition is about later, and it may not come true, so its verb is in the subjunctive: bâshad, not ast. The second half is a plain present, which in Persian also covers the future."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر خسته باشی، بهتر است بخوابی. — agar khaste bâshi, behtar ast bekhâbi — If you're tired, you'd better sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Agar can also sit after the person it is about: to agar khaste bâshi.... Either way, agar stays inside the condition half."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: vagarna, the other branch",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vagarna, \"otherwise\", is the condition turned round, \"and if not\":"
+            },
+            {
+              "kind": "speech",
+              "text": "زود بروید، وگرنه قطار را از دست میدهید. — zud beravid, vagarna qatâr râ az dast midahid — Leave early, otherwise you'll miss the train."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agar continues Middle Persian agar, \"if\" (EtymDB 2.1). Vagarna is va, \"and\", agar, and na, \"not\", run together: the same \"if\" with \"not\" on the end."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar havâ khub bâshad, be pârk miravim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar havâ khub bâshad, be pârk miravim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar khaste bâshi, behtar ast bekhâbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar khaste bâshi, behtar ast bekhâbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zud beravid, vagarna qatâr râ az dast midahid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zud beravid, vagarna qatâr râ az dast midahid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan of your own for tomorrow, with agar and bâshad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan of your own for tomorrow, with *agar* and *bâshad*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which half comes first? (Usually the condition, with agar.) Why bâshad and not ast? (The condition is about later, and may not come true.) \"Otherwise\"? (Vagarna.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C298-zhakat",
+      "sequence": 15220,
+      "title": "ژاکت (zhâkat) — a cardigan, in case it turns cold",
+      "headword": "ژاکت",
+      "romanization": "zhâkat",
+      "gloss": "a cardigan, a knitted jacket — the thing to take if it turns cold",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d9b9dbbcb9135e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if the weather is good\". (Agar havâ khub bâshad.) Then a padded jacket and a pullover. (Kâpshan, poliver.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A condition is easiest to practise on the weather, and on what to wear for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ژاکت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ژاکت — zhâkat — \"a cardigan\", a knitted jacket that buttons down the front."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر هوا سرد باشد، ژاکت بپوشید. — agar havâ sard bâshad, zhâkat bepushid — If it's cold, put on a cardigan."
+            },
+            {
+              "kind": "speech",
+              "text": "Bepushid is pushidan, \"to put on, to wear\", on its stem push-. A zhâkat is lighter than a kâpshan, the padded jacket from chapter one hundred and twenty, and it opens at the front where a poliver goes over the head."
+            },
+            {
+              "kind": "speech",
+              "text": "Say zhâ-kat. The zh is the sound in the middle of English measure, and its letter is one Persian added to the Arabic alphabet. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "EtymDB 2.1 has no entry for zhâkat. It is usually traced to French jaquette, a jacket. EtymDB takes English jacket back to Middle French jacquet, from the same French family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhâkat, with the zh of measure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhâkat*, with the *zh* of *measure*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar havâ sard bâshad, zhâkat bepushid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar havâ sard bâshad, zhâkat bepushid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a comparison — zhâkat az kâpshan saboktar ast, a cardigan is lighter than a padded jacket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a comparison — *zhâkat az kâpshan saboktar ast*, a cardigan is lighter than a padded jacket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same advice to a friend — zhâkat bepush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same advice to a friend — *zhâkat bepush*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A cardigan\"? (Zhâkat.) \"If it's cold, put on a cardigan\"? (Agar havâ sard bâshad, zhâkat bepushid.) Which English word comes from the same French family? (Jacket.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W298-zhe",
+      "sequence": 15228,
+      "title": "ژ (zhe) — the letter that opens ژاکت (zhâkat)",
+      "headword": "ژ",
+      "romanization": "zhe",
+      "gloss": "zhe — the letter that opens ژاکت",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:8f4889a1fe567ac0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ژ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ژ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ز and پ once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ژاکت (zhâkat), \"a cardigan\". You met it a moment ago. This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ژ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ژ — zhe, the sound in the middle of English measure."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ژاکت (zhâkat). It is ز with three dots in place of one, and like ز it takes nothing on its left: after ژ (zhe) the pen lifts, and ا stands on its own before کت."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic has no zh, so the Arabic alphabet had no letter for it. Persian made four letters of its own from Arabic ones, with extra dots or an extra stroke: پ from ب, چ from ج, گ from ک, and ژ (zhe) from ز. You have now written all four."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ژ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ژ (zhe) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ژ (zhe) at the start of ژاکت (zhâkat), and point at its three dots",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ژ at the start of **ژاکت**, and point at its three dots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ژ (zhe) three times, saying zh as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ژ three times, saying *zh* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ز, then ژ (zhe), from memory: one dot, then three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ز, then ژ, from memory: one dot, then three]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ژاکت (zhâkat), lifting the pen after ژ (zhe) and after ا",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ژاکت**, lifting the pen after ژ and after ا]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ژاکت (zhâkat) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ژاکت** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ژ? (zhe, the zh of measure.) Which word did it come from? (ژاکت, zhâkat, \"a cardigan\".) Name the four letters Persian added. (پ چ ژ گ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C298-agar-baran-biyayad",
+      "sequence": 15236,
+      "title": "اگر باران بیاید (agar bârân biyâyad) — if it rains",
+      "headword": "اگر باران بیاید",
+      "romanization": "agar bârân biyâyad",
+      "gloss": "if it rains — 'if rain comes': a real condition, the three shapes its result can take, and biyâyad, the subjunctive of âmadan",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dad4fad32e5f0ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it's cold, put on a cardigan\". (Agar havâ sard bâshad, zhâkat bepushid.) Then \"to come\", and its present stem. (Âmadan, â-.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In everyday Persian, rain comes: bârân miâyad, \"it's raining\", is word for word \"rain is coming\". That puts âmadan into a rainy condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: biyâyad, the subjunctive of âmadan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Be- meets the stem â-, and a y slips in to keep the two vowels apart: بیاید, biyâyad, \"that it come\". So biyâyam, biyâyi, biyâyad."
+            },
+            {
+              "kind": "speech",
+              "text": "اگر باران بیاید، در خانه میمانیم. — agar bârân biyâyad, dar khâne mimânim — If it rains, we'll stay at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"if rain come, we stay in the house\". Mimânim is mândan, \"to stay\", on its stem mân-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three shapes for the result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A real condition can come true, and its result takes one of three shapes."
+            },
+            {
+              "kind": "speech",
+              "text": "What will happen, in the plain present:"
+            },
+            {
+              "kind": "speech",
+              "text": "اگر دیر برسی، قطار را از دست میدهی. — agar dir beresi, qatâr râ az dast midahi — If you arrive late, you'll miss the train."
+            },
+            {
+              "kind": "speech",
+              "text": "What to do, as a polite instruction: agar bârân biyâyad, zhâkat bepushid, if it rains, put on a cardigan."
+            },
+            {
+              "kind": "speech",
+              "text": "What must happen, with bâyad: agar bârân biyâyad, bâyad zud beravim, if it rains, we have to leave early."
+            },
+            {
+              "kind": "speech",
+              "text": "The agar half keeps its subjunctive in all three. Only the result changes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biyâyam, biyâyi, biyâyad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biyâyam, biyâyi, biyâyad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar bârân biyâyad, dar khâne mimânim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar bârân biyâyad, dar khâne mimânim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar dir beresi, qatâr râ az dast midahi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar dir beresi, qatâr râ az dast midahi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one condition, three results — agar bârân biyâyad, then a present, an instruction, and bâyad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one condition, three results — *agar bârân biyâyad*, then a present, an instruction, and *bâyad*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"That it come\"? (Biyâyad.) Why the y? (To keep two vowels apart.) What are the three shapes of the result? (A present, a polite instruction, bâyad.) What stays the same in the agar half? (The subjunctive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C298-bastegi-darad",
+      "sequence": 15244,
+      "title": "بستگی دارد (bastegi dârad) — it depends",
+      "headword": "بستگی دارد",
+      "romanization": "bastegi dârad",
+      "gloss": "it depends — 'it has a binding', and be... for what it depends on",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce63c48985414b42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we'll stay at home\". (Agar bârân biyâyad, dar khâne mimânim.) Then \"to tie, to close\". (Bastan.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Asked about a plan, you often cannot answer yes or no yet. The honest answer is \"it depends\", and then the condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بستگی دارد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بستگی دارد — bastegi dârad — \"it depends\"."
+            },
+            {
+              "kind": "speech",
+              "text": "— فردا به پارک میروید؟ — fardâ be pârk miravid? — Are you going to the park tomorrow? — بستگی دارد. اگر هوا خوب باشد، بله. — bastegi dârad. agar havâ khub bâshad, bale. — It depends. If the weather is good, yes."
+            },
+            {
+              "kind": "speech",
+              "text": "To name what it depends on, add be, \"to\": بستگی دارد به هوا, bastegi dârad be havâ, \"it depends on the weather\". The be phrase can also come first: be havâ bastegi dârad. And be shomâ bastegi dârad, \"it depends on you\", is a polite \"it's up to you\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is dâshtan, so it takes no mi-: dârad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bastegi is baste, \"bound, tied\", with -gi, which makes a noun of it: \"boundness\". Baste is the participle of bastan, \"to tie, to close\", built the way gozashte was built from gozashtan. So bastegi dârad be havâ is \"it has a binding to the weather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "EtymDB 2.1 takes bastan back to an Indo-European root meaning \"to bind, to tie\", the same root it gives for English bind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bastegi dârad. agar havâ khub bâshad, bale.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bastegi dârad. agar havâ khub bâshad, bale.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"it depends on the weather\", both ways — bastegi dârad be havâ, be havâ bastegi dârad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"it depends on the weather\", both ways — *bastegi dârad be havâ*, *be havâ bastegi dârad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"it's up to you\" — be shomâ bastegi dârad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"it's up to you\" — *be shomâ bastegi dârad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "fardâ be muze miravid? — with bastegi dârad and a condition of your own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *fardâ be muze miravid?* — with *bastegi dârad* and a condition of your own]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (Bastegi dârad be havâ.) What is bastegi, taken apart? (Baste, \"bound\", with -gi: boundness.) Which English verb shares its root? (Bind.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R298-if-and-it-depends",
+      "sequence": 15252,
+      "title": "Review — a plan that depends on the weather",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a weekend plan that hangs on the weather — agar with the subjunctive, its three results, and bastegi dârad",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e089ee1de5dd1db8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if the weather is good\", then \"if it rains\". (Agar havâ khub bâshad, agar bârân biyâyad.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four lessons, and a plan can now hang on something. Agar opens the condition and takes the subjunctive, bâshad or biyâyad. The result is a present, a polite instruction, or bâyad. And when you cannot say yet, bastegi dârad holds the answer open."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two friends, making a plan:"
+            },
+            {
+              "kind": "speech",
+              "text": "— fardâ be pârk miravim? — bastegi dârad be havâ. agar havâ khub bâshad, miravim. agar bârân biyâyad, dar khâne mimânim. — agar sard bâshad? — zhâkat bepush!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four lines of the plan, playing both friends",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four lines of the plan, playing both friends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan with a comparison — agar havâ behtar bâshad, be pârk miravim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan with a comparison — *agar havâ behtar bâshad, be pârk miravim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar havâ mesl-e diruz bâshad, be behtarin pârk-e shahr miravim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar havâ mesl-e diruz bâshad, be behtarin pârk-e shahr miravim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fact and a plan — do hafte ast ke bârân miâyad; agar fardâ biyâyad, dar khâne mimânam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fact and a plan — *do hafte ast ke bârân miâyad; agar fardâ biyâyad, dar khâne mimânam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a past point and a plan — se ruz pish be pârk raftim; agar havâ khub bâshad, dobâre miravim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a past point and a plan — *se ruz pish be pârk raftim; agar havâ khub bâshad, dobâre miravim*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (Bastegi dârad be havâ.) What verb shape follows agar? (The subjunctive.) Which letter opens ژاکت (zhâkat)? (ژ, zhe.) And which sits in the middle of مثل? (ث, se.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

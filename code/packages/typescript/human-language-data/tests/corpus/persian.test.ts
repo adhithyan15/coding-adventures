@@ -49,7 +49,10 @@ it("pins Persian lesson-content budgets", () =>
     // 1482 -> 1485: chapters 287-289, the three writing stages Persian had not
     // proved at A1 (my own line, a three-minute timed form, four connected
     // lines). No new word, letter or atom; no idiom, sense or culture claim.
-    lessons: 1485,
+    // 1485 -> 1534: chapters 290-299, the B1 core that realizes all five B1
+    // spine nodes, with letter lessons for ع غ ژ ث ذ ض ئ: 49 lessons, one
+    // reading and one writing, no idiom, sense or culture claim.
+    lessons: 1534,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,
@@ -84,6 +87,9 @@ it("pins Persian's writing ladder IN ORDER, pre-A1 through A1", () => {
     ["FA-W287-khat-e-khodam", "controlled-composition"],
     ["FA-W288-ba-saat", "timed-assessment-production"],
     ["FA-W289-chahar-khat", "connected-composition"],
+    // FA-W299-shesh-khat: six connected lines about a trip, the B1 core's
+    // writing task. A second connected composition, later in sequence.
+    ["FA-W299-shesh-khat", "connected-composition"],
   ]);
   expect(persian.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
   expect(persian.levels[0]).toMatchObject({
