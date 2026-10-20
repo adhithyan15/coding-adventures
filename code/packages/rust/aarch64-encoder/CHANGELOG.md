@@ -1,5 +1,18 @@
 # Changelog — `aarch64-encoder`
 
+## Unreleased — 2026-10-20 (LANG83 PR4 — flag-setting arithmetic)
+
+### Added
+
+- **`adds`, `subs`, `negs`** — the flag-setting shifted-register add/subtract
+  (`ADD`/`SUB` with the S bit), whose V flag is the signed-overflow test
+  LANG83 PR4's `i64_*_ovf` ops branch on.
+- **`smulh`** — the high 64 bits of the signed 128-bit product.
+- **`cmp_asr(rn, rm, shift)`** — `CMP Xn, Xm, ASR #shift`, so the multiply
+  check is one compare against the sign of the low half. Rejects `shift >= 64`.
+- Tests pin every new encoding. Each expected word was checked against
+  `llvm-mc -triple=aarch64 -show-encoding`.
+
 ## Unreleased — 2026-08-18
 
 Brought under CI: the crate had no `BUILD` file, so nothing ever ran its tests

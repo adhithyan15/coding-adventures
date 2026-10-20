@@ -787,6 +787,81 @@ impl Assembler {
         self.emit(word);
     }
 
+    // -----------------------------------------------------------------------
+    // Flag-setting arithmetic and the high half of a multiply (LANG83 PR4)
+    // -----------------------------------------------------------------------
+    //
+    // Overflow-checked arithmetic needs the **V** (signed overflow) flag, which
+    // only the `S`-suffixed add/subtract forms set. They are the shifted-
+    // register encodings of `ADD`/`SUB` with the `S` bit (bit 29) set:
+    //
+    //   sf op S 01011 shift 0 Rm imm6 Rn Rd
+    //   ADD  = 1 0 0 …  → 0x8B000000      ADDS = 1 0 1 … → 0xAB000000
+    //   SUB  = 1 1 0 …  → 0xCB000000      SUBS = 1 1 1 … → 0xEB000000
+    //
+    // `shift` (bits 23:22) is 00 = LSL, 01 = LSR, 10 = ASR; `imm6` (15:10) is
+    // the shift amount. `CMP Xn, Xm, ASR #k` is `SUBS XZR, Xn, Xm, ASR #k`.
+    //
+    // A multiply has no overflow flag at all. `SMULH` gives the high 64 bits
+    // of the signed 128-bit product; the product fits in 64 bits exactly when
+    // that high half equals the sign-extension of the low half
+    // (`low ASR #63`).
+
+    /// `ADDS Xd, Xn, Xm` — add and set NZCV. `V` is set when the signed sum
+    /// overflows.
+    ///
+    /// ```text
+    /// ADDS x0, x1, x2   →   0xAB020020
+    /// ```
+    pub fn adds(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        self.emit(0xAB000000 | (rm.idx() << 16) | (rn.idx() << 5) | rd.idx());
+    }
+
+    /// `SUBS Xd, Xn, Xm` — subtract and set NZCV. `V` is set when the signed
+    /// difference overflows.
+    ///
+    /// ```text
+    /// SUBS x0, x1, x2   →   0xEB020020
+    /// ```
+    pub fn subs(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        self.emit(0xEB000000 | (rm.idx() << 16) | (rn.idx() << 5) | rd.idx());
+    }
+
+    /// `NEGS Xd, Xm` — `SUBS Xd, XZR, Xm`: negate and set NZCV. `V` is set only
+    /// for `Xm = INT64_MIN`, whose negation does not fit.
+    ///
+    /// ```text
+    /// NEGS x0, x1   →   0xEB0103E0
+    /// ```
+    pub fn negs(&mut self, rd: Reg, rm: Reg) {
+        self.emit(0xEB000000 | (rm.idx() << 16) | (0b11111 << 5) | rd.idx());
+    }
+
+    /// `SMULH Xd, Xn, Xm` — the high 64 bits of the signed 128-bit product.
+    ///
+    /// Data-processing (3-source): `1 00 11011 0 10 Rm 0 11111 Rn Rd`
+    /// (`Ra` = XZR) = `0x9B407C00 | Rm<<16 | Rn<<5 | Rd`.
+    ///
+    /// ```text
+    /// SMULH x0, x1, x2   →   0x9B427C20
+    /// ```
+    pub fn smulh(&mut self, rd: Reg, rn: Reg, rm: Reg) {
+        self.emit(0x9B407C00 | (rm.idx() << 16) | (rn.idx() << 5) | rd.idx());
+    }
+
+    /// `CMP Xn, Xm, ASR #shift` — `SUBS XZR, Xn, Xm, ASR #shift`.
+    ///
+    /// ```text
+    /// CMP x1, x2, ASR #63   →   0xEB82FC3F
+    /// ```
+    pub fn cmp_asr(&mut self, rn: Reg, rm: Reg, shift: u32) -> Result<(), EncodeError> {
+        if shift >= 64 {
+            return Err(EncodeError::ImmediateOutOfRange { op: "cmp_asr", bits: 6, value: shift as i64 });
+        }
+        self.emit(0xEB800000 | (rm.idx() << 16) | (shift << 10) | (rn.idx() << 5) | 0b11111);
+        Ok(())
+    }
+
     /// `CMP Xn, #imm` — equivalent to `SUBS XZR, Xn, #imm`.
     pub fn cmp_imm(&mut self, rn: Reg, imm12: u32) -> Result<(), EncodeError> {
         if imm12 >= (1 << 12) {
@@ -1839,6 +1914,54 @@ mod tests {
     }
 
     // ---- LANG38: Unary ----
+
+    /// One-instruction word from a fresh assembler.
+    fn one_word(emit: impl FnOnce(&mut Assembler)) -> u32 {
+        let mut a = Assembler::new();
+        emit(&mut a);
+        let bytes = a.finish().unwrap();
+        assert_eq!(bytes.len(), 4);
+        u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]])
+    }
+
+    #[test]
+    fn flag_setting_arithmetic_encodings() {
+        // ADDS/SUBS are ADD/SUB with the S bit (bit 29) set.
+        assert_eq!(one_word(|a| a.adds(Reg::X0, Reg::X1, Reg::X2)), 0xAB020020);
+        assert_eq!(one_word(|a| a.subs(Reg::X0, Reg::X1, Reg::X2)), 0xEB020020);
+        assert_eq!(
+            one_word(|a| a.adds(Reg::X0, Reg::X1, Reg::X2)),
+            one_word(|a| a.add(Reg::X0, Reg::X1, Reg::X2)) | (1 << 29)
+        );
+        assert_eq!(
+            one_word(|a| a.subs(Reg::X0, Reg::X1, Reg::X2)),
+            one_word(|a| a.sub(Reg::X0, Reg::X1, Reg::X2)) | (1 << 29)
+        );
+        // NEGS x0, x1 = SUBS x0, xzr, x1 = NEG with the S bit.
+        assert_eq!(one_word(|a| a.negs(Reg::X0, Reg::X1)), 0xEB0103E0);
+        assert_eq!(one_word(|a| a.negs(Reg::X0, Reg::X1)), one_word(|a| a.neg_(Reg::X0, Reg::X1)) | (1 << 29));
+        // CMP with no shift is the ASR form with shift type 00 and amount 0.
+        assert_eq!(one_word(|a| a.cmp_asr(Reg::X1, Reg::X2, 63).unwrap()), 0xEB82FC3F);
+        assert_eq!(
+            one_word(|a| a.cmp_asr(Reg::X1, Reg::X2, 0).unwrap()) & !(0b11 << 22),
+            one_word(|a| a.cmp(Reg::X1, Reg::X2))
+        );
+        let mut a = Assembler::new();
+        assert!(a.cmp_asr(Reg::X1, Reg::X2, 64).is_err());
+    }
+
+    #[test]
+    fn smulh_encoding() {
+        // smulh x0, x1, x2: 1 00 11011 0 10 Rm=2 0 Ra=11111 Rn=1 Rd=0
+        assert_eq!(one_word(|a| a.smulh(Reg::X0, Reg::X1, Reg::X2)), 0x9B427C20);
+        // smulh x9, x0, x1 (the PR4 multiply check's high half).
+        assert_eq!(one_word(|a| a.smulh(Reg::X9, Reg::X0, Reg::X1)), 0x9B417C09);
+        // Same family as MUL (MADD with Ra = XZR) but U=0, opc 010.
+        assert_ne!(
+            one_word(|a| a.smulh(Reg::X0, Reg::X1, Reg::X2)),
+            one_word(|a| a.mul(Reg::X0, Reg::X1, Reg::X2))
+        );
+    }
 
     #[test]
     fn neg_encoding() {

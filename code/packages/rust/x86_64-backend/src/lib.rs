@@ -1511,6 +1511,13 @@ fn emit_instr(
     if op == "i64_div_floor" || op == "i64_mod_floor" {
         return emit_floor_divmod(asm, alloc, instr, abi, op == "i64_mod_floor");
     }
+    // --- LANG83 PR4: overflow-checked arithmetic ---
+    //
+    // Matched by full name before the `add_`/`sub_`/`mul_`/`neg_` prefix arms
+    // (which wrap); the type-first names keep those arms from ever seeing them.
+    if matches!(op, "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf") {
+        return emit_checked_arith(asm, alloc, instr, abi);
+    }
     if op == "trap" {
         // IIR `trap "<kind>"` arrives as `trap Var("<kind>")` (the specialiser
         // lifts `Operand::Str` to a CIR `Var`). Only a kind from the closed
@@ -1738,6 +1745,73 @@ fn emit_floor_divmod(
     let result_reg = if want_mod { Reg::Rdx } else { Reg::Rax };
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
+    Ok(())
+}
+
+// ===========================================================================
+// LANG83 PR4 — overflow-checked arithmetic
+// ===========================================================================
+
+/// `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` (LANG83 PR4):
+/// the exact result, or `Trap.Overflow`.
+///
+/// x86-64 computes the overflow condition for free. The **OF** (overflow) flag
+/// is set by each of these instructions exactly when the signed result does
+/// not fit in 64 bits:
+///
+/// | instruction      | OF = 1 when                                         |
+/// |------------------|-----------------------------------------------------|
+/// | `add rax, rcx`   | the exact sum is outside `[MIN, MAX]`               |
+/// | `sub rax, rcx`   | the exact difference is outside the range           |
+/// | `imul rax, rcx`  | the full 128-bit signed product does not fit in RAX |
+/// | `neg rax`        | `rax == MIN` (the only value whose negation overflows) |
+///
+/// So the whole lowering is "do it, then `jno` over the trap":
+///
+/// ```text
+///         mov  rax, [a]
+///         mov  rcx, [b]              ; binary ops only
+///         add  rax, rcx              ; | sub rax, rcx | imul rax, rcx | neg rax
+///         jno  ok
+///         mov  edi, 5                ; Trap.Overflow (rcx on Microsoft x64)
+///         call __twig_trap           ; flush stdout, report, abort
+///         ud2
+/// ok:
+///         mov  [dest], rax
+/// ```
+///
+/// The destination is written only after the check, so a wrapped value never
+/// escapes, and a dest that aliases an operand is still correct (both operands
+/// are already in registers).
+fn emit_checked_arith(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    abi: X86_64Abi,
+) -> Result<(), BackendError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr(format!("{} needs srcs[0]", instr.op)))?;
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    if instr.op == "i64_neg_ovf" {
+        asm.neg_(Reg::Rax);
+    } else {
+        let rhs = instr.srcs.get(1)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{} needs srcs[1]", instr.op)))?;
+        load_operand(asm, alloc, Reg::Rcx, rhs);
+        match instr.op.as_str() {
+            "i64_add_ovf" => asm.add(Reg::Rax, Reg::Rcx),
+            "i64_sub_ovf" => asm.sub(Reg::Rax, Reg::Rcx),
+            _ => asm.imul(Reg::Rax, Reg::Rcx),
+        }
+    }
+    let ok = asm.create_label();
+    asm.jcc(Cond::No, ok);
+    emit_trap_call(asm, abi, trap_kind_id(TRAP_OVERFLOW).expect("Trap.Overflow is a built-in kind"));
+    asm.bind(ok).map_err(BackendError::from)?;
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
 }
 
@@ -3111,6 +3185,57 @@ mod tests {
         assert!(body_contains(&bytes, &[0x48, 0x01, 0xCA]), "add rdx, rcx in {bytes:02X?}");
         // The remainder (RDX) is what reaches the dest slot.
         assert!(body_contains(&bytes, &[0x48, 0x89, 0x95]), "mov [rbp+disp32], rdx in {bytes:02X?}");
+    }
+
+    // ---- LANG83 PR4: overflow-checked arithmetic ----
+
+    fn checked_fn(op: &str, abi: X86_64Abi) -> (Vec<u8>, Vec<Reloc>) {
+        let params = vec![("a".to_string(), "i64".to_string()), ("b".to_string(), "i64".to_string())];
+        let ctx = fn_ctx("f", &params, "i64");
+        let srcs = if op == "i64_neg_ovf" {
+            vec![Op::Var("a".into())]
+        } else {
+            vec![Op::Var("a".into()), Op::Var("b".into())]
+        };
+        let ir = vec![instr(op, Some("r"), srcs), instr("ret_i64", None, vec![Op::Var("r".into())])];
+        compile_function_with_relocs(&ctx, &ir, abi).expect("checked op lowers")
+    }
+
+    /// Each checked op is the one flag-setting instruction, then `jno` over
+    /// exactly the 14-byte trap sequence (`mov edi, 5; call __twig_trap;
+    /// ud2`), then the store — never the wrapping arm the `add_`/`mul_`
+    /// prefixes would have chosen without a following overflow check.
+    #[test]
+    fn checked_ops_test_the_overflow_flag_then_trap_overflow() {
+        for (op, arith) in [
+            ("i64_add_ovf", &[0x48, 0x01, 0xC8][..]),       // add rax, rcx
+            ("i64_sub_ovf", &[0x48, 0x29, 0xC8][..]),       // sub rax, rcx
+            ("i64_mul_ovf", &[0x48, 0x0F, 0xAF, 0xC1][..]), // imul rax, rcx
+            ("i64_neg_ovf", &[0x48, 0xF7, 0xD8][..]),       // neg rax
+        ] {
+            let (bytes, relocs) = checked_fn(op, X86_64Abi::SysV);
+            let at = position(&bytes, arith);
+            let jno = at + arith.len();
+            assert_eq!(&bytes[jno..jno + 6], &[0x0F, 0x81, 14, 0, 0, 0], "{op}: jno over the trap");
+            assert_eq!(&bytes[jno + 6..jno + 13], &[0x48, 0xC7, 0xC7, 5, 0, 0, 0], "{op}: mov rdi, Trap.Overflow");
+            assert_eq!(bytes[jno + 13], 0xE8, "{op}: call __twig_trap");
+            assert_eq!(&bytes[jno + 18..jno + 20], &[0x0F, 0x0B], "{op}: ud2");
+            // The result (RAX) is stored only after the check.
+            assert_eq!(&bytes[jno + 20..jno + 23], &[0x48, 0x89, 0x85], "{op}: mov [rbp+disp32], rax");
+            assert_eq!(trap_calls(&relocs), 1, "{op}");
+        }
+        // Microsoft x64 passes the kind id in RCX.
+        let (bytes, _) = checked_fn("i64_add_ovf", X86_64Abi::MsX64);
+        assert!(body_contains(&bytes, &[0x0F, 0x81, 14, 0, 0, 0, 0x48, 0xC7, 0xC1, 5, 0, 0, 0, 0xE8]));
+    }
+
+    #[test]
+    fn checked_ops_need_their_operands() {
+        let ctx = fn_ctx("f", &[], "i64");
+        let bad = vec![instr("i64_add_ovf", Some("r"), vec![Op::Var("a".into())])];
+        assert!(compile_function(&ctx, &bad, X86_64Abi::SysV).is_err(), "binary op with one source");
+        let no_dest = vec![instr("i64_neg_ovf", None, vec![Op::Var("a".into())])];
+        assert!(compile_function(&ctx, &no_dest, X86_64Abi::SysV).is_err(), "no dest");
     }
 
     #[test]
