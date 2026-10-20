@@ -10,8 +10,8 @@ it("adds a bounded Punjabi A2 transport prerequisite without mock credit", () =>
   const ids = [
     "PA-C181-rel",
     "PA-C181-ticket",
-    "PA-C181-yayya",
     "PA-C181-yatra",
+    "PA-C181-yayya",
     "PA-C181-vapas",
     "PA-C181-paidal",
     "PA-C181-travel-review",
@@ -37,15 +37,15 @@ it("adds a bounded Punjabi A2 transport prerequisite without mock credit", () =>
     .toEqual([
       [atoms[0]],
       [atoms[1]],
-      ["PA-SCRIPT-RECOG-YA-01"],
       [atoms[2]],
+      ["PA-SCRIPT-RECOG-YA-01"],
       [atoms[3]],
       [atoms[4]],
       [],
       [],
     ]);
   const newForms = ["ਰੇਲ", "ਟਿਕਟ", "ਯਾਤਰਾ", "ਵਾਪਸ", "ਪੈਦਲ"];
-  const ownerIndexes = [0, 1, 3, 4, 5];
+  const ownerIndexes = [0, 1, 2, 4, 5];
   for (const [formIndex, form] of newForms.entries()) {
     const ownerIndex = ownerIndexes[formIndex]!;
     const earlierCopy = chapterLessons.slice(0, ownerIndex)
@@ -54,17 +54,23 @@ it("adds a bounded Punjabi A2 transport prerequisite without mock credit", () =>
     expect(earlierCopy.includes(form), `${form} appears before its owner lesson`)
       .toBe(false);
   }
-  const yayya = chapterLessons[2]!;
+  const yatra = chapterLessons[2]!;
+  expect(yatra.frontmatter.skills).toEqual(["listening", "speaking"]);
+  expect(yatra.blocks.map((block) => block.markdown).join("\n"))
+    .not.toContain("[YOU READ:");
+  const yayya = chapterLessons[3]!;
   expect(yayya.frontmatter.headword).toBe("ਯ");
   expect(yayya.frontmatter.delivery).toBe("script");
   expect(yayya.blocks.map((block) => block.markdown).join("\n"))
     .toMatch(/No stroke order is taught here/i);
-  expect(chapterLessons[3]?.frontmatter["requires.knowledge"])
+  expect(yayya.frontmatter["requires.knowledge"])
+    .toContain("PA-TRAVEL-JOURNEY-01");
+  expect(chapterLessons[4]?.frontmatter["requires.knowledge"])
     .toContain("PA-SCRIPT-RECOG-YA-01");
   for (const lesson of chapterLessons) {
     expect(Number(lesson?.frontmatter["duration.max_seconds"]))
       .toBeLessThanOrEqual(300);
-    expect(lesson?.frontmatter.spine_node).toBe("SPINE-HANDLE-TRAVEL");
+    expect(lesson?.frontmatter.spine_node).toBe("SPINE-READ-PRACTICAL-TEXTS");
     expect(lesson?.frontmatter.introduces_idioms).toEqual([]);
     expect(lesson?.frontmatter.introduces_senses).toEqual([]);
     expect(lesson?.frontmatter.introduces_culture_claims).toEqual([]);

@@ -3,19 +3,19 @@
     "id": "PA-C181-yatra",
     "language": "punjabi",
     "chapter": 181,
-    "sequence": 9500,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "sequence": 9490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "eyes-or-hands-step"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "eyes-or-hands-step"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:6f77520017584097"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6287a6decfc5d085"
   },
   "findings": []
 }

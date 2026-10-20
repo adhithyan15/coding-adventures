@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 181,
   "title": "A Train Ticket and the Way Home",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:09f1298f137fa807",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ebd6c35dad087b13",
   "lessons": [
     {
       "id": "PA-C181-rel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93cf0b708174829d",
+      "sourceHash": "fnv1a64:194c26f2bd245131",
       "notice": null,
       "blocks": [
         {
@@ -135,7 +135,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48f94baa91e0f5f7",
+      "sourceHash": "fnv1a64:b65edb635672f4df",
       "notice": null,
       "blocks": [
         {
@@ -234,12 +234,150 @@
       ]
     },
     {
-      "id": "PA-C181-yayya",
+      "id": "PA-C181-yatra",
       "sequence": 9490,
-      "title": "ਯ (ya) — one new letter before a journey word",
+      "title": "ਯਾਤਰਾ (yatra) — hear and say journey or travel",
+      "headword": "ਯਾਤਰਾ",
+      "romanization": "yatra",
+      "gloss": "journey, travel",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6287a6decfc5d085",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one journey word by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "yātrā; YOU SAY: yātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *yātrā*; YOU SAY: *yātrā*]"
+            },
+            {
+              "kind": "speech",
+              "text": "— journey; travel."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "rel nāl yātrā; YOU SAY: rel nāl yātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *rel nāl yātrā*; YOU SAY: *rel nāl yātrā*]"
+            },
+            {
+              "kind": "speech",
+              "text": "— travel by train."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat the second line as one useful spoken travel chunk. Its Gurmukhi form waits until the next lesson takes the new opening letter from this known word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yātrā is Sanskrit yātrā, “journey, procession,” taken over as a learned loan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "yātrā; YOU SAY: yātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *yātrā*; YOU SAY: *yātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "rel nāl yātrā; YOU SAY: rel nāl yātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *rel nāl yātrā*; YOU SAY: *rel nāl yātrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਰੇਲ ਦੀ ਟਿਕਟ (tikat), then rel nāl yātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਰੇਲ ਦੀ ਟਿਕਟ**, then *rel nāl yātrā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say travel by train. (Rel nāl yātrā.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Punjabi University, RCPLT dictionary, lists ਯਾਤਰਾ (yatra) as journey or travel."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C181-yayya",
+      "sequence": 9500,
+      "title": "ਯ (ya) — one new letter from a journey word you can say",
       "headword": "ਯ",
       "romanization": "ya",
-      "gloss": "one Gurmukhi letter, met before a journey word",
+      "gloss": "one Gurmukhi letter, taken from a known spoken journey word",
       "script": "gurmukhi",
       "modality": "pen",
       "derivedModality": "pen",
@@ -249,7 +387,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b32d8b46994afba8",
+      "sourceHash": "fnv1a64:4f2ea52c004ccaa3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -278,7 +416,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat) once."
+              "text": "Say yātrā, then ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat)."
             }
           ]
         },
@@ -293,7 +431,7 @@
             },
             {
               "kind": "speech",
-              "text": "yayyā — ya. Keep the letter in view. Today you only need to recognise it and connect it with ya."
+              "text": "yayyā — ya. Keep the letter in view. It is the opening letter of the journey word yātrā that you already know by ear."
             },
             {
               "kind": "speech",
@@ -337,11 +475,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then ya",
+              "instruction": "yātrā, then point to its opening letter ਯ and say ya",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **ਰੇਲ ਦੀ ਟਿਕਟ**, then *ya*]"
+              "source": "[YOU SAY: *yātrā*, then point to its opening letter **ਯ** and say *ya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then yātrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਰੇਲ ਦੀ ਟਿਕਟ**, then *yātrā*]"
             }
           ]
         },
@@ -369,136 +516,6 @@
       ]
     },
     {
-      "id": "PA-C181-yatra",
-      "sequence": 9500,
-      "title": "ਯਾਤਰਾ (yatra) — journey or travel",
-      "headword": "ਯਾਤਰਾ",
-      "romanization": "yatra",
-      "gloss": "journey, travel",
-      "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "eyes-or-hands-step"
-      ],
-      "sourceHash": "fnv1a64:6f77520017584097",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
-        ],
-        "waitUntilStopped": [
-          "Warm-up",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Retrieve ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then point to ਯ and say ya."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one journey word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਯਾਤਰਾ (yatra) — yātrā — journey; travel."
-            },
-            {
-              "kind": "speech",
-              "text": "ਰੇਲ ਨਾਲ ਯਾਤਰਾ (yatra) — rel nāl yātrā — travel by train."
-            },
-            {
-              "kind": "speech",
-              "text": "Treat the second line as one useful travel chunk."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਯਾਤਰਾ (yatra) (yātrā) is Sanskrit yātrā, “journey, procession,” taken over as a learned loan."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "HEAR",
-              "instruction": "yātrā; YOU SAY: ਯਾਤਰਾ (yatra)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU HEAR: *yātrā*; YOU SAY: **ਯਾਤਰਾ**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: **ਰੇਲ ਨਾਲ ਯਾਤਰਾ**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **ਰੇਲ ਦੀ ਟਿਕਟ**, then **ਰੇਲ ਨਾਲ ਯਾਤਰਾ**]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say travel by train. (ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra).)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Punjabi University, RCPLT dictionary, lists ਯਾਤਰਾ (yatra) as journey or travel."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "PA-C181-vapas",
       "sequence": 9510,
       "title": "ਵਾਪਸ (vapas) — back or returning",
@@ -511,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b8041027d8f61d6",
+      "sourceHash": "fnv1a64:b8904e2781786ceb",
       "notice": null,
       "blocks": [
         {
@@ -620,7 +637,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c914f32240a0d113",
+      "sourceHash": "fnv1a64:6fdb920d5feb6c6d",
       "notice": null,
       "blocks": [
         {
@@ -729,7 +746,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5641f2f794a399c",
+      "sourceHash": "fnv1a64:4dc6272d5fd7f95e",
       "notice": null,
       "blocks": [
         {
@@ -831,7 +848,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:380db530222500d8",
+      "sourceHash": "fnv1a64:975c2309bfeb2962",
       "notice": null,
       "blocks": [
         {

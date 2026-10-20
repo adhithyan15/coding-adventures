@@ -1,50 +1,50 @@
 ---
 schema_version: 2
 id: PA-C181-yayya
-spine_node: SPINE-HANDLE-TRAVEL
-sequence: 9490
+spine_node: SPINE-READ-PRACTICAL-TEXTS
+sequence: 9500
 delivery: script
 chapter: 181
 type: writing
 headword: "ਯ"
 romanization: "ya"
-gloss: "one Gurmukhi letter, met before a journey word"
-prerequisites: [PA-C181-ticket]
+gloss: "one Gurmukhi letter, taken from a known spoken journey word"
+prerequisites: [PA-C181-yatra]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01]
+  knowledge: [PA-TRAVEL-JOURNEY-01, PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01]
 introduces:
   knowledge: [PA-SCRIPT-RECOG-YA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01, PA-SCRIPT-RECOG-YA-01]
+  knowledge: [PA-TRAVEL-JOURNEY-01, PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01, PA-SCRIPT-RECOG-YA-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-punjabi
-reviews_of: [PA-C181-ticket, PA-C181-rel]
+reviews_of: [PA-C181-yatra, PA-C181-ticket, PA-C181-rel]
 ---
 
-# ਯ — one new letter before a journey word
+# ਯ — one new letter from a journey word you can say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-TRAVEL-JOURNEY-01, PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01] -->
 
-[PAUSE 2s] Say **ਰੇਲ ਦੀ ਟਿਕਟ** once.
+[PAUSE 2s] Say *yātrā*, then **ਰੇਲ ਦੀ ਟਿਕਟ**.
 
 ## Script you'll notice: ਯ
 <!-- hl-knowledge: introduces=[PA-SCRIPT-RECOG-YA-01]; assesses=[] -->
 
 > ਯ
 
-**yayyā** — *ya*. Keep the letter in view. Today you only need to recognise
-it and connect it with *ya*.
+**yayyā** — *ya*. Keep the letter in view. It is the opening letter of the
+journey word *yātrā* that you already know by ear.
 
 No stroke order is taught here: the track does not yet have a verified source
 for one.
@@ -59,11 +59,12 @@ finish.
 > This is observe-and-copy with the model visible, not writing from memory.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01, PA-SCRIPT-RECOG-YA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-TRAVEL-JOURNEY-01, PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01, PA-SCRIPT-RECOG-YA-01] -->
 
 - [YOU LOOK: at **ਯ**; YOU SAY: *ya*]
 - Look away. Then look back and point to **ਯ**.
-- [YOU SAY: **ਰੇਲ ਦੀ ਟਿਕਟ**, then *ya*]
+- [YOU SAY: *yātrā*, then point to its opening letter **ਯ** and say *ya*]
+- [YOU SAY: **ਰੇਲ ਦੀ ਟਿਕਟ**, then *yātrā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-YA-01] -->

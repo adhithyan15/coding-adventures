@@ -1,5 +1,5 @@
 Punjabi, chapter 181: A Train Ticket and the Way Home.
-8 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+8 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 8.
@@ -56,18 +56,51 @@ Source: Punjabi University, RCPLT dictionary, lists ਟਿਕਟ (tikat) as a ti
 
 
 Lesson 3 of 8.
-ਯ (ya) — one new letter before a journey word.
+ਯਾਤਰਾ (yatra) — hear and say journey or travel.
+
+Warm-up.
+[pause 2 seconds]
+Retrieve ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat).
+
+Grammar Lens: one journey word by ear.
+[your turn — hear: yātrā; YOU SAY: yātrā]
+[pause 8 seconds for the answer]
+— journey; travel.
+[your turn — hear: rel nāl yātrā; YOU SAY: rel nāl yātrā]
+[pause 8 seconds for the answer]
+— travel by train.
+Treat the second line as one useful spoken travel chunk. Its Gurmukhi form waits until the next lesson takes the new opening letter from this known word.
+
+The word, taken apart.
+Yātrā is Sanskrit yātrā, “journey, procession,” taken over as a learned loan.
+
+Guided Practice.
+[your turn — hear: yātrā; YOU SAY: yātrā]
+[pause 8 seconds for the answer]
+[your turn — hear: rel nāl yātrā; YOU SAY: rel nāl yātrā]
+[pause 8 seconds for the answer]
+[your turn — say: ਰੇਲ ਦੀ ਟਿਕਟ (tikat), then rel nāl yātrā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say travel by train. (Rel nāl yātrā.)
+Source: Punjabi University, RCPLT dictionary, lists ਯਾਤਰਾ (yatra) as journey or travel.
+
+
+Lesson 4 of 8.
+ਯ (ya) — one new letter from a journey word you can say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਯ, Guided Practice and Wrap-up Recall.
 
 Warm-up.
 [pause 2 seconds]
-Say ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat) once.
+Say yātrā, then ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat).
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ਯ.
 ਯ (ya).
-yayyā — ya. Keep the letter in view. Today you only need to recognise it and connect it with ya.
+yayyā — ya. Keep the letter in view. It is the opening letter of the journey word yātrā that you already know by ear.
 No stroke order is taught here: the track does not yet have a verified source for one.
 
 Writing: copy what you can see.
@@ -78,7 +111,9 @@ This is observe-and-copy with the model visible, not writing from memory.
 Guided Practice.
 [once you have stopped driving — look: at ਯ; YOU SAY: ya]
 Look away. Then look back and point to ਯ (ya).
-[your turn — say: ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then ya]
+[your turn — say: yātrā, then point to its opening letter ਯ and say ya]
+[pause 8 seconds for the answer]
+[your turn — say: ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then yātrā]
 [pause 8 seconds for the answer]
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -86,38 +121,6 @@ Wrap-up Recall.
 [pause 3 seconds]
 Point to ਯ and say its sound. (ya.)
 Source: Unicode Gurmukhi chart.
-
-
-Lesson 4 of 8.
-ਯਾਤਰਾ (yatra) — journey or travel.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice.
-
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Warm-up.
-[pause 2 seconds]
-Retrieve ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then point to ਯ and say ya.
-
-Grammar Lens: one journey word.
-ਯਾਤਰਾ (yatra) — yātrā — journey; travel.
-ਰੇਲ ਨਾਲ ਯਾਤਰਾ (yatra) — rel nāl yātrā — travel by train.
-Treat the second line as one useful travel chunk.
-
-The word, taken apart.
-ਯਾਤਰਾ (yatra) (yātrā) is Sanskrit yātrā, “journey, procession,” taken over as a learned loan.
-
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Guided Practice.
-[your turn — hear: yātrā; YOU SAY: ਯਾਤਰਾ (yatra)]
-[pause 8 seconds for the answer]
-[once you have stopped driving — read: ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra)]
-[your turn — say: ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat), then ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say travel by train. (ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra).)
-Source: Punjabi University, RCPLT dictionary, lists ਯਾਤਰਾ (yatra) as journey or travel.
 
 
 Lesson 5 of 8.

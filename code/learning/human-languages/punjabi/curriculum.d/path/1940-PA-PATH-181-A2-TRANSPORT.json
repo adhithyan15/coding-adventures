@@ -1,6 +1,6 @@
 {
   "id": "PA-PATH-181-A2-TRANSPORT",
-  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
   "before": [],
   "inline": [
     "PA-EXT-181-A2-TRANSPORT"

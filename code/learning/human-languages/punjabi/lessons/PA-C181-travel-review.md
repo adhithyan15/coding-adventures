@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: PA-C181-travel-review
-spine_node: SPINE-HANDLE-TRAVEL
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 9530
 chapter: 181
 type: review

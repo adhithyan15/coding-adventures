@@ -4,7 +4,7 @@
   "label": "ch:pa-a2-transport-prerequisite",
   "canDo": "I can understand and give one short practical note about a train ticket, a journey, and going home on foot.",
   "spineNodes": [
-    "SPINE-HANDLE-TRAVEL"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "PA-C181-payoff",
