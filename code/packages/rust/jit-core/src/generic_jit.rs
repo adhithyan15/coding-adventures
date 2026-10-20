@@ -89,7 +89,7 @@
 //! behind `Arc`.  `GenericCirJit` implements `Send + Sync`, satisfying
 //! the `Backend` trait bound.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
 use vm_core::errors::VMError;
@@ -128,6 +128,13 @@ pub(crate) mod opcode {
     pub const LOAD_MEM:     u8 = 0x40;
     pub const STORE_MEM:    u8 = 0x41;
     pub const CALL_BUILTIN: u8 = 0x50;
+    /// `CALL_BUILTIN_F64 <builtin_idx:u16_le> <reg>` — LANG83 PR6a: call the
+    /// embedder's handler with ONE argument, `regs[reg]` reinterpreted as the
+    /// bit pattern of an `f64` (`Value::Float`). The register file is i64-only,
+    /// so a float travels as its bits; `CALL_BUILTIN` would hand the handler
+    /// `Value::Int(bits)`, which is why this is a separate opcode. Emitted only
+    /// for `write_f64_py` / `write_f64_js`.
+    pub const CALL_BUILTIN_F64: u8 = 0x51;
     pub const RET_I64:      u8 = 0x60;
     pub const RET_VOID:     u8 = 0x61;
     pub const RET_BOOL:     u8 = 0x62;
@@ -461,7 +468,14 @@ impl Backend for GenericCirJit {
         // walking off the fixed-size file — a defensive bound, never reached
         // in practice (a function cannot declare more than 256 registers).
         for (i, a) in args.iter().enumerate().take(regs.len()) {
-            regs[i] = a.as_i64().unwrap_or(0);
+            regs[i] = match a {
+                // LANG83 PR6a: an `f64` argument rides its register as its bit
+                // pattern. The compiler only accepts an `f64`-typed parameter
+                // when its sole consumers are the float writers, which read
+                // the bits back with `f64::from_bits`.
+                Value::Float(f) => f.to_bits() as i64,
+                other => other.as_i64().unwrap_or(0),
+            };
         }
 
         let mut tape: Vec<u8> = if self.tape_size > 0 {
@@ -752,6 +766,23 @@ impl Backend for GenericCirJit {
                         regs[dst as usize] = n;
                     }
                 }
+                opcode::CALL_BUILTIN_F64 => {
+                    // [builtin_idx:u16_le, reg:u8]
+                    if pc + 3 > code.len() {
+                        self.set_error("malformed bytecode: truncated CALL_BUILTIN_F64");
+                        return Value::Null;
+                    }
+                    let idx = u16::from_le_bytes([code[pc], code[pc + 1]]) as usize;
+                    let bits = regs[code[pc + 2] as usize] as u64;
+                    pc += 3;
+                    let Some(cb) = builtin_table.get(idx) else {
+                        self.set_error(format!(
+                            "GenericCirJit: builtin index {idx} out of range"
+                        ));
+                        return Value::Null;
+                    };
+                    cb(&[Value::Float(f64::from_bits(bits))]);
+                }
                 opcode::RET_I64 => {
                     if pc + 1 > code.len() {
                         self.set_error("malformed bytecode: truncated RET_I64");
@@ -909,11 +940,94 @@ fn compile_to_bytecode(
     let mut used_builtins: HashMap<String, u16> = HashMap::new();
     let mut builtin_order: Vec<String> = Vec::new();
 
+    // LANG83 PR6a — the `f64` registers. The register file is i64-only, and
+    // until PR6a every `f64` op refused compilation, so a function that touched
+    // a float always ran on the interpreter tier. PR6a lets exactly one shape
+    // through: a float that is created by `const_f64` (or arrives as an
+    // `f64`-typed parameter) and is consumed only by `write_f64_py` /
+    // `write_f64_js`. Such a register holds the float's bit pattern. ANY other
+    // instruction that reads or writes one of these names still refuses the
+    // whole function, so integer code can never misread float bits as an
+    // integer (`add`, `cmp_*`, `ret`, `mov`, a plain `call_builtin`, a branch
+    // on it — all fall back to the interpreter exactly as before).
+    let f64_vars: HashSet<&str> = params
+        .iter()
+        .filter(|(_, ty)| ty == "f64")
+        .map(|(name, _)| name.as_str())
+        .chain(ir.iter().filter(|i| i.op == "const_f64").filter_map(|i| i.dest.as_deref()))
+        .collect();
+
     for instr in ir {
         if code.len() > MAX_BYTECODE_BYTES {
             return None;
         }
         let op = instr.op.as_str();
+
+        // `const_f64 dest <- Float(x)` → the float's bits in an i64 register.
+        if op == "const_f64" {
+            let dest = instr.dest.as_deref()?;
+            let CIROperand::Float(x) = instr.srcs.first()? else {
+                return None; // an f64 const with a non-float literal: leave it to the VM
+            };
+            let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
+            code.push(opcode::CONST_I64);
+            code.push(didx);
+            code.extend_from_slice(&(x.to_bits() as i64).to_le_bytes());
+            continue;
+        }
+
+        // `call_builtin "write_f64_py"|"write_f64_js", x` → CALL_BUILTIN_F64.
+        if op == "call_builtin" {
+            if let Some(name @ ("write_f64_py" | "write_f64_js")) =
+                instr.srcs.first().and_then(CIROperand::as_var)
+            {
+                if !builtin_snapshot.iter().any(|(n, _)| n == name) || instr.dest.is_some() {
+                    return None;
+                }
+                let reg = match instr.srcs.as_slice() {
+                    // A float register (const_f64 or an f64 parameter).
+                    [_, CIROperand::Var(arg)] if f64_vars.contains(arg.as_str()) => {
+                        lookup_or_alloc_var(arg, &mut reg_map, &mut next_reg)?
+                    }
+                    // A float literal: the optimiser's constant propagation
+                    // folds `const_f64 x; write_f64 x` into this shape.
+                    [_, CIROperand::Float(x)] => {
+                        if next_reg >= 256 {
+                            return None;
+                        }
+                        let r = next_reg as u8;
+                        next_reg += 1;
+                        code.push(opcode::CONST_I64);
+                        code.push(r);
+                        code.extend_from_slice(&(x.to_bits() as i64).to_le_bytes());
+                        r
+                    }
+                    // Anything else (an integer register, an integer literal,
+                    // a wrong arity) is not provably a float: printing its bits
+                    // as one would be a miscompile, so let the VM decide.
+                    _ => return None,
+                };
+                let idx = if let Some(&i) = used_builtins.get(name) {
+                    i
+                } else {
+                    let i = builtin_order.len() as u16;
+                    used_builtins.insert(name.to_string(), i);
+                    builtin_order.push(name.to_string());
+                    i
+                };
+                code.push(opcode::CALL_BUILTIN_F64);
+                code.extend_from_slice(&idx.to_le_bytes());
+                code.push(reg);
+                continue;
+            }
+        }
+
+        // Any other use of an f64 register refuses the function (see above).
+        let touches_f64 = instr.dest.as_deref().is_some_and(|d| f64_vars.contains(d))
+            || instr.srcs.iter().any(|s| s.as_var().is_some_and(|v| f64_vars.contains(v)));
+        if touches_f64 {
+            return None;
+        }
 
         // Const family (any integer width or bool) → CONST_I64.
         if op.starts_with("const_") {
@@ -1660,5 +1774,119 @@ mod tests {
         assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.contains("Not.A.Kind")));
         j.set_error("malformed bytecode: truncated TRAP");
         assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.starts_with("generic-cir-jit: ")));
+    }
+
+    // ── LANG83 PR6a: f64 registers and CALL_BUILTIN_F64 ─────────────────────
+
+    fn f64_writer_jit() -> (GenericCirJit, Arc<Mutex<Vec<Value>>>) {
+        let j = GenericCirJit::new();
+        let seen: Arc<Mutex<Vec<Value>>> = Arc::default();
+        for name in ["write_f64_py", "write_f64_js", "print_i64"] {
+            let s = Arc::clone(&seen);
+            j.register_builtin(name, move |args: &[Value]| {
+                s.lock().unwrap().extend_from_slice(args);
+                Value::Null
+            });
+        }
+        (j, seen)
+    }
+
+    fn var(name: &str) -> CIROperand {
+        CIROperand::Var(name.into())
+    }
+
+    fn write_f64(name: &str, arg: &str) -> CIRInstr {
+        CIRInstr::new("call_builtin", None::<&str>, vec![var(name), var(arg)], "void")
+    }
+
+    /// `const_f64` + `write_f64_*` compile, and the handler receives the exact
+    /// float — bits included (`-0.0`, a NaN payload, the smallest subnormal).
+    #[test]
+    fn const_f64_reaches_the_float_writers_bit_exactly() {
+        let nan = f64::from_bits(0x7FF8_0000_0000_1234);
+        for x in [0.1, -0.0, 5e-324, f64::NEG_INFINITY, nan] {
+            let cir = vec![
+                CIRInstr::new("const_f64", Some("x"), vec![CIROperand::Float(x)], "f64"),
+                write_f64("write_f64_py", "x"),
+                write_f64("write_f64_js", "x"),
+                CIRInstr::new("ret_void", None::<&str>, vec![], "void"),
+            ];
+            let (j, seen) = f64_writer_jit();
+            let bin = j.compile(&cir).expect("a float written by write_f64_* compiles");
+            j.run(&bin, &[]);
+            let seen = seen.lock().unwrap();
+            assert_eq!(seen.len(), 2);
+            for v in seen.iter() {
+                assert!(matches!(v, Value::Float(f) if f.to_bits() == x.to_bits()), "{x:e}: got {v:?}");
+            }
+        }
+    }
+
+    /// The optimiser propagates constants, so the writer may receive a float
+    /// literal directly; it is materialised as its bits. An integer literal is
+    /// still refused.
+    #[test]
+    fn a_propagated_float_literal_is_written_bit_exactly() {
+        let lit = |op: CIROperand| {
+            vec![
+                CIRInstr::new("call_builtin", None::<&str>, vec![var("write_f64_js"), op], "void"),
+                CIRInstr::new("ret_void", None::<&str>, vec![], "void"),
+            ]
+        };
+        let (j, seen) = f64_writer_jit();
+        let bin = j.compile(&lit(CIROperand::Float(-0.0))).expect("a float literal compiles");
+        j.run(&bin, &[]);
+        assert!(matches!(seen.lock().unwrap()[..], [Value::Float(f)] if f.to_bits() == (-0.0f64).to_bits()));
+        assert!(j.compile(&lit(CIROperand::Int(1))).is_none(), "an integer literal is not a float");
+    }
+
+    /// An `f64` parameter arrives as `Value::Float` and is seeded as its bits.
+    #[test]
+    fn f64_parameter_is_seeded_as_bits() {
+        let cir = vec![write_f64("write_f64_py", "p"), CIRInstr::new("ret_void", None::<&str>, vec![], "void")];
+        let (j, seen) = f64_writer_jit();
+        let params = [("p".to_string(), "f64".to_string())];
+        let ctx = FunctionContext { name: "f", params: &params, return_type: "void" };
+        let bin = j.compile_function(&ctx, &cir).unwrap();
+        j.run(&bin, &[Value::Float(-2.5)]);
+        assert_eq!(*seen.lock().unwrap(), [Value::Float(-2.5)]);
+    }
+
+    /// Every other use of a float register refuses the function, so the
+    /// integer instructions can never read float bits as an integer.
+    #[test]
+    fn any_other_use_of_an_f64_register_refuses() {
+        let c = || CIRInstr::new("const_f64", Some("x"), vec![CIROperand::Float(1.5)], "f64");
+        let one = || CIRInstr::new("const_i64", Some("n"), vec![CIROperand::Int(1)], "i64");
+        let ret = || CIRInstr::new("ret_void", None::<&str>, vec![], "void");
+        let refused: Vec<(&str, Vec<CIRInstr>)> = vec![
+            ("print_i64 of a float", vec![c(), CIRInstr::new("call_builtin", None::<&str>, vec![var("print_i64"), var("x")], "void"), ret()]),
+            ("integer add", vec![c(), one(), CIRInstr::new("add_i64", Some("y"), vec![var("x"), var("n")], "i64"), ret()]),
+            ("comparison", vec![c(), one(), CIRInstr::new("cmp_lt_i64", Some("b"), vec![var("x"), var("n")], "bool"), ret()]),
+            ("mov", vec![c(), CIRInstr::new("mov", Some("y"), vec![var("x")], "i64"), ret()]),
+            ("ret", vec![c(), CIRInstr::new("ret_i64", None::<&str>, vec![var("x")], "i64")]),
+            ("overwritten by an integer", vec![c(), CIRInstr::new("const_i64", Some("x"), vec![CIROperand::Int(3)], "i64"), ret()]),
+            ("write_f64 of an integer", vec![one(), write_f64("write_f64_py", "n"), ret()]),
+            ("f64 const without a float literal", vec![CIRInstr::new("const_f64", Some("x"), vec![CIROperand::Int(1)], "f64"), write_f64("write_f64_py", "x"), ret()]),
+        ];
+        for (what, cir) in refused {
+            let (j, _) = f64_writer_jit();
+            assert!(j.compile(&cir).is_none(), "{what} must refuse JIT compilation");
+        }
+        // An unregistered writer refuses, like any unregistered builtin.
+        let cir = vec![c(), write_f64("write_f64_js", "x"), ret()];
+        assert!(GenericCirJit::new().compile(&cir).is_none());
+    }
+
+    #[test]
+    fn truncated_call_builtin_f64_sets_the_error_slot() {
+        let (j, _) = f64_writer_jit();
+        // Name table: one builtin, then CALL_BUILTIN_F64 with its register byte cut off.
+        let mut bin = 1u16.to_le_bytes().to_vec();
+        bin.extend_from_slice(&12u16.to_le_bytes());
+        bin.extend_from_slice(b"write_f64_py");
+        bin.extend_from_slice(&[opcode::CALL_BUILTIN_F64, 0, 0]);
+        j.run(&bin, &[]);
+        assert!(j.take_error().is_some());
     }
 }
