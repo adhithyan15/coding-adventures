@@ -94,4 +94,13 @@ question 10). They are recorded in the CSV header:
 
 Every row is `pending`, stage `none`. No per-release pair exists yet.
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name. It has one entry,
+`py-float-print`: LANG79's float `print` subset (phase 7), defined in LANG79.
+Its corpus goes in `corpus/py-float-print/` when a release first claims stage
+I. No row names it yet.
