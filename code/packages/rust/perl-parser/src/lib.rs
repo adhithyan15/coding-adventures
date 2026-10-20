@@ -527,8 +527,11 @@ mod tests {
                     "{release}: unrecognized character accepted"
                 );
             }
-            if matches!(
-                *release,
+            // scan_num's decimal bound: 250 digits from 5.003_97i (tokenbuf[256]
+            // less six reserved bytes); 1018 in 5.44.0 and 5.45.3, whose
+            // tokenbuf is 256 * MAX_UNICODE_UTF8_BYTES (1024) bytes. The older
+            // pairs have no bound (LANG84 4c fixed 5.38.2, 5.44.0 and 5.45.3).
+            let digit_bound = match *release {
                 "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
@@ -585,8 +588,12 @@ mod tests {
                     | "5.004_71"
                     | "5.004_72"
                     | "5.38.0"
-            ) {
-                let accepted = format!("print({});", "9".repeat(250));
+                    | "5.38.2" => Some(250),
+                "5.44.0" | "5.45.3" => Some(1018),
+                _ => None,
+            };
+            if let Some(bound) = digit_bound {
+                let accepted = format!("print({});", "9".repeat(bound));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
                     .tokenize()
                     .unwrap();
@@ -595,9 +602,9 @@ mod tests {
                         .with_max_depth(MAX_RULE_DEPTH)
                         .parse()
                         .is_ok(),
-                    "{release}: 250-digit decimal rejected"
+                    "{release}: {bound}-digit decimal rejected"
                 );
-                let too_long = format!("print({});", "9".repeat(251));
+                let too_long = format!("print({});", "9".repeat(bound + 1));
                 let rejected = GrammarLexer::new(&too_long, &token_grammar)
                     .tokenize()
                     .map_or(true, |tokens| {
@@ -606,7 +613,7 @@ mod tests {
                             .parse()
                             .is_err()
                     });
-                assert!(rejected, "{release}: 251-digit decimal accepted");
+                assert!(rejected, "{release}: {}-digit decimal accepted", bound + 1);
             }
             checked += 1;
         }

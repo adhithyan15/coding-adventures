@@ -545,15 +545,21 @@ Current pairs:
   the compiled tables share one class. Retrieved 2026-10-20: the
   `perly.y`, `toke.c` and `keywords.h` blobs of `v5.38.0` and `v5.38.2`
   are identical (and `perly.y`/`keywords.h` match `v5.37.11`).
-- `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
-  subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
-  It rejects syntax outside that pilot, including adjacent `--` and
-  leading-zero integer forms, and does not claim full coverage.
+- `perl5.38.2.*` is a **partial** pair for the same subset, and since LANG84
+  phase 4c a mechanical copy of `perl5.38.0.*`: the [`v5.38.2` source tag]'s
+  `perly.y`, `toke.c`, `keywords.h` and `parser.h` blobs are byte-identical
+  to `v5.38.0`'s, and the header cites both. The LANG81-era pair it replaced
+  had an unbounded `INT`; the host `perl` v5.38.2 croaks `Number too long` on
+  a 251-digit literal, as the copied 250-digit bound does.
 - `perl5.44.0.*` and `perl5.45.3.*` are distinct **partial** pairs for the
   current stable and development endpoints in the pinned inventory. Their
   arithmetic and `print` subset is documented by each release's tagged
   `perlop.pod` and `perlfunc.pod`; they reject adjacent `--` and leading-zero
-  integer forms and do not claim complete coverage.
+  integer forms and do not claim complete coverage. Since LANG84 phase 4c
+  their `INT` is bounded at 1018 digits from each tag's own `toke.c`,
+  `parser.h` and `utf8.h` (cited in the `.tokens` headers): `scan_num` keeps
+  six bytes of `PL_tokenbuf` in reserve, and the buffer grew to
+  `256 * MAX_UNICODE_UTF8_BYTES` = 1024 bytes after 5.38.
 - `perl.tokens` and `perl.grammar` are the unversioned **partial** Perl 5.38
   execution subset used by LANG81. They are not a substitute for the required
   release-specific `perl5.38.*` files.

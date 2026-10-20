@@ -1034,11 +1034,11 @@ pub fn token_grammar(release: &str) -> Option<TokenGrammar> {
             => Some(g_70013ef7ab94::token_grammar()),
         "5.004_72"
         | "5.38.0"
+        | "5.38.2"
             => Some(g_a196e6b62667::token_grammar()),
-        "5.38.2"
-        | "5.44.0"
+        "5.44.0"
         | "5.45.3"
-            => Some(g_d410b3a57cf4::token_grammar()),
+            => Some(g_772b10c1dcc8::token_grammar()),
         _ => None,
     }
 }
@@ -1480,7 +1480,7 @@ mod g_70013ef7ab94 {
     }
 }
 
-// 2 release(s), first 5.004_72
+// 3 release(s), first 5.004_72
 mod g_a196e6b62667 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl5.004_72.tokens
@@ -1588,11 +1588,11 @@ mod g_a196e6b62667 {
     }
 }
 
-// 3 release(s), first 5.38.2
-mod g_d410b3a57cf4 {
+// 2 release(s), first 5.44.0
+mod g_772b10c1dcc8 {
     // AUTO-GENERATED FILE — DO NOT EDIT
-    // Source: perl5.38.2.tokens
-    // Regenerate with: grammar-tools compile-tokens perl5.38.2.tokens
+    // Source: perl5.44.0.tokens
+    // Regenerate with: grammar-tools compile-tokens perl5.44.0.tokens
     //
     // This file embeds a TokenGrammar as native Rust data structures.
     // Call `token_grammar()` instead of reading and parsing the .tokens file.
@@ -1607,65 +1607,65 @@ mod g_d410b3a57cf4 {
             definitions: vec![
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
-                    pattern: r#"0|[1-9][0-9]*"#.to_string(),
+                    pattern: r#"0|[1-9][0-9]{0,1017}"#.to_string(),
                     is_regex: true,
-                    line_number: 7,
+                    line_number: 15,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
                     pattern: r#"[a-zA-Z_][a-zA-Z0-9_]*"#.to_string(),
                     is_regex: true,
-                    line_number: 8,
+                    line_number: 16,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
                     pattern: r#"+"#.to_string(),
                     is_regex: false,
-                    line_number: 9,
+                    line_number: 17,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
                     pattern: r#"--"#.to_string(),
                     is_regex: false,
-                    line_number: 10,
+                    line_number: 18,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
                     pattern: r#"-"#.to_string(),
                     is_regex: false,
-                    line_number: 11,
+                    line_number: 19,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
                     pattern: r#"*"#.to_string(),
                     is_regex: false,
-                    line_number: 12,
+                    line_number: 20,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
                     pattern: r#"("#.to_string(),
                     is_regex: false,
-                    line_number: 13,
+                    line_number: 21,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
                     pattern: r#")"#.to_string(),
                     is_regex: false,
-                    line_number: 14,
+                    line_number: 22,
                     alias: None,
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
                     pattern: r#";"#.to_string(),
                     is_regex: false,
-                    line_number: 15,
+                    line_number: 23,
                     alias: None,
                 },
             ],
@@ -1676,7 +1676,7 @@ mod g_d410b3a57cf4 {
                     name: r#"WHITESPACE"#.to_string(),
                     pattern: r#"[ \t\r\n]+"#.to_string(),
                     is_regex: true,
-                    line_number: 18,
+                    line_number: 26,
                     alias: None,
                 },
             ],

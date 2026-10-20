@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- LANG84 phase 4c: regenerated for the corrected `perl5.38.2`, `perl5.44.0`
+  and `perl5.45.3` pairs. `perl5.38.2` is now a copy of `perl5.38.0` (same
+  syntax blobs), so it joins that token table, and `perl5.44.0`/`perl5.45.3`
+  bound `INT` at 1018 digits, so their table is replaced by a bounded one.
+  Still 118 checked releases and 5 distinct token tables.
+
 - LANG84 phase 2b: regenerated after the `releases.csv` schema migration.
   The rows are now in date order, so `INVENTORY_RELEASES`,
   `SUPPORTED_RELEASES` and the match arms list releases chronologically

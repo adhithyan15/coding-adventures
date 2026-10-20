@@ -1031,9 +1031,9 @@ pub fn parser_grammar(release: &str) -> Option<ParserGrammar> {
         | "1.0.15"
         | "1.0_16"
         | "5.38.0"
+        | "5.38.2"
             => Some(g_02ebbe6b48c3::parser_grammar()),
-        "5.38.2"
-        | "5.44.0"
+        "5.44.0"
         | "5.45.3"
             => Some(g_93bf2a24df70::parser_grammar()),
         _ => None,
@@ -1132,7 +1132,7 @@ mod generic {
     }
 }
 
-// 115 release(s), first 1.000
+// 116 release(s), first 1.000
 mod g_02ebbe6b48c3 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl1.000.grammar
@@ -1219,11 +1219,11 @@ mod g_02ebbe6b48c3 {
     }
 }
 
-// 3 release(s), first 5.38.2
+// 2 release(s), first 5.44.0
 mod g_93bf2a24df70 {
     // AUTO-GENERATED FILE — DO NOT EDIT
-    // Source: perl5.38.2.grammar
-    // Regenerate with: grammar-tools compile-grammar perl5.38.2.grammar
+    // Source: perl5.44.0.grammar
+    // Regenerate with: grammar-tools compile-grammar perl5.44.0.grammar
     //
     // This file embeds a ParserGrammar as native Rust data structures.
     // Call `parser_grammar()` instead of reading and parsing the .grammar file.
