@@ -5369,6 +5369,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - exact static division may reduce factors before each sign
+    // root while the pathwise common-divisor proof still covers the final /3.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((12 / 2 * sign(left)) + 6) else ((18 / 2 * sign(right)) + 6)) / 3); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -23408,6 +23417,32 @@ fn algol_pathwise_commuted_exact_divided_local_name_actual_runtime_real_output_r
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the pathwise commuted exactly-divided local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_exact_prefix_divided_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((if choose() then ((12 / 2 * sign(left)) + 6) else ((18 / 2 * sign(right)) + 6)) / 3)",
+                )
+        })
+        .expect("the pathwise exact-prefix-divided ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise exact-prefix-divided local name actual did not run"
             );
             continue;
         };
