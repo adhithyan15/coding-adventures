@@ -39,7 +39,7 @@ reviews_of: [ML-C348-aghosham]
 [PAUSE 2s] Before the new one: write **ഗ** and **ഖ** once each, and name them. (*ga*, voiced; *kha*,
 with a puff of breath.)
 
-[PAUSE 2s] Now say **ആഘോഷം** (*āghōṣaṁ*), "a celebration". This lesson takes its second consonant
+[PAUSE 2s] Now say **ആഘോഷം** (*āghōṣaṁ*), "a celebration". This lesson takes its first consonant
 out and puts it in your hand.
 
 ## Script you'll notice: ഘ

@@ -12,7 +12,7 @@ Say "the weather" and "according to". (kālāvastha, anusariccŭ.) Then "if it r
 Grammar Lens: ആശ്രയിച്ചിരിക്കുന്നു.
 What something depends on takes the object ending -എ, as in അവനെ, and the verb is ആശ്രയിച്ചിരിക്കുന്നു: "rests on, depends on".
 നിങ്ങൾ നാളെ വരുമോ? — അത് കാലാവസ്ഥയെ ആശ്രയിച്ചിരിക്കുന്നു. niṅṅaḷ nāḷe varumō? — atŭ kālāvasthaye āśrayiccirikkunnu. — "Will you come tomorrow? — It depends on the weather."
-സമയം gives സമയത്തെ, and പണം gives പണത്തെ: "it depends on time", "on money". The verb is ആശ്രയിക്കുക, "to rely on", built on Sanskrit āśraya, "that on which anything rests" (Monier-Williams), and its form here is the past with ഇരിക്കുന്നു after it: it stays in a state of resting on.
+സമയം gives സമയത്തെ, and പണം gives പണത്തെ: "it depends on time", "on money". The verb is ആശ്രയിക്കുക, "to rely on", built on Sanskrit āśraya, "that on which anything rests" (Monier-Williams), and its form here is the -ഇച്ച് form, as in അനുസരിച്ച്, with ഇരിക്കുന്നു after it: it stays in a state of resting on.
 
 Grammar Lens: then both outcomes.
 After "it depends", give both sides:
@@ -47,7 +47,7 @@ You'll want to know: ആഘോഷം.
 ഓണം കേരളത്തിലെ ഏറ്റവും വലിയ ആഘോഷമാണ്. ōṇaṁ kēraḷattile ēṟṟavuṁ valiya āghōṣamāṇŭ. — "Onam is the biggest celebration in Kerala."
 കല്യാണത്തിന് വലിയ ആഘോഷം ഉണ്ടായിരുന്നു. kalyāṇattinŭ valiya āghōṣaṁ uṇṭāyirunnu. — "There was a big celebration at the wedding."
 ഉത്സവം is the festival itself, often at a temple; ആഘോഷം (āghōṣaṁ) is the celebrating, at a festival, a wedding or a birthday. The verb is ആഘോഷിക്കുക, "to celebrate": ഞങ്ങൾ ഓണം ആഘോഷിച്ചു.
-Its second consonant is new. The next lesson puts it in your hand.
+Its first consonant is new. The next lesson puts it in your hand.
 
 The word, taken apart.
 ആഘോഷം (āghōṣaṁ) is a Sanskrit word, āghoṣa, which Monier-Williams glosses as "a calling out, a proclaiming". In Malayalam it has come to mean the noise and gathering of a celebration; how the sense moved is not recorded there.
@@ -80,7 +80,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: write ഗ and ഖ once each, and name them. (ga, voiced; kha, with a puff of breath.)
 [pause 2 seconds]
-Now say ആഘോഷം (āghōṣaṁ), "a celebration". This lesson takes its second consonant out and puts it in your hand.
+Now say ആഘോഷം (āghōṣaṁ), "a celebration". This lesson takes its first consonant out and puts it in your hand.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ഘ.

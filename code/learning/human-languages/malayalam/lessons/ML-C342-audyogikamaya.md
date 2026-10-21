@@ -63,7 +63,7 @@ lesson takes it out and puts it in your hand.
 
 **ഔദ്യോഗികമായ** (*audyōgikamāya*) is a learned word built the Sanskrit way on *udyoga*,
 "undertaking, exertion" (Monier-Williams), which Malayalam took up for a post in an office:
-**ഉദ്യോഗസ്ഥൻ**, "an officer", is the same root. Lengthening the first vowel, *u* to *au*,
+**ഉദ്യോഗസ്ഥൻ**, "an officer", is the same root. Strengthening the first vowel, *u* to *au*,
 and adding *-ika* makes "having to do with" it, so "of the office". The Malayalam **-മായ** then
 makes it an adjective.
 

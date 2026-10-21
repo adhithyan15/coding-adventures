@@ -59,7 +59,7 @@ you have not written yet. The next lesson puts it in your hand.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ഐക്യം** (*aikyaṁ*) ← Sanskrit *aikya*, "oneness", taken over whole as a tatsama with Malayalam's
-noun ending (CDIAL 2533). *aikya* is built on *eka*, "one": Sanskrit lengthens the first vowel,
+noun ending (CDIAL 2533). *aikya* is built on *eka*, "one": Sanskrit strengthens the first vowel,
 *e* to *ai*, to make "the state of being one". Hindi *ek*, "one", is the same root.
 
 ## Guided Practice

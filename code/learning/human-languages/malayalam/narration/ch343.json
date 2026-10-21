@@ -4,7 +4,7 @@
   "chapter": 343,
   "title": "Asking the Way",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:92c345958d8830fd",
+  "sourceHash": "fnv1a64:91d5e5df13f1ec1f",
   "lessons": [
     {
       "id": "ML-C343-rodu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30cd0f9c2a2a47c3",
+      "sourceHash": "fnv1a64:b95451f14de693bf",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "വലിയ റോഡിൽ ഒരുപാട് ബസുകൾ ഉണ്ട്. valiya ṟōḍil orupāṭŭ basukaḷ uṇṭŭ. — \"There are a lot of buses on the main road.\""
+              "text": "വലിയ റോഡിൽ ഒരുപാട് ബസുകൾ ഉണ്ട്. valiya ṟōḍil orupāṭŭ basukaḷ uṇṭŭ. — \"There are a lot of buses on the big road.\""
             },
             {
               "kind": "speech",
@@ -109,11 +109,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"There are a lot of buses on the main road.\"",
+              "instruction": "\"There are a lot of buses on the big road.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"There are a lot of buses on the main road.\"]"
+              "source": "[YOU SAY: \"There are a lot of buses on the big road.\"]"
             },
             {
               "kind": "prompt",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a60866a3fd3bcf99",
+      "sourceHash": "fnv1a64:93f4cb0014605f5d",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
             },
             {
               "kind": "speech",
-              "text": "-ലൂടെ is \"along, through\", and രണ്ടാമത്തെ റോഡ് (ṟōḍŭ) is \"the second road\"."
+              "text": "പോകൂ and തിരിയൂ are the polite command in long -ū that you know from ഓടൂ. -ലൂടെ is \"along, through\", and രണ്ടാമത്തെ റോഡ് (ṟōḍŭ) is \"the second road\"."
             }
           ]
         },

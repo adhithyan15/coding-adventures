@@ -4,7 +4,7 @@
   "chapter": 340,
   "title": "Telling a Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:91ee5597b55f1339",
+  "sourceHash": "fnv1a64:1d5273ca85d3253c",
   "lessons": [
     {
       "id": "ML-C340-iyite",
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7c61eee2702ae5a",
+      "sourceHash": "fnv1a64:00cb2fe7fea02e6a",
       "notice": null,
       "blocks": [
         {
@@ -394,7 +394,7 @@
             },
             {
               "kind": "speech",
-              "text": "പിന്നെ is looser: \"after that, later on\", with time in between. എന്നിട്ട് (enniṭṭŭ) says the next thing followed straight on."
+              "text": "പിന്നെ is the looser, everyday \"then, after that\", and it can also mean \"later\". എന്നിട്ട് (enniṭṭŭ) ties the next action to the one just done."
             },
             {
               "kind": "speech",
@@ -464,7 +464,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"And then\", at the start of a sentence? (എന്നിട്ട്, enniṭṭŭ.) The same idea inside one sentence? (The -ഇട്ട് form: kuṭicciṭṭŭ.) How is പിന്നെ different? (Looser: \"later on\", with time in between.)"
+              "text": "\"And then\", at the start of a sentence? (എന്നിട്ട്, enniṭṭŭ.) The same idea inside one sentence? (The -ഇട്ട് form: kuṭicciṭṭŭ.) How is പിന്നെ different? (Looser: \"after that\", and it can also mean \"later\".)"
             }
           ]
         }
@@ -627,7 +627,7 @@
         "reading-type",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:61a2d32fc6e7384b",
+      "sourceHash": "fnv1a64:92d3d52c67729fed",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -652,7 +652,7 @@
             },
             {
               "kind": "speech",
-              "text": "This passage is about a hundred words long. Every word in it was taught before, apart from one glossed after it."
+              "text": "This passage is about a hundred words long. Every word in it was taught before; one new word and a few new forms are glossed after it."
             }
           ]
         },
@@ -700,7 +700,7 @@
             },
             {
               "kind": "speech",
-              "text": "One word is new: തിരക്ക്, \"a crowd, a rush\", from തിരക്കുള്ള, \"crowded\". നിർത്തി, \"stopped\", is the past of the നിർത്തൂ you say to a driver."
+              "text": "One word is new: തിരക്ക്, \"a crowd, a rush\", from തിരക്കുള്ള. The ending -ലേക്ക് is \"to\": nagarattilēkkŭ, \"to the city\"."
             },
             {
               "kind": "pause",
@@ -710,7 +710,7 @@
             },
             {
               "kind": "speech",
-              "text": "The events, in order: pōyi, kayaṟi, nirtti, iṟaṅṅi, naṭannu, ciriccu, tinnu, maṭaṅṅi. The scene: vāyikkukayāyirunnu, kāttirikkukayāyirunnu. The habit: kuḷikkumāyirunnu."
+              "text": "The events, in order, are plain pasts of verbs you know (kayaṟi from kayaṟuka): pōyi, kayaṟi, nirtti, iṟaṅṅi, naṭannu, ciriccu, tinnu, maṭaṅṅi. The scene: vāyikkukayāyirunnu, kāttirikkukayāyirunnu. The habit: kuḷikkumāyirunnu."
             }
           ]
         },
@@ -786,7 +786,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word opened the line where the writer arrived? (ettiyappōḷ, \"when I arrived\".)"
+              "text": "Which word set the moment the writer arrived? (ettiyappōḷ, \"when I arrived\".)"
             }
           ]
         }

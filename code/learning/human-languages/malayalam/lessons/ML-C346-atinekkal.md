@@ -56,7 +56,9 @@ the object form, **അവനെ**, **അതിനെ**, **എന്നെ**, and
 >
 > *enikkŭ cāyayekkāḷ kāppiyāṇŭ iṣṭaṁ.* — "I like coffee more than tea."
 
-You will also see it spelt **-ഏക്കാൾ**, as in **അതിനേക്കാൾ**; it is read the same way.
+**വലുത്** is "a big one", made from **വലിയ** the way **നല്ലത്** is made from **നല്ല**. You will also
+meet the ending with a long vowel, **-ഏക്കാൾ**, as in **അതിനേക്കാൾ** (*atinēkkāḷ*); both are
+correct, and they mean the same.
 
 ## Grammar Lens: ഏറ്റവും, "the most"
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C346-ETTAVUM-01]; assesses=[ML-LEX-C42-ADJ-01, ML-LEX-C128-HOME-01, ML-LEX-C135-TOWN-05, ML-GRAMMAR-C89-NOMINAL-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 343,
-  "sourceHash": "fnv1a64:92c345958d8830fd",
+  "sourceHash": "fnv1a64:91d5e5df13f1ec1f",
   "lessonIds": [
     "ML-C343-rodu",
     "ML-W343-da",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch343.txt",
   "json": "malayalam/narration/ch343.json",
-  "textHash": "fnv1a64:b2bcf03dc0d4dbfa",
-  "jsonHash": "fnv1a64:72f9b01bbf4413fa",
+  "textHash": "fnv1a64:07b2452203c950d6",
+  "jsonHash": "fnv1a64:5adda3bbd8fba7fd",
   "findings": []
 }

@@ -14,7 +14,7 @@ Malayalam has no "bigger". It says "than that, this is big". Put the thing you c
 ഇത് അതിനെക്കാൾ വലുതാണ്. itŭ atinekkāḷ valutāṇŭ. — "This is bigger than that."
 ട്രെയിൻ ബസിനെക്കാൾ വേഗത്തിൽ പോകും. ṭreyin basinekkāḷ vēgattil pōkuṁ. — "The train goes faster than the bus."
 എനിക്ക് ചായയെക്കാൾ കാപ്പിയാണ് ഇഷ്ടം. enikkŭ cāyayekkāḷ kāppiyāṇŭ iṣṭaṁ. — "I like coffee more than tea."
-You will also see it spelt -ഏക്കാൾ, as in അതിനേക്കാൾ; it is read the same way.
+വലുത് is "a big one", made from വലിയ the way നല്ലത് is made from നല്ല. You will also meet the ending with a long vowel, -ഏക്കാൾ, as in അതിനേക്കാൾ (atinēkkāḷ); both are correct, and they mean the same.
 
 Grammar Lens: ഏറ്റവും, "the most".
 Put ഏറ്റവും before the quality, and it is the top of the scale:
@@ -82,7 +82,7 @@ Now say ഋതു (ṛtu), "a season". This lesson takes its first letter out an
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ഋ.
-ഋ — ṛ, the Sanskrit vowel r, at the start of a word.
+ഋ — ṛ, the Sanskrit vowel r, at the start of a word. Malayalam says it ru, with a short u after the r: ഋതു (ṛtu) sounds close to rutu.
 After a consonant it is the sign ൃ, as in കൃഷി and സുഹൃത്ത്. At the start of a word it stands as a letter of its own, ഋ (ṛ). Only a few learned words begin with it.
 Its shape is two upper loops joined by a sagging waist, with an oval below.
 

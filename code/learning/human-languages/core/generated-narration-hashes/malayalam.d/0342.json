@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 342,
-  "sourceHash": "fnv1a64:90e80b6223cca339",
+  "sourceHash": "fnv1a64:3bc125d04a141ef6",
   "lessonIds": [
     "ML-C342-pokanam",
     "ML-C342-audyogikamaya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch342.txt",
   "json": "malayalam/narration/ch342.json",
-  "textHash": "fnv1a64:7fba1148cca9014b",
-  "jsonHash": "fnv1a64:15f83119fc807346",
+  "textHash": "fnv1a64:ef95fb5795c4fb08",
+  "jsonHash": "fnv1a64:e2de2aea13b41c83",
   "findings": []
 }

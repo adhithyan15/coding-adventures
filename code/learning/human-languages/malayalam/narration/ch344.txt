@@ -83,7 +83,7 @@ Now say സൗകര്യം (saukaryaṁ), "convenience". This lesson takes th
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script you'll notice: ൗ.
 ൗ — the vowel sign au. It is printed after its consonant: സ + ൗ becomes സൗ, sau.
-This is the modern spelling. Older books also put െ in front of the consonant for the same au, so you may meet both in print; they are read alike.
+Its formal name is the au length mark. Older books also put െ in front of the consonant for the same au, so you may meet both in print; they are read alike. The mark alone is the modern spelling.
 You have written this shape already, as the tail of ഈ and ഔ: a small lobe, a notch, and a broader lobe sweeping back along its foot. Here it stands on its own.
 
 Writing: ൗ.
@@ -99,7 +99,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which sign is this — ൗ? (au, printed after its consonant.) Which word did it come from? (സൗകര്യം, saukaryaṁ.) Which two letters end in the same tail? (ഈ and ഔ.)
+Which sign is this — ൗ? (au, printed after its consonant.) Which word did it come from? (സൗകര്യം, saukaryaṁ.) Which letters end in the same tail? (ഈ, ഊ and ഔ.)
 
 
 Lesson 4 of 5.
@@ -110,7 +110,7 @@ Warm-up.
 Say "to get", "to lose", and "it's late". (kiṭṭuka, naṣṭappeṭuka, vaiki.) Then the cry when something goes wrong. (ayyō!)
 
 Grammar Lens: it did not come to me.
-Malayalam does not "miss" a bus. The bus is not got by you, in the dative:
+Malayalam usually turns "I missed the bus" round: the bus did not come to you, and you stand in the dative:
 എനിക്ക് ബസ് കിട്ടിയില്ല. enikkŭ basŭ kiṭṭiyilla. — "I missed the bus."
 Or the bus went: ബസ് പോയി (basŭ pōyi), "the bus has gone". Delays and cancellations use verbs you know:
 ട്രെയിൻ ഒരു മണിക്കൂർ വൈകി. ṭreyin oru maṇikkūr vaiki. — "The train was an hour late."

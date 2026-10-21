@@ -4,7 +4,7 @@
   "chapter": 341,
   "title": "What I Think, and So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b70d1d204f878864",
+  "sourceHash": "fnv1a64:c244a5a54cd3dc8b",
   "lessons": [
     {
       "id": "ML-C341-vicarikkuka",
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48ecfe7f0958ff12",
+      "sourceHash": "fnv1a64:7e12fbefee42e980",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഐക്യം (aikyaṁ) from Sanskrit aikya, \"oneness\", taken over whole as a tatsama with Malayalam's noun ending (CDIAL 2533). aikya is built on eka, \"one\": Sanskrit lengthens the first vowel, e to ai, to make \"the state of being one\". Hindi ek, \"one\", is the same root."
+              "text": "ഐക്യം (aikyaṁ) from Sanskrit aikya, \"oneness\", taken over whole as a tatsama with Malayalam's noun ending (CDIAL 2533). aikya is built on eka, \"one\": Sanskrit strengthens the first vowel, e to ai, to make \"the state of being one\". Hindi ek, \"one\", is the same root."
             }
           ]
         },

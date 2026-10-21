@@ -45,7 +45,8 @@ in your hand.
 ## Script you'll notice: ഋ
 <!-- hl-knowledge: introduces=[ML-SCRIPT-C346-VOCALIC-R-01]; assesses=[ML-LEX-C346-RTU-01] -->
 
-**ഋ** — *ṛ*, the Sanskrit vowel *r*, at the start of a word.
+**ഋ** — *ṛ*, the Sanskrit vowel *r*, at the start of a word. Malayalam says it *ru*, with a short
+*u* after the *r*: **ഋതു** sounds close to *rutu*.
 
 After a consonant it is the sign **ൃ**, as in **കൃഷി** and **സുഹൃത്ത്**. At the start of a word it
 stands as a letter of its own, **ഋ**. Only a few learned words begin with it.

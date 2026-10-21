@@ -4,7 +4,7 @@
   "chapter": 344,
   "title": "Tickets, Seats and Trouble",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6f7fef6704af1931",
+  "sourceHash": "fnv1a64:01a5ba12eda1805a",
   "lessons": [
     {
       "id": "ML-C344-ticket-venam",
@@ -299,7 +299,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b2412067447a98c7",
+      "sourceHash": "fnv1a64:ff9403f57d320a3b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -353,7 +353,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the modern spelling. Older books also put െ in front of the consonant for the same au, so you may meet both in print; they are read alike."
+              "text": "Its formal name is the au length mark. Older books also put െ in front of the consonant for the same au, so you may meet both in print; they are read alike. The mark alone is the modern spelling."
             },
             {
               "kind": "speech",
@@ -429,7 +429,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which sign is this — ൗ? (au, printed after its consonant.) Which word did it come from? (സൗകര്യം, saukaryaṁ.) Which two letters end in the same tail? (ഈ and ഔ.)"
+              "text": "Which sign is this — ൗ? (au, printed after its consonant.) Which word did it come from? (സൗകര്യം, saukaryaṁ.) Which letters end in the same tail? (ഈ, ഊ and ഔ.)"
             }
           ]
         }
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c093483ace53e28c",
+      "sourceHash": "fnv1a64:7c974b555be570b4",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Malayalam does not \"miss\" a bus. The bus is not got by you, in the dative:"
+              "text": "Malayalam usually turns \"I missed the bus\" round: the bus did not come to you, and you stand in the dative:"
             },
             {
               "kind": "speech",

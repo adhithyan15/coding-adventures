@@ -51,7 +51,7 @@ station". (*vaḻi*, *teruvŭ*, *sṟṟēṣan*.)
 
 > **വലിയ റോഡിൽ ഒരുപാട് ബസുകൾ ഉണ്ട്.**
 >
-> *valiya ṟōḍil orupāṭŭ basukaḷ uṇṭŭ.* — "There are a lot of buses on the main road."
+> *valiya ṟōḍil orupāṭŭ basukaḷ uṇṭŭ.* — "There are a lot of buses on the big road."
 
 **വഴി** is the way or route you take; **റോഡ്** is the road itself; **തെരുവ്** is a street lined
 with houses and shops. **-ലേക്ക്** on **സ്റ്റേഷൻ** says "towards, to".
@@ -71,7 +71,7 @@ with **ടിക്കറ്റ്** and **സീറ്റ്**.
 [PAUSE 1s]
 - [YOU SAY: *ṟōḍŭ*, with the tongue curled back for the *ḍ*]
 - [YOU SAY: "This road goes to the station."]
-- [YOU SAY: "There are a lot of buses on the main road."]
+- [YOU SAY: "There are a lot of buses on the big road."]
 - [YOU SAY: a way, a road, a street — *vaḻi*, *ṟōḍŭ*, *teruvŭ*]
 
 ## Wrap-up Recall

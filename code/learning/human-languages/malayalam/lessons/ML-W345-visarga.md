@@ -67,7 +67,7 @@ order above.
 [PAUSE 1s]
 - [YOU FIND: ഃ inside **ദുഃഖം**]
 - [YOU TRACE: ഃ three times, saying *ḥ* as you finish each one]
-- [YOU WRITE: ം, then ഃ, from memory, and see that they differ]
+- [YOU WRITE: ം, then ഃ, from memory, naming each as you finish it]
 - [YOU WRITE: **ദുഃഖം**]
 
 ## Wrap-up Recall

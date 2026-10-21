@@ -4,7 +4,7 @@
   "chapter": 345,
   "title": "Feelings and Hopes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bdb73dafe480a276",
+  "sourceHash": "fnv1a64:450ae03879255f6c",
   "lessons": [
     {
       "id": "ML-C345-duhkham",
@@ -161,7 +161,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:82634f80eb4ff032",
+      "sourceHash": "fnv1a64:cc3d22d51162a1dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -266,11 +266,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ം, then ഃ (ḥ), from memory, and see that they differ",
+              "instruction": "ം, then ഃ (ḥ), from memory, naming each as you finish it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: ം, then ഃ, from memory, and see that they differ]"
+              "source": "[YOU WRITE: ം, then ഃ, from memory, naming each as you finish it]"
             },
             {
               "kind": "prompt",

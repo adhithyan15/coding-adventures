@@ -36,8 +36,8 @@ reviews_of: [ML-C69-words, ML-C339-vayikkukayayirunnu, ML-W340-ii, ML-C340-iyite
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SKILL-READ-WORDS, ML-GRAMMAR-C339-SCENE-EVENT-01] -->
 
-[PAUSE 2s] This passage is about a hundred words long. Every word in it was taught before,
-apart from one glossed after it.
+[PAUSE 2s] This passage is about a hundred words long. Every word in it was taught before; one
+new word and a few new forms are glossed after it.
 
 ## Reading
 <!-- hl-knowledge: introduces=[ML-SKILL-C340-READ-STORY-01]; assesses=[ML-SCRIPT-C340-II-01, ML-LEX-C340-IYITE-01, ML-LEX-GRANDMOTHER, ML-LEX-C135-TOWN-05, ML-LEX-C121-TRAVEL-03, ML-LEX-C175-ACT175-05, ML-LEX-C169-QUAL169-04, ML-LEX-C46-ASK-05, ML-LEX-C195-SAMAYAM195-04, ML-LEX-C176-ACT176-01, ML-LEX-C119-SLOWLY-01] -->
@@ -60,12 +60,12 @@ apart from one glossed after it.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C339-PAST-PROGRESSIVE-01, ML-GRAMMAR-C339-SCENE-EVENT-01, ML-GRAMMAR-C339-PAST-HABITUAL-01, ML-GRAMMAR-C340-ENNITTU-01, ML-GRAMMAR-C340-ATINUSESHAM-01, ML-GRAMMAR-C340-APPOL-01, ML-GRAMMAR-C339-AYIRUNNU-01, ML-GRAMMAR-C339-UNDAYIRUNNU-01, ML-LEX-C68-ORDINAL-08, ML-LEX-C196-SAMAYAM196-03] -->
 
-[PAUSE 2s] One word is new: **തിരക്ക്**, "a crowd, a rush", from **തിരക്കുള്ള**, "crowded".
-**നിർത്തി**, "stopped", is the past of the **നിർത്തൂ** you say to a driver.
+[PAUSE 2s] One word is new: **തിരക്ക്**, "a crowd, a rush", from **തിരക്കുള്ള**. The ending
+**-ലേക്ക്** is "to": *nagarattilēkkŭ*, "to the city".
 
-[PAUSE 2s] The events, in order: *pōyi*, *kayaṟi*, *nirtti*, *iṟaṅṅi*, *naṭannu*, *ciriccu*,
-*tinnu*, *maṭaṅṅi*. The scene: *vāyikkukayāyirunnu*, *kāttirikkukayāyirunnu*. The habit:
-*kuḷikkumāyirunnu*.
+[PAUSE 2s] The events, in order, are plain pasts of verbs you know (*kayaṟi* from *kayaṟuka*):
+*pōyi*, *kayaṟi*, *nirtti*, *iṟaṅṅi*, *naṭannu*, *ciriccu*, *tinnu*, *maṭaṅṅi*. The scene:
+*vāyikkukayāyirunnu*, *kāttirikkukayāyirunnu*. The habit: *kuḷikkumāyirunnu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SKILL-C340-READ-STORY-01, ML-GRAMMAR-C339-SCENE-EVENT-01, ML-GRAMMAR-C340-APPOL-01, ML-GRAMMAR-C339-PAST-HABITUAL-01] -->
@@ -82,5 +82,5 @@ apart from one glossed after it.
 [PAUSE 2s] Why is *kāttirikkukayāyirunnu* in the *-ukayāyirunnu* past? (Grandmother **was
 waiting**: it is scene.)
 
-[PAUSE 2s] Which word opened the line where the writer arrived? (***ettiyappōḷ***, "when I
+[PAUSE 2s] Which word set the moment the writer arrived? (***ettiyappōḷ***, "when I
 arrived".)

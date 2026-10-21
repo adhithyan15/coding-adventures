@@ -42,7 +42,8 @@ the cry when something goes wrong. (*ayyō!*)
 ## Grammar Lens: it did not come to me
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C344-MISSED-01]; assesses=[ML-LEX-C183-KRIYA183-04, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-LEX-C121-TRAVEL-03, ML-LEX-C158-THINGS158-02, ML-LEX-C127-CARE-02, ML-LEX-C139-TIME-03, ML-LEX-C306-KRIYA306-03] -->
 
-Malayalam does not "miss" a bus. The bus is not got by you, in the dative:
+Malayalam usually turns "I missed the bus" round: the bus did not come to you, and you stand
+in the dative:
 
 > **എനിക്ക് ബസ് കിട്ടിയില്ല.**
 >

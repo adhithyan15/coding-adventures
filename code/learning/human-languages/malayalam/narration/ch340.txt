@@ -89,7 +89,7 @@ Grammar Lens: two sentences, with എന്നിട്ട്.
 To keep the two actions as two sentences, start the second with എന്നിട്ട് (enniṭṭŭ):
 ഞാൻ ചായ കുടിച്ചു. എന്നിട്ട് ഓഫീസിൽ പോയി. ñān cāya kuṭiccu. enniṭṭŭ ōphīsil pōyi. — "I drank tea. And then I went to the office."
 എന്നിട്ട് (enniṭṭŭ) is usually explained as the -ഇട്ട് ending on the same root as എന്ന്: "having said so", "that done". It ties the next action to the one before.
-പിന്നെ is looser: "after that, later on", with time in between. എന്നിട്ട് (enniṭṭŭ) says the next thing followed straight on.
+പിന്നെ is the looser, everyday "then, after that", and it can also mean "later". എന്നിട്ട് (enniṭṭŭ) ties the next action to the one just done.
 A listener who wants the story to go on asks എന്നിട്ടോ? (enniṭṭō?), "and then?"
 
 Guided Practice.
@@ -105,7 +105,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-"And then", at the start of a sentence? (എന്നിട്ട്, enniṭṭŭ.) The same idea inside one sentence? (The -ഇട്ട് form: kuṭicciṭṭŭ.) How is പിന്നെ different? (Looser: "later on", with time in between.)
+"And then", at the start of a sentence? (എന്നിട്ട്, enniṭṭŭ.) The same idea inside one sentence? (The -ഇട്ട് form: kuṭicciṭṭŭ.) How is പിന്നെ different? (Looser: "after that", and it can also mean "later".)
 
 
 Lesson 4 of 6.
@@ -149,7 +149,7 @@ Before we start: this one needs your eyes, so it is not a driving lesson. You wi
 
 Warm-up.
 [pause 2 seconds]
-This passage is about a hundred words long. Every word in it was taught before, apart from one glossed after it.
+This passage is about a hundred words long. Every word in it was taught before; one new word and a few new forms are glossed after it.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Reading.
@@ -161,9 +161,9 @@ Then read it again and sort every verb: scene, event, or habit.
 
 Why it's said this way.
 [pause 2 seconds]
-One word is new: തിരക്ക്, "a crowd, a rush", from തിരക്കുള്ള, "crowded". നിർത്തി, "stopped", is the past of the നിർത്തൂ you say to a driver.
+One word is new: തിരക്ക്, "a crowd, a rush", from തിരക്കുള്ള. The ending -ലേക്ക് is "to": nagarattilēkkŭ, "to the city".
 [pause 2 seconds]
-The events, in order: pōyi, kayaṟi, nirtti, iṟaṅṅi, naṭannu, ciriccu, tinnu, maṭaṅṅi. The scene: vāyikkukayāyirunnu, kāttirikkukayāyirunnu. The habit: kuḷikkumāyirunnu.
+The events, in order, are plain pasts of verbs you know (kayaṟi from kayaṟuka): pōyi, kayaṟi, nirtti, iṟaṅṅi, naṭannu, ciriccu, tinnu, maṭaṅṅi. The scene: vāyikkukayāyirunnu, kāttirikkukayāyirunnu. The habit: kuḷikkumāyirunnu.
 
 Guided Practice.
 [pause 1 second]
@@ -180,7 +180,7 @@ Wrap-up Recall.
 [pause 2 seconds]
 Why is kāttirikkukayāyirunnu in the -ukayāyirunnu past? (Grandmother was waiting: it is scene.)
 [pause 2 seconds]
-Which word opened the line where the writer arrived? (ettiyappōḷ, "when I arrived".)
+Which word set the moment the writer arrived? (ettiyappōḷ, "when I arrived".)
 
 
 Lesson 6 of 6.

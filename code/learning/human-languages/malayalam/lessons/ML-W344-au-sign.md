@@ -47,8 +47,9 @@ first syllable and puts it in your hand.
 
 **ൗ** — the vowel sign *au*. It is printed after its consonant: **സ** + **ൗ** → **സൗ**, *sau*.
 
-This is the modern spelling. Older books also put **െ** in front of the consonant for the same
-*au*, so you may meet both in print; they are read alike.
+Its formal name is the *au* length mark. Older books also put **െ** in front of the consonant
+for the same *au*, so you may meet both in print; they are read alike. The mark alone is the
+modern spelling.
 
 You have written this shape already, as the tail of **ഈ** and **ഔ**: a small lobe, a notch, and a
 broader lobe sweeping back along its foot. Here it stands on its own.
@@ -75,4 +76,4 @@ order above.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-139, ML-LEX-C344-SAUKARYAM-01, ML-SCRIPT-C344-AU-SIGN-01] -->
 
 [PAUSE 3s] Which sign is this — ൗ? (**au**, printed after its consonant.) Which word did it come
-from? (**സൗകര്യം**, *saukaryaṁ*.) Which two letters end in the same tail? (**ഈ** and **ഔ**.)
+from? (**സൗകര്യം**, *saukaryaṁ*.) Which letters end in the same tail? (**ഈ**, **ഊ** and **ഔ**.)

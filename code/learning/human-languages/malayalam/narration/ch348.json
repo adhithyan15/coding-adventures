@@ -4,7 +4,7 @@
   "chapter": 348,
   "title": "It Depends, and What Would Have Been",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8290ee6cd1c29268",
+  "sourceHash": "fnv1a64:fa86185c20636077",
   "lessons": [
     {
       "id": "ML-C348-asrayiccirikkunnu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c02b2921fb4b7e7",
+      "sourceHash": "fnv1a64:eed24ee4f7abfb6d",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "സമയം gives സമയത്തെ, and പണം gives പണത്തെ: \"it depends on time\", \"on money\". The verb is ആശ്രയിക്കുക, \"to rely on\", built on Sanskrit āśraya, \"that on which anything rests\" (Monier-Williams), and its form here is the past with ഇരിക്കുന്നു after it: it stays in a state of resting on."
+              "text": "സമയം gives സമയത്തെ, and പണം gives പണത്തെ: \"it depends on time\", \"on money\". The verb is ആശ്രയിക്കുക, \"to rely on\", built on Sanskrit āśraya, \"that on which anything rests\" (Monier-Williams), and its form here is the -ഇച്ച് form, as in അനുസരിച്ച്, with ഇരിക്കുന്നു after it: it stays in a state of resting on."
             }
           ]
         },
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:094ae4e78ac3c608",
+      "sourceHash": "fnv1a64:0116387fce0ea816",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its second consonant is new. The next lesson puts it in your hand."
+              "text": "Its first consonant is new. The next lesson puts it in your hand."
             }
           ]
         },
@@ -309,7 +309,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:dbb9c81d74629a9a",
+      "sourceHash": "fnv1a64:de7acdca89678218",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -348,7 +348,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now say ആഘോഷം (āghōṣaṁ), \"a celebration\". This lesson takes its second consonant out and puts it in your hand."
+              "text": "Now say ആഘോഷം (āghōṣaṁ), \"a celebration\". This lesson takes its first consonant out and puts it in your hand."
             }
           ]
         },

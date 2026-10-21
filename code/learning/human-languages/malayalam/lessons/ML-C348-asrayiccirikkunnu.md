@@ -51,8 +51,8 @@ What something depends on takes the object ending **-എ**, as in **അവനെ
 
 **സമയം** gives **സമയത്തെ**, and **പണം** gives **പണത്തെ**: "it depends on time", "on money". The
 verb is **ആശ്രയിക്കുക**, "to rely on", built on Sanskrit *āśraya*, "that on which anything rests"
-(Monier-Williams), and its form here is the past with **ഇരിക്കുന്നു** after it: it stays in a
-state of resting on.
+(Monier-Williams), and its form here is the **-ഇച്ച്** form, as in **അനുസരിച്ച്**, with **ഇരിക്കുന്നു** after it: it
+stays in a state of resting on.
 
 ## Grammar Lens: then both outcomes
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C348-DEPENDS-01, ML-GRAMMAR-C347-ENKIL-VERB-01, ML-GRAMMAR-C347-NEGATIVE-CONDITION-01, ML-GRAMMAR-C347-REAL-CONDITION-01, ML-LEX-C200-KARANAM200-05] -->

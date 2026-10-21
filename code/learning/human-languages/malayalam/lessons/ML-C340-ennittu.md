@@ -64,8 +64,8 @@ To keep the two actions as two sentences, start the second with **എന്ന�
 **എന്നിട്ട്** is usually explained as the **-ഇട്ട്** ending on the same root as **എന്ന്**: "having
 said so", "that done". It ties the next action to the one before.
 
-**പിന്നെ** is looser: "after that, later on", with time in between. **എന്നിട്ട്** says the next
-thing followed straight on.
+**പിന്നെ** is the looser, everyday "then, after that", and it can also mean "later". **എന്നിട്ട്**
+ties the next action to the one just done.
 
 A listener who wants the story to go on asks **എന്നിട്ടോ?** (*enniṭṭō?*), "and then?"
 
@@ -83,4 +83,4 @@ A listener who wants the story to go on asks **എന്നിട്ടോ?** (*
 
 [PAUSE 3s] "And then", at the start of a sentence? (**എന്നിട്ട്**, *enniṭṭŭ*.) The same idea
 inside one sentence? (The **-ഇട്ട്** form: ***kuṭicciṭṭŭ***.) How is **പിന്നെ** different? (**Looser:
-"later on", with time in between.**)
+"after that", and it can also mean "later".**)

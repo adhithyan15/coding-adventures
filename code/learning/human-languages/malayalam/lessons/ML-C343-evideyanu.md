@@ -65,7 +65,8 @@ dūramuṇṭŭ*, asks how far.
 >
 > *ī ṟōḍilūṭe nēre pōkū. kavalayil ettumpōḷ iṭattōṭṭŭ tiriyū. sṟṟēṣan valattŭ āṇŭ.* — "Go straight along this road. When you reach the junction, turn left. The station is on the right."
 
-**-ലൂടെ** is "along, through", and **രണ്ടാമത്തെ റോഡ്** is "the second road".
+**പോകൂ** and **തിരിയൂ** are the polite command in long *-ū* that you know from **ഓടൂ**. **-ലൂടെ**
+is "along, through", and **രണ്ടാമത്തെ റോഡ്** is "the second road".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C343-ASK-WAY-01, ML-GRAMMAR-C343-GIVE-WAY-01, ML-CONCEPT-C09-KSHAMIKKANAM-01] -->

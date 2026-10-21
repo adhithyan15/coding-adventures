@@ -56,7 +56,7 @@ reviews_of: [ML-C141-onam, ML-C141-utsavam, ML-C126-wedding, ML-C346-atinekkal]
 **ഉത്സവം** is the festival itself, often at a temple; **ആഘോഷം** is the celebrating, at a festival,
 a wedding or a birthday. The verb is **ആഘോഷിക്കുക**, "to celebrate": **ഞങ്ങൾ ഓണം ആഘോഷിച്ചു**.
 
-Its second consonant is new. The next lesson puts it in your hand.
+Its first consonant is new. The next lesson puts it in your hand.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
