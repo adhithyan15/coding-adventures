@@ -346,7 +346,7 @@ Options:
                            (native) or with .ll extension (--emit=llvm-ir).
   -l, --lang <LANG>        Override language detection
                            (twig, nib, bf, basic, oct, mccarthy-lisp/mcl/lisp,
-                            algol60/algol/a60, ruby/rb, perl/pl).
+                            algol60/algol/a60, ruby/rb, perl/pl, python/py).
                            A language with a release inventory takes
                            <LANG>@<RELEASE>, an exact releases.csv ID
                            (e.g. perl@5.004_72, ruby@3.3.7); without

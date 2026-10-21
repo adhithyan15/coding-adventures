@@ -1,0 +1,132 @@
+# Python 3.0a1 (2007-08-31) tokens: py-int-print lexical slice.
+# @version 1
+# PARTIAL: lexes only the py-int-print neighbourhood listed below; see code/grammars/python/README.md.
+# source_ref: https://github.com/python/cpython/tree/v3.0a1
+# source_sha: 3540ef16c19f2260e347a679cb27d44ba734bec6
+# evidence: Grammar/Grammar blob 6111fae79b80e72e6af8d7c522b272c20bf57772; Grammar/Tokens blob -;
+#   Parser/tokenizer.c blob 776183d80582d7d7d92e548d44f4cc8e35a47e9d; Lib/keyword.py blob 9c49cd2744b23bfb7ae7bfb5b3a9dbcdab2df13e
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7a). Tokens follow tokenizer.c tok_get (decimal [1-9][0-9]* or 0+; no `_`; PyToken_OneChar/TwoChars/ThreeChars) and keyword.py kwlist (33, no async/await); the grammar follows Grammar/Grammar file_input..atom/trailer/arglist.
+
+# ---------------------------------------------------------------------------
+# What this pair lexes, and what it does not, so a reader never has to guess.
+#
+# Lexed: decimal integers, names, this release's keywords, every operator and
+# delimiter its tokenizer knows, `#` comments, a `\`-newline continuation, and
+# the indentation engine's NEWLINE/INDENT/DEDENT (newlines inside brackets are
+# suppressed, blank and comment-only lines produce nothing).
+#
+# NOT lexed (a lexer error here; later LANG84 Python slices):
+#   strings, bytes and f-strings      'a' "a" b'' f''
+#   floats and imaginary numbers      1.5 1e3 .5 2j       (`1.5` lexes as INT DOT INT
+#                                                          and fails to parse)
+#   hex, octal and binary integers    0x1F 0o17 0b101
+#   non-ASCII identifiers (PEP 3131), tabs before a comment, form feeds
+#
+# Known narrowings against the release's own tokenizer (each rejects; none
+# accepts a program the release would read differently):
+#   * A number must not run into a name character: `1if` and `1_` are lexer
+#     errors (`\b` closes INT). CPython rejects `1_` too and only warns or
+#     errors on `1if`, depending on the release.
+#   * `\` must be followed directly by the newline, as CPython requires.
+# ---------------------------------------------------------------------------
+
+mode: indentation
+
+skip:
+  COMMENT           = /#[^\n]*/
+  LINE_CONTINUATION = /\\\n/
+
+# --- integers (tok_get in Parser/tokenizer.c) --------------------------------
+# A non-zero decimal is a digit 1-9 then digits; zero is one or more `0`s.
+# There is no `_` separator before 3.6 (PEP 515): `1_000` is an error here, as
+# it is for this release. A leading `0` followed by a non-zero digit is an
+# error too (tok_get returns ERRORTOKEN for it).
+INT = /(?:[1-9][0-9]*|0+)\b/
+
+# --- names -------------------------------------------------------------------
+NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+# --- operators and delimiters (45 in this release's tokenizer) --------
+# Longest first: the first matching pattern wins.
+DOUBLE_STAR_EQUALS  = "**="
+LEFT_SHIFT_EQUALS   = "<<="
+RIGHT_SHIFT_EQUALS  = ">>="
+FLOOR_DIV_EQUALS    = "//="
+ELLIPSIS            = "..."
+DOUBLE_STAR         = "**"
+FLOOR_DIV           = "//"
+LEFT_SHIFT          = "<<"
+RIGHT_SHIFT         = ">>"
+EQUALS_EQUALS       = "=="
+NOT_EQUALS          = "!="
+LESS_EQUALS         = "<="
+GREATER_EQUALS      = ">="
+ARROW               = "->"
+PLUS_EQUALS         = "+="
+MINUS_EQUALS        = "-="
+STAR_EQUALS         = "*="
+SLASH_EQUALS        = "/="
+PERCENT_EQUALS      = "%="
+AMP_EQUALS          = "&="
+PIPE_EQUALS         = "|="
+CARET_EQUALS        = "^="
+PLUS                = "+"
+MINUS               = "-"
+STAR                = "*"
+SLASH               = "/"
+PERCENT             = "%"
+EQUALS              = "="
+LESS_THAN           = "<"
+GREATER_THAN        = ">"
+AMP                 = "&"
+PIPE                = "|"
+CARET               = "^"
+TILDE               = "~"
+AT                  = "@"
+LPAREN              = "("
+RPAREN              = ")"
+LBRACKET            = "["
+RBRACKET            = "]"
+LBRACE              = "{"
+RBRACE              = "}"
+COMMA               = ","
+COLON               = ":"
+SEMICOLON           = ";"
+DOT                 = "."
+
+# --- keywords (kwlist of Lib/keyword.py at the tag: 33) ------------------
+# Soft keywords (`match`, `case`, `_`, `type`) stay NAME, so they are not listed.
+keywords:
+  False
+  None
+  True
+  and
+  as
+  assert
+  break
+  class
+  continue
+  def
+  del
+  elif
+  else
+  except
+  finally
+  for
+  from
+  global
+  if
+  import
+  in
+  is
+  lambda
+  nonlocal
+  not
+  or
+  pass
+  raise
+  return
+  try
+  while
+  with
+  yield

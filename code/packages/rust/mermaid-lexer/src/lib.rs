@@ -1236,6 +1236,13 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_swimlane_long_endpoint_markers() {
+        try_tokenize_mermaid_swimlane(
+            "swimlane-beta LR\na o----> b\nb x-----o c\nc <====> d\nd o=====x e\ne <-...-> f\nf x-....-o g\n",
+        ).expect("long endpoint-marked links should tokenize");
+    }
+
+    #[test]
     fn tokenizes_swimlane_positional_link_styles() {
         let tokens = try_tokenize_mermaid_swimlane(
             "swimlane-beta LR\na --> b\nlinkStyle default stroke:#64748b\nlinkStyle 0, 2 stroke:#dc2626;\n",
