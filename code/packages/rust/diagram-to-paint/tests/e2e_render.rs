@@ -3854,6 +3854,18 @@ line "Target" [35, 50, 68, 82]"##,
                 assert!(scene.instructions.iter().filter(|instruction| matches!(
                     instruction, PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
                 )).count() >= 9, "Markdown spans must lower to separate backend-neutral glyph runs");
+                if fixture_name == "multiline-markdown-string-labels" {
+                    let edge = layout.edges.iter().find(|edge| edge.label.is_some()).unwrap();
+                    let request = layout.nodes.iter().find(|node| node.id == "request").unwrap();
+                    let done = layout.nodes.iter().find(|node| node.id == "done").unwrap();
+                    assert!(edge.label_height > 22.0,
+                        "authored edge-label lines must expand backend-neutral label geometry");
+                    assert!(done.x - (request.x + request.width) >= edge.label_width + 12.0,
+                        "layout must reserve the multiline edge-label width between adjacent nodes");
+                    let position = edge.label_position.as_ref().unwrap();
+                    assert!(position.x - edge.label_width / 2.0 >= request.x + request.width);
+                    assert!(position.x + edge.label_width / 2.0 <= done.x);
+                }
             }
             if fixture_name == "theme-variables" {
                 assert_eq!(layout.theme.main_background, "#ffe1ef");
@@ -3882,9 +3894,11 @@ line "Target" [35, 50, 68, 82]"##,
                     Some(&"Helvetica Neue".to_string()));
             }
             if fixture_name == "theme-edge-label-variables" {
+                let edge = layout.edges.iter().find(|edge| edge.label.is_some()).unwrap();
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe")
-                        && rect.stroke.is_none() && rect.width == 104.0 && rect.height == 22.0
+                        && rect.stroke.is_none() && rect.width == edge.label_width
+                        && rect.height == edge.label_height
                 )), "edgeLabelBackground must lower behind the edge label");
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(23, 37, 84)")
