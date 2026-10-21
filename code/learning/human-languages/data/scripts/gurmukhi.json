@@ -7,7 +7,7 @@
   "signature": "A headline runs along the top of most letters, as in Devanagari, but the letters are rounder and simpler, with no conjunct stacks; three vowel bearers (ੳ ਅ ੲ) carry the independent vowels.",
   "complete": false,
   "combination": "A consonant carries an inherent vowel a (ਕ = ka). A vowel sign replaces it (ਨ + ਾ → ਨਾ = nā); ਿ is written in front of the consonant it follows in speech. Vowels with no consonant ride on a bearer (ਅ + ਾ → ਆ ā). Bindi and tippi nasalize a vowel, addak doubles the next consonant, and the dot below (਼) marks borrowed sounds (ਸ਼ sha). A headline runs along the top of a word, joining its letters.",
-  "notes": "The Punjabi track's own inventory: exactly the letters, signs and digits its lessons read (34 letters, 14 signs, 4 digits), each `sound` taken from that letter's own lesson romanization. It is not the whole alphabet (ੳ ੲ ਙ ਞ ਢ, the other six digits and the other nukta letters are not yet read), so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from the Apache-2.0 tracing lesson of GNPS's Gurmukhi Sikho app (order, start, direction and lifts only; no checkpoint is copied), with Omniglot copyists' counts and shares as corroboration. Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The vowel signs, bindi, tippi, addak, halant and the dot below have no stroke-order source yet, so they stay undrawn; ਝ and ਧ, which the source covers, are left for a later batch because no lesson would print them yet.",
+  "notes": "The Punjabi track's own inventory: exactly the letters, signs and digits its lessons read (35 letters, 14 signs, 4 digits), each `sound` taken from that letter's own lesson romanization. It is not the whole alphabet (ੳ ੲ ਙ ਞ ਢ, the other six digits and the other nukta letters are not yet read), so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from the Apache-2.0 tracing lesson of GNPS's Gurmukhi Sikho app (order, start, direction and lifts only; no checkpoint is copied), with Omniglot copyists' counts and shares as corroboration. Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The vowel signs, bindi, tippi, addak, halant and the dot below have no stroke-order source yet, so they stay undrawn; ਝ and ਧ, which the source covers, are left for a later batch because no lesson would print them yet.",
   "letters": [
     {
       "glyph": "ਅ",
@@ -75,6 +75,16 @@
       "role": "independent-vowel",
       "components": [
         "ਉ  u — independent vowel (no consonant to ride)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ਐ",
+      "sound": "ai",
+      "role": "independent-vowel",
+      "components": [
+        "ਐ  ai — independent vowel (no consonant to ride)"
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""

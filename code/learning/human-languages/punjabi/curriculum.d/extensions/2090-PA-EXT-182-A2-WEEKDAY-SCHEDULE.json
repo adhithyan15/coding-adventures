@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-182-A2-WEEKDAY-SCHEDULE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise the seven weekdays and understand one simple opening-days notice.",
+  "prerequisites": [
+    "PA-EXT-181-A2-TRANSPORT"
+  ]
+}
