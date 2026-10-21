@@ -755,6 +755,14 @@ anchor, or validate a path. Complete RFC 4518 and schema-specific Name
 comparison, algorithm routing and link authentication, full path construction
 and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
 network effects remain blockers.
+The RSA SHA-256 issuer-link composition can now consume that non-copyable
+selection evidence directly. It derives the exact child and selected candidate
+from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
+and exact child-signature checks without a second Name callback. This closes a
+cross-certificate mixing gap between selection and authentication for the one
+implemented algorithm, but does not add algorithm routing, construct or
+validate a complete path, recognize trust, process constraints or revocation,
+or provide TLS, HTTP, OAuth transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
