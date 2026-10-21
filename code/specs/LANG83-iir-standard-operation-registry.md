@@ -453,7 +453,34 @@ the opcodes it uses. AArch64 is structural: each expected word comes from
 `lang_matrix` keeps its data-less `RunResult::Trapped`, and its WASM/VM/JIT
 hosts do not yet provide `write_i64`/`__trap`. No language row emits a PR1b op
 yet. LANG83 PR2 (Ruby), the first that does, ports `StdoutThenTrap` and those
-host imports.
+host imports. (Done: see "PR2 — what landed".)
+
+## PR2 — what landed
+
+LANG84 phase 5a. `ruby-iir-compiler` emits `i64_div_floor` for `/`,
+`i64_mod_floor` for `%` and `print_i64` for `puts` (plus `putchar 10` for
+`puts()`); the Ruby-named builtins (`rb_int_div`, `rb_puts_int`, …) are gone.
+A zero divisor is a run-time `Trap.DivZero`, as Ruby's `ZeroDivisionError` is,
+not a compile error. `Language::Ruby` has thirteen `lang_matrix` rows on all
+eight executable columns, and `check_module_for` passes on all nine backends.
+
+The matrix now carries the trap data the conformance suite already had:
+
+- `Expect::StdoutThenTrap(stdout, kind)` and `RunResult::TrappedAfter {
+  stdout, kind }`. The data-less `Expect::Trap` / `RunResult::Trapped` stay
+  for the older rows (bounds traps whose kind no row asserts yet).
+- Kind sources: native, LLVM, JVM and CLR stderr (the first `Trap.` word);
+  WASM's `env.__trap` id through `exception_kind::trap_kind_name` (the matrix
+  `PrintHost` now resolves `env.__trap`); `VMError::Trap { kind }` on the VM
+  and JIT; on BEAM a `try … catch error:K` launcher prints the reason atom
+  between sentinels.
+- Four Ruby rows trap: output then a zero divisor, a zero modulus, a zero
+  divisor in a second `puts` argument (nothing printed, because Ruby evaluates
+  every argument first), and a divisor that is zero only after evaluation.
+
+Local evidence: native x86-64, LLVM, WASM, JVM, VM and JIT executed all 78 of
+their Ruby cells, 24 of them trapping with the right stdout and kind. CLR and
+BEAM are compile-checked locally and execute in CI.
 
 ## PR4 — the overflow family
 

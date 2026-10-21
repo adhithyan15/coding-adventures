@@ -166,6 +166,17 @@ fn release_selection_is_exact_and_typed() {
     };
     assert!(requested.len() < 100);
 
+    // Control characters in a request are escaped, never echoed raw, so an
+    // error message cannot forge a log line or drive a terminal.
+    let Err(error) = resolve_release(Some("x\nINFO: ok\u{1b}[2J")) else {
+        panic!("a control-character ID must be unknown");
+    };
+    let RubyFrontendError::UnknownRelease { requested, .. } = &error else {
+        panic!("{error:?}");
+    };
+    assert_eq!(requested, "x\\nINFO: ok\\u{1b}[2J");
+    assert!(!error.to_string().chars().any(char::is_control), "{error}");
+
     // Every entry point refuses before doing any work.
     let budgets = FrontendBudgets::default();
     assert!(matches!(
@@ -229,6 +240,10 @@ const POSITIVE_ALL: &[&str] = &[
     "puts(1) # comment\nputs(2)\n",
     "puts(1 + \\\n 2)",
     "puts(1_000)",
+    // LANG84 phase 5: `%` joins the subset, at `*`/`/` precedence.
+    "puts(7 % 3)",
+    "puts(-7 % 2 * 3 / 4)",
+    "puts(1 %\n2)",
 ];
 
 const POSITIVE_MODERN: &[&str] = &[
@@ -252,6 +267,8 @@ const NEGATIVE_ALL: &[&str] = &[
     "puts(1) +",
     "1 + 2",
     "puts(\"1\")",
+    "puts(1 %)",
+    "puts(% 2)",
 ];
 
 const NEGATIVE_MODERN: &[&str] = &[

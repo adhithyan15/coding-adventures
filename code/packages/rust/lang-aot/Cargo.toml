@@ -18,6 +18,9 @@ coding-adventures-macrooct-iir-compiler = { path = "../macrooct-iir-compiler" }
 mccarthy-lisp-iir-compiler = { path = "../mccarthy-lisp-iir-compiler" }
 algol-iir-compiler = { path = "../algol-iir-compiler" }
 flow-matic-iir-compiler = { path = "../flow-matic-iir-compiler" }
+# LANG84 phase 5a: Ruby's rb-int-puts subset on the R0 release grammars
+# (`/` = LANG83 i64_div_floor, `%` = i64_mod_floor, `puts` = print_i64).
+ruby-iir-compiler = { path = "../ruby-iir-compiler" }
 cobol-iir-compiler = { path = "../cobol-iir-compiler" }
 macsyma-iir-compiler = { path = "../macsyma-iir-compiler" }
 # LANG84 phase 4a: Perl's bounded integer `print` subset (print = LANG83 write_i64).
