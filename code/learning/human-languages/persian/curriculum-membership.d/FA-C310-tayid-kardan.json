@@ -1,0 +1,11 @@
+{
+  "id": "FA-C310-tayid-kardan",
+  "pathSegment": "FA-PATH-310-TAKZIB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-310-TAKZIB",
+      "order": 1
+    }
+  ]
+}

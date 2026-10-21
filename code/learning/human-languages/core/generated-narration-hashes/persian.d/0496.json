@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:ae4f3b620da723d7",
+  "lessonIds": [
+    "FA-C496-maghz",
+    "FA-C496-asab",
+    "FA-C496-rag",
+    "FA-C496-pelk",
+    "FA-C496-lase"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch496.txt",
+  "json": "persian/narration/ch496.json",
+  "textHash": "fnv1a64:bfb58b1efeb0251f",
+  "jsonHash": "fnv1a64:e9da4c261a490c72",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:5f4a0300c158696f",
+  "lessonIds": [
+    "FA-C401-morur-kardan",
+    "FA-C401-tamarkoz-kardan",
+    "FA-C401-taqallob-kardan",
+    "FA-C401-jozve",
+    "FA-C401-taklif"
+  ],
+  "tex": "persian/book/chapters/ch401-studying-for-exams.tex"
+}

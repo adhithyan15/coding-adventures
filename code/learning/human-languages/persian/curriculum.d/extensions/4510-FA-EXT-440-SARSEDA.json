@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-440-SARSEDA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is wrong with a room: the noise, dirt, a squeaking door, a bad smell and the water heater.",
+  "prerequisites": []
+}

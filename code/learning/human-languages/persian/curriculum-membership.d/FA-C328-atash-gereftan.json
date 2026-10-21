@@ -1,0 +1,11 @@
+{
+  "id": "FA-C328-atash-gereftan",
+  "pathSegment": "FA-PATH-328-ATASHSUZI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-328-ATASHSUZI",
+      "order": 1
+    }
+  ]
+}

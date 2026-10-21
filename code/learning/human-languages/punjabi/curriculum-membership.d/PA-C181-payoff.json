@@ -1,0 +1,11 @@
+{
+  "id": "PA-C181-payoff",
+  "pathSegment": "PA-PATH-181-A2-TRANSPORT",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "PA-EXT-181-A2-TRANSPORT",
+      "order": 7
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Little by little and meanwhile",
+  "label": "ch:fa-little-by-little-and-meanwhile",
+  "canDo": "I can say that something happened gradually, meanwhile, during a period, until something else, and anew.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C306-mojaddadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can say that something happened gradually, meanwhile, during a period, until something else, and anew.",
+    "assesses": [
+      "FA-LEX-C306-TADRIJ-03",
+      "FA-LEX-C306-TADRIJ-04",
+      "FA-LEX-C306-TADRIJ-05"
+    ]
+  }
+}

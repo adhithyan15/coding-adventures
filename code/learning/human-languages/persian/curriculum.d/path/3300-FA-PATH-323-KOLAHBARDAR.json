@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-323-KOLAHBARDAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-323-KOLAHBARDAR"
+  ],
+  "after": []
+}

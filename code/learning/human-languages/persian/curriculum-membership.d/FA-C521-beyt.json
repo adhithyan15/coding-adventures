@@ -1,0 +1,11 @@
+{
+  "id": "FA-C521-beyt",
+  "pathSegment": "FA-PATH-521-POETRY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-521-POETRY",
+      "order": 4
+    }
+  ]
+}

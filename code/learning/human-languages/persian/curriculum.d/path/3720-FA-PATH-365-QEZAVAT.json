@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-365-QEZAVAT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-365-QEZAVAT"
+  ],
+  "after": []
+}

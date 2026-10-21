@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Weight and Diet",
+  "label": "ch:fa-weight-and-diet",
+  "canDo": "I can talk about weight and diet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C498-chaqi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about weight and diet.",
+    "assesses": [
+      "FA-LEX-C498-WEIGHT-03",
+      "FA-LEX-C498-WEIGHT-04",
+      "FA-LEX-C498-WEIGHT-05"
+    ]
+  }
+}

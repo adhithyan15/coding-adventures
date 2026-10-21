@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-444-NESHANI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask the way: an address, asking around, knowing the way, getting lost and a landmark.",
+  "prerequisites": []
+}

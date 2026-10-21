@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C480-khodnamayi-kardan",
+    "language": "persian",
+    "chapter": 480,
+    "sequence": 24640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dec85c32377c0fee"
+  },
+  "findings": []
+}

@@ -2,6 +2,18 @@
 
 All notable changes to the TOML Lexer package will be documented in this file.
 
+## Unreleased
+
+### Security
+- Make the multiline-basic-string grammar branches disjoint so unterminated
+  newline-heavy input is rejected in linear time instead of triggering
+  catastrophic regular-expression backtracking.
+- Reject lone carriage returns in every string form, preserve one or two
+  delimiter-adjacent quotes in multiline strings, and expose the generic
+  lexer's optional token-emission bound.
+- Enforce TOML's leading-zero and underscore rules for numeric literals and
+  reject forbidden raw comment controls instead of silently skipping them.
+
 ## [0.1.1] - 2026-08-17
 
 ### Fixed

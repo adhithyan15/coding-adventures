@@ -1,0 +1,11 @@
+{
+  "id": "FA-C535-rakhtekhab",
+  "pathSegment": "FA-PATH-535-COSY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-535-COSY",
+      "order": 1
+    }
+  ]
+}

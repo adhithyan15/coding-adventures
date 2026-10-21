@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:4432e93440fb721c",
+  "lessonIds": [
+    "FA-C491-kamardard",
+    "FA-C491-dandan-dard",
+    "FA-C491-dard-keshidan",
+    "FA-C491-kharesh",
+    "FA-C491-sekseke-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch491.txt",
+  "json": "persian/narration/ch491.json",
+  "textHash": "fnv1a64:f999b404c12c9ba5",
+  "jsonHash": "fnv1a64:2fa871ad90f81347",
+  "findings": []
+}

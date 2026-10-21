@@ -1,0 +1,11 @@
+{
+  "id": "FA-C516-tanbali-kardan",
+  "pathSegment": "FA-PATH-516-FITNESS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-516-FITNESS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Projects and planning",
+  "label": "ch:fa-projects-and-planning",
+  "canDo": "I can talk about a project, say who manages it, how we planned it and which organisation is behind it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C382-herfei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can talk about a project, say who manages it, how we planned it and which organisation is behind it.",
+    "assesses": [
+      "FA-LEX-C382-PROZHE-03",
+      "FA-LEX-C382-PROZHE-04",
+      "FA-LEX-C382-PROZHE-05"
+    ]
+  }
+}

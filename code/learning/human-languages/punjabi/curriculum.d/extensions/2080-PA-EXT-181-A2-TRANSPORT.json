@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-181-A2-TRANSPORT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand and give one short practical note about a train ticket, a journey, and going home on foot.",
+  "prerequisites": [
+    "PA-EXT-180-A2-PLACE-REFERENCE"
+  ]
+}

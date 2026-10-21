@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-309-SOKHANGU",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-309-SOKHANGU"
+  ],
+  "after": []
+}

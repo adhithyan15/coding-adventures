@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:d51427381e72c90c",
+  "lessonIds": [
+    "FA-C462-haraj",
+    "FA-C462-arzidan",
+    "FA-C462-kharid-kardan",
+    "FA-C462-forush-raftan",
+    "FA-C462-jabe"
+  ],
+  "tex": "persian/book/chapters/ch462-sales.tex"
+}

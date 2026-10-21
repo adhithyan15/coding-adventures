@@ -1,0 +1,11 @@
+{
+  "id": "FA-C460-porov-kardan",
+  "pathSegment": "FA-PATH-460-VITRIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-460-VITRIN",
+      "order": 2
+    }
+  ]
+}

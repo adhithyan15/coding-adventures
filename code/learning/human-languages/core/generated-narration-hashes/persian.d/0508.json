@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:ecb6c57d6447a0f1",
+  "lessonIds": [
+    "FA-C508-khoshnevisi",
+    "FA-C508-golduzi",
+    "FA-C508-qollab-bafi",
+    "FA-C508-kardasti",
+    "FA-C508-sofal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch508.txt",
+  "json": "persian/narration/ch508.json",
+  "textHash": "fnv1a64:2433866844d657ee",
+  "jsonHash": "fnv1a64:c0fb26931177c612",
+  "findings": []
+}

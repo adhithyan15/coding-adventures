@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C480-eftekhar-kardan",
+    "language": "persian",
+    "chapter": 480,
+    "sequence": 24630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89a544fcf0efc1d8"
+  },
+  "findings": []
+}

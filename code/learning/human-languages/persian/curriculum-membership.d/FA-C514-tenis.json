@@ -1,0 +1,11 @@
+{
+  "id": "FA-C514-tenis",
+  "pathSegment": "FA-PATH-514-BALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-514-BALL",
+      "order": 2
+    }
+  ]
+}

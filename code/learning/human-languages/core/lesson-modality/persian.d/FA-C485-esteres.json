@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C485-esteres",
+    "language": "persian",
+    "chapter": 485,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:532eb2c1434a8ab5"
+  },
+  "findings": []
+}

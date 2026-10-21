@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C508-kardasti",
+    "language": "persian",
+    "chapter": 508,
+    "sequence": 26060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0370b60b3f342288"
+  },
+  "findings": []
+}

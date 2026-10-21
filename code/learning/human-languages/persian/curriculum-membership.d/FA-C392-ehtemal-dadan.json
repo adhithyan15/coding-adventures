@@ -1,0 +1,11 @@
+{
+  "id": "FA-C392-ehtemal-dadan",
+  "pathSegment": "FA-PATH-392-EHTEMAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-392-EHTEMAL",
+      "order": 1
+    }
+  ]
+}

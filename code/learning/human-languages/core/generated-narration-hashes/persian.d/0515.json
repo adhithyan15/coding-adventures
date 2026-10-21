@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:e3668db882185591",
+  "lessonIds": [
+    "FA-C515-shut-kardan",
+    "FA-C515-pas-dadan",
+    "FA-C515-partab-kardan",
+    "FA-C515-koshti-gereftan",
+    "FA-C515-vazne-bardari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch515.txt",
+  "json": "persian/narration/ch515.json",
+  "textHash": "fnv1a64:01e39dfd079062c6",
+  "jsonHash": "fnv1a64:b2cf016bfc8508f8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:ae7e777c7784cea2",
+  "lessonIds": [
+    "FA-C494-iyadat-kardan",
+    "FA-C494-moraqebat-kardan",
+    "FA-C494-parastari-kardan",
+    "FA-C494-salamati",
+    "FA-C494-khub-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch494.txt",
+  "json": "persian/narration/ch494.json",
+  "textHash": "fnv1a64:fe70b47ee317bddb",
+  "jsonHash": "fnv1a64:dcb7c8d22ac5e168",
+  "findings": []
+}

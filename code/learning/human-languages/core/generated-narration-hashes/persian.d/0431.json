@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:f78e00c415b9cbc5",
+  "lessonIds": [
+    "FA-C431-parvaz",
+    "FA-C431-parvaz-kardan",
+    "FA-C431-forud-amadan",
+    "FA-C431-havapeymayi",
+    "FA-C431-kart-e-parvaz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch431.txt",
+  "json": "persian/narration/ch431.json",
+  "textHash": "fnv1a64:e738eabf9f13a8e2",
+  "jsonHash": "fnv1a64:e280479dc3dfbc81",
+  "findings": []
+}

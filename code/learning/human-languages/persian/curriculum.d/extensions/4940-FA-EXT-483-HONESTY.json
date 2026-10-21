@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-483-HONESTY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about honesty and lying.",
+  "prerequisites": []
+}

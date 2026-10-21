@@ -73,3 +73,29 @@ it("keeps timing evidence out of the untimed practical-form runway", () => {
     .filter((lesson) => FORM_IDS.includes(lesson.realization.lessonId));
   expect(lessons.some((lesson) => lesson.body.includes("timed-assessment-production"))).toBe(false);
 });
+
+it("introduces a partial timer before a full timed six-field form", () => {
+  const ids = ["MR-A1F13-six-field-independent", "MR-A1F14-partial-timer", "MR-A1F15-timed-form"];
+  const lessons = ids.map((id) => loadTrackLessons("marathi").find((lesson) => lesson.realization.lessonId === id));
+  expect(lessons.every(Boolean)).toBe(true);
+  expect(lessons[1]?.frontmatter.prerequisites).toContain(ids[0]);
+  expect(lessons[2]?.frontmatter.prerequisites).toContain(ids[1]);
+  for (const lesson of lessons.slice(1)) {
+    expect(lesson?.frontmatter.delivery).toBe("script");
+    expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(300);
+    expect(lesson?.body).toContain("hl-writing-stage: timed-assessment-production");
+    expect(lesson?.body).toContain("task fulfilment");
+    expect(lesson?.body).toContain("organisation");
+    expect(lesson?.body).toContain("Marathi control");
+    expect(lesson?.body).toContain("orthographic control");
+    expect(lesson?.body).toContain("repair");
+    const activities = lesson?.blocks.flatMap((block) => block.activities ?? []) ?? [];
+    expect(activities).toHaveLength(2);
+    expect(activities[1]?.id).toContain("separate-repair");
+    expect(activities[1]?.responseSeconds).toBeLessThanOrEqual(20);
+  }
+  expect(lessons[1]?.body).toContain("partial timer");
+  expect(lessons[2]?.body).toContain("six fields");
+  expect(lessons[2]?.body).toContain("two minutes");
+  expect(lessons[2]?.body).toContain("not a full A1 mock");
+});

@@ -61,6 +61,7 @@ fn str_literal_passed_to_strlen_returns_length() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert_eq!(run(module), 5, "strlen of a literal passed across a call must be its length");
 }
@@ -103,6 +104,7 @@ fn str_concat_result_passed_to_strlen_returns_length() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert_eq!(run(module), 5, "strlen of a folded concat passed across a call must be its length");
 }
@@ -143,6 +145,7 @@ fn str_slice_result_passed_to_strlen_returns_length() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert_eq!(run(module), 5, "strlen of a folded slice passed across a call must be its length");
 }
@@ -190,6 +193,7 @@ fn runtime_str_concat_allocates_without_array_ops() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert_eq!(run(module), 5);
 }

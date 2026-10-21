@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:779aaad12c316200",
+  "lessonIds": [
+    "FA-C441-darkhast-kardan",
+    "FA-C441-residegi-kardan",
+    "FA-C441-irad-gereftan",
+    "FA-C441-kutah-amadan",
+    "FA-C441-narazi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch441.txt",
+  "json": "persian/narration/ch441.json",
+  "textHash": "fnv1a64:ace175bb6aa27fb1",
+  "jsonHash": "fnv1a64:f14949126d49fb63",
+  "findings": []
+}

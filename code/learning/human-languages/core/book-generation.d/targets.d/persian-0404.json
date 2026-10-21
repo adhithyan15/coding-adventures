@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 404,
+  "output": "persian/book/chapters/ch404-rules.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

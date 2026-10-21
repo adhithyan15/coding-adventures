@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-396-MONSAREF",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-396-MONSAREF"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C389-solh",
+    "language": "persian",
+    "chapter": 389,
+    "sequence": 19900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:782359d93adc7150"
+  },
+  "findings": []
+}

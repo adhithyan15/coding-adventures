@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-450-MARKAZ",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-450-MARKAZ"
+  ],
+  "after": []
+}

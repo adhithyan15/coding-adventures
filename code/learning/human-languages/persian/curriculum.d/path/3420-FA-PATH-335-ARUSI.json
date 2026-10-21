@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-335-ARUSI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-335-ARUSI"
+  ],
+  "after": []
+}

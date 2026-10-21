@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-423-BENZIN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-423-BENZIN"
+  ],
+  "after": []
+}

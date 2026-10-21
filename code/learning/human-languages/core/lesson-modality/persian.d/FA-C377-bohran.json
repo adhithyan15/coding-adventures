@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C377-bohran",
+    "language": "persian",
+    "chapter": 377,
+    "sequence": 19270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8792c8d1905baaa8"
+  },
+  "findings": []
+}

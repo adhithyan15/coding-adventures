@@ -1,0 +1,11 @@
+{
+  "id": "FA-C494-khub-shodan",
+  "pathSegment": "FA-PATH-494-CARE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-494-CARE",
+      "order": 4
+    }
+  ]
+}

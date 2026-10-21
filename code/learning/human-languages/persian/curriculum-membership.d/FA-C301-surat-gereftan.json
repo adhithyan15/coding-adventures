@@ -1,0 +1,11 @@
+{
+  "id": "FA-C301-surat-gereftan",
+  "pathSegment": "FA-PATH-301-ETTEFAQ",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-301-ETTEFAQ",
+      "order": 3
+    }
+  ]
+}

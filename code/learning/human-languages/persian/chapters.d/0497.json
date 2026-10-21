@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Bones and Joints",
+  "label": "ch:fa-bones-and-joints",
+  "canDo": "I can talk about bones and joints.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C497-jomjome",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about bones and joints.",
+    "assesses": [
+      "FA-LEX-C497-BONES-03",
+      "FA-LEX-C497-BONES-04",
+      "FA-LEX-C497-BONES-05"
+    ]
+  }
+}

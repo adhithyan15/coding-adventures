@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-473-HAVASHENASI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-473-HAVASHENASI"
+  ],
+  "after": []
+}

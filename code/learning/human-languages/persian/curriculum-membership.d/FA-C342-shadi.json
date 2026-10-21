@@ -1,0 +1,11 @@
+{
+  "id": "FA-C342-shadi",
+  "pathSegment": "FA-PATH-342-TAZYIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-342-TAZYIN",
+      "order": 4
+    }
+  ]
+}

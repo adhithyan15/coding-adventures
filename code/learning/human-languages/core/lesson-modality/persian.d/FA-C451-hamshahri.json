@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C451-hamshahri",
+    "language": "persian",
+    "chapter": 451,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff82834dfa783f8e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C290-raftam",
+    "language": "persian",
+    "chapter": 290,
+    "sequence": 14908,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e671eeca4245787"
+  },
+  "findings": []
+}

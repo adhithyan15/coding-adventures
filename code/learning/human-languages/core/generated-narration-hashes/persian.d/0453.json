@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:ea74b738c2bda0f1",
+  "lessonIds": [
+    "FA-C453-pasgah",
+    "FA-C453-gomshode",
+    "FA-C453-kif-e-pul",
+    "FA-C453-polis-e-rah",
+    "FA-C453-shomare-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch453.txt",
+  "json": "persian/narration/ch453.json",
+  "textHash": "fnv1a64:b7287379c5ca0f50",
+  "jsonHash": "fnv1a64:f8264f68baa7dae4",
+  "findings": []
+}

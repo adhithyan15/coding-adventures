@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-333-NOWJAVANI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-333-NOWJAVANI"
+  ],
+  "after": []
+}

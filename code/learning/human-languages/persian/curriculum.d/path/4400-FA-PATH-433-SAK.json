@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-433-SAK",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-433-SAK"
+  ],
+  "after": []
+}

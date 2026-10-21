@@ -1,0 +1,11 @@
+{
+  "id": "PA-C181-vapas",
+  "pathSegment": "PA-PATH-181-A2-TRANSPORT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-181-A2-TRANSPORT",
+      "order": 4
+    }
+  ]
+}

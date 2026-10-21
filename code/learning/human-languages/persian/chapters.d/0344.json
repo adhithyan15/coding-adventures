@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Vows and sweets",
+  "label": "ch:fa-vows-and-sweets",
+  "canDo": "I can talk about a vow, the food given out for it, halva, saffron rice pudding and rosewater.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C344-golab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can talk about a vow, the food given out for it, halva, saffron rice pudding and rosewater.",
+    "assesses": [
+      "FA-LEX-C344-NAZR-03",
+      "FA-LEX-C344-NAZR-04",
+      "FA-LEX-C344-NAZR-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:77c7420e7c051853",
+  "lessonIds": [
+    "FA-C360-aqide",
+    "FA-C360-didgah",
+    "FA-C360-negaresh",
+    "FA-C360-motaqed-budan",
+    "FA-C360-nazariye"
+  ],
+  "tex": "persian/book/chapters/ch360-opinions-and-beliefs.tex"
+}

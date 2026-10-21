@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C512-harif",
+    "language": "persian",
+    "chapter": 512,
+    "sequence": 26260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1279881f458636c7"
+  },
+  "findings": []
+}

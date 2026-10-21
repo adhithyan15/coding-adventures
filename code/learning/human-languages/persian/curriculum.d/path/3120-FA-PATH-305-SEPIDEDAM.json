@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-305-SEPIDEDAM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-305-SEPIDEDAM"
+  ],
+  "after": []
+}

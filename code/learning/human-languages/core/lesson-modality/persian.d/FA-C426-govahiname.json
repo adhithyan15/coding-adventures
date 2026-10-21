@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C426-govahiname",
+    "language": "persian",
+    "chapter": 426,
+    "sequence": 21840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da0f310a0c406ce4"
+  },
+  "findings": []
+}

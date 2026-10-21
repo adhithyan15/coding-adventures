@@ -1,0 +1,11 @@
+{
+  "id": "FA-C403-lisans",
+  "pathSegment": "FA-PATH-403-TAHSILAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-403-TAHSILAT",
+      "order": 3
+    }
+  ]
+}

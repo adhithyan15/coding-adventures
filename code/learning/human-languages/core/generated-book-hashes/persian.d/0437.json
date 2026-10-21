@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:9e5b477f874a0500",
+  "lessonIds": [
+    "FA-C437-mosaferkhane",
+    "FA-C437-eqamatgah",
+    "FA-C437-pansiyon",
+    "FA-C437-suit",
+    "FA-C437-eqamat-kardan"
+  ],
+  "tex": "persian/book/chapters/ch437-places-to-stay.tex"
+}

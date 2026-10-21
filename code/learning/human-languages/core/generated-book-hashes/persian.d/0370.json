@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:070d4cb92b474286",
+  "lessonIds": [
+    "FA-C370-payamad",
+    "FA-C370-avaqeb",
+    "FA-C370-dar-natije",
+    "FA-C370-monjar-shodan",
+    "FA-C370-natije-gereftan"
+  ],
+  "tex": "persian/book/chapters/ch370-results-and-consequences.tex"
+}

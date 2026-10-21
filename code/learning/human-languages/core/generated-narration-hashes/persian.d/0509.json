@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:355dabac6f58aa65",
+  "lessonIds": [
+    "FA-C509-pazel",
+    "FA-C509-takhte-nard",
+    "FA-C509-varaq",
+    "FA-C509-tas",
+    "FA-C509-varaq-bazi-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch509.txt",
+  "json": "persian/narration/ch509.json",
+  "textHash": "fnv1a64:c9471d1beb28a5c8",
+  "jsonHash": "fnv1a64:d0bdb2186742c8a2",
+  "findings": []
+}

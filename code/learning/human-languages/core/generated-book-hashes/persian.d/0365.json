@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:26783ae310062225",
+  "lessonIds": [
+    "FA-C365-qezavat-kardan",
+    "FA-C365-enteqad",
+    "FA-C365-enteqad-kardan",
+    "FA-C365-eghraq-kardan",
+    "FA-C365-towjih-kardan"
+  ],
+  "tex": "persian/book/chapters/ch365-judging-and-criticising.tex"
+}

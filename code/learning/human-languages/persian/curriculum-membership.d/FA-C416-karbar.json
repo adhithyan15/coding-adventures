@@ -1,0 +1,11 @@
+{
+  "id": "FA-C416-karbar",
+  "pathSegment": "FA-PATH-416-KARBAR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-416-KARBAR",
+      "order": 0
+    }
+  ]
+}

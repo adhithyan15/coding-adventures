@@ -1,0 +1,11 @@
+{
+  "id": "FA-C362-manteq",
+  "pathSegment": "FA-PATH-362-ESTEDLAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-362-ESTEDLAL",
+      "order": 2
+    }
+  ]
+}

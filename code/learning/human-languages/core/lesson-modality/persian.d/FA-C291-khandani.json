@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "FA-C291-khandani",
+    "language": "persian",
+    "chapter": 291,
+    "sequence": 14980,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1a4245bce64f247b"
+  },
+  "findings": []
+}

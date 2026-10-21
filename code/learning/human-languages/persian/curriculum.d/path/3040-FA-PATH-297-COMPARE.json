@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-297-COMPARE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-297-COMPARE"
+  ],
+  "after": []
+}

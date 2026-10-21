@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Tricks, threats and fights",
+  "label": "ch:fa-tricks-threats-and-fights",
+  "canDo": "I can talk about a con man, tricking, threatening, quarrelling and beating someone up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R323-review-316-323",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about a con man, tricking, threatening, quarrelling and beating someone up.",
+    "assesses": [
+      "FA-LEX-C323-KOLAHBARDAR-03",
+      "FA-LEX-C323-KOLAHBARDAR-04",
+      "FA-LEX-C323-KOLAHBARDAR-05"
+    ]
+  }
+}

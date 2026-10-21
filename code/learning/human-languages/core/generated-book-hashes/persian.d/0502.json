@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:6d4d896aaf4a52a3",
+  "lessonIds": [
+    "FA-C502-gahvare",
+    "FA-C502-lalayi",
+    "FA-C502-pushak",
+    "FA-C502-kaleske",
+    "FA-C502-shir-dadan"
+  ],
+  "tex": "persian/book/chapters/ch502-babies.tex"
+}

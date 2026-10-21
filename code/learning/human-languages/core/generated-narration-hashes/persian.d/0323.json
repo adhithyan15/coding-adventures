@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:41cd92ea139bd6ef",
+  "lessonIds": [
+    "FA-C323-kolahbardar",
+    "FA-C323-farib-dadan",
+    "FA-C323-tahdid-kardan",
+    "FA-C323-dava-kardan",
+    "FA-C323-kotak-zadan",
+    "FA-R323-review-316-323"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch323.txt",
+  "json": "persian/narration/ch323.json",
+  "textHash": "fnv1a64:05d10ffa917cf9d8",
+  "jsonHash": "fnv1a64:a17cec3d6f18439e",
+  "findings": []
+}

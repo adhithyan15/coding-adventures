@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-437-MOSAFERKHANE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-437-MOSAFERKHANE"
+  ],
+  "after": []
+}

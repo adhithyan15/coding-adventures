@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Staying safe online",
+  "label": "ch:fa-staying-safe-online",
+  "canDo": "I can talk about privacy, hacking and viruses, sharing things online and artificial intelligence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-R419-review-final-419",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about privacy, hacking and viruses, sharing things online and artificial intelligence.",
+    "assesses": [
+      "FA-LEX-C419-HARIM-03",
+      "FA-LEX-C419-HARIM-04",
+      "FA-LEX-C419-HARIM-05"
+    ]
+  }
+}

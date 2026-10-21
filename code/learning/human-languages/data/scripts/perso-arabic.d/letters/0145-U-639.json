@@ -1,0 +1,17 @@
+{
+  "glyph": "ع",
+  "sound": "' / glottal catch",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ع",
+    "initial": "عـ",
+    "medial": "ـعـ",
+    "final": "ـع"
+  },
+  "components": [
+    "small open head",
+    "trailing bowl"
+  ],
+  "strokeOrder": [],
+  "notes": "Used in Arabic-derived Persian words; in modern Persian a light catch in the throat or a lengthened vowel, not the Arabic pharyngeal. Romanized with an apostrophe. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

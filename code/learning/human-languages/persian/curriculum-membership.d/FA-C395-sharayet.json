@@ -1,0 +1,11 @@
+{
+  "id": "FA-C395-sharayet",
+  "pathSegment": "FA-PATH-395-BASTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-395-BASTE",
+      "order": 2
+    }
+  ]
+}

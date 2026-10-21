@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:5174d2390aad733f",
+  "lessonIds": [
+    "FA-C414-arz",
+    "FA-C414-etebar",
+    "FA-C414-seporde",
+    "FA-C414-bardasht-kardan",
+    "FA-C414-enteqal-dadan"
+  ],
+  "tex": "persian/book/chapters/ch414-at-the-bank.tex"
+}

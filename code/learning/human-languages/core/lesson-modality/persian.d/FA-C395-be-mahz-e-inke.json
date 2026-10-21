@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C395-be-mahz-e-inke",
+    "language": "persian",
+    "chapter": 395,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e55d58e590bda815"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C385-nasl",
+  "pathSegment": "FA-PATH-385-JAMEE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-385-JAMEE",
+      "order": 2
+    }
+  ]
+}

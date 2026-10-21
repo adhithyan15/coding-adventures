@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:4a482506cfc4b40c",
+  "lessonIds": [
+    "FA-C493-moayene-kardan",
+    "FA-C493-nabz",
+    "FA-C493-darman-kardan",
+    "FA-C493-vaksan-zadan",
+    "FA-C493-chekap"
+  ],
+  "tex": "persian/book/chapters/ch493-at-the-doctor.tex"
+}

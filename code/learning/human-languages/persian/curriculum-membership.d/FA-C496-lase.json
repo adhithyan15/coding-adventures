@@ -1,0 +1,11 @@
+{
+  "id": "FA-C496-lase",
+  "pathSegment": "FA-PATH-496-NERVES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-496-NERVES",
+      "order": 4
+    }
+  ]
+}

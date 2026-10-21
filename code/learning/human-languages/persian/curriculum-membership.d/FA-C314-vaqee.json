@@ -1,0 +1,11 @@
+{
+  "id": "FA-C314-vaqee",
+  "pathSegment": "FA-PATH-314-RUYDAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-314-RUYDAD",
+      "order": 1
+    }
+  ]
+}

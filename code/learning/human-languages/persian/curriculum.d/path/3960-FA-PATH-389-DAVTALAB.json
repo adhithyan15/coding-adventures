@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-389-DAVTALAB",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-389-DAVTALAB"
+  ],
+  "after": []
+}

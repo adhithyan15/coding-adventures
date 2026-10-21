@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Finishing the dish",
+  "label": "ch:fa-finishing-the-dish",
+  "canDo": "I can talk about saffron, adding something, straining, a crisp golden finish and the taste of a dish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R359-review-final-359",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about saffron, adding something, straining, a crisp golden finish and the taste of a dish.",
+    "assesses": [
+      "FA-LEX-C359-ZAFARAN-03",
+      "FA-LEX-C359-ZAFARAN-04",
+      "FA-LEX-C359-ZAFARAN-05"
+    ]
+  }
+}

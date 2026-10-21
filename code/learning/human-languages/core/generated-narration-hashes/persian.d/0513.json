@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:3e85ec784c84c849",
+  "lessonIds": [
+    "FA-C513-bazande",
+    "FA-C513-mosavi",
+    "FA-C513-rekord",
+    "FA-C513-rekord-zadan",
+    "FA-C513-gol-zadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch513.txt",
+  "json": "persian/narration/ch513.json",
+  "textHash": "fnv1a64:a50ecd52f2eb851c",
+  "jsonHash": "fnv1a64:fc3ce431b2c32dc7",
+  "findings": []
+}

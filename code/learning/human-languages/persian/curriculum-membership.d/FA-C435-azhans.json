@@ -1,0 +1,11 @@
+{
+  "id": "FA-C435-azhans",
+  "pathSegment": "FA-PATH-435-DARBAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-435-DARBAST",
+      "order": 1
+    }
+  ]
+}
