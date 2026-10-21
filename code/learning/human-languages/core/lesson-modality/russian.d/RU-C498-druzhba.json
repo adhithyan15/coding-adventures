@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C498-druzhba",
+    "language": "russian",
+    "chapter": 498,
+    "sequence": 28090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51e83dc3fe6641c2"
+  },
+  "findings": []
+}

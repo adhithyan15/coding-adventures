@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-262-STORY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a short story in order with сначала, потом, затем and наконец, retell it with рассказать, and read a connected story in the past.",
+  "prerequisites": []
+}

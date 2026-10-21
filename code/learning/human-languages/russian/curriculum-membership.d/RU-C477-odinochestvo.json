@@ -1,0 +1,11 @@
+{
+  "id": "RU-C477-odinochestvo",
+  "pathSegment": "RU-PATH-477-LONGING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-477-LONGING",
+      "order": 2
+    }
+  ]
+}

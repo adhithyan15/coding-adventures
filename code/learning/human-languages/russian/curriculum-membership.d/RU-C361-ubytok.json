@@ -1,0 +1,11 @@
+{
+  "id": "RU-C361-ubytok",
+  "pathSegment": "RU-PATH-361-PRIBYL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-361-PRIBYL",
+      "order": 2
+    }
+  ]
+}

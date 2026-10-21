@@ -1,0 +1,5 @@
+tests/diff/simple-private-generator-method/input/a.js:1:11: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is not currently supported by the compiler: Private elements.
+  1| class C { *#g(){ return 1 + 2 } }
+                ^
+
+1 error(s), 0 warning(s)

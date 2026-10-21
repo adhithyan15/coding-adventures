@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:00848eb8feab5578",
+  "lessonIds": [
+    "RU-C452-bulochnaya",
+    "RU-C452-gastronom",
+    "RU-C452-prilavok",
+    "RU-C452-prodavshchitsa",
+    "RU-C452-vzveshivat"
+  ],
+  "tex": "russian/book/chapters/ch452-food-shopping.tex"
+}

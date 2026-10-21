@@ -1,0 +1,11 @@
+{
+  "id": "RU-C534-budit",
+  "pathSegment": "RU-PATH-534-MORNING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-534-MORNING",
+      "order": 0
+    }
+  ]
+}

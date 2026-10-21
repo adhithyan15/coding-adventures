@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-285-SOBYTIYE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about what happened: an event, an incident, a news round-up, a summary and the outcome.",
+  "prerequisites": []
+}

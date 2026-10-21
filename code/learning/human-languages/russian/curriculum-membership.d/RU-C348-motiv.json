@@ -1,0 +1,11 @@
+{
+  "id": "RU-C348-motiv",
+  "pathSegment": "RU-PATH-348-POVOD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-348-POVOD",
+      "order": 3
+    }
+  ]
+}

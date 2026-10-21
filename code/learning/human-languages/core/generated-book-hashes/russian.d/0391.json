@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:95786b6e2660e2a5",
+  "lessonIds": [
+    "RU-C391-zakonodatelstvo",
+    "RU-C391-konstituciya",
+    "RU-C391-grazhdanstvo",
+    "RU-C391-yuridicheskiy",
+    "RU-C391-ogranichenie"
+  ],
+  "tex": "russian/book/chapters/ch391-laws-of-the-land.tex"
+}

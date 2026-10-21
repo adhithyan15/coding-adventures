@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C423-kompensatsiya",
+    "language": "russian",
+    "chapter": 423,
+    "sequence": 24260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f73a81522b825c6d"
+  },
+  "findings": []
+}

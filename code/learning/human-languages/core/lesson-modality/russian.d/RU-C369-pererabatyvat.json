@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C369-pererabatyvat",
+    "language": "russian",
+    "chapter": 369,
+    "sequence": 21470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:688facb53e05f23b"
+  },
+  "findings": []
+}

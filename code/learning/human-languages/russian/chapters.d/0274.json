@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Little by little",
+  "label": "ch:ru-little-by-little",
+  "canDo": "I can say how events unfolded: gradually, at the same time, at first, later on and at the very end.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C274-naposledok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say how events unfolded: gradually, at the same time, at first, later on and at the very end.",
+    "assesses": [
+      "RU-LEX-C274-POSTEPENNO-03",
+      "RU-LEX-C274-POSTEPENNO-04",
+      "RU-LEX-C274-POSTEPENNO-05"
+    ]
+  }
+}

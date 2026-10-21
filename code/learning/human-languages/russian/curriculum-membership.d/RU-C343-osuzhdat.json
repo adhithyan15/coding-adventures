@@ -1,0 +1,11 @@
+{
+  "id": "RU-C343-osuzhdat",
+  "pathSegment": "RU-PATH-343-KRITIKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-343-KRITIKA",
+      "order": 3
+    }
+  ]
+}

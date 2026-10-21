@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:d57b6901f8f97420",
+  "lessonIds": [
+    "RU-C311-prazdnovat",
+    "RU-C311-otmechat",
+    "RU-C311-torzhestvo",
+    "RU-C311-torzhestvennyy",
+    "RU-C311-prazdnichnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch311.txt",
+  "json": "russian/narration/ch311.json",
+  "textHash": "fnv1a64:5552a142173cde2b",
+  "jsonHash": "fnv1a64:4de53f024ec81d5f",
+  "findings": []
+}

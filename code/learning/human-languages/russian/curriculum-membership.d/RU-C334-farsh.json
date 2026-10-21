@@ -1,0 +1,11 @@
+{
+  "id": "RU-C334-farsh",
+  "pathSegment": "RU-PATH-334-FARSH",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-334-FARSH",
+      "order": 0
+    }
+  ]
+}

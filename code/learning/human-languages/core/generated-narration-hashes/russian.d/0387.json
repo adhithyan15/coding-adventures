@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:518e39cc74929083",
+  "lessonIds": [
+    "RU-C387-znanie",
+    "RU-C387-umenie",
+    "RU-C387-usvaivat",
+    "RU-C387-otchislyat",
+    "RU-C387-obrazovannyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch387.txt",
+  "json": "russian/narration/ch387.json",
+  "textHash": "fnv1a64:b48e2df4d06754bf",
+  "jsonHash": "fnv1a64:df050465a11faf70",
+  "findings": []
+}

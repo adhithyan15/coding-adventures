@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-395-SBEREZHENIYA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-395-SBEREZHENIYA"
+  ],
+  "after": []
+}

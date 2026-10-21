@@ -1,0 +1,11 @@
+{
+  "id": "RU-C331-lepit",
+  "pathSegment": "RU-PATH-331-TESTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-331-TESTO",
+      "order": 3
+    }
+  ]
+}

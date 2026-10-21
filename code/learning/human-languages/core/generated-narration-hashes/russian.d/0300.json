@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:5ec967a933d51f1c",
+  "lessonIds": [
+    "RU-C300-navodneniye",
+    "RU-C300-zemletryaseniye",
+    "RU-C300-smerch",
+    "RU-C300-zasukha",
+    "RU-C300-zatoplyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch300.txt",
+  "json": "russian/narration/ch300.json",
+  "textHash": "fnv1a64:08da30a3d0e635ff",
+  "jsonHash": "fnv1a64:662eb1d2767d047f",
+  "findings": []
+}

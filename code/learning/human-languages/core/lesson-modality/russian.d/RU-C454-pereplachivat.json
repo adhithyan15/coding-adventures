@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C454-pereplachivat",
+    "language": "russian",
+    "chapter": 454,
+    "sequence": 25850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1829b549b732a275"
+  },
+  "findings": []
+}

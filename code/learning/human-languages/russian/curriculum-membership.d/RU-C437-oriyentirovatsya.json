@@ -1,0 +1,11 @@
+{
+  "id": "RU-C437-oriyentirovatsya",
+  "pathSegment": "RU-PATH-437-ZABLUDITSYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-437-ZABLUDITSYA",
+      "order": 1
+    }
+  ]
+}

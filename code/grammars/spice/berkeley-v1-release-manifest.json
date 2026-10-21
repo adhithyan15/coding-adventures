@@ -17,8 +17,8 @@
     "failureExitStatus": 1,
     "usageExitStatus": 2,
     "result": {
-      "schemaVersion": 2,
-      "topLevelFields": ["analyses", "schemaVersion", "title"],
+      "schemaVersion": 3,
+      "topLevelFields": ["analyses", "measures", "outputs", "rawfiles", "schemaVersion", "title", "wrdata"],
       "analysisFields": ["index", "kind", "temperatureKelvin", "records"]
     },
     "failureDiagnostic": {
@@ -39,7 +39,7 @@
     "Nested .subckt definitions",
     "MOS model LEVEL values other than 1",
     "Vendor-dialect and ngspice compatibility extensions",
-    ".control command execution"
+    "Arbitrary .control script execution and filesystem-backed writes"
   ],
   "scopeRule": "Cards and parameters outside this manifest are not Berkeley SPICE v1 compatibility promises."
 }

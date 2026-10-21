@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C449-chyolka",
+    "language": "russian",
+    "chapter": 449,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98eec37f45d8896d"
+  },
+  "findings": []
+}

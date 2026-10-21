@@ -1,0 +1,11 @@
+{
+  "id": "RU-C397-platnyy",
+  "pathSegment": "RU-PATH-397-OPLATA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-397-OPLATA",
+      "order": 3
+    }
+  ]
+}

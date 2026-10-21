@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "In the Stands",
+  "label": "ch:ru-in-the-stands",
+  "canDo": "I can talk about fans cheering at a match.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R508-review-501-508",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about fans cheering at a match.",
+    "assesses": [
+      "RU-LEX-C508-FANS-03",
+      "RU-LEX-C508-FANS-04",
+      "RU-LEX-C508-FANS-05"
+    ]
+  }
+}

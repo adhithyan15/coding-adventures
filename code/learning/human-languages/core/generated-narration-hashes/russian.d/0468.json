@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:86f8ead3cfa38c18",
+  "lessonIds": [
+    "RU-C468-zhara",
+    "RU-C468-dushnyy",
+    "RU-C468-dukhota",
+    "RU-C468-potet",
+    "RU-C468-tayat",
+    "RU-R468-review-467-468",
+    "RU-R468-review-final-468"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch468.txt",
+  "json": "russian/narration/ch468.json",
+  "textHash": "fnv1a64:01a926e1ed00e764",
+  "jsonHash": "fnv1a64:c46806d336c47f9b",
+  "findings": []
+}

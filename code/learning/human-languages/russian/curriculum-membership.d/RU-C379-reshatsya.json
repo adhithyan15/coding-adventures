@@ -1,0 +1,11 @@
+{
+  "id": "RU-C379-reshatsya",
+  "pathSegment": "RU-PATH-379-ZAPASNOY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-379-ZAPASNOY",
+      "order": 3
+    }
+  ]
+}

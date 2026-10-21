@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:25a1013d1023a915",
+  "lessonIds": [
+    "RU-C530-stirka",
+    "RU-C530-prishchepka",
+    "RU-C530-pyatno",
+    "RU-C530-razveshivat",
+    "RU-C530-otstiryvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch530.txt",
+  "json": "russian/narration/ch530.json",
+  "textHash": "fnv1a64:08544c7dc1b19006",
+  "jsonHash": "fnv1a64:920e3caa50a6444a",
+  "findings": []
+}

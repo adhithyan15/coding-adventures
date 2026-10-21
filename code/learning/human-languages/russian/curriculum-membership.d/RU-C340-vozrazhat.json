@@ -1,0 +1,11 @@
+{
+  "id": "RU-C340-vozrazhat",
+  "pathSegment": "RU-PATH-340-SOGLASIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-340-SOGLASIYE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-439-RAZVILKA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a route: a turn, a fork in the road, a dead end, taking a short cut and going round something.",
+  "prerequisites": []
+}

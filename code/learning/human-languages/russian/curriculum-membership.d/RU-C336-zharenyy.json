@@ -1,0 +1,11 @@
+{
+  "id": "RU-C336-zharenyy",
+  "pathSegment": "RU-PATH-336-GOTOVO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-336-GOTOVO",
+      "order": 3
+    }
+  ]
+}

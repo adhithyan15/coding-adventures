@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-486-FEVER",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-486-FEVER"
+  ],
+  "after": []
+}

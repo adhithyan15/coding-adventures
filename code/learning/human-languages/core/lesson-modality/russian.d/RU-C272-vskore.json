@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C272-vskore",
+    "language": "russian",
+    "chapter": 272,
+    "sequence": 16480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a11cee0dd382b5e2"
+  },
+  "findings": []
+}

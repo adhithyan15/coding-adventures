@@ -1,0 +1,11 @@
+{
+  "id": "RU-C388-narushenie",
+  "pathSegment": "RU-PATH-388-ZAKON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-388-ZAKON",
+      "order": 4
+    }
+  ]
+}

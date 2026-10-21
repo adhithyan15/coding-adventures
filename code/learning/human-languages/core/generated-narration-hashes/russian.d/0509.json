@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:25d4143e2ac9a41c",
+  "lessonIds": [
+    "RU-C509-vorota",
+    "RU-C509-vratar",
+    "RU-C509-napadayushchiy",
+    "RU-C509-gol",
+    "RU-C509-zabivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch509.txt",
+  "json": "russian/narration/ch509.json",
+  "textHash": "fnv1a64:92244f7b2054843f",
+  "jsonHash": "fnv1a64:8e38b3309d38d36d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:674bb26b8e6f47ba",
+  "lessonIds": [
+    "RU-C534-budit",
+    "RU-C534-vysypatsya",
+    "RU-C534-prichyosyvatsya",
+    "RU-C534-krasitsya",
+    "RU-C534-khalat",
+    "RU-R534-review-533-534",
+    "RU-R534-review-final-534"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch534.txt",
+  "json": "russian/narration/ch534.json",
+  "textHash": "fnv1a64:d8f36ad7ea303f4d",
+  "jsonHash": "fnv1a64:6914b9cc641df012",
+  "findings": []
+}

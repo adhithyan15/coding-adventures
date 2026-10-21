@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Seedlings and Blossom",
+  "label": "ch:ru-seedlings-and-blossom",
+  "canDo": "I can talk about growing flowers and trees.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C507-podrezat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about growing flowers and trees.",
+    "assesses": [
+      "RU-LEX-C507-BLOSSOM-03",
+      "RU-LEX-C507-BLOSSOM-04",
+      "RU-LEX-C507-BLOSSOM-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C461-shishka",
+  "pathSegment": "RU-PATH-461-POLYANA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-461-POLYANA",
+      "order": 4
+    }
+  ]
+}

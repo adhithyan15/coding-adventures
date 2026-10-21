@@ -1,0 +1,11 @@
+{
+  "id": "RU-C392-obyazyvat",
+  "pathSegment": "RU-PATH-392-OGRANICHENIYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-392-OGRANICHENIYA",
+      "order": 2
+    }
+  ]
+}

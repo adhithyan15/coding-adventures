@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:daf7986611bc5199",
+  "lessonIds": [
+    "RU-C299-nosilki",
+    "RU-C299-sirena",
+    "RU-C299-trevoga",
+    "RU-C299-dezhurnyy",
+    "RU-C299-vyzyvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch299.txt",
+  "json": "russian/narration/ch299.json",
+  "textHash": "fnv1a64:39fe5289bd548648",
+  "jsonHash": "fnv1a64:48ff041538cc60e3",
+  "findings": []
+}

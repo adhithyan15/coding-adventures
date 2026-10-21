@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:5a03dc997c6038fe",
+  "lessonIds": [
+    "RU-C358-vakansiya",
+    "RU-C358-sobesedovanie",
+    "RU-C358-kandidat",
+    "RU-C358-nanimat",
+    "RU-C358-stazh"
+  ],
+  "tex": "russian/book/chapters/ch358-looking-for-a-job.tex"
+}

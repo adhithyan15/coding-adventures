@@ -448,6 +448,34 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
         .map(|item| dce_program_item(item, st))
         .collect();
 
+    // CCR-086 (#15923): drop the dead tail after a top-level `throw`, as
+    // `dce_block_statement` does inside blocks. Upstream:
+    // `throw 1;console.log(1);` → `throw 1;`. Same hoisting guard: a tail
+    // holding any declaration (`var`, `function`, `class`, `let`, `const`)
+    // or a compound statement is kept whole.
+    let terminator = new_body
+        .iter()
+        .position(|item| matches!(item, ProgramItem::Statement(s) if is_terminator(s)));
+    if let Some(t) = terminator {
+        let tail = &new_body[t + 1..];
+        let safe = tail.iter().all(|item| match item {
+            ProgramItem::Statement(s) => tail_is_safe_to_truncate(std::slice::from_ref(s)),
+            ProgramItem::Declaration(_) => false,
+        });
+        if !tail.is_empty() && safe {
+            let removed: Vec<Option<String>> = tail.iter().map(program_item_cv).collect();
+            let before = new_body.len();
+            new_body.truncate(t + 1);
+            st.record_deletion(
+                &removed,
+                &prog.cv,
+                "removed-dead-code",
+                &format!("program with {} top-level items", before),
+                &format!("dropped {} items after top-level terminator", before - (t + 1)),
+            );
+        }
+    }
+
     // NOTE (CCR-053): `debugger` statements are NOT stripped here, and were
     // until 2026-09-23. The removed code claimed it was "matching upstream
     // Closure exactly". It was not — see `preserves_debugger_statement_in_block`
@@ -980,8 +1008,15 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                     // don't model fall-through across cases here,
                     // so bail. A future slice can concatenate
                     // consequents through the next terminator.
-                    if terminates && !target.consequent.is_empty() {
-                        let new_body = strip_trailing_break(&target.consequent);
+                    let new_body = strip_trailing_break(&target.consequent);
+                    // #17842: any OTHER unlabelled `break` aimed at this
+                    // switch (`if (x) break;`) would, once the switch is
+                    // gone, aim at whatever encloses it — exiting a loop, or
+                    // failing to parse. Keep the switch then.
+                    if terminates
+                        && !target.consequent.is_empty()
+                        && !has_break_targeting_enclosing(&new_body)
+                    {
                         st.record(
                             &s.cv,
                             "switch_collapsed_to_matched_case",
@@ -1414,6 +1449,59 @@ fn strip_trailing_break(consequent: &[Statement]) -> Vec<Statement> {
     } else {
         consequent.to_vec()
     }
+}
+
+/// Does any statement in `stmts` contain an unlabelled `break` that would
+/// exit the *enclosing* breakable construct (#17842)?
+///
+/// Used to keep a switch whose matched case still breaks out of it from
+/// mid-body:
+///
+/// ```js
+/// switch (1) { case 1: if (x) break; g(); break; }   // inner break → keep
+/// switch (1) { case 1: while (c) { break; } g(); }   // break targets the while
+/// ```
+///
+/// The walk enters plain blocks, `if`, `try`, `with` and labelled statements,
+/// whose `break`s still reach the enclosing construct. It does not enter loops
+/// or nested `switch`es, which capture their own unlabelled `break`, or
+/// functions, which no `break` crosses. A labelled `break` is never counted:
+/// it names its own target.
+fn has_break_targeting_enclosing(stmts: &[Statement]) -> bool {
+    stmts.iter().any(|s| match s {
+        Statement::Tagged(t) => match t {
+            TaggedStatement::BreakStatement(b) => b.label.is_none(),
+            TaggedStatement::BlockStatement(b) => has_break_targeting_enclosing(&b.body),
+            TaggedStatement::IfStatement(i) => {
+                has_break_targeting_enclosing(std::slice::from_ref(&*i.consequent))
+                    || i
+                        .alternate
+                        .as_deref()
+                        .is_some_and(|a| has_break_targeting_enclosing(std::slice::from_ref(a)))
+            }
+            TaggedStatement::LabeledStatement(l) => {
+                has_break_targeting_enclosing(std::slice::from_ref(&*l.body))
+            }
+            TaggedStatement::WithStatement(w) => {
+                has_break_targeting_enclosing(std::slice::from_ref(&*w.body))
+            }
+            TaggedStatement::TryStatement(t) => {
+                has_break_targeting_enclosing(&t.block.body)
+                    || t
+                        .handler
+                        .as_ref()
+                        .is_some_and(|h| has_break_targeting_enclosing(&h.body.body))
+                    || t
+                        .finalizer
+                        .as_ref()
+                        .is_some_and(|f| has_break_targeting_enclosing(&f.body))
+            }
+            // Loops and nested switches capture their own `break`.
+            _ => false,
+        },
+        // Declarations (including function bodies) contain no reachable break.
+        Statement::Declaration(_) => false,
+    })
 }
 
 /// Returns `true` when an inner BlockStatement's body can be
@@ -4145,4 +4233,122 @@ mod tests {
         let body = dce_loop_body(vec![continue_stmt(None), func_decl_stmt("h")]);
         assert_eq!(body.len(), 2, "{body:?}");
     }
+
+    // ---- #17842: a nested `break` must keep its switch -------------------
+    //
+    // `switch (1) { case 1: if (x) break; g(); break; }` — the inner `break`
+    // exits the SWITCH. Collapsing the switch to its case body would leave
+    // that `break` targeting whatever encloses it (a loop: the loop now
+    // exits; nothing: a SyntaxError). The collapse is declined unless the
+    // only switch-targeting `break` is the trailing one.
+
+    fn if_break(test: Expression) -> Statement {
+        Statement::if_statement(coding_adventures_javascript_ast::IfStatement {
+            cv: None,
+            test,
+            consequent: Box::new(break_stmt()),
+            alternate: None,
+        })
+    }
+
+    fn one_case_switch(consequent: Vec<Statement>) -> Statement {
+        switch_stmt(
+            num(1.0),
+            vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent,
+            }],
+        )
+    }
+
+    #[test]
+    fn nested_break_targeting_the_switch_blocks_the_collapse() {
+        let body = vec![one_case_switch(vec![
+            if_break(ident("x")),
+            expr_stmt(ident("g")),
+            break_stmt(),
+        ])];
+        let (out, _, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        let sw = extract_switch(&out); // still a switch
+        assert_eq!(sw.cases.len(), 1);
+    }
+
+    #[test]
+    fn break_inside_a_nested_loop_does_not_block_the_collapse() {
+        // case 1: while (c) { break; } g(); break;  — that inner `break`
+        // targets the `while`, so collapsing is still sound.
+        let inner_loop = Statement::while_statement(coding_adventures_javascript_ast::WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![break_stmt()],
+            })),
+        });
+        let body = vec![one_case_switch(vec![inner_loop, expr_stmt(ident("g")), break_stmt()])];
+        let (out, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert!(
+            contribs.iter().any(|c| c.tag == "switch_collapsed_to_matched_case"),
+            "expected the collapse: {:?}",
+            extract_function_body(&out).body
+        );
+    }
+
+    #[test]
+    fn trailing_break_alone_still_collapses() {
+        let body = vec![one_case_switch(vec![expr_stmt(ident("g")), break_stmt()])];
+        let (_, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert!(contribs.iter().any(|c| c.tag == "switch_collapsed_to_matched_case"));
+    }
+
+    // ---- CCR-086 (#15923): dead tail after a top-level `throw` ----------
+
+    fn throw_item() -> ProgramItem {
+        ProgramItem::Statement(Statement::throw_statement(
+            coding_adventures_javascript_ast::ThrowStatement { cv: None, argument: num(1.0) },
+        ))
+    }
+
+    fn run_top(body: Vec<ProgramItem>) -> Program {
+        let mut prog = program();
+        prog.body = body;
+        run_pass(prog).0
+    }
+
+    #[test]
+    fn ccr086_drops_statements_after_a_top_level_throw() {
+        // throw 1; g(); debugger; → throw 1;
+        let out = run_top(vec![
+            throw_item(),
+            ProgramItem::Statement(expr_stmt(ident("g"))),
+            ProgramItem::Statement(debugger_stmt()),
+        ]);
+        assert_eq!(out.body.len(), 1, "{:?}", out.body);
+    }
+
+    #[test]
+    fn ccr086_keeps_statements_before_the_throw() {
+        // f(); throw 1; g(); → f(); throw 1;
+        let out = run_top(vec![
+            ProgramItem::Statement(expr_stmt(ident("f"))),
+            throw_item(),
+            ProgramItem::Statement(expr_stmt(ident("g"))),
+        ]);
+        assert_eq!(out.body.len(), 2, "{:?}", out.body);
+    }
+
+    #[test]
+    fn ccr086_a_declaration_keeps_the_whole_tail() {
+        // throw 1; g(); function h(){} — `h` hoists, so nothing is dropped.
+        let out = run_top(vec![
+            throw_item(),
+            ProgramItem::Statement(expr_stmt(ident("g"))),
+            ProgramItem::Statement(func_decl_stmt("h")),
+        ]);
+        assert_eq!(out.body.len(), 3, "{:?}", out.body);
+        let out = run_top(vec![throw_item(), ProgramItem::Statement(let_decl_stmt("y"))]);
+        assert_eq!(out.body.len(), 2, "{:?}", out.body);
+    }
 }
+

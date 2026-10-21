@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C435-obsluzhivaniye",
+    "language": "russian",
+    "chapter": 435,
+    "sequence": 24840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb5dc94df5ee2b44"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:00d2a6699750904f",
+  "lessonIds": [
+    "RU-C433-shum",
+    "RU-C433-meshat",
+    "RU-C433-tarakan",
+    "RU-C433-seyf",
+    "RU-C433-nepoladka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch433.txt",
+  "json": "russian/narration/ch433.json",
+  "textHash": "fnv1a64:8d680fcce698b0c7",
+  "jsonHash": "fnv1a64:9af90b2576ea0621",
+  "findings": []
+}

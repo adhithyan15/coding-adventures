@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C393-notarius",
+    "language": "russian",
+    "chapter": 393,
+    "sequence": 22690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14893f6e92b72667"
+  },
+  "findings": []
+}

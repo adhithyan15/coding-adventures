@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:9906508e0947e42d",
+  "lessonIds": [
+    "RU-C438-ukazatel",
+    "RU-C438-tablichka",
+    "RU-C438-strelka",
+    "RU-C438-oriyentir",
+    "RU-C438-skhema"
+  ],
+  "tex": "russian/book/chapters/ch438-signs-and-landmarks.tex"
+}

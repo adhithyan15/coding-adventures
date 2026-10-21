@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C284-kommentirovat",
+    "language": "russian",
+    "chapter": 284,
+    "sequence": 17090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a5d6f0fd4efbc83"
+  },
+  "findings": []
+}

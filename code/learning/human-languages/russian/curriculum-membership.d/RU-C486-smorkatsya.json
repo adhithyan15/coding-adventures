@@ -1,0 +1,11 @@
+{
+  "id": "RU-C486-smorkatsya",
+  "pathSegment": "RU-PATH-486-FEVER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-486-FEVER",
+      "order": 2
+    }
+  ]
+}

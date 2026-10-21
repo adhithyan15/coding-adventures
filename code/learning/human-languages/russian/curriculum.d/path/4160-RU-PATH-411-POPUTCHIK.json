@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-411-POPUTCHIK",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-411-POPUTCHIK"
+  ],
+  "after": []
+}

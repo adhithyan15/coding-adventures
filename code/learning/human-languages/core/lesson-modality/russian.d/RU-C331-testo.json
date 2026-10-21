@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C331-testo",
+    "language": "russian",
+    "chapter": 331,
+    "sequence": 19470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b4dbb6aa03549da"
+  },
+  "findings": []
+}

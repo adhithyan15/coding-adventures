@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:ea8f0ebed200625e",
+  "lessonIds": [
+    "RU-C411-poputchik",
+    "RU-C411-poputka",
+    "RU-C411-podvozit",
+    "RU-C411-vysazhivat",
+    "RU-C411-pristyogivatsya"
+  ],
+  "tex": "russian/book/chapters/ch411-giving-someone-a-lift.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:5980f467d59a94d8",
+  "lessonIds": [
+    "RU-C293-sud",
+    "RU-C293-advokat",
+    "RU-C293-prigovor",
+    "RU-C293-tyurma",
+    "RU-C293-obvinyat"
+  ],
+  "tex": "russian/book/chapters/ch293-in-court.tex"
+}

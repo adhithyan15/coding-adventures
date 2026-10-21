@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Consoles and Bloggers",
+  "label": "ch:ru-consoles-and-bloggers",
+  "canDo": "I can talk about video games and people online.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C528-geymer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about video games and people online.",
+    "assesses": [
+      "RU-LEX-C528-GAMING-03",
+      "RU-LEX-C528-GAMING-04",
+      "RU-LEX-C528-GAMING-05"
+    ]
+  }
+}

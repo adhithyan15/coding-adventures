@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C492-otchim",
+    "language": "russian",
+    "chapter": 492,
+    "sequence": 27770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:983d6b8681a9095c"
+  },
+  "findings": []
+}

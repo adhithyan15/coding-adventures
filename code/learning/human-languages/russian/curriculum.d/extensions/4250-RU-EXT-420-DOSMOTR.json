@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-420-DOSMOTR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go through security and the border: the security check, searching bags, the border guard and the declaration.",
+  "prerequisites": []
+}

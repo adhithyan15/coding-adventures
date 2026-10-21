@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
-    DiagramDirection, DiagramIconGlyph, DiagramShape, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneGroup, LayoutedSwimlaneLane,
+    DiagramDirection, DiagramIconGlyph, DiagramLabel, DiagramShape, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneGroup, LayoutedSwimlaneLane,
     LayoutedSwimlaneNode, LayoutedTreeViewConnector, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
     LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
     LayoutedRailroadDiagram, LayoutedRailroadElement, LayoutedRailroadPath, LayoutedRailroadRule,
@@ -711,7 +711,7 @@ fn swimlane_edge_endpoints(
 
 fn swimlane_node_width(
     shape: &DiagramShape,
-    label: &str,
+    label: &DiagramLabel,
     style: &diagram_ir::DiagramStyle,
     theme_font_size: f64,
     wrapping_width: Option<f64>,
@@ -728,7 +728,8 @@ fn swimlane_node_width(
             let weight_scale = if style.font_weight.unwrap_or(400) >= 600 { 1.06 } else { 1.0 };
             let horizontal_padding = padding.map(|value| value * 2.0).unwrap_or(28.0);
             let minimum_width = 104.0 + horizontal_padding;
-            (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + horizontal_padding)
+            let longest_line = label.lines().map(|line| line.chars().count()).max().unwrap_or(0);
+            (longest_line as f64 * 7.2 * font_scale * weight_scale + horizontal_padding)
                 .clamp(minimum_width, wrapping_width.unwrap_or(360.0).max(minimum_width))
         }
     }

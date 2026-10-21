@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Making arrangements",
+  "label": "ch:ru-making-arrangements",
+  "canDo": "I can make an arrangement with someone, compare options and alternatives, and say that a decision is final.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C378-okonchatelnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can make an arrangement with someone, compare options and alternatives, and say that a decision is final.",
+    "assesses": [
+      "RU-LEX-C378-DOGOVORILIS-03",
+      "RU-LEX-C378-DOGOVORILIS-04",
+      "RU-LEX-C378-DOGOVORILIS-05"
+    ]
+  }
+}

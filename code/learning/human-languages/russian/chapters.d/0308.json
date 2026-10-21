@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "School and university",
+  "label": "ch:ru-school-and-university",
+  "canDo": "I can talk about a school-leaver, getting into university, finishing my studies, a degree and a school certificate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C308-attestat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about a school-leaver, getting into university, finishing my studies, a degree and a school certificate.",
+    "assesses": [
+      "RU-LEX-C308-VYPUSKNIK-03",
+      "RU-LEX-C308-VYPUSKNIK-04",
+      "RU-LEX-C308-VYPUSKNIK-05"
+    ]
+  }
+}

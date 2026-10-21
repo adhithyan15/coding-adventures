@@ -1,6 +1,11 @@
 cd ../directed-graph && npm install --silent
 cd ../state-machine && npm install --silent
 cd ../cli-builder && npm install --silent
+cd ../grammar-tools && npm install --silent
+cd ../lexer && npm install --silent
+cd ../toml-lexer && npm install --silent
+cd ../parser && npm install --silent
+cd ../toml-parser && npm install --silent
 cd ../forme-dev-server && npm install --silent
 cd ../forme-deploy-runner-core && npm install --silent
 cd ../forme-deploy-runner-fs-adapter && npm install --silent

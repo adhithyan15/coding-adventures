@@ -1,0 +1,11 @@
+{
+  "id": "RU-C398-strakhovat",
+  "pathSegment": "RU-PATH-398-ARENDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-398-ARENDA",
+      "order": 3
+    }
+  ]
+}

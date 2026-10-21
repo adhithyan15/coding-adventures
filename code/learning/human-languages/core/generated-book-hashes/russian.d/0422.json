@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:eb992e8a481018fd",
+  "lessonIds": [
+    "RU-C422-vylet",
+    "RU-C422-vyletat",
+    "RU-C422-prilyot",
+    "RU-C422-terminal",
+    "RU-C422-styuardessa"
+  ],
+  "tex": "russian/book/chapters/ch422-at-the-airport.tex"
+}

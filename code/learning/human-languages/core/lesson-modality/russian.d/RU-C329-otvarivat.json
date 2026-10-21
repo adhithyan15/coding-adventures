@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C329-otvarivat",
+    "language": "russian",
+    "chapter": 329,
+    "sequence": 19390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38cd5e0fb7c95b41"
+  },
+  "findings": []
+}

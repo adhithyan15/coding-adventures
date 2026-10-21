@@ -1248,7 +1248,7 @@ fn pinned_sequence_corpus_matches_upstream_acceptance() {
 }
 
 #[test]
-fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
+fn sequence_full_status_is_backed_by_complete_syntax_and_visual_corpora() {
     let syntax: Value = serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
     let visual: Value =
         serde_json::from_str(SEQUENCE_VISUAL_CORPUS).expect("sequence visual corpus must be JSON");
@@ -1266,7 +1266,7 @@ fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
         .iter()
         .map(|id| id.as_str().expect("visual fixture id"))
         .collect::<BTreeSet<_>>();
-    assert!(fixtures.is_subset(&valid));
+    assert_eq!(fixtures, valid, "visual corpus must cover every valid syntax fixture");
     assert_eq!(
         fixtures.len(),
         visual["fixtures"].as_array().expect("visual fixture array").len(),
@@ -1855,6 +1855,26 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
         .map(|fixture| fixture.as_str().expect("visual fixture name")).collect::<BTreeSet<_>>();
     assert_eq!(visual_names.len(), visual["fixtures"].as_array().expect("visual fixtures").len());
     assert!(visual_names.is_subset(&syntax_names));
+}
+
+#[test]
+fn swimlane_markdown_labels_preserve_rich_text_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph \"`**Intake**`\"\n  request[\"`Review **carefully**\\n_then act_`\"] -- \"`**Approved**`\" --> done[Done]\n  subgraph queue [\"`_Queue_`\"]\n    wait[\"`Wait *briefly*`\"]\n  end\nend",
+    ).expect("Swimlane Markdown strings should parse");
+
+    assert_eq!(diagram.lanes[0].label.text, "Intake");
+    assert!(diagram.lanes[0].label.markdown.is_some());
+    assert!(diagram.lanes[0].label.spans.iter().any(|span| span.bold));
+    assert_eq!(diagram.groups[0].label.text, "Queue");
+    assert!(diagram.groups[0].label.spans.iter().any(|span| span.italic));
+    let request = diagram.nodes.iter().find(|node| node.id == "request").unwrap();
+    assert_eq!(request.label.text, "Review carefully\nthen act");
+    assert!(request.label.spans.iter().any(|span| span.bold));
+    assert!(request.label.spans.iter().any(|span| span.italic));
+    let edge = diagram.edges.iter().find(|edge| edge.label.is_some()).unwrap();
+    assert_eq!(edge.label.as_ref().unwrap().text, "Approved");
+    assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.bold));
 }
 
 #[test]

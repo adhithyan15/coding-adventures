@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:08b6a620d79e5537",
+  "lessonIds": [
+    "RU-C440-perekhod",
+    "RU-C440-perekhodit",
+    "RU-C440-naberezhnaya",
+    "RU-C440-bulvar",
+    "RU-C440-alleya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch440.txt",
+  "json": "russian/narration/ch440.json",
+  "textHash": "fnv1a64:65d05d0edf9a3149",
+  "jsonHash": "fnv1a64:ba8c57f1134e7208",
+  "findings": []
+}

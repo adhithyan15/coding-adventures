@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:d4d9287983eac219",
+  "lessonIds": [
+    "RU-C314-salyut",
+    "RU-C314-feyerverk",
+    "RU-C314-konfetti",
+    "RU-C314-khlopushka",
+    "RU-C314-sharik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch314.txt",
+  "json": "russian/narration/ch314.json",
+  "textHash": "fnv1a64:f3a98c4694d16e54",
+  "jsonHash": "fnv1a64:cc32a1e70ea03bd8",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-450-SPRAVKA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with paperwork: a certificate, a form, a queue, getting documents done and certifying a copy.",
+  "prerequisites": []
+}

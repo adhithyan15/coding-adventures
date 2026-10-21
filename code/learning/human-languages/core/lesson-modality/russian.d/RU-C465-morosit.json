@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C465-morosit",
+    "language": "russian",
+    "chapter": 465,
+    "sequence": 26380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d2985e6cbfaca82"
+  },
+  "findings": []
+}

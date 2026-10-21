@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C414-perron",
+    "language": "russian",
+    "chapter": 414,
+    "sequence": 23760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05bf3468950d12b1"
+  },
+  "findings": []
+}

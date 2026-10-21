@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C393-zayavlenie",
+    "language": "russian",
+    "chapter": 393,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9466406a0efaf51"
+  },
+  "findings": []
+}

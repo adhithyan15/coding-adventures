@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C391-yuridicheskiy",
+    "language": "russian",
+    "chapter": 391,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:056c6cf1a8ce57cd"
+  },
+  "findings": []
+}

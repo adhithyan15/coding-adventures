@@ -1,0 +1,11 @@
+{
+  "id": "RU-C498-druzhba",
+  "pathSegment": "RU-PATH-498-FRIENDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-498-FRIENDS",
+      "order": 1
+    }
+  ]
+}

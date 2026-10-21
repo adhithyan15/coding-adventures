@@ -1,0 +1,11 @@
+{
+  "id": "RU-C416-provodnik",
+  "pathSegment": "RU-PATH-416-PROVODNIK",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-416-PROVODNIK",
+      "order": 0
+    }
+  ]
+}

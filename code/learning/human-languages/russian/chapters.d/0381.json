@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Exam time",
+  "label": "ch:ru-exam-time",
+  "canDo": "I can talk about the exam period, a pass-or-fail test, a seminar, my lecture notes and the points I scored.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C381-ball",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about the exam period, a pass-or-fail test, a seminar, my lecture notes and the points I scored.",
+    "assesses": [
+      "RU-LEX-C381-SESSIYA-03",
+      "RU-LEX-C381-SESSIYA-04",
+      "RU-LEX-C381-SESSIYA-05"
+    ]
+  }
+}

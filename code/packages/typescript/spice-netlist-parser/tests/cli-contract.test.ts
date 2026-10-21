@@ -72,6 +72,8 @@ describe("Berkeley SPICE CLI contract", () => {
           temperatureKelvin: readonly number[];
           outputTemperaturesKelvin: readonly number[];
           measureTemperaturesKelvin: readonly number[];
+          measureAnalyses: readonly string[];
+          measureNames: readonly string[];
         };
       }[];
     };
@@ -79,13 +81,15 @@ describe("Berkeley SPICE CLI contract", () => {
     const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
       analyses: readonly { index: number; temperatureKelvin: number }[];
       outputs: readonly { temperatureKelvin: number }[];
-      measures: readonly { temperatureKelvin: number }[];
+      measures: readonly { temperatureKelvin: number; analysis: string; name: string }[];
     };
 
     expect(payload.analyses.map((analysis) => analysis.index)).toEqual(testCase.expected.analysisIndexes);
     expect(payload.analyses.map((analysis) => analysis.temperatureKelvin)).toEqual(testCase.expected.temperatureKelvin);
     expect(payload.outputs.map((output) => output.temperatureKelvin)).toEqual(testCase.expected.outputTemperaturesKelvin);
     expect(payload.measures.map((measure) => measure.temperatureKelvin)).toEqual(testCase.expected.measureTemperaturesKelvin);
+    expect(payload.measures.map((measure) => measure.analysis)).toEqual(testCase.expected.measureAnalyses);
+    expect(payload.measures.map((measure) => measure.name)).toEqual(testCase.expected.measureNames);
   });
 
   it("exposes deck-selected outputs and evaluated measures", () => {
@@ -106,12 +110,36 @@ describe("Berkeley SPICE CLI contract", () => {
     expect(payload.measures).toEqual(testCase.expected.measures);
   });
 
+  it("exposes rawfile and WRDATA output artifacts", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { rawfiles: unknown; wrdata: unknown };
+      }[];
+    };
+    const testCase = corpus.cases.find((candidate) => candidate.id === "raw-output-artifacts")!;
+    const payload = JSON.parse(runNetlistJson(testCase.deck)) as { rawfiles: unknown; wrdata: unknown };
+
+    expect(payload.rawfiles).toEqual(testCase.expected.rawfiles);
+    expect(payload.wrdata).toEqual(testCase.expected.wrdata);
+  });
+
   it("runs the bundled CLI against standard input", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
       "utf8",
-    )) as { cases: readonly { deck: string; expected: { title: string } }[] };
-    const testCase = corpus.cases[0]!;
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { title: string; rawfiles: unknown; wrdata: unknown };
+      }[];
+    };
+    const testCase = corpus.cases.find((candidate) => candidate.id === "raw-output-artifacts")!;
     const result = spawnSync(
       process.execPath,
       [fileURLToPath(new URL("../dist/cli.js", import.meta.url)), "run", "--json", "-"],
@@ -119,7 +147,10 @@ describe("Berkeley SPICE CLI contract", () => {
     );
 
     expect(result.status, result.stderr).toBe(0);
-    expect(JSON.parse(result.stdout).title).toBe(testCase.expected.title);
+    const payload = JSON.parse(result.stdout) as { title: string; rawfiles: unknown; wrdata: unknown };
+    expect(payload.title).toBe(testCase.expected.title);
+    expect(payload.rawfiles).toEqual(testCase.expected.rawfiles);
+    expect(payload.wrdata).toEqual(testCase.expected.wrdata);
   });
 
   it("inspects the complete runnable plan through the API and CLI", () => {

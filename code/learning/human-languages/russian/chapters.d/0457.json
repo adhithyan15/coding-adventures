@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Packing and delivery",
+  "label": "ch:ru-packing-and-delivery",
+  "canDo": "I can send things: packing, wrapping, delivery, delivering and the courier.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C457-kuryer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can send things: packing, wrapping, delivery, delivering and the courier.",
+    "assesses": [
+      "RU-LEX-C457-DOSTAVKA-03",
+      "RU-LEX-C457-DOSTAVKA-04",
+      "RU-LEX-C457-DOSTAVKA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C386-referat",
+    "language": "russian",
+    "chapter": 386,
+    "sequence": 22320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:391c6ae7e4b8c50c"
+  },
+  "findings": []
+}

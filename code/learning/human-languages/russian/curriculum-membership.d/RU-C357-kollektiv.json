@@ -1,0 +1,11 @@
+{
+  "id": "RU-C357-kollektiv",
+  "pathSegment": "RU-PATH-357-SOTRUDNIK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-357-SOTRUDNIK",
+      "order": 4
+    }
+  ]
+}

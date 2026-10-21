@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:141040f939e9bd9e",
+  "lessonIds": [
+    "RU-C316-karnaval",
+    "RU-C316-maskarad",
+    "RU-C316-parad",
+    "RU-C316-shestviye",
+    "RU-C316-yarmarka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch316.txt",
+  "json": "russian/narration/ch316.json",
+  "textHash": "fnv1a64:e22b7402308f954d",
+  "jsonHash": "fnv1a64:a8077299cd12031d",
+  "findings": []
+}
