@@ -804,6 +804,21 @@ It does not apply the selected anchor's name constraints, validate the target's
 role, purpose, validity, or identity, construct a multi-hop path, apply path
 length or other constraints, check revocation, or provide TLS, HTTP, OAuth
 transport, or network authority.
+The next bounded composition is `x509-server-certificate-policy`. It consumes
+certificate-wide end-entity role-policy evidence and certificate-bound,
+caller-selected algorithm-policy evidence, rejecting them unless they retain
+the same exact decoded target certificate and the role is exactly end entity.
+Only then does it apply the existing SAN-only server-identity matcher, inclusive
+validity classifier at one explicit validated observation, and one explicit
+non-empty Extended Key Usage purpose policy to that same certificate. Its
+non-copyable result retains the two certificate-bound inputs plus the identity,
+validity, and purpose results so later path code cannot silently recombine
+detached evidence from different decoded certificate objects. The caller still
+owns critical-extension recognition, algorithm profiles, reference identity,
+time authority, and requested purpose. This target-only policy composition does
+not authenticate an issuer link, recognize or constrain a trust anchor,
+construct or validate a certification path, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or open a network connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
