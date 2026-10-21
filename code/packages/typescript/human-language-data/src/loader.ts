@@ -47,6 +47,7 @@ import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
 import { buildCurriculumGapReport } from "./report.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
+import { lessonCacheFor, type LessonCache } from "./lesson-cache.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   type ExamContentDimension,
@@ -690,10 +691,56 @@ export function loadTrackLessons(
   const lessonsDir = join(root, language, "lessons");
   if (!existsSync(lessonsDir)) return [];
   const script = trackScript(root, language);
-  return readdirSync(lessonsDir)
+  const files = readdirSync(lessonsDir)
     .sort()
-    .filter((file) => file.endsWith(".md"))
-    .map((file) => parseLesson(readFileSync(join(lessonsDir, file), "utf8"), language, script));
+    .filter((file) => file.endsWith(".md"));
+  // `undefined` everywhere except inside the test suite, and there only for the
+  // real curriculum root — see `lesson-cache.ts`. Every CLI process and
+  // generator takes the plain branch, which is this function exactly as it was
+  // before the cache existed.
+  const cache = lessonCacheFor(root);
+  if (cache === undefined) {
+    return files.map((file) =>
+      parseLesson(readFileSync(join(lessonsDir, file), "utf8"), language, script),
+    );
+  }
+  return cachedTrackLessons(cache, lessonsDir, files, language, script);
+}
+
+/**
+ * `loadTrackLessons` for a process that has the lesson cache turned on.
+ *
+ * Every file is still READ on every call — the bytes are the cache key, which is
+ * what makes a stale answer impossible rather than merely unlikely. What a hit
+ * saves is the parse — frontmatter, body blocks and `sourceHash` — which is
+ * about two thirds of a full `loadEverything()`.
+ *
+ * Only the guarded, validated part of the loader sits behind the cache. The
+ * track id check, the `existsSync` probe and `trackScript`'s symlink refusal all
+ * run above, on every call, hit or miss; and a lesson the parser rejects throws
+ * here on every call too, because only a SUCCESSFUL parse is ever written.
+ *
+ * `Buffer#toString("utf8")` is what `readFileSync(path, "utf8")` does
+ * internally, so a miss parses exactly the string the uncached branch would.
+ */
+function cachedTrackLessons(
+  cache: LessonCache,
+  lessonsDir: string,
+  files: readonly string[],
+  language: string,
+  script: Script | undefined,
+): ParsedLesson[] {
+  const sources = files.map((name) => ({ name, bytes: readFileSync(join(lessonsDir, name)) }));
+  const key = cache.key({ language, script, files: sources });
+  const hit = cache.read(language, key);
+  // The length check is not what keeps a hit honest — the key and the digest do
+  // that — but it is free, and it turns a wildly wrong entry into a miss.
+  if (hit !== undefined && hit.length === sources.length) return hit;
+  const lessons = sources.map(({ bytes }) =>
+    parseLesson(bytes.toString("utf8"), language, script),
+  );
+  cache.write(language, key, lessons);
+  return lessons;
 }
 
 export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {

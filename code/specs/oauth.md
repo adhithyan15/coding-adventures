@@ -733,6 +733,28 @@ the target certificate and trust anchor are outside this transition. Path
 construction, complete path validation, trust-anchor constraints, name
 constraints, revocation, TLS, HTTP, and network effects remain separate
 blockers, so concrete HTTPS remains unavailable.
+A bounded evidence-binding follow-up now invokes one caller-supplied Name
+comparator exactly once with an exact certificate's issuer followed by its
+subject and retains a non-copyable reference to that certificate with the
+self-issued result. The path-length package can consume that evidence, derive
+the issuing-CA role check from the same certificate, and then apply the state
+transition, preventing accidental cross-certificate mixing. The comparator
+still owns all RFC 5280 Name normalization and equality semantics; the result
+does not prove self-signature, construct a path, or grant trust. Complete Name
+comparison, path construction and validation, trust-anchor constraints, name
+constraints, revocation, TLS, HTTP, and network effects remain blockers.
+A bounded `x509-certificate-issuer-candidate-selection` path-construction
+prerequisite now scans one caller-bounded pool of decoded candidate
+certificates in caller order. It invokes caller-owned Name policy exactly once
+per candidate with the child's issuer followed by that candidate's subject,
+rejects zero or multiple matches after a complete accepted-pool scan, and
+returns non-copyable evidence binding the exact child, selected candidate, and
+candidate index. The selector embeds no Name normalization or equality rule and
+does not grant a CA role, authenticate the selected link, recognize a trust
+anchor, or validate a path. Complete RFC 4518 and schema-specific Name
+comparison, algorithm routing and link authentication, full path construction
+and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
+network effects remain blockers.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

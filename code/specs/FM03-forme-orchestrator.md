@@ -1,9 +1,8 @@
 # FM03 — Forme Orchestrator: Pipeline Configuration and Execution
 
-> **Status:** The shipped headless and extensible product paths are implemented.
-> The 2026-10-18 audit found that the declarative TOML form in §2.3 remains a
-> specification-conformance gap; FM-B073 tracks it to completion. Read alongside
-> FM00 (vision) and FM01 (kernel).
+> **Status:** The shipped headless and extensible product paths, including the
+> declarative TOML form in §2.3, are implemented. Read alongside FM00 (vision)
+> and FM01 (kernel).
 > **Scope:** The orchestrator runtime — pipeline configuration format,
 > DAG construction, type checking, execution scheduling, streaming,
 > caching, incremental rebuild, watch mode, reproducible builds,
@@ -19,7 +18,7 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Config validation and typed DAG | Implemented | `forme-pipeline-config` and `forme-orchestrator` power both live sites. |
-| Declarative TOML configuration | Active | FM-B073 adds bounded parsing, TS-form parity, FM02 resolution, and CLI product acceptance. |
+| Declarative TOML configuration | Implemented | Bounded parsing, TS-form parity, FM02 resolution, and CLI product acceptance are covered by FM-B073. |
 | Deterministic fan-in/fan-out | Implemented | Named ports, bounded multicast, and stable ordering are tested. |
 | Persistent cache and affected set | Implemented | External source ledgers and topology checkpoints work across CLI processes. |
 | Concurrent scheduling and cancellation | Implemented | One FIFO permit pool bounds ready stages, items, and iterator pulls. |
@@ -320,6 +319,43 @@ config = { out = "./dist" }
 The TS form is canonical; the TOML form compiles to the TS form. Any
 TOML-only feature is a feature gap — both forms must be expressively
 equivalent. Code reviewers hold this rule strictly.
+
+`forme-pipeline-config` exposes the pure transform
+`parseTomlConfig(source)`. The product CLI reads an explicitly selected
+`.toml` file (or discovers `forme.config.toml`) and passes its UTF-8 text to
+that transform. TypeScript/JavaScript config files continue through
+`loadTsConfig`; unknown extensions are rejected rather than guessed.
+
+The declarative spelling lowers as follows:
+
+- `[settings]` uses kebab-case keys: `storage-root`, `cache-dir`,
+  `reproducible-build`, `max-concurrency`, `log-level`, `best-effort`, and
+  `deadline-ms`. `max-concurrency` and `deadline-ms` omit to `null`; the other
+  settings are required. `[settings.plugin-runtimes.<kind>]` supplies the
+  canonical `{ executable, root }` pair for `deno`, `bun`, or `python`.
+- Each `[[stages]]` requires a string `stage`, lowered to
+  `{ kind = "stage-ref", packageName = stage }`. Optional `export`, `id`,
+  `config`, and string-array `capabilities` fields lower directly to the
+  corresponding `StageInstanceSpec` fields.
+- Each `[[wires]]` requires inline-table `from` and `to` values with `id` and
+  optional `port` strings. Each `[[outputs]]` uses `from-instance` and `name`.
+- The root, settings, stage, wire, output, endpoint, and plugin-runtime tables
+  are closed: unknown keys fail with their full path. Stage `config` tables
+  remain open because their schema belongs to the referenced stage.
+
+The parser fails closed before constructing a `PipelineConfig`: duplicate
+assignments or table declarations (including dotted-key/table and
+array-of-tables/table conflicts), conflicting table/scalar paths, unsupported
+TOML constructs, unsafe key segments (`__proto__`, `constructor`, or
+`prototype`), non-finite numbers, and schema/type mismatches are errors. It
+builds only null-prototype intermediate tables and enforces explicit source,
+token, nesting-depth, collection-size, and string-size bounds before and while
+walking the grammar AST. Lexing is linear in the bounded input size. CLI file
+admission rejects links, multiply-linked files, and non-regular files before a
+potentially blocking read, then binds the opened handle to stable pre/post file
+identity. Diagnostics are ASCII-only, control-safe, and bounded. This makes a
+declarative config data, not executable code, while retaining the exact same
+downstream FM02 resolution and FM03 validation path as the TypeScript form.
 
 ### 2.4 Validation
 
@@ -1232,8 +1268,9 @@ follows the repo standards (`package.json`, `BUILD`, `BUILD_windows`,
 
 ### 13.1 `@coding-adventures/forme-pipeline-config`
 
-Pure types and parsers for pipeline configs. Depends only on
-`forme-types` and `forme-errors`.
+Pure types and parsers for pipeline configs. Depends on `forme-types`,
+`forme-stage`, `forme-capability`, `forme-errors`, `toml-lexer`, and
+`toml-parser`.
 
 - `src/config-types.ts` — `PipelineConfig`, `PipelineSettings`,
   `StageInstanceSpec`, `StageRef`, `EdgeSpec`, `OutputSpec`
@@ -1315,8 +1352,12 @@ forme-types → forme-errors → forme-identity → forme-pipeline-config
 
 ### 14.1 `forme-pipeline-config`
 
-- Round-trip: `parseTomlConfig(serialiseTomlConfig(c)) === c` for
-  representative configs.
+- Differential parity: representative declarative configs lower to the same
+  canonical value returned by the TypeScript loader.
+- TOML rejection: duplicate/conflicting paths, unknown closed-schema fields,
+  unsafe keys, malformed scalars, adversarial unterminated strings, unsafe
+  file identities/types, diagnostic controls, and every explicit resource
+  limit fail deterministically.
 - TS form: `loadTsConfig(...)` correctly imports and validates.
 - Validation: every documented rejection reason has a test.
 - Type-level tests: the `PipelineConfig` shape is preserved across

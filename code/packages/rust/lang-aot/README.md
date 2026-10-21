@@ -30,8 +30,9 @@ an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
 `2^53`, including exact additive composition; fractional factors, non-unit
-divisors, denominator roots, repeated roots, and oversized products stay
-conservative. Unary
+integer division, denominator roots, repeated roots, and oversized products
+stay conservative. A non-unit static divisor is accepted only when it divides
+every possible exact integer value of the sign-rooted transform. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
