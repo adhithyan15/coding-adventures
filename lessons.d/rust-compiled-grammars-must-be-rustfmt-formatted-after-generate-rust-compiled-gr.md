@@ -11,8 +11,11 @@ Rust: one array element per line, different wrapping. The committed
 drift (#17877). Running `rustfmt --edition 2021` on the regenerated file gave
 a zero diff against the committed one.
 
-Do this: after regenerating, run `rustfmt --edition 2021` on each
-`_grammar.rs`, then diff. Before trusting any regeneration diff, regenerate
+Do this: after regenerating, match the format the committed file already
+has. `javascript-parser/src/_grammar.rs` is rustfmt-formatted, so run
+`rustfmt --edition 2021` on it. `javascript-lexer/src/_grammar.rs` is
+committed raw, so leave it unformatted: rustfmt there turns a 200-line
+pattern change into an 800-line diff. Then diff. Before trusting any regeneration diff, regenerate
 from the untouched grammars first: the baseline diff should be zero, so
 whatever is left is your change. Revert generated files your change doesn't
 own (here, `javascript-lexer/src/_grammar.rs` had real but unrelated
