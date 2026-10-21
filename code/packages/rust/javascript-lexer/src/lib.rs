@@ -282,6 +282,59 @@ mod tests {
     use super::*;
     use lexer::token::{TokenType, TOKEN_PRECEDED_BY_NEWLINE};
 
+    /// Token values (empty EOF dropped) for an ES2025 lex.
+    fn values(src: &str) -> Vec<String> {
+        tokenize_javascript_typed(src, EsVersion::Es2025)
+            .unwrap()
+            .into_iter()
+            .map(|t| t.value)
+            .filter(|v| !v.is_empty())
+            .collect()
+    }
+
+    #[test]
+    fn block_comments_ending_in_extra_stars_are_comments() {
+        // `([^*]|\*[^/])*` ate the `*` that starts `*/` (#17888).
+        for src in ["/***/ a", "/* x **/ a", "/****/ a", "/* * / */ a", "/**\n * doc\n **/ a"] {
+            assert_eq!(values(src), vec!["a"], "{src:?}");
+        }
+    }
+
+    #[test]
+    fn line_comments_and_hashbangs_end_at_a_carriage_return() {
+        // `\r` ends a line in JavaScript; `[^\n]*` swallowed the code after it.
+        assert_eq!(values("a // c\rb"), vec!["a", "b"]);
+        // HASHBANG is a token; it ends at the `\r`, and `b` is code.
+        assert_eq!(values("#!/usr/bin/env node\rb"), vec!["#!/usr/bin/env node", "b"]);
+    }
+
+    #[test]
+    fn a_regex_never_spans_a_carriage_return() {
+        // A regex literal can't hold a line terminator, escaped or not.
+        let toks = tokenize_javascript_typed("x = /a\rb/", EsVersion::Es2025);
+        assert!(toks.map_or(true, |t| t.iter().all(|t| t.type_name.as_deref() != Some("REGEX"))));
+        let toks = tokenize_javascript_typed("x = /a\\\rb/", EsVersion::Es2025);
+        assert!(toks.map_or(true, |t| t.iter().all(|t| t.type_name.as_deref() != Some("REGEX"))));
+        // Ordinary regexes still lex.
+        assert!(values("x = /a\\/b/g").contains(&"/a\\/b/g".to_string()));
+    }
+
+    #[test]
+    fn a_dollar_before_the_closing_backtick_ends_the_template() {
+        // `\$[^{]` consumed `$` + backtick, so `\`$\`` ran on to the next
+        // backtick, swallowing code (#17886).
+        assert_eq!(values("x = `$` + y"), vec!["x", "=", "`$`", "+", "y"]);
+        assert_eq!(values("x = `a$$` ; y"), vec!["x", "=", "`a$$`", ";", "y"]);
+        // `$${` is a literal `$` then a substitution.
+        let toks = tokenize_javascript_typed("x = `$${y}`", EsVersion::Es2025).unwrap();
+        let kinds: Vec<_> = toks.iter().filter_map(|t| t.type_name.clone()).collect();
+        assert!(kinds.iter().any(|k| k == "TEMPLATE_HEAD"), "{kinds:?}");
+        assert!(kinds.iter().any(|k| k == "TEMPLATE_TAIL"), "{kinds:?}");
+        // `$` before a substitution's closing tail, and a lone `$x`.
+        assert!(tokenize_javascript_typed("x = `${a}$`", EsVersion::Es2025).is_ok());
+        assert_eq!(values("x = `$a`"), vec!["x", "=", "`$a`"]);
+    }
+
     #[test]
     fn division_only_goal_keeps_slashes_separate_in_every_version() {
         for &version in EsVersion::ALL {

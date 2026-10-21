@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-182-A2-WEEKDAY-SCHEDULE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-182-A2-WEEKDAY-SCHEDULE"
+  ],
+  "after": []
+}

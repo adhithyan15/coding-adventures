@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "PA-C182-airhaa-ai",
+    "language": "punjabi",
+    "chapter": 182,
+    "sequence": 9620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:413472ca289bfeec",
+    "detachableSegments": [
+      "Script you'll notice: ਐ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

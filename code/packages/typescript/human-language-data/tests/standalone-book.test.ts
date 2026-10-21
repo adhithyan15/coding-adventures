@@ -2,10 +2,17 @@
 
 import { describe, expect, it } from "vitest";
 import { generatedBookOutputs } from "../src/book-cli.js";
-import { loadBookCorpus, loadEverything } from "../src/loader.js";
+import { loadBookCorpus, loadLessons } from "../src/loader.js";
 import { canonicalLessonSource } from "../src/hash.js";
 
 const BOOKS = loadBookCorpus().books;
+// Every real lesson, read ONCE for the file. Two places below walk them, and each
+// used to call `loadEverything()`, which also reads every curriculum membership
+// owner, the script tables and the book corpus again — about 4 s, the larger part
+// of the frontmatter case's cost, inside a 30 s budget that a loaded macOS runner
+// overran. Only the lessons are read here, through the loader `loadEverything`
+// itself calls; nothing below mutates them.
+const LESSONS = loadLessons();
 const GENERATED_BOOKS = generatedBookOutputs();
 
 function projectedEntrypoint(path: string): string {
@@ -35,7 +42,7 @@ const CHAPTERS = [
 // and it is the authored source of truth, so it is held to the same rule.
 const SURFACES = [
   ...CHAPTERS,
-  ...loadEverything().lessons.map((lesson) => ({
+  ...LESSONS.map((lesson) => ({
     source: `${lesson.language}/lessons/${lesson.realization.lessonId}.md`,
     // canonicalLessonSource returns JSON, where a line break is the two-character
     // escape `\n`, not a newline. Un-escaping matters twice: `\\s+` in the patterns
@@ -80,7 +87,7 @@ describe("a reader holding the PDF", () => {
     // Frontmatter still reaches the narration export and the app, and it is the
     // authored source of truth, so it is held to the same rule.
     const offenders: string[] = [];
-    for (const lesson of loadEverything().lessons) {
+    for (const lesson of LESSONS) {
       const own = TRACK_PREFIX[lesson.language];
       expect(own, `${lesson.language}: no TRACK_PREFIX entry`).toBeDefined();
       for (const [, prefix] of canonicalLessonSource(lesson).matchAll(/\b([A-Z]{2})-C\d+/g)) {

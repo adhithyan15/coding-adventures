@@ -254,8 +254,9 @@ remain conservative. Exact whole-number division is also permitted when the
 bounded result is the numerator and every possible transformed integer is
 divisible by the static nonzero divisor. Inexact or variable divisors and a
 bounded denominator remain conservative. Static whole-number factors may
-precede the bounded numerator when multiplication alone connects them to its
-root; a division before that root remains conservative.
+precede the bounded numerator, including exact divisions among those factors,
+provided multiplication connects the resulting prefix to its root; division
+by that root remains conservative.
 An exact variable-free exponent chain evaluating to one may preserve the
 bounded result before `entier`; other or dynamic exponents remain conservative.
 Additional built-in `entier` calls may wrap that already integral bounded

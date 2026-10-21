@@ -4811,9 +4811,9 @@ impl Compiler {
                 }
                 let mut proof = rooted?;
                 let rooted_index = rooted_index?;
-                if (1..rooted_index).step_by(2).any(
-                    |index| matches!(sequence.get(index), Some(Piece::Op(op)) if op == "/"),
-                ) {
+                if rooted_index > 0
+                    && matches!(sequence.get(rooted_index - 1), Some(Piece::Op(op)) if op == "/")
+                {
                     return None;
                 }
                 for (operator, units) in static_terms {
@@ -14801,6 +14801,7 @@ mod tests {
     {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier((6 * sign(pick())) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(12 / 2 * sign(pick()) / 3); output(result) end",
             "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier((2 * ((sign(pick()) * 4) + 2)) / 2))) end",
             "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((6 * sign(left)) + 6) else ((9 * sign(right)) + 6)) / 3); output(result) end",
         ] {
@@ -14826,7 +14827,7 @@ mod tests {
             "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier((sign(pick()) * 4) / divisor); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 4) / 0); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((6 / sign(pick())) / 3); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(12 / 2 * sign(pick()) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(3 / 2 * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("inexact, dynamic, and zero divisors must fail closed");

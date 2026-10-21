@@ -5,6 +5,23 @@
   names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
   behaviour change: backends do not read the field.
 
+## [0.62.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `call void
+  @__iir_write_f64(double x, i32 layout)`. The definition is module-local
+  `linkonce_odr` IR (`src/lang83_f64.rs`), like PR1b's `@__iir_write_i64`. It
+  holds the Burger–Dybvig shortest-digits core over `alloca [40 x i64]` big
+  integers, the Python / JavaScript layout, and output through libc
+  `putchar`. A `.ll` that prints a float links with nothing but libc.
+  `putchar` is declared once even when the module also uses it. A module that
+  prints a float and defines a function named `__iir_*` is refused (the
+  security review: a duplicate definition would otherwise be a confusing
+  clang error).
+- Checked by compiling the IR with clang 18 at `-O0` and `-O2` and comparing
+  against host `python3` (535 432 values) and `node` (402 112 values): no
+  mismatch. New tests pin the one-routine / one-declaration shape and run 19
+  edge values on real clang.
+
 ## [0.61.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**

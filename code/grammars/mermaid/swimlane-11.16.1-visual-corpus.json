@@ -72,6 +72,7 @@
     "edge-identifiers",
     "edge-class-styles",
     "edge-label-typography-styles",
+    "edge-label-typography-layout",
     "positional-link-styles",
     "positional-link-curves",
     "edge-animation-config",
