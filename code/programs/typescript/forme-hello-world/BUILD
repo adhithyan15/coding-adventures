@@ -50,6 +50,12 @@ set -e
 # Tools (npm, npx, node, tsx) are expected on PATH (mise shims locally;
 # CI installs Node directly via actions/setup-node).
 
+cd ../../../packages/typescript/cli-builder && npm install --silent
+cd ../../../packages/typescript/grammar-tools && npm install --silent
+cd ../../../packages/typescript/lexer && npm install --silent
+cd ../../../packages/typescript/toml-lexer && npm install --silent
+cd ../../../packages/typescript/parser && npm install --silent
+cd ../../../packages/typescript/toml-parser && npm install --silent
 cd ../../../packages/typescript/document-ast && npm install --silent
 cd ../../../packages/typescript/forme-types && npm install --silent
 cd ../../../packages/typescript/forme-interactivity-ir && npm install --silent

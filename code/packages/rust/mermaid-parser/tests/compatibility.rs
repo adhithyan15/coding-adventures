@@ -1858,6 +1858,48 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
 }
 
 #[test]
+fn swimlane_markdown_labels_preserve_rich_text_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph \"`**Intake**`\"\n  request[\"`Review **carefully**\\n_then act_`\"] -- \"`**Approved**`\" --> done[Done]\n  subgraph queue [\"`_Queue_`\"]\n    wait[\"`Wait *briefly*`\"]\n  end\nend",
+    ).expect("Swimlane Markdown strings should parse");
+
+    assert_eq!(diagram.lanes[0].label.text, "Intake");
+    assert!(diagram.lanes[0].label.markdown.is_some());
+    assert!(diagram.lanes[0].label.spans.iter().any(|span| span.bold));
+    assert_eq!(diagram.groups[0].label.text, "Queue");
+    assert!(diagram.groups[0].label.spans.iter().any(|span| span.italic));
+    let request = diagram.nodes.iter().find(|node| node.id == "request").unwrap();
+    assert_eq!(request.label.text, "Review carefully\nthen act");
+    assert!(request.label.spans.iter().any(|span| span.bold));
+    assert!(request.label.spans.iter().any(|span| span.italic));
+    let edge = diagram.edges.iter().find(|edge| edge.label.is_some()).unwrap();
+    assert_eq!(edge.label.as_ref().unwrap().text, "Approved");
+    assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.bold));
+}
+
+#[test]
+fn swimlane_markdown_labels_accept_authored_line_breaks() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph \"`Customer\n**Care**`\"\n  request[\"`Review **carefully**\n_then act_`\"]\n  done[Done]\n  request -- \"`Needs\n**approval**`\" --> done\n  subgraph queue [\"`Review\n_queue_`\"]\n    wait[Wait]\n  end\nend",
+    ).expect("authored Swimlane Markdown line breaks should parse");
+
+    assert_eq!(diagram.lanes[0].label.text, "Customer\nCare");
+    assert_eq!(diagram.groups[0].label.text, "Review\nqueue");
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "request").unwrap().label.text,
+        "Review carefully\nthen act");
+    assert_eq!(diagram.edges[0].label.as_ref().unwrap().text, "Needs\napproval");
+}
+
+#[test]
+fn swimlane_rejects_unterminated_multiline_markdown_labels() {
+    let error = parse_swimlane("swimlane-beta\nsubgraph A\n  task[\"`unfinished\nend")
+        .expect_err("unterminated Swimlane Markdown should fail");
+
+    assert_eq!(error.line, 3);
+    assert!(error.message.contains("unterminated Swimlane Markdown string"));
+}
+
+#[test]
 fn swimlane_parallel_endpoints_lower_to_individual_handoffs() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  decide{Approved?}\n  revise[Revise]\nend\nsubgraph Delivery\n  ship[Ship]\n  notify[Notify]\nend\ndecide --> ship & notify\nship & notify --> revise",

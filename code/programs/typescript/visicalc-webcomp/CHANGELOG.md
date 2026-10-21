@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed — vendor elements regenerated for #17807
+
+- #17807 taught the Web Component emitter to keep focus across re-renders and
+  to dispatch `onChange` per keystroke (`oninput` plus `oncompositionend`), but
+  `vendor/FormulaBar.js` and `vendor/Grid.js` were not regenerated, so
+  `scripts/build.sh --check` (the `web_demos_are_current` test) failed on main.
+  Both are regenerated with `bash scripts/build.sh`.
+
 ### Changed — generated pieces are written by scripts and checked
 
 - `scripts/build.sh` writes `vendor/FormulaBar.js` and `vendor/Grid.js` in place
