@@ -5,6 +5,19 @@ import {
   loadTrackLanguageCurriculum,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { lessonModalities, orderChapterLessons, unstartableCause } from "../../../src/modality.js";
+
+it("opens Punjabi chapter 184 by ear while retaining its printed review", () => {
+  const opener = loadTrackLessons("punjabi").find(
+    (lesson) => lesson.realization.lessonId === "PA-C184-time-return",
+  );
+  expect(opener).toBeDefined();
+  const [entry] = orderChapterLessons(lessonModalities([opener!]));
+  expect(entry?.coreModality).toBe("voice");
+  expect(unstartableCause([entry!])).toBeNull();
+  expect(opener?.blocks.some((block) => block.markdown.includes("[YOU READ: **ਹਫ਼ਤਾ")))
+    .toBe(true);
+});
 
 it("adds a slow Punjabi A2 nearby-time prerequisite without mock credit", () => {
   const lessons = loadTrackLessons("punjabi");
