@@ -56,7 +56,7 @@
 //! | [`TRAP_NULL`] | `"Trap.Null"` | `unbox` of a null `ref<T>` |
 //! | [`TRAP_DIV_ZERO`] | `"Trap.DivZero"` | integer `div`/`mod` by zero |
 //! | [`TRAP_CONV_RANGE`] | `"Trap.ConvRange"` | `real_to_int_trunc`/`real_to_int_floor` on a non-finite or out-of-range value |
-//! | [`TRAP_OVERFLOW`] | `"Trap.Overflow"` | `i64_div_floor` of `MIN / -1` (LANG83 PR1b); later the `*_ovf` family |
+//! | [`TRAP_OVERFLOW`] | `"Trap.Overflow"` | `i64_div_floor` of `MIN / -1` (LANG83 PR1b); the `i64_*_ovf` family (PR4) |
 //! | [`TRAP_USER`] | `"Trap.User"` | a frontend's explicit abort (`die`, a bare `raise`, …) via `trap` |
 //!
 //! # The closed trap-kind table (LANG83)
@@ -100,7 +100,7 @@ pub const TRAP_DIV_ZERO: &str = "Trap.DivZero";
 pub const TRAP_CONV_RANGE: &str = "Trap.ConvRange";
 
 /// Integer overflow with *defined* trapping semantics (LANG83): `i64_div_floor`
-/// of `i64::MIN / -1` in PR1b, and the later `i64_*_ovf` family.
+/// of `i64::MIN / -1` in PR1b, and the `i64_*_ovf` family in PR4.
 pub const TRAP_OVERFLOW: &str = "Trap.Overflow";
 
 /// A frontend's explicit, language-level abort that has no more specific kind

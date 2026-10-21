@@ -269,4 +269,9 @@ The matrix exercises the four native/LLVM input programs on WASM as well.
 (`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_wasm` emits WebAssembly for the op. `lang-aot` refuses a
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64` (`env.__write_i64`),
 `i64_div_floor`/`i64_mod_floor` (explicit zero / `MIN / -1` checks, then a
-floor fix-up) and `trap` (`env.__trap(kind_id)` then `unreachable`).
+floor fix-up) and `trap` (`env.__trap(kind_id)` then `unreachable`). LANG83 PR4 adds
+`i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`. WASM has no overflow flag
+and no wide multiply, so overflow is computed from the operands: a sign test for
+add/sub, `a == MIN` for negation, and for multiply a `-1 × MIN` guard followed by
+`a != 0 && (a * b) / a != b`. Each failing test calls `env.__trap(5)`
+(`Trap.Overflow`) then `unreachable`.

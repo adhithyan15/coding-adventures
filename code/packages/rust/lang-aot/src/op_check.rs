@@ -254,8 +254,9 @@ mod tests {
         for backend in Backend::ALL {
             for spec in STANDARD_OPS {
                 let support = backend.op_support(spec.name);
-                if spec.is_pr1b() {
-                    // LANG83 PR1b lowered all four everywhere.
+                if spec.is_pr1b() || spec.is_pr4() {
+                    // LANG83 PR1b lowered all four everywhere; PR4 registered
+                    // and lowered the overflow family everywhere at once.
                     assert_eq!(support, OpSupport::Lowered, "{backend} {}", spec.name);
                 }
             }
@@ -314,6 +315,20 @@ mod tests {
     fn pr1b_ops_pass_the_check_on_every_backend() {
         let trap = IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void");
         let module = module_using(vec![floor_div(), trap]);
+        for backend in Backend::ALL {
+            assert!(check_module_for(backend, &module).is_ok(), "{backend}");
+        }
+    }
+
+    #[test]
+    fn pr4_ops_pass_the_check_on_every_backend() {
+        let v = |n: &str| Operand::Var(n.into());
+        let module = module_using(vec![
+            IIRInstr::new("i64_add_ovf", Some("s".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("i64_sub_ovf", Some("d".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("i64_mul_ovf", Some("p".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("i64_neg_ovf", Some("n".into()), vec![v("a")], "i64"),
+        ]);
         for backend in Backend::ALL {
             assert!(check_module_for(backend, &module).is_ok(), "{backend}");
         }

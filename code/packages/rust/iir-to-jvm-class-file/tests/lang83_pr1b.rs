@@ -1,5 +1,6 @@
 //! LANG83 PR1b on the JVM backend: bytecode shape of `i64_div_floor`,
-//! `i64_mod_floor`, `trap` and `write_i64`.
+//! `i64_mod_floor`, `trap` and `write_i64` — and of the PR4 overflow-checked
+//! `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` (end of file).
 //!
 //! Execution on a real `java` (with the class-file verifier on) is proven by
 //! `lang-aot/tests/op_conformance.rs`'s JVM column; these tests pin the
@@ -207,4 +208,110 @@ fn unregistered_trap_kind_is_refused() {
         release: None,
     };
     assert!(lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).is_err());
+}
+
+// ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────────────
+
+const LADD: u8 = 0x61;
+const LSUB: u8 = 0x65;
+const LMUL: u8 = 0x69;
+const LNEG: u8 = 0x75;
+const LSTORE: u8 = 0x37;
+const LSTORE_0: u8 = 0x3F;
+const IFEQ: u8 = 0x99;
+const IFGE: u8 = 0x9C;
+
+fn checked_fn(op: &str) -> JvmClassFile {
+    let srcs = if op == "i64_neg_ovf" { vec![v("a")] } else { vec![v("a"), v("b")] };
+    lower(
+        vec![
+            IIRInstr::new(op, Some("q".into()), srcs, "i64"),
+            IIRInstr::new("ret", None, vec![v("q")], "i64"),
+        ],
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+    )
+}
+
+/// Every `Trap.Overflow` trap in `code`, each checked to be the full 17-byte
+/// sequence and to be jumped over by the `if<cond>` right before it.
+fn overflow_traps(class: &JvmClassFile, code: &[u8], guard: &[u8]) -> Vec<usize> {
+    let traps: Vec<usize> = refs(class, code, INVOKEVIRTUAL)
+        .into_iter()
+        .filter(|(_, m)| m == "java/io/PrintStream.flush:()V")
+        .map(|(pc, _)| pc - 3)
+        .collect();
+    assert_eq!(traps.len(), guard.len(), "one trap per guard");
+    for (&t, &if_op) in traps.iter().zip(guard) {
+        assert_trap_at(class, code, t, "Trap.Overflow");
+        assert_eq!(code[t - 3], if_op, "the guard branch right before the trap");
+        let offset = i16::from_be_bytes([code[t - 2], code[t - 1]]);
+        assert_eq!(offset, 3 + 17, "the guard skips exactly the trap");
+    }
+    traps
+}
+
+/// The wrapping instruction and its `lstore` come after every guard, and no
+/// `Math.*Exact` (which throws `ArithmeticException` with no kind) is called.
+fn assert_tail(class: &JvmClassFile, code: &[u8], traps: &[usize], arith: u8) {
+    let last_trap_end = traps.last().unwrap() + 17;
+    let at = code[last_trap_end..]
+        .windows(2)
+        .position(|w| w[0] == arith && (w[1] == LSTORE || (LSTORE_0..LSTORE_0 + 4).contains(&w[1])))
+        .unwrap_or_else(|| panic!("{arith:#04x} then lstore after the last guard: {code:02x?}"));
+    assert!(at > 0);
+    assert!(refs(class, code, INVOKESTATIC).is_empty(), "no Math.*Exact");
+}
+
+#[test]
+fn add_and_sub_ovf_sign_test_then_wrap() {
+    for (op, arith) in [("i64_add_ovf", LADD), ("i64_sub_ovf", LSUB)] {
+        let class = checked_fn(op);
+        let code = main_code(&class);
+        let traps = overflow_traps(&class, &code, &[IFGE]);
+        // `land; lconst_0; lcmp; ifge` — the sign of the combined xor test.
+        assert_eq!(&code[traps[0] - 6..traps[0] - 3], &[0x7F, 0x09, LCMP], "{op}");
+        assert_tail(&class, &code, &traps, arith);
+    }
+}
+
+#[test]
+fn neg_ovf_compares_with_min() {
+    let class = checked_fn("i64_neg_ovf");
+    let code = main_code(&class);
+    let traps = overflow_traps(&class, &code, &[IFNE]);
+    assert_eq!(code[traps[0] - 4], LCMP);
+    assert!(class.constant_pool.iter().any(|e| matches!(e, Some(Cp::Long(n)) if *n == i64::MIN)));
+    assert_tail(&class, &code, &traps, LNEG);
+}
+
+#[test]
+fn mul_ovf_guards_minus_one_times_min_then_divides_back() {
+    let class = checked_fn("i64_mul_ovf");
+    let code = main_code(&class);
+    // Guard 1 (b == MIN, nested under a == -1) ends `ifne`; guard 2
+    // ((a*b)/a == b, nested under a != 0) ends `ifeq`.
+    let traps = overflow_traps(&class, &code, &[IFNE, IFEQ]);
+    assert!(code[traps[0]..traps[1]].contains(&0x6D), "ldiv between the guards");
+    assert_tail(&class, &code, &traps, LMUL);
+}
+
+#[test]
+fn checked_ops_refuse_int_operands() {
+    let module = IIRModule {
+        name: "lang83".into(),
+        functions: vec![IIRFunction::new(
+            "main",
+            vec![("a".into(), "i32".into()), ("b".into(), "i32".into())],
+            "i32",
+            vec![
+                IIRInstr::new("i64_add_ovf", Some("q".into()), vec![v("a"), v("b")], "i32"),
+                IIRInstr::new("ret", None, vec![v("q")], "i32"),
+            ],
+        )],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    assert!(lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).is_err(), "defined on i64 only");
 }

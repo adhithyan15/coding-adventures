@@ -3624,3 +3624,73 @@ fn trap_on_real_clang_flushes_stdout_then_names_its_kind() {
     assert_eq!(String::from_utf8_lossy(&out.stdout), "2 ");
     assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.DivZero"));
 }
+
+// ===========================================================================
+// LANG83 PR4 — overflow-checked arithmetic
+// ===========================================================================
+
+/// `floor_program`, but for a checked op; `i64_neg_ovf` ignores `b`. The name
+/// of the helper function stays `floor` (it is only a callee name).
+fn checked_program(op: &str, pairs: &[(i64, i64)]) -> IIRModule {
+    let mut module = floor_program("i64_div_floor", pairs);
+    let srcs = if op == "i64_neg_ovf" { vec![v("a")] } else { vec![v("a"), v("b")] };
+    module.functions[0].instructions[0] = IIRInstr::new(op, Some("q".into()), srcs, "i64");
+    module
+}
+
+#[test]
+fn checked_ops_call_the_overflow_intrinsic_and_branch_to_the_trap() {
+    for (op, call) in [
+        ("i64_add_ovf", "call { i64, i1 } @llvm.sadd.with.overflow.i64(i64 %a, i64 %b)"),
+        ("i64_sub_ovf", "call { i64, i1 } @llvm.ssub.with.overflow.i64(i64 %a, i64 %b)"),
+        ("i64_mul_ovf", "call { i64, i1 } @llvm.smul.with.overflow.i64(i64 %a, i64 %b)"),
+        ("i64_neg_ovf", "call { i64, i1 } @llvm.ssub.with.overflow.i64(i64 0, i64 %a)"),
+    ] {
+        let ll = lower(&checked_program(op, &[(1, 2)]));
+        let at = ll.find(call).unwrap_or_else(|| panic!("{op}: {call}\n{ll}"));
+        let flag = ll[at..].find("extractvalue { i64, i1 }").expect("flag extracted");
+        let trap = ll[at..].find("call void @__iir_trap(ptr @__iir_trap_msg.5, i64 20)").expect("Trap.Overflow");
+        let value = ll[at..].find("%q = extractvalue { i64, i1 }").expect("dest is the value half");
+        assert!(flag < trap && trap < value, "{op}: the value is defined only after the trap branch:\n{ll}");
+        let name = call.split('@').nth(1).unwrap().split('(').next().unwrap();
+        assert_eq!(ll.matches(&format!("declare {{ i64, i1 }} @{name}(i64, i64)")).count(), 1, "{op}: declared once");
+        // Only Trap.Overflow is possible.
+        assert!(!ll.contains("@__iir_trap_msg.3"), "{op} never divides by zero");
+    }
+    assert!(validate_for_llvm(&checked_program("i64_mul_ovf", &[(1, 2)])).is_empty());
+}
+
+#[test]
+fn checked_ops_run_on_real_clang_at_the_range_edges() {
+    const MAX: i64 = i64::MAX;
+    const MIN: i64 = i64::MIN;
+    let Some(out) = run_on_clang(&checked_program("i64_add_ovf", &[(MAX - 1, 1), (MIN, MAX), (-5, 3)]), "add") else {
+        return;
+    };
+    assert!(out.status.success());
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "9223372036854775807 -1 -2 ");
+    let out = run_on_clang(&checked_program("i64_sub_ovf", &[(MIN + 1, 1), (-1, MAX)]), "sub").expect("clang");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-9223372036854775808 -9223372036854775808 ");
+    let out = run_on_clang(&checked_program("i64_mul_ovf", &[(-(1 << 32), 1 << 31), (3_037_000_499, 3_037_000_499)]), "mul")
+        .expect("clang");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-9223372036854775808 9223372030926249001 ");
+    let out = run_on_clang(&checked_program("i64_neg_ovf", &[(MAX, 0), (0, 0)]), "neg").expect("clang");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-9223372036854775807 0 ");
+}
+
+/// Print-then-trap for every checked op: the earlier result is flushed, the
+/// overflowing call traps `Trap.Overflow`, and nothing after it prints.
+#[test]
+fn checked_ops_on_real_clang_flush_then_trap_overflow() {
+    for (op, ok, bad, printed) in [
+        ("i64_add_ovf", (2, 3), (i64::MAX, 1), "5 "),
+        ("i64_sub_ovf", (2, 3), (i64::MIN, 1), "-1 "),
+        ("i64_mul_ovf", (2, 3), (i64::MIN, -1), "6 "),
+        ("i64_neg_ovf", (2, 0), (i64::MIN, 0), "-2 "),
+    ] {
+        let Some(out) = run_on_clang(&checked_program(op, &[ok, bad, ok]), op) else { return };
+        assert!(!out.status.success(), "{op}: a trap exits non-zero");
+        assert_eq!(String::from_utf8_lossy(&out.stdout), printed, "{op}: output before the trap is flushed");
+        assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.Overflow"), "{op}");
+    }
+}
