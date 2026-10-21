@@ -57,4 +57,4 @@ The infinitive was learned long ago. Keep its stem and use the same ending you s
 
 [PAUSE 3s] Say and read “he gets up,” then recall the two *kar-* forms. (**ਉੱਠਦਾ; ਕਰਦਾ; ਕਰਦੇ**.)
 
-Source: the earlier *utthnaa* lesson and the track's existing present-habitual engine.
+Source: the canonical Punjabi *utthnaa* and present-habitual entries.

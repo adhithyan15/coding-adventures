@@ -4,7 +4,7 @@
   "chapter": 183,
   "title": "One Routine, One Familiar Engine",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b4f5c009dd40e61f",
+  "sourceHash": "fnv1a64:1d7d76ca1ef02e29",
   "lessons": [
     {
       "id": "PA-C183-habitual-return",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8211d07d6225ee4c",
+      "sourceHash": "fnv1a64:2a1ebf4599403396",
       "notice": null,
       "blocks": [
         {
@@ -101,7 +101,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is retrieval of grammar and verbs already taught much earlier in the track."
+              "text": "This is retrieval of the required grammar and verb atoms."
             }
           ]
         }
@@ -120,7 +120,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44291da04ebad76b",
+      "sourceHash": "fnv1a64:c1d74d0818abe5b7",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: the present-habitual engine and kamm karnaa taught earlier in this track."
+              "text": "Source: the canonical Punjabi present-habitual and kamm karnaa entries."
             }
           ]
         }
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78c5339a19f27d67",
+      "sourceHash": "fnv1a64:6894f5591997d84b",
       "notice": null,
       "blocks": [
         {
@@ -314,7 +314,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: the present-habitual agreement contrast taught earlier in this track."
+              "text": "Source: the canonical Punjabi present-habitual agreement contrast."
             }
           ]
         }
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4315159e63c0af7c",
+      "sourceHash": "fnv1a64:929e0dd386953a14",
       "notice": null,
       "blocks": [
         {
@@ -419,7 +419,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: the earlier utthnaa lesson and the track's existing present-habitual engine."
+              "text": "Source: the canonical Punjabi utthnaa and present-habitual entries."
             }
           ]
         }
@@ -438,7 +438,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:e66d9ad7fde7cc10",
+      "sourceHash": "fnv1a64:6284ec319de6c0ec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -479,7 +479,7 @@
             },
             {
               "kind": "speech",
-              "text": "An earlier lesson taught that vekhnaa and dekhnaa are living twins. This mock-facing form uses the dekh- twin: ਉਹ ਦੇਖਦਾ (dekhdaa) ਹੈ — “He sees” or “He watches.”"
+              "text": "Vekhnaa and dekhnaa are living twins. This mock-facing form uses the dekh- twin: ਉਹ ਦੇਖਦਾ (dekhdaa) ਹੈ — “He sees” or “He watches.”"
             }
           ]
         },
@@ -534,7 +534,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: the vekhnaa/dekhnaa comparison taught earlier in this track."
+              "text": "Source: the canonical Punjabi vekhnaa/dekhnaa comparison."
             }
           ]
         }
@@ -553,7 +553,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:dcb07710e5726a0a",
+      "sourceHash": "fnv1a64:2f53b70599712a6e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -650,7 +650,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: the earlier saunaa lesson and the track's existing present-habitual engine."
+              "text": "Source: the canonical Punjabi saunaa and present-habitual entries."
             }
           ]
         }
@@ -784,7 +784,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:d90a4c08063fbc96",
+      "sourceHash": "fnv1a64:6916a1189891c1a2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -872,7 +872,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: infinitives and the present-habitual agreement engine already taught earlier in the track."
+              "text": "Source: the canonical Punjabi infinitive and present-habitual agreement entries."
             }
           ]
         }

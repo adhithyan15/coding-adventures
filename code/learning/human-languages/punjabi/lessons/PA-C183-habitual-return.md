@@ -55,4 +55,4 @@ You already used *-daa* for one masculine subject and *-de* for a plural or resp
 
 [PAUSE 3s] Which ending marks one masculine habitual form? (*-daa*.) Which one can mark plural or respectful agreement? (*-de*.)
 
-This is retrieval of grammar and verbs already taught much earlier in the track.
+This is retrieval of the required grammar and verb atoms.

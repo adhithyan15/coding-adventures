@@ -57,4 +57,4 @@ The stem stays *kar-*. The visible ending changes from **ਦਾ** to **ਦੇ**.
 
 [PAUSE 3s] Read the pair for one masculine subject, then plural or respectful agreement. (**ਕਰਦਾ, ਕਰਦੇ**.)
 
-Source: the present-habitual agreement contrast taught earlier in this track.
+Source: the canonical Punjabi present-habitual agreement contrast.

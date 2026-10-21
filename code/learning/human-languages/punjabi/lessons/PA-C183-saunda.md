@@ -57,4 +57,4 @@ Hear the nasal in the middle and keep the familiar ending. In a complete sentenc
 
 [PAUSE 3s] Read the three routine forms: **ਉੱਠਦਾ, ਦੇਖਦਾ, ਸੌਂਦਾ**.
 
-Source: the earlier *saunaa* lesson and the track's existing present-habitual engine.
+Source: the canonical Punjabi *saunaa* and present-habitual entries.

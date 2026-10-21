@@ -43,7 +43,7 @@ reviews_of: [PA-C07-vekhna, PA-C183-utthda]
 
 > **ਦੇਖਦਾ** — *dekhdaa* — sees or watches, for one masculine subject
 
-An earlier lesson taught that *vekhnaa* and *dekhnaa* are living twins. This mock-facing form uses the *dekh-* twin: **ਉਹ ਦੇਖਦਾ ਹੈ** — “He sees” or “He watches.”
+*Vekhnaa* and *dekhnaa* are living twins. This mock-facing form uses the *dekh-* twin: **ਉਹ ਦੇਖਦਾ ਹੈ** — “He sees” or “He watches.”
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DEKHDA-183, PA-COMPARISON-VEKHNA-DEKHNA, PA-GRAMMAR-PRESENT-HABITUAL-GENDER-05] -->
@@ -57,4 +57,4 @@ An earlier lesson taught that *vekhnaa* and *dekhnaa* are living twins. This moc
 
 [PAUSE 3s] Read “he sees,” then “he gets up.” (**ਦੇਖਦਾ; ਉੱਠਦਾ**.)
 
-Source: the *vekhnaa/dekhnaa* comparison taught earlier in this track.
+Source: the canonical Punjabi *vekhnaa/dekhnaa* comparison.

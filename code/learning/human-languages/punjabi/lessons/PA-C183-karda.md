@@ -57,4 +57,4 @@ In a complete sentence you already know: **ਮੈਂ ਕੰਮ ਕਰਦਾ ਹ�
 
 [PAUSE 3s] Read the exact form for “does” with one masculine subject. (**ਕਰਦਾ**.)
 
-Source: the present-habitual engine and *kamm karnaa* taught earlier in this track.
+Source: the canonical Punjabi present-habitual and *kamm karnaa* entries.

@@ -54,4 +54,4 @@ Now point to the ending that distinguishes **ਕਰਦਾ** from **ਕਰਦੇ*
 
 This is the sixth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation.
 
-Source: infinitives and the present-habitual agreement engine already taught earlier in the track.
+Source: the canonical Punjabi infinitive and present-habitual agreement entries.
