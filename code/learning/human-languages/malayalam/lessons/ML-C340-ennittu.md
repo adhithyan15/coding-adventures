@@ -42,7 +42,7 @@ reviews_of: [ML-C111-vannittu, ML-C64-then, ML-C39-chaaya, ML-C85-kudikkuka]
 ## Grammar Lens: one sentence, with -ഇട്ട്
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C111-ITTU-01, ML-CONCEPT-C39-CHAAYA-01, ML-LEX-C85-DRINK-01, ML-LEX-C126-ABOUTYOU-05] -->
 
-Chapter 111 gave you the past form with **-ഇട്ട്** on it: "having done". Put it inside a sentence
+You already know the past form with **-ഇട്ട്** on it: "having done". Put it inside a sentence
 and it says "did this, and then":
 
 > **ഞാൻ ചായ കുടിച്ചിട്ട് ഓഫീസിൽ പോയി.**

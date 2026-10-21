@@ -52,7 +52,7 @@ Open with **ക്ഷമിക്കണം**, "excuse me", then ask where, or as
 >
 > *sṟṟēṣanilēkkŭ eṅṅane pōkaṇaṁ?* — "How do I get to the station?"
 
-The second is the **-അണം** of chapter 342: "how must one go". **എത്ര ദൂരമുണ്ട്**, *etra
+The second is the **-അണം** of the last chapter: "how must one go". **എത്ര ദൂരമുണ്ട്**, *etra
 dūramuṇṭŭ*, asks how far.
 
 ## Grammar Lens: following the answer

@@ -46,7 +46,7 @@ is good". (*nallatāṇŭ ennŭ ñān cintikkunnu*.)
 **വിചാരിക്കുക** — *vicārikkuka* — "to think, to suppose".
 
 It is the everyday verb for what you think is so, and it takes what you think in front of it,
-closed with **എന്ന്**, the way **ചിന്തിക്കുക** did in chapter 89.
+closed with **എന്ന്**, the way **ചിന്തിക്കുക** did when you met it.
 
 > **ഇത് ഒരു ചെറിയ പ്രശ്നമാണ് എന്ന് ഞാൻ വിചാരിച്ചു.**
 >

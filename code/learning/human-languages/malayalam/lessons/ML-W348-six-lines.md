@@ -37,7 +37,7 @@ reviews_of: [ML-C339-vayikkukayayirunnu, ML-C340-gramathil, ML-C340-atinusesham,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C339-SCENE-EVENT-01, ML-SKILL-C340-READ-STORY-01] -->
 
-[PAUSE 2s] Chapter 338 asked for a connected message about a familiar day. This one asks for six
+[PAUSE 2s] The last A2 writing task asked for a connected message about a familiar day. This one asks for six
 lines, and they tell a story.
 
 [PAUSE 1s] Pick one reader: a friend, by name.
@@ -72,7 +72,7 @@ choosing the right past for each line, and joining them.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C339-SCENE-EVENT-01, ML-GRAMMAR-C339-PAST-PROGRESSIVE-01, ML-GRAMMAR-C348-UNREAL-IF-01, ML-SCRIPT-C340-II-01, ML-SCRIPT-C344-AU-SIGN-01, ML-SCRIPT-C345-VISARGA-01] -->
 
-[PAUSE 2s] Now read your lines as you read the village story in chapter 340. Mark every verb **s**
+[PAUSE 2s] Now read your lines as you read the village story earlier in this core. Mark every verb **s**
 for scene or **e** for event. Line two should be mostly **s**; lines three and four mostly **e**.
 
 [PAUSE 2s] Then three spelling checks. A word that starts with long *ī* starts with **ഈ**, not **ഇ**.

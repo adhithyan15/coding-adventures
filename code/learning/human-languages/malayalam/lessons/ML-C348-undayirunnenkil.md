@@ -49,7 +49,7 @@ For something that is not so, or was not, put **ഇരുന്നെങ്ക�
 ## Grammar Lens: -ഉമായിരുന്നു, would
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C348-WOULD-01]; assesses=[ML-GRAMMAR-C339-PAST-HABITUAL-01, ML-LEX-C91-MONEY-02, ML-LEX-C183-KRIYA183-04, ML-LEX-C121-TRAVEL-03, ML-LEX-C172-ACT172-04] -->
 
-The other half is the **-ഉമായിരുന്നു** of chapter 339, now with its second job: "would", "would
+The other half is the **-ഉമായിരുന്നു** from the start of this core, now with its second job: "would", "would
 have".
 
 > **പണം ഉണ്ടായിരുന്നെങ്കിൽ ഞാൻ പോകുമായിരുന്നു.**

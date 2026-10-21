@@ -48,7 +48,7 @@ letter out and puts it in your hand.
 
 Its body is the shape of **ഒ**, which you write inside **ഓ**: an inner loop, a broad arch, a
 rounded lobe. On its right it carries the tail you have written on **ഊ**: a small lobe, a notch,
-and a broader lobe that sweeps back along its foot. Chapter 344 gives that tail a lesson of its own.
+and a broader lobe that sweeps back along its foot. A later letter lesson is about that tail alone.
 
 ## Writing: ഔ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C342-AU-01] -->

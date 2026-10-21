@@ -42,7 +42,7 @@ reviews_of: [ML-C75-aal, ML-C241-enkil, ML-C32-undu, ML-C02-aanu]
 ## Grammar Lens: a full verb, then എങ്കിൽ
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C347-ENKIL-VERB-01]; assesses=[ML-LEX-C241-KARANAM241-05, ML-CONCEPT-C32-UNDU-01, ML-LEX-AANU-01, ML-LEX-C127-CARE-05, ML-LEX-C127-CARE-03, ML-LEX-C139-TIME-01] -->
 
-Chapter 241 gave you **എങ്കിൽ** on its own: "if so". Join it to a full verb and it says "if it is
+You already know **എങ്കിൽ** on its own: "if so". Join it to a full verb and it says "if it is
 so that …":
 
 > **നീ വരുന്നുണ്ടെങ്കിൽ ഞാനും വരാം.**

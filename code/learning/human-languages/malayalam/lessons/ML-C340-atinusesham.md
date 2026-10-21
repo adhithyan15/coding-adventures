@@ -56,7 +56,7 @@ A story then hangs on four posts: a time to open it, **ആദ്യം**, **പ�
 ## Grammar Lens: when it happened, -അപ്പോൾ
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C340-APPOL-01]; assesses=[ML-GRAMMAR-C90-PAST-PARTICIPLE-01, ML-GRAMMAR-C75-UMBOL-01, ML-LEX-C225-KRIYA225-03, ML-LEX-GRANDMOTHER, ML-LEX-C174-ACT174-02] -->
 
-Chapter 75 gave you **വരുമ്പോൾ**, "when he comes". For "when he came", take the past form you
+You already know **വരുമ്പോൾ**, "when he comes". For "when he came", take the past form you
 know as **വന്ന** and add **-പ്പോൾ**: **വന്നപ്പോൾ** (*vannappōḷ*). In the same way **എത്തി** gives
 **എത്തിയപ്പോൾ** (*ettiyappōḷ*), "when (I) arrived", and **കണ്ടു** gives **കണ്ടപ്പോൾ** (*kaṇṭappōḷ*), "when (I) saw".
 

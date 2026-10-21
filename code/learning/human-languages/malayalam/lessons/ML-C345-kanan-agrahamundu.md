@@ -42,7 +42,7 @@ reviews_of: [ML-C145-agraham, ML-C74-aan, ML-C145-svapnam, ML-C06-dative-subject
 ## Grammar Lens: -ആൻ ആഗ്രഹമുണ്ട്
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C345-AAN-AGRAHAM-01]; assesses=[ML-GRAMMAR-C74-AAN-01, ML-LEX-C145-WANT145-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C32-UNDU-01, ML-LEX-C48-ROLE-01] -->
 
-The **-ആൻ** form of chapter 74 says "to do it". Put it before **ആഗ്രഹം**, "a wish", and the wish
+The **-ആൻ** form you already know says "to do it". Put it before **ആഗ്രഹം**, "a wish", and the wish
 belongs to someone in the dative, with **ഉണ്ട്**:
 
 > **എനിക്ക് കേരളം കാണാൻ ആഗ്രഹമുണ്ട്.**

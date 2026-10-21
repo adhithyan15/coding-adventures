@@ -68,7 +68,7 @@ are the words that usually stand in front of a habit.
 | **ഞാൻ നടക്കുകയായിരുന്നു** (*ñān naṭakkukayāyirunnu*) | I was walking: the scene, still running |
 | **ഞാൻ നടക്കുമായിരുന്നു** (*ñān naṭakkumāyirunnu*) | I used to walk: again and again |
 
-Hold on to the last one. In chapter 348 the same **-ഉമായിരുന്നു** comes back with a second
+Hold on to the last one. Later in this core the same **-ഉമായിരുന്നു** comes back with a second
 job: "would have".
 
 ## Guided Practice
