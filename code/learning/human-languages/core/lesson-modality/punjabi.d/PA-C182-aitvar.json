@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C182-aitvar",
+    "language": "punjabi",
+    "chapter": 182,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:834577ff9b15ac21"
+  },
+  "findings": []
+}
