@@ -4,7 +4,7 @@
   "chapter": 289,
   "title": "How It Felt, What I Hope",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:dedaeda41590c3e5",
+  "sourceHash": "fnv1a64:8c04d7f37a93aa28",
   "lessons": [
     {
       "id": "AR-C289-kuntu-saidan",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0598dbd091461b0e",
+      "sourceHash": "fnv1a64:898d8251171a4172",
       "notice": null,
       "blocks": [
         {
@@ -525,7 +525,7 @@
             },
             {
               "kind": "speech",
-              "text": "كانت تجربة (tajriba) صعبة، لكنني أتمنى أن أسافر مرة أخرى. — kānat tajribatan ṣaʿba, lākinnanī atamannā an usāfira marratan ukhrā — It was a hard experience, but I hope to travel again."
+              "text": "كانت تجربة (tajriba) صعبة، لكن أتمنى أن أسافر قريبا. — kānat tajribatan ṣaʿba, lākin atamannā an usāfira qarīban — It was a hard experience, but I hope to travel again soon."
             }
           ]
         },

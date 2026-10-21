@@ -4,7 +4,7 @@
   "chapter": 288,
   "title": "At The Station",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:63ed6fc64075c724",
+  "sourceHash": "fnv1a64:17305d5ba8af34ff",
   "lessons": [
     {
       "id": "AR-C288-dhahab-wa-iyab",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c860988ad3459006",
+      "sourceHash": "fnv1a64:1fb32f02ff86ba9e",
       "notice": null,
       "blocks": [
         {
@@ -241,7 +241,7 @@
             },
             {
               "kind": "speech",
-              "text": "The verb takes the -at of \"she\": waṣalat. A word ending in ة is feminine, and so is the verb that goes with it."
+              "text": "The verb takes the -at of \"she\": waṣalat. A word ending in ة is usually feminine, and so is the verb that goes with it."
             },
             {
               "kind": "speech",
@@ -814,7 +814,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b665e03182c96c7",
+      "sourceHash": "fnv1a64:e4bdb77a4f35d881",
       "notice": null,
       "blocks": [
         {
@@ -851,7 +851,7 @@
             },
             {
               "kind": "speech",
-              "text": "The hamza now has all its seats in your hand: أ in سأل, ؤ in سؤال and مسؤول (masʾūl), ئ (hamza on yāʾ) in طائرة (ṭāʾira). One sound, three ways to write it."
+              "text": "The hamza now has three of its seats in your hand: أ in سأل, ؤ in سؤال and مسؤول (masʾūl), ئ (hamza on yāʾ) in طائرة (ṭāʾira). One sound, three ways to write it."
             }
           ]
         },

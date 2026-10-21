@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "A Story, In Order",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f0a6fea7f1b42b16",
+  "sourceHash": "fnv1a64:41a2b1ce10a48204",
   "lessons": [
     {
       "id": "AR-C284-awwalan-thumma",
@@ -722,7 +722,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df2752cd8fd4da59",
+      "sourceHash": "fnv1a64:122ff4438d202ffd",
       "notice": null,
       "blocks": [
         {
@@ -763,7 +763,7 @@
             },
             {
               "kind": "speech",
-              "text": "أولا ذهبت إلى العمل، ثم كتبت رسالة. عندما رجعت، حكيت القصة لصديقي. — awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla. ʿindamā rajaʿtu, ḥakaytu al-qiṣṣa li-ṣadīqī — First I went to work, then I wrote a letter. When I came back, I told my friend the story."
+              "text": "أولا ذهبت إلى المكتب، ثم كتبت رسالة. عندما رجعت، حكيت القصة لصديقي. — awwalan dhahabtu ilā al-maktab, thumma katabtu risāla. ʿindamā rajaʿtu, ḥakaytu al-qiṣṣa li-ṣadīqī — First I went to the office, then I wrote a letter. When I came back, I told my friend the story."
             }
           ]
         },
@@ -781,11 +781,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla",
+              "instruction": "awwalan dhahabtu ilā al-maktab, thumma katabtu risāla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla*]"
+              "source": "[YOU SAY: *awwalan dhahabtu ilā al-maktab, thumma katabtu risāla*]"
             },
             {
               "kind": "prompt",

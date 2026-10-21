@@ -79,7 +79,7 @@ present it can only mean "for".
 - [YOU SAY: "I have been working here for three years" — *aʿmalu hunā mundhu thalāth sanawāt*]
 - [YOU SAY: "for three months", then "for two weeks" — *mundhu thalāthat ashhur*, *mundhu usbūʿayn*]
 - [YOU SAY: "I arrived a week ago" — *waṣaltu qabla usbūʿ*]
-- [YOU SAY: "I have been learning Arabic for two years" — *ataʿallamu al-ʿarabiyya mundhu sanatayn*]
+- [YOU SAY: "I have known my friend for two years" — *aʿrifu ṣadīqī mundhu sanatayn*]
 - [YOU SAY: how long you have lived where you live — *askunu hunā mundhu …*]
 
 ## Wrap-up Recall

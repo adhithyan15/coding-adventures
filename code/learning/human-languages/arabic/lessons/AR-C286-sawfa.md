@@ -15,7 +15,7 @@ concept_tag: AR-FUTURE-SA-SAWFA
 prerequisites: [AR-C286-bi-sabab, AR-C157-al-qadim, AR-C98-utla, AR-C88-waqt]
 sounds: []
 roots: []
-etymology_hook: "sa- is usually described as a shortened sawfa: the long form and the short one say the same 'will'"
+etymology_hook: "sa- is often explained as a shortened sawfa, though the old grammarians disagreed; both say the same 'will'"
 duration:
   max_seconds: 290
 requires:
@@ -76,7 +76,7 @@ For "will not", the *sa-* goes and **لن** — *lan* — takes its place. After
 - [YOU SAY: "We will travel in the next holiday" — *sawfa nusāfiru fī al-ʿuṭla al-qādima*]
 - [YOU SAY: "I won't go" — *lan adhhaba*]
 - [YOU SAY: a plan with its reason — *sa-usāfiru li-anna ʿindī waqtan*]
-- [YOU SAY: the opposite — *lan usāfira li-anna ʿindī ʿamalan*]
+- [YOU SAY: the opposite — *lan usāfira li-anna ʿindī imtiḥānan*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C286-FUTURE-01, AR-GRAMMAR-C286-LAN-01, AR-GRAMMAR-C286-SUBJUNCTIVE-01] -->

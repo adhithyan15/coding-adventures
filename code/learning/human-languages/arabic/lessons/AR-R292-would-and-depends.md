@@ -14,7 +14,7 @@ concept_tag: REVIEW
 prerequisites: [AR-C292-law]
 sounds: []
 roots: []
-etymology_hook: "idhā, law and layta all take the past, and mean three different distances from the facts"
+etymology_hook: "idhā, yaʿtamidu ʿalā and law stand at three distances from the facts: likely, still open, and not so"
 duration:
   max_seconds: 270
 requires:
@@ -44,13 +44,13 @@ other "if". (*In waṣalta mubakkiran*.)
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C292-DEPENDS-01, AR-GRAMMAR-C292-HASABA-01, AR-GRAMMAR-C292-LAW-01, AR-GRAMMAR-C292-LAYTA-01, AR-LEX-C292-SHART292-01] -->
 
 Three lessons, and three distances from the facts. *Idhā*: it may well
-happen, *idhā kāna ʿindī waqt, sa-usāfiru*. *Yaʿtamidu ʿalā*: it is still
+happen, *idhā kāna ʿindī waqt, fa-sa-usāfiru*. *Yaʿtamidu ʿalā*: it is still
 open, *yaʿtamidu ʿalā al-waqt*. *Law*: it is not so, *law kāna ʿindī waqt
 la-sāfartu*; and *layta*, the wish with no result.
 
 [PAUSE 2s] All three, on one question:
 
-> — *hal sa-tusāfiru?* — *yaʿtamidu ʿalā al-ʿamal. law kāna ʿindī waqt
+> — *hal sa-tusāfiru?* — *yaʿtamidu ʿalā aṭ-ṭaqs. law kāna ʿindī waqt
 > la-sāfartu al-usbūʿa al-qādim.*
 
 ## Guided Practice

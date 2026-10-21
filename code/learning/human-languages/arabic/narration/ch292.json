@@ -4,7 +4,7 @@
   "chapter": 292,
   "title": "Would, And Six Lines About A Trip",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b604523220e6068c",
+  "sourceHash": "fnv1a64:d5485ef9d8e4448f",
   "lessons": [
     {
       "id": "AR-C292-itamada",
@@ -309,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34252c5106ca921a",
+      "sourceHash": "fnv1a64:37fe86068472d8c4",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
             },
             {
               "kind": "speech",
-              "text": "لو — law — takes the past, and so does the result. The result usually carries لـ — la- — written onto it: la-sāfartu, I would have travelled, I would travel. The meaning is \"but I don't have time\". That is the difference from idhā: idhā kāna ʿindī waqt, sa-usāfiru leaves it open; law says it is not so."
+              "text": "لو — law — takes the past, and so does the result. The result usually carries لـ — la- — written onto it: la-sāfartu, I would have travelled, I would travel. The meaning is \"but I don't have time\". That is the difference from idhā: idhā kāna ʿindī waqt, fa-sa-usāfiru leaves it open; law says it is not so."
             },
             {
               "kind": "speech",
@@ -396,11 +396,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the open one, with idhā — idhā kāna ʿindī waqt, sa-usāfiru",
+              "instruction": "the open one, with idhā — idhā kāna ʿindī waqt, fa-sa-usāfiru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the open one, with *idhā* — *idhā kāna ʿindī waqt, sa-usāfiru*]"
+              "source": "[YOU SAY: the open one, with *idhā* — *idhā kāna ʿindī waqt, fa-sa-usāfiru*]"
             },
             {
               "kind": "prompt",
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:834b76893366e097",
+      "sourceHash": "fnv1a64:ab718f7f118d9f7d",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +490,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three lessons, and three distances from the facts. Idhā: it may well happen, idhā kāna ʿindī waqt, sa-usāfiru. Yaʿtamidu ʿalā: it is still open, yaʿtamidu ʿalā al-waqt. Law: it is not so, law kāna ʿindī waqt la-sāfartu; and layta, the wish with no result."
+              "text": "Three lessons, and three distances from the facts. Idhā: it may well happen, idhā kāna ʿindī waqt, fa-sa-usāfiru. Yaʿtamidu ʿalā: it is still open, yaʿtamidu ʿalā al-waqt. Law: it is not so, law kāna ʿindī waqt la-sāfartu; and layta, the wish with no result."
             },
             {
               "kind": "pause",
@@ -504,7 +504,7 @@
             },
             {
               "kind": "speech",
-              "text": "— hal sa-tusāfiru? — yaʿtamidu ʿalā al-ʿamal. law kāna ʿindī waqt la-sāfartu al-usbūʿa al-qādim."
+              "text": "— hal sa-tusāfiru? — yaʿtamidu ʿalā aṭ-ṭaqs. law kāna ʿindī waqt la-sāfartu al-usbūʿa al-qādim."
             }
           ]
         },

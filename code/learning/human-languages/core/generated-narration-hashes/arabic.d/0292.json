@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 292,
-  "sourceHash": "fnv1a64:b604523220e6068c",
+  "sourceHash": "fnv1a64:d5485ef9d8e4448f",
   "lessonIds": [
     "AR-C292-itamada",
     "AR-C292-yatamidu-ala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "arabic/narration/ch292.txt",
   "json": "arabic/narration/ch292.json",
-  "textHash": "fnv1a64:88b443e4a6c18671",
-  "jsonHash": "fnv1a64:968c8375e916cdc2",
+  "textHash": "fnv1a64:60027c300e242fa8",
+  "jsonHash": "fnv1a64:33af7384699f3e27",
   "findings": []
 }

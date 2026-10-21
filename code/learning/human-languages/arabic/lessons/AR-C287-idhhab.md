@@ -15,7 +15,7 @@ concept_tag: AR-IMPERATIVE
 prerequisites: [AR-C287-kayfa-asilu, AR-C41-karrir, AR-C105-mustaqim, AR-C90-yamin, AR-C103-yasar, AR-C90-shari, AR-C159-abara, AR-C92-jisr]
 sounds: []
 roots: []
-etymology_hook: "karrir, say it again, was this book's first order: every order is the present with its ta- taken off"
+etymology_hook: "karrir, say it again, is an order you already use: an order is the present with its front letter taken off"
 duration:
   max_seconds: 290
 requires:
@@ -52,7 +52,7 @@ puts a short vowel in front: *u-* when the stem's vowel is *u*, and *i-*
 otherwise.
 
 > *tadhhabu* → **اذهب** *idhhab*, go · *taʿburu* → **اعبر** *uʿbur*, cross ·
-> *taktubu* → **اكتب** *uktub*, write
+> *takhruju* → **اخرج** *ukhruj*, go out
 
 To a woman, add *-ī*: *idhhabī*, *uʿburī*. One common order is short and
 irregular: **خذ** *khudh*, take, from *akhadha*; to a woman, *khudhī*.

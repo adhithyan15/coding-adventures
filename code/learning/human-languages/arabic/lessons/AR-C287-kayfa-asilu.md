@@ -61,7 +61,7 @@ dropped, as it did in *yajibu*. To a woman, say *min faḍliki*.
 Two shorter questions often come with it. **أين** — *ayna*, "where": *ayna
 al-matḥaf?*, where is the museum? And **هل** with *baʿīd* or *qarīb*: *hal
 al-matḥaf baʿīd?*, is the museum far? The answer may be *qarīb min hunā*,
-near here, or *baʿīd qalīlan*, a little far.
+near here, or *baʿīd jiddan*, very far.
 
 The answer to *kayfa aṣilu* is a set of orders, which the next lesson
 builds.
@@ -72,7 +72,7 @@ builds.
 **أصل** (*aṣilu*) is built on the native Arabic root *w-ṣ-l*, "to reach, to
 join" (Lane), the root of *waṣala*, "he arrived", and of *ittaṣala*, "he
 phoned", a call that joins two people. **كيف** (*kayfa*) and **إلى** (*ilā*)
-are inherited particles, not built on three-letter roots.
+are small particles, not verbs or nouns built on a three-letter root.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C287-TARIQ287-01, AR-GRAMMAR-C283-PRESENT-PERSONS-01, AR-GRAMMAR-C286-YAJIBU-01] -->

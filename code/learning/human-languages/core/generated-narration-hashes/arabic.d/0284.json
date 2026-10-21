@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 284,
-  "sourceHash": "fnv1a64:f0a6fea7f1b42b16",
+  "sourceHash": "fnv1a64:41a2b1ce10a48204",
   "lessonIds": [
     "AR-C284-awwalan-thumma",
     "AR-C284-haka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "arabic/narration/ch284.txt",
   "json": "arabic/narration/ch284.json",
-  "textHash": "fnv1a64:6c37b9c078698968",
-  "jsonHash": "fnv1a64:f68d021f98a1a921",
+  "textHash": "fnv1a64:1233a6603f74b634",
+  "jsonHash": "fnv1a64:ef60b83a9e2593a4",
   "findings": []
 }

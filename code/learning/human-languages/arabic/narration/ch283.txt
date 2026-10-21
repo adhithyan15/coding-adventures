@@ -14,13 +14,13 @@ Chapter thirty-seven gave you the present for one person only: أ at the front m
 Grammar Lens: one stem, four prefixes.
 Keep the stem -ktub- and change the letter in front of it:
 أكتب aktubu, I write, تكتب taktubu, you write, يكتب yaktubu, he writes, تكتب taktubu, she writes, نكتب naktubu, we write.
-Ta- does two jobs: "you" said to a man, and "she". The sentence around it tells them apart. Said to a woman, "you write" adds -īna at the back, taktubīna, and "they write" adds -ūna, yaktubūna.
+Ta- does two jobs: "you" said to a man, and "she". The sentence around it tells them apart. Said to a woman, "you write" adds -īna at the back, taktubīna; "they write" adds -ūna, yaktubūna, and so does "you write" said to several people, taktubūna.
 The -u at the end is the present's own vowel. At the end of a sentence it is usually dropped, which is why chapter thirty-seven wrote aktub; inside a sentence you will hear it.
 
 Grammar Lens: the same door on other verbs.
 هي تكتب رسالة. — hiya taktubu risāla — She is writing a letter.
 نحن نذهب إلى المدرسة. — naḥnu nadhhabu ilā al-madrasa — We go to school.
-Dhahaba gives nadhhabu; qaraʾa gives yaqraʾu, he reads. One present covers "I write" and "I am writing"; English splits what Arabic keeps as one. Huwa is "he", hiya "she", naḥnu "we", and they are often left out, because the prefix already says who.
+Dhahaba gives nadhhabu; qaraʾa gives yaqraʾu, he reads. One present covers "I write" and "I am writing"; English splits what Arabic keeps as one. Anā is "I", huwa "he", hiya "she", naḥnu "we", and they are often left out, because the prefix already says who.
 
 Guided Practice.
 [pause 1 second]
@@ -51,7 +51,7 @@ You have said qaḍaytu al-ʿuṭla fī al-qarya, "I spent the holiday in the vi
 
 Grammar Lens: the endings at the back.
 Kataba, he wrote, is the bare past. Every other person is an ending on the same stem, katab-:
-كتبتُ katabtu, I wrote, كتبتَ katabta, you wrote (to a man), كتبتِ katabti, you wrote (to a woman), كتبَ kataba, he wrote, كتبتْ katabat, she wrote, كتبنا katabnā, we wrote, كتبوا katabū, they wrote.
+كتبتُ katabtu, I wrote, كتبتَ katabta, you wrote (to a man), كتبتِ katabti, you wrote (to a woman), كتبَ kataba, he wrote, كتبتْ katabat, she wrote, كتبنا katabnā, we wrote, كتبوا katabū, they wrote, كتبتم katabtum, you wrote (to several).
 The present put the person at the front; the past puts it at the back.
 Without its vowel marks, كتبت spells four of these at once: katabtu, katabta, katabti and katabat. That is why they carry marks here, and why, on an unmarked page, the rest of the sentence tells you who wrote.
 

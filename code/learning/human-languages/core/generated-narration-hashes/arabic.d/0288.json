@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 288,
-  "sourceHash": "fnv1a64:63ed6fc64075c724",
+  "sourceHash": "fnv1a64:17305d5ba8af34ff",
   "lessonIds": [
     "AR-C288-dhahab-wa-iyab",
     "AR-C288-taira",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "arabic/narration/ch288.txt",
   "json": "arabic/narration/ch288.json",
-  "textHash": "fnv1a64:c03591f02ba62436",
-  "jsonHash": "fnv1a64:1589a34e2462ba12",
+  "textHash": "fnv1a64:2d812bdcfe2d2f73",
+  "jsonHash": "fnv1a64:8b1ab8885947ca99",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 290,
   "title": "Bigger, Better, For How Long",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:14521040ad4dc645",
+  "sourceHash": "fnv1a64:1a01d2e512ad9a2b",
   "lessons": [
     {
       "id": "AR-C290-akbar-min",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:297e52724ecb6ccd",
+      "sourceHash": "fnv1a64:ca9844bc5e9658c5",
       "notice": null,
       "blocks": [
         {
@@ -303,11 +303,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I have been learning Arabic for two years\" — ataʿallamu al-ʿarabiyya mundhu sanatayn",
+              "instruction": "\"I have known my friend for two years\" — aʿrifu ṣadīqī mundhu sanatayn",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I have been learning Arabic for two years\" — *ataʿallamu al-ʿarabiyya mundhu sanatayn*]"
+              "source": "[YOU SAY: \"I have known my friend for two years\" — *aʿrifu ṣadīqī mundhu sanatayn*]"
             },
             {
               "kind": "prompt",
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79b73ef84c0ef9e8",
+      "sourceHash": "fnv1a64:dc6ced4be43d456b",
       "notice": null,
       "blocks": [
         {
@@ -420,11 +420,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"This pencil case is smaller\" — hādhihi al-miqlama aṣghar",
+              "instruction": "\"The pencil case is smaller\" — al-miqlama aṣghar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"This pencil case is smaller\" — *hādhihi al-miqlama aṣghar*]"
+              "source": "[YOU SAY: \"The pencil case is smaller\" — *al-miqlama aṣghar*]"
             },
             {
               "kind": "prompt",

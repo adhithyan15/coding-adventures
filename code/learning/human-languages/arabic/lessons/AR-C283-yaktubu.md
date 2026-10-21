@@ -55,7 +55,8 @@ Keep the stem *-ktub-* and change the letter in front of it:
 
 *Ta-* does two jobs: "you" said to a man, and "she". The sentence around it
 tells them apart. Said to a woman, "you write" adds *-īna* at the back,
-*taktubīna*, and "they write" adds *-ūna*, *yaktubūna*.
+*taktubīna*; "they write" adds *-ūna*, *yaktubūna*, and so does "you write"
+said to several people, *taktubūna*.
 
 The *-u* at the end is the present's own vowel. At the end of a sentence it
 is usually dropped, which is why chapter thirty-seven wrote *aktub*; inside a
@@ -71,7 +72,7 @@ sentence you will hear it.
 
 *Dhahaba* gives *nadhhabu*; *qaraʾa* gives *yaqraʾu*, he reads. One present
 covers "I write" and "I am writing"; English splits what Arabic keeps as one.
-*Huwa* is "he", *hiya* "she", *naḥnu* "we", and they are often left out,
+*Anā* is "I", *huwa* "he", *hiya* "she", *naḥnu* "we", and they are often left out,
 because the prefix already says who.
 
 ## Guided Practice

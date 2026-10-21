@@ -4,7 +4,7 @@
   "chapter": 285,
   "title": "What I Think, And So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a66b85930918a20a",
+  "sourceHash": "fnv1a64:ed363c1140d3a3c3",
   "lessons": [
     {
       "id": "AR-C285-ray",
@@ -641,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b6b2d86365bdb9d",
+      "sourceHash": "fnv1a64:c30286b41b546879",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +705,7 @@
             },
             {
               "kind": "speech",
-              "text": "Wa- adds the next thing; fa- says the next thing came of the first. Li-dhālika is the heavier of the two, and it suits a reason that needs weight: kāna al-imtiḥān ṣaʿban, li-dhālika darastu kathīran, the exam was hard, so I studied a lot."
+              "text": "Wa- adds the next thing; fa- says the next thing came of the first. Li-dhālika is the heavier of the two, and it suits a reason that needs weight: kāna al-imtiḥān ṣaʿban, li-dhālika qaraʾtu kathīran, the exam was hard, so I read a lot."
             }
           ]
         },
@@ -750,11 +750,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "an opinion and its result — aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika adrusu",
+              "instruction": "an opinion and its result — aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika aqraʾu kathīran",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: an opinion and its result — *aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika adrusu*]"
+              "source": "[YOU SAY: an opinion and its result — *aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika aqraʾu kathīran*]"
             }
           ]
         },

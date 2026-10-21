@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 287,
-  "sourceHash": "fnv1a64:2f6b56e7a8571efa",
+  "sourceHash": "fnv1a64:3cb86e6e940480ae",
   "lessonIds": [
     "AR-C287-kayfa-asilu",
     "AR-C287-idhhab",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "arabic/narration/ch287.txt",
   "json": "arabic/narration/ch287.json",
-  "textHash": "fnv1a64:1b2281a9707735a6",
-  "jsonHash": "fnv1a64:72fe43da26b71a08",
+  "textHash": "fnv1a64:be5b686c7a23ed2e",
+  "jsonHash": "fnv1a64:8dec811f7f3787fa",
   "findings": []
 }

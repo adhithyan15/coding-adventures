@@ -4,7 +4,7 @@
   "chapter": 283,
   "title": "The Past, Person By Person",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6b5e35300d7c97b2",
+  "sourceHash": "fnv1a64:9eb3814f5f519c84",
   "lessons": [
     {
       "id": "AR-C283-yaktubu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b6db3edb4578ef9",
+      "sourceHash": "fnv1a64:1a48f9e875ba2869",
       "notice": null,
       "blocks": [
         {
@@ -64,7 +64,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ta- does two jobs: \"you\" said to a man, and \"she\". The sentence around it tells them apart. Said to a woman, \"you write\" adds -īna at the back, taktubīna, and \"they write\" adds -ūna, yaktubūna."
+              "text": "Ta- does two jobs: \"you\" said to a man, and \"she\". The sentence around it tells them apart. Said to a woman, \"you write\" adds -īna at the back, taktubīna; \"they write\" adds -ūna, yaktubūna, and so does \"you write\" said to several people, taktubūna."
             },
             {
               "kind": "speech",
@@ -87,7 +87,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dhahaba gives nadhhabu; qaraʾa gives yaqraʾu, he reads. One present covers \"I write\" and \"I am writing\"; English splits what Arabic keeps as one. Huwa is \"he\", hiya \"she\", naḥnu \"we\", and they are often left out, because the prefix already says who."
+              "text": "Dhahaba gives nadhhabu; qaraʾa gives yaqraʾu, he reads. One present covers \"I write\" and \"I am writing\"; English splits what Arabic keeps as one. Anā is \"I\", huwa \"he\", hiya \"she\", naḥnu \"we\", and they are often left out, because the prefix already says who."
             }
           ]
         },
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02a44fb2bcdb9fd8",
+      "sourceHash": "fnv1a64:cfe0338041e00bc6",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "كتبتُ katabtu, I wrote, كتبتَ katabta, you wrote (to a man), كتبتِ katabti, you wrote (to a woman), كتبَ kataba, he wrote, كتبتْ katabat, she wrote, كتبنا katabnā, we wrote, كتبوا katabū, they wrote."
+              "text": "كتبتُ katabtu, I wrote, كتبتَ katabta, you wrote (to a man), كتبتِ katabti, you wrote (to a woman), كتبَ kataba, he wrote, كتبتْ katabat, she wrote, كتبنا katabnā, we wrote, كتبوا katabū, they wrote, كتبتم katabtum, you wrote (to several)."
             },
             {
               "kind": "speech",

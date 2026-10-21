@@ -52,7 +52,7 @@ only imagine, Arabic has a third "if".
 **لو** — *law* — takes the past, and so does the result. The result usually
 carries **لـ** — *la-* — written onto it: *la-sāfartu*, I would have
 travelled, I would travel. The meaning is "but I don't have time". That is
-the difference from *idhā*: *idhā kāna ʿindī waqt, sa-usāfiru* leaves it
+the difference from *idhā*: *idhā kāna ʿindī waqt, fa-sa-usāfiru* leaves it
 open; *law* says it is not so.
 
 You have said *law* since chapter six: *law samaḥt*, "if you would permit",
@@ -73,7 +73,7 @@ wishes without a result: *laytanī kuntu ghaniyyan*, if only I were rich;
 
 [PAUSE 1s]
 - [YOU SAY: "If I had time, I would travel" — *law kāna ʿindī waqt la-sāfartu*]
-- [YOU SAY: the open one, with *idhā* — *idhā kāna ʿindī waqt, sa-usāfiru*]
+- [YOU SAY: the open one, with *idhā* — *idhā kāna ʿindī waqt, fa-sa-usāfiru*]
 - [YOU SAY: "If I were you, I'd go to the doctor" — *law kuntu makānaka la-dhahabtu ilā aṭ-ṭabīb*]
 - [YOU SAY: "If only I were rich" — *laytanī kuntu ghaniyyan*]
 - [YOU SAY: a wish of your own with *law* and *la-*, then one with *atamannā an*]

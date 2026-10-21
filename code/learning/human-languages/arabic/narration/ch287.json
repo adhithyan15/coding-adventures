@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "Asking The Way",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2f6b56e7a8571efa",
+  "sourceHash": "fnv1a64:3cb86e6e940480ae",
   "lessons": [
     {
       "id": "AR-C287-kayfa-asilu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38d2a8350ca11468",
+      "sourceHash": "fnv1a64:8d0d4f544815eb36",
       "notice": null,
       "blocks": [
         {
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two shorter questions often come with it. أين — ayna, \"where\": ayna al-matḥaf?, where is the museum? And هل with baʿīd or qarīb: hal al-matḥaf baʿīd?, is the museum far? The answer may be qarīb min hunā, near here, or baʿīd qalīlan, a little far."
+              "text": "Two shorter questions often come with it. أين — ayna, \"where\": ayna al-matḥaf?, where is the museum? And هل with baʿīd or qarīb: hal al-matḥaf baʿīd?, is the museum far? The answer may be qarīb min hunā, near here, or baʿīd jiddan, very far."
             },
             {
               "kind": "speech",
@@ -90,7 +90,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أصل (aṣilu) is built on the native Arabic root w-ṣ-l, \"to reach, to join\" (Lane), the root of waṣala, \"he arrived\", and of ittaṣala, \"he phoned\", a call that joins two people. كيف (kayfa) and إلى (ilā) are inherited particles, not built on three-letter roots."
+              "text": "أصل (aṣilu) is built on the native Arabic root w-ṣ-l, \"to reach, to join\" (Lane), the root of waṣala, \"he arrived\", and of ittaṣala, \"he phoned\", a call that joins two people. كيف (kayfa) and إلى (ilā) are small particles, not verbs or nouns built on a three-letter root."
             }
           ]
         },
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4541394da8352e57",
+      "sourceHash": "fnv1a64:47bd6893a9497583",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "tadhhabu becomes اذهب idhhab, go, taʿburu becomes اعبر uʿbur, cross, taktubu becomes اكتب uktub, write."
+              "text": "tadhhabu becomes اذهب idhhab, go, taʿburu becomes اعبر uʿbur, cross, takhruju becomes اخرج ukhruj, go out."
             },
             {
               "kind": "speech",

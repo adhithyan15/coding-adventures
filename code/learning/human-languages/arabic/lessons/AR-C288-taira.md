@@ -54,7 +54,7 @@ They share a root, and so does the thing between them.
 > **سافرنا بالطائرة.** — *sāfarnā bi-ṭ-ṭāʾira* — We travelled by plane.
 
 The verb takes the *-at* of "she": *waṣalat*. A word ending in **ة** is
-feminine, and so is the verb that goes with it.
+usually feminine, and so is the verb that goes with it.
 
 Say it *ṭā-ʾi-ra*: the long *ā*, then the catch, then *ira*.
 

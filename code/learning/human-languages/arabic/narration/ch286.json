@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "Must, Should, Will, Because",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:76939c5fe61adef5",
+  "sourceHash": "fnv1a64:1adff198d690fe00",
   "lessons": [
     {
       "id": "AR-C286-an-adhhaba",
@@ -496,7 +496,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afb5ae03a105b04c",
+      "sourceHash": "fnv1a64:888fe68138b7292e",
       "notice": null,
       "blocks": [
         {
@@ -618,11 +618,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the opposite — lan usāfira li-anna ʿindī ʿamalan",
+              "instruction": "the opposite — lan usāfira li-anna ʿindī imtiḥānan",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the opposite — *lan usāfira li-anna ʿindī ʿamalan*]"
+              "source": "[YOU SAY: the opposite — *lan usāfira li-anna ʿindī imtiḥānan*]"
             }
           ]
         },

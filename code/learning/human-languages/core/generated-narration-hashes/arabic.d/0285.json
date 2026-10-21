@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 285,
-  "sourceHash": "fnv1a64:a66b85930918a20a",
+  "sourceHash": "fnv1a64:ed363c1140d3a3c3",
   "lessonIds": [
     "AR-C285-ray",
     "AR-C285-ataqidu-anna",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "arabic/narration/ch285.txt",
   "json": "arabic/narration/ch285.json",
-  "textHash": "fnv1a64:d69999f73306f5c0",
-  "jsonHash": "fnv1a64:d54695527c823f62",
+  "textHash": "fnv1a64:41db8d3962b92e9a",
+  "jsonHash": "fnv1a64:bd74e8eeca1d8f64",
   "findings": []
 }

@@ -48,7 +48,7 @@ dhahāb wa-iyāb*, *bi-kam?*, *min ayyi raṣīf?* When it goes wrong: *fātanī
 al-qiṭār*, *ḍāʿat ḥaqībatī*, *taʾakhkharat aṭ-ṭāʾira*, and *mādhā yajibu an
 aʿmala?* And if nobody can help, *al-masʾūl*.
 
-[PAUSE 2s] The hamza now has all its seats in your hand: **أ** in **سأل**,
+[PAUSE 2s] The hamza now has three of its seats in your hand: **أ** in **سأل**,
 **ؤ** in **سؤال** and **مسؤول**, **ئ** in **طائرة**. One sound, three ways
 to write it.
 

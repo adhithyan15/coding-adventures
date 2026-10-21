@@ -17,11 +17,11 @@ You'll want to know: كيف أصل إلى.
 Aṣilu, I arrive, is the present of waṣala, and the root's w has dropped, as it did in yajibu. To a woman, say min faḍliki.
 
 Grammar Lens: the questions around it.
-Two shorter questions often come with it. أين — ayna, "where": ayna al-matḥaf?, where is the museum? And هل with baʿīd or qarīb: hal al-matḥaf baʿīd?, is the museum far? The answer may be qarīb min hunā, near here, or baʿīd qalīlan, a little far.
+Two shorter questions often come with it. أين — ayna, "where": ayna al-matḥaf?, where is the museum? And هل with baʿīd or qarīb: hal al-matḥaf baʿīd?, is the museum far? The answer may be qarīb min hunā, near here, or baʿīd jiddan, very far.
 The answer to kayfa aṣilu is a set of orders, which the next lesson builds.
 
 The phrase, taken apart.
-أصل (aṣilu) is built on the native Arabic root w-ṣ-l, "to reach, to join" (Lane), the root of waṣala, "he arrived", and of ittaṣala, "he phoned", a call that joins two people. كيف (kayfa) and إلى (ilā) are inherited particles, not built on three-letter roots.
+أصل (aṣilu) is built on the native Arabic root w-ṣ-l, "to reach, to join" (Lane), the root of waṣala, "he arrived", and of ittaṣala, "he phoned", a call that joins two people. كيف (kayfa) and إلى (ilā) are small particles, not verbs or nouns built on a three-letter root.
 
 Guided Practice.
 [pause 1 second]
@@ -48,7 +48,7 @@ Karrir was an order. The answer to your question will be a string of them.
 
 Grammar Lens: an order from the present.
 Start from "you do it": tadhhabu, you go. Take off the ta- and the final vowel, and -dhhab is left, which cannot open with two consonants. Arabic puts a short vowel in front: u- when the stem's vowel is u, and i- otherwise.
-tadhhabu becomes اذهب idhhab, go, taʿburu becomes اعبر uʿbur, cross, taktubu becomes اكتب uktub, write.
+tadhhabu becomes اذهب idhhab, go, taʿburu becomes اعبر uʿbur, cross, takhruju becomes اخرج ukhruj, go out.
 To a woman, add -ī: idhhabī, uʿburī. One common order is short and irregular: خذ khudh, take, from akhadha; to a woman, khudhī.
 
 Grammar Lens: the way, in orders.

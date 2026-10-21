@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 286,
-  "sourceHash": "fnv1a64:76939c5fe61adef5",
+  "sourceHash": "fnv1a64:1adff198d690fe00",
   "lessonIds": [
     "AR-C286-an-adhhaba",
     "AR-C286-yajibu-an",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch286.txt",
   "json": "arabic/narration/ch286.json",
-  "textHash": "fnv1a64:d021c60df5cedf8a",
-  "jsonHash": "fnv1a64:82f340d81ff7784c",
+  "textHash": "fnv1a64:83bbb405495c4268",
+  "jsonHash": "fnv1a64:631f894be7da8b3a",
   "findings": []
 }

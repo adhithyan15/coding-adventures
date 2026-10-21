@@ -49,16 +49,16 @@ to hand the whole thing on.
 
 [PAUSE 2s] One small story, in four steps:
 
-> **أولا ذهبت إلى العمل، ثم كتبت رسالة. عندما رجعت، حكيت القصة لصديقي.** —
-> *awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla. ʿindamā rajaʿtu,
-> ḥakaytu al-qiṣṣa li-ṣadīqī* — First I went to work, then I wrote a letter.
+> **أولا ذهبت إلى المكتب، ثم كتبت رسالة. عندما رجعت، حكيت القصة لصديقي.** —
+> *awwalan dhahabtu ilā al-maktab, thumma katabtu risāla. ʿindamā rajaʿtu,
+> ḥakaytu al-qiṣṣa li-ṣadīqī* — First I went to the office, then I wrote a letter.
 > When I came back, I told my friend the story.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C283-SCENE-EVENT-01, AR-GRAMMAR-C283-PRESENT-PERSONS-01, AR-SKILL-C284-READ-NARRATIVE-01, AR-LEX-C280-AMAL280-01, AR-LEX-C280-AMAL280-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: *awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla*]
+- [YOU SAY: *awwalan dhahabtu ilā al-maktab, thumma katabtu risāla*]
 - [YOU SAY: *ʿindamā rajaʿtu, ḥakaytu al-qiṣṣa li-ṣadīqī*]
 - [YOU SAY: "After the client came, the pharmacist phoned" — *baʿda an jāʾa al-ʿamīl, ittaṣala aṣ-ṣaydalī*]
 - [YOU SAY: the trip to the sea in three steps: where you went first, what you did then, how it ended]

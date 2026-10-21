@@ -14,7 +14,7 @@ concept_tag: REVIEW
 prerequisites: [AR-C290-mundhu]
 sounds: []
 roots: []
-etymology_hook: "one shape, aCCaC, makes every 'more': akbar, asraʿ, akthar, and afḍal from the root of min faḍlik"
+etymology_hook: "one shape, aCCaC, makes the 'more' of most describing words: akbar, asraʿ, akthar, and afḍal from the root of min faḍlik"
 duration:
   max_seconds: 260
 requires:
@@ -60,7 +60,7 @@ past, for "ago".
 
 [PAUSE 1s]
 - [YOU SAY: "The plane is faster than the train" — *aṭ-ṭāʾira asraʿ min al-qiṭār*]
-- [YOU SAY: "This pencil case is smaller" — *hādhihi al-miqlama aṣghar*]
+- [YOU SAY: "The pencil case is smaller" — *al-miqlama aṣghar*]
 - [YOU SAY: "I have been waiting for the information since the morning" — *antaẓiru al-maʿlūmāt mundhu aṣ-ṣabāḥ*]
 - [YOU SAY: something you did a year ago, and how long you have done something else]
 

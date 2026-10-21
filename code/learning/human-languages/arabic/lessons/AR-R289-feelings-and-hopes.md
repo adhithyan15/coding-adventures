@@ -49,9 +49,9 @@ jadīda*. Looking ahead: *atamannā an*, *aḥlumu bi-*, *urīdu an uṣbiḥa*.
 
 [PAUSE 2s] Both ends in one breath:
 
-> **كانت تجربة صعبة، لكنني أتمنى أن أسافر مرة أخرى.** — *kānat tajribatan
-> ṣaʿba, lākinnanī atamannā an usāfira marratan ukhrā* — It was a hard
-> experience, but I hope to travel again.
+> **كانت تجربة صعبة، لكن أتمنى أن أسافر قريبا.** — *kānat tajribatan
+> ṣaʿba, lākin atamannā an usāfira qarīban* — It was a hard
+> experience, but I hope to travel again soon.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C289-KANA-ACCUSATIVE-01, AR-GRAMMAR-C289-BECOME-01, AR-LEX-C54-HEALTH54-02, AR-LEX-C281-AMAL281-05, AR-LEX-C282-AMAL282-05, AR-LEX-C284-QISSA284-01] -->

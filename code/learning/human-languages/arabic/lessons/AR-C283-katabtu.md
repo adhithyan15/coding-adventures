@@ -52,7 +52,7 @@ same stem, *katab-*:
 > **كتبتُ** *katabtu*, I wrote · **كتبتَ** *katabta*, you wrote (to a man) ·
 > **كتبتِ** *katabti*, you wrote (to a woman) · **كتبَ** *kataba*, he wrote ·
 > **كتبتْ** *katabat*, she wrote · **كتبنا** *katabnā*, we wrote ·
-> **كتبوا** *katabū*, they wrote
+> **كتبوا** *katabū*, they wrote · **كتبتم** *katabtum*, you wrote (to several)
 
 The present put the person at the front; the past puts it at the back.
 

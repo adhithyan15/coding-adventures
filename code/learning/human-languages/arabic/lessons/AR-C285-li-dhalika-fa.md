@@ -68,8 +68,8 @@ onto the next word, with no space:
 
 *Wa-* adds the next thing; *fa-* says the next thing came of the first.
 *Li-dhālika* is the heavier of the two, and it suits a reason that needs
-weight: *kāna al-imtiḥān ṣaʿban, li-dhālika darastu kathīran*, the exam was
-hard, so I studied a lot.
+weight: *kāna al-imtiḥān ṣaʿban, li-dhālika qaraʾtu kathīran*, the exam was
+hard, so I read a lot.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C285-FA-SO-01, AR-GRAMMAR-C283-PAST-PERSONS-01, AR-GRAMMAR-C285-OPINION-ANNA-01] -->
@@ -78,7 +78,7 @@ hard, so I studied a lot.
 - [YOU SAY: *nimtu mubakkiran li-annanī kuntu mutʿaban*]
 - [YOU SAY: the same facts the other way — *kuntu mutʿaban, li-dhālika nimtu mubakkiran*]
 - [YOU SAY: "The train was late, so we took the bus" — *taʾakhkhara al-qiṭār, fa-akhadhnā al-ḥāfila*]
-- [YOU SAY: an opinion and its result — *aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika adrusu*]
+- [YOU SAY: an opinion and its result — *aʿtaqidu anna al-imtiḥāna ṣaʿb, li-dhālika aqraʾu kathīran*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-GRAMMAR-C285-FA-SO-01, AR-LEX-C174-SABAB174-03, AR-LEX-C40-LIANNA-01] -->
