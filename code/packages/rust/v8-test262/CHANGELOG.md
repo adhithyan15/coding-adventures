@@ -2,6 +2,18 @@
 
 ## 0.1.0 — unreleased
 
+- **Annex B HTML close comments pass, and are listed.** javascript-lexer now
+  skips a line-leading `-->`, so all 7 results in
+  `annexB/language/comments/` that use only `-->` now pass
+  (`multi-line-html-close`, `single-line-html-close`, and
+  `single-line-html-close-first-line-1/2/3`). They were added with a filtered
+  `--update annexB/language/comments`, which adds only those 7 ids. This also
+  clears the main-branch regression of `single-line-html-close-asi.js` (both
+  modes). That test had passed only because the grammar misread `-->` as a
+  postfix `--`, until #17875's newline-led `--` split exposed it. Full run at
+  `7ab7faf`: 69,062 pass, 0 regressions. The other 38 unlisted passes on
+  `main` are left to the changes that caused them.
+
 - **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
   `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is
   judged again (it is on the pass list in both modes). `PARSE_BUDGET_BYTES`

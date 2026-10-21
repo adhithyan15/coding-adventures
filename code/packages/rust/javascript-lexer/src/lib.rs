@@ -13,8 +13,9 @@
 
 use coding_adventures_correlation_vector::{CVLog, Origin};
 use coding_adventures_javascript_tokens::EsVersion;
-use lexer::grammar_lexer::GrammarLexer;
-use lexer::token::Token;
+use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+use lexer::grammar_lexer::{GrammarLexer, LexerContext};
+use lexer::token::{Token, TOKEN_PRECEDED_BY_NEWLINE};
 use std::collections::HashMap;
 
 mod _grammar;
@@ -40,6 +41,116 @@ fn validate_version(version: &str) -> Result<&str, String> {
     }
 }
 
+// ===========================================================================
+// Annex B: SingleLineHTMLCloseComment (`-->` at the start of a line)
+// ===========================================================================
+//
+// Browsers have always let a script hide itself from pre-`<script>` browsers
+// inside an HTML comment, and ECMA-262 Annex B §B.1.1 ("HTML-like Comments")
+// keeps that working. One of its forms is the *close* comment: a `-->` that
+// starts a line (only whitespace and `/* … */` comments may come before it on
+// that line) runs to the end of the line and is ignored, exactly like `//`:
+//
+// ```text
+//     var foo = [23]
+//     -->[0];            ← all of `-->[0];` is a comment
+//     foo[0] === 23      ← so `foo` is still the array [23]
+// ```
+//
+// The token grammars cannot say "at the start of a line" (a skip pattern is
+// a regex anchored at the current position, with no look-behind), so the
+// grammar alone lexes that `-->` as `--` then `>`. The lexer does know which
+// tokens a line terminator preceded: it sets TOKEN_PRECEDED_BY_NEWLINE from
+// the trivia it skipped, and that trivia includes any `/* … */` comments. So
+// an on-token callback recognises the comment where the grammar can't:
+//
+// ```text
+//   MINUS_MINUS, line-leading, next char `>`   →  drop it, push the
+//                                                 `html_close_comment` group
+//   HTML_CLOSE_COMMENT_REST (`>` … end of line) →  drop it, pop the group
+// ```
+//
+// The group holds that single pattern and is exclusive (it is never a
+// `set-mode` target, so it does not inherit the default patterns). Both
+// tokens are suppressed, so no F10 mode transition fires on them and the
+// regex-vs-division mode on the far side of the comment is the one before it.
+// The line terminator that ends the comment is ordinary skipped trivia, so the
+// next token is still flagged as newline-preceded, which is what ASI needs.
+//
+// "Line-leading" also covers the very start of the input. ES2024 test262
+// accepts `-->` as the first thing in a Script.
+//
+// This applies to every edition and to module code too, which Annex B does
+// not ask for. It is safe because, read as code, a line-leading `-->` can
+// never be part of a valid program: a postfix `--` may not follow a line
+// terminator, so the `--` would have to be a prefix operator, and `>` cannot
+// start its operand. Treating it as a comment therefore changes no program
+// that was valid before. (Before this, javascript-parser's newline-led
+// `++`/`--` split, #17840, turned `[23]⏎-->[0]` into `[23]; -- > [0]` and
+// rejected the program. Before that split, the grammar accepted it only by
+// misreading it as `[23]-- > [0]`.)
+//
+// The *open* comment `<!--` is not handled. Unlike `-->`, it changes the
+// meaning of valid module code (`a<!--b` is `a < !(--b)` there), so it needs
+// a script-vs-module goal that the lexer does not have.
+
+/// The pattern group pushed after a line-leading `--` whose next char is `>`.
+const HTML_CLOSE_COMMENT_GROUP: &str = "html_close_comment";
+
+/// The rest of an HTML close comment: the `>` of `-->`, then everything up to
+/// (not including) the next LineTerminator (LF, CR, LS or PS).
+const HTML_CLOSE_COMMENT_REST: &str = "HTML_CLOSE_COMMENT_REST";
+
+/// Build the GrammarLexer every entry point in this crate uses.
+///
+/// Sources that do not contain `-->` at all (almost all of them) get the plain
+/// grammar lexer with no callback, so they pay nothing for Annex B. The others
+/// get the `html_close_comment` group and [`skip_html_close_comment`].
+fn javascript_lexer<'src>(source: &'src str, mut grammar: TokenGrammar) -> GrammarLexer<'src> {
+    if !source.contains("-->") {
+        return GrammarLexer::new(source, &grammar);
+    }
+    grammar.groups.insert(
+        HTML_CLOSE_COMMENT_GROUP.to_string(),
+        PatternGroup {
+            name: HTML_CLOSE_COMMENT_GROUP.to_string(),
+            definitions: vec![TokenDefinition {
+                name: HTML_CLOSE_COMMENT_REST.to_string(),
+                pattern: r">[^\n\r\u{2028}\u{2029}]*".to_string(),
+                is_regex: true,
+                line_number: 0,
+                alias: None,
+            }],
+        },
+    );
+    let mut lexer = GrammarLexer::new(source, &grammar);
+    lexer.set_on_token(Some(Box::new(skip_html_close_comment)));
+    lexer
+}
+
+/// The on-token callback that turns a line-leading `-->` into a comment. See
+/// the section comment above for why this lives in the lexer.
+fn skip_html_close_comment(token: &Token, ctx: &mut LexerContext) {
+    match token.type_name.as_deref() {
+        Some("MINUS_MINUS") if starts_line(token, ctx) && ctx.peek(1) == ">" => {
+            ctx.suppress();
+            ctx.push_group(HTML_CLOSE_COMMENT_GROUP)
+                .expect("javascript_lexer registers the html_close_comment group");
+        }
+        Some(HTML_CLOSE_COMMENT_REST) => {
+            ctx.suppress();
+            ctx.pop_group();
+        }
+        _ => {}
+    }
+}
+
+/// Whether `token` is the first token on its line: a line terminator was
+/// skipped since the previous token, or nothing has been emitted yet.
+fn starts_line(token: &Token, ctx: &LexerContext) -> bool {
+    token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0 || ctx.previous_token().is_none()
+}
+
 pub fn create_javascript_lexer<'src>(
     source: &'src str,
     version: &str,
@@ -47,14 +158,14 @@ pub fn create_javascript_lexer<'src>(
     let version = validate_version(version)?;
     let grammar = _grammar::token_grammar(version)
         .expect("compiled JavaScript token grammar missing supported version");
-    Ok(GrammarLexer::new(source, &grammar))
+    Ok(javascript_lexer(source, grammar))
 }
 
 pub fn tokenize_javascript(source: &str, version: &str) -> Result<Vec<Token>, String> {
     let version = validate_version(version)?;
     let grammar = _grammar::token_grammar(version)
         .expect("compiled JavaScript token grammar missing supported version");
-    let mut lexer = GrammarLexer::new(source, &grammar);
+    let mut lexer = javascript_lexer(source, grammar);
     lexer
         .tokenize()
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
@@ -68,7 +179,7 @@ pub fn create_javascript_lexer_typed<'src>(
 ) -> GrammarLexer<'src> {
     let grammar = _grammar::token_grammar(version.as_str())
         .expect("compiled JavaScript token grammar missing supported version");
-    GrammarLexer::new(source, &grammar)
+    javascript_lexer(source, grammar)
 }
 
 /// Typed version of [`tokenize_javascript`]. Takes an [`EsVersion`] directly;
@@ -80,7 +191,7 @@ pub fn tokenize_javascript_typed(
 ) -> Result<Vec<Token>, String> {
     let grammar = _grammar::token_grammar(version.as_str())
         .expect("compiled JavaScript token grammar missing supported version");
-    let mut lexer = GrammarLexer::new(source, &grammar);
+    let mut lexer = javascript_lexer(source, grammar);
     lexer
         .tokenize()
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
@@ -105,7 +216,7 @@ pub fn tokenize_javascript_division_only(
     grammar
         .error_definitions
         .retain(|rule| rule.name != "BAD_REGEX");
-    let mut lexer = GrammarLexer::new(source, &grammar);
+    let mut lexer = javascript_lexer(source, grammar);
     lexer
         .tokenize()
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
@@ -238,6 +349,127 @@ mod tests {
 
     fn preceded_by_newline(t: &lexer::token::Token) -> bool {
         t.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
+    }
+
+    // -----------------------------------------------------------------------
+    // Annex B SingleLineHTMLCloseComment (test262
+    // annexB/language/comments/single-line-html-close*.js)
+    // -----------------------------------------------------------------------
+
+    fn values(tokens: &[lexer::token::Token]) -> Vec<&str> {
+        tokens.iter().map(|t| t.value.as_str()).collect()
+    }
+
+    #[test]
+    fn line_leading_html_close_comment_is_skipped_in_every_version() {
+        // test262 single-line-html-close-asi.js: `-->[0];` is a comment, so
+        // `foo` stays the array and the next line is a new statement.
+        for &version in EsVersion::ALL {
+            let tokens =
+                tokenize_javascript_typed("var foo = [23]\n-->[0];\nfoo", version).unwrap();
+            assert_eq!(
+                values(&tokens),
+                ["var", "foo", "=", "[", "23", "]", "foo", ""],
+                "{version}"
+            );
+            assert!(preceded_by_newline(&tokens[6]), "{version}");
+        }
+    }
+
+    #[test]
+    fn html_close_comment_may_follow_whitespace_and_comments_on_its_line() {
+        // Every HTMLCloseComment shape test262 uses: after a line terminator,
+        // then optional whitespace and same-line `/* */` comments; after a
+        // `/* */` that itself contains a line terminator (even when a token
+        // precedes it on its first line); and at the very start of the input.
+        for src in [
+            "a\n-->",
+            "a\n-->the comment extends to these characters\nb",
+            "a\n   -->x\nb",
+            "a\n/* x */-->x\nb",
+            "a\n/**/ /* y */-->x\nb",
+            "a\n/*\n*/-->x\nb",
+            "a\n0/*\n*/-->x\nb",
+            "--> a comment\nb",
+            "   --> a comment\nb",
+            "/* a */ /* b */--> a comment\nb",
+            "a\r\n-->x\r\nb",
+            "a\n-->>= not an operator\nb",
+            "a\n--> unterminated ' \" ` /* are all comment text\nb",
+        ] {
+            let tokens = tokenize_javascript_typed(src, EsVersion::Es2025)
+                .unwrap_or_else(|e| panic!("{src:?}: {e}"));
+            assert!(
+                tokens.iter().all(|t| t.value != "--" && t.value != ">"),
+                "{src:?} -> {:?}",
+                values(&tokens)
+            );
+            let last = &tokens[tokens.len() - 2];
+            if last.value == "b" {
+                assert!(preceded_by_newline(last), "{src:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn html_close_comment_ends_at_every_line_terminator() {
+        // SingleLineCommentChars stop at LF, CR, LS and PS.
+        let tokens = tokenize_javascript_typed("a\n-->x\rb", EsVersion::Es2025).unwrap();
+        assert_eq!(values(&tokens), ["a", "b", ""]);
+    }
+
+    #[test]
+    fn dash_dash_gt_that_does_not_lead_its_line_is_still_code() {
+        // Mid-line, `-->` is `--` then `>`; `-- >` is never a comment.
+        assert_eq!(
+            values(&tokenize_javascript_typed("a-->b", EsVersion::Es2025).unwrap()),
+            ["a", "--", ">", "b", ""]
+        );
+        assert_eq!(
+            values(&tokenize_javascript_typed("a\n-- >b", EsVersion::Es2025).unwrap()),
+            ["a", "--", ">", "b", ""]
+        );
+        // A `-->` at the start of a line inside a template literal or a
+        // block comment is part of that token or comment, not a comment of
+        // its own.
+        let template = tokenize_javascript_typed("x = `\n-->`;", EsVersion::Es2025).unwrap();
+        assert_eq!(template[2].value, "`\n-->`");
+        let block = tokenize_javascript_typed("a /*\n-->*/ - b", EsVersion::Es2025).unwrap();
+        assert_eq!(values(&block), ["a", "-", "b", ""]);
+    }
+
+    #[test]
+    fn html_close_comment_keeps_the_regex_or_division_mode() {
+        // After `a` a `/` is division. The suppressed comment tokens fire no
+        // F10 transition (an emitted `>` would switch to regex mode and lex
+        // `/b/g` as one REGEX).
+        let tokens = tokenize_javascript_typed("a\n-->x\n/b/g", EsVersion::Es2025).unwrap();
+        assert_eq!(values(&tokens), ["a", "/", "b", "/", "g", ""]);
+        // After `=` a `/` starts a regex, and still does past the comment.
+        let tokens = tokenize_javascript_typed("a =\n-->x\n/b/g", EsVersion::Es2025).unwrap();
+        assert_eq!(values(&tokens), ["a", "=", "/b/g", ""]);
+    }
+
+    #[test]
+    fn every_entry_point_skips_html_close_comments() {
+        let src = "a\n-->x\nb";
+        let expected = ["a", "b", ""];
+        assert_eq!(values(&tokenize_javascript(src, "es2025").unwrap()), expected);
+        assert_eq!(
+            values(&tokenize_javascript_division_only(src, EsVersion::Es2025).unwrap()),
+            expected
+        );
+        assert_eq!(
+            values(&create_javascript_lexer(src, "es2025").unwrap().tokenize().unwrap()),
+            expected
+        );
+        assert_eq!(
+            values(&create_javascript_lexer_typed(src, EsVersion::Es2025).tokenize().unwrap()),
+            expected
+        );
+        let mut cv = CVLog::new(true);
+        let with_cv = tokenize_javascript_with_cv(src, "in.js", EsVersion::Es2025, &mut cv).unwrap();
+        assert_eq!(with_cv.len(), 3);
     }
 
     #[test]
