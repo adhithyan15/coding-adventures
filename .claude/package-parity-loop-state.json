@@ -22655,7 +22655,89 @@
       "worktree": "C:/Users/adhit/.codex/worktrees/parity-next-20261021/coding-adventures",
       "started_at": "2026-10-21T05:56:36.942951+00:00",
       "base_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
-      "selection_notes": "Exactly one successor after1517owner/2576edge reconciliation,28newpending discoveries and25savednote updates. Go1.26.4 available;18directconsumers; no directsource/spec overlap among25openPRs. Neutral BF03 externallymerged. Additive strict boundary preserves broadlegacy API/Nibdebugcomments; all50cases and25roles required. Source-map/duplicate-selector/.NETdigest alternatives retained; RustSTP01 heavier fullworkspace validation."
+      "selection_notes": "Exactly one successor after1517owner/2576edge reconciliation,28newpending discoveries and25savednote updates. Go1.26.4 available;18directconsumers; no directsource/spec overlap among25openPRs. Neutral BF03 externallymerged. Additive strict boundary preserves broadlegacy API/Nibdebugcomments; all50cases and25roles required. Source-map/duplicate-selector/.NETdigest alternatives retained; RustSTP01 heavier fullworkspace validation.",
+      "local_validation": {
+        "observed_at": "2026-10-21T06:20:48.606749+00:00",
+        "source_head": "531d1608bbb641a2d55a7c39361e6763c1188768",
+        "source_hashes": {
+          "code/packages/go/compiler-ir/core_profile.go": "aabde62bd4a06321b36b580082dda5c752516cde662754a1ceeadf7ae847b764",
+          "code/packages/go/compiler-ir/core_profile_test.go": "815a4e9df102a5db2e791e25fae2e9c106944a7721d56e45ac021b8965f49bbe",
+          "code/programs/go/build-tool/main.go": "bf70bf426317ad228e6824af27ade63bec469689e4473995c320394f1cdf099a",
+          "code/programs/go/build-tool/compiler_ir_core_ci_selection_test.go": "fc4bc3031f9611a86ab5e0abb36437bfcdb6adbf6b06c8b3c1d78c1768f09fbc"
+        },
+        "scope": "Go BF03 core-text-v1 native data/text component; no other lane/runtime/backend/full-build-tool qualification",
+        "native_package": {
+          "BUILD": "PASS go test ./... -v -cover",
+          "statements_covered": 280,
+          "statements_total": 281,
+          "percent": 99.644128,
+          "includes_generated_production": true,
+          "reader_coverage_credit": false,
+          "race": "PASS",
+          "vet": "PASS",
+          "build": "PASS",
+          "gofmt": "PASS",
+          "corpus_cases": 50,
+          "operation_roles": 25,
+          "fuzz_executions": 614689,
+          "fuzz_seconds": 10
+        },
+        "native_affected_closure": {
+          "force": false,
+          "discovered_go": 314,
+          "built": 61,
+          "skipped": 253,
+          "failed": 0,
+          "log": "bf03-go-native-plan-execution-final.log"
+        },
+        "fixture_only": {
+          "actual_unforced_detector_and_real_copied_native_BUILD": "PASS",
+          "exact_unchanged_corpus": true,
+          "affected": [
+            "go/compiler-ir"
+          ],
+          "log": "bf03-go-fixture-only-native-build-final.log"
+        },
+        "build_tool": {
+          "all15package_test_suites": "PASS",
+          "vet": "PASS",
+          "build": "PASS",
+          "selector_linux_darwin_windows_all_go_rust_and_atomic_plan": "PASS"
+        },
+        "all_language_metadata_plan": {
+          "packages": 5341,
+          "starlark_builds": 45,
+          "existing_exemptions": 38,
+          "status": "PASS"
+        },
+        "neutral_and_metadata": {
+          "compiler_ir_tests": 11,
+          "reporter_tests": 10,
+          "CI_registry_tests": 19,
+          "lessons_tests": 31,
+          "lesson_shards": 1296,
+          "collision_report": "PASS same15lanes1521identities4803slots;OCaml5emerging excluded",
+          "diff": "PASS"
+        },
+        "vulnerability": {
+          "tool": "govulncheck@v1.9.0",
+          "go": "go1.26.4",
+          "database": "vuln.go.dev updated2026-10-21T00:27:29Z",
+          "modules_scanned": [
+            "go/compiler-ir",
+            "go/programs/build-tool"
+          ],
+          "reachable": 0,
+          "unreachable_imported_package_advisories": 2,
+          "unreachable_module_advisories": 22
+        },
+        "independent_security_reviews": [
+          "bf03-go-security-code-review.md",
+          "bf03-go-security-data-review.md"
+        ],
+        "limitations": "Native BUILD execution on Windows; otherplatformdetectorplans tested, actualcrossplatformpackageCI pending. No reviewed exception or wholelane claim.",
+        "receipt": "bf03-go-local-validation-receipt.json"
+      }
     },
     {
       "id": "compiler-ir-bf03-haskell-core-profile-adoption",

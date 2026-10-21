@@ -17605,3 +17605,18 @@ strict production APIs, all50neutral cases/25operation roles, bounded reader,
 95%+ production statement coverage,18real consumers and exact fixture CI routing.
 Source-map foundation, duplicate-discovery native selector and .NET dependency
 hashing remain ready alternatives; no second implementation is selected.
+
+
+Go BF03 delivery validation: all50frozen cases/25roles and independent
+tag/ID/order/golden corruption witnesses pass through real strict APIs.
+Production coverage280/281statements (99.64%), including generated helpers;
+race/vet/build/gofmt and614689fuzz inputs/10seconds pass. All18direct
+consumer BUILDfronts and the actual unforced61package affected/prerequisite
+closure pass (253unrelated Go packages skipped). A fixture-only Git change
+selected and built the real copied Go reader, preserving frozen corpus bytes.
+The all-language plan validates5341packages/45StarlarkBUILDs/38existing
+exemptions. Two independent security reviews pass after malformedCOMMENT
+projection and pre-hash file-read bounds fixes. Both changed modules have
+zero reachable govulncheck findings; imported/module advisories with no call
+path remain reported. Windows execution and three-platform selection plans
+are measured; current-head hosted CI remains required before merge.
