@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:a03945df95a885f7",
+  "lessonIds": [
+    "FA-C320-karagah",
+    "FA-C320-sarnakh",
+    "FA-C320-raddepa",
+    "FA-C320-asar-e-angosht",
+    "FA-C320-bazjuyi"
+  ],
+  "tex": "persian/book/chapters/ch320-detectives-and-clues.tex"
+}

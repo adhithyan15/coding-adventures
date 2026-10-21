@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C398-sanjidan",
+    "language": "persian",
+    "chapter": 398,
+    "sequence": 20380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f57392af481705"
+  },
+  "findings": []
+}

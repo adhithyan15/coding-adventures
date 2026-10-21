@@ -1,0 +1,11 @@
+{
+  "id": "FA-C365-enteqad-kardan",
+  "pathSegment": "FA-PATH-365-QEZAVAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-365-QEZAVAT",
+      "order": 2
+    }
+  ]
+}

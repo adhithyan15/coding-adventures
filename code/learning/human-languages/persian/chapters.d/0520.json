@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Musicians",
+  "label": "ch:fa-musicians",
+  "canDo": "I can talk about musicians and their work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C520-albom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about musicians and their work.",
+    "assesses": [
+      "FA-LEX-C520-MUSICIANS-03",
+      "FA-LEX-C520-MUSICIANS-04",
+      "FA-LEX-C520-MUSICIANS-05"
+    ]
+  }
+}

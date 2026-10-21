@@ -1,0 +1,11 @@
+{
+  "id": "FA-C403-doktora",
+  "pathSegment": "FA-PATH-403-TAHSILAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-403-TAHSILAT",
+      "order": 4
+    }
+  ]
+}

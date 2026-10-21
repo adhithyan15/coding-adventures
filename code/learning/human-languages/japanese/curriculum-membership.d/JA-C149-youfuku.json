@@ -1,0 +1,11 @@
+{
+  "id": "JA-C149-youfuku",
+  "pathSegment": "JA-PATH-149-DRESS149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-149-DRESS149",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C502-pushak",
+  "pathSegment": "FA-PATH-502-BABIES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-502-BABIES",
+      "order": 2
+    }
+  ]
+}

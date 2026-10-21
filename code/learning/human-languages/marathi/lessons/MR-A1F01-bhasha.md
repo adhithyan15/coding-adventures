@@ -16,13 +16,13 @@ prerequisites: [MR-A1F01-shahar, MR-C05-mi-marathi-bolto]
 sounds: []
 roots: []
 duration:
-  max_seconds: 150
+  max_seconds: 165
 requires:
   knowledge: [MR-A1-FORM-LABEL-NAAV, MR-A1-FORM-LABEL-SHAHAR]
 introduces:
   knowledge: [MR-A1-FORM-LABEL-BHASHA]
 practises:
-  knowledge: [MR-A1-FORM-LABEL-BHASHA]
+  knowledge: [MR-A1-FORM-LABEL-SHAHAR, MR-A1-FORM-LABEL-BHASHA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,10 @@ reviews_of: [MR-A1F01-shahar, MR-C05-mi-marathi-bolto]
 # भाषा — the language box
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-BHASHA]; assesses=[] -->
+<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-BHASHA]; assesses=[MR-A1-FORM-LABEL-SHAHAR] -->
+
+Before looking back, cover the title. Write the label for the city box from
+memory. Check the previous page only after writing it.
 
 You can already say **मी मराठी बोलतो / बोलते**. A form compresses that whole
 sentence to a label and a value: **भाषा: मराठी** — “language: Marathi.”

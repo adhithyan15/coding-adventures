@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:4c90f54159540955",
+  "lessonIds": [
+    "FA-C397-ehtiyat",
+    "FA-C397-mahz-e-ehtiyat",
+    "FA-C397-amadegi",
+    "FA-C397-pish-amadan",
+    "FA-C397-gozine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch397.txt",
+  "json": "persian/narration/ch397.json",
+  "textHash": "fnv1a64:6b379fc7d26b40ff",
+  "jsonHash": "fnv1a64:ce669ee2d3e80ac7",
+  "findings": []
+}

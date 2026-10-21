@@ -36,6 +36,7 @@ fn single(f: IIRFunction) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

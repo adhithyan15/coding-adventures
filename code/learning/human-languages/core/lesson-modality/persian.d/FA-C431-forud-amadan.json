@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C431-forud-amadan",
+    "language": "persian",
+    "chapter": 431,
+    "sequence": 22080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e92bbee4bce6c3d"
+  },
+  "findings": []
+}

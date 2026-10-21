@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Snow and ice",
+  "label": "ch:fa-snow-and-ice",
+  "canDo": "I can talk about winter weather: a snowstorm, a blizzard, a frost, freezing and melting.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C476-ab-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about winter weather: a snowstorm, a blizzard, a frost, freezing and melting.",
+    "assesses": [
+      "FA-LEX-C476-KULAK-03",
+      "FA-LEX-C476-KULAK-04",
+      "FA-LEX-C476-KULAK-05"
+    ]
+  }
+}

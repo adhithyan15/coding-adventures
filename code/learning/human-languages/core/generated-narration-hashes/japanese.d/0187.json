@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f284c5df86a422f6",
+  "lessonIds": [
+    "JA-C187-azukeru",
+    "JA-C187-orosu",
+    "JA-C187-tsuuchou",
+    "JA-C187-kariru",
+    "JA-C187-ryougae"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch187.txt",
+  "json": "japanese/narration/ch187.json",
+  "textHash": "fnv1a64:39c29a3ead70bdee",
+  "jsonHash": "fnv1a64:03ace75884f5ad93",
+  "findings": []
+}

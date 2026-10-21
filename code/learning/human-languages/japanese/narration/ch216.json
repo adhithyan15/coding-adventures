@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 216,
+  "title": "Feeling Unwell",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9242434a0046b7f4",
+  "lessons": [
+    {
+      "id": "JA-C216-byouki",
+      "sequence": 12930,
+      "title": "びょうき (byōki) — an illness; a disease",
+      "headword": "びょうき",
+      "romanization": "byōki",
+      "gloss": "an illness; a disease",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1aae3bec8ca2152",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a neck, then the Japanese for a cough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: びょうき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びょうき — byōki — \"an illness; a disease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもは びょうきですか。 — kodomo wa byōki desu ka — \"Is the child ill?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びょうき (byōki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are byō, \"illness\" (Middle Chinese bjaengH) and ki, \"air, spirit\" (khj+jH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byōki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byōki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byōki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byōki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo wa byōki desu ka — Is the child ill?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo wa byōki desu ka* — Is the child ill?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a neck, then the Japanese for a cough, then say byōki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a neck, then the Japanese for a cough, then say *byōki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does びょうき (byōki) mean? (\"An illness; a disease\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C216-byouki-type",
+              "prompt": "Say the Japanese for 'an illness'.",
+              "assesses": [
+                "JA-LEX-C216-UNWELL216-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びょうき",
+                "byōki",
+                "byouki",
+                "byooki",
+                "byoki"
+              ],
+              "feedback": {
+                "correct": "Right: びょうき (byōki) is 'an illness; a disease'.",
+                "incorrect": "'An illness' is びょうき (byōki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C216-guai",
+      "sequence": 12940,
+      "title": "ぐあい (guai) — condition; how one feels",
+      "headword": "ぐあい",
+      "romanization": "guai",
+      "gloss": "condition; how one feels",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fdb00b5c06d3d4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cough, then the Japanese for an illness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぐあい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぐあい — guai — \"condition; how one feels\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぐあいは いいですか。 — guai wa ii desu ka — \"Are you feeling well?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぐあい (guai) is built from Sino-Japanese gu, \"tool, means\" (Middle Chinese gjuH), borrowed from Chinese, and native ai, \"fitting\", from au, \"to meet, fit\" (JMdict, KANJIDIC2; Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guai wa ii desu ka — Are you feeling well?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guai wa ii desu ka* — Are you feeling well?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cough, then the Japanese for an illness, then say guai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cough, then the Japanese for an illness, then say *guai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぐあい (guai) mean? (\"Condition; how one feels\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C216-guai-type",
+              "prompt": "Say the Japanese for 'condition'.",
+              "assesses": [
+                "JA-LEX-C216-UNWELL216-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぐあい",
+                "guai"
+              ],
+              "feedback": {
+                "correct": "Right: ぐあい (guai) is 'condition; how one feels'.",
+                "incorrect": "'Condition' is ぐあい (guai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C216-tsukareru",
+      "sequence": 12950,
+      "title": "つかれる (tsukareru) — to get tired",
+      "headword": "つかれる",
+      "romanization": "tsukareru",
+      "gloss": "to get tired",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90fdbbaac78bf0df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an illness, then the Japanese for condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つかれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかれる — tsukareru — \"to get tired\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち つかれますか。 — mainichi tsukaremasu ka — \"Do you get tired every day?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つかれます, tsukaremasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかれる (tsukareru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukareru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukareru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukareru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukareru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi tsukaremasu ka — Do you get tired every day?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi tsukaremasu ka* — Do you get tired every day?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an illness, then the Japanese for condition, then say tsukareru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an illness, then the Japanese for condition, then say *tsukareru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つかれる (tsukareru) mean? (\"To get tired\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C216-tsukareru-type",
+              "prompt": "Say the Japanese for 'to get tired'.",
+              "assesses": [
+                "JA-LEX-C216-UNWELL216-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つかれる",
+                "tsukareru"
+              ],
+              "feedback": {
+                "correct": "Right: つかれる (tsukareru) is 'to get tired'.",
+                "incorrect": "'To get tired' is つかれる (tsukareru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C216-naoru",
+      "sequence": 12960,
+      "title": "なおる (naoru) — to get better; to heal",
+      "headword": "なおる",
+      "romanization": "naoru",
+      "gloss": "to get better; to heal",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c392f8e0918536e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for condition, then the Japanese for to get tired."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なおる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なおる — naoru — \"to get better; to heal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "びょうきは もう なおりましたか。 — byōki wa mō naorimashita ka — \"Has your illness got better yet?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite なおります, naorimasu; a godan verb. Its partner なおす, naosu, means \"to fix\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なおる (naoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and it pairs with naosu, \"to fix\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byōki wa mō naorimashita ka — Has your illness got better yet?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byōki wa mō naorimashita ka* — Has your illness got better yet?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for condition, then the Japanese for to get tired, then say naoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for condition, then the Japanese for to get tired, then say *naoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なおる (naoru) mean? (\"To get better; to heal\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C216-naoru-type",
+              "prompt": "Say the Japanese for 'to get better'.",
+              "assesses": [
+                "JA-LEX-C216-UNWELL216-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なおる",
+                "naoru"
+              ],
+              "feedback": {
+                "correct": "Right: なおる (naoru) is 'to get better; to heal'.",
+                "incorrect": "'To get better' is なおる (naoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C216-furueru",
+      "sequence": 12970,
+      "title": "ふるえる (furueru) — to shiver; to tremble",
+      "headword": "ふるえる",
+      "romanization": "furueru",
+      "gloss": "to shiver; to tremble",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45386650f3172a19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get tired, then the Japanese for to get better."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふるえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるえる — furueru — \"to shiver; to tremble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねつで からだが ふるえますか。 — netsu de karada ga furuemasu ka — \"Are you shivering with fever?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふるえます, furuemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるえる (furueru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furueru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furueru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furueru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furueru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netsu de karada ga furuemasu ka — Are you shivering with fever?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netsu de karada ga furuemasu ka* — Are you shivering with fever?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get tired, then the Japanese for to get better, then say furueru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get tired, then the Japanese for to get better, then say *furueru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふるえる (furueru) mean? (\"To shiver; to tremble\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C216-furueru-type",
+              "prompt": "Say the Japanese for 'to shiver'.",
+              "assesses": [
+                "JA-LEX-C216-UNWELL216-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふるえる",
+                "furueru"
+              ],
+              "feedback": {
+                "correct": "Right: ふるえる (furueru) is 'to shiver; to tremble'.",
+                "incorrect": "'To shiver' is ふるえる (furueru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

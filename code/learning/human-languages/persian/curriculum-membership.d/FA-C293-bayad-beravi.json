@@ -1,0 +1,11 @@
+{
+  "id": "FA-C293-bayad-beravi",
+  "pathSegment": "FA-PATH-293-ADVICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-293-ADVICE",
+      "order": 1
+    }
+  ]
+}

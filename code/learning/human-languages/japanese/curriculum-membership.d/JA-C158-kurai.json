@@ -1,0 +1,11 @@
+{
+  "id": "JA-C158-kurai",
+  "pathSegment": "JA-PATH-158-LIGHTS158",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-158-LIGHTS158",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Discoveries",
+  "label": "ch:fa-discoveries",
+  "canDo": "I can say what someone discovered, invented or founded, and talk about inscriptions and ruins.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C354-virane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say what someone discovered, invented or founded, and talk about inscriptions and ruins.",
+    "assesses": [
+      "FA-LEX-C354-KASHF-03",
+      "FA-LEX-C354-KASHF-04",
+      "FA-LEX-C354-KASHF-05"
+    ]
+  }
+}

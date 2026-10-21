@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:d5c66340ed1be221",
+  "lessonIds": [
+    "FA-C324-hadese",
+    "FA-C324-sanehe",
+    "FA-C324-tasadof-kardan",
+    "FA-C324-barkhord-kardan",
+    "FA-C324-vazhgun-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch324.txt",
+  "json": "persian/narration/ch324.json",
+  "textHash": "fnv1a64:f3e784682f327945",
+  "jsonHash": "fnv1a64:b10ff9940511c720",
+  "findings": []
+}

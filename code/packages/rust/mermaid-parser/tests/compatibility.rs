@@ -1878,6 +1878,28 @@ fn swimlane_markdown_labels_preserve_rich_text_ir() {
 }
 
 #[test]
+fn swimlane_markdown_labels_accept_authored_line_breaks() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph \"`Customer\n**Care**`\"\n  request[\"`Review **carefully**\n_then act_`\"]\n  done[Done]\n  request -- \"`Needs\n**approval**`\" --> done\n  subgraph queue [\"`Review\n_queue_`\"]\n    wait[Wait]\n  end\nend",
+    ).expect("authored Swimlane Markdown line breaks should parse");
+
+    assert_eq!(diagram.lanes[0].label.text, "Customer\nCare");
+    assert_eq!(diagram.groups[0].label.text, "Review\nqueue");
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "request").unwrap().label.text,
+        "Review carefully\nthen act");
+    assert_eq!(diagram.edges[0].label.as_ref().unwrap().text, "Needs\napproval");
+}
+
+#[test]
+fn swimlane_rejects_unterminated_multiline_markdown_labels() {
+    let error = parse_swimlane("swimlane-beta\nsubgraph A\n  task[\"`unfinished\nend")
+        .expect_err("unterminated Swimlane Markdown should fail");
+
+    assert_eq!(error.line, 3);
+    assert!(error.message.contains("unterminated Swimlane Markdown string"));
+}
+
+#[test]
 fn swimlane_parallel_endpoints_lower_to_individual_handoffs() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  decide{Approved?}\n  revise[Revise]\nend\nsubgraph Delivery\n  ship[Ship]\n  notify[Notify]\nend\ndecide --> ship & notify\nship & notify --> revise",
@@ -2649,14 +2671,36 @@ fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_long_endpoint_markers_preserve_minimum_lengths() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o----> b\nb x-----o c\nc <====> d\nd o=====x e\ne <-...-> f\nf x-....-o g",
+    ).expect("long endpoint-marked links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(),
+        vec![3, 4, 3, 4, 3, 4]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Undirected,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    assert_eq!((diagram.edges[0].start_marker, diagram.edges[0].end_marker),
+        (EdgeMarker::Circle, EdgeMarker::Point));
+    assert_eq!((diagram.edges[5].start_marker, diagram.edges[5].end_marker),
+        (EdgeMarker::Cross, EdgeMarker::Circle));
+}
+
+#[test]
 fn swimlane_minimum_link_lengths_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
-        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g",
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g\na -----> b ------ c =====> d ====== e -....-> f -....- g",
     ).expect("minimum-length Flowchart links should parse");
 
-    assert_eq!(diagram.edges.len(), 12);
+    assert_eq!(diagram.edges.len(), 18);
     assert!(diagram.edges[..6].iter().all(|edge| edge.min_length == 2));
-    assert!(diagram.edges[6..].iter().all(|edge| edge.min_length == 3));
+    assert!(diagram.edges[6..12].iter().all(|edge| edge.min_length == 3));
+    assert!(diagram.edges[12..].iter().all(|edge| edge.min_length == 4));
     assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Directed);
     assert_eq!(diagram.edges[2].kind, diagram_ir::SwimlaneEdgeKind::Thick);
     assert_eq!(diagram.edges[4].kind, diagram_ir::SwimlaneEdgeKind::Dotted);

@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Changing plans",
+  "label": "ch:fa-changing-plans",
+  "canDo": "I can say that someone changed their mind, that a meeting was put off or postponed, that we coordinated a time and that a plan was carried out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C396-ejra-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can say that someone changed their mind, that a meeting was put off or postponed, that we coordinated a time and that a plan was carried out.",
+    "assesses": [
+      "FA-LEX-C396-MONSAREF-03",
+      "FA-LEX-C396-MONSAREF-04",
+      "FA-LEX-C396-MONSAREF-05"
+    ]
+  }
+}

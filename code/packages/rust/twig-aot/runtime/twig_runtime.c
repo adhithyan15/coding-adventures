@@ -34,6 +34,8 @@
  * |-----------------------|----------------------------------------------|
  * | `__twig_print_i64`    | Print a signed 64-bit integer + newline.     |
  * | `__twig_write_i64`    | LANG83: print a signed 64-bit integer, no newline. |
+ * | `__twig_write_f64_py` | LANG83 PR6a: a double as Python `repr`, no newline. |
+ * | `__twig_write_f64_js` | LANG83 PR6a: a double as JS `Number#toString`, no newline. |
  * | `__twig_trap`         | LANG83: flush stdout, report the trap kind on stderr, abort. |
  * | `__twig_putchar`      | Write one byte to stdout.                    |
  * | `__twig_getchar`      | Read one byte from stdin (-1 on EOF).        |
@@ -138,6 +140,272 @@ void __twig_print_i64(int64_t val) {
 void __twig_write_i64(int64_t val) {
     twig_runtime_ensure_stdout_binary();
     printf("%lld", (long long)val);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LANG83 PR6a — shortest round-trip float output
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ * `__twig_write_f64_py(bits)` prints a double the way Python's `repr` does,
+ * `__twig_write_f64_js(bits)` the way JavaScript's `Number#toString` does,
+ * both with NO newline. The argument is the double's raw bit pattern: the
+ * native backends keep an `f64` in a frame slot as its 8 bytes and pass a
+ * builtin argument in a general-purpose register (`rdi` / `x0`), so the
+ * generic `call_builtin` marshalling needs no float-register path.
+ *
+ * Two steps, as in every LANG83 backend (spec, "PR6a"):
+ *
+ *   1. DIGITS — the shortest decimal string D (and exponent k, value =
+ *      0.D × 10^k) that reads back as exactly x; on a length tie the closest
+ *      one; on an exact tie the even one. `printf("%.17g")` is NOT this: it
+ *      prints 17 digits, `0.1` as `0.10000000000000001`.
+ *   2. LAYOUT — where the point goes, which is where Python and JavaScript
+ *      differ (`1e+16` vs `10000000000000000`, `1.0` vs `1`).
+ *
+ * The digits come from the Burger–Dybvig free-format algorithm (the
+ * Steele–White / Dragon4 family): exact big-integer arithmetic, no tables.
+ * Picture the real line around x:
+ *
+ *            x - m-          x           x + m+
+ *      ───────[──────────────●──────────────]───────
+ *        every decimal inside this interval reads back as x
+ *
+ * m- and m+ are half the gaps to the neighbouring doubles (m- is half as
+ * wide when x is a power of two: the gap below shrinks). The algorithm
+ * emits digits of x one at a time and stops at the first digit where it
+ * can round to a decimal inside the interval: that is the shortest string.
+ * Everything is kept as integers over a common denominator s:
+ *
+ *      x = r / s,   m+ = mp / s,   m- = mm / s
+ *
+ * ── Big integers ──────────────────────────────────────────────────────────
+ * A twig_bn is TWIG_BN_LIMBS base-2^32 digits, least significant first,
+ * each held in a 64-bit word so `limb × m + carry` never overflows
+ * (m < 2^32). 40 limbs = 1280 bits; the largest value any double needs is
+ * below 2^1084 (measured over every power of two, the subnormal range and
+ * random bit patterns — LANG83 "PR6a"), so they cannot overflow.
+ */
+#define TWIG_BN_LIMBS 40
+#define TWIG_BN_MASK 0xFFFFFFFFull
+
+typedef struct {
+    uint64_t limb[TWIG_BN_LIMBS];
+} twig_bn;
+
+/* a = v  (v < 2^64: two limbs). */
+static void twig_bn_set(twig_bn *a, uint64_t v) {
+    for (int i = 0; i < TWIG_BN_LIMBS; i++) a->limb[i] = 0;
+    a->limb[0] = v & TWIG_BN_MASK;
+    a->limb[1] = v >> 32;
+}
+
+/* a *= m  (m < 2^32). Schoolbook: each limb times m plus the carry in. */
+static void twig_bn_mul_small(twig_bn *a, uint64_t m) {
+    uint64_t carry = 0;
+    for (int i = 0; i < TWIG_BN_LIMBS; i++) {
+        uint64_t t = a->limb[i] * m + carry;
+        a->limb[i] = t & TWIG_BN_MASK;
+        carry = t >> 32;
+    }
+}
+
+/* a *= 2^n, 31 bits per pass (2^31 < 2^32 keeps mul_small exact). */
+static void twig_bn_mul_pow2(twig_bn *a, int64_t n) {
+    while (n > 0) {
+        int64_t c = n < 31 ? n : 31;
+        twig_bn_mul_small(a, (uint64_t)1 << c);
+        n -= c;
+    }
+}
+
+/* a *= 10^n, nine decimal digits per pass (10^9 < 2^32). */
+static void twig_bn_mul_pow10(twig_bn *a, int64_t n) {
+    while (n > 0) {
+        int64_t c = n < 9 ? n : 9;
+        uint64_t p = 1;
+        for (int64_t i = 0; i < c; i++) p *= 10;
+        twig_bn_mul_small(a, p);
+        n -= c;
+    }
+}
+
+/* d = a + b. */
+static void twig_bn_add(twig_bn *d, const twig_bn *a, const twig_bn *b) {
+    uint64_t carry = 0;
+    for (int i = 0; i < TWIG_BN_LIMBS; i++) {
+        uint64_t t = a->limb[i] + b->limb[i] + carry;
+        d->limb[i] = t & TWIG_BN_MASK;
+        carry = t >> 32;
+    }
+}
+
+/* a -= b, for a >= b. Borrowing is done without signed arithmetic:
+ * t = a_i + 2^32 - b_i - borrow is always >= 0; its bit 32 is set exactly
+ * when no borrow was needed. */
+static void twig_bn_sub(twig_bn *a, const twig_bn *b) {
+    uint64_t borrow = 0;
+    for (int i = 0; i < TWIG_BN_LIMBS; i++) {
+        uint64_t t = a->limb[i] + ((uint64_t)1 << 32) - b->limb[i] - borrow;
+        a->limb[i] = t & TWIG_BN_MASK;
+        borrow = 1 - (t >> 32);
+    }
+}
+
+/* -1, 0 or 1 as a <, ==, > b: compare from the most significant limb. */
+static int twig_bn_cmp(const twig_bn *a, const twig_bn *b) {
+    for (int i = TWIG_BN_LIMBS - 1; i >= 0; i--) {
+        if (a->limb[i] != b->limb[i]) return a->limb[i] < b->limb[i] ? -1 : 1;
+    }
+    return 0;
+}
+
+/* The shortest digits of the finite, positive double whose bits are `mag`.
+ * Writes the digits (values 0..9, not characters) to `out`, returns their
+ * count and stores k (value = 0.D × 10^k). */
+static int twig_f64_digits(uint64_t mag, unsigned char out[32], int64_t *k_out) {
+    twig_bn r, s, mp, mm, t;
+    uint64_t mant = mag & ((((uint64_t)1) << 52) - 1);
+    int64_t bexp = (int64_t)(mag >> 52);
+    /* x = f × 2^e exactly. Subnormals have no hidden bit and e = -1074. */
+    uint64_t f = bexp == 0 ? mant : (mant | (((uint64_t)1) << 52));
+    int64_t e = bexp == 0 ? -1074 : bexp - 1075;
+    /* Round-half-even readers (strtod, Python, JS) accept a decimal exactly
+     * on the interval's edge when f is even, so `even` widens each test by
+     * one: "c > -even" is "c >= 0" when even and "c > 0" when odd. */
+    int even = (f & 1) == 0;
+    /* At a power of two the gap below x is half the gap above: scale
+     * everything by one more 2 so m- can be half of m+. */
+    int64_t closer = (mant == 0 && bexp > 1) ? 1 : 0;
+    int64_t le = e > 0 ? e : 0;
+    int64_t se = e < 0 ? -e : 0;
+    twig_bn_set(&r, f);  twig_bn_mul_pow2(&r, le + 1 + closer);  /* r  = f·2^(le+1+c) */
+    twig_bn_set(&s, 1);  twig_bn_mul_pow2(&s, se + 1 + closer);  /* s  = 2^(se+1+c)   */
+    twig_bn_set(&mp, 1); twig_bn_mul_pow2(&mp, le + closer);     /* m+ = 2^(le+c)     */
+    twig_bn_set(&mm, 1); twig_bn_mul_pow2(&mm, le);              /* m- = 2^le         */
+
+    /* k ≈ log10(x): floor((e+52) · log10 2), with 1233/4096 ≈ log10 2.
+     * Floor division, written so it is exact C for negative values too. */
+    int64_t kn = (e + 52) * 1233;
+    int64_t k = kn >= 0 ? kn / 4096 : -((-kn + 4095) / 4096);
+    if (k >= 0) {
+        twig_bn_mul_pow10(&s, k);
+    } else {
+        twig_bn_mul_pow10(&r, -k);
+        twig_bn_mul_pow10(&mp, -k);
+        twig_bn_mul_pow10(&mm, -k);
+    }
+    /* The estimate can be off (it ignores a subnormal's missing bits):
+     * fix k until 0.1 <= (r + m+)/s < 1, the edge counting as `even` says. */
+    for (;;) {
+        twig_bn_add(&t, &r, &mp);
+        if (twig_bn_cmp(&t, &s) > -even) { twig_bn_mul_small(&s, 10); k++; }
+        else break;
+    }
+    for (;;) {
+        twig_bn_add(&t, &r, &mp);
+        twig_bn_mul_small(&t, 10);
+        if (twig_bn_cmp(&t, &s) < even) {
+            twig_bn_mul_small(&r, 10); twig_bn_mul_small(&mp, 10); twig_bn_mul_small(&mm, 10);
+            k--;
+        } else break;
+    }
+
+    /* Generate. Each pass: the next digit d = floor(10r / s), then ask
+     * whether stopping here lands inside the interval rounding down (low)
+     * or rounding up (high). The bound n < 31 never binds (n <= 17 for
+     * every double); it only keeps `out` in range by construction. */
+    int n = 0;
+    while (n < 31) {
+        twig_bn_mul_small(&r, 10); twig_bn_mul_small(&mp, 10); twig_bn_mul_small(&mm, 10);
+        int d = 0;
+        while (twig_bn_cmp(&r, &s) >= 0) { twig_bn_sub(&r, &s); d++; }
+        int low = twig_bn_cmp(&r, &mm) < even;           /* r <= m- (even) / r < m- */
+        twig_bn_add(&t, &r, &mp);
+        int high = twig_bn_cmp(&t, &s) > -even;          /* r + m+ >= s / > s      */
+        if (!low && !high) { out[n++] = (unsigned char)d; continue; }
+        if (low && high) {
+            /* Both d and d+1 read back as x: take the closer, and on an
+             * exact tie (2r == s) the even one — Python's and JS's rule. */
+            twig_bn_add(&t, &r, &r);
+            int c = twig_bn_cmp(&t, &s);
+            if (c > 0 || (c == 0 && (d & 1))) d++;
+        } else if (high) {
+            d++;   /* never 10: r + m+ < s held on entry, so d + 1 <= 9 */
+        }
+        out[n++] = (unsigned char)d;
+        break;
+    }
+    *k_out = k;
+    return n;
+}
+
+/* Lay out and print one double. `js` = 0 for Python, 1 for JavaScript.
+ *
+ *   e = k - 1, the exponent of the first digit (123.4 → e = 2)
+ *   fixed when -4 <= e < 16 (Python) / -6 <= e < 21 (JavaScript)
+ *     e < 0          → "0." + (-e-1) zeros + D             0.0001
+ *     len(D) <= e+1  → D + zeros up to the units place     100 (+ ".0" in Python)
+ *     otherwise      → D with a point after e+1 digits     123.456
+ *   else sci         → d[.ddd]e±X (Python pads X to two digits)
+ */
+static void twig_write_f64(int64_t bits, int js) {
+    uint64_t u = (uint64_t)bits;
+    uint64_t mag = u & 0x7FFFFFFFFFFFFFFFull;
+    twig_runtime_ensure_stdout_binary();
+    if (mag > 0x7FF0000000000000ull) {           /* NaN, whatever its sign */
+        fputs(js ? "NaN" : "nan", stdout);
+        return;
+    }
+    if ((u >> 63) && !(js && mag == 0)) putchar('-');   /* JS prints -0 as "0" */
+    if (mag == 0x7FF0000000000000ull) { fputs(js ? "Infinity" : "inf", stdout); return; }
+    if (mag == 0) { fputs(js ? "0" : "0.0", stdout); return; }
+
+    unsigned char d[32];
+    int64_t k;
+    int n = twig_f64_digits(mag, d, &k);
+    int64_t e = k - 1;
+    int64_t lo = js ? -6 : -4, hi = js ? 21 : 16;
+    if (e >= lo && e < hi) {
+        if (e < 0) {
+            putchar('0'); putchar('.');
+            for (int64_t i = 0; i < -e - 1; i++) putchar('0');
+            for (int i = 0; i < n; i++) putchar('0' + d[i]);
+        } else {
+            for (int64_t i = 0; i <= e; i++) putchar(i < n ? '0' + d[i] : '0');
+            if (n > e + 1) {
+                putchar('.');
+                for (int64_t i = e + 1; i < n; i++) putchar('0' + d[i]);
+            } else if (!js) {
+                putchar('.'); putchar('0');
+            }
+        }
+    } else {
+        putchar('0' + d[0]);
+        if (n > 1) {
+            putchar('.');
+            for (int i = 1; i < n; i++) putchar('0' + d[i]);
+        }
+        putchar('e');
+        putchar(e < 0 ? '-' : '+');
+        int64_t a = e < 0 ? -e : e;   /* |e| <= 324 */
+        if (!js && a < 10) putchar('0');
+        if (a >= 100) putchar('0' + (int)(a / 100));
+        if (a >= 10) putchar('0' + (int)((a / 10) % 10));
+        putchar('0' + (int)(a % 10));
+    }
+}
+
+/* __twig_write_f64_py — LANG83 PR6a `write_f64_py`: Python `repr(float)`,
+ * no newline. Same FILE* as every other output helper (one ordered stream);
+ * like `__twig_write_i64` it does not flush per call. */
+void __twig_write_f64_py(int64_t bits) {
+    twig_write_f64(bits, 0);
+}
+
+/* __twig_write_f64_js — LANG83 PR6a `write_f64_js`: JavaScript
+ * `Number#toString`, no newline. */
+void __twig_write_f64_js(int64_t bits) {
+    twig_write_f64(bits, 1);
 }
 
 /* The closed LANG83 trap-kind table, indexed by stable id

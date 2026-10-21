@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Directions and distances",
+  "label": "ch:fa-directions-and-distances",
+  "canDo": "I can talk about direction and distance: a direction, a compass, kilometres, distance and moving away.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C446-dur-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about direction and distance: a direction, a compass, kilometres, distance and moving away.",
+    "assesses": [
+      "FA-LEX-C446-JAHAT-03",
+      "FA-LEX-C446-JAHAT-04",
+      "FA-LEX-C446-JAHAT-05"
+    ]
+  }
+}

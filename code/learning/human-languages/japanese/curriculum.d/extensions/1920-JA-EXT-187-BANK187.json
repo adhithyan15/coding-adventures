@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-187-BANK187",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deposit, withdraw and change money at the bank.",
+  "prerequisites": []
+}

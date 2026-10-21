@@ -1,5 +1,45 @@
 # Changelog — grammar-tools (Rust program)
 
+## [2.3.0] - 2026-10-20
+
+### Added — Perl joins the LANG84 release families (phase 4a)
+- `generate-rust-compiled-grammars perl` uses the generic release-family path
+  (`RustReleaseFamilySpec`) instead of a Perl-only generator. Perl's 117
+  checked pairs become 5 token and 2 parser tables; its generated API matches
+  Ruby's (`SUPPORTED_RELEASES`, `grammar_class`, the exact-ID selector, and
+  `INVENTORY` in the parser table).
+- `RustReleaseFamilySpec.legacy_token_grammar`: also embed the unversioned
+  `<prefix>.tokens` as `unversioned_token_grammar()` (Perl on, Ruby off).
+- `RustReleaseFamilySpec.stage_source`: `Column` (the LANG84 schema; the
+  `grammar_stage` column is required) or `DerivedFromStatus` for an inventory
+  that predates it (Perl until LANG84 2b), which derives the stage by the
+  spec's migration rule (`pending` → `none`, otherwise `P`).
+
+### Security
+- The release-inventory reader now also refuses duplicate release IDs and
+  unknown `grammar_status` / `grammar_stage` values, on top of quoted rows,
+  field-count mismatches and unsafe IDs. A trailing `\r` is dropped so a
+  CRLF checkout reads like an LF one. Ruby's generated tables are unchanged
+  byte for byte.
+
+### Added — LANG84 phase 7a: Python joins the release families
+- `generate-rust-compiled-grammars python` now reads its release list from
+  `code/grammars/python/releases.csv`. The five phase-7a pairs (3.0a1,
+  3.11.17, 3.12.3, 3.13.16, 3.16.0a1) compile to three distinct token tables
+  and one parser table.
+- A release family can keep pre-LANG84 **minor-line** pairs
+  (`RustReleaseFamilySpec::legacy_versions`). Python's six (`python2.7` …
+  `python3.12`) are embedded in a generated `pub mod legacy_versions` with its
+  own `SUPPORTED_VERSIONS` and `token_grammar(version)` /
+  `parser_grammar(version)`, which the release selector cannot reach. A
+  legacy stem that is also a paired release, or a missing legacy file, is an
+  error.
+- Release pairs are now always validated and cross-validated (LANG84 stage G),
+  even when the package needs `force` for its legacy grammars, as
+  `python-parser` does. `force` applies only to the legacy modules.
+- New tests: `release_family_embeds_legacy_minor_lines_out_of_the_release_selector`
+  and `committed_python_release_tables_match_regeneration`.
+
 ## [2.2.0] - 2026-10-20
 
 ### Added — LANG84 release families

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C413-tavarrom",
+  "pathSegment": "FA-PATH-413-EQTESAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-413-EQTESAD",
+      "order": 1
+    }
+  ]
+}

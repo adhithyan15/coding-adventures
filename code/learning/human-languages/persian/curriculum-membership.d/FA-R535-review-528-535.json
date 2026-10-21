@@ -1,0 +1,11 @@
+{
+  "id": "FA-R535-review-528-535",
+  "pathSegment": "FA-PATH-535-COSY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-535-COSY",
+      "order": 5
+    }
+  ]
+}

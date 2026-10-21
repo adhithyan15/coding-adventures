@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Help arrives",
+  "label": "ch:fa-help-arrives",
+  "canDo": "I can talk about rescue workers, the emergency services, sirens, lifeguards and people who survived.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C327-ghariq-e-nejat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about rescue workers, the emergency services, sirens, lifeguards and people who survived.",
+    "assesses": [
+      "FA-LEX-C327-EMDADGAR-03",
+      "FA-LEX-C327-EMDADGAR-04",
+      "FA-LEX-C327-EMDADGAR-05"
+    ]
+  }
+}

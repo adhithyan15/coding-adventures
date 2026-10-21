@@ -25,7 +25,7 @@ Source
 
 | Type | Description |
 |------|-------------|
-| `IIRModule` | Top-level container: functions + entry point + language tag |
+| `IIRModule` | Top-level container: functions + entry point + language tag + the source release it was compiled against (`release`, LANG84; `None` for languages without a release inventory) |
 | `IIRFunction` | Named, parameterised sequence of `IIRInstr` |
 | `IIRInstr` | One instruction: `op`, `dest`, `srcs`, `type_hint`, profiling fields |
 | `Operand` | Instruction operand: `Var(name)`, `Int`, `Float`, `Bool`, or `Str` |
@@ -68,7 +68,8 @@ LANG83 `trap` may name is the six built-in leaves (`Trap.Bounds`, `Trap.Null`,
 
 `op_registry::STANDARD_OPS` names every operation a frontend may emit and every
 backend must lower or refuse — output builtins (`print_i64`, `putchar`,
-`write_i64`), `print_str` and the string ops, arithmetic and comparison, `f64` math,
+`write_i64`, and since PR6a `write_f64_py` / `write_f64_js`, which print an `f64` as
+the shortest round-trip decimal in Python's or JavaScript's layout), `print_str` and the string ops, arithmetic and comparison, `f64` math,
 conversions and `trap`. Each backend crate publishes an `OP_SUPPORT` table of
 `OpSupport::{Lowered, Refused(reason)}` and checks it with
 `op_registry::check_op_support_table`, so adding a registry op fails CI in every

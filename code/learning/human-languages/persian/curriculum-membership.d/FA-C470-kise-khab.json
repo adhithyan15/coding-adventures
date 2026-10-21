@@ -1,0 +1,11 @@
+{
+  "id": "FA-C470-kise-khab",
+  "pathSegment": "FA-PATH-470-CHADOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-470-CHADOR",
+      "order": 1
+    }
+  ]
+}

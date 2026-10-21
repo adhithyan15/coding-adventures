@@ -1,0 +1,11 @@
+{
+  "id": "JA-C209-aki",
+  "pathSegment": "JA-PATH-209-SEASON209",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-209-SEASON209",
+      "order": 1
+    }
+  ]
+}

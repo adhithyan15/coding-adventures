@@ -1,0 +1,11 @@
+{
+  "id": "FA-C398-budje",
+  "pathSegment": "FA-PATH-398-AMALI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-398-AMALI",
+      "order": 2
+    }
+  ]
+}

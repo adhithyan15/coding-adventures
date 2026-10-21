@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-188-POST188",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy stamps and send post at the post office.",
+  "prerequisites": []
+}

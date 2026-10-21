@@ -1,0 +1,11 @@
+{
+  "id": "JA-C210-shokubutsu",
+  "pathSegment": "JA-PATH-210-PLANT210",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-210-PLANT210",
+      "order": 2
+    }
+  ]
+}

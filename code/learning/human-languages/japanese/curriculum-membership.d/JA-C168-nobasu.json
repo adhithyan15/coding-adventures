@@ -1,0 +1,11 @@
+{
+  "id": "JA-C168-nobasu",
+  "pathSegment": "JA-PATH-168-DELAY168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-168-DELAY168",
+      "order": 3
+    }
+  ]
+}

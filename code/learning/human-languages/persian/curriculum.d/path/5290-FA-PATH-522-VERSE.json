@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-522-VERSE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-522-VERSE"
+  ],
+  "after": []
+}

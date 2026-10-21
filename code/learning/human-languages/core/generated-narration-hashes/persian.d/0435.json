@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:850f26749b322de1",
+  "lessonIds": [
+    "FA-C435-darbast",
+    "FA-C435-azhans",
+    "FA-C435-mosaferbari",
+    "FA-C435-barbar",
+    "FA-C435-resandan",
+    "FA-R435-review-428-435"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch435.txt",
+  "json": "persian/narration/ch435.json",
+  "textHash": "fnv1a64:3c3bd2c5b272b7e5",
+  "jsonHash": "fnv1a64:6a01c9b59becff59",
+  "findings": []
+}

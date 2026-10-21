@@ -766,6 +766,7 @@ impl Compiler {
             language: "twig".to_string(),
             exports,
             imports: Vec::new(),
+            release: None,
         })
     }
 

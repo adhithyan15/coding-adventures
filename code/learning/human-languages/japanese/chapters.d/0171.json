@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "First of All, Next and Last",
+  "label": "ch:ja-first-of-all-next-and-last",
+  "canDo": "I can put my plans in order.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-R171-review-final-171",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can put my plans in order.",
+    "assesses": [
+      "JA-LEX-C171-ORDER171-03",
+      "JA-LEX-C171-ORDER171-04",
+      "JA-LEX-C171-ORDER171-05"
+    ]
+  }
+}

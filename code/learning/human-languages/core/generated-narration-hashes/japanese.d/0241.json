@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:73ba898b2117c5d2",
+  "lessonIds": [
+    "JA-C241-sasou",
+    "JA-C241-shibai",
+    "JA-C241-yukai",
+    "JA-C241-moushikomu",
+    "JA-C241-yaru",
+    "JA-R241-review-236-241"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch241.txt",
+  "json": "japanese/narration/ch241.json",
+  "textHash": "fnv1a64:63e5b626628c2f58",
+  "jsonHash": "fnv1a64:a5f49425e732b17a",
+  "findings": []
+}

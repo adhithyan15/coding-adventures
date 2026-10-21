@@ -1,0 +1,11 @@
+{
+  "id": "FA-C510-vaqt-gozarandan",
+  "pathSegment": "FA-PATH-510-LEISURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-510-LEISURE",
+      "order": 1
+    }
+  ]
+}

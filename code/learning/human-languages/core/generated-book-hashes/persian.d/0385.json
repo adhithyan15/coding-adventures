@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:2ac7dc1c08914968",
+  "lessonIds": [
+    "FA-C385-jamee",
+    "FA-C385-ejtemai",
+    "FA-C385-nasl",
+    "FA-C385-salmand",
+    "FA-C385-mazhab"
+  ],
+  "tex": "persian/book/chapters/ch385-society-and-generations.tex"
+}

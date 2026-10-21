@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:49d98b3997161006",
+  "lessonIds": [
+    "JA-C212-kion",
+    "JA-C212-agaru",
+    "JA-C212-hieru",
+    "JA-C212-kooru",
+    "JA-C212-tokeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch212.txt",
+  "json": "japanese/narration/ch212.json",
+  "textHash": "fnv1a64:7670b246ce1188f4",
+  "jsonHash": "fnv1a64:e835ae6ee960505e",
+  "findings": []
+}

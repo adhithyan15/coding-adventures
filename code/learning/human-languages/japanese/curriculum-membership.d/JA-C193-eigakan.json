@@ -1,0 +1,11 @@
+{
+  "id": "JA-C193-eigakan",
+  "pathSegment": "JA-PATH-193-SIGHT193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-193-SIGHT193",
+      "order": 2
+    }
+  ]
+}

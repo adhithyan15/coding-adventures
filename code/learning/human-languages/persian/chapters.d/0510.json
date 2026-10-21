@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Free Time",
+  "label": "ch:fa-free-time",
+  "canDo": "I can say how I spend my free time.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C510-ozv-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can say how I spend my free time.",
+    "assesses": [
+      "FA-LEX-C510-LEISURE-03",
+      "FA-LEX-C510-LEISURE-04",
+      "FA-LEX-C510-LEISURE-05"
+    ]
+  }
+}

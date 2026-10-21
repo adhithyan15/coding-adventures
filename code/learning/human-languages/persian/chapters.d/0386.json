@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Fairness in society",
+  "label": "ch:fa-fairness-in-society",
+  "canDo": "I can talk about equality and inequality, justice, poverty and wealth.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C386-servat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about equality and inequality, justice, poverty and wealth.",
+    "assesses": [
+      "FA-LEX-C386-BARABARI-03",
+      "FA-LEX-C386-BARABARI-04",
+      "FA-LEX-C386-BARABARI-05"
+    ]
+  }
+}

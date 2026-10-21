@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-404-MOQARRARAT",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-404-MOQARRARAT"
+  ],
+  "after": []
+}

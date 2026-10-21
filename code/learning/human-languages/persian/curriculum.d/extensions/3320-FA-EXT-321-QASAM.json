@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-321-QASAM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone swore, testified, admitted something, gave someone away or was guilty.",
+  "prerequisites": []
+}

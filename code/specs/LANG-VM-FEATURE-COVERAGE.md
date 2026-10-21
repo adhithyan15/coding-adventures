@@ -7,11 +7,12 @@ historical languages or every backend are complete. Follow-up IDs live in the
 
 ## Reading the evidence
 
-The [driver](../packages/rust/lang-aot/src/lib.rs) wires eleven `Language`
-variants (PREP01 slice 1 adds MacroOct).
-The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has nine.
+The [driver](../packages/rust/lang-aot/src/lib.rs) wires fourteen `Language`
+variants (PREP01 slice 1 adds MacroOct; LANG84 phase 4a adds Perl; LANG84
+phase 5a adds Ruby; LANG84 phase 7a adds Python).
+The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has rows for all of them except McCarthy Lisp and Macsyma (dedicated capstones below).
 Its seven standard columns are NativeAOT, LLVM, WASM, JVM, CLR, VM and JIT.
-Twig, Nib, Oct, FLOW-MATIC, COBOL-60 and (as of VM-042) Brainfuck rows
+Twig, Nib, Oct, FLOW-MATIC, COBOL-60, Perl, Ruby, Python and (as of VM-042) Brainfuck rows
 additionally declare BEAM, each only for the specific rows independently
 proven on real `erl` — see each row's "Additional proof boundary" below for
 the exact count. All counts below are source **declarations**, not counts of
@@ -33,14 +34,17 @@ refusal also does not imply the complete driver refuses that feature.
 | MacroOct | 15 | 120 | All eight columns. Unlike every other row here, these do not prove a new language feature: PREP01's criterion is that each MacroOct program lowers to IIR **identical** to its hand-expanded Oct equivalent, asserted directly by `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct`, with Oct's own 12 rows additionally recompiled byte-identically through the MacroOct frontend. Slice 1's 9 conditional/include rows are joined by slice 2's 6 (five `@define` shapes plus the VM-068 positive control), whose hand-expanded twins are the *textual* expansion (`21 + 21`, not `42`) so a constant-folding frontend cannot satisfy the oracle. Oct's counts above are unchanged, deliberately — PREP01 holds Oct fixed as the reference |
 | ALGOL 60 | 292 | 2044 | Separate owner; full-matrix CI exclusion remains VM-025. **Deliberately not pinned** — see the note below the table. Every row declares seven backends; none declares `Beam` (VM-064). BEAM10 closed `array_len`, and **277 of the 292 now run correctly on real `erl`** (up from 254), so promotion remains the ALGOL owner's call but is no longer an unmeasured one |
 | FLOW-MATIC | 8 | 64 | All eight rows now declare Beam (BEAM07 promoted the four `READ-ITEM`/EOF rows that were on seven columns) |
+| Ruby | 13 | 104 | All eight columns (LANG84 phase 5a = LANG83 PR2). The `rb-int-puts` subset on the default release 3.3.6, compiled from the grammar-driven R0 parse tree; `/` and `%` are LANG83 `i64_div_floor`/`i64_mod_floor` and `puts` is `print_i64`, so no backend has Ruby code. Each row is a verbatim case of `code/grammars/ruby/corpus/rb-int-puts` (`ruby_rows_are_rb_int_puts_corpus_cases`), re-checked against a host ruby 3.3 (`ruby_rows_agree_with_the_host_ruby_oracle`); four are the first `StdoutThenTrap` rows, checking the output before a `Trap.DivZero` and the kind on every column. `ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine backends. 3.3.5 and 3.3.7 compile to identical IIR (`ruby-iir-compiler` stage-I test), so these rows stand for them; their own backend sweep is phase 5b |
 | COBOL-60 | 59 | 472 | All eight backends; VM-058 adds independently executed two-boundary INSPECT tally proof |
+| Perl | 11 | 88 | All eight columns (LANG84 phase 4a). The bounded LANG81 integer `print` subset on its default release (`5.38.0` since LANG84 phase 4b); `print` lowers to LANG83 `write_i64`, so no backend has Perl-specific code. A host `perl` oracle re-checks every expectation (`perl_rows_agree_with_the_host_perl_oracle`), and `perl_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine LANG83 backends. Per-release coverage (118 checked pairs) is IIR-identity in `perl-iir-compiler`, not yet a backend sweep (phase 4c) |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
+| Python | 18 | 144 | All eight columns (LANG84 phase 7a). The `py-int-print` subset on the default release 3.13.16, compiled from the grammar-driven release parse tree; `+ - *` and unary `-` are the LANG83 PR4 checked ops `i64_*_ovf`, `//` and `%` are `i64_div_floor`/`i64_mod_floor`, and `print` is `print_i64`, so no backend has Python code. Each row is a verbatim case of `code/grammars/python/corpus/py-int-print`, and every accepted case is a row (`python_rows_are_py_int_print_corpus_cases`); the rows are re-checked against host CPython 3.13 (`python_rows_agree_with_the_host_python_oracle`). Nine are `StdoutThenTrap` rows: four `Trap.DivZero` and five `Trap.Overflow`, the first matrix rows whose kind is `Trap.Overflow`. For those five, the oracle checks that CPython prints an `int` outside `i64` there, the subset's stated divergence. `python_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine backends. 3.0a1, 3.11.17, 3.12.3 and 3.16.0a1 compile to identical IIR (`python-iir-compiler` stage-I test), so these rows stand for them; their own backend sweep is later |
 
 ### Why the ALGOL row is not pinned, and how to re-derive it
 
-`feature_coverage_doc_counts_match_programs_source` asserts the seven non-ALGOL
-tuples and deliberately omits ALGOL. That omission is why this row was wrong:
+`feature_coverage_doc_counts_match_programs_source` asserts every non-ALGOL
+tuple and deliberately omits ALGOL. That omission is why this row was wrong:
 it read 233 rows / 1631 cells while `lang_matrix.rs` declared **292 / 2044** — a
 drift of 59 rows that nothing was checking.
 
@@ -360,7 +364,8 @@ p.backends.len()).sum()`) via a brace-balanced parse of the whole array, not
 a hand count or a quick regex, and all six matched the doc exactly except
 Twig at that time. That derivation is pinned as
 `feature_coverage_doc_counts_match_programs_source` in `lang_matrix.rs`: it
-asserts each of these seven non-ALGOL row/cell pairs against the live
+asserts each of these non-ALGOL row/cell pairs (Perl's added by LANG84
+phase 4a, Ruby's by phase 5a, Python's by phase 7a) against the live
 `PROGRAMS` corpus, plus that McCarthy Lisp and Macsyma still have zero rows
 there (both use the dedicated capstone files below instead), so a future
 slice that adds or removes a row without updating this table fails a normal

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:8295e7416c721009",
+  "lessonIds": [
+    "JA-C211-doubutsu",
+    "JA-C211-saru",
+    "JA-C211-usagi",
+    "JA-C211-kotori",
+    "JA-C211-fueru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch211.txt",
+  "json": "japanese/narration/ch211.json",
+  "textHash": "fnv1a64:58fd48245d32a7c7",
+  "jsonHash": "fnv1a64:f1765fbe72d94dce",
+  "findings": []
+}

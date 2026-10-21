@@ -1,0 +1,11 @@
+{
+  "id": "FA-C355-khis-kardan",
+  "pathSegment": "FA-PATH-355-DASTURPOKHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-355-DASTURPOKHT",
+      "order": 4
+    }
+  ]
+}

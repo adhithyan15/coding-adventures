@@ -320,6 +320,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // Telugu followed as the eighteenth, with chapters 153-277 (the negation
     // and questions, past, future and practical-reading nodes, 625 headwords,
     // 153 verbs), which moved it from the A1 row of HELD to the A2 row.
+    // Japanese followed, with chapters 146-249 (520 hiragana headwords, 210
+    // verbs, on its already-realized A2 spine nodes), which moved it from the
+    // A1 row of HELD to the A2 row.
     // Gujarati followed, with chapters 145-152 (the negation and questions,
     // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
     // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
@@ -353,6 +356,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // aspect in the past, reasons, travel, experience and бы, realizing all five
     // B1 nodes, plus the letter ъ) and chapters 271-534 (1,320 headwords, 456
     // verbs).
+    // Persian followed as the eighth, with chapters 290-299 (the B1 core: the
+    // present and past stems, the mi- past, reasons, travel, experience, the
+    // subjunctive and the unreal condition, realizing all five B1 nodes, plus
+    // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
+    // 358 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

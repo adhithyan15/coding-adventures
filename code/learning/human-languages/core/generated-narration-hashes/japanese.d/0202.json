@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:b591e6a401b8a46f",
+  "lessonIds": [
+    "JA-C202-jidousha",
+    "JA-C202-unten",
+    "JA-C202-untenshu",
+    "JA-C202-tomeru",
+    "JA-C202-chuushajou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch202.txt",
+  "json": "japanese/narration/ch202.json",
+  "textHash": "fnv1a64:f61812bc4dbf50fd",
+  "jsonHash": "fnv1a64:fcb5748690e4d253",
+  "findings": []
+}

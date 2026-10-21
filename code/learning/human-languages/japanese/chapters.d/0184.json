@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Goods, Queues and Exchanges",
+  "label": "ch:ja-goods-queues-and-exchanges",
+  "canDo": "I can talk about goods, queues and totals.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C184-choudo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can talk about goods, queues and totals.",
+    "assesses": [
+      "JA-LEX-C184-GOODS184-03",
+      "JA-LEX-C184-GOODS184-04",
+      "JA-LEX-C184-GOODS184-05"
+    ]
+  }
+}

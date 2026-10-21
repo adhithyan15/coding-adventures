@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C362-manteq",
+    "language": "persian",
+    "chapter": 362,
+    "sequence": 18520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d1881d71f7e0912"
+  },
+  "findings": []
+}

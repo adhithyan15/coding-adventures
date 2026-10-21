@@ -1,0 +1,11 @@
+{
+  "id": "FA-C501-doqolu",
+  "pathSegment": "FA-PATH-501-INLAWS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-501-INLAWS",
+      "order": 3
+    }
+  ]
+}

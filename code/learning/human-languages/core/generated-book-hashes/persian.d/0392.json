@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:69d483ef71173532",
+  "lessonIds": [
+    "FA-C392-ehtemal",
+    "FA-C392-ehtemal-dadan",
+    "FA-C392-emkan",
+    "FA-C392-baid",
+    "FA-C392-qati"
+  ],
+  "tex": "persian/book/chapters/ch392-likely-or-unlikely.tex"
+}

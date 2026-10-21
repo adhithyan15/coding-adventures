@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:e1eb344b12dfe29f",
+  "lessonIds": [
+    "JA-C223-abunai",
+    "JA-C223-kiken",
+    "JA-C223-ikiru",
+    "JA-C223-tasukeru",
+    "JA-C223-kurushimu",
+    "JA-R223-review-222-223",
+    "JA-R223-review-final-223"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch223.txt",
+  "json": "japanese/narration/ch223.json",
+  "textHash": "fnv1a64:ee30040119940929",
+  "jsonHash": "fnv1a64:102eb1d900742f43",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:3798c17c51b05b51",
+  "lessonIds": [
+    "JA-C174-nabe",
+    "JA-C174-houchou",
+    "JA-C174-kizamu",
+    "JA-C174-osara",
+    "JA-C174-moru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch174.txt",
+  "json": "japanese/narration/ch174.json",
+  "textHash": "fnv1a64:00cb20c868a26de6",
+  "jsonHash": "fnv1a64:896d35177eda3d96",
+  "findings": []
+}

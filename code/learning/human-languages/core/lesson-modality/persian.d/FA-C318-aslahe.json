@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C318-aslahe",
+    "language": "persian",
+    "chapter": 318,
+    "sequence": 16260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9982d4c081d6e6bb"
+  },
+  "findings": []
+}

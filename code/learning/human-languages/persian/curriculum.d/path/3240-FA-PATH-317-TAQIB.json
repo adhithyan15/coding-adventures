@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-317-TAQIB",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-317-TAQIB"
+  ],
+  "after": []
+}

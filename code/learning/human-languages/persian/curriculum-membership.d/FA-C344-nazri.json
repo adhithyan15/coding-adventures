@@ -1,0 +1,11 @@
+{
+  "id": "FA-C344-nazri",
+  "pathSegment": "FA-PATH-344-NAZR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-344-NAZR",
+      "order": 1
+    }
+  ]
+}

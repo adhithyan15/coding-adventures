@@ -1,0 +1,11 @@
+{
+  "id": "FA-C337-fowt-kardan",
+  "pathSegment": "FA-PATH-337-MARG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-337-MARG",
+      "order": 2
+    }
+  ]
+}

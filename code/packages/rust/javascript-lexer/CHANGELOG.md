@@ -6,6 +6,15 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ### Fixed
 
+- **Tokens end where JavaScript ends them (#17886, #17888, #17887).** The
+  ECMAScript `.tokens` patterns let a token run past its end, so comment or
+  string text was lexed as code:
+  - `` `$` `` didn't close a template (`\$[^{]` ate the backtick), so the
+    template ran on to the next backtick;
+  - `/***/` and `/* a **/` weren't block comments;
+  - line comments and hashbangs swallowed code after a `\r`;
+  - a regex could hold a `\r`.
+  `src/_grammar.rs` is regenerated. Four unit tests cover these.
 - Add explicit `tokenize_javascript_division_only` for subsets excluding regex
   literals, preserving comments, strings, token locations and version rules.
   Existing regex-capable entry points retain their behavior.

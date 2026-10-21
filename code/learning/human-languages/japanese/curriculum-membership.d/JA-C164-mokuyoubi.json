@@ -1,0 +1,11 @@
+{
+  "id": "JA-C164-mokuyoubi",
+  "pathSegment": "JA-PATH-164-WEEK164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-164-WEEK164",
+      "order": 2
+    }
+  ]
+}

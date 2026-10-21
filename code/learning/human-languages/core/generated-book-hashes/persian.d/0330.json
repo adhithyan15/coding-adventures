@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:f35a90e54a89783d",
+  "lessonIds": [
+    "FA-C330-tufan",
+    "FA-C330-gharq-shodan",
+    "FA-C330-soqut-kardan",
+    "FA-C330-hoshdar",
+    "FA-C330-hoshdar-dadan"
+  ],
+  "tex": "persian/book/chapters/ch330-storms-and-warnings.tex"
+}

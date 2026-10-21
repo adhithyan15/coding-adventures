@@ -1,0 +1,11 @@
+{
+  "id": "JA-C223-tasukeru",
+  "pathSegment": "JA-PATH-223-SAFETY223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-223-SAFETY223",
+      "order": 3
+    }
+  ]
+}

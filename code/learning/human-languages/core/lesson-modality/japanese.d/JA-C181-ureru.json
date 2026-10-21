@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C181-ureru",
+    "language": "japanese",
+    "chapter": 181,
+    "sequence": 10900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48de4d25d3f84d83"
+  },
+  "findings": []
+}

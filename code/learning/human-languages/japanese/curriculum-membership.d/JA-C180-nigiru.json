@@ -1,0 +1,11 @@
+{
+  "id": "JA-C180-nigiru",
+  "pathSegment": "JA-PATH-180-EATOUT180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-180-EATOUT180",
+      "order": 3
+    }
+  ]
+}

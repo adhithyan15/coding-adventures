@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-166-TIMEOFDAY166",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what time of day I will do things.",
+  "prerequisites": []
+}

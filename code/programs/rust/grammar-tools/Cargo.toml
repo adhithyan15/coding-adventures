@@ -1,6 +1,6 @@
 [package]
 name = "grammar-tools"
-version = "2.2.0"
+version = "2.3.0"
 edition = "2021"
 description = "CLI for validating .tokens and .grammar files — Rust port using cli-builder"
 authors = ["Adhithya Rajasekaran"]

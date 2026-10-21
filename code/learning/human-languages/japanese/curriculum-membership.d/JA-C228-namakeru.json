@@ -1,0 +1,11 @@
+{
+  "id": "JA-C228-namakeru",
+  "pathSegment": "JA-PATH-228-LEARN228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-228-LEARN228",
+      "order": 2
+    }
+  ]
+}

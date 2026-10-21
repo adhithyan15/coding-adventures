@@ -16,13 +16,13 @@ prerequisites: [MR-A1F01-avdate-pey, MR-C08-vachne]
 sounds: []
 roots: []
 duration:
-  max_seconds: 180
+  max_seconds: 195
 requires:
   knowledge: [MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER]
 introduces:
   knowledge: [MR-A1-FORM-LABEL-AVADTI-KRUTI, MR-A1-FORM-AGREEMENT-FEMININE]
 practises:
-  knowledge: [MR-A1-FORM-LABEL-AVADTI-KRUTI, MR-A1-FORM-AGREEMENT-FEMININE, MR-A1-FORM-AGREEMENT-NEUTER]
+  knowledge: [MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-LABEL-AVADTI-KRUTI, MR-A1-FORM-AGREEMENT-FEMININE, MR-A1-FORM-AGREEMENT-NEUTER]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,10 @@ reviews_of: [MR-A1F01-avdate-pey, MR-C08-vachne]
 # आवडती कृती — favorite activity
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-AVADTI-KRUTI, MR-A1-FORM-AGREEMENT-FEMININE]; assesses=[MR-A1-FORM-AGREEMENT-NEUTER] -->
+<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-AVADTI-KRUTI, MR-A1-FORM-AGREEMENT-FEMININE]; assesses=[MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER] -->
+
+Before looking back, cover the title. Write the complete favorite-drink label
+from memory. Check the previous page only after writing it.
 
 Change one thing. **कृती**, “activity,” is feminine, so “favorite” becomes
 feminine **आवडती**. The familiar activity value is **वाचणे**, “reading.”

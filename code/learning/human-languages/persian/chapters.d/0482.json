@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Hurt Feelings",
+  "label": "ch:fa-hurt-feelings",
+  "canDo": "I can say when someone is hurt or offended.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C482-sharmande",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can say when someone is hurt or offended.",
+    "assesses": [
+      "FA-LEX-C482-HURT-03",
+      "FA-LEX-C482-HURT-04",
+      "FA-LEX-C482-HURT-05"
+    ]
+  }
+}

@@ -131,7 +131,7 @@ export function canonicalChapterHash(
  * The combining step, over already-computed lesson hashes.
  *
  * Exported separately because the BROWSER app must reproduce this exact value and
- * has no `ParsedLesson` — it loads lesson contents through `import.meta.glob`, not
+ * has no `ParsedLesson` — it loads lesson contents through Vite's glob import, not
  * through the Node-only loader. `language-ladder` previously reproduced only the
  * lesson half via `combineLessonHashes`, which was fine while that WAS the whole
  * fingerprint; folding the capability in without giving the app a seam to reach it

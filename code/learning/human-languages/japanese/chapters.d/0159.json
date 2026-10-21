@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Housework and Sorting the Rubbish",
+  "label": "ch:ja-housework-and-sorting-the-rubbish",
+  "canDo": "I can talk about housework, sorting and throwing things away.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C159-seiri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can talk about housework, sorting and throwing things away.",
+    "assesses": [
+      "JA-LEX-C159-TIDY159-03",
+      "JA-LEX-C159-TIDY159-04",
+      "JA-LEX-C159-TIDY159-05"
+    ]
+  }
+}

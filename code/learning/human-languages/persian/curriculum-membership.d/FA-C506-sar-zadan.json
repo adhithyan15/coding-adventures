@@ -1,0 +1,11 @@
+{
+  "id": "FA-C506-sar-zadan",
+  "pathSegment": "FA-PATH-506-TIES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-506-TIES",
+      "order": 2
+    }
+  ]
+}

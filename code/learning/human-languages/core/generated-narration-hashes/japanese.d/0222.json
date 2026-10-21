@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:b26d98039606472c",
+  "lessonIds": [
+    "JA-C222-nuru",
+    "JA-C222-omimai",
+    "JA-C222-kaifuku",
+    "JA-C222-daijoubu",
+    "JA-C222-gaman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch222.txt",
+  "json": "japanese/narration/ch222.json",
+  "textHash": "fnv1a64:c25211946da4c3d9",
+  "jsonHash": "fnv1a64:a175c471b7daa658",
+  "findings": []
+}

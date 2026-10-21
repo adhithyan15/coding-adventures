@@ -1,0 +1,11 @@
+{
+  "id": "FA-C460-pasazh",
+  "pathSegment": "FA-PATH-460-VITRIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-460-VITRIN",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C180-nigiru",
+    "language": "japanese",
+    "chapter": 180,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36974d54cc4a2f36"
+  },
+  "findings": []
+}

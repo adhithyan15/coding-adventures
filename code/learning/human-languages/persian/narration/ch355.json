@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 355,
+  "title": "Getting ready to cook",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:13557e21bbb742c0",
+  "lessons": [
+    {
+      "id": "FA-C355-dastur-e-pokht",
+      "sequence": 18110,
+      "title": "دستور پخت (dastur-e pokht) — a recipe",
+      "headword": "دستور پخت",
+      "romanization": "dastur-e pokht",
+      "gloss": "a recipe",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67e54fabc5cc4537",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an inscription, then the Persian for a ruin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دستور پخت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دستور پخت (dastur-e pokht) — \"a recipe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این دستور پخت را از مادربزرگم یاد گرفتم. In dastur-e pokht râ az mâdarbozorgam yâd gereftam. I learned this recipe from my grandmother."
+            },
+            {
+              "kind": "speech",
+              "text": "dastur \"instruction\" + pokht \"cooking\", from pokhtan \"to cook\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dastur \"command, instruction\" is a Persian word that EtymDB lists without a parent, and pokht \"cooking\" is the past stem of the native verb pokhtan \"to cook\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastur-e pokht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastur-e pokht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastur-e pokht, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastur-e pokht*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dastur-e pokht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dastur-e pokht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an inscription, then the Persian for a ruin, then say dastur-e pokht again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an inscription, then the Persian for a ruin, then say *dastur-e pokht* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دستور پخت (dastur-e pokht) mean? (\"A recipe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C355-mavad",
+      "sequence": 18120,
+      "title": "مواد (mavâd) — ingredients; materials",
+      "headword": "مواد",
+      "romanization": "mavâd",
+      "gloss": "ingredients; materials",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6feb1c0900d9123",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a ruin, then the Persian for a recipe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مواد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مواد (mavâd) — \"ingredients; materials\"."
+            },
+            {
+              "kind": "speech",
+              "text": "همه مواد را روی میز آشپزخانه گذاشت. Hame-ye mavâd râ ru-ye miz-e âshpazkhâne gozâsht. She put all the ingredients out on the kitchen table."
+            },
+            {
+              "kind": "speech",
+              "text": "The Arabic broken plural of mâdde \"a substance\". Mavâd-e lâzem \"the ingredients needed\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mavâd is usually traced to Arabic mawādd, the broken plural of mādda \"substance, matter\"; EtymDB lists Arabic mādda \"matter, substance\", though not the plural."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mavâd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mavâd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mavâd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mavâd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mavâd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mavâd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a ruin, then the Persian for a recipe, then say mavâd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a ruin, then the Persian for a recipe, then say *mavâd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مواد (mavâd) mean? (\"Ingredients; materials\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C355-peymane",
+      "sequence": 18130,
+      "title": "پیمانه (peymâne) — a measuring cup, a measure",
+      "headword": "پیمانه",
+      "romanization": "peymâne",
+      "gloss": "a measuring cup, a measure",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20d690f241599412",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a recipe, then the Persian for ingredients."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیمانه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیمانه (peymâne) — \"a measuring cup, a measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دو پیمانه برنج را شست. Do peymâne berenj râ shost. She washed two cups of rice."
+            },
+            {
+              "kind": "speech",
+              "text": "In recipes, a cup used as a measure. In old poetry, a wine cup."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "peymâne is a native Persian word, usually linked with the verb peymudan \"to measure\"; EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peymâne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peymâne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peymâne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peymâne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with peymâne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *peymâne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a recipe, then the Persian for ingredients, then say peymâne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a recipe, then the Persian for ingredients, then say *peymâne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیمانه (peymâne) mean? (\"A measuring cup, a measure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C355-alak-kardan",
+      "sequence": 18140,
+      "title": "الک کردن (alak kardan) — to sift",
+      "headword": "الک کردن",
+      "romanization": "alak kardan",
+      "gloss": "to sift",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb8a4737762f63b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for ingredients, then the Persian for a measuring cup."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: الک کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "الک کردن (alak kardan) — \"to sift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آرد را دو بار الک کرد. Ârd râ do bâr alak kard. She sifted the flour twice."
+            },
+            {
+              "kind": "speech",
+              "text": "Alak \"a sieve\". Present alak mikonad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alak \"a sieve\" is usually traced to Turkic elek; EtymDB lists no entry. kardan \"to do\" is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alak kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alak kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alak kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alak kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with alak kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *alak kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for ingredients, then the Persian for a measuring cup, then say alak kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for ingredients, then the Persian for a measuring cup, then say *alak kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does الک کردن (alak kardan) mean? (\"To sift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C355-khis-kardan",
+      "sequence": 18150,
+      "title": "خیس کردن (khis kardan) — to soak",
+      "headword": "خیس کردن",
+      "romanization": "khis kardan",
+      "gloss": "to soak",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cf97f7296073f33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a measuring cup, then the Persian for to sift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خیس کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خیس کردن (khis kardan) — \"to soak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نخودها را از شب قبل خیس کرد. Nokhod-hâ râ az shab-e qabl khis kard. She soaked the chickpeas from the night before."
+            },
+            {
+              "kind": "speech",
+              "text": "Khis \"wet\". Present khis mikonad; khis khordan \"to stand soaking\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khis \"wet\" is a native Persian word whose deeper origin is not settled; kardan \"to do\" is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khis kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khis kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khis kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khis kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khis kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khis kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a measuring cup, then the Persian for to sift, then say khis kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a measuring cup, then the Persian for to sift, then say *khis kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خیس کردن (khis kardan) mean? (\"To soak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R355-review-348-355",
+      "sequence": 18160,
+      "title": "Words from chapters 348–355 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 348-355",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ce55a4bd567d6d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a fairy and magic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fairy, magic, a witch, a treasure, fate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fairy, magic, a witch, a treasure, fate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to betray, to take revenge, to fight, to kill, to be taken prisoner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to betray, to take revenge, to fight, to kill, to be taken prisoner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, a queen, a palace, a castle, a crown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, a queen, a palace, a castle, a crown]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an army, a battle, a victory, to defeat, to conquer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an army, a battle, a victory, to defeat, to conquer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antiquity, ancient, a civilisation, an empire, a dynasty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: antiquity, ancient, a civilisation, an empire, a dynasty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an era, a century, a historian, ancestors, heritage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an era, a century, a historian, ancestors, heritage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to discover, to invent, to found, an inscription, a ruin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to discover, to invent, to found, an inscription, a ruin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a recipe, ingredients, a measuring cup, to sift, to soak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a recipe, ingredients, a measuring cup, to sift, to soak]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A fairy? (پری.) Magic? (جادو.) A witch? (جادوگر.) A treasure? (گنج.) Fate? (سرنوشت.) To betray? (خیانت کردن.) To take revenge? (انتقام گرفتن.) To fight? (جنگیدن.) To kill? (کشتن.) To be taken prisoner? (اسیر شدن.) A king? (پادشاه.) A queen? (ملکه.) A palace? (کاخ.) A castle? (قلعه.) A crown? (تاج.) An army? (سپاه.) A battle? (نبرد.) A victory? (پیروزی.) To defeat? (شکست دادن.) To conquer? (فتح کردن.) Antiquity? (باستان.) Ancient? (باستانی.) A civilisation? (تمدن.) An empire? (امپراتوری.) A dynasty? (سلسله.) An era? (دوران.) A century? (سده.) A historian? (مورخ.) Ancestors? (نیاکان.) Heritage? (میراث.) To discover? (کشف کردن.) To invent? (اختراع کردن.) To found? (تاسیس کردن.) An inscription? (کتیبه.) A ruin? (ویرانه.) A recipe? (دستور پخت (dastur-e pokht).) Ingredients? (مواد (mavâd).) A measuring cup? (پیمانه (peymâne).) To sift? (الک کردن (alak kardan).) To soak? (خیس کردن (khis kardan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

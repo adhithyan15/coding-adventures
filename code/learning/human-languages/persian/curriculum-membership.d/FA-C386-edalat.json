@@ -1,0 +1,11 @@
+{
+  "id": "FA-C386-edalat",
+  "pathSegment": "FA-PATH-386-BARABARI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-386-BARABARI",
+      "order": 2
+    }
+  ]
+}

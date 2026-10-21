@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C383-reqabat",
+    "language": "persian",
+    "chapter": 383,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfd6c9da789c92de"
+  },
+  "findings": []
+}

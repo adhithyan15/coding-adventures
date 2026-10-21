@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:32721718a7589aaf",
+  "lessonIds": [
+    "JA-C180-kissaten",
+    "JA-C180-shokudou",
+    "JA-C180-misoshiru",
+    "JA-C180-nigiru",
+    "JA-C180-onigiri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch180.txt",
+  "json": "japanese/narration/ch180.json",
+  "textHash": "fnv1a64:ee4e66d804e5386d",
+  "jsonHash": "fnv1a64:4074a11b4dd302f3",
+  "findings": []
+}

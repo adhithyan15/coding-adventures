@@ -1,0 +1,11 @@
+{
+  "id": "FA-C383-tablighat",
+  "pathSegment": "FA-PATH-383-TOWLID",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-383-TOWLID",
+      "order": 4
+    }
+  ]
+}

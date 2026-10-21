@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-413-EQTESAD",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-413-EQTESAD"
+  ],
+  "after": []
+}

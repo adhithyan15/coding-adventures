@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:34049802ab6bad76",
+  "lessonIds": [
+    "JA-C152-shitaku",
+    "JA-C152-isogu",
+    "JA-C152-dekakeru",
+    "JA-C152-wasureru",
+    "JA-C152-okureru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch152.txt",
+  "json": "japanese/narration/ch152.json",
+  "textHash": "fnv1a64:05ee576938b22338",
+  "jsonHash": "fnv1a64:889b7ae295ed6ce3",
+  "findings": []
+}

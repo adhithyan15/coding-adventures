@@ -1,0 +1,11 @@
+{
+  "id": "FA-C424-kenar-zadan",
+  "pathSegment": "FA-PATH-424-SORAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-424-SORAT",
+      "order": 3
+    }
+  ]
+}

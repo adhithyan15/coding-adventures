@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:d3081ca24d7e55e8",
+  "lessonIds": [
+    "JA-C187-azukeru",
+    "JA-C187-orosu",
+    "JA-C187-tsuuchou",
+    "JA-C187-kariru",
+    "JA-C187-ryougae"
+  ],
+  "tex": "japanese/book/chapters/ch187-at-the-bank.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-454-KAFFASH",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get things fixed in town: the repairman, the cobbler, the locksmith, the hairdresser and the watchmaker.",
+  "prerequisites": []
+}

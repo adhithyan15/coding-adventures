@@ -1,0 +1,11 @@
+{
+  "id": "FA-C469-sadd",
+  "pathSegment": "FA-PATH-469-TALAB",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-469-TALAB",
+      "order": 3
+    }
+  ]
+}

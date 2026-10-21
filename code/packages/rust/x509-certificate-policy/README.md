@@ -7,12 +7,22 @@ policy. Its certificate-role gate composes the repository-owned Basic
 Constraints, Key Usage, and Extended Key Usage decoders under one explicit
 semantic budget.
 
+Its evidence-bound role-policy composition first rejects any critical
+extension not recognized by caller-owned policy and only then applies those
+role semantics to the same exact decoded certificate. The resulting
+non-copyable outer evidence cannot combine a critical-extension check from one
+certificate with role evidence from another.
+
 Its algorithm-profile gate selects exactly one caller-supplied combination of
 signature AlgorithmIdentifier, subject-public-key AlgorithmIdentifier, exact
 parameter encodings, and inclusive bit-length ranges. It embeds no algorithm
 registry and does not parse keys or signatures or choose a verifier.
 The subject-public-key range measures its complete encoded BIT STRING, not an
 algorithm-specific strength such as an RSA modulus size or EC group.
+An outer algorithm-policy composition retains that profile result beside the
+exact decoded certificate object that was checked. Binding-sensitive consumers
+can require the non-copyable outer evidence rather than accepting detached
+fields that might have come from another certificate.
 
 Its server-identity gate requires and decodes the complete certificate's
 Subject Alternative Name extension under a caller-supplied budget, then passes
@@ -56,19 +66,31 @@ zero-based sequence index; the error retains no OID or certificate bytes.
 
 Recognition is not semantic validation. The caller must separately decode and
 enforce every recognized extension according to the certificate's role. This
-crate's role result proves only the extension relationships above; callers must
-still run the unknown-critical-extension gate and validate every other
-recognized extension. The role gate does not select algorithm-dependent TLS
-key usages, authorize an Extended Key Usage purpose, or grant a certificate
-role or trust. It provides no built-in issuer/subject name normalization or
-semantic equality and does not construct or validate paths, verify signatures,
-interpret keys, check validity against a clock, process revocation, select
-trust roots, or perform TLS, HTTP, or OAuth transport. Passing an algorithm
-profile proves only exact identifier, parameter, and bit-length checks;
-supplying an Ed25519, RSA,
+crate's lower-level role result proves only the extension relationships above;
+callers using it directly must also run the unknown-critical-extension gate.
+The combined role-policy gate performs both checks on one exact certificate,
+but callers must still validate every other recognized extension. Neither gate
+selects algorithm-dependent TLS key usages, authorizes an Extended Key Usage
+purpose, or grants a certificate role or trust. This crate provides no built-in
+issuer/subject name normalization or semantic equality and does not construct
+or validate paths, verify signatures, interpret keys, check validity against a
+clock, process revocation, select trust roots, or perform TLS, HTTP, or OAuth
+transport. Passing an algorithm profile proves only exact identifier,
+parameter, and bit-length checks; supplying an Ed25519, RSA,
 or other OID does not enable the algorithm or authorize a cryptographic
 implementation. Algorithm-specific key parsing and strength policy remain
 separate mandatory work for a repository-owned parser and verifier.
+The certificate-bound algorithm-policy result adds only exact-object identity;
+it does not make the selected profile a verifier-routing decision or upgrade an
+encoded key-length bound into algorithm-specific strength evidence.
+
+The combined role-policy result removes the need to run the two gates
+independently, but it does not turn recognition into semantic validation.
+Critical extensions outside Basic Constraints, Key Usage, and Extended Key
+Usage remain caller-owned mandatory work before assigning path or trust
+authority. Any downstream API that relies on the same-certificate binding must
+accept the outer role-policy evidence, not a detached clone of its lower-level
+role evidence.
 
 Passing the server-identity gate proves only that one already validated caller
 reference matched a typed Subject Alternative Name value. It neither replaces
@@ -105,36 +127,40 @@ use der_asn1::Asn1Limits;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    classify_certificate_self_issued, validate_certificate_algorithm_profile,
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_extended_key_purpose, validate_certificate_issuer_link,
-    validate_certificate_role_extensions, validate_certificate_server_identity,
-    validate_critical_extensions, X509AlgorithmParametersPolicy,
-    X509CertificateAlgorithmProfile, X509CertificatePurposePolicy, X509CertificateRole,
+    validate_certificate_role_policy, validate_certificate_server_identity,
+    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
+    X509CertificatePurposePolicy, X509CertificateRole,
 };
 
 # fn check(encoded: &[u8], candidate_issuer_encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
 let certificate = decode_x509_certificate(encoded, Asn1Limits::default())?;
 let candidate_issuer =
     decode_x509_certificate(candidate_issuer_encoded, Asn1Limits::default())?;
-// This deliberately closed example recognizes only the three extensions its
-// next gate decodes. A broader profile must validate every additional OID it
-// recognizes before assigning trust.
-validate_critical_extensions(&certificate, |oid| {
-    oid.equals(&[2, 5, 29, 19])
-        || oid.equals(&[2, 5, 29, 15])
-        || oid.equals(&[2, 5, 29, 37])
-        || oid.equals(&[2, 5, 29, 17])
-})?;
-let evidence = validate_certificate_role_extensions(
+// This deliberately closed example recognizes the three role extensions and
+// Subject Alternative Name, which is validated below. A broader profile must
+// validate every additional OID it recognizes before assigning trust.
+let role_policy = validate_certificate_role_policy(
     &certificate,
     X509CertificateRole::EndEntity,
     Asn1Limits::default(),
+    |oid| {
+        oid.equals(&[2, 5, 29, 19])
+            || oid.equals(&[2, 5, 29, 15])
+            || oid.equals(&[2, 5, 29, 37])
+            || oid.equals(&[2, 5, 29, 17])
+    },
 )?;
-assert_eq!(evidence.role(), X509CertificateRole::EndEntity);
+assert_eq!(
+    role_policy.role_extensions().role(),
+    X509CertificateRole::EndEntity
+);
 // Purpose OIDs remain caller-owned policy data. This exact serverAuth value
 // does not select a key operation or enable any cryptographic implementation.
 let purpose = X509CertificatePurposePolicy::new(&[1, 3, 6, 1, 5, 5, 7, 3, 1])?;
-let _purpose_evidence = validate_certificate_extended_key_purpose(&evidence, purpose)?;
+let _purpose_evidence =
+    validate_certificate_extended_key_purpose(role_policy.role_extensions(), purpose)?;
 // Exact DER is one intentionally strict caller policy, not a claim of complete
 // RFC 5280 distinguished-name normalization or semantic equality.
 let _issuer_link = validate_certificate_issuer_link(
@@ -159,8 +185,9 @@ let profiles = [X509CertificateAlgorithmProfile::new(
     2_048,
     8_192,
 )?];
-let algorithm_evidence = validate_certificate_algorithm_profile(&certificate, &profiles)?;
-assert_eq!(algorithm_evidence.profile_index(), 0);
+let algorithm_evidence = validate_certificate_algorithm_policy(&certificate, &profiles)?;
+assert!(std::ptr::eq(algorithm_evidence.certificate(), &certificate));
+assert_eq!(algorithm_evidence.algorithm_profile().profile_index(), 0);
 let reference = ReferenceIdentity::parse("api.example.test")?;
 let identity_evidence = validate_certificate_server_identity(
     &certificate,

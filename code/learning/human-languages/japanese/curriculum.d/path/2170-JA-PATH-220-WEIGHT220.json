@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-220-WEIGHT220",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "JA-EXT-220-WEIGHT220"
+  ],
+  "after": []
+}

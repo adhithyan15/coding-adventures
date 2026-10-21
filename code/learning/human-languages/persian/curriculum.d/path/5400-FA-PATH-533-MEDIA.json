@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-533-MEDIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-533-MEDIA"
+  ],
+  "after": []
+}

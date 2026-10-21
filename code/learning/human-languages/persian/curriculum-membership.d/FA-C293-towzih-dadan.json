@@ -1,0 +1,11 @@
+{
+  "id": "FA-C293-towzih-dadan",
+  "pathSegment": "FA-PATH-293-ADVICE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-293-ADVICE",
+      "order": 2
+    }
+  ]
+}

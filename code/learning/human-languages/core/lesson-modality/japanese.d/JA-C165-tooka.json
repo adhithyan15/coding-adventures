@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C165-tooka",
+    "language": "japanese",
+    "chapter": 165,
+    "sequence": 9800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae424ed2870e428a"
+  },
+  "findings": []
+}

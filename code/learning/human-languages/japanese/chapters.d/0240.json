@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Likes and Skills",
+  "label": "ch:ja-likes-and-skills",
+  "canDo": "I can say what I liked and what I was good or bad at.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-C240-akiru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say what I liked and what I was good or bad at.",
+    "assesses": [
+      "JA-LEX-C240-LIKES240-03",
+      "JA-LEX-C240-LIKES240-04",
+      "JA-LEX-C240-LIKES240-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Divorce and loss",
+  "label": "ch:fa-divorce-and-loss",
+  "canDo": "I can talk about a divorce, getting divorced, a widow, an orphan and custody of a child.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C336-sarparasti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can talk about a divorce, getting divorced, a widow, an orphan and custody of a child.",
+    "assesses": [
+      "FA-LEX-C336-TALAQ-03",
+      "FA-LEX-C336-TALAQ-04",
+      "FA-LEX-C336-TALAQ-05"
+    ]
+  }
+}

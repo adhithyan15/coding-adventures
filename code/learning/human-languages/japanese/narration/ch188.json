@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 188,
+  "title": "At the Post Office",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:54de277982882bff",
+  "lessons": [
+    {
+      "id": "JA-C188-yuubinkyoku",
+      "sequence": 11220,
+      "title": "ゆうびんきょく (yūbinkyoku) — post office",
+      "headword": "ゆうびんきょく",
+      "romanization": "yūbinkyoku",
+      "gloss": "post office",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:753d3e07dc25ff59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to borrow, then the Japanese for money exchange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆうびんきょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょく — yūbinkyoku — \"post office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょくは えきの ちかくです。 — yūbinkyoku wa eki no chikaku desu — \"The post office is near the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょく (yūbinkyoku) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yū, \"post station\" (Middle Chinese hjuw), bin, \"convenience\" (bjienH) and kyoku, \"office, bureau\" (gjowk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku wa eki no chikaku desu — The post office is near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku wa eki no chikaku desu* — The post office is near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to borrow, then the Japanese for money exchange, then say yūbinkyoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to borrow, then the Japanese for money exchange, then say *yūbinkyoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆうびんきょく (yūbinkyoku) mean? (\"Post office\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C188-yuubinkyoku-type",
+              "prompt": "Say the Japanese for 'post office'.",
+              "assesses": [
+                "JA-LEX-C188-POST188-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆうびんきょく",
+                "yūbinkyoku",
+                "yuubinkyoku",
+                "yubinkyoku"
+              ],
+              "feedback": {
+                "correct": "Right: ゆうびんきょく (yūbinkyoku) is 'post office'.",
+                "incorrect": "'Post office' is ゆうびんきょく (yūbinkyoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C188-kitte",
+      "sequence": 11230,
+      "title": "きって (kitte) — stamp; postage stamp",
+      "headword": "きって",
+      "romanization": "kitte",
+      "gloss": "stamp; postage stamp",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e34743a3c75dd38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for money exchange, then the Japanese for post office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きって",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きって — kitte — \"stamp; postage stamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょくで きってを かいます。 — yūbinkyoku de kitte o kaimasu — \"I buy stamps at the post office.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きって (kitte) is native Japanese, built from kiri, the stem of kiru, \"to cut\", and te, \"hand\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitte, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitte*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku de kitte o kaimasu — I buy stamps at the post office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku de kitte o kaimasu* — I buy stamps at the post office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for money exchange, then the Japanese for post office, then say kitte again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for money exchange, then the Japanese for post office, then say *kitte* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きって (kitte) mean? (\"Stamp; postage stamp\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C188-kitte-type",
+              "prompt": "Say the Japanese for 'stamp'.",
+              "assesses": [
+                "JA-LEX-C188-POST188-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きって",
+                "kitte"
+              ],
+              "feedback": {
+                "correct": "Right: きって (kitte) is 'stamp; postage stamp'.",
+                "incorrect": "'Stamp' is きって (kitte)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C188-hagaki",
+      "sequence": 11240,
+      "title": "はがき (hagaki) — postcard",
+      "headword": "はがき",
+      "romanization": "hagaki",
+      "gloss": "postcard",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e1c9ee9b6c47d7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for post office, then the Japanese for stamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はがき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はがき — hagaki — \"postcard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちに はがきを かきます。 — tomodachi ni hagaki o kakimasu — \"I write a postcard to a friend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はがき (hagaki) is native Japanese, built from ha and kaki, \"writing\", from kaku, \"to write\"; JMdict spells the first part as either \"leaf\" or \"edge\", so which came first is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hagaki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hagaki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hagaki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hagaki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi ni hagaki o kakimasu — I write a postcard to a friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi ni hagaki o kakimasu* — I write a postcard to a friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for post office, then the Japanese for stamp, then say hagaki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for post office, then the Japanese for stamp, then say *hagaki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はがき (hagaki) mean? (\"Postcard\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C188-hagaki-type",
+              "prompt": "Say the Japanese for 'postcard'.",
+              "assesses": [
+                "JA-LEX-C188-POST188-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はがき",
+                "hagaki"
+              ],
+              "feedback": {
+                "correct": "Right: はがき (hagaki) is 'postcard'.",
+                "incorrect": "'Postcard' is はがき (hagaki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C188-okuru",
+      "sequence": 11250,
+      "title": "おくる (okuru) — to send; to see off",
+      "headword": "おくる",
+      "romanization": "okuru",
+      "gloss": "to send; to see off",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0283891a4eb914df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for stamp, then the Japanese for postcard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おくる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おくる — okuru — \"to send; to see off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははに てがみを おくります。 — haha ni tegami o okurimasu — \"I send a letter to my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おくります, okurimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おくる (okuru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha ni tegami o okurimasu — I send a letter to my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha ni tegami o okurimasu* — I send a letter to my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for stamp, then the Japanese for postcard, then say okuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for stamp, then the Japanese for postcard, then say *okuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おくる (okuru) mean? (\"To send; to see off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C188-okuru-type",
+              "prompt": "Say the Japanese for 'to send'.",
+              "assesses": [
+                "JA-LEX-C188-POST188-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おくる",
+                "okuru"
+              ],
+              "feedback": {
+                "correct": "Right: おくる (okuru) is 'to send; to see off'.",
+                "incorrect": "'To send' is おくる (okuru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C188-kakitome",
+      "sequence": 11260,
+      "title": "かきとめ (kakitome) — registered mail; registered post",
+      "headword": "かきとめ",
+      "romanization": "kakitome",
+      "gloss": "registered mail; registered post",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c359f0273407d5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for postcard, then the Japanese for to send."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かきとめ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かきとめ — kakitome — \"registered mail; registered post\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょくで かきとめを おくります。 — yūbinkyoku de kakitome o okurimasu — \"I send registered mail at the post office.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かきとめ (kakitome) is native Japanese, built from kaki, the stem of kaku, \"to write\", and tome, the stem of tomeru, \"to fasten, to keep in place\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakitome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakitome*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakitome, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakitome*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku de kakitome o okurimasu — I send registered mail at the post office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku de kakitome o okurimasu* — I send registered mail at the post office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for postcard, then the Japanese for to send, then say kakitome again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for postcard, then the Japanese for to send, then say *kakitome* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かきとめ (kakitome) mean? (\"Registered mail; registered post\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C188-kakitome-type",
+              "prompt": "Say the Japanese for 'registered mail'.",
+              "assesses": [
+                "JA-LEX-C188-POST188-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かきとめ",
+                "kakitome"
+              ],
+              "feedback": {
+                "correct": "Right: かきとめ (kakitome) is 'registered mail; registered post'.",
+                "incorrect": "'Registered mail' is かきとめ (kakitome)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

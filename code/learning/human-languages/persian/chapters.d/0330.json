@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Storms and warnings",
+  "label": "ch:fa-storms-and-warnings",
+  "canDo": "I can talk about storms, people drowning or boats sinking, a plane coming down, and warning people.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C330-hoshdar-dadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can talk about storms, people drowning or boats sinking, a plane coming down, and warning people.",
+    "assesses": [
+      "FA-LEX-C330-TUFAN-03",
+      "FA-LEX-C330-TUFAN-04",
+      "FA-LEX-C330-TUFAN-05"
+    ]
+  }
+}

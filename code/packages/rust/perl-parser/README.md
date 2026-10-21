@@ -1,5 +1,11 @@
 # Perl parser (Rust)
 
+`release_parser_grammar(id)` returns the compiled parser grammar of exactly
+one checked release from `code/grammars/perl/releases.csv` (LANG84); the 118
+pairs share 2 distinct grammars. `parse_perl` below keeps using the
+unversioned pair, which is no longer on the IIR path. Release selection
+itself lives in `perl-iir-compiler`, whose default is the `perl5.38.0` pair.
+
 Parses LANG81's bounded Perl 5.38 `print` arithmetic subset from the
 checked-in `code/grammars/perl/perl.grammar` definition. The parser returns
 a grammar tree for direct lowering to InterpreterIR. This is not a full Perl

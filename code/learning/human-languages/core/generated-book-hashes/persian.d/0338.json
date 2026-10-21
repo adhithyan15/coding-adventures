@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:1af904e551f1bfe8",
+  "lessonIds": [
+    "FA-C338-khatm",
+    "FA-C338-aza",
+    "FA-C338-tasliyat-goftan",
+    "FA-C338-vasiyat",
+    "FA-C338-ers"
+  ],
+  "tex": "persian/book/chapters/ch338-mourning-and-what-is-left.tex"
+}

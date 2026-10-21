@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C495-kolye",
+    "language": "persian",
+    "chapter": 495,
+    "sequence": 25390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03aca4265c211c12"
+  },
+  "findings": []
+}

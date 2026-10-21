@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:03b80dc4c4cac2ca",
+  "lessonIds": [
+    "FA-C328-atash-suzi",
+    "FA-C328-atash-gereftan",
+    "FA-C328-shole",
+    "FA-C328-dud",
+    "FA-C328-jaraqe"
+  ],
+  "tex": "persian/book/chapters/ch328-fire.tex"
+}

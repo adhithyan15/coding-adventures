@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Speed and safety",
+  "label": "ch:fa-speed-and-safety",
+  "canDo": "I can talk about speed: speed, speeding up, overtaking, pulling over and safety.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C424-imeni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about speed: speed, speeding up, overtaking, pulling over and safety.",
+    "assesses": [
+      "FA-LEX-C424-SORAT-03",
+      "FA-LEX-C424-SORAT-04",
+      "FA-LEX-C424-SORAT-05"
+    ]
+  }
+}

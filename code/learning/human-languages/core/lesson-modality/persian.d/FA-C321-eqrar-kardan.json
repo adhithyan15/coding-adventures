@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C321-eqrar-kardan",
+    "language": "persian",
+    "chapter": 321,
+    "sequence": 16390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cd3a6506e4b035c"
+  },
+  "findings": []
+}

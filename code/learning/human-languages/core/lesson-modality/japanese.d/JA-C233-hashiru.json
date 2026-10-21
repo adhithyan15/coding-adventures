@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C233-hashiru",
+    "language": "japanese",
+    "chapter": 233,
+    "sequence": 14090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8541ad15e70577f0"
+  },
+  "findings": []
+}

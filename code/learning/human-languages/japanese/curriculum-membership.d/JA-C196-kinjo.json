@@ -1,0 +1,11 @@
+{
+  "id": "JA-C196-kinjo",
+  "pathSegment": "JA-PATH-196-ADDR196",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-196-ADDR196",
+      "order": 1
+    }
+  ]
+}

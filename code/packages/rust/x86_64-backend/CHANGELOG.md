@@ -1,4 +1,12 @@
 # Changelog — `x86_64-backend`
+## Unreleased — LANG83 PR6a — shortest round-trip float output
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): two `V1_BUILTINS` rows,
+  so `call_builtin` lowers to `call __twig_write_f64_py` / `__twig_write_f64_js`.
+  The f64 slot's raw bytes reach `rdi` through an integer `mov`, which is the
+  runtime's `int64_t bits` argument. No SSE instruction is involved.
+- `op_support`: both `Lowered`. A test pins the shape.
+
 ## Unreleased — LANG83 PR4 — overflow-checked arithmetic
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**

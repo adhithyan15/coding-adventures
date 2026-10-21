@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Getting better",
+  "label": "ch:fa-getting-better",
+  "canDo": "I can say that a situation improved, that someone recovered, that I made progress and that someone fell behind.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C374-aqab-mandan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say that a situation improved, that someone recovered, that I made progress and that someone fell behind.",
+    "assesses": [
+      "FA-LEX-C374-BEHBUD-03",
+      "FA-LEX-C374-BEHBUD-04",
+      "FA-LEX-C374-BEHBUD-05"
+    ]
+  }
+}

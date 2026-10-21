@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C173-obentou",
+    "language": "japanese",
+    "chapter": 173,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:988cabbe250e9a1c"
+  },
+  "findings": []
+}

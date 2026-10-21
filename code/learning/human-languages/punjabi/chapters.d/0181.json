@@ -1,0 +1,22 @@
+{
+  "chapter": 181,
+  "title": "A Train Ticket and the Way Home",
+  "label": "ch:pa-a2-transport-prerequisite",
+  "canDo": "I can understand and give one short practical note about a train ticket, a journey, and going home on foot.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C181-payoff",
+    "kind": "production",
+    "summary": "Hear the journey word before seeing its spelling, recognise its newly needed opening letter, then retrieve a three-line travel note through listening, speaking, reading, and bounded Gurmukhi writing after an atom-free review.",
+    "assesses": [
+      "PA-TRAVEL-RAIL-01",
+      "PA-TRAVEL-TICKET-01",
+      "PA-TRAVEL-JOURNEY-01",
+      "PA-TRAVEL-BACK-01",
+      "PA-TRAVEL-ON-FOOT-01"
+    ],
+    "note": "This fourth Punjabi A2 mock-draft prerequisite tranche removes 22 measured occurrences but does not by itself unblock mock 1 and provides no readiness, attainment, equivalence, or human-validation evidence."
+  }
+}

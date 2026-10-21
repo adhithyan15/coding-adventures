@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Heat and humidity",
+  "label": "ch:fa-heat-and-humidity",
+  "canDo": "I can talk about the heat: muggy weather, humidity, heatstroke, mild weather and sunbathing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C477-aftab-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about the heat: muggy weather, humidity, heatstroke, mild weather and sunbathing.",
+    "assesses": [
+      "FA-LEX-C477-SHARJI-03",
+      "FA-LEX-C477-SHARJI-04",
+      "FA-LEX-C477-SHARJI-05"
+    ]
+  }
+}

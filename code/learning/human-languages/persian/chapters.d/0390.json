@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Provided that",
+  "label": "ch:fa-provided-that",
+  "canDo": "I can set a condition with provided that, in the event that and unless, and say what happens otherwise.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C390-dar-gheyr-e-in-surat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can set a condition with provided that, in the event that and unless, and say what happens otherwise.",
+    "assesses": [
+      "FA-LEX-C390-SHART-03",
+      "FA-LEX-C390-SHART-04",
+      "FA-LEX-C390-SHART-05"
+    ]
+  }
+}

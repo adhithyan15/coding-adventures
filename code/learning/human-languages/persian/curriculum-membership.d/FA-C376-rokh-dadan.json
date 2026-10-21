@@ -1,0 +1,11 @@
+{
+  "id": "FA-C376-rokh-dadan",
+  "pathSegment": "FA-PATH-376-TAQSIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-376-TAQSIR",
+      "order": 3
+    }
+  ]
+}

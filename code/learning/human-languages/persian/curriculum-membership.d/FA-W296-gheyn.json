@@ -1,0 +1,11 @@
+{
+  "id": "FA-W296-gheyn",
+  "pathSegment": "FA-PATH-296-FEELING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-296-FEELING",
+      "order": 2
+    }
+  ]
+}

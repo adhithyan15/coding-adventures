@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Explosions and leaks",
+  "label": "ch:fa-explosions-and-leaks",
+  "canDo": "I can talk about an explosion, something blowing up or bursting, a leak, and the ashes left behind.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C329-khakestar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can talk about an explosion, something blowing up or bursting, a leak, and the ashes left behind.",
+    "assesses": [
+      "FA-LEX-C329-ENFEJAR-03",
+      "FA-LEX-C329-ENFEJAR-04",
+      "FA-LEX-C329-ENFEJAR-05"
+    ]
+  }
+}

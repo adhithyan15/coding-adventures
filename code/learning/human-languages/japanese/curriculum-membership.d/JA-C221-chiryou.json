@@ -1,0 +1,11 @@
+{
+  "id": "JA-C221-chiryou",
+  "pathSegment": "JA-PATH-221-FEVER221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-221-FEVER221",
+      "order": 3
+    }
+  ]
+}

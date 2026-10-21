@@ -675,10 +675,17 @@ export function trackScript(root: string, trackName: string): Script | undefined
   }
 }
 
+/**
+ * Told, for each track the lesson cache served, the content address its lessons
+ * were served under — see `loadLessons`'s `onCacheKey`.
+ */
+export type LessonCacheKeyObserver = (language: string, key: string) => void;
+
 /** Read every track's lessons/*.md into parsed lessons. */
 export function loadTrackLessons(
   language: string,
   root = defaultCurriculumRoot(),
+  onCacheKey?: LessonCacheKeyObserver,
 ): ParsedLesson[] {
   // Validated FIRST, before the id reaches a path at all. It used to run after
   // the `join` and after the `existsSync` probe, which left an existence
@@ -704,7 +711,7 @@ export function loadTrackLessons(
       parseLesson(readFileSync(join(lessonsDir, file), "utf8"), language, script),
     );
   }
-  return cachedTrackLessons(cache, lessonsDir, files, language, script);
+  return cachedTrackLessons(cache, lessonsDir, files, language, script, onCacheKey);
 }
 
 /**
@@ -729,9 +736,14 @@ function cachedTrackLessons(
   files: readonly string[],
   language: string,
   script: Script | undefined,
+  onCacheKey: LessonCacheKeyObserver | undefined,
 ): ParsedLesson[] {
   const sources = files.map((name) => ({ name, bytes: readFileSync(join(lessonsDir, name)) }));
   const key = cache.key({ language, script, files: sources });
+  // Reported before the lessons are returned, and for the very `sources` they are
+  // parsed from (or were cached under): the key names exactly these lessons, with
+  // no second read of the files in between that an edit could slip into.
+  onCacheKey?.(language, key);
   const hit = cache.read(language, key);
   // The length check is not what keeps a hit honest — the key and the digest do
   // that — but it is free, and it turns a wildly wrong entry into a miss.
@@ -743,7 +755,20 @@ function cachedTrackLessons(
   return lessons;
 }
 
-export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
+/**
+ * Every track's lessons, in track order.
+ *
+ * `onCacheKey` is for the narration cache (`src/narration-cache.ts`) and nothing
+ * else. Inside the test suite, each track the lesson cache serves is reported with
+ * the SHA-256 it was served under — a hash of that track's lesson files' bytes, its
+ * script and this package's source — so a consumer can key work it derives from
+ * those lessons without hashing them a second time. Outside the suite the lesson
+ * cache is off, nothing is ever reported, and this is the plain loader.
+ */
+export function loadLessons(
+  root = defaultCurriculumRoot(),
+  onCacheKey?: LessonCacheKeyObserver,
+): ParsedLesson[] {
   const out: ParsedLesson[] = [];
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) {
@@ -788,7 +813,7 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
       }
       continue;
     }
-    out.push(...loadTrackLessons(track.name, root));
+    out.push(...loadTrackLessons(track.name, root, onCacheKey));
   }
   return out;
 }

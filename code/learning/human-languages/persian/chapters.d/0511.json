@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Outdoor Pastimes",
+  "label": "ch:fa-outdoor-pastimes",
+  "canDo": "I can talk about outdoor pastimes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R511-review-504-511",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about outdoor pastimes.",
+    "assesses": [
+      "FA-LEX-C511-OUTDOORS-03",
+      "FA-LEX-C511-OUTDOORS-04",
+      "FA-LEX-C511-OUTDOORS-05"
+    ]
+  }
+}

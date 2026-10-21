@@ -74,15 +74,15 @@ STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
 # into the template group when it encounters `${` inside a template, and pops
 # back when the expression completes.
 
-TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
-TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # --- Regular expressions ---
 #
 # ES2015 added the `u` (Unicode) flag. Flags available: g, i, m, u, y.
 # The `y` (sticky) flag was also added in ES2015.
 
-REGEX = /\/([^\/\\\n]|\\.)+\/[gimuy]*/
+REGEX = /\/([^\/\\\n\r]|\\[^\n\r])+\/[gimuy]*/
 
 # ============================================================================
 # Multi-character operators
@@ -263,8 +263,8 @@ context_keywords:
 # it switches to the template group to continue lexing the template string.
 
 group template:
-  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
-  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # ============================================================================
 # Skip patterns
@@ -272,8 +272,8 @@ group template:
 
 skip:
   WHITESPACE    = /[ \t\r\n\v\f]+/
-  LINE_COMMENT  = /\/\/[^\n]*/
-  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+  LINE_COMMENT  = /\/\/[^\n\r]*/
+  BLOCK_COMMENT = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
 
 # ============================================================================
 # Error recovery tokens
@@ -283,4 +283,4 @@ errors:
   BAD_STRING_DQ = /"[^"]*$/
   BAD_STRING_SQ = /'[^']*$/
   BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
-  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*$/

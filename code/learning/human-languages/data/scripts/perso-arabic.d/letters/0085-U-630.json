@@ -1,0 +1,18 @@
+{
+  "glyph": "ذ",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ذ",
+    "initial": "ذ",
+    "medial": "ـذ",
+    "final": "ـذ"
+  },
+  "components": [
+    "folded shoulder",
+    "leftward baseline",
+    "one dot above"
+  ],
+  "strokeOrder": [],
+  "notes": "Does not join to the following letter. Pronounced z in modern Persian, like ز and ظ; found mostly in Arabic-derived words and in a few Persian ones such as گذشتن. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

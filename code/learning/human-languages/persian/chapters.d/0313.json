@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Numbers and summaries",
+  "label": "ch:fa-numbers-and-summaries",
+  "canDo": "I can talk about the figures in a report: statistics, an estimate, stressing a point and summing up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C313-kholase-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about the figures in a report: statistics, an estimate, stressing a point and summing up.",
+    "assesses": [
+      "FA-LEX-C313-AMAR-03",
+      "FA-LEX-C313-AMAR-04",
+      "FA-LEX-C313-AMAR-05"
+    ]
+  }
+}

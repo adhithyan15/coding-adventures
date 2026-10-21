@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:47454470485fe224",
+  "lessonIds": [
+    "FA-C331-viran-shodan",
+    "FA-C331-foru-rikhtan",
+    "FA-C331-avar",
+    "FA-C331-takhliye-kardan",
+    "FA-C331-panah-bordan",
+    "FA-R331-review-324-331"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch331.txt",
+  "json": "persian/narration/ch331.json",
+  "textHash": "fnv1a64:32fd653de8c828d9",
+  "jsonHash": "fnv1a64:0590e5812b3384b7",
+  "findings": []
+}

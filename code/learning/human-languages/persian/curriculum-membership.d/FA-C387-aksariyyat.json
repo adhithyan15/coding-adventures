@@ -1,0 +1,11 @@
+{
+  "id": "FA-C387-aksariyyat",
+  "pathSegment": "FA-PATH-387-MOHAJERAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-387-MOHAJERAT",
+      "order": 3
+    }
+  ]
+}

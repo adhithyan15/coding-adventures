@@ -1,0 +1,11 @@
+{
+  "id": "JA-C154-kurasu",
+  "pathSegment": "JA-PATH-154-HABIT154",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-154-HABIT154",
+      "order": 3
+    }
+  ]
+}

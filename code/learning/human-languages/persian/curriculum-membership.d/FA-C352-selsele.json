@@ -1,0 +1,11 @@
+{
+  "id": "FA-C352-selsele",
+  "pathSegment": "FA-PATH-352-BASTAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-352-BASTAN",
+      "order": 4
+    }
+  ]
+}

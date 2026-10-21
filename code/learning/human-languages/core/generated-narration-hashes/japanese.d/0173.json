@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:0953f80c62638c44",
+  "lessonIds": [
+    "JA-C173-tabemono",
+    "JA-C173-nomimono",
+    "JA-C173-obentou",
+    "JA-C173-nokoru",
+    "JA-C173-ajiwau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch173.txt",
+  "json": "japanese/narration/ch173.json",
+  "textHash": "fnv1a64:f0dffa0f579d5f58",
+  "jsonHash": "fnv1a64:1a980613c4bba1c6",
+  "findings": []
+}

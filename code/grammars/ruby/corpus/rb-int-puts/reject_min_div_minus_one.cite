@@ -1,0 +1,4 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby reject_min_div_minus_one.rb
+ruby: exit 0, stdout '9223372036854775808\n' (Ruby accepts it)
+rb-int-puts: rejected with Unsupported: Ruby's quotient 2**63 is a Bignum; rb-int-puts values are i64

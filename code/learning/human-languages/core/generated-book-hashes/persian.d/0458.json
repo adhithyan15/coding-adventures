@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:05b39b3a3fd11bd5",
+  "lessonIds": [
+    "FA-C458-dastforush",
+    "FA-C458-attari",
+    "FA-C458-bazzaz",
+    "FA-C458-omdeforush",
+    "FA-C458-khordeforush"
+  ],
+  "tex": "persian/book/chapters/ch458-sellers.tex"
+}

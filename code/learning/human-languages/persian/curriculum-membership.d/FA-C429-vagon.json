@@ -1,0 +1,11 @@
+{
+  "id": "FA-C429-vagon",
+  "pathSegment": "FA-PATH-429-RAHAHAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-429-RAHAHAN",
+      "order": 2
+    }
+  ]
+}

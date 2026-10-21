@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:0325516bc3fb4c9f",
+  "lessonIds": [
+    "FA-C305-sepide-dam",
+    "FA-C305-bamdad",
+    "FA-C305-farda-ye-an-ruz",
+    "FA-C305-hengam",
+    "FA-C305-shabane-ruz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch305.txt",
+  "json": "persian/narration/ch305.json",
+  "textHash": "fnv1a64:85d732a5679c69a7",
+  "jsonHash": "fnv1a64:d62d9cf87b2ac5e8",
+  "findings": []
+}

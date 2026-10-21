@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C468-damane",
+    "language": "persian",
+    "chapter": 468,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ba1d6c3c598759f"
+  },
+  "findings": []
+}

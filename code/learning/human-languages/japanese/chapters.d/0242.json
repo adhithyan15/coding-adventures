@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Partners and Best Friends",
+  "label": "ch:ja-partners-and-best-friends",
+  "canDo": "I can ask and answer questions about friends and partners.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C242-tsukiau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can ask and answer questions about friends and partners.",
+    "assesses": [
+      "JA-LEX-C242-FRIENDS242-03",
+      "JA-LEX-C242-FRIENDS242-04",
+      "JA-LEX-C242-FRIENDS242-05"
+    ]
+  }
+}

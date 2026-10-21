@@ -926,6 +926,41 @@ struct RustReleaseFamilySpec {
     /// `unversioned_parser_grammar()` for consumers that have not moved to a
     /// release (LANG84 C4.5 lets them keep it). Never selectable by release.
     legacy_parser_grammar: bool,
+    /// Pre-LANG84 minor-line pairs (`<prefix><version>.tokens/.grammar`) that
+    /// a legacy version API still serves, such as Python's
+    /// `parse_python(source, "3.12")`. They are embedded in a separate
+    /// `legacy_versions` module, are not inventory releases, and the release
+    /// selector above cannot reach them. Empty for a family without any.
+    legacy_versions: &'static [&'static str],
+    /// The same for the unversioned `<prefix>.tokens`, embedded in the lexer
+    /// table as `unversioned_token_grammar()`. Perl needs it because LANG81's
+    /// execution grammar is a token/parser PAIR; Ruby's lexer is hand-written
+    /// around its unversioned tokens, so it leaves this off.
+    legacy_token_grammar: bool,
+    /// Where each row's `grammar_stage` comes from (see [`StageSource`]).
+    stage_source: StageSource,
+}
+
+/// Where a release row's `grammar_stage` comes from.
+///
+/// ```text
+///   StageSource::Column             header has grammar_stage ── read it
+///   StageSource::DerivedFromStatus  header has no grammar_stage ── derive:
+///        grammar_status   pending   partial   complete
+///        grammar_stage    none      P         P
+/// ```
+///
+/// The derivation is exactly the mechanical rule LANG84's "Migration of the
+/// Perl inventory" applies when the schema PR adds the column, so a family
+/// produces the same `INVENTORY` before and after its migration. A family
+/// declared `Column` still REQUIRES the column: a missing one is an error,
+/// never a silent fallback to derivation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum StageSource {
+    /// The LANG84 schema: `grammar_stage` is a required column.
+    Column,
+    /// An inventory that predates the LANG84 schema (Perl until phase 2b).
+    DerivedFromStatus,
 }
 
 /// Opt-in table. A language joins once its first pair exists; until then its
@@ -937,6 +972,36 @@ fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFami
             input_dir: "ruby",
             input_prefix: "ruby",
             legacy_parser_grammar: true,
+            legacy_token_grammar: false,
+            stage_source: StageSource::Column,
+            legacy_versions: &[],
+        }),
+        // LANG84 phase 4a. Perl's checked partial pairs collapse to a
+        // handful of distinct grammars. Both halves of the unversioned
+        // `perl.tokens`/`perl.grammar` pair (LANG81's execution grammar) stay
+        // reachable as `unversioned_*()`, never as the `""` release.
+        "perl" => Some(RustReleaseFamilySpec {
+            family_name: "perl",
+            input_dir: "perl",
+            input_prefix: "perl",
+            legacy_parser_grammar: true,
+            legacy_token_grammar: true,
+            stage_source: StageSource::DerivedFromStatus,
+            legacy_versions: &[],
+        }),
+        // LANG84 phase 7a. Python's release pairs (`python3.13.16.*` …)
+        // follow `releases.csv`; the six minor-line pairs (`python3.12.*` …)
+        // keep serving `tokenize_python`/`parse_python(source, "3.12")` from
+        // `legacy_versions`, which no release ID can select. The CSV header
+        // declares the same six stems (`legacy-minor-line-pairs:`).
+        "python" => Some(RustReleaseFamilySpec {
+            family_name: "python",
+            input_dir: "python",
+            input_prefix: "python",
+            legacy_parser_grammar: false,
+            legacy_token_grammar: false,
+            stage_source: StageSource::Column,
+            legacy_versions: PYTHON_VERSIONS,
         }),
         _ => None,
     }
@@ -956,6 +1021,8 @@ struct RustReleaseFamilyTarget {
     /// Rows with a pair, in inventory order, with the pair's directory stem.
     paired: Vec<(String, PathBuf)>,
     legacy_input: Option<PathBuf>,
+    /// The legacy minor-line pairs, as versioned sources (`v_3_12` …).
+    legacy_versions: Vec<RustVersionedSource>,
 }
 
 /// Release IDs become file names and Rust string literals, so only the LANG84
@@ -970,41 +1037,86 @@ fn is_safe_release_id(release: &str) -> bool {
 
 /// Read `release`, `grammar_status` and `grammar_stage` by header NAME.
 ///
-/// The inventories never quote a field, so a quote is rejected rather than
-/// half-parsed. A row "has a pair" when it left stage `none` or is not
-/// `pending` — the same rule `release_inventory.py check` applies.
-fn read_release_inventory(path: &Path) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
+/// Columns are found by name, never by position, because LANG84 adds required
+/// columns to every inventory and a positional reader would silently read the
+/// wrong one after that migration. Every row is checked before anything is
+/// built from it, because a release ID ends up in a file name and in a Rust
+/// string literal:
+///
+/// | Row defect                               | Result                |
+/// | ---------------------------------------- | --------------------- |
+/// | a `"` anywhere (the CSVs never quote)    | error: quoted         |
+/// | field count differs from the header's    | error: field count    |
+/// | ID outside `[A-Za-z0-9._-]`, empty, `..` | error: unsafe         |
+/// | ID seen on an earlier row                | error: duplicate      |
+/// | status not `pending/partial/complete`    | error: grammar_status |
+/// | stage not `none/G/P`                     | error: grammar_stage  |
+///
+/// A row "has a pair" when it left stage `none` or is not `pending` — the
+/// same rule `release_inventory.py check` applies.
+fn read_release_inventory(
+    path: &Path,
+    stage_source: StageSource,
+) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
     let text = std::fs::read_to_string(path)
         .map_err(|e| format!("Failed to read {}: {}", path.display(), e))?;
-    let mut lines = text.lines().filter(|line| !line.starts_with('#'));
-    let header: Vec<&str> = lines
-        .next()
-        .ok_or_else(|| format!("{} has no header", path.display()))?
-        .split(',')
-        .collect();
+    parse_release_inventory(&text, stage_source).map_err(|e| format!("{}: {}", path.display(), e))
+}
+
+/// The body of [`read_release_inventory`], on text, so the tests can feed it
+/// hostile rows without touching the disk. A trailing `\r` is dropped from
+/// each line so a CRLF checkout reads the same as an LF one.
+fn parse_release_inventory(
+    text: &str,
+    stage_source: StageSource,
+) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
+    let mut lines = text
+        .lines()
+        .map(|line| line.strip_suffix('\r').unwrap_or(line))
+        .filter(|line| !line.starts_with('#'));
+    let header: Vec<&str> = lines.next().ok_or("no header")?.split(',').collect();
     let column = |name: &str| {
         header
             .iter()
             .position(|cell| *cell == name)
-            .ok_or_else(|| format!("{} has no `{}` column", path.display(), name))
+            .ok_or_else(|| format!("no `{}` column", name))
     };
-    let (release_col, status_col, stage_col) =
-        (column("release")?, column("grammar_status")?, column("grammar_stage")?);
+    let (release_col, status_col) = (column("release")?, column("grammar_status")?);
+    let stage_col = match stage_source {
+        StageSource::Column => Some(column("grammar_stage")?),
+        StageSource::DerivedFromStatus => None,
+    };
+    let mut seen = HashSet::new();
     let mut rows = Vec::new();
     let mut paired = Vec::new();
     for (index, line) in lines.enumerate() {
+        let row = index + 1;
         if line.contains('"') {
-            return Err(format!("{}: row {} is quoted", path.display(), index + 1));
+            return Err(format!("row {} is quoted", row));
         }
         let cells: Vec<&str> = line.split(',').collect();
         if cells.len() != header.len() {
-            return Err(format!("{}: row {} has the wrong field count", path.display(), index + 1));
+            return Err(format!("row {} has the wrong field count", row));
         }
         let release = cells[release_col];
         if !is_safe_release_id(release) {
-            return Err(format!("{}: unsafe release ID {:?}", path.display(), release));
+            return Err(format!("row {}: unsafe release ID {:?}", row, release));
         }
-        let (status, stage) = (cells[status_col], cells[stage_col]);
+        if !seen.insert(release) {
+            return Err(format!("row {}: duplicate release ID {:?}", row, release));
+        }
+        let status = cells[status_col];
+        if !matches!(status, "pending" | "partial" | "complete") {
+            return Err(format!("release {}: unknown grammar_status {:?}", release, status));
+        }
+        let stage = match stage_col {
+            Some(col) => cells[col],
+            None if status == "pending" => "none",
+            None => "P",
+        };
+        if !matches!(stage, "none" | "G" | "P") {
+            return Err(format!("release {}: unknown grammar_stage {:?}", release, stage));
+        }
         if stage != "none" || status != "pending" {
             paired.push(release.to_string());
         }
@@ -1022,7 +1134,8 @@ fn build_release_family_target(
     kind: RustGrammarKind,
 ) -> Result<RustReleaseFamilyTarget, String> {
     let input_dir = grammars_dir.join(spec.input_dir);
-    let (inventory, paired_ids) = read_release_inventory(&input_dir.join("releases.csv"))?;
+    let (inventory, paired_ids) =
+        read_release_inventory(&input_dir.join("releases.csv"), spec.stage_source)?;
     if paired_ids.is_empty() {
         return Err(format!(
             "Release family '{}' has no row past stage `none` in releases.csv.",
@@ -1044,21 +1157,53 @@ fn build_release_family_target(
         }
         paired.push((release, stem));
     }
-    let legacy_input = match (spec.legacy_parser_grammar, kind) {
-        (true, RustGrammarKind::Grammar) => {
-            let path = input_dir.join(format!("{}.grammar", spec.input_prefix));
+    let legacy_extension = match kind {
+        RustGrammarKind::Grammar if spec.legacy_parser_grammar => Some("grammar"),
+        RustGrammarKind::Tokens if spec.legacy_token_grammar => Some("tokens"),
+        _ => None,
+    };
+    let legacy_input = match legacy_extension {
+        Some(extension) => {
+            let path = input_dir.join(format!("{}.{}", spec.input_prefix, extension));
             if !path.exists() {
                 return Err(format!("Expected legacy grammar '{}'.", path.display()));
             }
             Some(path)
         }
-        _ => None,
+        None => None,
     };
+    let mut legacy_versions = Vec::new();
+    for version in spec.legacy_versions {
+        // A legacy stem that is also an inventory release with a pair would
+        // make one file name mean two things (LANG84: `python3.0.*` versus
+        // release 3.0). Refuse it rather than embed it twice.
+        if paired.iter().any(|(release, _)| release == version) {
+            return Err(format!(
+                "{}{} is both a legacy minor-line pair and a release pair; move the legacy pair first.",
+                spec.input_prefix, version
+            ));
+        }
+        let input_path = input_dir.join(format!(
+            "{}{}.{}",
+            spec.input_prefix,
+            version,
+            kind.input_extension()
+        ));
+        if !input_path.exists() {
+            return Err(format!("Expected legacy pair file '{}'.", input_path.display()));
+        }
+        legacy_versions.push(RustVersionedSource {
+            version: (*version).to_string(),
+            input_path,
+            module_name: rust_module_name_for_version(version),
+        });
+    }
     Ok(RustReleaseFamilyTarget {
         family_name: spec.family_name.to_string(),
         inventory,
         paired,
         legacy_input,
+        legacy_versions,
     })
 }
 
@@ -1179,7 +1324,11 @@ fn render_release_rust_target(
     let mut classes: Vec<(String, String, Vec<String>)> = Vec::new(); // (module, embedded, releases)
     let mut canonical_by_module: Vec<String> = Vec::new();
     for (release, stem) in &family.paired {
-        let (embedded, canonical) = release_module_source(target.kind, stem, force)?;
+        // A release pair is always validated and cross-validated (LANG84
+        // stage G), even for a package whose legacy grammars need `force`
+        // (python-parser's minor-line pairs do): `force` below applies only
+        // to the legacy modules, never to a release pair.
+        let (embedded, canonical) = release_module_source(target.kind, stem, false)?;
         let digest = coding_adventures_sha256::sha256_hex(canonical.as_bytes());
         let module = format!("g_{}", &digest[..12]);
         match classes.iter().position(|(name, _, _)| *name == module) {
@@ -1277,6 +1426,45 @@ fn render_release_rust_target(
         out.push_str("mod legacy {\n");
         out.push_str(&indent_rust_code(&code, 4));
         out.push_str("}\n\n");
+    }
+
+    if !family.legacy_versions.is_empty() {
+        // The pre-LANG84 minor-line pairs, for a legacy version API only.
+        // They live in their own module with their own selector, so a
+        // release ID can never reach them, and their `v_*` module names
+        // cannot collide with the `g_<hex>` release classes.
+        out.push_str("/// Pre-LANG84 minor-line pairs, kept for the legacy version API only.\n");
+        out.push_str("/// They are not inventory releases: the release selector above cannot\n");
+        out.push_str("/// reach them, and these names are not release IDs (LANG84 C4).\n");
+        out.push_str("pub mod legacy_versions {\n");
+        out.push_str(&format!("    use {};\n\n", import));
+        out.push_str("    /// The minor-line versions, in their historical order.\n");
+        out.push_str("    pub const SUPPORTED_VERSIONS: &[&str] = &[\n");
+        for source in &family.legacy_versions {
+            out.push_str(&format!("        {:?},\n", source.version));
+        }
+        out.push_str("    ];\n\n");
+        out.push_str(&format!(
+            "    /// The {} of exactly one minor-line `version`, or `None`.\n",
+            grammar_type
+        ));
+        out.push_str(&format!(
+            "    pub fn {}(version: &str) -> Option<{}> {{\n        match version {{\n",
+            selector, grammar_type
+        ));
+        for source in &family.legacy_versions {
+            out.push_str(&format!(
+                "            {:?} => Some(super::{}::{}()),\n",
+                source.version, source.module_name, selector
+            ));
+        }
+        out.push_str("            _ => None,\n        }\n    }\n}\n\n");
+        for source in &family.legacy_versions {
+            let code = compile_rust_input_source(target.kind, &source.input_path, force)?;
+            out.push_str(&format!("mod {} {{\n", source.module_name));
+            out.push_str(&indent_rust_code(&code, 4));
+            out.push_str("}\n\n");
+        }
     }
 
     for (module, embedded, _) in &classes {
@@ -2035,20 +2223,59 @@ mod tests {
             "# provenance\nx,grammar_stage,release,grammar_status\n1,none,0.1,pending\n2,P,0.2,partial\n3,G,0.3,pending\n",
         )
         .unwrap();
-        let (rows, paired) = read_release_inventory(&path).unwrap();
+        let (rows, paired) = read_release_inventory(&path, StageSource::Column).unwrap();
         assert_eq!(rows.len(), 3);
         assert_eq!(rows[1], RustReleaseRow { release: "0.2".into(), stage: "P".into() });
         assert_eq!(paired, vec!["0.2".to_string(), "0.3".to_string()]);
 
         std::fs::write(&path, "release,grammar_status\n0.1,pending\n").unwrap();
-        assert!(read_release_inventory(&path).unwrap_err().contains("grammar_stage"));
+        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("grammar_stage"));
         std::fs::write(&path, "release,grammar_status,grammar_stage\n\"0.1\",pending,none\n").unwrap();
-        assert!(read_release_inventory(&path).unwrap_err().contains("quoted"));
+        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("quoted"));
         std::fs::write(&path, "release,grammar_status,grammar_stage\n../x,partial,P\n").unwrap();
-        assert!(read_release_inventory(&path).unwrap_err().contains("unsafe"));
+        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("unsafe"));
         std::fs::write(&path, "release,grammar_status,grammar_stage\n0.1,partial\n").unwrap();
-        assert!(read_release_inventory(&path).unwrap_err().contains("field count"));
+        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("field count"));
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn release_inventory_refuses_bad_rows() {
+        let h = "release,grammar_status,grammar_stage\n";
+        for (csv, why) in [
+            (format!("{h}1.0,partial\n"), "field count"),
+            (format!("{h}1.0,partial,P,extra\n"), "field count"),
+            (format!("{h}a/b,partial,P\n"), "unsafe"),
+            (format!("{h},partial,P\n"), "unsafe"),
+            (format!("{h}1.0,done,P\n"), "grammar_status"),
+            (format!("{h}1.0,partial,Q\n"), "grammar_stage"),
+            (format!("{h}1.0,partial,P\n1.0,pending,none\n"), "duplicate"),
+            ("release,grammar_stage\n1.0,P\n".to_string(), "grammar_status"),
+            ("grammar_status,grammar_stage\npartial,P\n".to_string(), "release"),
+            ("# only a comment\n".to_string(), "no header"),
+        ] {
+            let error = parse_release_inventory(&csv, StageSource::Column).unwrap_err();
+            assert!(error.contains(why), "{csv:?}: {error}");
+        }
+    }
+
+    #[test]
+    fn pre_lang84_inventory_derives_stage_by_the_migration_rule() {
+        // Perl's pre-2b header: no grammar_stage column. Derivation maps
+        // pending → none and partial/complete → P, and tolerates CRLF.
+        let csv = "# provenance\r\nrelease,date,perlhist_line,grammar_status\r\n\
+                   1.000,1987,78,partial\r\n1.001,1988,80,pending\r\n2.0,1988,81,complete\r\n";
+        let (rows, paired) = parse_release_inventory(csv, StageSource::DerivedFromStatus).unwrap();
+        let stages: Vec<_> = rows.iter().map(|r| (r.release.as_str(), r.stage.as_str())).collect();
+        assert_eq!(stages, [("1.000", "P"), ("1.001", "none"), ("2.0", "P")]);
+        assert_eq!(paired, ["1.000", "2.0"]);
+        // The same text is an error for a family that declares the column.
+        let error = parse_release_inventory(csv, StageSource::Column).unwrap_err();
+        assert!(error.contains("grammar_stage"), "{error}");
+        // Derivation does not relax any row check.
+        let short = "release,grammar_status\n1.0\n";
+        let error = parse_release_inventory(short, StageSource::DerivedFromStatus).unwrap_err();
+        assert!(error.contains("field count"), "{error}");
     }
 
     #[test]
@@ -2082,6 +2309,9 @@ mod tests {
             input_dir: "toy",
             input_prefix: "toy",
             legacy_parser_grammar: false,
+            legacy_token_grammar: false,
+            stage_source: StageSource::Column,
+            legacy_versions: &[],
         };
         let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Tokens).unwrap();
         assert_eq!(family_target.inventory.len(), 4);
@@ -2112,6 +2342,76 @@ mod tests {
         std::fs::remove_dir_all(dir).unwrap();
     }
 
+    /// LANG84 phase 7a: a release family can keep serving pre-LANG84
+    /// minor-line pairs (Python's `python3.12.*`) through a separate
+    /// `legacy_versions` module that no release ID can reach.
+    #[test]
+    fn release_family_embeds_legacy_minor_lines_out_of_the_release_selector() {
+        let dir = scratch_dir("legacy-lines");
+        let family = dir.join("toy");
+        std::fs::create_dir_all(&family).unwrap();
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n9.0a1,partial,P\n9.0,pending,none\n",
+        )
+        .unwrap();
+        for stem in ["toy9.0a1", "toy9.0"] {
+            std::fs::write(family.join(format!("{stem}.tokens")), "NUMBER = /[0-9]+/\n").unwrap();
+            std::fs::write(family.join(format!("{stem}.grammar")), "program = NUMBER ;\n").unwrap();
+        }
+        let spec = RustReleaseFamilySpec {
+            family_name: "toy",
+            input_dir: "toy",
+            input_prefix: "toy",
+            legacy_parser_grammar: false,
+            legacy_token_grammar: false,
+            stage_source: StageSource::Column,
+            legacy_versions: &["9.0"],
+        };
+        let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Grammar).unwrap();
+        assert_eq!(family_target.legacy_versions.len(), 1);
+        let target = RustCompileTarget {
+            package_name: "toy-parser".into(),
+            package_stem: "toy".into(),
+            grammar_name: "toy".into(),
+            filter_names: vec![],
+            kind: RustGrammarKind::Grammar,
+            inputs: RustCompileInputs::Release(family_target.clone()),
+            output_path: dir.join("_grammar.rs"),
+            force: false,
+        };
+        let out = render_release_rust_target(&target, &family_target, false).unwrap();
+        // The release selector names only the release; the minor line has its own.
+        let release_selector = out.split("pub fn parser_grammar(release").nth(1).unwrap();
+        let release_selector = release_selector.split("\n}\n").next().unwrap();
+        assert!(release_selector.contains("\"9.0a1\" => Some(g_"), "{release_selector}");
+        assert!(!release_selector.contains("\"9.0\" =>"), "{release_selector}");
+        assert!(out.contains("pub mod legacy_versions {"));
+        assert!(out.contains("            \"9.0\" => Some(super::v_9_0::parser_grammar()),"));
+        assert!(out.contains("mod v_9_0 {"));
+
+        // A legacy stem that is also a paired release is refused.
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n9.0a1,partial,P\n9.0,partial,P\n",
+        )
+        .unwrap();
+        assert!(build_release_family_target(&dir, spec, RustGrammarKind::Grammar)
+            .unwrap_err()
+            .contains("both a legacy minor-line pair and a release pair"));
+        // A missing legacy file is an error, not a skip.
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n9.0a1,partial,P\n",
+        )
+        .unwrap();
+        std::fs::remove_file(family.join("toy9.0.grammar")).unwrap();
+        assert!(build_release_family_target(&dir, spec, RustGrammarKind::Grammar)
+            .unwrap_err()
+            .contains("toy9.0.grammar"));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
     #[test]
     fn release_family_rejects_a_pair_that_does_not_cross_validate() {
         let dir = scratch_dir("cross");
@@ -2123,6 +2423,28 @@ mod tests {
         let error = release_module_source(RustGrammarKind::Grammar, &family.join("toy1"), false).unwrap_err();
         assert!(error.contains("UNDEFINED_TOKEN"), "{error}");
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    /// LANG84 phase 7a: Python is a release family that also carries the
+    /// legacy minor-line pairs; the committed tables must match regeneration.
+    #[test]
+    fn committed_python_release_tables_match_regeneration() {
+        let root = find_root();
+        let targets = find_rust_compile_targets(&root, &["python".to_string()]).unwrap();
+        assert_eq!(targets.len(), 2);
+        for target in &targets {
+            let RustCompileInputs::Release(family) = &target.inputs else {
+                panic!("{} is not a release family", target.package_name);
+            };
+            assert_eq!(family.legacy_versions.len(), PYTHON_VERSIONS.len());
+            let generated = compile_rust_target_to_string(target, target.force).unwrap();
+            let committed = std::fs::read_to_string(&target.output_path).unwrap();
+            assert!(
+                generated == committed,
+                "{} is stale; run grammar-tools generate-rust-compiled-grammars python",
+                target.output_path.display()
+            );
+        }
     }
 
     #[test]
@@ -2137,6 +2459,35 @@ mod tests {
             assert!(
                 generated == committed,
                 "{} is stale; run grammar-tools generate-rust-compiled-grammars ruby",
+                target.output_path.display()
+            );
+        }
+    }
+
+    #[test]
+    fn committed_perl_release_tables_match_regeneration() {
+        let root = find_root();
+        let targets = find_rust_compile_targets(&root, &["perl".to_string()]).unwrap();
+        let names: Vec<_> = targets.iter().map(|t| t.package_name.as_str()).collect();
+        assert_eq!(names, ["perl-lexer", "perl-parser"]);
+        for target in &targets {
+            let RustCompileInputs::Release(family) = &target.inputs else {
+                panic!("{} must be a release family", target.package_name);
+            };
+            assert!(family.inventory.len() > family.paired.len());
+            assert_eq!(family.inventory[0].release, "1.000");
+            // Both halves of the unversioned pair are embedded.
+            assert!(family.legacy_input.is_some(), "{}", target.package_name);
+            let generated = compile_rust_target_to_string(target, target.force).unwrap();
+            let modules = generated.lines().filter(|l| l.starts_with("mod g_")).count();
+            assert!(modules >= 1 && modules < family.paired.len(), "{modules} modules");
+            // The unversioned pair is a named function, never the "" release.
+            assert!(generated.contains("pub fn unversioned_"));
+            assert!(!generated.contains("\"\" =>"));
+            let committed = std::fs::read_to_string(&target.output_path).unwrap();
+            assert!(
+                generated == committed,
+                "{} is stale; run grammar-tools generate-rust-compiled-grammars perl",
                 target.output_path.display()
             );
         }

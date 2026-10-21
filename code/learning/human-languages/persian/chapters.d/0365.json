@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Judging and criticising",
+  "label": "ch:fa-judging-and-criticising",
+  "canDo": "I can say that someone judges others, criticise something, say that someone exaggerates and justify what I did.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C365-towjih-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say that someone judges others, criticise something, say that someone exaggerates and justify what I did.",
+    "assesses": [
+      "FA-LEX-C365-QEZAVAT-03",
+      "FA-LEX-C365-QEZAVAT-04",
+      "FA-LEX-C365-QEZAVAT-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C294-dast-e-rast",
+  "pathSegment": "FA-PATH-294-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-294-WAY",
+      "order": 1
+    }
+  ]
+}

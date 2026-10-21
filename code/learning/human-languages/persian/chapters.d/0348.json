@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Fairies, magic and treasure",
+  "label": "ch:fa-fairies-magic-and-treasure",
+  "canDo": "I can talk about fairies, magic, witches, treasure and fate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C348-sarnevesht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can talk about fairies, magic, witches, treasure and fate.",
+    "assesses": [
+      "FA-LEX-C348-PARI-03",
+      "FA-LEX-C348-PARI-04",
+      "FA-LEX-C348-PARI-05"
+    ]
+  }
+}

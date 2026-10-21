@@ -1,0 +1,24 @@
+{
+  "chapter": 293,
+  "title": "Advice, And Why",
+  "label": "ch:fa-advice-and-why",
+  "canDo": "I can give advice with bayad or behtar ast and the subjunctive, and explain a reason in a full sentence with dalil in ast ke.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R293-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete FA-R293-advice-and-reasons: a piece of advice, then the reason for it.",
+    "assesses": [
+      "FA-GRAMMAR-SUBJUNCTIVE-BE-01",
+      "FA-GRAMMAR-MIKHAHAM-SUBJ-01",
+      "FA-GRAMMAR-BAYAD-SUBJ-01",
+      "FA-GRAMMAR-BEHTAR-AST-SUBJ-01",
+      "FA-LEX-C293-TOWZIH-DADAN-01",
+      "FA-SCRIPT-C293-ZAD-01",
+      "FA-GRAMMAR-DALIL-IN-AST-KE-01",
+      "FA-GRAMMAR-CAUSE-NOUN-OR-CLAUSE-01"
+    ]
+  }
+}
