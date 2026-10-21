@@ -1,0 +1,11 @@
+{
+  "id": "JA-C222-daijoubu",
+  "pathSegment": "JA-PATH-222-CARE222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-222-CARE222",
+      "order": 3
+    }
+  ]
+}

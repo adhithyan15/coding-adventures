@@ -1,0 +1,11 @@
+{
+  "id": "JA-C161-kawakasu",
+  "pathSegment": "JA-PATH-161-LAUNDRY161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-161-LAUNDRY161",
+      "order": 4
+    }
+  ]
+}

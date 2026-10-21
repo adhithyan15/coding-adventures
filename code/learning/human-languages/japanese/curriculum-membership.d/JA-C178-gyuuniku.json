@@ -1,0 +1,11 @@
+{
+  "id": "JA-C178-gyuuniku",
+  "pathSegment": "JA-PATH-178-MEAT178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-178-MEAT178",
+      "order": 1
+    }
+  ]
+}

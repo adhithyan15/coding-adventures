@@ -1,0 +1,11 @@
+{
+  "id": "JA-C212-agaru",
+  "pathSegment": "JA-PATH-212-TEMP212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-212-TEMP212",
+      "order": 1
+    }
+  ]
+}

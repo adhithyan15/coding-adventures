@@ -1,0 +1,11 @@
+{
+  "id": "JA-C212-hieru",
+  "pathSegment": "JA-PATH-212-TEMP212",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-212-TEMP212",
+      "order": 2
+    }
+  ]
+}

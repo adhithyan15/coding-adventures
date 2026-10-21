@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Addresses, Maps and Neighbours",
+  "label": "ch:ja-addresses-maps-and-neighbours",
+  "canDo": "I can talk about my neighbourhood and find an address.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C196-mawaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can talk about my neighbourhood and find an address.",
+    "assesses": [
+      "JA-LEX-C196-ADDR196-03",
+      "JA-LEX-C196-ADDR196-04",
+      "JA-LEX-C196-ADDR196-05"
+    ]
+  }
+}

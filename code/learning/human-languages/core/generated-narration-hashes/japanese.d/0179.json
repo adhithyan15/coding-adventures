@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:937fda884c27729b",
+  "lessonIds": [
+    "JA-C179-koucha",
+    "JA-C179-osake",
+    "JA-C179-sosogu",
+    "JA-C179-kobosu",
+    "JA-C179-atatameru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch179.txt",
+  "json": "japanese/narration/ch179.json",
+  "textHash": "fnv1a64:fb7fdfbd34f874d1",
+  "jsonHash": "fnv1a64:85c8ab96b5ec198d",
+  "findings": []
+}

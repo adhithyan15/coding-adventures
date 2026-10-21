@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Buildings and Shopping Streets",
+  "label": "ch:ja-buildings-and-shopping-streets",
+  "canDo": "I can name buildings in town and say when shops open.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C190-aku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can name buildings in town and say when shops open.",
+    "assesses": [
+      "JA-LEX-C190-TOWN190-03",
+      "JA-LEX-C190-TOWN190-04",
+      "JA-LEX-C190-TOWN190-05"
+    ]
+  }
+}

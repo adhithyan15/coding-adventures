@@ -1,0 +1,11 @@
+{
+  "id": "JA-C151-obi",
+  "pathSegment": "JA-PATH-151-KIMONO151",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-151-KIMONO151",
+      "order": 1
+    }
+  ]
+}

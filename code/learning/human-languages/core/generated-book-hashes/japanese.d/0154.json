@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:660112849e226152",
+  "lessonIds": [
+    "JA-C154-fudan",
+    "JA-C154-kuse",
+    "JA-C154-nichijou",
+    "JA-C154-kurasu",
+    "JA-C154-nareru"
+  ],
+  "tex": "japanese/book/chapters/ch154-habits-and-everyday-life.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Tea, Sake and Spills",
+  "label": "ch:ja-tea-sake-and-spills",
+  "canDo": "I can talk about drinks and how I pour and warm them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C179-atatameru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can talk about drinks and how I pour and warm them.",
+    "assesses": [
+      "JA-LEX-C179-DRINK179-03",
+      "JA-LEX-C179-DRINK179-04",
+      "JA-LEX-C179-DRINK179-05"
+    ]
+  }
+}

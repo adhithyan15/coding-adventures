@@ -1,0 +1,11 @@
+{
+  "id": "JA-C155-ugokasu",
+  "pathSegment": "JA-PATH-155-MOVE155",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-155-MOVE155",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C163-shizuka",
+  "pathSegment": "JA-PATH-163-HOME163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-163-HOME163",
+      "order": 1
+    }
+  ]
+}

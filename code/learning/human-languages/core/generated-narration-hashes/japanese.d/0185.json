@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:fda590663f350e7f",
+  "lessonIds": [
+    "JA-C185-waribiki",
+    "JA-C185-yasuuri",
+    "JA-C185-urikire",
+    "JA-C185-kakaru",
+    "JA-C185-tariru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch185.txt",
+  "json": "japanese/narration/ch185.json",
+  "textHash": "fnv1a64:0d237da2c87645c6",
+  "jsonHash": "fnv1a64:31b82e7e6c6a0340",
+  "findings": []
+}

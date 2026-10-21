@@ -39,10 +39,13 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // practical texts (five notices), 26 word and phrase lessons, then a
     // first-pass and a second-pass review at the end of chapter 142.
     // 837 -> 840: chapters 143-145, the three A1 writing stages.
-    expect(japanese).toHaveLength(840);
+    // 840 -> 1384: chapters 146-249, the A2 vocabulary: 520 headwords (210
+    // verbs), one word per lesson, plus 24 review lessons, six per tranche.
+    expect(japanese).toHaveLength(1384);
     // 142 -> 145: the same three writing chapters, one lesson each.
+    // 145 -> 249: the A2 vocabulary chapters.
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 145 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 249 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

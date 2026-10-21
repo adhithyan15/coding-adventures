@@ -1,0 +1,814 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 167,
+  "title": "Starting, Finishing and Calling Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c7ec5cbf8797ebca",
+  "lessons": [
+    {
+      "id": "JA-C167-hajimaru",
+      "sequence": 9880,
+      "title": "はじまる (hajimaru) — to begin",
+      "headword": "はじまる",
+      "romanization": "hajimaru",
+      "gloss": "to begin",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e77991655c795026",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for this evening, then the Japanese for every night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はじまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はじまる — hajimaru — \"to begin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あした まつりが はじまります。 — ashita matsuri ga hajimarimasu — \"The festival begins tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はじまります, hajimarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はじまる (hajimaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajimaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajimaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajimaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajimaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita matsuri ga hajimarimasu — The festival begins tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita matsuri ga hajimarimasu* — The festival begins tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for this evening, then the Japanese for every night, then say hajimaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for this evening, then the Japanese for every night, then say *hajimaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はじまる (hajimaru) mean? (\"To begin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C167-hajimaru-type",
+              "prompt": "Say the Japanese for 'to begin'.",
+              "assesses": [
+                "JA-LEX-C167-DONE167-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はじまる",
+                "hajimaru"
+              ],
+              "feedback": {
+                "correct": "Right: はじまる (hajimaru) is 'to begin'.",
+                "incorrect": "'To begin' is はじまる (hajimaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C167-hajimeru",
+      "sequence": 9890,
+      "title": "はじめる (hajimeru) — to start (something)",
+      "headword": "はじめる",
+      "romanization": "hajimeru",
+      "gloss": "to start (something)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da55fee5a10b7a59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for every night, then the Japanese for to begin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はじめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はじめる — hajimeru — \"to start (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅう しごとを はじめます。 — raishū shigoto o hajimemasu — \"I will start work next week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はじめます, hajimemasu; an ichidan verb. Its intransitive partner is はじまる, hajimaru."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はじめる (hajimeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as hajimaru, \"to begin\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajimeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajimeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajimeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajimeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū shigoto o hajimemasu — I will start work next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū shigoto o hajimemasu* — I will start work next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for every night, then the Japanese for to begin, then say hajimeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for every night, then the Japanese for to begin, then say *hajimeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はじめる (hajimeru) mean? (\"To start (something)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C167-hajimeru-type",
+              "prompt": "Say the Japanese for 'to start'.",
+              "assesses": [
+                "JA-LEX-C167-DONE167-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はじめる",
+                "hajimeru"
+              ],
+              "feedback": {
+                "correct": "Right: はじめる (hajimeru) is 'to start (something)'.",
+                "incorrect": "'To start' is はじめる (hajimeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C167-oeru",
+      "sequence": 9900,
+      "title": "おえる (oeru) — to finish (something)",
+      "headword": "おえる",
+      "romanization": "oeru",
+      "gloss": "to finish (something)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff6fc9365b9b32fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to begin, then the Japanese for to start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おえる — oeru — \"to finish (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あした しごとを おえます。 — ashita shigoto o oemasu — \"I will finish the work tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おえます, oemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おえる (oeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as owaru, \"to end\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita shigoto o oemasu — I will finish the work tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita shigoto o oemasu* — I will finish the work tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to begin, then the Japanese for to start, then say oeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to begin, then the Japanese for to start, then say *oeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おえる (oeru) mean? (\"To finish (something)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C167-oeru-type",
+              "prompt": "Say the Japanese for 'to finish'.",
+              "assesses": [
+                "JA-LEX-C167-DONE167-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おえる",
+                "oeru"
+              ],
+              "feedback": {
+                "correct": "Right: おえる (oeru) is 'to finish (something)'.",
+                "incorrect": "'To finish' is おえる (oeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C167-kawaru",
+      "sequence": 9910,
+      "title": "かわる (kawaru) — to become different; to change",
+      "headword": "かわる",
+      "romanization": "kawaru",
+      "gloss": "to become different; to change",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe6708d092209b47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to start, then the Japanese for to finish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かわる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かわる — kawaru — \"to become different; to change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいげつ しごとの じかんが かわります。 — raigetsu shigoto no jikan ga kawarimasu — \"Next month my working hours will change.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かわります, kawarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かわる (kawaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raigetsu shigoto no jikan ga kawarimasu — Next month my working hours will change.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raigetsu shigoto no jikan ga kawarimasu* — Next month my working hours will change.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to start, then the Japanese for to finish, then say kawaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to start, then the Japanese for to finish, then say *kawaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かわる (kawaru) mean? (\"To become different; to change\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C167-kawaru-type",
+              "prompt": "Say the Japanese for 'to become different'.",
+              "assesses": [
+                "JA-LEX-C167-DONE167-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かわる",
+                "kawaru"
+              ],
+              "feedback": {
+                "correct": "Right: かわる (kawaru) is 'to become different; to change'.",
+                "incorrect": "'To become different' is かわる (kawaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C167-chuushi",
+      "sequence": 9920,
+      "title": "ちゅうし (chūshi) — calling off; suspension",
+      "headword": "ちゅうし",
+      "romanization": "chūshi",
+      "gloss": "calling off; suspension",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:996043c915904a57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to finish, then the Japanese for to become different."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゅうし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうし — chūshi — \"calling off; suspension\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたの まつりは ちゅうしでしょう。 — ashita no matsuri wa chūshi deshō — \"Tomorrow's festival will probably be called off.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうし (chūshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"middle\" (Middle Chinese trjuwng) and shi, \"stop\" (tsyiX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita no matsuri wa chūshi deshō — Tomorrow's festival will probably be called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita no matsuri wa chūshi deshō* — Tomorrow's festival will probably be called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to finish, then the Japanese for to become different, then say chūshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to finish, then the Japanese for to become different, then say *chūshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゅうし (chūshi) mean? (\"Calling off; suspension\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C167-chuushi-type",
+              "prompt": "Say the Japanese for 'calling off'.",
+              "assesses": [
+                "JA-LEX-C167-DONE167-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゅうし",
+                "chūshi",
+                "chuushi",
+                "chushi"
+              ],
+              "feedback": {
+                "correct": "Right: ちゅうし (chūshi) is 'calling off; suspension'.",
+                "incorrect": "'Calling off' is ちゅうし (chūshi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

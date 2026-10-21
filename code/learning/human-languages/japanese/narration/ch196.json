@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 196,
+  "title": "Addresses, Maps and Neighbours",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a00b99164682a3df",
+  "lessons": [
+    {
+      "id": "JA-C196-mukau",
+      "sequence": 11640,
+      "title": "むかう (mukau) — to head for; to face",
+      "headword": "むかう",
+      "romanization": "mukau",
+      "gloss": "to head for; to face",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1796221270fea85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go past, then the Japanese for to go back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むかう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかう — mukau — \"to head for; to face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いま えきに むかいます。 — ima eki ni mukaimasu — \"I am heading for the station now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite むかいます, mukaimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかう (mukau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ima eki ni mukaimasu — I am heading for the station now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ima eki ni mukaimasu* — I am heading for the station now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go past, then the Japanese for to go back, then say mukau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go past, then the Japanese for to go back, then say *mukau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むかう (mukau) mean? (\"To head for; to face\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C196-mukau-type",
+              "prompt": "Say the Japanese for 'to head for'.",
+              "assesses": [
+                "JA-LEX-C196-ADDR196-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むかう",
+                "mukau"
+              ],
+              "feedback": {
+                "correct": "Right: むかう (mukau) is 'to head for; to face'.",
+                "incorrect": "'To head for' is むかう (mukau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C196-kinjo",
+      "sequence": 11650,
+      "title": "きんじょ (kinjo) — neighbourhood; vicinity",
+      "headword": "きんじょ",
+      "romanization": "kinjo",
+      "gloss": "neighbourhood; vicinity",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d57b325e2fa19cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go back, then the Japanese for to head for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きんじょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんじょ — kinjo — \"neighbourhood; vicinity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きんじょに いい みせが あります。 — kinjo ni ii mise ga arimasu — \"There is a good shop in my neighbourhood.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんじょ (kinjo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, \"near\" (Middle Chinese gj+nX) and jo, \"place\" (srjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinjo ni ii mise ga arimasu — There is a good shop in my neighbourhood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinjo ni ii mise ga arimasu* — There is a good shop in my neighbourhood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go back, then the Japanese for to head for, then say kinjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go back, then the Japanese for to head for, then say *kinjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きんじょ (kinjo) mean? (\"Neighbourhood; vicinity\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C196-kinjo-type",
+              "prompt": "Say the Japanese for 'neighbourhood'.",
+              "assesses": [
+                "JA-LEX-C196-ADDR196-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きんじょ",
+                "kinjo"
+              ],
+              "feedback": {
+                "correct": "Right: きんじょ (kinjo) is 'neighbourhood; vicinity'.",
+                "incorrect": "'Neighbourhood' is きんじょ (kinjo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C196-juusho",
+      "sequence": 11660,
+      "title": "じゅうしょ (jūsho) — address; residence",
+      "headword": "じゅうしょ",
+      "romanization": "jūsho",
+      "gloss": "address; residence",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dde98cadb720578",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to head for, then the Japanese for neighbourhood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅうしょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうしょ — jūsho — \"address; residence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "てがみに じゅうしょを かきます。 — tegami ni jūsho o kakimasu — \"I write the address on the letter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうしょ (jūsho) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jū, \"dwell\" (Middle Chinese drjuH) and sho, \"place\" (srjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūsho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūsho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūsho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūsho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tegami ni jūsho o kakimasu — I write the address on the letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tegami ni jūsho o kakimasu* — I write the address on the letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to head for, then the Japanese for neighbourhood, then say jūsho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to head for, then the Japanese for neighbourhood, then say *jūsho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅうしょ (jūsho) mean? (\"Address; residence\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C196-juusho-type",
+              "prompt": "Say the Japanese for 'address'.",
+              "assesses": [
+                "JA-LEX-C196-ADDR196-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅうしょ",
+                "jūsho",
+                "juusho",
+                "jusho"
+              ],
+              "feedback": {
+                "correct": "Right: じゅうしょ (jūsho) is 'address; residence'.",
+                "incorrect": "'Address' is じゅうしょ (jūsho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C196-chizu",
+      "sequence": 11670,
+      "title": "ちず (chizu) — map",
+      "headword": "ちず",
+      "romanization": "chizu",
+      "gloss": "map",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18fce5c438e19b8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for neighbourhood, then the Japanese for address."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちず",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちず — chizu — \"map\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちずで みちを さがします。 — chizu de michi o sagashimasu — \"I look for the way on a map.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちず (chizu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chi, \"ground, earth\" (Middle Chinese dijH) and zu, \"drawing, plan\" (du) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chizu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chizu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chizu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chizu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chizu de michi o sagashimasu — I look for the way on a map.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chizu de michi o sagashimasu* — I look for the way on a map.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for neighbourhood, then the Japanese for address, then say chizu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for neighbourhood, then the Japanese for address, then say *chizu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちず (chizu) mean? (\"Map\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C196-chizu-type",
+              "prompt": "Say the Japanese for 'map'.",
+              "assesses": [
+                "JA-LEX-C196-ADDR196-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちず",
+                "chizu"
+              ],
+              "feedback": {
+                "correct": "Right: ちず (chizu) is 'map'.",
+                "incorrect": "'Map' is ちず (chizu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C196-mawaru",
+      "sequence": 11680,
+      "title": "まわる (mawaru) — to go round; to make the rounds, to spin",
+      "headword": "まわる",
+      "romanization": "mawaru",
+      "gloss": "to go round; to make the rounds, to spin",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf05592b982754c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for address, then the Japanese for map."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まわる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まわる — mawaru — \"to go round; to make the rounds, to spin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうてんがいの みせを まわります。 — shōtengai no mise o mawarimasu — \"I go round the shops on the shopping street.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite まわります, mawarimasu; a godan verb. Its transitive partner まわす is taught already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まわる (mawaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōtengai no mise o mawarimasu — I go round the shops on the shopping street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōtengai no mise o mawarimasu* — I go round the shops on the shopping street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for address, then the Japanese for map, then say mawaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for address, then the Japanese for map, then say *mawaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まわる (mawaru) mean? (\"To go round; to make the rounds, to spin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C196-mawaru-type",
+              "prompt": "Say the Japanese for 'to go round'.",
+              "assesses": [
+                "JA-LEX-C196-ADDR196-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まわる",
+                "mawaru"
+              ],
+              "feedback": {
+                "correct": "Right: まわる (mawaru) is 'to go round; to make the rounds, to spin'.",
+                "incorrect": "'To go round' is まわる (mawaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

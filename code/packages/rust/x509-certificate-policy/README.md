@@ -19,6 +19,10 @@ parameter encodings, and inclusive bit-length ranges. It embeds no algorithm
 registry and does not parse keys or signatures or choose a verifier.
 The subject-public-key range measures its complete encoded BIT STRING, not an
 algorithm-specific strength such as an RSA modulus size or EC group.
+An outer algorithm-policy composition retains that profile result beside the
+exact decoded certificate object that was checked. Binding-sensitive consumers
+can require the non-copyable outer evidence rather than accepting detached
+fields that might have come from another certificate.
 
 Its server-identity gate requires and decodes the complete certificate's
 Subject Alternative Name extension under a caller-supplied budget, then passes
@@ -76,6 +80,9 @@ parameter, and bit-length checks; supplying an Ed25519, RSA,
 or other OID does not enable the algorithm or authorize a cryptographic
 implementation. Algorithm-specific key parsing and strength policy remain
 separate mandatory work for a repository-owned parser and verifier.
+The certificate-bound algorithm-policy result adds only exact-object identity;
+it does not make the selected profile a verifier-routing decision or upgrade an
+encoded key-length bound into algorithm-specific strength evidence.
 
 The combined role-policy result removes the need to run the two gates
 independently, but it does not turn recognition into semantic validation.
@@ -120,7 +127,7 @@ use der_asn1::Asn1Limits;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    classify_certificate_self_issued, validate_certificate_algorithm_profile,
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_extended_key_purpose, validate_certificate_issuer_link,
     validate_certificate_role_policy, validate_certificate_server_identity,
     X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
@@ -178,8 +185,9 @@ let profiles = [X509CertificateAlgorithmProfile::new(
     2_048,
     8_192,
 )?];
-let algorithm_evidence = validate_certificate_algorithm_profile(&certificate, &profiles)?;
-assert_eq!(algorithm_evidence.profile_index(), 0);
+let algorithm_evidence = validate_certificate_algorithm_policy(&certificate, &profiles)?;
+assert!(std::ptr::eq(algorithm_evidence.certificate(), &certificate));
+assert_eq!(algorithm_evidence.algorithm_profile().profile_index(), 0);
 let reference = ReferenceIdentity::parse("api.example.test")?;
 let identity_evidence = validate_certificate_server_identity(
     &certificate,

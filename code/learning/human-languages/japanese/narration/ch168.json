@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 168,
+  "title": "Deadlines and Putting Things Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f217df386dc874db",
+  "lessons": [
+    {
+      "id": "JA-C168-kimaru",
+      "sequence": 9930,
+      "title": "きまる (kimaru) — to be decided; to be settled",
+      "headword": "きまる",
+      "romanization": "kimaru",
+      "gloss": "to be decided; to be settled",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8e25c4b99fde94b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to become different, then the Japanese for calling off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きまる — kimaru — \"to be decided; to be settled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅう よていが きまります。 — raishū yotei ga kimarimasu — \"The plan will be decided next week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きまります, kimarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きまる (kimaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū yotei ga kimarimasu — The plan will be decided next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū yotei ga kimarimasu* — The plan will be decided next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to become different, then the Japanese for calling off, then say kimaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to become different, then the Japanese for calling off, then say *kimaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きまる (kimaru) mean? (\"To be decided; to be settled\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C168-kimaru-type",
+              "prompt": "Say the Japanese for 'to be decided'.",
+              "assesses": [
+                "JA-LEX-C168-DELAY168-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きまる",
+                "kimaru"
+              ],
+              "feedback": {
+                "correct": "Right: きまる (kimaru) is 'to be decided; to be settled'.",
+                "incorrect": "'To be decided' is きまる (kimaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C168-kimeru",
+      "sequence": 9940,
+      "title": "きめる (kimeru) — to decide",
+      "headword": "きめる",
+      "romanization": "kimeru",
+      "gloss": "to decide",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8272ff25310bb980",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for calling off, then the Japanese for to be decided."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きめる — kimeru — \"to decide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あした ははと よていを きめます。 — ashita haha to yotei o kimemasu — \"Tomorrow I will decide the plan with my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きめます, kimemasu; an ichidan verb. Its intransitive partner is きまる, kimaru."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きめる (kimeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as kimaru, \"to be decided\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita haha to yotei o kimemasu — Tomorrow I will decide the plan with my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita haha to yotei o kimemasu* — Tomorrow I will decide the plan with my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for calling off, then the Japanese for to be decided, then say kimeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for calling off, then the Japanese for to be decided, then say *kimeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きめる (kimeru) mean? (\"To decide\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C168-kimeru-type",
+              "prompt": "Say the Japanese for 'to decide'.",
+              "assesses": [
+                "JA-LEX-C168-DELAY168-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きめる",
+                "kimeru"
+              ],
+              "feedback": {
+                "correct": "Right: きめる (kimeru) is 'to decide'.",
+                "incorrect": "'To decide' is きめる (kimeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C168-kigen",
+      "sequence": 9950,
+      "title": "きげん (kigen) — a deadline; a time limit",
+      "headword": "きげん",
+      "romanization": "kigen",
+      "gloss": "a deadline; a time limit",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f167e657427b588",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be decided, then the Japanese for to decide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きげん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きげん — kigen — \"a deadline; a time limit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅくだいの きげんは あしたです。 — shukudai no kigen wa ashita desu — \"The homework deadline is tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きげん (kigen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ki, \"period, time\" (Middle Chinese gi) and gen, \"limit\" (heanX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kigen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kigen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kigen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kigen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shukudai no kigen wa ashita desu — The homework deadline is tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shukudai no kigen wa ashita desu* — The homework deadline is tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be decided, then the Japanese for to decide, then say kigen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be decided, then the Japanese for to decide, then say *kigen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きげん (kigen) mean? (\"A deadline; a time limit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C168-kigen-type",
+              "prompt": "Say the Japanese for 'a deadline'.",
+              "assesses": [
+                "JA-LEX-C168-DELAY168-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きげん",
+                "kigen"
+              ],
+              "feedback": {
+                "correct": "Right: きげん (kigen) is 'a deadline; a time limit'.",
+                "incorrect": "'A deadline' is きげん (kigen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C168-nobasu",
+      "sequence": 9960,
+      "title": "のばす (nobasu) — to put off; to lengthen",
+      "headword": "のばす",
+      "romanization": "nobasu",
+      "gloss": "to put off; to lengthen",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:233b681735ae466b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to decide, then the Japanese for a deadline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のばす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のばす — nobasu — \"to put off; to lengthen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅうの よていを のばします。 — raishū no yotei o nobashimasu — \"I will put off next week's plans.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のばします, nobashimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のばす (nobasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nobasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nobasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nobasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nobasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū no yotei o nobashimasu — I will put off next week's plans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū no yotei o nobashimasu* — I will put off next week's plans.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to decide, then the Japanese for a deadline, then say nobasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to decide, then the Japanese for a deadline, then say *nobasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のばす (nobasu) mean? (\"To put off; to lengthen\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C168-nobasu-type",
+              "prompt": "Say the Japanese for 'to put off'.",
+              "assesses": [
+                "JA-LEX-C168-DELAY168-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のばす",
+                "nobasu"
+              ],
+              "feedback": {
+                "correct": "Right: のばす (nobasu) is 'to put off; to lengthen'.",
+                "incorrect": "'To put off' is のばす (nobasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C168-nobiru",
+      "sequence": 9970,
+      "title": "のびる (nobiru) — to be put off; to grow longer",
+      "headword": "のびる",
+      "romanization": "nobiru",
+      "gloss": "to be put off; to grow longer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57712f6b0b6e80d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a deadline, then the Japanese for to put off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のびる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のびる — nobiru — \"to be put off; to grow longer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まつりは らいしゅうに のびます。 — matsuri wa raishū ni nobimasu — \"The festival will be put off until next week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のびます, nobimasu; an ichidan verb. Its transitive partner is のばす, nobasu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のびる (nobiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nobiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nobiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nobiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nobiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matsuri wa raishū ni nobimasu — The festival will be put off until next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matsuri wa raishū ni nobimasu* — The festival will be put off until next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a deadline, then the Japanese for to put off, then say nobiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a deadline, then the Japanese for to put off, then say *nobiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のびる (nobiru) mean? (\"To be put off; to grow longer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C168-nobiru-type",
+              "prompt": "Say the Japanese for 'to be put off'.",
+              "assesses": [
+                "JA-LEX-C168-DELAY168-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のびる",
+                "nobiru"
+              ],
+              "feedback": {
+                "correct": "Right: のびる (nobiru) is 'to be put off; to grow longer'.",
+                "incorrect": "'To be put off' is のびる (nobiru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

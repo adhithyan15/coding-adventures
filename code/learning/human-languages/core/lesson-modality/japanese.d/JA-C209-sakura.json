@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C209-sakura",
+    "language": "japanese",
+    "chapter": 209,
+    "sequence": 12590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed6b97ff6f4558a4"
+  },
+  "findings": []
+}

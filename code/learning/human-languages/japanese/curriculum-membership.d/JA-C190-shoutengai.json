@@ -1,0 +1,11 @@
+{
+  "id": "JA-C190-shoutengai",
+  "pathSegment": "JA-PATH-190-TOWN190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-190-TOWN190",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:e8e14c4beabe5b3e",
+  "lessonIds": [
+    "JA-C198-noru",
+    "JA-C198-oriru",
+    "JA-C198-jitensha",
+    "JA-C198-chikatetsu",
+    "JA-C198-tsuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch198.txt",
+  "json": "japanese/narration/ch198.json",
+  "textHash": "fnv1a64:8bded0b9bad3e985",
+  "jsonHash": "fnv1a64:4f4c74d497471b27",
+  "findings": []
+}

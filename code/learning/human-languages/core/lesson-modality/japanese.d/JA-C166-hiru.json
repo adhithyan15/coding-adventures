@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C166-hiru",
+    "language": "japanese",
+    "chapter": 166,
+    "sequence": 9840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9db9a5dd5f44a854"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Cars, Drivers and Car Parks",
+  "label": "ch:ja-cars-drivers-and-car-parks",
+  "canDo": "I can talk about cars, driving and parking.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C202-chuushajou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can talk about cars, driving and parking.",
+    "assesses": [
+      "JA-LEX-C202-DRIVE202-03",
+      "JA-LEX-C202-DRIVE202-04",
+      "JA-LEX-C202-DRIVE202-05"
+    ]
+  }
+}

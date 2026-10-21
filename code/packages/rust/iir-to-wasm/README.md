@@ -275,3 +275,5 @@ and no wide multiply, so overflow is computed from the operands: a sign test for
 add/sub, `a == MIN` for negation, and for multiply a `-1 × MIN` guard followed by
 `a != 0 && (a * b) / a != b`. Each failing test calls `env.__trap(5)`
 (`Trap.Overflow`) then `unreachable`.
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the in-module `$__iir_write_f64(f64, i32 layout)`. Eleven in-module functions compute the shortest round-trip digits (Burger–Dybvig over big integers in a scratch region reserved after the static data) and print Python's `repr` or JavaScript's `toString` layout through `env.putchar` (see `src/lang83_f64.rs`).

@@ -4296,14 +4296,23 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
                 )).count() >= 6, "styled cross markers must lower to paired path instructions");
             }
+            if fixture_name == "long-endpoint-markers" {
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![3, 4, 4]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "long circle markers must lower to ellipse instructions");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )), "long cross markers must lower to paired path instructions");
+            }
             if fixture_name == "minimum-link-lengths" {
-                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3]);
-                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3],
+                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3, 5]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3, 5],
                     "minimum link lengths must survive layout lowering");
                 let gaps = layout.nodes.windows(2).map(|nodes|
                     nodes[1].x - (nodes[0].x + nodes[0].width)
                 ).collect::<Vec<_>>();
-                assert!(gaps[1] > gaps[0] && gaps[2] > gaps[1],
+                assert!(gaps.windows(2).all(|pair| pair[1] > pair[0]),
                     "minimum link lengths must reserve progressively wider rank gaps");
             }
             if fixture_name == "styled-inline-link-labels" {
@@ -4412,6 +4421,24 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::GlyphRun(run) if run.font_size == 18.0
                         && run.fill.as_deref() == Some("rgb(20, 83, 45)")
                 )), "direct edge typography must lower to styled glyph runs");
+            }
+            if fixture_name == "edge-label-typography-layout" {
+                let edge = &layout.edges[0];
+                let request = layout.nodes.iter().find(|node| node.id == "request").unwrap();
+                let done = layout.nodes.iter().find(|node| node.id == "done").unwrap();
+                assert_eq!(edge.style.font_size, Some(20.0));
+                assert_eq!(edge.style.font_weight, Some(500));
+                assert_eq!(edge.style.font_italic, Some(false));
+                assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.bold));
+                assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.italic));
+                assert!(edge.label_width > 280.0,
+                    "styled Markdown spans must participate in deterministic edge-label measurement");
+                assert!(done.x - (request.x + request.width) >= edge.label_width + 12.0,
+                    "styled edge-label width must reserve rank clearance");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 20.0
+                        && run.fill.as_deref() == Some("#7c2d12")
+                )), "styled Markdown content must lower to backend-neutral glyph runs");
             }
             if fixture_name == "positional-link-styles" {
                 assert_eq!(layout.edges[0].style.stroke.as_deref(), Some("#dc2626"));

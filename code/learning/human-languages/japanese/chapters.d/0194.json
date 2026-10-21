@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Straight On and Turn Right",
+  "label": "ch:ja-straight-on-and-turn-right",
+  "canDo": "I can give simple directions.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C194-hakubutsukan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can give simple directions.",
+    "assesses": [
+      "JA-LEX-C194-WAY194-03",
+      "JA-LEX-C194-WAY194-04",
+      "JA-LEX-C194-WAY194-05"
+    ]
+  }
+}

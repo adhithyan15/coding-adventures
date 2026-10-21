@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:eb3baeeeb1220ca0",
+  "lessonIds": [
+    "JA-C177-karai",
+    "JA-C177-suppai",
+    "JA-C177-mazui",
+    "JA-C177-kogeru",
+    "JA-C177-kusaru",
+    "JA-R177-review-172-177"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch177.txt",
+  "json": "japanese/narration/ch177.json",
+  "textHash": "fnv1a64:3e456b1d4190628b",
+  "jsonHash": "fnv1a64:9ccceb88d88762ef",
+  "findings": []
+}

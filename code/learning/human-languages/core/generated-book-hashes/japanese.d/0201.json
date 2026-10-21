@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:9474ca80916b5cc3",
+  "lessonIds": [
+    "JA-C201-wataru",
+    "JA-C201-komu",
+    "JA-C201-yokogiru",
+    "JA-C201-tobidasu",
+    "JA-C201-butsukaru"
+  ],
+  "tex": "japanese/book/chapters/ch201-crossing-the-road-safely.tex"
+}

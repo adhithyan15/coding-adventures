@@ -1,0 +1,11 @@
+{
+  "id": "JA-C232-makaseru",
+  "pathSegment": "JA-PATH-232-TALK232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-232-TALK232",
+      "order": 2
+    }
+  ]
+}

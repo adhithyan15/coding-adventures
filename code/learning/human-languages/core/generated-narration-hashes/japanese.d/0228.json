@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:271710992afde931",
+  "lessonIds": [
+    "JA-C228-manabu",
+    "JA-C228-yakusu",
+    "JA-C228-namakeru",
+    "JA-C228-yameru",
+    "JA-C228-sotsugyou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch228.txt",
+  "json": "japanese/narration/ch228.json",
+  "textHash": "fnv1a64:34a30466cfa446f9",
+  "jsonHash": "fnv1a64:44c75bef20d8e6ec",
+  "findings": []
+}

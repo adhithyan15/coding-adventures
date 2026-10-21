@@ -1,0 +1,11 @@
+{
+  "id": "JA-C232-kotowaru",
+  "pathSegment": "JA-PATH-232-TALK232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-232-TALK232",
+      "order": 3
+    }
+  ]
+}

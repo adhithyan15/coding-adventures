@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:dc75318519f60390",
+  "lessonIds": [
+    "JA-C217-kanja",
+    "JA-C217-shinsatsu",
+    "JA-C217-chuusha",
+    "JA-C217-haisha",
+    "JA-C217-mushiba"
+  ],
+  "tex": "japanese/book/chapters/ch217-at-the-doctor-s.tex"
+}

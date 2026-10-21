@@ -30,7 +30,7 @@
 #   4. Symbols as WeakMap keys — runtime only
 #
 # Token changes from ES2022:
-#   - Added: HASHBANG = /^#![^\n]*/
+#   - Added: HASHBANG = /^#![^\n\r]*/
 #     Note: The `^` means "start of input" — this token is only valid at
 #     byte position 0. The lexer must enforce this positional constraint.
 
@@ -53,7 +53,7 @@
 # Best implementation strategy: check for `#!` before starting the main
 # lexer loop, or use a pre-tokenize hook.
 
-HASHBANG = /^#![^\n]*/
+HASHBANG = /^#![^\n\r]*/
 
 NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
 
@@ -81,12 +81,12 @@ STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
 
 # --- Template literals ---
 
-TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
-TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # --- Regular expressions (with ES2022 `d` flag) ---
 
-REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuy]*/
+REGEX = /\/([^\/\\\n\r]|\\[^\n\r])+\/[dgimsuy]*/
 
 # ============================================================================
 # Multi-character operators (unchanged from ES2022)
@@ -229,8 +229,8 @@ context_keywords:
 # ============================================================================
 
 group template:
-  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
-  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # ============================================================================
 # Skip patterns
@@ -238,8 +238,8 @@ group template:
 
 skip:
   WHITESPACE    = /[ \t\r\n\v\f]+/
-  LINE_COMMENT  = /\/\/[^\n]*/
-  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+  LINE_COMMENT  = /\/\/[^\n\r]*/
+  BLOCK_COMMENT = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
 
 # ============================================================================
 # Error recovery tokens
@@ -249,4 +249,4 @@ errors:
   BAD_STRING_DQ = /"[^"]*$/
   BAD_STRING_SQ = /'[^']*$/
   BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
-  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*$/

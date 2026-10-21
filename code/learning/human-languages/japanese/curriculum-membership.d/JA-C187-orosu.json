@@ -1,0 +1,11 @@
+{
+  "id": "JA-C187-orosu",
+  "pathSegment": "JA-PATH-187-BANK187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-187-BANK187",
+      "order": 1
+    }
+  ]
+}

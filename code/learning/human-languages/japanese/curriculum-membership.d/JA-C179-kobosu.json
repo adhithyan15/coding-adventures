@@ -1,0 +1,11 @@
+{
+  "id": "JA-C179-kobosu",
+  "pathSegment": "JA-PATH-179-DRINK179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-179-DRINK179",
+      "order": 3
+    }
+  ]
+}

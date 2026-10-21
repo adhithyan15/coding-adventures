@@ -543,6 +543,14 @@ languages without one. It also gains `case: Option<&'static str>`
 generates the boundary set. `release_inventory.py check --matrix` fails if a
 release claims B(S) while a case of S has neither a matrix row on its
 boundary release nor membership in a class whose representative has one.
+Until `Prog` has those fields (phase 4c), no row can name a release, so a
+language whose rows ALL name no release has its B claims reported as
+*pending* (a note, not an error): Ruby 5a's and Python 7a's default-release
+claims landed before the check could apply to them. The first row of a
+language that names a release makes every claim of that language strict.
+Corpus overrides `<name>.expect@<profile>` and `<name>.reject@<release>` (a
+release that must refuse an otherwise accepted case, such as Python's
+`int_underscores.reject@3.0a1`) both need the plain `.expect`.
 
 ## grammar-tools capability extensions
 
@@ -973,7 +981,7 @@ noted.
 | Maxima | re-exports Macsyma | — | CST | none of its own | No grammar of its own | Own `maxima<release>` pairs from Maxima tags before any `Language::Maxima`. Until then `--lang maxima` is an error, not a silent Macsyma alias |
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
-| Python | GL (indentation mode) | GP | CST | 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned; no CSV | Compliant; selection hard-coded to `"3.12"` | Phase 7 |
+| Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7b/7c |
 | Perl | GL | GP | CST | 118 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is the inventory release `5.38.0` and the unversioned pair is off the IIR path (4b); `IIRModule.release` recorded; `Language::Perl` on all nine backends with `--lang perl@<release>` (4a, 4b) | Phase 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
@@ -982,7 +990,7 @@ noted.
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
-| Ruby | hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines; 15 eras share it, the era list stops at 3.3) | GP over `ruby.grammar` (919 lines) | CST | unversioned; stale 79-line `ruby.tokens` | **Non-compliant (C2 hand-written lexer)** | Phases 3 and 5 |
+| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends. The hand-written lexer remains only for non-IIR consumers | 5b; R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
 
@@ -1045,9 +1053,93 @@ Decisions and deviations in this slice:
   provisional until phase 5 gives that row an `iir_status` (C4.4).
 - `ruby-iir-compiler` stays on `ruby-lexer`: LANG80 accepts `puts -7 / 2`,
   whose unary reading depends on the space before `-`, so moving it now would
-  regress LANG80. Phase 5 moves it together with E6.
+  regress LANG80. Phase 5 moves it together with E6. (Phase 5a moved it
+  without E6 and refuses that one form instead; see below.)
 - The `corpus/rb-int-puts` directory named in `subsets.csv` arrives with
   stage I in phase 5.
+
+**Status (5a, 2026-10-20).** The IIR path no longer uses `ruby-lexer`.
+`ruby-iir-compiler` compiles `rb-int-puts` from the tree `parse_ruby_at`
+builds (GL over `ruby<release>.tokens`, GP over `ruby<release>.grammar`), and
+`Language::Ruby` runs it on every backend:
+
+- `compile_source_at(source, release, module_name, &FrontendBudgets)` resolves
+  an exact inventory ID (`None` is `DEFAULT_RELEASE`, `3.3.6`), looks up the
+  release's `ReleaseProfile` in `profiles.rs`, parses with that release's
+  pair, and walks the CST in place: borrowed nodes, flat `sum`/`term` chains
+  folded left in a loop, no owned AST. `compile_cst` takes a caller-supplied
+  tree after measuring it (items, depth, text). Errors are the six C6
+  categories, each naming the release and a 1-based position; `Unsupported`
+  names the CST rule and span.
+- LANG83 ops only: `/` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` →
+  `print_i64` per argument (all arguments are evaluated first, as in Ruby),
+  `puts()` → `putchar 10`, end of program → `ret 0`. The `rb_*` builtins are
+  gone. Every value is range-checked against `i64` at compile time in `i128`
+  (Ruby would switch to a Bignum); a zero divisor is not refused but traps at
+  run time with `Trap.DivZero` after the earlier output, matching Ruby's
+  `ZeroDivisionError`.
+- Stage I is `cargo test -p ruby-iir-compiler --test release_subsets`: the
+  new corpus `code/grammars/ruby/corpus/rb-int-puts` (14 accepted cases, 4 of
+  them trapping, and 9 `.reject` cases, each with a `.cite` oracle record
+  from host ruby 3.3.6) on every release whose `iir_status` claims the
+  subset. `releases.csv` now claims `iir_status` `rb-int-puts` and profile
+  `ruby33` for 3.3.5, 3.3.6 and 3.3.7, and `backend_status` `rb-int-puts` for
+  3.3.6, the release the matrix rows compile (C4.4 is met: the default claims
+  an IIR subset). The same test proves 3.3.5–3.3.7 emit identical IIR for
+  every case and that the CSV's `profile` column matches `profiles.rs`.
+- C8 is `tests/cst_contract.rs` (every dispatched rule and token exists in
+  each claiming release); C5 hostile probes run in a child process
+  (`tests/hostile.rs`); `tests/iir_path.rs` fails if the crate calls a legacy
+  `ruby-lexer` entry point.
+- Security review: `i64::MIN % -1` (Ruby: 0) is the one modulus a machine
+  `rem` faults on (x86 SIGFPE, LLVM UB, a CLR exception, a Rust panic).
+  LANG83 defines it as 0 and the PR1b backends guard it, but the compiler
+  folds that edge to `const 0` anyway, so no backend sees it; a corpus case
+  and matrix row pin it.
+- lang-aot: `Language::Ruby` (`ruby`/`rb`, `.rb`) on the default release.
+  Thirteen `lang_matrix` rows, each a verbatim corpus case, declare all eight
+  executable columns, and `check_module_for` passes on all nine backends. The
+  matrix gained `Expect::StdoutThenTrap` (LANG83's port item): four rows check
+  the stdout before the trap and the kind on every column. CLR, BEAM and
+  AArch64 execute in CI only; the authoring host had no `dotnet` or `erl`.
+
+Decisions and deviations in this slice:
+
+- **`%` joins `rb-int-puts`.** Each pair's `term` accepts `PERCENT`, cited to
+  the tag's `parse.y` (`%left '*' '/' '%'`), and `subsets.csv` says so. The
+  3.3.6/3.3.7 copies were regenerated by `ruby_release_pairs.py`.
+- **0.49 and 0.50 get no profile.** They parse the subset (stage P), but
+  `puts` is only `IO#puts` there (`io.c` line 1196 at `v0_49`), so a bare
+  `puts(1)` raises NameError, and `Fixnum#/` truncates (`numeric.c`
+  `Ffix_div`). Compiling them is a typed `ReleaseNotAvailable` ("no IIR
+  profile"), not 3.3 semantics under a 1994 label. `IntDiv::Truncate` is
+  recorded in the profile struct for the first early release that gets a
+  profile; the compiler refuses it until LANG83's `i64_div_trunc` leaves
+  `Later`.
+- **No E6.** `puts -7` (a bare command whose argument starts with `-`) stays
+  a parse error, as the R0 grammar already had it; `puts(-7)` and `puts 1 -
+  7` work. This narrows LANG80's accepted set by that one form. E6
+  (`@space_before`) is not needed for the rest of the subset, so this slice
+  does not depend on it.
+- **`main` returns `i64` 0**, not `ret_void`. That is the exit status every
+  AOT entry point reads, and it avoids the void-entry hazards a void `main`
+  hits on the CLR (an empty stack in the `int32` launcher entry) and BEAM
+  (`ret_void` returns whatever is in `x0`).
+- **Not in 5a:** `IIRModule.release`, `compile_source_to_iir_at`, `--lang
+  ruby@<release>` and the lang-aot `UnknownRelease`/`ReleaseNotAvailable`
+  variants. They are the lang-aot release API that Perl's phase 4b also
+  needs; building it twice would conflict. Phase 4b has since landed that
+  API (with Perl as its only inventory language), so until 5b a
+  `ruby@<release>` request is refused as `UnknownRelease` and a Ruby module
+  leaves `IIRModule.release` as `None`.
+
+**Phase 5b (remaining).** Wire Ruby into the lang-aot release API above
+(`has_release_inventory`, the `compile_source_to_iir_at` arm, and
+`IIRModule.release` from `ruby-iir-compiler`); matrix
+rows with `Prog.release` on the boundary releases 3.3.5 and 3.3.7 (or the
+release sweep of [CI bounding](#ci-bounding)), after which those rows may
+claim `backend_status`; the release-identity class check in a
+`release_sweep.rs`.
 
 ### JavaScript: rewrite to walk the CST
 
@@ -1320,6 +1412,189 @@ Remaining phase 4 slice:
   to the 11 Perl `lang_matrix` rows, and then fills `iir_status`,
   `backend_status` and `profile`, which `check --matrix` verifies.
 
+### Python phase 7a: `py-int-print` on every backend
+
+Phase 7a is the first Python slice on the release path. It is a new subset,
+`py-int-print`, beside LANG79's float pilot (`py-float-print`), which keeps its
+own API and its legacy minor-line grammar until LANG83's float formatting
+lands (7b/7c).
+
+**The subset.** A module of `print` statements over integer arithmetic:
+
+```python
+print(1 + 2 * 3)          # 7
+print(-7 // 2, )          # -4   (floor division; trailing comma allowed)
+print(-7 % 2); print()    # 1, then an empty line
+print(1_000 * (2 - 5))    # -3000 (`_` separators where the release lexes them)
+```
+
+- Statements: `print(<expr>)` with exactly one positional argument (an
+  optional trailing comma), or `print()`. Statements are separated by
+  NEWLINE or `;` (a trailing `;` is allowed). Blank lines, `#` comments, a
+  `\`-newline continuation, and newlines inside parentheses are trivia, as
+  CPython's tokenizer makes them.
+- Expressions: decimal integer literals, parentheses, unary `+` and `-`, and
+  binary `+ - * // %` at Python's precedence (`* // %` above `+ -`, unary
+  above both), all left-associative.
+- Everything else is a typed error: a lexer error for tokens the release's
+  partial `.tokens` does not lex (strings, floats, hex/octal/binary
+  literals), a parse error for shapes its `.grammar` does not admit, and
+  `Unsupported` for shapes it parses but the subset excludes (`/`, which gives
+  a float, a callee other than `print`, keyword or multiple arguments,
+  `print(...)` used as a value, and literals outside `i64`).
+
+**Semantics and lowering.** Every value is an `i64`; the compiler emits only
+LANG83 registry ops plus the ungated `const` and `ret`:
+
+| Python | IIR |
+| --- | --- |
+| literal | `const` (a literal outside `i64` is `Unsupported`) |
+| `a + b`, `a - b`, `a * b` | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` |
+| `-a` | `i64_neg_ovf` |
+| `+a` | no instruction (`int.__pos__` is the identity) |
+| `a // b`, `a % b` | `i64_div_floor`, `i64_mod_floor` |
+| `a // -1`, `a % -1` (divisor known to be `-1`) | `i64_neg_ovf a`, `const 0` |
+| `print(a)` | `call_builtin print_i64 a` |
+| `print()` | `call_builtin putchar 10` |
+| end of module | `const 0`, `ret` (`main` returns `i64`) |
+
+- Python integers are unbounded; this subset's are not. Where CPython would
+  produce an `int` outside `[-2^63, 2^63-1]`, the program stops with
+  `Trap.Overflow` after the output so far, never a wrapped value. This is a
+  stated divergence from CPython. Promoting to a bignum on that trap is
+  later work (LANG83 PR4: "bignum promotion is a frontend decision made by
+  catching it, once traps are catchable").
+- A zero divisor stops the program with `Trap.DivZero` after the output so
+  far, as CPython's `ZeroDivisionError` does.
+- The divisor `-1` is folded. `a // -1 == -a` and `a % -1 == 0` hold for
+  every integer, so the compiler emits those forms when it knows the divisor
+  is `-1`. That keeps `i64::MIN // -1` and `i64::MIN % -1`, the two operands
+  a machine divide faults on, away from every backend's divide: the first
+  becomes `i64_neg_ovf i64::MIN`, which traps `Trap.Overflow` (CPython's
+  answer, 2^63, is outside `i64`); the second becomes `0`, CPython's answer.
+- Python evaluates a call's argument before `print` writes, so a trap inside
+  the argument prints nothing for that statement.
+
+**Releases.** `py-int-print` needs `print` as a function and `//`, so it
+starts at Python 3; the first Python 3 tag is 3.0a1. Phase 7a writes a
+materialized `python<release>.tokens`/`.grammar` pair for:
+
+| Release | Why | Oracle |
+| --- | --- | --- |
+| 3.0a1 | earliest tag with a Python 3 grammar | pinned historical source: `Grammar/Grammar`, `Parser/tokenizer.c`, `Objects/longobject.c`, `Python/bltinmodule.c` at the tag |
+| 3.11.17 | host `python3.11` | host interpreter, plus pinned source |
+| 3.12.3 | host `python3.12` | host interpreter, plus pinned source |
+| 3.13.16 | host `python3` and `DEFAULT_RELEASE` | host interpreter, plus pinned source |
+| 3.16.0a1 | newest inventory row | pinned historical source |
+
+`3.0` and `2.7` cannot have release pairs yet: their file names would be
+`python3.0.*` and `python2.7.*`, which are the legacy minor-line pairs. Python
+2 needs a `print` statement shape and a profile, so it is a later slice.
+
+Every pair is `partial`, stage `P`, `grammar_subset` `py-int-print`. The token
+file of each lexes the subset's neighbourhood: the release's operators,
+keywords (`Lib/keyword.py` at the tag), names, and decimal integers. It does
+not lex strings, floats, imaginary numbers or non-decimal integers. The
+grammar files keep `python3.12.grammar`'s rule names for the rules the subset
+uses (`file`, `statement`, `simple_stmt`, `small_stmt`, `expression`, `arith`,
+`term`, `factor`, `primary`, `suffix`, `arguments`, `argument`, `atom`,
+`paren_expr`, `paren_body`), so C8 can check them. They omit precedence levels
+that the subset never reaches, so each parenthesis costs 8 rule levels
+instead of about 18, and later subsets add those levels by name. The one known
+lexical difference inside the subset is PEP 515's `_` digit separator (3.6):
+3.0a1 lexes `1_000` as an error, as CPython 3.0a1 rejects it.
+
+All five rows name profile `py3` and claim `iir_status` `py-int-print`.
+`backend_status` is claimed for 3.13.16, the release the matrix rows compile.
+
+**Crates.**
+
+- `grammar-tools` compiles `python` as a release family. The legacy
+  minor-line pairs are still embedded, behind a separate `legacy_versions`
+  module that the release selector cannot reach.
+- `python-lexer` exposes `releases::{token_grammar, grammar_class,
+  SUPPORTED_RELEASES}`. `python-parser` gains the release API:
+  `parse_python_at`, `tokenize_python_at`, `resolve_release`,
+  `FrontendBudgets`, `PythonFrontendError`, and `DEFAULT_RELEASE = "3.13.16"`.
+  The legacy `tokenize_python`/`parse_python(source, "3.12")` API is
+  unchanged.
+- `python-iir-compiler` gains `compile_source_at(source, release,
+  module_name, &FrontendBudgets)`, `compile_cst`, `profiles.rs`, and
+  `run_source_at`. These compile `py-int-print`. LANG84 asks the existing
+  `compile_source` to delegate to `compile_source_at`. Here it cannot,
+  because `compile_source` is LANG79's float pilot. It keeps its signature,
+  its behaviour and its legacy 3.12 grammar until the float subset moves to
+  release pairs.
+- `lang-aot`: `Language::Python` (`python` or `py`, `.py` files) compiles
+  through `compile_source_at(.., None, ..)`. `lang_matrix` gets `py-int-print`
+  rows on all eight executable columns, `StdoutThenTrap` rows for
+  `Trap.DivZero` and `Trap.Overflow`, and an oracle test against host
+  `python3` 3.13.
+
+**Corpus and oracles.** `code/grammars/python/corpus/py-int-print`: each case
+is `<name>.py` with either `<name>.expect` or `<name>.reject`, plus a
+`<name>.cite`. `<name>.reject@<release>` names a release where an otherwise
+accepted case must be refused, with its category. That is how
+`int_underscores` records that 3.0a1 refuses it. For an `Overflow` case the
+`.expect` comes from the subset definition, not from CPython; the oracle test
+checks instead that host CPython prints the expected prefix and then an
+integer outside `i64`.
+
+**Status (7a, 2026-10-20).** Landed as planned above, with these results and
+decisions:
+
+- **Pairs and evidence.** The five pairs, `pair-evidence.csv`, and the README
+  section "Release pairs" in `code/grammars/python/`. Three token classes:
+  3.0a1 (no `_`, 33 keywords, 45 operators); 3.11.17 (47 operators, no `!`);
+  and 3.12.3 = 3.13.16 = 3.16.0a1 (48). There is one grammar class. Stage G
+  is `grammar-tools validate` on each pair, and generation now always
+  validates release pairs. Stage P is `python-parser`'s `release_probes`.
+  `tokenize_differential` checks the three host releases' token tables
+  against the exact token streams that CPython 3.11.17, 3.12.3 and 3.13.16's
+  own `tokenize` recorded for six fixtures. Kinds, spellings and 1-based
+  positions all match.
+- **Generator.** `python` is a release family. Its six minor-line pairs are
+  embedded in a separate `legacy_versions` module that no release ID
+  reaches, so `parse_python(source, "3.12")` is unchanged. The CI regen gate
+  covers `python-lexer` and `python-parser`.
+- **Stage I** is `cargo test -p python-iir-compiler --test release_subsets`.
+  It runs 36 corpus cases on each of the five releases on vm-core, comparing
+  stdout and trap kind; for 3.0a1 `int_underscores` is a `Lex` error by its
+  `.reject@3.0a1` override. It also checks C7, the `profile` column against
+  `profiles.rs`, and IIR identity across all five releases. The host-CPython
+  oracle checks every case under 3.11.17, 3.12.3 and 3.13.16, and they all
+  agree. C8 is `cst_contract`, C5 `hostile_release`, and C2/C4.5 `iir_path`.
+- **Backends.** `Language::Python` has 18 `lang_matrix` rows, one per accepted
+  corpus case, on all eight executable columns, and `check_module_for`
+  passes on all nine. The `StdoutThenTrap` matrix support is the same code as
+  phase 5a's, ported unchanged so the two branches merge cleanly. Locally,
+  native x86-64, LLVM, WASM, JVM, VM and JIT executed all 108 of their
+  Python cells, 54 of them trapping with the right stdout and kind. CLR and
+  BEAM execute in CI only, because the authoring host had neither `dotnet`
+  nor `erl`. The JIT column runs printing functions on the vm-core tier (the
+  known matrix limitation, VM-078d).
+
+Decisions and deviations:
+
+- **`compile_source` does not delegate to `compile_source_at`.** It is
+  LANG79's float pilot and keeps the legacy `"3.12"` grammar. LANG84 C4.5
+  ("the IIR path MUST NOT use the unversioned pair") holds for the release
+  path; the float pilot is a separate, older path that moves in 7b/7c.
+- **A lean subset grammar.** Rule names are `python3.12.grammar`'s, but the
+  precedence levels the subset never reaches are left out, so the release
+  parser admits more than 15 nested parentheses under the 190-level cap
+  where the legacy grammar admits 9.
+- **No folding of constants into `const`.** Every operation is emitted and
+  checked at run time. The one exception is a divisor known to be `-1`,
+  which is folded to `i64_neg_ovf` or `const 0`, as planned.
+- **Not in 7a:** `IIRModule.release`, `compile_source_to_iir_at`,
+  `--lang python@<release>`, the lang-aot `UnknownRelease` and
+  `ReleaseNotAvailable` variants, and matrix rows on releases other than
+  the default. These are the shared lang-aot release API (phases 4b and 5b).
+  Phase 4b has since landed that API with Perl as its only inventory
+  language, so until 7b a `python@<release>` request is refused as
+  `UnknownRelease` and a Python module leaves `IIRModule.release` as `None`.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
@@ -1399,9 +1674,9 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
-| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
+| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b:** lang-aot release selection and the boundary-release sweep (B for 3.3.5, 3.3.7) | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b/7c:** lang-aot release selection and the boundary sweep, Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 

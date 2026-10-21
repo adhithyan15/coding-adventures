@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C159-kasaneru",
+    "language": "japanese",
+    "chapter": 159,
+    "sequence": 9500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0116f7790fb3f3e1"
+  },
+  "findings": []
+}

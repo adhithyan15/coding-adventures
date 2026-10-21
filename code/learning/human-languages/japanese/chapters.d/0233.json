@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Swimming and Running",
+  "label": "ch:ja-swimming-and-running",
+  "canDo": "I can say how I played and exercised.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-C233-undou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say how I played and exercised.",
+    "assesses": [
+      "JA-LEX-C233-SPORT233-03",
+      "JA-LEX-C233-SPORT233-04",
+      "JA-LEX-C233-SPORT233-05"
+    ]
+  }
+}

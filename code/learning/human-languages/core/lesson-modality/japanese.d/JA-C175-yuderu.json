@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C175-yuderu",
+    "language": "japanese",
+    "chapter": 175,
+    "sequence": 10560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03f36d4ca0e6c867"
+  },
+  "findings": []
+}

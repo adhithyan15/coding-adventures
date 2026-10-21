@@ -1,0 +1,11 @@
+{
+  "id": "JA-C248-uso",
+  "pathSegment": "JA-PATH-248-TRUST248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-248-TRUST248",
+      "order": 1
+    }
+  ]
+}

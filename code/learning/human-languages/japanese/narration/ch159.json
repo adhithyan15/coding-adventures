@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 159,
+  "title": "Housework and Sorting the Rubbish",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5596bc119d336ed9",
+  "lessons": [
+    {
+      "id": "JA-C159-kaji",
+      "sequence": 9470,
+      "title": "かじ (kaji) — housework; chores",
+      "headword": "かじ",
+      "romanization": "kaji",
+      "gloss": "housework; chores",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bdaa731668312e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to open up, then the Japanese for dark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かじ — kaji — \"housework; chores\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもも かじを てつだいます。 — kodomo mo kaji o tetsudaimasu — \"The children help with the housework too.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かじ (kaji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"house, home\" (Middle Chinese kae) and ji, \"matter, affair\" (dzriH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo mo kaji o tetsudaimasu — The children help with the housework too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo mo kaji o tetsudaimasu* — The children help with the housework too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to open up, then the Japanese for dark, then say kaji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to open up, then the Japanese for dark, then say *kaji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かじ (kaji) mean? (\"Housework; chores\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C159-kaji-type",
+              "prompt": "Say the Japanese for 'housework'.",
+              "assesses": [
+                "JA-LEX-C159-TIDY159-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かじ",
+                "kaji"
+              ],
+              "feedback": {
+                "correct": "Right: かじ (kaji) is 'housework; chores'.",
+                "incorrect": "'Housework' is かじ (kaji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C159-suteru",
+      "sequence": 9480,
+      "title": "すてる (suteru) — to throw away",
+      "headword": "すてる",
+      "romanization": "suteru",
+      "gloss": "to throw away",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c566220113725674",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dark, then the Japanese for housework."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すてる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すてる — suteru — \"to throw away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいしゅう ごみを すてます。 — maishū gomi o sutemasu — \"I throw out the rubbish every week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite すてます, sutemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すてる (suteru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suteru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suteru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suteru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suteru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maishū gomi o sutemasu — I throw out the rubbish every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maishū gomi o sutemasu* — I throw out the rubbish every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dark, then the Japanese for housework, then say suteru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dark, then the Japanese for housework, then say *suteru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すてる (suteru) mean? (\"To throw away\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C159-suteru-type",
+              "prompt": "Say the Japanese for 'to throw away'.",
+              "assesses": [
+                "JA-LEX-C159-TIDY159-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すてる",
+                "suteru"
+              ],
+              "feedback": {
+                "correct": "Right: すてる (suteru) is 'to throw away'.",
+                "incorrect": "'To throw away' is すてる (suteru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C159-wakeru",
+      "sequence": 9490,
+      "title": "わける (wakeru) — to sort; to divide",
+      "headword": "わける",
+      "romanization": "wakeru",
+      "gloss": "to sort; to divide",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5b617acd26eb4ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for housework, then the Japanese for to throw away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わける — wakeru — \"to sort; to divide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ごみを みっつに わけます。 — gomi o mittsu ni wakemasu — \"I sort the rubbish into three kinds.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite わけます, wakemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わける (wakeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gomi o mittsu ni wakemasu — I sort the rubbish into three kinds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gomi o mittsu ni wakemasu* — I sort the rubbish into three kinds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for housework, then the Japanese for to throw away, then say wakeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for housework, then the Japanese for to throw away, then say *wakeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わける (wakeru) mean? (\"To sort; to divide\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C159-wakeru-type",
+              "prompt": "Say the Japanese for 'to sort'.",
+              "assesses": [
+                "JA-LEX-C159-TIDY159-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わける",
+                "wakeru"
+              ],
+              "feedback": {
+                "correct": "Right: わける (wakeru) is 'to sort; to divide'.",
+                "incorrect": "'To sort' is わける (wakeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C159-kasaneru",
+      "sequence": 9500,
+      "title": "かさねる (kasaneru) — to stack; to pile one on another",
+      "headword": "かさねる",
+      "romanization": "kasaneru",
+      "gloss": "to stack; to pile one on another",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0116f7790fb3f3e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to throw away, then the Japanese for to sort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かさねる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かさねる — kasaneru — \"to stack; to pile one on another\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はこを かさねます。 — hako o kasanemasu — \"I stack the boxes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かさねます, kasanemasu; an ichidan verb. Close to つむ, tsumu, \"to pile up\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かさねる (kasaneru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasaneru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasaneru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasaneru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasaneru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hako o kasanemasu — I stack the boxes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hako o kasanemasu* — I stack the boxes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to throw away, then the Japanese for to sort, then say kasaneru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to throw away, then the Japanese for to sort, then say *kasaneru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かさねる (kasaneru) mean? (\"To stack; to pile one on another\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C159-kasaneru-type",
+              "prompt": "Say the Japanese for 'to stack'.",
+              "assesses": [
+                "JA-LEX-C159-TIDY159-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かさねる",
+                "kasaneru"
+              ],
+              "feedback": {
+                "correct": "Right: かさねる (kasaneru) is 'to stack; to pile one on another'.",
+                "incorrect": "'To stack' is かさねる (kasaneru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C159-seiri",
+      "sequence": 9510,
+      "title": "せいり (seiri) — sorting out; putting in order",
+      "headword": "せいり",
+      "romanization": "seiri",
+      "gloss": "sorting out; putting in order",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:652241d31bc97e08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sort, then the Japanese for to stack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいり — seiri — \"sorting out; putting in order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "へやの せいりは たのしいです。 — heya no seiri wa tanoshii desu — \"Sorting out my room is fun.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいり (seiri) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"put in order\" (Middle Chinese tsyengX) and ri, \"reason, arrangement\" (liX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seiri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seiri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seiri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seiri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heya no seiri wa tanoshii desu — Sorting out my room is fun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heya no seiri wa tanoshii desu* — Sorting out my room is fun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sort, then the Japanese for to stack, then say seiri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sort, then the Japanese for to stack, then say *seiri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいり (seiri) mean? (\"Sorting out; putting in order\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C159-seiri-type",
+              "prompt": "Say the Japanese for 'sorting out'.",
+              "assesses": [
+                "JA-LEX-C159-TIDY159-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいり",
+                "seiri"
+              ],
+              "feedback": {
+                "correct": "Right: せいり (seiri) is 'sorting out; putting in order'.",
+                "incorrect": "'Sorting out' is せいり (seiri)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

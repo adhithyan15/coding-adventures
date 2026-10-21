@@ -4,6 +4,37 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a `function`/`class` declaration in a block no longer becomes an expression (#17877)
+
+`if(true){function g(){return 7}⏎console.log(g())}` compiled at SIMPLE and
+ADVANCED to `(function g(){return 7});console.log(g());`, which throws
+`ReferenceError: g is not defined`. The same happened for `class`, for
+`case`/`default` clauses, and for every block. Without a newline the
+program failed to parse instead. The cause was the ECMAScript grammars'
+`block` rule. The fix is in `javascript-parser`: the grammars, the
+regenerated compiled grammar, and the bridge.
+
+`tests/regression_block_declarations.rs` compiles 12 shapes at SIMPLE and
+ADVANCED. When `node` is installed, it checks that each output prints what
+the source prints. Sloppy-mode Annex B hoisting, where upstream itself
+changes behaviour, stays open in CLOC12-gaps.
+
+### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
+
+`` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to
+`console.log("PWN");`. The template token didn't end at `` `$` ``, so it ran
+on to the backtick inside the comment, and the comment text became code.
+Three more token patterns had the same flaw:
+
+- `/***/` and `/* a **/` weren't comments;
+- `// c\r` swallowed the code after the `\r`;
+- a regex could hold a `\r`.
+
+The fix is in the ECMAScript `.tokens` files and javascript-lexer.
+`tests/regression_token_patterns.rs` compiles the repros at SIMPLE and
+ADVANCED and, when `node` is installed, checks that each prints what the
+source prints.
+
 ### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
 
 `closure-pass-dce` truncated a case's dead tail, and collapsed a constant
@@ -157,6 +188,18 @@ Independent review then reproduced an enabled gate with no compiler/toolchain
 on a specification-only diff. Exact CV02 consumer mapping now selects the
 compiler and Rust on all platforms, fails on missing consumers, honors language
 filters, and is verified through an emitted plan with the actual native command.
+
+### Fixed - WHITESPACE_ONLY keeps the `;` on a block-final `throw` (CCR-084 slice 2, #15919)
+
+Upstream ends every `throw` with a forced `;`, so
+`function f(){throw 1}` → `function f(){throw 1;};`. The token path's
+gap-030 rule A dropped it like any other `;` before `}`. `throw_terminators`
+now marks each throw's terminator and rule A leaves it. A `throw` property
+or method name is unaffected.
+
+`tests/regression_ws_throw_semicolon.rs` checks 15 rows against bytes
+captured from the `v20260915` jar, including the contrast rows that keep
+dropping their `;`.
 
 ### Added locally - explicit Linux/macOS publication policy support (CV02)
 

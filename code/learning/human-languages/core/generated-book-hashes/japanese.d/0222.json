@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:91ff9459bfd33b5e",
+  "lessonIds": [
+    "JA-C222-nuru",
+    "JA-C222-omimai",
+    "JA-C222-kaifuku",
+    "JA-C222-daijoubu",
+    "JA-C222-gaman"
+  ],
+  "tex": "japanese/book/chapters/ch222-medicine-visits-and-getting-well.tex"
+}

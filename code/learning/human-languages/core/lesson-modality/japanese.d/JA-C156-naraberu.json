@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C156-naraberu",
+    "language": "japanese",
+    "chapter": 156,
+    "sequence": 9350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60c41e43f1875976"
+  },
+  "findings": []
+}

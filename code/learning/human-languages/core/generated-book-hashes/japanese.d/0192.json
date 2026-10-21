@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:de2f79c9b7ad280f",
+  "lessonIds": [
+    "JA-C192-kouban",
+    "JA-C192-omawarisan",
+    "JA-C192-keisatsu",
+    "JA-C192-tazuneru",
+    "JA-C192-annai"
+  ],
+  "tex": "japanese/book/chapters/ch192-asking-a-police-officer.tex"
+}

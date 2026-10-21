@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Six Small Form Labels",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:14bda49a08865677",
+  "sourceHash": "fnv1a64:1769cf8d7dc0c7e5",
   "lessons": [
     {
       "id": "MR-A1F01-naav",
@@ -101,16 +101,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:f1e288c354e660f1",
+      "sourceHash": "fnv1a64:eebb831898161fbc",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -118,6 +122,10 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Before looking back, cover the title and recall the form label that asks for a person's name. Write only that label, then check the previous page. This is a quick memory check, not another form to fill."
+            },
             {
               "kind": "speech",
               "text": "The known sentence मी पुण्यात राहतो / राहते put the practice person in Pune. A short form asks for that place with शहर — “city.”"
@@ -179,16 +187,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:d82d27d462cdccb4",
+      "sourceHash": "fnv1a64:3e6f847942d45a76",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -196,6 +208,10 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Before looking back, cover the title. Write the label for the city box from memory. Check the previous page only after writing it."
+            },
             {
               "kind": "speech",
               "text": "You can already say मी मराठी बोलतो / बोलते. A form compresses that whole sentence to a label and a value: भाषा: मराठी (bhāṣā: marāṭhī) — “language: Marathi.”"
@@ -258,16 +274,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:15edca10387ab7dd",
+      "sourceHash": "fnv1a64:31fb07a3c1f412a1",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -275,6 +295,10 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Before looking back, cover the title. Write the label that asks which language a person uses. Check the previous page after writing it."
+            },
             {
               "kind": "speech",
               "text": "The known drink is चहा. The label आवडते पेय means “favorite drink.” पेय is neuter, so the describing word takes neuter -ते: आवडते."
@@ -337,16 +361,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:6d929efde53c44f8",
+      "sourceHash": "fnv1a64:dcd1b4f12636d43b",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
       },
       "blocks": [
         {
@@ -354,6 +382,10 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Before looking back, cover the title. Write the complete favorite-drink label from memory. Check the previous page only after writing it."
+            },
             {
               "kind": "speech",
               "text": "Change one thing. कृती, “activity,” is feminine, so “favorite” becomes feminine आवडती. The familiar activity value is वाचणे, “reading.”"

@@ -91,6 +91,11 @@ for C, or `rejected`. A `lang_matrix` row (`Prog { .. }` in
 `release: Some("<id>")` and `case: Some("<subset>/<name>")`. Rows naming an
 unknown release, subset or case fail the check, so stale rows cannot linger.
 
+Until phase 4c gives `Prog` its `release`/`case` fields, no row can back a
+claim. While NONE of a language's rows names a release, its B claims are
+reported as pending (a note, not an error); as soon as one row does, every
+claim of that language is checked strictly.
+
 USAGE
 =====
 
@@ -357,7 +362,9 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
 
     A case is `<name>.<ext>` + `<name>.expect` + `<name>.cite`; a negative
     probe is `<name>.<ext>` + `<name>.reject`. Overrides `<name>.expect@<p>`
-    need the plain `.expect`. Only positive cases need backend coverage.
+    (another profile's output) and `<name>.reject@<release>` (a release that
+    must refuse an otherwise accepted case) need the plain `.expect`. Only
+    positive cases need backend coverage.
     """
     corpus = directory / "corpus" / subset
     if not corpus.is_dir():
@@ -384,7 +391,8 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
         sources = {
             s
             for s in suffixes
-            if s not in {"expect", "cite", "reject"} and not s.startswith("expect@")
+            if s not in {"expect", "cite", "reject"}
+            and not s.startswith(("expect@", "reject@"))
         }
         positive, negative = "expect" in suffixes, "reject" in suffixes
         if positive == negative:
@@ -397,6 +405,8 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
             report.error(f"{where}: .expect has no .cite oracle record")
         if any(s.startswith("expect@") for s in suffixes) and not positive:
             report.error(f"{where}: a profile override needs the plain .expect")
+        if any(s.startswith("reject@") for s in suffixes) and not positive:
+            report.error(f"{where}: a release refusal override needs the plain .expect")
         if positive:
             cases.add(stem)
     return cases
@@ -736,6 +746,12 @@ def check_matrix(
             f"matrix: {undeclared} lang_matrix row(s) name no release "
             "(LANG84 requires one; Prog gains the field in phase 4c)"
         )
+    # Until a language's rows name releases (Prog gains `release`/`case` in
+    # phase 4c), none of its B claims can be backed by a row, so checking
+    # them would only report that the field does not exist yet. They are
+    # counted as pending instead; the first row that names a release makes
+    # every claim of that language strict.
+    pending = bool(mine) and undeclared == len(mine)
 
     classes = read_classes(report, directory, order, cases)
     representative: dict[tuple[str, str, str], str] = {}
@@ -744,13 +760,16 @@ def check_matrix(
     ):
         representative.setdefault((subset, name, digest), release)
 
-    claims = direct = by_class = skipped = 0
+    claims = direct = by_class = skipped = unchecked = 0
     for row in rows:
         if row.get("__malformed__"):
             continue
         release = row["release"]
         for subset in sorted(split_list(row["backend_status"])):
             claims += 1
+            if pending:
+                unchecked += 1
+                continue
             for name in sorted(cases.get(subset, set())):
                 digest = classes.get((subset, name, release))
                 if digest == "rejected":
@@ -772,6 +791,11 @@ def check_matrix(
         f"matrix: {claims} backend claim(s); case coverage {direct} direct, "
         f"{by_class} by IIR class, {skipped} not applicable"
     )
+    if unchecked:
+        report.notes.append(
+            f"matrix: {unchecked} backend claim(s) pending: no lang_matrix row "
+            "of this language names a release yet (phase 4c)"
+        )
 
 
 def read_classes(

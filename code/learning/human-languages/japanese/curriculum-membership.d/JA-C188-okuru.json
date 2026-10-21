@@ -1,0 +1,11 @@
+{
+  "id": "JA-C188-okuru",
+  "pathSegment": "JA-PATH-188-POST188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-188-POST188",
+      "order": 3
+    }
+  ]
+}

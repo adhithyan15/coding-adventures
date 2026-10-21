@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "The Weather Forecast",
+  "label": "ch:ja-the-weather-forecast",
+  "canDo": "I can understand a simple weather forecast.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C208-taifuu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can understand a simple weather forecast.",
+    "assesses": [
+      "JA-LEX-C208-FORECAST208-03",
+      "JA-LEX-C208-FORECAST208-04",
+      "JA-LEX-C208-FORECAST208-05"
+    ]
+  }
+}

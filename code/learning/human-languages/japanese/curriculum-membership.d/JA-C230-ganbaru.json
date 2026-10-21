@@ -1,0 +1,11 @@
+{
+  "id": "JA-C230-ganbaru",
+  "pathSegment": "JA-PATH-230-BOSS230",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-230-BOSS230",
+      "order": 4
+    }
+  ]
+}

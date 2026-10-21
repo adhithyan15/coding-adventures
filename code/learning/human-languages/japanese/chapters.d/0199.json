@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Departures, Arrivals and Expresses",
+  "label": "ch:ja-departures-arrivals-and-expresses",
+  "canDo": "I can read when trains leave, arrive and stop.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C199-kyuukou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can read when trains leave, arrive and stop.",
+    "assesses": [
+      "JA-LEX-C199-DEPART199-03",
+      "JA-LEX-C199-DEPART199-04",
+      "JA-LEX-C199-DEPART199-05"
+    ]
+  }
+}

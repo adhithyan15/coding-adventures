@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Meeting and Parting",
+  "label": "ch:ja-meeting-and-parting",
+  "canDo": "I can ask and answer questions about meeting people and parting.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C244-kekkon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can ask and answer questions about meeting people and parting.",
+    "assesses": [
+      "JA-LEX-C244-MEET244-03",
+      "JA-LEX-C244-MEET244-04",
+      "JA-LEX-C244-MEET244-05"
+    ]
+  }
+}

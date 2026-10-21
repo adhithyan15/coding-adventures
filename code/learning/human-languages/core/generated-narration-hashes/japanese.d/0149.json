@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:d73b2b1f75eb9cb0",
+  "lessonIds": [
+    "JA-C149-kiru",
+    "JA-C149-nugu",
+    "JA-C149-kaburu",
+    "JA-C149-youfuku",
+    "JA-C149-shitagi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch149.txt",
+  "json": "japanese/narration/ch149.json",
+  "textHash": "fnv1a64:904e1d4637434169",
+  "jsonHash": "fnv1a64:68efc6d25a0d6394",
+  "findings": []
+}

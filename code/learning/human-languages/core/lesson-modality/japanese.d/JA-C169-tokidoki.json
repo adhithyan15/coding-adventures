@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C169-tokidoki",
+    "language": "japanese",
+    "chapter": 169,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6131aa16f0006d3"
+  },
+  "findings": []
+}

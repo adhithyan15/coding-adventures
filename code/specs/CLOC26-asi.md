@@ -317,6 +317,12 @@ final stream. 1,000 lines of `a()` now take about 1.5 s, and 1,600
 semicolon-light shapes (`tests/regression_ws_newline_asi.rs`) are now
 byte-identical. That includes CCR-080's program-final `;` after a `do…while`.
 
+**Follow-on: CCR-084 slice 2 (#15919).** With every `throw` now ending in a
+`;`, WHITESPACE_ONLY can keep the one upstream forces, as `CodeGenerator` does
+with `endStatement(needSemiColon=true)` for `THROW`. `throw_terminators` marks
+that `;` and gap-030 rule A leaves it in place, so `function f(){throw 1}` →
+`function f(){throw 1;};`. The AST-emitter half is slice 1 (#17839).
+
 ## Non-goals
 
 * No grammar-file changes (semicolons stay mandatory in `es2025.grammar`).

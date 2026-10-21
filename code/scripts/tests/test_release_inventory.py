@@ -477,6 +477,8 @@ class SubsetsTest(Fixture):
         self.case("lang", "s", "both", "rb", "expect", "cite", "reject")
         self.case("lang", "s", "neither", "rb")
         self.case("lang", "s", "orphan", "rb", "reject", "expect@p18")
+        self.case("lang", "s", "relrefuse", "rb", "expect", "cite", "reject@1.0")
+        self.case("lang", "s", "relorphan", "rb", "reject", "reject@1.0")
         self.case("lang", "s", "bad name", "rb", "expect", "cite")
         lines = [HEADER, row("1.0", "1990-01-01", "", "partial,P,s,s,-,p")]
         errors = self.errors("lang", lines)
@@ -487,10 +489,13 @@ class SubsetsTest(Fixture):
             "corpus/s/both: needs exactly one of .expect or .reject",
             "corpus/s/neither: needs exactly one of .expect or .reject",
             "corpus/s/orphan: a profile override needs the plain .expect",
+            "corpus/s/relorphan: a release refusal override needs the plain .expect",
             "corpus/s/bad name: case name must match",
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
         self.assertFalse(any("corpus/s/good" in e for e in errors), errors)
+        # `<name>.reject@<release>` is an override, not a second source file.
+        self.assertFalse(any("corpus/s/relrefuse" in e for e in errors), errors)
 
 
 MATRIX = """
@@ -702,6 +707,27 @@ class MatrixTest(Fixture):
             "matrix: 1 lang_matrix row(s) name no release (LANG84 requires one; "
             "Prog gains the field in phase 4c)",
             report.notes,
+        )
+
+    def test_claims_are_pending_until_a_row_names_a_release(self) -> None:
+        # Before phase 4c no Perl row can name a release, so a B claim is a
+        # note, not an error ...
+        path = self.inventory({"1.0": "partial,P,s,s,s,p"})
+        report = release_inventory.check_inventory(
+            path, release_inventory.matrix_rows("Prog { lang: Language::Perl }\n")
+        )
+        self.assertEqual(report.errors, [])
+        self.assertIn(
+            "matrix: 1 backend claim(s) pending: no lang_matrix row of this "
+            "language names a release yet (phase 4c)",
+            report.notes,
+        )
+        # ... and one row that names a release makes every claim strict.
+        source = "Prog { lang: Language::Perl }\n" + self.prog("1.0", "s/add")
+        errors = self.matrix_errors(path, source)
+        self.assertTrue(
+            any("claims B(s) but case s/mul has no lang_matrix row" in e for e in errors),
+            errors,
         )
 
     @ANY_PROFILE

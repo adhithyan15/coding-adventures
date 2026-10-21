@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C187-ryougae",
+    "language": "japanese",
+    "chapter": 187,
+    "sequence": 11210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b88856a13882426"
+  },
+  "findings": []
+}

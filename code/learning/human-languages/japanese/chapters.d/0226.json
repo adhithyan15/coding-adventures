@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Questions and Exams",
+  "label": "ch:ja-questions-and-exams",
+  "canDo": "I can talk about questions, replies and exams.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C226-ten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can talk about questions, replies and exams.",
+    "assesses": [
+      "JA-LEX-C226-EXAM226-03",
+      "JA-LEX-C226-EXAM226-04",
+      "JA-LEX-C226-EXAM226-05"
+    ]
+  }
+}

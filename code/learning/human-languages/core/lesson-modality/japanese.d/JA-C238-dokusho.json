@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C238-dokusho",
+    "language": "japanese",
+    "chapter": 238,
+    "sequence": 14340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20c7437d9e6f107a"
+  },
+  "findings": []
+}
