@@ -1,0 +1,11 @@
+{
+  "id": "JA-C184-choudo",
+  "pathSegment": "JA-PATH-184-GOODS184",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-184-GOODS184",
+      "order": 4
+    }
+  ]
+}

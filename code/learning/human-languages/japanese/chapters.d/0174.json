@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Pots, Knives and Plates",
+  "label": "ch:ja-pots-knives-and-plates",
+  "canDo": "I can name kitchen tools and say what I do with them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C174-moru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can name kitchen tools and say what I do with them.",
+    "assesses": [
+      "JA-LEX-C174-KITCH174-03",
+      "JA-LEX-C174-KITCH174-04",
+      "JA-LEX-C174-KITCH174-05"
+    ]
+  }
+}

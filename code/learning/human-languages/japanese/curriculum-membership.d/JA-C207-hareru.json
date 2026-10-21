@@ -1,0 +1,11 @@
+{
+  "id": "JA-C207-hareru",
+  "pathSegment": "JA-PATH-207-WEATHER207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-207-WEATHER207",
+      "order": 3
+    }
+  ]
+}

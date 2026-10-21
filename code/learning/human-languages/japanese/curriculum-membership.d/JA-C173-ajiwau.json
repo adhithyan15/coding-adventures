@@ -1,0 +1,11 @@
+{
+  "id": "JA-C173-ajiwau",
+  "pathSegment": "JA-PATH-173-FOOD173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-173-FOOD173",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 191,
+  "title": "Closing Time and Local Shops",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5d942abf10a9e836",
+  "lessons": [
+    {
+      "id": "JA-C191-shimaru",
+      "sequence": 11380,
+      "title": "しまる (shimaru) — to close; to be shut",
+      "headword": "しまる",
+      "romanization": "shimaru",
+      "gloss": "to close; to be shut",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceb2d80aeb5ba57a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to enter, then the Japanese for to be open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しまる — shimaru — \"to close; to be shut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょくは ごじに しまります。 — yūbinkyoku wa goji ni shimarimasu — \"The post office closes at five.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しまります, shimarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しまる (shimaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku wa goji ni shimarimasu — The post office closes at five.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku wa goji ni shimarimasu* — The post office closes at five.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to enter, then the Japanese for to be open, then say shimaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to enter, then the Japanese for to be open, then say *shimaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しまる (shimaru) mean? (\"To close; to be shut\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C191-shimaru-type",
+              "prompt": "Say the Japanese for 'to close'.",
+              "assesses": [
+                "JA-LEX-C191-SHUT191-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しまる",
+                "shimaru"
+              ],
+              "feedback": {
+                "correct": "Right: しまる (shimaru) is 'to close; to be shut'.",
+                "incorrect": "'To close' is しまる (shimaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C191-ichiba",
+      "sequence": 11390,
+      "title": "いちば (ichiba) — market; marketplace",
+      "headword": "いちば",
+      "romanization": "ichiba",
+      "gloss": "market; marketplace",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaefbd2d60d44ed1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be open, then the Japanese for to close."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いちば",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちば — ichiba — \"market; marketplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いちばで さかなを かいます。 — ichiba de sakana o kaimasu — \"I buy fish at the market.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちば (ichiba) is native Japanese, built from ichi, \"market\", and ba, \"place\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiba de sakana o kaimasu — I buy fish at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiba de sakana o kaimasu* — I buy fish at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be open, then the Japanese for to close, then say ichiba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be open, then the Japanese for to close, then say *ichiba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いちば (ichiba) mean? (\"Market; marketplace\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C191-ichiba-type",
+              "prompt": "Say the Japanese for 'market'.",
+              "assesses": [
+                "JA-LEX-C191-SHUT191-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いちば",
+                "ichiba"
+              ],
+              "feedback": {
+                "correct": "Right: いちば (ichiba) is 'market; marketplace'.",
+                "incorrect": "'Market' is いちば (ichiba)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C191-sakaya",
+      "sequence": 11400,
+      "title": "さかや (sakaya) — liquor store; sake shop",
+      "headword": "さかや",
+      "romanization": "sakaya",
+      "gloss": "liquor store; sake shop",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7d261c6b61b98bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to close, then the Japanese for market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さかや",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかや — sakaya — \"liquor store; sake shop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さかやで おさけを かいます。 — sakaya de osake o kaimasu — \"I buy sake at the liquor store.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかや (sakaya) is native Japanese, built from saka-, the form sake, \"rice wine\", takes in compounds, and ya, \"house, shop\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakaya de osake o kaimasu — I buy sake at the liquor store.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakaya de osake o kaimasu* — I buy sake at the liquor store.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to close, then the Japanese for market, then say sakaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to close, then the Japanese for market, then say *sakaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さかや (sakaya) mean? (\"Liquor store; sake shop\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C191-sakaya-type",
+              "prompt": "Say the Japanese for 'liquor store'.",
+              "assesses": [
+                "JA-LEX-C191-SHUT191-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さかや",
+                "sakaya"
+              ],
+              "feedback": {
+                "correct": "Right: さかや (sakaya) is 'liquor store; sake shop'.",
+                "incorrect": "'Liquor store' is さかや (sakaya)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C191-yakkyoku",
+      "sequence": 11410,
+      "title": "やっきょく (yakkyoku) — pharmacy; chemist's",
+      "headword": "やっきょく",
+      "romanization": "yakkyoku",
+      "gloss": "pharmacy; chemist's",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a172bbddbf95f3b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for market, then the Japanese for liquor store."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やっきょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やっきょく — yakkyoku — \"pharmacy; chemist's\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やっきょくで くすりを かいます。 — yakkyoku de kusuri o kaimasu — \"I buy medicine at the pharmacy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やっきょく (yakkyoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yak, \"medicine\" (Middle Chinese yak) and kyoku, \"office, bureau\" (gjowk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakkyoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakkyoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakkyoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakkyoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakkyoku de kusuri o kaimasu — I buy medicine at the pharmacy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakkyoku de kusuri o kaimasu* — I buy medicine at the pharmacy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for market, then the Japanese for liquor store, then say yakkyoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for market, then the Japanese for liquor store, then say *yakkyoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やっきょく (yakkyoku) mean? (\"Pharmacy; chemist's\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C191-yakkyoku-type",
+              "prompt": "Say the Japanese for 'pharmacy'.",
+              "assesses": [
+                "JA-LEX-C191-SHUT191-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やっきょく",
+                "yakkyoku"
+              ],
+              "feedback": {
+                "correct": "Right: やっきょく (yakkyoku) is 'pharmacy; chemist's'.",
+                "incorrect": "'Pharmacy' is やっきょく (yakkyoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C191-mitsukeru",
+      "sequence": 11420,
+      "title": "みつける (mitsukeru) — to find; to discover",
+      "headword": "みつける",
+      "romanization": "mitsukeru",
+      "gloss": "to find; to discover",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8953456aae173ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for liquor store, then the Japanese for pharmacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みつける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みつける — mitsukeru — \"to find; to discover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いちばで やすい やさいを みつけます。 — ichiba de yasui yasai o mitsukemasu — \"I find cheap vegetables at the market.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みつけます, mitsukemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みつける (mitsukeru) is native Japanese, built from mi, \"seeing\", and tsukeru, \"to attach\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitsukeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitsukeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitsukeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitsukeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiba de yasui yasai o mitsukemasu — I find cheap vegetables at the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiba de yasui yasai o mitsukemasu* — I find cheap vegetables at the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for liquor store, then the Japanese for pharmacy, then say mitsukeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for liquor store, then the Japanese for pharmacy, then say *mitsukeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みつける (mitsukeru) mean? (\"To find; to discover\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C191-mitsukeru-type",
+              "prompt": "Say the Japanese for 'to find'.",
+              "assesses": [
+                "JA-LEX-C191-SHUT191-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みつける",
+                "mitsukeru"
+              ],
+              "feedback": {
+                "correct": "Right: みつける (mitsukeru) is 'to find; to discover'.",
+                "incorrect": "'To find' is みつける (mitsukeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

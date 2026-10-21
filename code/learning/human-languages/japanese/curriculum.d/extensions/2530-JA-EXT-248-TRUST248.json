@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-248-TRUST248",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask about promises and secrets and say what someone does not believe.",
+  "prerequisites": []
+}

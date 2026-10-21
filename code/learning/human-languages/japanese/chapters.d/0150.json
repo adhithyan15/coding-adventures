@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Jackets, Gloves and Rings",
+  "label": "ch:ja-jackets-gloves-and-rings",
+  "canDo": "I can talk about jackets, gloves and rings.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C150-yubiwa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can talk about jackets, gloves and rings.",
+    "assesses": [
+      "JA-LEX-C150-GLOVES150-03",
+      "JA-LEX-C150-GLOVES150-04",
+      "JA-LEX-C150-GLOVES150-05"
+    ]
+  }
+}

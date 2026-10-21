@@ -1,0 +1,11 @@
+{
+  "id": "JA-C228-sotsugyou",
+  "pathSegment": "JA-PATH-228-LEARN228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-228-LEARN228",
+      "order": 4
+    }
+  ]
+}

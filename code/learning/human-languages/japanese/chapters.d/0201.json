@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Crossing the Road Safely",
+  "label": "ch:ja-crossing-the-road-safely",
+  "canDo": "I can say how people cross roads and what happens in traffic.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C201-butsukaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say how people cross roads and what happens in traffic.",
+    "assesses": [
+      "JA-LEX-C201-ROAD201-03",
+      "JA-LEX-C201-ROAD201-04",
+      "JA-LEX-C201-ROAD201-05"
+    ]
+  }
+}

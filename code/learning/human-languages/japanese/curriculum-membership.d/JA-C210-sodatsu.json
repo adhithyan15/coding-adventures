@@ -1,0 +1,11 @@
+{
+  "id": "JA-C210-sodatsu",
+  "pathSegment": "JA-PATH-210-PLANT210",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-210-PLANT210",
+      "order": 3
+    }
+  ]
+}

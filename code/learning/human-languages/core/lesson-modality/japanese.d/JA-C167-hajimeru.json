@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C167-hajimeru",
+    "language": "japanese",
+    "chapter": 167,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da55fee5a10b7a59"
+  },
+  "findings": []
+}

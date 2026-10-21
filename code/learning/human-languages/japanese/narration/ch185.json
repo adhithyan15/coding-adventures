@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 185,
+  "title": "Sale, Discount and Sold Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fda590663f350e7f",
+  "lessons": [
+    {
+      "id": "JA-C185-waribiki",
+      "sequence": 11070,
+      "title": "わりびき (waribiki) — discount; reduction",
+      "headword": "わりびき",
+      "romanization": "waribiki",
+      "gloss": "discount; reduction",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e2a4c3f323ef4b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for all of it, then the Japanese for exactly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わりびき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わりびき — waribiki — \"discount; reduction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この くつは わりびきです。 — kono kutsu wa waribiki desu — \"These shoes are discounted.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わりびき (waribiki) is native Japanese, built from wari, the stem of waru, \"to divide\", and biki, from hiku, \"to pull, to take off\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waribiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waribiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waribiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waribiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono kutsu wa waribiki desu — These shoes are discounted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono kutsu wa waribiki desu* — These shoes are discounted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for all of it, then the Japanese for exactly, then say waribiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for all of it, then the Japanese for exactly, then say *waribiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わりびき (waribiki) mean? (\"Discount; reduction\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C185-waribiki-type",
+              "prompt": "Say the Japanese for 'discount'.",
+              "assesses": [
+                "JA-LEX-C185-SALE185-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わりびき",
+                "waribiki"
+              ],
+              "feedback": {
+                "correct": "Right: わりびき (waribiki) is 'discount; reduction'.",
+                "incorrect": "'Discount' is わりびき (waribiki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C185-yasuuri",
+      "sequence": 11080,
+      "title": "やすうり (yasuuri) — bargain sale",
+      "headword": "やすうり",
+      "romanization": "yasuuri",
+      "gloss": "bargain sale",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18be08d61935f931",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for exactly, then the Japanese for discount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やすうり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やすうり — yasuuri — \"bargain sale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅうまつは やすうりが あります。 — shūmatsu wa yasuuri ga arimasu — \"There is a bargain sale at the weekend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やすうり (yasuuri) is native Japanese, built from yasu, the stem of yasui, \"cheap\", and uri, \"selling\", from uru, \"to sell\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasuuri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasuuri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasuuri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasuuri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūmatsu wa yasuuri ga arimasu — There is a bargain sale at the weekend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūmatsu wa yasuuri ga arimasu* — There is a bargain sale at the weekend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for exactly, then the Japanese for discount, then say yasuuri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for exactly, then the Japanese for discount, then say *yasuuri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やすうり (yasuuri) mean? (\"Bargain sale\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C185-yasuuri-type",
+              "prompt": "Say the Japanese for 'bargain sale'.",
+              "assesses": [
+                "JA-LEX-C185-SALE185-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やすうり",
+                "yasuuri",
+                "yasūri"
+              ],
+              "feedback": {
+                "correct": "Right: やすうり (yasuuri) is 'bargain sale'.",
+                "incorrect": "'Bargain sale' is やすうり (yasuuri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C185-urikire",
+      "sequence": 11090,
+      "title": "うりきれ (urikire) — sold out",
+      "headword": "うりきれ",
+      "romanization": "urikire",
+      "gloss": "sold out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c47ecf0f19bcd034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for discount, then the Japanese for bargain sale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うりきれ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うりきれ — urikire — \"sold out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やすい たまごは もう うりきれです。 — yasui tamago wa mō urikire desu — \"The cheap eggs are already sold out.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うりきれ (urikire) is native Japanese, built from uri, \"selling\", and kire, \"running out\", from kireru, a verb on the same stem as kiru, \"to cut\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urikire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urikire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urikire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urikire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasui tamago wa mō urikire desu — The cheap eggs are already sold out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasui tamago wa mō urikire desu* — The cheap eggs are already sold out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for discount, then the Japanese for bargain sale, then say urikire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for discount, then the Japanese for bargain sale, then say *urikire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うりきれ (urikire) mean? (\"Sold out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C185-urikire-type",
+              "prompt": "Say the Japanese for 'sold out'.",
+              "assesses": [
+                "JA-LEX-C185-SALE185-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うりきれ",
+                "urikire"
+              ],
+              "feedback": {
+                "correct": "Right: うりきれ (urikire) is 'sold out'.",
+                "incorrect": "'Sold out' is うりきれ (urikire)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C185-kakaru",
+      "sequence": 11100,
+      "title": "かかる (kakaru) — to cost; to take (time), to hang",
+      "headword": "かかる",
+      "romanization": "kakaru",
+      "gloss": "to cost; to take (time), to hang",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33679921b9af201e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for bargain sale, then the Japanese for sold out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かかる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かかる — kakaru — \"to cost; to take (time), to hang\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くるまは おかねが かかります。 — kuruma wa okane ga kakarimasu — \"A car costs money.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かかります, kakarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かかる (kakaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruma wa okane ga kakarimasu — A car costs money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruma wa okane ga kakarimasu* — A car costs money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for bargain sale, then the Japanese for sold out, then say kakaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for bargain sale, then the Japanese for sold out, then say *kakaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かかる (kakaru) mean? (\"To cost; to take (time), to hang\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C185-kakaru-type",
+              "prompt": "Say the Japanese for 'to cost'.",
+              "assesses": [
+                "JA-LEX-C185-SALE185-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かかる",
+                "kakaru"
+              ],
+              "feedback": {
+                "correct": "Right: かかる (kakaru) is 'to cost; to take (time), to hang'.",
+                "incorrect": "'To cost' is かかる (kakaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C185-tariru",
+      "sequence": 11110,
+      "title": "たりる (tariru) — to be enough; to suffice",
+      "headword": "たりる",
+      "romanization": "tariru",
+      "gloss": "to be enough; to suffice",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ceb8187060bb401",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sold out, then the Japanese for to cost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たりる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たりる — tariru — \"to be enough; to suffice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おかねが たりません。 — okane ga tarimasen — \"There is not enough money.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たります, tarimasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たりる (tariru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tariru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tariru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tariru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tariru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okane ga tarimasen — There is not enough money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okane ga tarimasen* — There is not enough money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sold out, then the Japanese for to cost, then say tariru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sold out, then the Japanese for to cost, then say *tariru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たりる (tariru) mean? (\"To be enough; to suffice\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C185-tariru-type",
+              "prompt": "Say the Japanese for 'to be enough'.",
+              "assesses": [
+                "JA-LEX-C185-SALE185-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たりる",
+                "tariru"
+              ],
+              "feedback": {
+                "correct": "Right: たりる (tariru) is 'to be enough; to suffice'.",
+                "incorrect": "'To be enough' is たりる (tariru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

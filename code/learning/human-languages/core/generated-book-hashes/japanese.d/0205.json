@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:9a4488dc7572bd97",
+  "lessonIds": [
+    "JA-C205-madoguchi",
+    "JA-C205-ekiin",
+    "JA-C205-kaisatsuguchi",
+    "JA-C205-katamichi",
+    "JA-C205-oufuku"
+  ],
+  "tex": "japanese/book/chapters/ch205-at-the-ticket-window.tex"
+}

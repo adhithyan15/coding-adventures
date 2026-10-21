@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:2ede3becf16a4b94",
+  "lessonIds": [
+    "JA-C148-kaminoke",
+    "JA-C148-karu",
+    "JA-C148-hige",
+    "JA-C148-hayasu",
+    "JA-C148-keshou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch148.txt",
+  "json": "japanese/narration/ch148.json",
+  "textHash": "fnv1a64:f482ec1d992b1bbd",
+  "jsonHash": "fnv1a64:1ff1c8dc29328979",
+  "findings": []
+}

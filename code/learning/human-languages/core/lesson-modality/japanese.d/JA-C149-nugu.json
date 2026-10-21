@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C149-nugu",
+    "language": "japanese",
+    "chapter": 149,
+    "sequence": 8960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9272e88ae4f11e31"
+  },
+  "findings": []
+}

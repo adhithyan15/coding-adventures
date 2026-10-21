@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:472ad2f1828c01ca",
+  "lessonIds": [
+    "JA-C230-shachou",
+    "JA-C230-joushi",
+    "JA-C230-senpai",
+    "JA-C230-kouhai",
+    "JA-C230-ganbaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch230.txt",
+  "json": "japanese/narration/ch230.json",
+  "textHash": "fnv1a64:6971a9702ac6c382",
+  "jsonHash": "fnv1a64:49fbbe44e9881b4d",
+  "findings": []
+}

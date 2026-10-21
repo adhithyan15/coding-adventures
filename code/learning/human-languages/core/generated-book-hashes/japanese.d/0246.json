@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:d3f5d7c39f065a16",
+  "lessonIds": [
+    "JA-C246-okoru",
+    "JA-C246-kenka",
+    "JA-C246-ayamaru",
+    "JA-C246-yurusu",
+    "JA-C246-zannen"
+  ],
+  "tex": "japanese/book/chapters/ch246-anger-and-apologies.tex"
+}

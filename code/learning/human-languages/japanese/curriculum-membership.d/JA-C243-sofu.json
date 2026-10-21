@@ -1,0 +1,11 @@
+{
+  "id": "JA-C243-sofu",
+  "pathSegment": "JA-PATH-243-KIN243",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-243-KIN243",
+      "order": 1
+    }
+  ]
+}

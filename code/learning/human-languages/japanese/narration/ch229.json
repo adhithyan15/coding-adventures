@@ -1,0 +1,941 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 229,
+  "title": "At the Company",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d807bc7b7e324158",
+  "lessons": [
+    {
+      "id": "JA-C229-kaisha",
+      "sequence": 13850,
+      "title": "かいしゃ (kaisha) — a company; a workplace",
+      "headword": "かいしゃ",
+      "romanization": "kaisha",
+      "gloss": "a company; a workplace",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:484078a6f57ffa23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to quit, then the Japanese for graduation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいしゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいしゃ — kaisha — \"a company; a workplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは まいにち かいしゃに いきます。 — chichi wa mainichi kaisha ni ikimasu — \"My father goes to the company every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいしゃ (kaisha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, \"meet\" (Middle Chinese hwajH) and sha, \"company, association\" (dzyaeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa mainichi kaisha ni ikimasu — My father goes to the company every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa mainichi kaisha ni ikimasu* — My father goes to the company every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to quit, then the Japanese for graduation, then say kaisha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to quit, then the Japanese for graduation, then say *kaisha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいしゃ (kaisha) mean? (\"A company; a workplace\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C229-kaisha-type",
+              "prompt": "Say the Japanese for 'a company'.",
+              "assesses": [
+                "JA-LEX-C229-OFFICE229-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいしゃ",
+                "kaisha"
+              ],
+              "feedback": {
+                "correct": "Right: かいしゃ (kaisha) is 'a company; a workplace'.",
+                "incorrect": "'A company' is かいしゃ (kaisha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C229-kaigi",
+      "sequence": 13860,
+      "title": "かいぎ (kaigi) — a meeting; a conference",
+      "headword": "かいぎ",
+      "romanization": "kaigi",
+      "gloss": "a meeting; a conference",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9d5b3a0fe16a99a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for graduation, then the Japanese for a company."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいぎ — kaigi — \"a meeting; a conference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かいしゃは まいしゅう かいぎが あります。 — kaisha wa maishū kaigi ga arimasu — \"The company has a meeting every week.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいぎ (kaigi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, \"meet\" (Middle Chinese hwajH) and gi, \"discuss\" (ngjeH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisha wa maishū kaigi ga arimasu — The company has a meeting every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisha wa maishū kaigi ga arimasu* — The company has a meeting every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for graduation, then the Japanese for a company, then say kaigi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for graduation, then the Japanese for a company, then say *kaigi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいぎ (kaigi) mean? (\"A meeting; a conference\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C229-kaigi-type",
+              "prompt": "Say the Japanese for 'a meeting'.",
+              "assesses": [
+                "JA-LEX-C229-OFFICE229-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいぎ",
+                "kaigi"
+              ],
+              "feedback": {
+                "correct": "Right: かいぎ (kaigi) is 'a meeting; a conference'.",
+                "incorrect": "'A meeting' is かいぎ (kaigi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C229-jimusho",
+      "sequence": 13870,
+      "title": "じむしょ (jimusho) — an office",
+      "headword": "じむしょ",
+      "romanization": "jimusho",
+      "gloss": "an office",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e837fda1f4212aa6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a company, then the Japanese for a meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じむしょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じむしょ — jimusho — \"an office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははは えきの ちかくの じむしょで はたらきます。 — haha wa eki no chikaku no jimusho de hatarakimasu — \"My mother works in an office near the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じむしょ (jimusho) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"affair\" (Middle Chinese dzriH), mu, \"duty\" (mjuH) and sho, \"place\" (srjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jimusho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jimusho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jimusho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jimusho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha wa eki no chikaku no jimusho de hatarakimasu — My mother works in an office near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha wa eki no chikaku no jimusho de hatarakimasu* — My mother works in an office near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a company, then the Japanese for a meeting, then say jimusho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a company, then the Japanese for a meeting, then say *jimusho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じむしょ (jimusho) mean? (\"An office\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C229-jimusho-type",
+              "prompt": "Say the Japanese for 'an office'.",
+              "assesses": [
+                "JA-LEX-C229-OFFICE229-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じむしょ",
+                "jimusho"
+              ],
+              "feedback": {
+                "correct": "Right: じむしょ (jimusho) is 'an office'.",
+                "incorrect": "'An office' is じむしょ (jimusho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C229-tsutomeru",
+      "sequence": 13880,
+      "title": "つとめる (tsutomeru) — to be employed; to work for",
+      "headword": "つとめる",
+      "romanization": "tsutomeru",
+      "gloss": "to be employed; to work for",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:172eefe1b7cba20c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a meeting, then the Japanese for an office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つとめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つとめる — tsutomeru — \"to be employed; to work for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには らいねん ぎんこうに つとめます。 — ani wa rainen ginkō ni tsutomemasu — \"Next year my elder brother will work for a bank.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つとめます, tsutomemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つとめる (tsutomeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutomeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutomeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutomeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutomeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa rainen ginkō ni tsutomemasu — Next year my elder brother will work for a bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa rainen ginkō ni tsutomemasu* — Next year my elder brother will work for a bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a meeting, then the Japanese for an office, then say tsutomeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a meeting, then the Japanese for an office, then say *tsutomeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つとめる (tsutomeru) mean? (\"To be employed; to work for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C229-tsutomeru-type",
+              "prompt": "Say the Japanese for 'to be employed'.",
+              "assesses": [
+                "JA-LEX-C229-OFFICE229-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つとめる",
+                "tsutomeru"
+              ],
+              "feedback": {
+                "correct": "Right: つとめる (tsutomeru) is 'to be employed; to work for'.",
+                "incorrect": "'To be employed' is つとめる (tsutomeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C229-douryou",
+      "sequence": 13890,
+      "title": "どうりょう (dōryō) — a colleague; a co-worker",
+      "headword": "どうりょう",
+      "romanization": "dōryō",
+      "gloss": "a colleague; a co-worker",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cad4a697bdf5a296",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an office, then the Japanese for to be employed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どうりょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうりょう — dōryō — \"a colleague; a co-worker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは どうりょうと よく はなします。 — chichi wa dōryō to yoku hanashimasu — \"My father often talks with his colleagues.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうりょう (dōryō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, \"same\" (Middle Chinese duwng) and ryō, \"companion, official\" (lew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōryō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōryō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōryō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōryō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa dōryō to yoku hanashimasu — My father often talks with his colleagues.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa dōryō to yoku hanashimasu* — My father often talks with his colleagues.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an office, then the Japanese for to be employed, then say dōryō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an office, then the Japanese for to be employed, then say *dōryō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どうりょう (dōryō) mean? (\"A colleague; a co-worker\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C229-douryou-type",
+              "prompt": "Say the Japanese for 'a colleague'.",
+              "assesses": [
+                "JA-LEX-C229-OFFICE229-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どうりょう",
+                "dōryō",
+                "douryou",
+                "dooryoo",
+                "doryo"
+              ],
+              "feedback": {
+                "correct": "Right: どうりょう (dōryō) is 'a colleague; a co-worker'.",
+                "incorrect": "'A colleague' is どうりょう (dōryō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R229-review-224-229",
+      "sequence": 13900,
+      "title": "Work and school words, a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 224-229",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fadf61eeb4aa0e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a student and a classroom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a student, a classroom, a class, to teach, to take lessons",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a student, a classroom, a class, to teach, to take lessons]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to memorize, practice, revision, to look up, a dictionary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to memorize, practice, revision, to look up, a dictionary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a question, to reply, an exam, to take an exam, a mark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a question, to reply, an exam, to take an exam, a mark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make a mistake, to think over, to recall, to make sure, to compare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make a mistake, to think over, to recall, to make sure, to compare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to learn, to translate, to slack off, to quit, graduation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to learn, to translate, to slack off, to quit, graduation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a company, a meeting, an office, to be employed, a colleague",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a company, a meeting, an office, to be employed, a colleague]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A student? (がくせい, gakusei.) A classroom? (きょうしつ, kyōshitsu.) A class? (じゅぎょう, jugyō.) To teach? (おしえる, oshieru.) To take lessons? (ならう, narau.) To memorize? (おぼえる, oboeru.) Practice? (れんしゅう, renshū.) Revision? (ふくしゅう, fukushū.) To look up? (しらべる, shiraberu.) A dictionary? (じしょ, jisho.) A question? (しつもん, shitsumon.) To reply? (こたえる, kotaeru.) An exam? (しけん, shiken.) To take an exam? (うける, ukeru.) A mark? (てん, ten.) To make a mistake? (まちがえる, machigaeru.) To think over? (かんがえる, kangaeru.) To recall? (おもいだす, omoidasu.) To make sure? (たしかめる, tashikameru.) To compare? (くらべる, kuraberu.) To learn? (まなぶ, manabu.) To translate? (やくす, yakusu.) To slack off? (なまける, namakeru.) To quit? (やめる, yameru.) Graduation? (そつぎょう, sotsugyō.) A company? (かいしゃ, kaisha.) A meeting? (かいぎ, kaigi.) An office? (じむしょ, jimusho.) To be employed? (つとめる, tsutomeru.) A colleague? (どうりょう, dōryō.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R229-review-224-229-type",
+              "prompt": "Say the Japanese for 'a student'.",
+              "assesses": [
+                "JA-LEX-C224-SCHOOL224-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がくせい",
+                "gakusei"
+              ],
+              "feedback": {
+                "correct": "Right: がくせい (gakusei) is 'a student; a university student'.",
+                "incorrect": "'A student' is がくせい (gakusei)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

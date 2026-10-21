@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 224,
+  "title": "Students and Classrooms",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cd1f97f5403d6fd9",
+  "lessons": [
+    {
+      "id": "JA-C224-gakusei",
+      "sequence": 13600,
+      "title": "がくせい (gakusei) — a student; a university student",
+      "headword": "がくせい",
+      "romanization": "gakusei",
+      "gloss": "a student; a university student",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8326bfa47aff13b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for open for business, then the Japanese for not yet open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がくせい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がくせい — gakusei — \"a student; a university student\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がくせいは まいにち がっこうに いきます。 — gakusei wa mainichi gakkō ni ikimasu — \"The students go to school every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がくせい (gakusei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, \"learning\" (Middle Chinese haewk) and sei, \"life, birth\" (srjaeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakusei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakusei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakusei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakusei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakusei wa mainichi gakkō ni ikimasu — The students go to school every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakusei wa mainichi gakkō ni ikimasu* — The students go to school every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for open for business, then the Japanese for not yet open, then say gakusei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for open for business, then the Japanese for not yet open, then say *gakusei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がくせい (gakusei) mean? (\"A student; a university student\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C224-gakusei-type",
+              "prompt": "Say the Japanese for 'a student'.",
+              "assesses": [
+                "JA-LEX-C224-SCHOOL224-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がくせい",
+                "gakusei"
+              ],
+              "feedback": {
+                "correct": "Right: がくせい (gakusei) is 'a student; a university student'.",
+                "incorrect": "'A student' is がくせい (gakusei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C224-kyoushitsu",
+      "sequence": 13610,
+      "title": "きょうしつ (kyōshitsu) — a classroom",
+      "headword": "きょうしつ",
+      "romanization": "kyōshitsu",
+      "gloss": "a classroom",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d60ba596f20b4bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for not yet open, then the Japanese for a student."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きょうしつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょうしつ — kyōshitsu — \"a classroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がくせいは きょうしつで べんきょうします。 — gakusei wa kyōshitsu de benkyō shimasu — \"The students study in the classroom.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょうしつ (kyōshitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyō, \"teach\" (Middle Chinese kaewH) and shitsu, \"room\" (syit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyōshitsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyōshitsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyōshitsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyōshitsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakusei wa kyōshitsu de benkyō shimasu — The students study in the classroom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakusei wa kyōshitsu de benkyō shimasu* — The students study in the classroom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for not yet open, then the Japanese for a student, then say kyōshitsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for not yet open, then the Japanese for a student, then say *kyōshitsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きょうしつ (kyōshitsu) mean? (\"A classroom\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C224-kyoushitsu-type",
+              "prompt": "Say the Japanese for 'a classroom'.",
+              "assesses": [
+                "JA-LEX-C224-SCHOOL224-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きょうしつ",
+                "kyōshitsu",
+                "kyoushitsu",
+                "kyooshitsu",
+                "kyoshitsu"
+              ],
+              "feedback": {
+                "correct": "Right: きょうしつ (kyōshitsu) is 'a classroom'.",
+                "incorrect": "'A classroom' is きょうしつ (kyōshitsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C224-jugyou",
+      "sequence": 13620,
+      "title": "じゅぎょう (jugyō) — a class; a lesson",
+      "headword": "じゅぎょう",
+      "romanization": "jugyō",
+      "gloss": "a class; a lesson",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e0f57566af0d00e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a student, then the Japanese for a classroom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅぎょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅぎょう — jugyō — \"a class; a lesson\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ごごは きょうしつで じゅぎょうが あります。 — gogo wa kyōshitsu de jugyō ga arimasu — \"In the afternoon there is a class in the classroom.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅぎょう (jugyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ju, \"impart\" (Middle Chinese dzyuwH) and gyō, \"work, vocation\" (ngjaep) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gogo wa kyōshitsu de jugyō ga arimasu — In the afternoon there is a class in the classroom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gogo wa kyōshitsu de jugyō ga arimasu* — In the afternoon there is a class in the classroom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a student, then the Japanese for a classroom, then say jugyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a student, then the Japanese for a classroom, then say *jugyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅぎょう (jugyō) mean? (\"A class; a lesson\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C224-jugyou-type",
+              "prompt": "Say the Japanese for 'a class'.",
+              "assesses": [
+                "JA-LEX-C224-SCHOOL224-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅぎょう",
+                "jugyō",
+                "jugyou",
+                "jugyoo",
+                "jugyo"
+              ],
+              "feedback": {
+                "correct": "Right: じゅぎょう (jugyō) is 'a class; a lesson'.",
+                "incorrect": "'A class' is じゅぎょう (jugyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C224-oshieru",
+      "sequence": 13630,
+      "title": "おしえる (oshieru) — to teach; to tell",
+      "headword": "おしえる",
+      "romanization": "oshieru",
+      "gloss": "to teach; to tell",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d68e49d99dc029e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a classroom, then the Japanese for a class."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おしえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おしえる — oshieru — \"to teach; to tell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいは にほんごを おしえます。 — sensei wa nihongo o oshiemasu — \"The teacher teaches Japanese.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おしえます, oshiemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おしえる (oshieru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oshieru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oshieru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oshieru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oshieru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei wa nihongo o oshiemasu — The teacher teaches Japanese.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei wa nihongo o oshiemasu* — The teacher teaches Japanese.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a classroom, then the Japanese for a class, then say oshieru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a classroom, then the Japanese for a class, then say *oshieru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おしえる (oshieru) mean? (\"To teach; to tell\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C224-oshieru-type",
+              "prompt": "Say the Japanese for 'to teach'.",
+              "assesses": [
+                "JA-LEX-C224-SCHOOL224-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おしえる",
+                "oshieru"
+              ],
+              "feedback": {
+                "correct": "Right: おしえる (oshieru) is 'to teach; to tell'.",
+                "incorrect": "'To teach' is おしえる (oshieru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C224-narau",
+      "sequence": 13640,
+      "title": "ならう (narau) — to take lessons; to learn from a teacher",
+      "headword": "ならう",
+      "romanization": "narau",
+      "gloss": "to take lessons; to learn from a teacher",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d73f582ac7871843",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a class, then the Japanese for to teach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ならう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ならう — narau — \"to take lessons; to learn from a teacher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもうとは せんせいに うたを ならいます。 — imōto wa sensei ni uta o naraimasu — \"My younger sister takes singing lessons from a teacher.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ならいます, naraimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ならう (narau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imōto wa sensei ni uta o naraimasu — My younger sister takes singing lessons from a teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imōto wa sensei ni uta o naraimasu* — My younger sister takes singing lessons from a teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a class, then the Japanese for to teach, then say narau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a class, then the Japanese for to teach, then say *narau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ならう (narau) mean? (\"To take lessons; to learn from a teacher\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C224-narau-type",
+              "prompt": "Say the Japanese for 'to take lessons'.",
+              "assesses": [
+                "JA-LEX-C224-SCHOOL224-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ならう",
+                "narau"
+              ],
+              "feedback": {
+                "correct": "Right: ならう (narau) is 'to take lessons; to learn from a teacher'.",
+                "incorrect": "'To take lessons' is ならう (narau)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

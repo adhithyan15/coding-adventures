@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:e680c4ee20e640fa",
+  "lessonIds": [
+    "JA-C221-taion",
+    "JA-C221-sagaru",
+    "JA-C221-itamu",
+    "JA-C221-chiryou",
+    "JA-C221-yobou",
+    "JA-R221-review-216-221"
+  ],
+  "tex": "japanese/book/chapters/ch221-fever-pain-and-treatment.tex"
+}

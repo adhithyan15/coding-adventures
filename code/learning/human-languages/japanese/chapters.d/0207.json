@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Tomorrow's Rain and Snow",
+  "label": "ch:ja-tomorrow-s-rain-and-snow",
+  "canDo": "I can say what the weather will do tomorrow.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C207-kumoru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say what the weather will do tomorrow.",
+    "assesses": [
+      "JA-LEX-C207-WEATHER207-03",
+      "JA-LEX-C207-WEATHER207-04",
+      "JA-LEX-C207-WEATHER207-05"
+    ]
+  }
+}

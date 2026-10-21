@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:5cb4ac0fe8f36b90",
+  "lessonIds": [
+    "JA-C188-yuubinkyoku",
+    "JA-C188-kitte",
+    "JA-C188-hagaki",
+    "JA-C188-okuru",
+    "JA-C188-kakitome"
+  ],
+  "tex": "japanese/book/chapters/ch188-at-the-post-office.tex"
+}

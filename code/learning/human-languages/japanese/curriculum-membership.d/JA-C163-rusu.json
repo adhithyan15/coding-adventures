@@ -1,0 +1,11 @@
+{
+  "id": "JA-C163-rusu",
+  "pathSegment": "JA-PATH-163-HOME163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-163-HOME163",
+      "order": 3
+    }
+  ]
+}

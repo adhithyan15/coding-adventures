@@ -1,0 +1,11 @@
+{
+  "id": "JA-C165-hatsuka",
+  "pathSegment": "JA-PATH-165-DATES165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-165-DATES165",
+      "order": 3
+    }
+  ]
+}

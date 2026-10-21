@@ -1,0 +1,11 @@
+{
+  "id": "JA-C159-seiri",
+  "pathSegment": "JA-PATH-159-TIDY159",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-159-TIDY159",
+      "order": 4
+    }
+  ]
+}

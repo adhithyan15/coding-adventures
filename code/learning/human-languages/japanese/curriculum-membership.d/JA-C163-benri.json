@@ -1,0 +1,11 @@
+{
+  "id": "JA-C163-benri",
+  "pathSegment": "JA-PATH-163-HOME163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-163-HOME163",
+      "order": 2
+    }
+  ]
+}

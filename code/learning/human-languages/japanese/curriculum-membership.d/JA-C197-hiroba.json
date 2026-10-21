@@ -1,0 +1,11 @@
+{
+  "id": "JA-C197-hiroba",
+  "pathSegment": "JA-PATH-197-CITY197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-197-CITY197",
+      "order": 1
+    }
+  ]
+}

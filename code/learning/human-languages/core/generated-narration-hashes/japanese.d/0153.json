@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:100189a656dcb73f",
+  "lessonIds": [
+    "JA-C153-gaishutsu",
+    "JA-C153-kitaku",
+    "JA-C153-wasuremono",
+    "JA-C153-nakusu",
+    "JA-C153-maniau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch153.txt",
+  "json": "japanese/narration/ch153.json",
+  "textHash": "fnv1a64:8770f463e487ece9",
+  "jsonHash": "fnv1a64:8f1a3813def1c163",
+  "findings": []
+}

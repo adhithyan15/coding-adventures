@@ -1,0 +1,11 @@
+{
+  "id": "JA-C150-yubiwa",
+  "pathSegment": "JA-PATH-150-GLOVES150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-150-GLOVES150",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C219-taoreru",
+  "pathSegment": "JA-PATH-219-FALL219",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-219-FALL219",
+      "order": 3
+    }
+  ]
+}

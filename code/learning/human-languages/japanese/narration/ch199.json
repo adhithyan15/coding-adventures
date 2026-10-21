@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 199,
+  "title": "Departures, Arrivals and Expresses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3c6f536c21c22d1b",
+  "lessons": [
+    {
+      "id": "JA-C199-shuppatsu",
+      "sequence": 12050,
+      "title": "しゅっぱつ (shuppatsu) — departure",
+      "headword": "しゅっぱつ",
+      "romanization": "shuppatsu",
+      "gloss": "departure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:190e712f2a6d204b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a subway, then the Japanese for to get to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅっぱつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっぱつ — shuppatsu — \"departure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅっぱつは ごごです。 — shuppatsu wa gogo desu — \"Departure is in the afternoon.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっぱつ (shuppatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shutsu, \"to go out\" (Middle Chinese tsyhwit) and hatsu, \"to set off\" (pjot) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as shup-patsu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuppatsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuppatsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuppatsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuppatsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuppatsu wa gogo desu — Departure is in the afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuppatsu wa gogo desu* — Departure is in the afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a subway, then the Japanese for to get to, then say shuppatsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a subway, then the Japanese for to get to, then say *shuppatsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅっぱつ (shuppatsu) mean? (\"Departure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C199-shuppatsu-type",
+              "prompt": "Say the Japanese for 'departure'.",
+              "assesses": [
+                "JA-LEX-C199-DEPART199-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅっぱつ",
+                "shuppatsu"
+              ],
+              "feedback": {
+                "correct": "Right: しゅっぱつ (shuppatsu) is 'departure'.",
+                "incorrect": "'Departure' is しゅっぱつ (shuppatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C199-touchaku",
+      "sequence": 12060,
+      "title": "とうちゃく (tōchaku) — arrival",
+      "headword": "とうちゃく",
+      "romanization": "tōchaku",
+      "gloss": "arrival",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d74f0aae96e08641",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get to, then the Japanese for departure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とうちゃく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうちゃく — tōchaku — \"arrival\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とうちゃくは ゆうがたです。 — tōchaku wa yūgata desu — \"Arrival is in the evening.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうちゃく (tōchaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tō, \"to reach\" (Middle Chinese tawH) and chaku, \"to arrive\" (drjak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōchaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōchaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōchaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōchaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōchaku wa yūgata desu — Arrival is in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōchaku wa yūgata desu* — Arrival is in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get to, then the Japanese for departure, then say tōchaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get to, then the Japanese for departure, then say *tōchaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とうちゃく (tōchaku) mean? (\"Arrival\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C199-touchaku-type",
+              "prompt": "Say the Japanese for 'arrival'.",
+              "assesses": [
+                "JA-LEX-C199-DEPART199-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とうちゃく",
+                "tōchaku",
+                "touchaku",
+                "toochaku",
+                "tochaku"
+              ],
+              "feedback": {
+                "correct": "Right: とうちゃく (tōchaku) is 'arrival'.",
+                "incorrect": "'Arrival' is とうちゃく (tōchaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C199-tokkyuu",
+      "sequence": 12070,
+      "title": "とっきゅう (tokkyū) — a limited express",
+      "headword": "とっきゅう",
+      "romanization": "tokkyū",
+      "gloss": "a limited express",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5043637a3ac34ac6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for departure, then the Japanese for arrival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とっきゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とっきゅう — tokkyū — \"a limited express\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とっきゅうの しゅっぱつは ごごです。 — tokkyū no shuppatsu wa gogo desu — \"The limited express leaves in the afternoon.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とっきゅう (tokkyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are toku, \"special\" (Middle Chinese dok) and kyū, \"urgent\" (kip) (KANJIDIC2; Middle Chinese in Baxter's transcription). The word is a shortening (JMdict), and the two join as tok-kyū."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokkyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokkyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokkyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokkyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokkyū no shuppatsu wa gogo desu — The limited express leaves in the afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokkyū no shuppatsu wa gogo desu* — The limited express leaves in the afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for departure, then the Japanese for arrival, then say tokkyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for departure, then the Japanese for arrival, then say *tokkyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とっきゅう (tokkyū) mean? (\"A limited express\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C199-tokkyuu-type",
+              "prompt": "Say the Japanese for 'a limited express'.",
+              "assesses": [
+                "JA-LEX-C199-DEPART199-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とっきゅう",
+                "tokkyū",
+                "tokkyuu",
+                "tokkyu"
+              ],
+              "feedback": {
+                "correct": "Right: とっきゅう (tokkyū) is 'a limited express'.",
+                "incorrect": "'A limited express' is とっきゅう (tokkyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C199-tomaru",
+      "sequence": 12080,
+      "title": "とまる (tomaru) — to come to a stop; to stop moving",
+      "headword": "とまる",
+      "romanization": "tomaru",
+      "gloss": "to come to a stop; to stop moving",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48c8c8f7b42a2942",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for arrival, then the Japanese for a limited express."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とまる — tomaru — \"to come to a stop; to stop moving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃが えきに とまります。 — densha ga eki ni tomarimasu — \"The train stops at the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とまります, tomarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とまる (tomaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha ga eki ni tomarimasu — The train stops at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha ga eki ni tomarimasu* — The train stops at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for arrival, then the Japanese for a limited express, then say tomaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for arrival, then the Japanese for a limited express, then say *tomaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とまる (tomaru) mean? (\"To come to a stop; to stop moving\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C199-tomaru-type",
+              "prompt": "Say the Japanese for 'to come to a stop'.",
+              "assesses": [
+                "JA-LEX-C199-DEPART199-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とまる",
+                "tomaru"
+              ],
+              "feedback": {
+                "correct": "Right: とまる (tomaru) is 'to come to a stop; to stop moving'.",
+                "incorrect": "'To come to a stop' is とまる (tomaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C199-kyuukou",
+      "sequence": 12090,
+      "title": "きゅうこう (kyūkō) — an express (train)",
+      "headword": "きゅうこう",
+      "romanization": "kyūkō",
+      "gloss": "an express (train)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af7ccc5d9060ded7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a limited express, then the Japanese for to come to a stop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きゅうこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうこう — kyūkō — \"an express (train)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きゅうこうは この えきに とまりません。 — kyūkō wa kono eki ni tomarimasen — \"The express does not stop at this station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうこう (kyūkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyū, \"urgent\" (Middle Chinese kip) and kō, \"to go\" (haeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūkō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūkō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūkō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūkō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūkō wa kono eki ni tomarimasen — The express does not stop at this station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūkō wa kono eki ni tomarimasen* — The express does not stop at this station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a limited express, then the Japanese for to come to a stop, then say kyūkō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a limited express, then the Japanese for to come to a stop, then say *kyūkō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きゅうこう (kyūkō) mean? (\"An express (train)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C199-kyuukou-type",
+              "prompt": "Say the Japanese for 'an express'.",
+              "assesses": [
+                "JA-LEX-C199-DEPART199-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きゅうこう",
+                "kyūkō",
+                "kyuukou",
+                "kyūkoo",
+                "kyuko"
+              ],
+              "feedback": {
+                "correct": "Right: きゅうこう (kyūkō) is 'an express (train)'.",
+                "incorrect": "'An express' is きゅうこう (kyūkō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Mistakes and Second Thoughts",
+  "label": "ch:ja-mistakes-and-second-thoughts",
+  "canDo": "I can talk about mistakes, thinking and checking.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C227-kuraberu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can talk about mistakes, thinking and checking.",
+    "assesses": [
+      "JA-LEX-C227-THINK227-03",
+      "JA-LEX-C227-THINK227-04",
+      "JA-LEX-C227-THINK227-05"
+    ]
+  }
+}

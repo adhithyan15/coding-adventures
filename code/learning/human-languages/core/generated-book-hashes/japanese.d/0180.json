@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:d2a8620e4f3c8cb7",
+  "lessonIds": [
+    "JA-C180-kissaten",
+    "JA-C180-shokudou",
+    "JA-C180-misoshiru",
+    "JA-C180-nigiru",
+    "JA-C180-onigiri"
+  ],
+  "tex": "japanese/book/chapters/ch180-cafes-canteens-and-rice-balls.tex"
+}

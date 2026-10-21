@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:4415afda2f664c6f",
+  "lessonIds": [
+    "JA-C211-doubutsu",
+    "JA-C211-saru",
+    "JA-C211-usagi",
+    "JA-C211-kotori",
+    "JA-C211-fueru"
+  ],
+  "tex": "japanese/book/chapters/ch211-animals-in-the-hills.tex"
+}

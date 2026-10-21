@@ -1,0 +1,11 @@
+{
+  "id": "JA-C188-kitte",
+  "pathSegment": "JA-PATH-188-POST188",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-188-POST188",
+      "order": 1
+    }
+  ]
+}

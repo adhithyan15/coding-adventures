@@ -1,0 +1,11 @@
+{
+  "id": "JA-C223-abunai",
+  "pathSegment": "JA-PATH-223-SAFETY223",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-223-SAFETY223",
+      "order": 0
+    }
+  ]
+}

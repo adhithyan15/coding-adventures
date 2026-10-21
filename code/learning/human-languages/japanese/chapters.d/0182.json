@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Paying, Cash and Coins",
+  "label": "ch:ja-paying-cash-and-coins",
+  "canDo": "I can pay and talk about cash and change.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C182-kozeni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can pay and talk about cash and change.",
+    "assesses": [
+      "JA-LEX-C182-PAY182-03",
+      "JA-LEX-C182-PAY182-04",
+      "JA-LEX-C182-PAY182-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-211-ANIMAL211",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "JA-EXT-211-ANIMAL211"
+  ],
+  "after": []
+}

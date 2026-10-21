@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:3068930df0fcd3bd",
+  "lessonIds": [
+    "JA-C219-korobu",
+    "JA-C219-suberu",
+    "JA-C219-oreru",
+    "JA-C219-taoreru",
+    "JA-C219-kega"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch219.txt",
+  "json": "japanese/narration/ch219.json",
+  "textHash": "fnv1a64:0273fa3bf1a53c5d",
+  "jsonHash": "fnv1a64:c6dc983386e89d7f",
+  "findings": []
+}

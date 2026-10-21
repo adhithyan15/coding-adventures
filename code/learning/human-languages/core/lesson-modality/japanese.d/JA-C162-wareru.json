@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C162-wareru",
+    "language": "japanese",
+    "chapter": 162,
+    "sequence": 9630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf55d93f6ff864fe"
+  },
+  "findings": []
+}

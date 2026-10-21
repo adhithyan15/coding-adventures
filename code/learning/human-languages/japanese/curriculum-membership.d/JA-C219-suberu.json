@@ -1,0 +1,11 @@
+{
+  "id": "JA-C219-suberu",
+  "pathSegment": "JA-PATH-219-FALL219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-219-FALL219",
+      "order": 1
+    }
+  ]
+}

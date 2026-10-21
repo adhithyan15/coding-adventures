@@ -1,0 +1,11 @@
+{
+  "id": "JA-C249-majime",
+  "pathSegment": "JA-PATH-249-HEART249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-249-HEART249",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C175-chawan",
+  "pathSegment": "JA-PATH-175-COOK175",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-175-COOK175",
+      "order": 3
+    }
+  ]
+}

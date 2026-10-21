@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:3416746ea8823d9b",
+  "lessonIds": [
+    "JA-C244-shiriai",
+    "JA-C244-deau",
+    "JA-C244-wakareru",
+    "JA-C244-mukaeru",
+    "JA-C244-kekkon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch244.txt",
+  "json": "japanese/narration/ch244.json",
+  "textHash": "fnv1a64:bc25af1e97cd64ce",
+  "jsonHash": "fnv1a64:0ab7d08723034347",
+  "findings": []
+}

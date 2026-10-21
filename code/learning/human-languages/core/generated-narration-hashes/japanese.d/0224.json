@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:cd1f97f5403d6fd9",
+  "lessonIds": [
+    "JA-C224-gakusei",
+    "JA-C224-kyoushitsu",
+    "JA-C224-jugyou",
+    "JA-C224-oshieru",
+    "JA-C224-narau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch224.txt",
+  "json": "japanese/narration/ch224.json",
+  "textHash": "fnv1a64:172d1909a249227d",
+  "jsonHash": "fnv1a64:4ecfe9bc3f213486",
+  "findings": []
+}

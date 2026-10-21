@@ -1,0 +1,11 @@
+{
+  "id": "JA-C226-shiken",
+  "pathSegment": "JA-PATH-226-EXAM226",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-226-EXAM226",
+      "order": 2
+    }
+  ]
+}

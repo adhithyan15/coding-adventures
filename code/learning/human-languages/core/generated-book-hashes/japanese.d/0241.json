@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:85481c3eefaf45e1",
+  "lessonIds": [
+    "JA-C241-sasou",
+    "JA-C241-shibai",
+    "JA-C241-yukai",
+    "JA-C241-moushikomu",
+    "JA-C241-yaru",
+    "JA-R241-review-236-241"
+  ],
+  "tex": "japanese/book/chapters/ch241-invitations-and-plays.tex"
+}
