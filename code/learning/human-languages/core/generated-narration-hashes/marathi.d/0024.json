@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 24,
-  "sourceHash": "fnv1a64:0a1dde56fe44d640",
+  "sourceHash": "fnv1a64:c219780f43b762f2",
   "lessonIds": [
     "MR-A1M01-reader-greeting",
     "MR-A1M02-name-line",
@@ -29,6 +29,6 @@
   "text": "marathi/narration/ch24.txt",
   "json": "marathi/narration/ch24.json",
   "textHash": "fnv1a64:78846923c1f42481",
-  "jsonHash": "fnv1a64:74a1997fb3995a83",
+  "jsonHash": "fnv1a64:859597203faeb030",
   "findings": []
 }

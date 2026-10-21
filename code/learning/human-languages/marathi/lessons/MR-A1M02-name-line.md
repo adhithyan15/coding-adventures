@@ -12,7 +12,7 @@ type: writing
 headword: "माझं नाव अरुण आहे."
 gloss: copy the already-practised identity sentence as one message line
 romanization: "mājhaṁ nāv Aruṇ āhe"
-prerequisites: [MR-A1M01-reader-greeting]
+prerequisites: [MR-A1M01-reader-greeting, MR-A1F01-mitrache-naav]
 sounds: []
 roots: []
 duration:
@@ -28,7 +28,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [MR-A1M01-reader-greeting, MR-C02-majhe-naav-aahe, MR-C02-practice]
+reviews_of: [MR-A1M01-reader-greeting, MR-A1F01-mitrache-naav, MR-C02-majhe-naav-aahe, MR-C02-practice]
 ---
 
 # Add the sender's name

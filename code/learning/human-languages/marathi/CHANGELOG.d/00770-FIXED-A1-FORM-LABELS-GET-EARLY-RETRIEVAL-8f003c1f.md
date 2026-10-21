@@ -6,5 +6,7 @@
 - These checks fill the missing R1/R2 windows without adding new knowledge
   atoms or extending any lesson beyond five minutes. The existing later R3/R4
   form and message practice remains in place.
+- The sender-name message now explicitly depends on the earlier friend's-name
+  form lesson, so its retrieval has a valid prerequisite path.
 - This is form-label durability practice, not evidence that the A1 mocks or
   book-only human validation are complete.

@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A Message for Mira",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0a1dde56fe44d640",
+  "sourceHash": "fnv1a64:c219780f43b762f2",
   "lessons": [
     {
       "id": "MR-A1M01-reader-greeting",
@@ -100,7 +100,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:8ce4b93f781fd2a4",
+      "sourceHash": "fnv1a64:c4f27c12e61cb114",
       "notice": {
         "modality": "pen",
         "needs": [
