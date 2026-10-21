@@ -65,7 +65,7 @@ To keep the two actions as two sentences, start the second with **എന്ന�
 said so", "that done". It ties the next action to the one before.
 
 **പിന്നെ** is the looser, everyday "then, after that", and it can also mean "later". **എന്നിട്ട്**
-ties the next action to the one just done.
+ties the next action to the one done a moment before.
 
 A listener who wants the story to go on asks **എന്നിട്ടോ?** (*enniṭṭō?*), "and then?"
 
