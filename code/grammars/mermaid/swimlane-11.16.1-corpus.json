@@ -441,6 +441,10 @@
     {
       "name": "rank-crossing-optimization",
       "source": "---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n    optimizeRanksByCrossings: true\n---\nswimlane-beta LR\nsubgraph laneA[Lane A]\n  a[A]\nend\nsubgraph laneB[Lane B]\n  b[B]\nend\nsubgraph laneC[Lane C]\n  c[C]\nend\nsubgraph laneD[Lane D]\n  d[D]\nend\na --> d\nc --> b"
+    },
+    {
+      "name": "icon-glyph-node",
+      "source": "swimlane-beta LR\nsubgraph Services\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  paint[Paint]\nend\nparser --> paint"
     }
   ]
 }

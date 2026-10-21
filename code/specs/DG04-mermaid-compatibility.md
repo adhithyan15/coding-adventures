@@ -1329,7 +1329,10 @@ color, and typography fields through semantic and layout IR into backend-neutral
 `:::class` decorators on either subgraph form resolve through the same class pipeline.
 Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
+Flowchart-style `icon` node attributes preserve their fully qualified identity in semantic and layout
+IR. Integrator-registered glyphs resolve through layout options and lower above the node label as
+backend-neutral text paint, while scene metadata records both identity and resolution state.
 
-This is intentionally partial. Flowchart icons and images, additional link forms beyond the documented
+This is intentionally partial. Automatic external icon-pack loading and Flowchart images, additional link forms beyond the documented
 marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
