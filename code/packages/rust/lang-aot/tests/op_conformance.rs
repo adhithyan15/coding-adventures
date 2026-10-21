@@ -13,6 +13,7 @@
 //! | `refused_ops_are_rejected_at_compile_time` | a `Refused` declaration is enforced: `check_module_for` *and* the backend's own compile entry point reject the case with a typed `UnsupportedOps` error |
 //! | `print_i64_and_putchar_share_one_ordered_stream` | the LANG83 ordered-output contract for the one builtin pair no frontend emits together today |
 //! | `pr1b_ops_are_lowered_on_every_backend` | LANG83 PR1b landed everywhere: no backend still refuses `write_i64`, `i64_div_floor`, `i64_mod_floor` or `trap` |
+//! | `pr4_ops_are_lowered_on_every_backend` | LANG83 PR4 landed everywhere: every backend lowers `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf` |
 //! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
 //!
 //! # The case corpus is IIR, not source
@@ -202,6 +203,38 @@ fn floor_then_trap(name: &str, before: i64, a: i64, b: i64) -> IIRModule {
         print_i64("r"),
     ])
 }
+
+/// `name(a, b)` (or `name(a)` for the unary `i64_neg_ovf`) for every pair, each
+/// result printed with `print_i64`.
+fn checked_table(name: &str, pairs: &[(i64, i64)]) -> IIRModule {
+    let mut body = Vec::new();
+    for (i, (a, b)) in pairs.iter().enumerate() {
+        let (x, y, r) = (format!("a{i}"), format!("b{i}"), format!("r{i}"));
+        body.push(int(&x, *a));
+        body.push(int(&y, *b));
+        let srcs: Vec<&str> = if name == "i64_neg_ovf" { vec![&x] } else { vec![&x, &y] };
+        body.push(op(name, &r, &srcs, "i64"));
+        body.push(print_i64(&r));
+    }
+    program(body)
+}
+
+/// Print `before`, then evaluate the checked `name(a, b)` (or `name(a)`) — which
+/// must trap `Trap.Overflow` — then print its result (never reached).
+fn checked_then_trap(name: &str, before: i64, a: i64, b: i64) -> IIRModule {
+    let srcs: &[&str] = if name == "i64_neg_ovf" { &["a"] } else { &["a", "b"] };
+    program(vec![
+        int("p", before),
+        print_i64("p"),
+        int("a", a),
+        int("b", b),
+        op(name, "r", srcs, "i64"),
+        print_i64("r"),
+    ])
+}
+
+const MAX: i64 = i64::MAX;
+const MIN: i64 = i64::MIN;
 
 fn trap_instr(kind: &str) -> IIRInstr {
     IIRInstr::new("trap", None, vec![Operand::Str(kind.into())], "void")
@@ -425,6 +458,118 @@ fn cases() -> Vec<Case> {
                 ])
             },
             expect: Expect::StdoutThenTrap("1", "Trap.DivZero"),
+        },
+        // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────
+        //
+        // Exact results right at the i64 bounds, then one step past them,
+        // where every column must trap `Trap.Overflow` after flushing the
+        // output written before.
+        Case {
+            name: "i64_add_ovf is exact up to the range edges (PR4)",
+            build: || checked_table("i64_add_ovf", &[(MAX, 0), (MAX - 1, 1), (MIN, MAX), (MIN, 0), (-5, 3)]),
+            expect: Expect::Stdout("9223372036854775807\n9223372036854775807\n-1\n-9223372036854775808\n-2"),
+        },
+        Case {
+            name: "i64_sub_ovf is exact up to the range edges (PR4)",
+            build: || checked_table("i64_sub_ovf", &[(MIN, 0), (MIN + 1, 1), (-1, MAX), (MAX, MAX), (-5, 3)]),
+            expect: Expect::Stdout("-9223372036854775808\n-9223372036854775808\n-9223372036854775808\n0\n-8"),
+        },
+        Case {
+            name: "i64_mul_ovf is exact up to the range edges (PR4)",
+            build: || {
+                checked_table(
+                    "i64_mul_ovf",
+                    &[(MIN, 1), (-(1 << 32), 1 << 31), (3_037_000_499, 3_037_000_499), (-1, MAX), (MIN, 0), (-6, 7)],
+                )
+            },
+            expect: Expect::Stdout(
+                "-9223372036854775808\n-9223372036854775808\n9223372030926249001\n-9223372036854775807\n0\n-42",
+            ),
+        },
+        Case {
+            name: "i64_neg_ovf is exact except for MIN (PR4)",
+            build: || checked_table("i64_neg_ovf", &[(MAX, 0), (0, 0), (-7, 0)]),
+            expect: Expect::Stdout("-9223372036854775807\n0\n7"),
+        },
+        Case {
+            name: "i64_add_ovf of MAX + 1 traps Trap.Overflow",
+            build: || checked_then_trap("i64_add_ovf", 11, MAX, 1),
+            expect: Expect::StdoutThenTrap("11", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_add_ovf of MIN + -1 traps Trap.Overflow",
+            build: || checked_then_trap("i64_add_ovf", 12, MIN, -1),
+            expect: Expect::StdoutThenTrap("12", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_sub_ovf of MIN - 1 traps Trap.Overflow",
+            build: || checked_then_trap("i64_sub_ovf", 13, MIN, 1),
+            expect: Expect::StdoutThenTrap("13", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_sub_ovf of MAX - -1 traps Trap.Overflow",
+            build: || checked_then_trap("i64_sub_ovf", 14, MAX, -1),
+            expect: Expect::StdoutThenTrap("14", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_mul_ovf of MIN * -1 traps Trap.Overflow",
+            build: || checked_then_trap("i64_mul_ovf", 15, MIN, -1),
+            expect: Expect::StdoutThenTrap("15", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_mul_ovf of -1 * MIN traps Trap.Overflow",
+            build: || checked_then_trap("i64_mul_ovf", 16, -1, MIN),
+            expect: Expect::StdoutThenTrap("16", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_mul_ovf of 2^32 * 2^31 traps Trap.Overflow",
+            build: || checked_then_trap("i64_mul_ovf", 17, 1 << 32, 1 << 31),
+            expect: Expect::StdoutThenTrap("17", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_mul_ovf of 3037000500 squared traps Trap.Overflow",
+            build: || checked_then_trap("i64_mul_ovf", 18, 3_037_000_500, 3_037_000_500),
+            expect: Expect::StdoutThenTrap("18", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_neg_ovf of MIN traps Trap.Overflow",
+            build: || checked_then_trap("i64_neg_ovf", 19, MIN, 0),
+            expect: Expect::StdoutThenTrap("19", "Trap.Overflow"),
+        },
+        Case {
+            // The sum is never read: an optimiser that treated the op as pure
+            // would delete it, and its trap with it. `write_i64` does not
+            // flush per call natively, so the "1" also proves the flush.
+            name: "an i64_add_ovf whose result is unused still traps",
+            build: || {
+                program(vec![
+                    int("a", 1),
+                    int("big", MAX),
+                    builtin("write_i64", "a"),
+                    op("i64_add_ovf", "dead", &["big", "a"], "i64"),
+                    builtin("write_i64", "a"),
+                ])
+            },
+            expect: Expect::StdoutThenTrap("1", "Trap.Overflow"),
+        },
+        Case {
+            // No `print_i64`/`write_i64` and no literal wider than i32: the
+            // only i64 evidence is the checked op itself, so this exercises
+            // the JVM scalar concretizer, which must keep the module on
+            // `long`. 2e9 + 2e9 = 4e9 (overflows i32), / 10^8 = 40, + 25 = 'A'.
+            name: "i64_add_ovf keeps a putchar-only module on the i64 model",
+            build: || {
+                program(vec![
+                    int("a", 2_000_000_000),
+                    int("scale", 100_000_000),
+                    int("k", 25),
+                    op("i64_add_ovf", "s", &["a", "a"], "i64"),
+                    op("div", "q", &["s", "scale"], "i64"),
+                    op("add", "c", &["q", "k"], "i64"),
+                    builtin("putchar", "c"),
+                ])
+            },
+            expect: Expect::Stdout("A"),
         },
         // ── Comparison ──────────────────────────────────────────────────────
         Case { name: "cmp_eq", build: || compare("cmp_eq", 3, 3), expect: Expect::Stdout("1") },
@@ -1153,6 +1298,21 @@ fn pr1b_ops_are_lowered_on_every_backend() {
                 "{backend} still refuses {}: {:?}",
                 spec.name,
                 backend.op_support(spec.name)
+            );
+        }
+    }
+}
+
+#[test]
+fn pr4_ops_are_lowered_on_every_backend() {
+    let pr4: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr4()).map(|s| s.name).collect();
+    assert_eq!(pr4.len(), 4, "the overflow family is i64_add/sub/mul/neg_ovf");
+    for name in pr4 {
+        for backend in Backend::ALL {
+            assert!(
+                backend.op_support(name).is_lowered(),
+                "{backend} refuses {name}: {:?}",
+                backend.op_support(name)
             );
         }
     }

@@ -3,8 +3,32 @@
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
-  names the new `release: None` field from interpreter-ir 0.13.0. No
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
   behaviour change: backends do not read the field.
+
+## Unreleased — LANG83 PR4 — overflow-checked arithmetic
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4),
+  on `long` operands only (an `int` operand is `UnsupportedType`). The
+  overflow condition is tested *before* the wrapping instruction, as PR1b's
+  floor division does, and a failing test runs the 17-byte flush-then-throw
+  trap with `Trap.Overflow`:
+  - add: `((a ^ (a+b)) & (b ^ (a+b))) < 0`; sub: `((a ^ b) & (a ^ (a-b))) < 0`
+    (`land; lconst_0; lcmp; ifge` over the trap);
+  - neg: `lcmp` against `MIN`, `ifne` over the trap;
+  - mul: `a == -1 && b == MIN`, then `a != 0 && (a*b)/a != b`.
+
+  `Math.addExact` & co. are deliberately not used: their
+  `ArithmeticException` has no LANG83 kind and skips the `System.out` flush,
+  and catching it would need an exception table this writer does not emit.
+  The mul check needs no JDK 9+ `Math.multiplyHigh`. The destination is
+  stored last, so a dest that aliases an operand is correct.
+- New helper `emit_skip_if(code, if_op, skip)` (`emit_skip_if_ne` now
+  delegates to it).
+- `op_support`: all four `Lowered`. `tests/lang83_pr1b.rs` pins each guard,
+  each trap and the tail; `lang-aot`'s `op_conformance` runs them on real
+  `java` with the verifier on.
 
 ## 0.37.0 - 2026-10-19 - fail-closed real-to-integer narrowing
 

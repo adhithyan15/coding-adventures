@@ -1,0 +1,13 @@
+[package]
+name = "x509-certificate-issuer-candidate-selection"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded unique issuer-candidate selection for decoded X.509 certificates"
+license = "MIT"
+
+[dependencies]
+x509-certificate = { path = "../x509-certificate" }
+x509-name = { path = "../x509-name" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

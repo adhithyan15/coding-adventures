@@ -52,6 +52,9 @@ const tokens = grammarTokenize("x = 1 + 2", grammar);
 const richTokens = grammarTokenize("  // lead\nx = 1", grammar, {
   preserveSourceInfo: true,
 });
+
+// Bound output growth while tokenizing untrusted input (EOF counts too):
+const boundedTokens = grammarTokenize(source, grammar, { maxTokens: 50_000 });
 ```
 
 ## Token Format

@@ -1,14 +1,20 @@
 //! # Bounded RFC 5280 certificate path-length policy
 //!
 //! This crate applies only the path-length state transition to caller-ordered
-//! intermediate issuing-CA role evidence. It does not decide self-issuance,
-//! construct or authenticate a path, process a trust anchor, or grant trust.
+//! intermediate issuing-CA role evidence. It can also derive that role for the
+//! exact certificate bound into caller-policy self-issued evidence. It does
+//! not supply Name equality, construct or authenticate a path, process a trust
+//! anchor, or grant trust.
 
 #![deny(unsafe_code)]
 
+use der_asn1::Asn1Limits;
 use std::error::Error;
 use std::fmt;
-use x509_certificate_policy::{ValidatedCertificateRoleExtensions, X509CertificateRole};
+use x509_certificate_policy::{
+    validate_certificate_role_extensions, ClassifiedCertificateSelfIssued,
+    ValidatedCertificateRoleExtensions, X509CertificateRole,
+};
 
 /// Stable path-length failure categories. No category retains input data.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -65,6 +71,32 @@ impl X509CertificatePathLengthState {
 
     pub const fn remaining_non_self_issued_intermediate_cas(&self) -> u64 {
         self.remaining_non_self_issued_intermediate_cas
+    }
+
+    /// Advance across one evidence-bound intermediate CA.
+    ///
+    /// The CA-role check is derived from the exact certificate retained by the
+    /// self-issued classification, preventing callers from accidentally
+    /// combining a classification for one certificate with role evidence from
+    /// another. The classifier's caller-owned Name semantics remain outside
+    /// this crate.
+    pub fn advance_classified_intermediate_ca(
+        self,
+        classification: &ClassifiedCertificateSelfIssued<'_, '_>,
+        role_limits: Asn1Limits,
+    ) -> Result<Self, X509CertificatePathLengthError> {
+        let role_evidence = validate_certificate_role_extensions(
+            classification.certificate(),
+            X509CertificateRole::IssuingCertificateAuthority,
+            role_limits,
+        )
+        .map_err(|_| {
+            X509CertificatePathLengthError::new(
+                X509CertificatePathLengthErrorKind::NotIssuingCertificateAuthority,
+            )
+        })?;
+
+        self.advance_intermediate_ca(&role_evidence, classification.is_self_issued())
     }
 
     /// Advance across one intermediate CA in trust-anchor-to-target order.

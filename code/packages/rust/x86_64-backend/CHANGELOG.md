@@ -1,4 +1,18 @@
 # Changelog — `x86_64-backend`
+## Unreleased — LANG83 PR4 — overflow-checked arithmetic
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  `add` / `sub` / `imul r64, r64` / `neg` set OF exactly when the signed
+  result does not fit in 64 bits, so each lowers to the one instruction, then
+  `jno` over `mov edi, 5; call __twig_trap; ud2` (`Trap.Overflow`), then the
+  store. The result is written only after the check. Matched by full name
+  ahead of the wrapping `add_`/`sub_`/`mul_`/`neg_` prefix arms.
+- `op_support`: all four `Lowered`.
+- Tests pin the byte sequence for each op (flag-setting instruction, `jno`
+  over exactly the 14-byte trap, store after), the Microsoft x64 kind-id
+  register, and malformed-operand errors. The sequences were also checked
+  with `llvm-mc --disassemble`; `lang-aot`'s `op_conformance` executes them.
 
 ## 0.41.0 - 2026-10-19 - fail-closed real-to-integer narrowing
 

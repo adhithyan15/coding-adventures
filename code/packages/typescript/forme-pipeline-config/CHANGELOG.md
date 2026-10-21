@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Harden declarative TOML evaluation against adversarial multiline strings,
+  invalid Unicode scalars and date/time ranges, table-declaration conflicts,
+  and control-character diagnostic injection while preserving explicit input
+  bounds. Token limits are enforced during both lexer passes before an
+  oversized token array can be allocated.
+- Reject non-canonical numeric spellings and JSON-only escapes, validate raw
+  source controls even inside comments, and restrict multiline continuation
+  trimming to TOML-defined whitespace.
+
+### Added
+
+- Add bounded `parseTomlConfig(source)` lowering for FM03's declarative form.
+  Kebab-case settings, plugin runtimes, package stage references, open stage
+  config, wires, named ports, outputs, TOML scalar forms, and multiline strings
+  produce the canonical `PipelineConfig` shape.
+- Reject duplicate or conflicting TOML paths, unknown closed-schema keys,
+  prototype-sensitive segments, unsafe or non-finite numbers, malformed field
+  types, and inputs beyond explicit source, token, assignment, nesting,
+  collection, and string limits. Intermediate tables have null prototypes.
+- Add differential TypeScript/TOML parity, hostile-input, resource-bound, and
+  scalar-semantics tests, plus the TOML lexer/parser build prerequisites.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
@@ -101,16 +123,11 @@ validator, TS-form loader).
   compatibility. Wraps import errors with the file:// URL in the
   message. Test hook (`importModule` option) for unit tests.
 
-### Spec divergences from FM03 §2
+### Historical spec divergences from FM03 §2
 
-- **JSON-Schema validation** of stage configs is deferred to the
-  orchestrator. The validator only enforces the *presence* rule
-  (`configSchema !== null` ⇒ `config !== undefined`); structural
-  schema validation needs a JSON-Schema validator that doesn't yet
-  live in the monorepo.
-- **TOML form loader** (FM03 §2.3) is not implemented in v0. The
-  TS form is the canonical surface; a TOML loader will compile to
-  the same `PipelineConfig` shape in a sibling package.
+- JSON-Schema validation of stage configs was added in 0.2.0.
+- The TOML form loader was added after 1.0.0 and now compiles to the same
+  `PipelineConfig` shape in this package.
 
 ### Notes
 

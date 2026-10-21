@@ -4687,7 +4687,7 @@ impl Compiler {
             }
         }
         self.builtin_exact_integer_sign_operand(node)
-            .map(|(operand, _magnitude)| operand)
+            .map(|proof| proof.operand)
     }
 
     /// Recognize an exact-integer transform rooted in one built-in `sign` call
@@ -4697,18 +4697,20 @@ impl Compiler {
     fn builtin_exact_integer_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
-    ) -> Option<(&'n GrammarASTNode, u64)> {
+    ) -> Option<ExactIntegerSignProof<'n>> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            let (then_operand, then_magnitude) =
-                self.builtin_exact_integer_sign_operand(then_node)?;
-            let (else_operand, else_magnitude) =
-                self.builtin_exact_integer_sign_operand(else_node)?;
-            if self.is_selector_call_safe_runtime_real_root(then_operand)
-                && self.is_selector_call_safe_runtime_real_root(else_operand)
+            let then_proof = self.builtin_exact_integer_sign_operand(then_node)?;
+            let else_proof = self.builtin_exact_integer_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_proof.operand)
+                && self.is_selector_call_safe_runtime_real_root(else_proof.operand)
             {
-                return Some((then_operand, then_magnitude.max(else_magnitude)));
+                return Some(ExactIntegerSignProof {
+                    operand: then_proof.operand,
+                    magnitude: then_proof.magnitude.max(else_proof.magnitude),
+                    value_gcd: integer_gcd(then_proof.value_gcd, else_proof.value_gcd),
+                });
             }
             return None;
         }
@@ -4732,6 +4734,7 @@ impl Compiler {
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
                 let mut rooted = None;
                 let mut static_magnitude = 0u64;
+                let mut static_offset = 0i64;
                 for (index, piece) in sequence.iter().enumerate() {
                     if index % 2 == 0 {
                         let Piece::Node(operand) = piece else {
@@ -4742,20 +4745,28 @@ impl Compiler {
                                 return None;
                             }
                         } else {
-                            static_magnitude = static_magnitude.checked_add(
-                                exact_sign_integer_units(
-                                    expr_static_real_arithmetic_value_with(operand, &|_| None)?,
-                                )?,
-                            )?;
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            let units = exact_sign_integer_units(value)?;
+                            static_magnitude = static_magnitude.checked_add(units)?;
+                            let signed_value = value as i64;
+                            if index > 0
+                                && matches!(sequence.get(index - 1), Some(Piece::Op(op)) if op == "-")
+                            {
+                                static_offset = static_offset.checked_sub(signed_value)?;
+                            } else {
+                                static_offset = static_offset.checked_add(signed_value)?;
+                            }
                         }
                     } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
                         return None;
                     }
                 }
-                let (operand, magnitude) = rooted?;
-                let magnitude = magnitude.checked_add(static_magnitude)?;
-                return (magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
-                    .then_some((operand, magnitude));
+                let mut proof = rooted?;
+                proof.magnitude = proof.magnitude.checked_add(static_magnitude)?;
+                proof.value_gcd = integer_gcd(proof.value_gcd, static_offset.unsigned_abs());
+                return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
+                    .then_some(proof);
             }
         }
         if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
@@ -4763,8 +4774,8 @@ impl Compiler {
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
                 let mut rooted = None;
                 let mut rooted_index = None;
-                let mut factor = 1u64;
                 let mut saw_division = false;
+                let mut static_terms = Vec::new();
                 for (index, piece) in sequence.iter().enumerate() {
                     if index % 2 == 0 {
                         let Piece::Node(operand) = piece else {
@@ -4779,15 +4790,14 @@ impl Compiler {
                             let units = exact_sign_integer_units(
                                 expr_static_real_arithmetic_value_with(operand, &|_| None)?,
                             )?;
-                            if index > 0
-                                && matches!(sequence.get(index - 1), Some(Piece::Op(op)) if op == "/")
-                            {
-                                if units != 1 {
-                                    return None;
-                                }
-                            } else {
-                                factor = factor.checked_mul(units)?;
-                            }
+                            let operator = (index > 0)
+                                .then(|| sequence.get(index - 1))
+                                .flatten()
+                                .and_then(|piece| match piece {
+                                    Piece::Op(op) => Some(op.as_str()),
+                                    Piece::Node(_) => None,
+                                });
+                            static_terms.push((operator, units));
                         }
                     } else {
                         let Piece::Op(op) = piece else {
@@ -4800,13 +4810,26 @@ impl Compiler {
                         }
                     }
                 }
-                let (operand, magnitude) = rooted?;
+                let mut proof = rooted?;
                 if saw_division && rooted_index != Some(0) {
                     return None;
                 }
-                let magnitude = magnitude.checked_mul(factor)?;
-                return (magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
-                    .then_some((operand, magnitude));
+                for (operator, units) in static_terms {
+                    if operator == Some("/") {
+                        if units == 0 || proof.value_gcd % units != 0 {
+                            return None;
+                        }
+                        proof.magnitude /= units;
+                        proof.value_gcd /= units;
+                    } else {
+                        proof.magnitude = proof.magnitude.checked_mul(units)?;
+                        proof.value_gcd = proof.value_gcd.checked_mul(units)?;
+                    }
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        return None;
+                    }
+                }
+                return Some(proof);
             }
         }
         if node.rule_name != "proc_call" {
@@ -4830,7 +4853,11 @@ impl Compiler {
             return None;
         }
         match target_name.as_str() {
-            "sign" => Some((actuals[0], 1)),
+            "sign" => Some(ExactIntegerSignProof {
+                operand: actuals[0],
+                magnitude: 1,
+                value_gcd: 1,
+            }),
             "abs" | "entier" => self.builtin_exact_integer_sign_operand(actuals[0]),
             _ => None,
         }
@@ -12247,6 +12274,14 @@ const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 /// ```
 const MAX_SIGN_OFFSET_UNITS: u64 = 9_007_199_254_740_991;
 
+#[derive(Clone, Copy)]
+struct ExactIntegerSignProof<'n> {
+    operand: &'n GrammarASTNode,
+    magnitude: u64,
+    /// A conservative common divisor of every possible transformed value.
+    value_gcd: u64,
+}
+
 /// Largest integer magnitude for which binary64 represents every integral
 /// value exactly. Exact sign-rooted multiplication uses this inclusive bound:
 /// unlike an additive offset, the scaled sign itself may be exactly `2^53`.
@@ -12272,6 +12307,13 @@ fn exact_sign_integer_units(value: f64) -> Option<u64> {
         && magnitude.fract() == 0.0
         && magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
         .then_some(magnitude as u64)
+}
+
+fn integer_gcd(mut left: u64, mut right: u64) -> u64 {
+    while right != 0 {
+        (left, right) = (right, left % right);
+    }
+    left
 }
 
 /// Bound compile-time simulation of `step` progress and scalar recurrences.
@@ -14727,6 +14769,41 @@ mod tests {
         ] {
             let err = compile_source(source, "test")
                 .expect_err("inexact, oversized, or denominator-root scaling must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_exact_divided_local_name_actual_branches() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 6) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(((sign(pick()) * 4) + 2) / 2))) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then (sign(left) * 6) else ((sign(right) * 9) + 6)) / 3); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "an exactly divisible sign-rooted transform remains an integer for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_reject_inexact_divided_local_name_actual_branches() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 2) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((sign(pick()) * 4) + 1) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier((sign(pick()) * 4) / divisor); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 4) / 0); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("inexact, dynamic, and zero divisors must fail closed");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }

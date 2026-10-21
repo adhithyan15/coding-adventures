@@ -253,6 +253,19 @@ historical context with status `RESOLVED` and a link to the fix PR.
   gets none. Upstream WHITESPACE_ONLY bytes are in #15919, probed under Java
   21.0.10.
 
+### CCR-083 (#15918) — a `do…while` in a body slot is braced
+
+- **Upstream rule.** At `10ca677a`, `CodeGenerator.addNonEmptyStatement`
+  unwraps a one-statement BLOCK body unless `isBlockDeclOrDo` is true. That
+  holds for `LET`, `CONST`, `FUNCTION`, `CLASS` and `DO`. Closure's AST always
+  gives `IF`, `WHILE`, `FOR`, `FOR_IN`, `FOR_OF`, `WITH` and `DO` a BLOCK
+  body. `LABEL` passes `allowNonBlockChild=true`, so it keeps a bare child.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `emit_body` braces a bare
+  `do…while` in every one of those slots. `else`/`do` drop the separating
+  space before a `{`-led body.
+- **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
+  ASI), since both rewrite the same statement boundaries.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
@@ -1413,6 +1426,15 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 `while (c) { break; }`). closurec only treats break/continue as terminators
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
+
+### #17842 — the switch collapse retargeted a nested `break`
+
+**Resolved (soundness).** The gap-014 constant-switch collapse now declines
+when the matched case still holds a non-trailing unlabelled `break` aimed at
+the switch. Without the switch, that `break` would hit the enclosing loop.
+
+**Still open (size):** upstream instead rewrites the case: `if(x)break;g()`
+becomes `x||g()`.
 
 ### #17841 — fold-control-flow's dead-after-`return` drop ignored hoisting
 

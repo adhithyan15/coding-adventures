@@ -1,10 +1,11 @@
 use der_asn1::Asn1Limits;
-use x509_certificate::decode_x509_certificate;
+use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_length_policy::{
     X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
 };
 use x509_certificate_policy::{
-    validate_certificate_role_extensions, ValidatedCertificateRoleExtensions, X509CertificateRole,
+    classify_certificate_self_issued, validate_certificate_role_extensions,
+    ValidatedCertificateRoleExtensions, X509CertificateRole,
 };
 
 const SIGNATURE_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
@@ -88,6 +89,14 @@ fn role_evidence(
     role: X509CertificateRole,
     path_length: Option<&[u8]>,
 ) -> ValidatedCertificateRoleExtensions<'static> {
+    let certificate = decoded_certificate(role, path_length);
+    validate_certificate_role_extensions(&certificate, role, Asn1Limits::default()).unwrap()
+}
+
+fn decoded_certificate(
+    role: X509CertificateRole,
+    path_length: Option<&[u8]>,
+) -> X509Certificate<'static> {
     let extensions = match role {
         X509CertificateRole::IssuingCertificateAuthority => {
             vec![basic_constraints(path_length), key_cert_sign()]
@@ -95,8 +104,48 @@ fn role_evidence(
         X509CertificateRole::EndEntity => Vec::new(),
     };
     let encoded = Box::leak(certificate(&extensions).into_boxed_slice());
-    let certificate = decode_x509_certificate(encoded, Asn1Limits::default()).unwrap();
-    validate_certificate_role_extensions(&certificate, role, Asn1Limits::default()).unwrap()
+    decode_x509_certificate(encoded, Asn1Limits::default()).unwrap()
+}
+
+#[test]
+fn classified_self_issued_ca_skips_decrement_for_the_same_bound_certificate() {
+    let certificate = decoded_certificate(X509CertificateRole::IssuingCertificateAuthority, None);
+    let classification = classify_certificate_self_issued(&certificate, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+
+    let state = X509CertificatePathLengthState::new(1)
+        .advance_classified_intermediate_ca(&classification, Asn1Limits::default())
+        .unwrap();
+
+    assert_eq!(state.remaining_non_self_issued_intermediate_cas(), 1);
+}
+
+#[test]
+fn classified_non_self_issued_ca_consumes_the_budget() {
+    let certificate = decoded_certificate(X509CertificateRole::IssuingCertificateAuthority, None);
+    let classification = classify_certificate_self_issued(&certificate, |_issuer, _subject| false);
+
+    let state = X509CertificatePathLengthState::new(1)
+        .advance_classified_intermediate_ca(&classification, Asn1Limits::default())
+        .unwrap();
+
+    assert_eq!(state.remaining_non_self_issued_intermediate_cas(), 0);
+}
+
+#[test]
+fn classified_end_entity_fails_before_path_length_transition() {
+    let certificate = decoded_certificate(X509CertificateRole::EndEntity, None);
+    let classification = classify_certificate_self_issued(&certificate, |_issuer, _subject| true);
+
+    let error = X509CertificatePathLengthState::new(1)
+        .advance_classified_intermediate_ca(&classification, Asn1Limits::default())
+        .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathLengthErrorKind::NotIssuingCertificateAuthority
+    );
 }
 
 #[test]
