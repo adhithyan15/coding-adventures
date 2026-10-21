@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:7b7fee6fc0361ed5",
+  "lessonIds": [
+    "FA-C323-kolahbardar",
+    "FA-C323-farib-dadan",
+    "FA-C323-tahdid-kardan",
+    "FA-C323-dava-kardan",
+    "FA-C323-kotak-zadan",
+    "FA-R323-review-316-323"
+  ],
+  "tex": "persian/book/chapters/ch323-tricks-threats-and-fights.tex"
+}

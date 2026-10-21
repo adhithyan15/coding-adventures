@@ -1,0 +1,11 @@
+{
+  "id": "FA-C397-amadegi",
+  "pathSegment": "FA-PATH-397-EHTIYAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-397-EHTIYAT",
+      "order": 2
+    }
+  ]
+}

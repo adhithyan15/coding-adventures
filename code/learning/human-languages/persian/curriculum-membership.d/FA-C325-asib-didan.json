@@ -1,0 +1,11 @@
+{
+  "id": "FA-C325-asib-didan",
+  "pathSegment": "FA-PATH-325-ZAMINKHORDAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-325-ZAMINKHORDAN",
+      "order": 2
+    }
+  ]
+}

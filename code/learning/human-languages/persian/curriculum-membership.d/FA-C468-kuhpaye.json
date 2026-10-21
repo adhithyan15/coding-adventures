@@ -1,0 +1,11 @@
+{
+  "id": "FA-C468-kuhpaye",
+  "pathSegment": "FA-PATH-468-GHAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-468-GHAR",
+      "order": 3
+    }
+  ]
+}

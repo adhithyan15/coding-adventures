@@ -1,0 +1,11 @@
+{
+  "id": "FA-C467-haras-kardan",
+  "pathSegment": "FA-PATH-467-BAGH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-467-BAGH",
+      "order": 4
+    }
+  ]
+}

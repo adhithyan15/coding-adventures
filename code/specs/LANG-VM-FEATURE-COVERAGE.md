@@ -10,7 +10,7 @@ historical languages or every backend are complete. Follow-up IDs live in the
 The [driver](../packages/rust/lang-aot/src/lib.rs) wires thirteen `Language`
 variants (PREP01 slice 1 adds MacroOct; LANG84 phase 4a adds Perl; LANG84
 phase 5a adds Ruby).
-The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has ten.
+The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has rows for all of them except McCarthy Lisp and Macsyma (dedicated capstones below).
 Its seven standard columns are NativeAOT, LLVM, WASM, JVM, CLR, VM and JIT.
 Twig, Nib, Oct, FLOW-MATIC, COBOL-60, Perl, Ruby and (as of VM-042) Brainfuck rows
 additionally declare BEAM, each only for the specific rows independently
@@ -36,7 +36,7 @@ refusal also does not imply the complete driver refuses that feature.
 | FLOW-MATIC | 8 | 64 | All eight rows now declare Beam (BEAM07 promoted the four `READ-ITEM`/EOF rows that were on seven columns) |
 | Ruby | 13 | 104 | All eight columns (LANG84 phase 5a = LANG83 PR2). The `rb-int-puts` subset on the default release 3.3.6, compiled from the grammar-driven R0 parse tree; `/` and `%` are LANG83 `i64_div_floor`/`i64_mod_floor` and `puts` is `print_i64`, so no backend has Ruby code. Each row is a verbatim case of `code/grammars/ruby/corpus/rb-int-puts` (`ruby_rows_are_rb_int_puts_corpus_cases`), re-checked against a host ruby 3.3 (`ruby_rows_agree_with_the_host_ruby_oracle`); four are the first `StdoutThenTrap` rows, checking the output before a `Trap.DivZero` and the kind on every column. `ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine backends. 3.3.5 and 3.3.7 compile to identical IIR (`ruby-iir-compiler` stage-I test), so these rows stand for them; their own backend sweep is phase 5b |
 | COBOL-60 | 59 | 472 | All eight backends; VM-058 adds independently executed two-boundary INSPECT tally proof |
-| Perl | 11 | 88 | All eight columns (LANG84 phase 4a). The bounded LANG81 integer `print` subset on its default release; `print` lowers to LANG83 `write_i64`, so no backend has Perl-specific code. A host `perl` oracle re-checks every expectation (`perl_rows_agree_with_the_host_perl_oracle`), and `perl_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine LANG83 backends. Per-release coverage (117 checked pairs) is IIR-identity in `perl-iir-compiler`, not yet a backend sweep (phase 4c) |
+| Perl | 11 | 88 | All eight columns (LANG84 phase 4a). The bounded LANG81 integer `print` subset on its default release (`5.38.0` since LANG84 phase 4b); `print` lowers to LANG83 `write_i64`, so no backend has Perl-specific code. A host `perl` oracle re-checks every expectation (`perl_rows_agree_with_the_host_perl_oracle`), and `perl_rows_pass_the_lang83_check_on_all_nine_backends` runs `check_module_for` on all nine LANG83 backends. Per-release coverage (118 checked pairs) is IIR-identity in `perl-iir-compiler`, not yet a backend sweep (phase 4c) |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 

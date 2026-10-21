@@ -1,0 +1,11 @@
+{
+  "id": "FA-C424-imeni",
+  "pathSegment": "FA-PATH-424-SORAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-424-SORAT",
+      "order": 4
+    }
+  ]
+}

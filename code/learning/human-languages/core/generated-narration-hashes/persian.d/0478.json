@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:dd45ce1df9639912",
+  "lessonIds": [
+    "FA-C478-rizgard",
+    "FA-C478-gard-o-khak",
+    "FA-C478-khoshksali",
+    "FA-C478-khoshk-shodan",
+    "FA-C478-mehalud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch478.txt",
+  "json": "persian/narration/ch478.json",
+  "textHash": "fnv1a64:b3d25f6b43c5cee8",
+  "jsonHash": "fnv1a64:2d3639d24d65933c",
+  "findings": []
+}

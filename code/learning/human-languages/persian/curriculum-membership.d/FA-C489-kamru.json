@@ -1,0 +1,11 @@
+{
+  "id": "FA-C489-kamru",
+  "pathSegment": "FA-PATH-489-MANNERS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-489-MANNERS",
+      "order": 3
+    }
+  ]
+}

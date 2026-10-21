@@ -1,0 +1,11 @@
+{
+  "id": "FA-C468-gardane",
+  "pathSegment": "FA-PATH-468-GHAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-468-GHAR",
+      "order": 2
+    }
+  ]
+}

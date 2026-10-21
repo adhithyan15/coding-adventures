@@ -1,0 +1,11 @@
+{
+  "id": "FA-C440-seda-dadan",
+  "pathSegment": "FA-PATH-440-SARSEDA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-440-SARSEDA",
+      "order": 2
+    }
+  ]
+}

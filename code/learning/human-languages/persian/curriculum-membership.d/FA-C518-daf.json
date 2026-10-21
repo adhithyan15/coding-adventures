@@ -1,0 +1,11 @@
+{
+  "id": "FA-C518-daf",
+  "pathSegment": "FA-PATH-518-PLAYING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-518-PLAYING",
+      "order": 1
+    }
+  ]
+}

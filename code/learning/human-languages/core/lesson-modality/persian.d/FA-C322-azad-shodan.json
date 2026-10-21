@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C322-azad-shodan",
+    "language": "persian",
+    "chapter": 322,
+    "sequence": 16460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7047e3b5a0b747e2"
+  },
+  "findings": []
+}

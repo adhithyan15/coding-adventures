@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:f6e7edd6ffe80df0",
+  "lessonIds": [
+    "FA-C514-valibal",
+    "FA-C514-basketbal",
+    "FA-C514-tenis",
+    "FA-C514-raket",
+    "FA-C514-darvazeban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch514.txt",
+  "json": "persian/narration/ch514.json",
+  "textHash": "fnv1a64:7a12b6eae134e21d",
+  "jsonHash": "fnv1a64:ef613283252cd7ea",
+  "findings": []
+}

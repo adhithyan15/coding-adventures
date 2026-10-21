@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C461-kart-be-kart-kardan",
+    "language": "persian",
+    "chapter": 461,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:205e6c89fb159aef"
+  },
+  "findings": []
+}

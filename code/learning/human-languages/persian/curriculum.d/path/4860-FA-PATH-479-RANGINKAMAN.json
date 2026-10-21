@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-479-RANGINKAMAN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-479-RANGINKAMAN"
+  ],
+  "after": []
+}

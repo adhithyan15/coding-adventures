@@ -135,6 +135,7 @@ fn many_str_concat_calls_module(iterations: i64) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

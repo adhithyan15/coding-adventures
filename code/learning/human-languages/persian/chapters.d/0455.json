@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Out and about",
+  "label": "ch:fa-out-and-about",
+  "canDo": "I can talk about places to go in town: the funfair, a forest park, an exhibition, a cultural centre and closing time.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C455-tatil-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about places to go in town: the funfair, a forest park, an exhibition, a cultural centre and closing time.",
+    "assesses": [
+      "FA-LEX-C455-SHAHRBAZI-03",
+      "FA-LEX-C455-SHAHRBAZI-04",
+      "FA-LEX-C455-SHAHRBAZI-05"
+    ]
+  }
+}

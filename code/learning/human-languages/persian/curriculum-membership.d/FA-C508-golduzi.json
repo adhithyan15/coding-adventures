@@ -1,0 +1,11 @@
+{
+  "id": "FA-C508-golduzi",
+  "pathSegment": "FA-PATH-508-CRAFTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-508-CRAFTS",
+      "order": 1
+    }
+  ]
+}

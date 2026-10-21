@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C393-zaheran",
+    "language": "persian",
+    "chapter": 393,
+    "sequence": 20130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42d550f79ed8e674"
+  },
+  "findings": []
+}

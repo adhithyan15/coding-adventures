@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 487,
+  "title": "Hope and Courage",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8b70ed2e97e7e978",
+  "lessons": [
+    {
+      "id": "FA-C487-naomid",
+      "sequence": 24950,
+      "title": "ناامید (nâomid) — disappointed; hopeless",
+      "headword": "ناامید",
+      "romanization": "nâomid",
+      "gloss": "disappointed; hopeless",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4ebb6485790edf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for love, then the Persian for to hate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ناامید",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناامید (nâomid) — \"disappointed; hopeless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او از نتیجه امتحان ناامید شد. u az natije-ye emtehân nâomid shod. He was disappointed with the exam result."
+            },
+            {
+              "kind": "speech",
+              "text": "nâ- 'not' + omid 'hope'. The noun is nâomidi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nâomid is built on native Persian pieces: the prefix nâ-, 'not', and omid, 'hope', which is usually traced to Middle Persian ummēd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nâomid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nâomid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nâomid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nâomid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nâomid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nâomid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for love, then the Persian for to hate, then say nâomid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for love, then the Persian for to hate, then say *nâomid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ناامید (nâomid) mean? (\"Disappointed; hopeless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C487-khoshbin",
+      "sequence": 24960,
+      "title": "خوشبین (khoshbin) — optimistic",
+      "headword": "خوشبین",
+      "romanization": "khoshbin",
+      "gloss": "optimistic",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:229754e4d52b84dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to hate, then the Persian for disappointed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خوشبین",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوشبین (khoshbin) — \"optimistic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پدرم همیشه به آینده خوشبین است. pedaram hamishe be âyande khoshbin ast. My father is always optimistic about the future."
+            },
+            {
+              "kind": "speech",
+              "text": "khosh 'good' + bin 'seeing' (stem of didan). What you are hopeful about takes be."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khoshbin is built on native Persian parts: khosh, 'good, pleasant', and bin, the present stem of didan, 'to see': someone who sees things well."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoshbin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoshbin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoshbin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoshbin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khoshbin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khoshbin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to hate, then the Persian for disappointed, then say khoshbin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to hate, then the Persian for disappointed, then say *khoshbin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خوشبین (khoshbin) mean? (\"Optimistic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C487-badbin",
+      "sequence": 24970,
+      "title": "بدبین (badbin) — pessimistic; distrustful",
+      "headword": "بدبین",
+      "romanization": "badbin",
+      "gloss": "pessimistic; distrustful",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49cbfe0543a00e5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for disappointed, then the Persian for optimistic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بدبین",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بدبین (badbin) — \"pessimistic; distrustful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او به همه بدبین است. u be hame badbin ast. He distrusts everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "bad 'bad' + bin 'seeing'. be kasi badbin budan — to distrust someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "badbin is built on native Persian bad, 'bad', and bin, the present stem of didan, 'to see'. Persian bad looks like English bad, but they are not related."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badbin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badbin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badbin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badbin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with badbin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *badbin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for disappointed, then the Persian for optimistic, then say badbin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for disappointed, then the Persian for optimistic, then say *badbin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بدبین (badbin) mean? (\"Pessimistic; distrustful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C487-etemad-be-nafs",
+      "sequence": 24980,
+      "title": "اعتماد به نفس (e'temâd be nafs) — self-confidence",
+      "headword": "اعتماد به نفس",
+      "romanization": "e'temâd be nafs",
+      "gloss": "self-confidence",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f037cb7e6074fa6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for optimistic, then the Persian for pessimistic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اعتماد به نفس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعتماد به نفس (e'temâd be nafs) — \"self-confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او بعد از این مسابقه اعتماد به نفس بیشتری دارد. u ba'd az in mosâbeqe e'temâd be nafs-e bishtari dârad. After this contest he has more self-confidence."
+            },
+            {
+              "kind": "speech",
+              "text": "e'temâd 'trust' + be 'in' + nafs 'self': trust in oneself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "e'temâd be nafs is built in Persian from two Arabic loans: e'temâd, usually traced to Arabic iʿtimād, 'reliance', and nafs, borrowed from Arabic nafs, 'self, soul' (EtymDB), joined by Persian be."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "e'temâd be nafs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *e'temâd be nafs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "e'temâd be nafs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *e'temâd be nafs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with e'temâd be nafs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *e'temâd be nafs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for optimistic, then the Persian for pessimistic, then say e'temâd be nafs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for optimistic, then the Persian for pessimistic, then say *e'temâd be nafs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اعتماد به نفس (e'temâd be nafs) mean? (\"Self-confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C487-shojaat",
+      "sequence": 24990,
+      "title": "شجاعت (shojâ'at) — courage, bravery",
+      "headword": "شجاعت",
+      "romanization": "shojâ'at",
+      "gloss": "courage, bravery",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64124d33b40615a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for pessimistic, then the Persian for self-confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شجاعت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شجاعت (shojâ'at) — \"courage, bravery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آتش نشان با شجاعت بچه را نجات داد. âtashneshân bâ shojâ'at bachche râ nejât dâd. The firefighter bravely saved the child."
+            },
+            {
+              "kind": "speech",
+              "text": "bâ shojâ'at — bravely. The adjective is shojâ' 'brave'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shojâ'at is a loan, usually traced to Arabic šajāʿa, 'courage'. Its partner shojâ', 'brave', was borrowed from Arabic šujāʿ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shojâ'at",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shojâ'at*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shojâ'at, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shojâ'at*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shojâ'at",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shojâ'at*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for pessimistic, then the Persian for self-confidence, then say shojâ'at again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for pessimistic, then the Persian for self-confidence, then say *shojâ'at* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شجاعت (shojâ'at) mean? (\"Courage, bravery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R487-review-480-487",
+      "sequence": 25000,
+      "title": "Feelings, Health and Family",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 480-487",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7f5fa270ed24b90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for pride and arrogant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pride, arrogant, humble, to be proud, to show off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pride, arrogant, humble, to be proud, to show off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patient, impatient, to put up with, calm, to get angry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: patient, impatient, to put up with, calm, to get angry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upset, to take offence, hurt, a grudge, ashamed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: upset, to take offence, hurt, a grudge, ashamed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honest, honesty, frank, to lie, a liar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: honest, honesty, frank, to lie, a liar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sad, sorrow, to fret, depressed, sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sad, sorrow, to fret, depressed, sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anxiety, stress, a nagging worry, exasperated, to sigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: anxiety, stress, a nagging worry, exasperated, to sigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excited, to be thrilled, in good spirits, love, to hate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: excited, to be thrilled, in good spirits, love, to hate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disappointed, optimistic, pessimistic, self-confidence, courage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: disappointed, optimistic, pessimistic, self-confidence, courage]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pride? (غرور.) Arrogant? (مغرور.) Humble? (فروتن.) To be proud? (افتخار کردن.) To show off? (خودنمایی کردن.) Patient? (صبور.) Impatient? (بیصبر.) To put up with? (تحمل کردن.) Calm? (خونسرد.) To get angry? (عصبانی شدن.) Upset? (دلخور.) To take offence? (رنجیدن.) Hurt? (آزرده.) A grudge? (کینه.) Ashamed? (شرمنده.) Honest? (صادق.) Honesty? (صداقت.) Frank? (رک.) To lie? (دروغ گفتن.) A liar? (دروغگو.) Sad? (غمگین.) Sorrow? (غم.) To fret? (غصه خوردن.) Depressed? (افسرده.) Sorry? (پشیمان.) Anxiety? (اضطراب.) Stress? (استرس.) A nagging worry? (دلشوره.) Exasperated? (کلافه.) To sigh? (آه کشیدن.) Excited? (هیجان زده.) To be thrilled? (ذوق کردن.) In good spirits? (سرحال.) Love? (عشق.) To hate? (متنفر بودن.) Disappointed? (ناامید (nâomid).) Optimistic? (خوشبین (khoshbin).) Pessimistic? (بدبین (badbin).) Self-confidence? (اعتماد به نفس (e'temâd be nafs).) Courage? (شجاعت (shojâ'at).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

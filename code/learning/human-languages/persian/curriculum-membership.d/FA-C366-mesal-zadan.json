@@ -1,0 +1,11 @@
+{
+  "id": "FA-C366-mesal-zadan",
+  "pathSegment": "FA-PATH-366-BAHS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-366-BAHS",
+      "order": 4
+    }
+  ]
+}

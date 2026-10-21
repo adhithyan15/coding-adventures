@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Wishes and risks",
+  "label": "ch:fa-wishes-and-risks",
+  "canDo": "I can make a wish with if only, assess a plan, say what nobody can guarantee and talk about taking a risk.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C394-khatar-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can make a wish with if only, assess a plan, say what nobody can guarantee and talk about taking a risk.",
+    "assesses": [
+      "FA-LEX-C394-RISK-03",
+      "FA-LEX-C394-RISK-04",
+      "FA-LEX-C394-RISK-05"
+    ]
+  }
+}

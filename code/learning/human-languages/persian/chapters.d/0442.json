@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Putting it right",
+  "label": "ch:fa-putting-it-right",
+  "canDo": "I can get things put right: an apology, making up for something, an exchange, a refund and giving something back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C442-bargardandan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can get things put right: an apology, making up for something, an exchange, a refund and giving something back.",
+    "assesses": [
+      "FA-LEX-C442-JOBRAN-03",
+      "FA-LEX-C442-JOBRAN-04",
+      "FA-LEX-C442-JOBRAN-05"
+    ]
+  }
+}

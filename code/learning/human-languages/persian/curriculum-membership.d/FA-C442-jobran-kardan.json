@@ -1,0 +1,11 @@
+{
+  "id": "FA-C442-jobran-kardan",
+  "pathSegment": "FA-PATH-442-JOBRAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-442-JOBRAN",
+      "order": 1
+    }
+  ]
+}

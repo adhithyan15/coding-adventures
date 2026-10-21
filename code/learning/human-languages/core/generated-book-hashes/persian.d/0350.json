@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:e10b4851b662d82c",
+  "lessonIds": [
+    "FA-C350-padeshah",
+    "FA-C350-malake",
+    "FA-C350-kakh",
+    "FA-C350-qale",
+    "FA-C350-taj"
+  ],
+  "tex": "persian/book/chapters/ch350-kings-and-castles.tex"
+}

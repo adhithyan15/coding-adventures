@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C332-nowzad",
+    "language": "persian",
+    "chapter": 332,
+    "sequence": 16970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1f7547e57a88834"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C331-panah-bordan",
+  "pathSegment": "FA-PATH-331-VIRAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-331-VIRAN",
+      "order": 4
+    }
+  ]
+}

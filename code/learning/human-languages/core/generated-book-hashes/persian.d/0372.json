@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:dc9382d91dd86cf3",
+  "lessonIds": [
+    "FA-C372-tasir",
+    "FA-C372-tasir-gozashtan",
+    "FA-C372-nashi-shodan",
+    "FA-C372-mojeb-shodan",
+    "FA-C372-vakonesh"
+  ],
+  "tex": "persian/book/chapters/ch372-effects-and-reactions.tex"
+}

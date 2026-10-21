@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Mourning and what is left",
+  "label": "ch:fa-mourning-and-what-is-left",
+  "canDo": "I can talk about a memorial gathering, mourning, offering condolences, a will and an inheritance.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C338-ers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can talk about a memorial gathering, mourning, offering condolences, a will and an inheritance.",
+    "assesses": [
+      "FA-LEX-C338-KHATM-03",
+      "FA-LEX-C338-KHATM-04",
+      "FA-LEX-C338-KHATM-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:3ceeb2abb29f33ca",
+  "lessonIds": [
+    "FA-C302-aghaz",
+    "FA-C302-aghaz-shodan",
+    "FA-C302-payan",
+    "FA-C302-payan-yaftan",
+    "FA-C302-saranjam"
+  ],
+  "tex": "persian/book/chapters/ch302-beginnings-and-endings.tex"
+}

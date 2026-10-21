@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:2cfebc27b514ac71",
+  "lessonIds": [
+    "FA-C530-dastan-e-kutah",
+    "FA-C530-shakhsiyat-e-asli",
+    "FA-C530-tarsnak",
+    "FA-C530-ghamangiz",
+    "FA-C530-khandedar"
+  ],
+  "tex": "persian/book/chapters/ch530-kinds-of-stories.tex"
+}

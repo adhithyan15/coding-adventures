@@ -1,0 +1,11 @@
+{
+  "id": "FA-C339-mahi-qermez",
+  "pathSegment": "FA-PATH-339-EYD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-339-EYD",
+      "order": 4
+    }
+  ]
+}

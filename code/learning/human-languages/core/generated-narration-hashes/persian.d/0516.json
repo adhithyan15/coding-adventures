@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:bcb85de9693f9e02",
+  "lessonIds": [
+    "FA-C516-narmesh-kardan",
+    "FA-C516-yoga",
+    "FA-C516-tanasob-e-andam",
+    "FA-C516-porenerzhi",
+    "FA-C516-tanbali-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch516.txt",
+  "json": "persian/narration/ch516.json",
+  "textHash": "fnv1a64:5ca1ec82248fff8a",
+  "jsonHash": "fnv1a64:104d22ca62ba39e7",
+  "findings": []
+}

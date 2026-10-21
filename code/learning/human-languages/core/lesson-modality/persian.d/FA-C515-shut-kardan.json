@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C515-shut-kardan",
+    "language": "persian",
+    "chapter": 515,
+    "sequence": 26390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b464571a96d72a8"
+  },
+  "findings": []
+}

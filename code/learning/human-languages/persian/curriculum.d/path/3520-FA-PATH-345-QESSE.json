@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-345-QESSE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-345-QESSE"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C508-golduzi",
+    "language": "persian",
+    "chapter": 508,
+    "sequence": 26040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:412a3aeeac7b714d"
+  },
+  "findings": []
+}

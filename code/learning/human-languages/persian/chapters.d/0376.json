@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Whose fault is it",
+  "label": "ch:fa-whose-fault-is-it",
+  "canDo": "I can say whose fault something was, talk about guilt and weak points, say when something happened and admit a mistake.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C376-eteraf-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can say whose fault something was, talk about guilt and weak points, say when something happened and admit a mistake.",
+    "assesses": [
+      "FA-LEX-C376-TAQSIR-03",
+      "FA-LEX-C376-TAQSIR-04",
+      "FA-LEX-C376-TAQSIR-05"
+    ]
+  }
+}

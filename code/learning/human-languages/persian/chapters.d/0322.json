@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Verdict and release",
+  "label": "ch:fa-verdict-and-release",
+  "canDo": "I can say that someone was sentenced or cleared, held in prison, let out on bail and released.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C322-azad-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can say that someone was sentenced or cleared, held in prison, let out on bail and released.",
+    "assesses": [
+      "FA-LEX-C322-MAHKUM-03",
+      "FA-LEX-C322-MAHKUM-04",
+      "FA-LEX-C322-MAHKUM-05"
+    ]
+  }
+}

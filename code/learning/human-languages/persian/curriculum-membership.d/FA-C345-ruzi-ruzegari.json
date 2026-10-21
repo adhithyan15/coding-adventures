@@ -1,0 +1,11 @@
+{
+  "id": "FA-C345-ruzi-ruzegari",
+  "pathSegment": "FA-PATH-345-QESSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-345-QESSE",
+      "order": 1
+    }
+  ]
+}

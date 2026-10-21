@@ -1,0 +1,473 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 292,
+  "title": "What I Think, And So",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:85318555d62d6d82",
+  "lessons": [
+    {
+      "id": "FA-C292-be-nazar-e-man",
+      "sequence": 14996,
+      "title": "به نظر من (be nazar-e man) — to my view, which is to say, in my opinion",
+      "headword": "به نظر من",
+      "romanization": "be nazar-e man",
+      "gloss": "in my opinion — literally 'to my view', the nazar of be nazar residan, now with an owner",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:473df662211aae5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to seem\", then \"to think\". (Be nazar residan, fekr kardan.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A story says what happened. Giving reasons starts one step earlier, with what you think about it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: به نظر من",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "به نظر من — be nazar-e man — \"in my opinion\", \"if you ask me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "به نظر من این فیلم خیلی خوب است. — be nazar-e man in film kheyli khub ast — In my opinion this film is very good."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word it is \"to the view of me\": be, \"to\", nazar, \"view\", and the ezafe joining man as its owner. Change the owner to hand the opinion back: به نظر شما؟, be nazar-e shomâ?, \"what do you think?\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the nazar of be nazar residan, \"to seem\", \"to reach the view\". The present of that verb opens a careful opinion: به نظر میرسد که..., be nazar miresad ke..., \"it seems that...\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: fekr mikonam ke",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The verb you have held since chapter seven, in the present, with که, ke, \"that\":"
+            },
+            {
+              "kind": "speech",
+              "text": "فکر میکنم که قطار دیر میرسد. — fekr mikonam ke qatâr dir miresad — I think the train will be late."
+            },
+            {
+              "kind": "speech",
+              "text": "Ke opens the thought, and the thought keeps its ordinary verb, miresad. In speech ke is often dropped: fekr mikonam qatâr dir miresad."
+            },
+            {
+              "kind": "speech",
+              "text": "\"I don't think so\" is the negative with nothing after it: فکر نمیکنم, fekr nemikonam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nazar is borrowed from Arabic naẓar, \"a look, a view\" (EtymDB 2.1); be and man are Persian. So the phrase sets an Arabic noun inside a Persian frame, the way fekr kardan sets Arabic fekr, \"thought\", in front of a Persian verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be nazar-e man in film kheyli khub ast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be nazar-e man in film kheyli khub ast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand it back — be nazar-e shomâ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand it back — *be nazar-e shomâ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fekr mikonam ke qatâr dir miresad, then without ke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fekr mikonam ke qatâr dir miresad*, then without *ke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "qatâr dir miresad? with \"I don't think so\" — fekr nemikonam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *qatâr dir miresad?* with \"I don't think so\" — *fekr nemikonam*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does be nazar-e man say, word for word? (To the view of me.) \"What do you think?\" (Be nazar-e shomâ?) What does ke do after fekr mikonam? (It opens the thought, and the verb after it stays ordinary.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C292-baraye-hamin",
+      "sequence": 15004,
+      "title": "برای همین (barâ-ye hamin) — so: the arrow that points forward",
+      "headword": "برای همین",
+      "romanization": "barâ-ye hamin",
+      "gloss": "so, for that reason — the arrow that points forward to the result, against chon and zirâ, which point back to the cause",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bba385271aa37f90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because\", two ways. (Chon, zirâ.) Then \"in my opinion\". (Be nazar-e man.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An opinion needs its reasons, and a reason needs a result. Persian can join the two from either end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two arrows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One fact, three ways to join it:"
+            },
+            {
+              "kind": "speech",
+              "text": "خسته بودم، برای همین زود خوابیدم. — khaste budam, barâ-ye hamin zud khâbidam — I was tired, so I went to sleep early."
+            },
+            {
+              "kind": "speech",
+              "text": "چون خسته بودم، زود خوابیدم. — chon khaste budam, zud khâbidam — Because I was tired, I went to sleep early."
+            },
+            {
+              "kind": "speech",
+              "text": "زود خوابیدم، زیرا خسته بودم. — zud khâbidam, zirâ khaste budam — I went to sleep early, because I was tired."
+            },
+            {
+              "kind": "speech",
+              "text": "برای همین, barâ-ye hamin, comes after the cause and points forward to the result. Barâ-ye is \"for\", and hamin is \"this very\": \"for this very reason\". Chon and zirâ sit on the cause itself and point back to it. Chon can open the sentence; zirâ mostly follows the result, and sounds written."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: pas, the short one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پس, pas, is \"so\" when you draw a conclusion, often at the front of what you conclude:"
+            },
+            {
+              "kind": "speech",
+              "text": "پس قطار دیر میرسد. — pas qatâr dir miresad — So the train will be late."
+            },
+            {
+              "kind": "speech",
+              "text": "Banâbarin, \"therefore\", does the same job in writing. Pas is also the pas of pas az, \"after\": a result comes after its cause."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hamin is ham, \"same\", with in, \"this\". EtymDB 2.1 takes ham through Middle and Old Persian back to an Indo-European word for \"same\", the one English kept as same. Pas goes back, in EtymDB, through Middle Persian ps, read pas, to an Indo-European word meaning \"behind, afterwards\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaste budam, barâ-ye hamin zud khâbidam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaste budam, barâ-ye hamin zud khâbidam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, with the cause first and chon in front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, with the cause first and *chon* in front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a conclusion — pas qatâr dir miresad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a conclusion — *pas qatâr dir miresad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opinion and its result — be nazar-e man film khub ast, barâ-ye hamin miravam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opinion and its result — *be nazar-e man film khub ast, barâ-ye hamin miravam*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which joiner points forward to the result? (Barâ-ye hamin, or pas.) Which point back to the cause? (Chon and zirâ.) What does hamin say, taken apart? (This very: ham and in.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R292-opinion-and-result",
+      "sequence": 15012,
+      "title": "Review — what I think, and what follows",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "an opinion, a cause and a result in one breath — be nazar-e man, fekr mikonam ke, chon and barâ-ye hamin together",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c0b4f8ef4958021",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"in my opinion\", then \"I think that\". (Be nazar-e man, fekr mikonam ke.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and an opinion now has both ends. It opens with be nazar-e man or fekr mikonam ke, or carefully with be nazar miresad ke. Its cause comes with chon. Its result comes with barâ-ye hamin, or with pas when you are drawing a conclusion."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Think back to the winter trip in chapter two hundred and ninety-one, and give your view of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "به نظر من سفر خوب بود، چون هتل گرم بود. — be nazar-e man safar khub bud, chon hotel garm bud — In my opinion the trip was good, because the hotel was warm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be nazar-e man safar khub bud, chon hotel garm bud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be nazar-e man safar khub bud, chon hotel garm bud*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same view with the result after it —... barâ-ye hamin dobâre miravam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same view with the result after it — *... barâ-ye hamin dobâre miravam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "be nazar-e shomâ? — with fekr mikonam ke and a reason",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *be nazar-e shomâ?* — with *fekr mikonam ke* and a reason]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaqti bâ qatâr bargashtim, khaste budim, barâ-ye hamin zud khâbidim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaqti bâ qatâr bargashtim, khaste budim, barâ-ye hamin zud khâbidim*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which joiner goes on the cause, and which on the result? (Chon on the cause; barâ-ye hamin on the result.) \"I don't think so\"? (Fekr nemikonam.) Which one draws a conclusion in two letters? (Pas.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

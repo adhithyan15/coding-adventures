@@ -1,0 +1,11 @@
+{
+  "id": "FA-C400-bursiye",
+  "pathSegment": "FA-PATH-400-DANESHKADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-400-DANESHKADE",
+      "order": 3
+    }
+  ]
+}

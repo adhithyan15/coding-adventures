@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Moves in Sport",
+  "label": "ch:fa-moves-in-sport",
+  "canDo": "I can describe moves in a game.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C515-vazne-bardari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can describe moves in a game.",
+    "assesses": [
+      "FA-LEX-C515-MOVES-03",
+      "FA-LEX-C515-MOVES-04",
+      "FA-LEX-C515-MOVES-05"
+    ]
+  }
+}

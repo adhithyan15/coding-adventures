@@ -1,0 +1,11 @@
+{
+  "id": "FA-C360-aqide",
+  "pathSegment": "FA-PATH-360-AQIDE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-360-AQIDE",
+      "order": 0
+    }
+  ]
+}

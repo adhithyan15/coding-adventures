@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Protecting nature",
+  "label": "ch:fa-protecting-nature",
+  "canDo": "I can talk about looking after nature: nature, protecting it, tourists, volcanoes and habitats.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C472-zistgah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about looking after nature: nature, protecting it, tourists, volcanoes and habitats.",
+    "assesses": [
+      "FA-LEX-C472-TABIAT-03",
+      "FA-LEX-C472-TABIAT-04",
+      "FA-LEX-C472-TABIAT-05"
+    ]
+  }
+}

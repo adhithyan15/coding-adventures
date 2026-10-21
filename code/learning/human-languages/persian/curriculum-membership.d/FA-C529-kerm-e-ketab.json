@@ -1,0 +1,11 @@
+{
+  "id": "FA-C529-kerm-e-ketab",
+  "pathSegment": "FA-PATH-529-READERS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-529-READERS",
+      "order": 4
+    }
+  ]
+}

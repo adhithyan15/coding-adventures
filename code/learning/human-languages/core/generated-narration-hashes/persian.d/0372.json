@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:26906abe9ff598e1",
+  "lessonIds": [
+    "FA-C372-tasir",
+    "FA-C372-tasir-gozashtan",
+    "FA-C372-nashi-shodan",
+    "FA-C372-mojeb-shodan",
+    "FA-C372-vakonesh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch372.txt",
+  "json": "persian/narration/ch372.json",
+  "textHash": "fnv1a64:1519c2fef68aaefb",
+  "jsonHash": "fnv1a64:5dcac4ebad272e8d",
+  "findings": []
+}

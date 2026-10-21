@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Bills and fees",
+  "label": "ch:fa-bills-and-fees",
+  "canDo": "I can talk about expenses, a bill, bank fees and percentages, and say that someone spends too much.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-R415-review-408-415",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about expenses, a bill, bank fees and percentages, and say that someone spends too much.",
+    "assesses": [
+      "FA-LEX-C415-MAKHAREJ-03",
+      "FA-LEX-C415-MAKHAREJ-04",
+      "FA-LEX-C415-MAKHAREJ-05"
+    ]
+  }
+}

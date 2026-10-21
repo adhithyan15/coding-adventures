@@ -1,0 +1,11 @@
+{
+  "id": "FA-C345-yeki-bud-yeki-nabud",
+  "pathSegment": "FA-PATH-345-QESSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-345-QESSE",
+      "order": 2
+    }
+  ]
+}

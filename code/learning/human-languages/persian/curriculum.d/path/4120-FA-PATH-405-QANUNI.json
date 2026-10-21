@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-405-QANUNI",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-405-QANUNI"
+  ],
+  "after": []
+}

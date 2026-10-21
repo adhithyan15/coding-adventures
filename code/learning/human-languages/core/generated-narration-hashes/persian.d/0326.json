@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:5089cff6c2aadc77",
+  "lessonIds": [
+    "FA-C326-masdum",
+    "FA-C326-jerahat",
+    "FA-C326-khunrizi",
+    "FA-C326-bihush-shodan",
+    "FA-C326-be-hush-amadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch326.txt",
+  "json": "persian/narration/ch326.json",
+  "textHash": "fnv1a64:721443ff88ea46b2",
+  "jsonHash": "fnv1a64:4202b5294545bd44",
+  "findings": []
+}

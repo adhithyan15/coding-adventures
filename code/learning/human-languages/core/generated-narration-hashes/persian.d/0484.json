@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:f2577dbb517d925c",
+  "lessonIds": [
+    "FA-C484-ghamgin",
+    "FA-C484-gham",
+    "FA-C484-ghosse-khordan",
+    "FA-C484-afsorde",
+    "FA-C484-pashiman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch484.txt",
+  "json": "persian/narration/ch484.json",
+  "textHash": "fnv1a64:5437584094895371",
+  "jsonHash": "fnv1a64:53dd2cb9e1fd9e1a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Being prepared",
+  "label": "ch:fa-being-prepared",
+  "canDo": "I can say that I acted with caution and as a precaution, talk about being ready, about something that came up and about the options.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C397-gozine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say that I acted with caution and as a precaution, talk about being ready, about something that came up and about the options.",
+    "assesses": [
+      "FA-LEX-C397-EHTIYAT-03",
+      "FA-LEX-C397-EHTIYAT-04",
+      "FA-LEX-C397-EHTIYAT-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C442-ozrkhahi-kardan",
+    "language": "persian",
+    "chapter": 442,
+    "sequence": 22620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9e4c9f25c41727b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Parties and presents",
+  "label": "ch:fa-parties-and-presents",
+  "canDo": "I can talk about throwing a party, serving the guests, presents, balloons and candles.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C341-sham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can talk about throwing a party, serving the guests, presents, balloons and candles.",
+    "assesses": [
+      "FA-LEX-C341-MEHMANI-03",
+      "FA-LEX-C341-MEHMANI-04",
+      "FA-LEX-C341-MEHMANI-05"
+    ]
+  }
+}

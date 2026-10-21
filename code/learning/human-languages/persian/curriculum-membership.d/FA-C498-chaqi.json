@@ -1,0 +1,11 @@
+{
+  "id": "FA-C498-chaqi",
+  "pathSegment": "FA-PATH-498-WEIGHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-498-WEIGHT",
+      "order": 4
+    }
+  ]
+}

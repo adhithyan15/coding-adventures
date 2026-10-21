@@ -1,0 +1,11 @@
+{
+  "id": "FA-R294-asking-the-way",
+  "pathSegment": "FA-PATH-294-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-294-WAY",
+      "order": 2
+    }
+  ]
+}

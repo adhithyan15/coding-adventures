@@ -56,6 +56,28 @@ pub struct IIRModule {
     /// at module-load time for dynamic linking.
     /// Backward compatible: existing modules with no imports work identically.
     pub imports: Vec<IIRImport>,
+
+    /// The exact source-language release this module was compiled against
+    /// (LANG84 C4.1), such as `Some("5.38.0")` for a Perl module.
+    ///
+    /// A release-versioned frontend resolves every compile to **one** row of
+    /// its language's `code/grammars/<lang>/releases.csv` and records that
+    /// row's ID here, so a module says which grammar produced it:
+    ///
+    /// ```text
+    ///   perl source ──► perl5.38.0.{tokens,grammar} ──► IIRModule { release: Some("5.38.0"), .. }
+    ///   twig source ──► twig.{tokens,grammar}       ──► IIRModule { release: None, .. }
+    /// ```
+    ///
+    /// `None` means the producing frontend has no release inventory (or the
+    /// module was built by hand). Backends never read this field: two modules
+    /// that differ only in `release` lower to identical code, which is what
+    /// lets LANG84's CI group releases into IIR identity classes. It is not
+    /// part of the binary wire format (`serialise`), so a deserialised module
+    /// has `None`, like the transient profiling fields. Read `None` as
+    /// "unknown", never as a language's default release: a Perl module that
+    /// went through `serialise` also has `None`.
+    pub release: Option<String>,
 }
 
 impl IIRModule {
@@ -68,6 +90,7 @@ impl IIRModule {
             language:    language.into(),
             exports:     Vec::new(),
             imports:     Vec::new(),
+            release:     None,
         }
     }
 
@@ -281,6 +304,15 @@ mod tests {
             "void",
             vec![IIRInstr::new("ret_void", None, vec![], "void")],
         )
+    }
+
+    #[test]
+    fn a_new_module_names_no_release() {
+        // LANG84 C4.1: only a release-versioned frontend sets `release`.
+        let mut module = IIRModule::new("p.pl", "perl");
+        assert_eq!(module.release, None);
+        module.release = Some("5.38.0".into());
+        assert_eq!(module.clone().release.as_deref(), Some("5.38.0"));
     }
 
     #[test]

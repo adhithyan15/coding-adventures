@@ -1,0 +1,11 @@
+{
+  "id": "FA-C411-qarz-gereftan",
+  "pathSegment": "FA-PATH-411-QARZ",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-411-QARZ",
+      "order": 0
+    }
+  ]
+}

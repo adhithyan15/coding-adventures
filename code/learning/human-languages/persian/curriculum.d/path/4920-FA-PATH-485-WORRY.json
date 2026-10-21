@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-485-WORRY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-485-WORRY"
+  ],
+  "after": []
+}

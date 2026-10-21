@@ -1,0 +1,11 @@
+{
+  "id": "FA-W293-zad",
+  "pathSegment": "FA-PATH-293-ADVICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-293-ADVICE",
+      "order": 3
+    }
+  ]
+}

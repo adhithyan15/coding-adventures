@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Shows and Presenters",
+  "label": "ch:fa-shows-and-presenters",
+  "canDo": "I can talk about TV shows and presenters.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C533-khire-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about TV shows and presenters.",
+    "assesses": [
+      "FA-LEX-C533-MEDIA-03",
+      "FA-LEX-C533-MEDIA-04",
+      "FA-LEX-C533-MEDIA-05"
+    ]
+  }
+}

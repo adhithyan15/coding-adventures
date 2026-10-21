@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-417-SHABAKE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-417-SHABAKE"
+  ],
+  "after": []
+}

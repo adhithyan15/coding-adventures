@@ -1,0 +1,11 @@
+{
+  "id": "FA-C516-tanasob-e-andam",
+  "pathSegment": "FA-PATH-516-FITNESS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-516-FITNESS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:d17e6360dda8ba64",
+  "lessonIds": [
+    "FA-C503-asbab-bazi",
+    "FA-C503-arusak",
+    "FA-C503-bachchedari",
+    "FA-C503-lus",
+    "FA-C503-qayem-mushak",
+    "FA-R503-review-496-503"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch503.txt",
+  "json": "persian/narration/ch503.json",
+  "textHash": "fnv1a64:76136d809c362fac",
+  "jsonHash": "fnv1a64:e3defd7d3b26f004",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C350-malake",
+    "language": "persian",
+    "chapter": 350,
+    "sequence": 17870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0cfe52cfee5d0a1"
+  },
+  "findings": []
+}

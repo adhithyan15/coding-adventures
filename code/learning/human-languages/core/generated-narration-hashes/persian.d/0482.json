@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:a526ed2de8492b5c",
+  "lessonIds": [
+    "FA-C482-delkhor",
+    "FA-C482-ranjidan",
+    "FA-C482-azorde",
+    "FA-C482-kine",
+    "FA-C482-sharmande"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch482.txt",
+  "json": "persian/narration/ch482.json",
+  "textHash": "fnv1a64:85d98b67358314da",
+  "jsonHash": "fnv1a64:4e498c89af569ab9",
+  "findings": []
+}

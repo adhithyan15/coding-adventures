@@ -1,0 +1,11 @@
+{
+  "id": "FA-C447-fari",
+  "pathSegment": "FA-PATH-447-NABSH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-447-NABSH",
+      "order": 4
+    }
+  ]
+}

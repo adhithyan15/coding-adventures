@@ -1,0 +1,11 @@
+{
+  "id": "FA-C339-samanu",
+  "pathSegment": "FA-PATH-339-EYD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-339-EYD",
+      "order": 2
+    }
+  ]
+}

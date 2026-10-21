@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:05668e2f0a9c9289",
+  "lessonIds": [
+    "FA-C421-buq",
+    "FA-C421-buq-zadan",
+    "FA-C421-cheragh",
+    "FA-C421-barfpakkon",
+    "FA-C421-ayene-baghal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch421.txt",
+  "json": "persian/narration/ch421.json",
+  "textHash": "fnv1a64:1dfd26186ef93acf",
+  "jsonHash": "fnv1a64:d7ae29ddb7dd4220",
+  "findings": []
+}

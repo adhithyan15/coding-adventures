@@ -1,0 +1,11 @@
+{
+  "id": "FA-C354-kashf-kardan",
+  "pathSegment": "FA-PATH-354-KASHF",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-354-KASHF",
+      "order": 0
+    }
+  ]
+}

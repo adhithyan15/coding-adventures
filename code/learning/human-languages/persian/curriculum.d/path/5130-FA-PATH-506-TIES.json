@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-506-TIES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-506-TIES"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:7f11f6f70f8becfa",
+  "lessonIds": [
+    "FA-C538-mostajer",
+    "FA-C538-maykroviv",
+    "FA-C538-lavazem-e-khanegi",
+    "FA-C538-garm-kardan",
+    "FA-C538-sard-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch538.txt",
+  "json": "persian/narration/ch538.json",
+  "textHash": "fnv1a64:6857009793f23a8a",
+  "jsonHash": "fnv1a64:77ae2d86d1dfe2ee",
+  "findings": []
+}

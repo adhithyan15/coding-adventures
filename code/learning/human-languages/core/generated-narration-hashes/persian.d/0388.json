@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:85df2230a25269d5",
+  "lessonIds": [
+    "FA-C388-aludegi",
+    "FA-C388-bazyaft",
+    "FA-C388-bazyaft-kardan",
+    "FA-C388-masraf",
+    "FA-C388-masraf-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch388.txt",
+  "json": "persian/narration/ch388.json",
+  "textHash": "fnv1a64:6ddfa3a88819f60b",
+  "jsonHash": "fnv1a64:d65d63859d2b2a84",
+  "findings": []
+}

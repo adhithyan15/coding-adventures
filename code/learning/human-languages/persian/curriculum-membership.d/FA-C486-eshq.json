@@ -1,0 +1,11 @@
+{
+  "id": "FA-C486-eshq",
+  "pathSegment": "FA-PATH-486-JOY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-486-JOY",
+      "order": 3
+    }
+  ]
+}

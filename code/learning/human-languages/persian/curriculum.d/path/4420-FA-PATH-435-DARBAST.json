@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-435-DARBAST",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-435-DARBAST"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:7fe8beffd207d3a1",
+  "lessonIds": [
+    "FA-C314-ruydad",
+    "FA-C314-vaqee",
+    "FA-C314-bargozar-shodan",
+    "FA-C314-bargozar-kardan",
+    "FA-C314-sherkat-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch314.txt",
+  "json": "persian/narration/ch314.json",
+  "textHash": "fnv1a64:c648d087290fd8ac",
+  "jsonHash": "fnv1a64:92bbdff6c7942ead",
+  "findings": []
+}

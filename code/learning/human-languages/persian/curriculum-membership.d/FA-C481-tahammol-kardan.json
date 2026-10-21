@@ -1,0 +1,11 @@
+{
+  "id": "FA-C481-tahammol-kardan",
+  "pathSegment": "FA-PATH-481-PATIENCE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-481-PATIENCE",
+      "order": 2
+    }
+  ]
+}

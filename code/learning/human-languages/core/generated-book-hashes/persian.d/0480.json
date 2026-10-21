@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:edf72470e73faf9c",
+  "lessonIds": [
+    "FA-C480-ghorur",
+    "FA-C480-maghrur",
+    "FA-C480-forutan",
+    "FA-C480-eftekhar-kardan",
+    "FA-C480-khodnamayi-kardan"
+  ],
+  "tex": "persian/book/chapters/ch480-pride-and-modesty.tex"
+}

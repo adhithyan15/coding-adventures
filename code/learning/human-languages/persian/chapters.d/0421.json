@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Horn, lights and mirrors",
+  "label": "ch:fa-horn-lights-and-mirrors",
+  "canDo": "I can talk about the horn, honking, the lights, the wipers and the side mirror.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C421-ayene-baghal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about the horn, honking, the lights, the wipers and the side mirror.",
+    "assesses": [
+      "FA-LEX-C421-BUGH-03",
+      "FA-LEX-C421-BUGH-04",
+      "FA-LEX-C421-BUGH-05"
+    ]
+  }
+}

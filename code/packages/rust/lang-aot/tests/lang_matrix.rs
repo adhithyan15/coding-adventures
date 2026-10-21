@@ -5404,6 +5404,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - static numerator factors may commute to the left of each
+    // sign root while the common-divisor proof still covers the final /3.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((6 * sign(left)) + 6) else ((9 * sign(right)) + 6)) / 3); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9274,7 +9283,8 @@ fn main() { out(1, VALUE); }\n",
     },
 
     // Perl — LANG84 phase 4a, the bounded LANG81 integer `print` subset on its
-    // default release (the unversioned LANG81 pair). Perl's `print` writes the
+    // default release (`5.38.0` since phase 4b; the unversioned LANG81 pair in 4a,
+    // which no longer reaches the IIR path). Perl's `print` writes the
     // decimal text with NO newline, which is LANG83's `write_i64`; the frontend emits
     // `call_builtin write_i64` and nothing Perl-specific, so every column runs these
     // rows through the same lowering the op-conformance suite already proved.
@@ -23760,6 +23770,32 @@ fn algol_pathwise_exact_divided_local_name_actual_runtime_real_output_runs_on_ev
 }
 
 #[test]
+fn algol_pathwise_commuted_exact_divided_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((if choose() then ((6 * sign(left)) + 6) else ((9 * sign(right)) + 6)) / 3)",
+                )
+        })
+        .expect("the pathwise commuted exactly-divided ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise commuted exactly-divided local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -25818,8 +25854,9 @@ fn perl_rows_agree_with_the_host_perl_oracle() {
             .output()
             .expect("perl ran once already");
         assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
+        // Perl on Windows prints through a `:crlf` layer; fold "\r\n" back.
         assert_eq!(
-            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"),
             expected,
             "perl {version} disagrees with the row's expectation for {:?}",
             program.src

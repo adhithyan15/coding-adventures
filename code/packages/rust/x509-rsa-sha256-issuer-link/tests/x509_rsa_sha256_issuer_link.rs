@@ -2,12 +2,13 @@ use der_asn1::Asn1Limits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use std::cell::Cell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
+use x509_certificate_issuer_candidate_selection::select_unique_x509_issuer_candidate_by;
 use x509_certificate_policy::{X509CertificateIssuerLinkErrorKind, X509CertificateRoleErrorKind};
 use x509_rsa_pkcs1_v1_5_sha256_signature::X509RsaSha256SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha256_issuer_link::{
-    verify_x509_rsa_sha256_issuer_link, X509RsaSha256IssuerLinkErrorKind,
-    X509RsaSha256IssuerLinkPolicy,
+    verify_selected_x509_rsa_sha256_issuer_link, verify_x509_rsa_sha256_issuer_link,
+    X509RsaSha256IssuerLinkErrorKind, X509RsaSha256IssuerLinkPolicy,
 };
 
 const RSA_ENCRYPTION_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
@@ -82,6 +83,21 @@ fn mutate_first(encoded: &mut [u8], needle: &[u8], mutate: impl FnOnce(&mut [u8]
     mutate(&mut encoded[offset..offset + needle.len()]);
 }
 
+fn mutate_every(encoded: &mut [u8], needle: &[u8], mut mutate: impl FnMut(&mut [u8])) {
+    let mut search_start = 0;
+    let mut matches = 0;
+    while let Some(relative_offset) = encoded[search_start..]
+        .windows(needle.len())
+        .position(|window| window == needle)
+    {
+        let offset = search_start + relative_offset;
+        mutate(&mut encoded[offset..offset + needle.len()]);
+        search_start = offset + needle.len();
+        matches += 1;
+    }
+    assert!(matches > 0, "fixture contains mutation target");
+}
+
 #[test]
 fn verifies_one_exact_self_signed_ca_link_and_binds_both_certificates() {
     let child_encoded = fixture();
@@ -110,6 +126,42 @@ fn verifies_one_exact_self_signed_ca_link_and_binds_both_certificates() {
     assert!(std::ptr::eq(verified.candidate_issuer(), &candidate_issuer));
     assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
     assert_eq!(verified.issuer_public_key().public_exponent(), 65_537);
+}
+
+#[test]
+fn authenticates_the_exact_pair_consumed_from_selection_evidence() {
+    let child_encoded = fixture();
+    let mut other_encoded = fixture();
+    mutate_every(&mut other_encoded, b"fixture.example", |name| {
+        name[0] = b'o';
+    });
+    let mut issuer_encoded = fixture();
+    mutate_first(&mut issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
+        serial[2] = 2;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&other_encoded), decode(&issuer_encoded)];
+    let calls = Cell::new(0);
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        2,
+        |child_issuer, candidate_subject| {
+            calls.set(calls.get() + 1);
+            child_issuer.encoded() == candidate_subject.encoded()
+        },
+    )
+    .unwrap();
+    assert_eq!(calls.get(), 2);
+    assert_eq!(selected.candidate_index(), 1);
+
+    let verified = verify_selected_x509_rsa_sha256_issuer_link(selected, policy()).unwrap();
+
+    assert_eq!(calls.get(), 2, "authentication must not repeat Name policy");
+    assert!(std::ptr::eq(verified.child(), &child));
+    assert!(std::ptr::eq(verified.candidate_issuer(), &candidates[1]));
+    assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
 }
 
 #[test]

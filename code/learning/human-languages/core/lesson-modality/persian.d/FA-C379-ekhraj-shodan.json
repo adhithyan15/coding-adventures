@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C379-ekhraj-shodan",
+    "language": "persian",
+    "chapter": 379,
+    "sequence": 19390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7d2d1c9456306b2"
+  },
+  "findings": []
+}

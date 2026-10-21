@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:a6795bc664525260",
+  "lessonIds": [
+    "FA-C401-morur-kardan",
+    "FA-C401-tamarkoz-kardan",
+    "FA-C401-taqallob-kardan",
+    "FA-C401-jozve",
+    "FA-C401-taklif"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch401.txt",
+  "json": "persian/narration/ch401.json",
+  "textHash": "fnv1a64:4bd036e759512320",
+  "jsonHash": "fnv1a64:2534f677d07d5ebf",
+  "findings": []
+}

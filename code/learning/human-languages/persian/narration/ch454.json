@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 454,
+  "title": "Repairs around town",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5314bf06d446c770",
+  "lessons": [
+    {
+      "id": "FA-C454-tamirkar",
+      "sequence": 23240,
+      "title": "تعمیرکار (ta'mirkâr) — a repairman, a repairer",
+      "headword": "تعمیرکار",
+      "romanization": "ta'mirkâr",
+      "gloss": "a repairman, a repairer",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78114b8ab6ee2c87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for the traffic police, then the Persian for to ring a number."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعمیرکار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعمیرکار (ta'mirkâr) — \"a repairman, a repairer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعمیرکار (ta'mirkâr) یخچال ما را درست کرد. Ta'mirkâr yakhchâl-e mâ râ dorost kard. The repairman fixed our fridge."
+            },
+            {
+              "kind": "speech",
+              "text": "ta'mir 'repair' + kâr 'worker'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ta'mirkâr is built from ta'mir 'repair', a loan usually traced to Arabic taʿmīr, and native kâr 'work, worker'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'mirkâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'mirkâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'mirkâr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'mirkâr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ta'mirkâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ta'mirkâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for the traffic police, then the Persian for to ring a number, then say ta'mirkâr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for the traffic police, then the Persian for to ring a number, then say *ta'mirkâr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعمیرکار (ta'mirkâr) mean? (\"A repairman, a repairer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C454-kaffash",
+      "sequence": 23250,
+      "title": "کفاش (kaffâsh) — a shoemaker, a cobbler",
+      "headword": "کفاش",
+      "romanization": "kaffâsh",
+      "gloss": "a shoemaker, a cobbler",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7c9a41b7ced3bed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to ring a number, then the Persian for a repairman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کفاش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کفاش (kaffâsh) — \"a shoemaker, a cobbler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کفاش (kaffâsh) کفش پاره مرا دوخت. Kaffâsh kafsh-e pâre-ye marâ dukht. The cobbler stitched my torn shoe."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on kafsh 'shoe' in the Arabic pattern of trade names, like najjâr 'carpenter'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kaffâsh is built on native kafsh 'shoe', from Middle Persian kafš (EtymDB), shaped in the Arabic pattern of trade names such as najjâr 'carpenter'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaffâsh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaffâsh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaffâsh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaffâsh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kaffâsh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kaffâsh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to ring a number, then the Persian for a repairman, then say kaffâsh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to ring a number, then the Persian for a repairman, then say *kaffâsh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کفاش (kaffâsh) mean? (\"A shoemaker, a cobbler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C454-kelidsaz",
+      "sequence": 23260,
+      "title": "کلید ساز (kelidsâz) — a locksmith, a key cutter",
+      "headword": "کلید ساز",
+      "romanization": "kelidsâz",
+      "gloss": "a locksmith, a key cutter",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:865dd3a174053326",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a repairman, then the Persian for a shoemaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کلید ساز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کلید ساز (kelidsâz) — \"a locksmith, a key cutter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کلید ساز (kelidsâz) برای ما یک کلید تازه ساخت. Kelidsâz barâ-ye mâ yek kelid-e tâze sâkht. The locksmith made a new key for us."
+            },
+            {
+              "kind": "speech",
+              "text": "kelid 'key' + sâz 'maker'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kelidsâz is built from kelid 'key', which EtymDB traces through Middle Persian kilēd to Greek kleís 'key', and native sâz, the present stem of sâkhtan 'to make'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kelidsâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kelidsâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kelidsâz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kelidsâz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kelidsâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kelidsâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a repairman, then the Persian for a shoemaker, then say kelidsâz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a repairman, then the Persian for a shoemaker, then say *kelidsâz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کلید ساز (kelidsâz) mean? (\"A locksmith, a key cutter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C454-arayeshgah",
+      "sequence": 23270,
+      "title": "آرایشگاه (ârâyeshgâh) — a hairdresser's, a barber's (shop)",
+      "headword": "آرایشگاه",
+      "romanization": "ârâyeshgâh",
+      "gloss": "a hairdresser's, a barber's (shop)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9ad73b1cb0f3873",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a shoemaker, then the Persian for a locksmith."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آرایشگاه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آرایشگاه (ârâyeshgâh) — \"a hairdresser's, a barber's (shop)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خواهرم پنجشنبه به آرایشگاه رفت. Khâharam panjshanbe be ârâyeshgâh raft. My sister went to the hairdresser's on Thursday."
+            },
+            {
+              "kind": "speech",
+              "text": "ârâyesh 'adornment' + gâh 'place'. The person is an ârâyeshgar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ârâyeshgâh is a native compound of ârâyesh 'adornment', from ârâstan 'to adorn', and gâh 'place'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ârâyeshgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ârâyeshgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ârâyeshgâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ârâyeshgâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ârâyeshgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ârâyeshgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a shoemaker, then the Persian for a locksmith, then say ârâyeshgâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a shoemaker, then the Persian for a locksmith, then say *ârâyeshgâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آرایشگاه (ârâyeshgâh) mean? (\"A hairdresser's, a barber's (shop)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C454-saatsaz",
+      "sequence": 23280,
+      "title": "ساعت ساز (sâ'atsâz) — a watchmaker, a watch repairer",
+      "headword": "ساعت ساز",
+      "romanization": "sâ'atsâz",
+      "gloss": "a watchmaker, a watch repairer",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:633adf601f6c19ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a locksmith, then the Persian for a hairdresser's."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ساعت ساز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ساعت ساز (sâ'atsâz) — \"a watchmaker, a watch repairer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ساعت پدربزرگ را پیش ساعت ساز بردیم. Sâ'at-e pedarbozorg râ pish-e sâ'atsâz bordim. We took grandfather's watch to the watchmaker."
+            },
+            {
+              "kind": "speech",
+              "text": "sâ'at 'watch, hour' + sâz 'maker'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sâ'atsâz is built from sâ'at 'hour, clock', borrowed from Arabic sāʿa (EtymDB), and native sâz, the present stem of sâkhtan 'to make'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sâ'atsâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sâ'atsâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sâ'atsâz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sâ'atsâz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sâ'atsâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sâ'atsâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a locksmith, then the Persian for a hairdresser's, then say sâ'atsâz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a locksmith, then the Persian for a hairdresser's, then say *sâ'atsâz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ساعت ساز (sâ'atsâz) mean? (\"A watchmaker, a watch repairer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

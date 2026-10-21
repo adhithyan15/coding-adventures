@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Eras and ancestors",
+  "label": "ch:fa-eras-and-ancestors",
+  "canDo": "I can talk about an era, a century, a historian, ancestors and heritage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C353-miras",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can talk about an era, a century, a historian, ancestors and heritage.",
+    "assesses": [
+      "FA-LEX-C353-DOWRAN-03",
+      "FA-LEX-C353-DOWRAN-04",
+      "FA-LEX-C353-DOWRAN-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:55ecae1dafc23de3",
+  "lessonIds": [
+    "FA-C477-sharji",
+    "FA-C477-rotubat",
+    "FA-C477-garmazadegi",
+    "FA-C477-motadel",
+    "FA-C477-aftab-gereftan"
+  ],
+  "tex": "persian/book/chapters/ch477-heat-and-humidity.tex"
+}

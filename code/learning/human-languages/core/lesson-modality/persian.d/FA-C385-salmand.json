@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C385-salmand",
+    "language": "persian",
+    "chapter": 385,
+    "sequence": 19710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24a48b8ec1ac88ad"
+  },
+  "findings": []
+}
