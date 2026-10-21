@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C150-plans-practice",
+    "language": "gujarati",
+    "chapter": 150,
+    "sequence": 7940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab9c7b34b1d9b8e2"
+  },
+  "findings": []
+}

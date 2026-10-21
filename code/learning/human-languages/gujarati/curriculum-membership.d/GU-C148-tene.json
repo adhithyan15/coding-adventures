@@ -1,0 +1,11 @@
+{
+  "id": "GU-C148-tene",
+  "pathSegment": "GU-PATH-148-PAST148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-148-PAST148",
+      "order": 1
+    }
+  ]
+}

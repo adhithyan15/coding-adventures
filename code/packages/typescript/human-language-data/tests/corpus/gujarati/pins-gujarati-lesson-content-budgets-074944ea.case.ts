@@ -53,7 +53,8 @@ it("pins Gujarati lesson-content budgets", () =>
     // checkpoint. No idiom, sense or culture claim.
     // 807 -> 808: chapter 144 adds one no-new-atom A2 connected-composition
     // lesson. It adds no idiom, sense, or culture claim.
-    lessons: 808,
+    // 808 -> 856: the A2 grammar core, chapters 145-152: 23 grammar, 11 word, 6 practice, 3 letter, 2 reading and 3 review lessons. No idiom, sense or culture claim.
+    lessons: 856,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

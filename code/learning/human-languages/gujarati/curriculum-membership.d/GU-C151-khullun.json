@@ -1,0 +1,11 @@
+{
+  "id": "GU-C151-khullun",
+  "pathSegment": "GU-PATH-151-READ151",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-151-READ151",
+      "order": 1
+    }
+  ]
+}

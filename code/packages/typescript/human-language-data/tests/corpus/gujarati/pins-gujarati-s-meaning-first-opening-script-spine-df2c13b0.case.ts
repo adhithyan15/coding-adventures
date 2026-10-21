@@ -255,5 +255,14 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["142", 5],
     ["143", 8],
     ["144", 1],
+    // The A2 grammar core: two chapters per A2 spine node, then the reading pair.
+    ["145", 8],
+    ["146", 6],
+    ["147", 7],
+    ["148", 5],
+    ["149", 6],
+    ["150", 5],
+    ["151", 5],
+    ["152", 6],
   ]);
 });

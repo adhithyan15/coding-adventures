@@ -1,0 +1,25 @@
+{
+  "chapter": 146,
+  "title": "Asking yes or no",
+  "label": "ch:gu-asking-yes-or-no",
+  "canDo": "I can ask a question that is answered yes or no, with śũ, ke nahī̃ or kharũ, answer it, and say whose things are whose and what someone likes or has.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C146-ask-practice",
+    "kind": "dialogue",
+    "summary": "Carry a short exchange of yes-or-no questions about likes, family and plans, and answer one with a negative.",
+    "assesses": [
+      "GU-GRAMMAR-C146-POLAR-SHUN-01",
+      "GU-GRAMMAR-C146-POLAR-RISE-01",
+      "GU-GRAMMAR-C146-KE-NAHI-01",
+      "GU-GRAMMAR-C146-KHARUN-01",
+      "GU-GRAMMAR-C146-DATIVE-SG-01",
+      "GU-GRAMMAR-C146-DATIVE-PL-01",
+      "GU-GRAMMAR-C146-POSS-AGREE-01",
+      "GU-GRAMMAR-C146-POSS-SG-01",
+      "GU-GRAMMAR-C146-POSS-PL-01"
+    ]
+  }
+}

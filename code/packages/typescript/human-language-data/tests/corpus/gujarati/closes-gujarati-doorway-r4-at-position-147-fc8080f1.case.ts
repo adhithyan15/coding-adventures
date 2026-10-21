@@ -164,7 +164,18 @@ it("closes Gujarati doorway R4 at position 149", () => {
   //        each is retrieved by name in a warm-up at the right distance.
   // Chapter 144's connected-composition retrieval exposes three later
   // measured windows without changing the pinned A1 doorway boundary.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1468);
+  // 1468 -> 1524. The A2 core, chapters 145-152 (48 lessons), decomposed against
+  // the corpus measured without it:
+  //     0  on the core's own 57 atoms. Every one is revisited in the next lesson
+  //        and again at R2 by a named warm-up or practice line; the chapter-148
+  //        and later atoms whose R3 falls inside the track are swept by the two
+  //        closing reviews and the landlord's note.
+  //   +60  PRE-EXISTING (atom, window) slots that did not exist until the track
+  //        grew 808 -> 856: 45 R4 on the chapter 129-138 words and 15 R3 on the
+  //        chapter 140-143 verbs, whose windows now fall inside the track.
+  //    -4  closed outright: koī, kaīk, ahī̃ and tyā̃ (chapters 99-101) reach their
+  //        R4 in the core's negation, past and present lessons.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1524);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
