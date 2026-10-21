@@ -1,0 +1,11 @@
+{
+  "id": "RU-C426-shlyupka",
+  "pathSegment": "RU-PATH-426-VESLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-426-VESLO",
+      "order": 1
+    }
+  ]
+}

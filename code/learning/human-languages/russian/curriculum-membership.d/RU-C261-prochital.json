@@ -1,0 +1,11 @@
+{
+  "id": "RU-C261-prochital",
+  "pathSegment": "RU-PATH-261-PAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-261-PAST",
+      "order": 1
+    }
+  ]
+}

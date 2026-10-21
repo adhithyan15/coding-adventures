@@ -1,0 +1,11 @@
+{
+  "id": "RU-C459-karabkatsya",
+  "pathSegment": "RU-PATH-459-POKHOD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-459-POKHOD",
+      "order": 3
+    }
+  ]
+}

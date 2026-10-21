@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C422-terminal",
+    "language": "russian",
+    "chapter": 422,
+    "sequence": 24200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c66e3f0207653366"
+  },
+  "findings": []
+}

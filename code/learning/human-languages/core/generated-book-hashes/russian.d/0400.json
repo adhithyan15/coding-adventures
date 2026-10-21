@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:b99f6ead5ed8d352",
+  "lessonIds": [
+    "RU-C400-parol",
+    "RU-C400-bezopasnost",
+    "RU-C400-khaker",
+    "RU-C400-vzlamyvat",
+    "RU-C400-virus",
+    "RU-R400-review-393-400"
+  ],
+  "tex": "russian/book/chapters/ch400-staying-safe-online.tex"
+}

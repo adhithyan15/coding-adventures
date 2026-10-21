@@ -312,6 +312,14 @@ simulator's reserved host MemberRefs.
 `Lowered` or `Refused(reason)`, for every operation in the
 [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
 (`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" describes the textual `emit_il` path (real `ilasm` + CoreCLR); the binary simulator path is narrower. `lang-aot` refuses a
-module that uses a refused op at compile time, with a typed error. The four
-LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
-refused until PR1b lowers them.
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b the textual path also lowers `write_i64`
+(`Console.Write(int64)`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
+`MIN / -1` branches before `div`/`rem`, then a floor fix-up) and `trap`
+(`Console.Out.Flush()` then `throw new Exception(kind)`); the binary
+simulator path refuses them with a typed error. LANG83 PR4 adds `i64_add_ovf`/`i64_sub_ovf`/
+`i64_mul_ovf`/`i64_neg_ovf` on the textual path: the overflow condition is
+branched around before the plain `add`/`sub`/`mul`/`neg` (sign tests for add/sub,
+`MIN` for negation, a `-1 × MIN` guard then `(a*b)/a == b` for multiplication),
+and a failing test runs the same flush-then-throw sequence with `Trap.Overflow`.
+`add.ovf` & co. are not used: their `OverflowException` has no kind and does not
+flush. The binary path refuses these too.

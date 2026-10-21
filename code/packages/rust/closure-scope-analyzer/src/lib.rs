@@ -909,6 +909,61 @@ fn walk_statement(
     }
 }
 
+/// The walk context for a `for` / `for-in` / `for-of` loop (#16008).
+///
+/// A `let`/`const` head is scoped to the loop, not to the statement list
+/// the loop sits in (ECMAScript §14.7.4.2 ForLoopEvaluation and §14.7.5.6
+/// ForIn/OfHeadEvaluation create a fresh declarative environment for it):
+///
+/// ```js
+/// var x = 1;
+/// for (let x of [7]) console.log(x);   // 7  — the loop's x
+/// console.log(x);                       // 1  — the outer x
+/// ```
+///
+/// So a lexical head gets a fresh [`ScopeKind::Block`] scope and everything
+/// in the loop — head, test, update, `right` and body — walks inside it.
+/// Registering the head binding in the enclosing scope instead put two `x`
+/// bindings side by side there; the read after the loop resolved to the
+/// loop's one, the outer `var` looked unreferenced, and remove-unused-vars
+/// deleted it, so the output threw `ReferenceError`.
+///
+/// | head            | result                                          |
+/// |-----------------|-------------------------------------------------|
+/// | `let` / `const` | new Block scope under `ctx.current`             |
+/// | `var`           | `ctx` unchanged (the binding hoists out anyway) |
+/// | expression / ∅  | `ctx` unchanged (nothing is declared)           |
+///
+/// A `{ … }` body still opens its own Block scope beneath the loop scope,
+/// matching the spec's nesting of the body's environment inside the loop's.
+fn loop_scope_ctx(
+    head: Option<&ForInit>,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+) -> WalkCtx {
+    match head {
+        Some(ForInit::VariableDeclaration(vd)) if vd.kind != VarKind::Var => WalkCtx {
+            current: emit_scope(ScopeKind::Block, ctx.current, analysis),
+            enclosing_function: ctx.enclosing_function,
+        },
+        _ => ctx,
+    }
+}
+
+/// Walk a `for` head: a declaration registers its bindings (in the scope
+/// [`loop_scope_ctx`] chose), an expression head is an ordinary read/write.
+fn walk_for_head(
+    head: &ForInit,
+    ctx: WalkCtx,
+    analysis: &mut ScopeAnalysis,
+    pending: &mut Vec<PendingReference>,
+) {
+    match head {
+        ForInit::VariableDeclaration(vd) => walk_variable_declaration(vd, ctx, analysis, pending),
+        ForInit::Expression(e) => walk_expression(e, ctx, analysis, pending),
+    }
+}
+
 fn walk_tagged_statement(
     stmt: &TaggedStatement,
     ctx: WalkCtx,
@@ -938,13 +993,11 @@ fn walk_tagged_statement(
             walk_expression(&ds.test, ctx, analysis, pending);
         }
         TaggedStatement::ForStatement(fs) => {
+            // A `let`/`const` head scopes to the loop (#16008), so the
+            // head, test, update and body all walk in the loop scope.
+            let ctx = loop_scope_ctx(fs.init.as_ref(), ctx, analysis);
             if let Some(init) = &fs.init {
-                match init {
-                    ForInit::VariableDeclaration(vd) => {
-                        walk_variable_declaration(vd, ctx, analysis, pending);
-                    }
-                    ForInit::Expression(e) => walk_expression(e, ctx, analysis, pending),
-                }
+                walk_for_head(init, ctx, analysis, pending);
             }
             if let Some(test) = &fs.test {
                 walk_expression(test, ctx, analysis, pending);
@@ -956,25 +1009,18 @@ fn walk_tagged_statement(
         }
         TaggedStatement::ForInStatement(fs) => {
             // The for-in `left` declares (or targets) the loop variable; walk
-            // it, then the enumerated `right`, then the body.
-            match &fs.left {
-                ForInit::VariableDeclaration(vd) => {
-                    walk_variable_declaration(vd, ctx, analysis, pending);
-                }
-                ForInit::Expression(e) => walk_expression(e, ctx, analysis, pending),
-            }
+            // it, then the enumerated `right`, then the body — all inside the
+            // loop scope when `left` is a `let`/`const` declaration (#16008).
+            let ctx = loop_scope_ctx(Some(&fs.left), ctx, analysis);
+            walk_for_head(&fs.left, ctx, analysis, pending);
             walk_expression(&fs.right, ctx, analysis, pending);
             walk_statement(&fs.body, ctx, analysis, pending);
         }
         TaggedStatement::ForOfStatement(fs) => {
-            // The for-in `left` declares (or targets) the loop variable; walk
-            // it, then the enumerated `right`, then the body.
-            match &fs.left {
-                ForInit::VariableDeclaration(vd) => {
-                    walk_variable_declaration(vd, ctx, analysis, pending);
-                }
-                ForInit::Expression(e) => walk_expression(e, ctx, analysis, pending),
-            }
+            // Same shape as for-in: `left`, then the iterated `right`, then
+            // the body, inside the loop scope for a lexical head (#16008).
+            let ctx = loop_scope_ctx(Some(&fs.left), ctx, analysis);
+            walk_for_head(&fs.left, ctx, analysis, pending);
             walk_expression(&fs.right, ctx, analysis, pending);
             walk_statement(&fs.body, ctx, analysis, pending);
         }
@@ -990,18 +1036,30 @@ fn walk_tagged_statement(
             walk_expression(&ts.argument, ctx, analysis, pending);
         }
         TaggedStatement::SwitchStatement(ss) => {
-            // Visit the discriminant in the enclosing scope, then
-            // each case's test expression and consequent. Per
-            // ECMAScript §13.12, switch bodies share a single
-            // lexical scope spanning all cases, so we keep `ctx`
-            // unchanged across consequents.
+            // The discriminant is evaluated in the enclosing scope. Then
+            // ECMAScript §14.12.4 creates ONE fresh block environment for the
+            // whole case block, so every case test and consequent walks inside
+            // a single new Block scope, shared across cases (#17836):
+            //
+            //   var x = 1;
+            //   switch (1) { case 1: let x = 2; }   // the case block's x
+            //   console.log(x);                      // the outer x
+            //
+            // Walking the cases in the enclosing scope put the case's `let x`
+            // beside the outer `var x`, so the read after the switch resolved
+            // to the wrong one and remove-unused-vars deleted the outer `var`.
+            // `var` inside a case still hoists out via `enclosing_function`.
             walk_expression(&ss.discriminant, ctx, analysis, pending);
+            let case_block = WalkCtx {
+                current: emit_scope(ScopeKind::Block, ctx.current, analysis),
+                enclosing_function: ctx.enclosing_function,
+            };
             for case in &ss.cases {
                 if let Some(test) = &case.test {
-                    walk_expression(test, ctx, analysis, pending);
+                    walk_expression(test, case_block, analysis, pending);
                 }
                 for s in &case.consequent {
-                    walk_statement(s, ctx, analysis, pending);
+                    walk_statement(s, case_block, analysis, pending);
                 }
             }
         }
@@ -2198,5 +2256,284 @@ mod tests {
         let prog = program_with(vec![export_item()]);
         assert!(program_contains_export_declaration(&prog));
         assert!(analyze(&prog).has_export);
+    }
+
+    // ---------------------------------------------------------------
+    // #16008 — a `for` head with `let`/`const` gets its own loop scope.
+    //
+    // ```js
+    // var x = 1;
+    // for (let x of [7]) console.log(x);   // reads the LOOP's x
+    // console.log(x);                       // reads the OUTER x
+    // ```
+    //
+    // Before the fix the head's `let x` was registered in the enclosing
+    // scope beside the outer `var x`, so the trailing read resolved to
+    // the loop binding, the outer `var` looked unreferenced, and
+    // remove-unused-vars deleted it — the output threw ReferenceError.
+    //
+    // The scope tree each shape must produce:
+    //
+    // | head            | loop scope? | head binding lives in |
+    // |-----------------|-------------|-----------------------|
+    // | `let` / `const` | yes (Block) | the loop scope        |
+    // | `var`           | no          | enclosing function    |
+    // | expression      | no          | (no binding)          |
+    // ---------------------------------------------------------------
+
+    use coding_adventures_javascript_ast::{ForInStatement, ForOfStatement, ForStatement};
+
+    /// A `kind x` declaration with no initializer, for a `for` head.
+    fn head_decl(kind: VarKind, name: &str) -> ForInit {
+        ForInit::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(ident(name)),
+                init: None,
+            }],
+        })
+    }
+
+    /// `x;` as a nested statement (a loop body).
+    fn read_stmt(name: &str) -> Statement {
+        Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: id_expr(name),
+        })
+    }
+
+    /// `for (kind x of right) x;`
+    fn for_of_item(kind: VarKind) -> ProgramItem {
+        ProgramItem::Statement(Statement::for_of_statement(ForOfStatement {
+            cv: None,
+            left: head_decl(kind, "x"),
+            right: id_expr("xs"),
+            body: Box::new(read_stmt("x")),
+        }))
+    }
+
+    /// `for (kind x in right) x;`
+    fn for_in_item(kind: VarKind) -> ProgramItem {
+        ProgramItem::Statement(Statement::for_in_statement(ForInStatement {
+            cv: None,
+            left: head_decl(kind, "x"),
+            right: id_expr("xs"),
+            body: Box::new(read_stmt("x")),
+        }))
+    }
+
+    /// `for (kind x = 0; x; x) x;`
+    fn for_item(kind: VarKind) -> ProgramItem {
+        let mut init = head_decl(kind, "x");
+        if let ForInit::VariableDeclaration(vd) = &mut init {
+            vd.declarations[0].init = Some(num_expr(0.0));
+        }
+        ProgramItem::Statement(Statement::for_statement(ForStatement {
+            cv: None,
+            init: Some(init),
+            test: Some(id_expr("x")),
+            update: Some(id_expr("x")),
+            body: Box::new(read_stmt("x")),
+        }))
+    }
+
+    /// `var x; <loop>; x;` — the shadowing program from #16008.
+    fn shadow_program(outer: VarKind, loop_item: ProgramItem) -> Program {
+        program_with(vec![var_decl(outer, &["x"]), loop_item, expr_stmt(id_expr("x"))])
+    }
+
+    /// The outer binding is id 0 (declared first). Asserts the read after
+    /// the loop resolves to it and every read inside the loop does not.
+    fn assert_trailing_read_resolves_outward(analysis: &ScopeAnalysis) {
+        let outer = BindingId(0);
+        assert_eq!(analysis.bindings[0].scope, ScopeId::GLOBAL);
+        let reads: Vec<_> = analysis.references.iter().filter(|r| r.name == "x").collect();
+        let (last, inside) = reads.split_last().expect("at least one read of x");
+        assert_eq!(last.from_scope, ScopeId::GLOBAL);
+        assert_eq!(last.binding, Some(outer), "read after the loop must see the outer x");
+        for r in inside {
+            assert_ne!(r.binding, Some(outer), "read inside the loop must see the loop's x");
+            assert!(r.binding.is_some());
+        }
+    }
+
+    #[test]
+    fn for_of_let_head_lives_in_its_own_loop_scope() {
+        let analysis = analyze(&shadow_program(VarKind::Var, for_of_item(VarKind::Let)));
+        assert_eq!(analysis.scopes.len(), 2);
+        assert_eq!(analysis.scopes[1].kind, ScopeKind::Block);
+        assert_eq!(analysis.scopes[1].parent, Some(ScopeId::GLOBAL));
+        let head = &analysis.bindings[1];
+        assert_eq!((head.name.as_str(), head.kind, head.scope), ("x", BindingKind::Let, ScopeId(1)));
+        assert_trailing_read_resolves_outward(&analysis);
+    }
+
+    #[test]
+    fn every_lexical_for_head_shape_keeps_the_outer_binding_referenced() {
+        // The matrix from #16008: three loop forms × `let`/`const` heads ×
+        // `var`/`const` outer bindings.
+        for outer in [VarKind::Var, VarKind::Const] {
+            for head in [VarKind::Let, VarKind::Const] {
+                for item in [for_item(head), for_in_item(head), for_of_item(head)] {
+                    let analysis = analyze(&shadow_program(outer, item));
+                    assert_eq!(analysis.bindings[1].scope, ScopeId(1));
+                    assert_trailing_read_resolves_outward(&analysis);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn for_statement_test_and_update_resolve_in_the_loop_scope() {
+        // `for (let x = 0; x; x) x;` — test, update and body all read the
+        // loop's x, so all three references come from the loop scope.
+        let analysis = analyze(&program_with(vec![for_item(VarKind::Let)]));
+        assert_eq!(analysis.references.len(), 3);
+        for r in &analysis.references {
+            assert_eq!(r.from_scope, ScopeId(1));
+            assert_eq!(r.binding, Some(BindingId(0)));
+        }
+    }
+
+    #[test]
+    fn for_of_right_is_walked_in_the_loop_scope() {
+        // ECMAScript ForIn/OfHeadEvaluation evaluates `right` in a TDZ
+        // environment holding the head's names, so `for (let x of x)`
+        // reads the (uninitialised) loop x — a runtime TDZ error, never
+        // the outer one. `xs` here is free and resolves to nothing.
+        let analysis = analyze(&program_with(vec![for_of_item(VarKind::Let)]));
+        let right = analysis.references.iter().find(|r| r.name == "xs").expect("xs read");
+        assert_eq!(right.from_scope, ScopeId(1));
+        assert!(right.binding.is_none());
+    }
+
+    #[test]
+    fn var_for_head_still_hoists_without_a_loop_scope() {
+        // `for (var x of xs) x;` — `var` hoists to the enclosing function
+        // (here GLOBAL) and the loop opens no scope, exactly as before.
+        let analysis = analyze(&program_with(vec![for_of_item(VarKind::Var)]));
+        assert_eq!(analysis.scopes.len(), 1);
+        assert_eq!(analysis.bindings[0].scope, ScopeId::GLOBAL);
+    }
+
+    #[test]
+    fn expression_for_head_opens_no_loop_scope() {
+        // `for (x of xs) x;` — an assignment target, not a declaration.
+        let prog = program_with(vec![ProgramItem::Statement(Statement::for_of_statement(
+            ForOfStatement {
+                cv: None,
+                left: ForInit::Expression(id_expr("x")),
+                right: id_expr("xs"),
+                body: Box::new(read_stmt("x")),
+            },
+        ))]);
+        let analysis = analyze(&prog);
+        assert_eq!(analysis.scopes.len(), 1);
+        assert!(analysis.bindings.is_empty());
+    }
+
+    // ---------------------------------------------------------------
+    // #17836 — a `switch` case block is its own lexical scope.
+    //
+    // ```js
+    // var x = 1;
+    // switch (1) { case 1: let x = 2; console.log(x); }   // case block's x
+    // console.log(x);                                      // outer x
+    // ```
+    //
+    // The cases share ONE scope (§14.12.4 CaseBlock evaluation), but that
+    // scope is a fresh block, not the enclosing one. Before the fix the
+    // case's `let x` landed beside the outer `var x`, the trailing read
+    // resolved to it, and remove-unused-vars deleted the outer `var`.
+    //
+    // | part            | scope it is walked in |
+    // |-----------------|-----------------------|
+    // | discriminant    | enclosing             |
+    // | case tests      | case block            |
+    // | case bodies     | case block (shared)   |
+    // ---------------------------------------------------------------
+
+    use coding_adventures_javascript_ast::{SwitchCase, SwitchStatement};
+
+    /// `let`/`const`/`var <name>;` as a nested statement.
+    fn decl_stmt(kind: VarKind, name: &str) -> Statement {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(ident(name)),
+                init: None,
+            }],
+        }))
+    }
+
+    /// `switch (d) { case t: <first>; default: <second>; }`
+    fn switch_item(first: Vec<Statement>, second: Vec<Statement>) -> ProgramItem {
+        ProgramItem::Statement(Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: id_expr("d"),
+            cases: vec![
+                SwitchCase {
+                    cv: None,
+                    test: Some(id_expr("t")),
+                    consequent: first,
+                },
+                SwitchCase {
+                    cv: None,
+                    test: None,
+                    consequent: second,
+                },
+            ],
+        }))
+    }
+
+    #[test]
+    fn switch_case_let_lives_in_the_case_block_scope() {
+        // var x; switch (d) { case t: let x; x; default: x; } x;
+        for head in [VarKind::Let, VarKind::Const] {
+            let prog = program_with(vec![
+                var_decl(VarKind::Var, &["x"]),
+                switch_item(vec![decl_stmt(head, "x"), read_stmt("x")], vec![read_stmt("x")]),
+                expr_stmt(id_expr("x")),
+            ]);
+            let analysis = analyze(&prog);
+            assert_eq!(analysis.scopes.len(), 2);
+            assert_eq!(analysis.scopes[1].kind, ScopeKind::Block);
+            assert_eq!(analysis.scopes[1].parent, Some(ScopeId::GLOBAL));
+            assert_eq!(analysis.bindings[1].scope, ScopeId(1));
+            // Both case bodies share the block, so the `default:` read also
+            // sees the case's `let x`; only the read after the switch sees
+            // the outer one.
+            assert_trailing_read_resolves_outward(&analysis);
+        }
+    }
+
+    #[test]
+    fn switch_discriminant_is_outside_and_tests_inside_the_case_block() {
+        let analysis = analyze(&program_with(vec![switch_item(vec![], vec![])]));
+        let from = |name: &str| {
+            analysis
+                .references
+                .iter()
+                .find(|r| r.name == name)
+                .map(|r| r.from_scope)
+                .expect("reference")
+        };
+        assert_eq!(from("d"), ScopeId::GLOBAL);
+        assert_eq!(from("t"), ScopeId(1));
+    }
+
+    #[test]
+    fn var_in_switch_case_still_hoists_to_the_function() {
+        // switch (d) { case t: var y; } — `var` ignores the case block.
+        let analysis = analyze(&program_with(vec![switch_item(
+            vec![decl_stmt(VarKind::Var, "y")],
+            vec![],
+        )]));
+        let y = analysis.bindings.iter().find(|b| b.name == "y").expect("y");
+        assert_eq!(y.scope, ScopeId::GLOBAL);
     }
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Failing and retaking",
+  "label": "ch:ru-failing-and-retaking",
+  "canDo": "I can say that someone failed an exam and must retake it, talk about the resit, and talk about preparing for it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C382-gotovitsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say that someone failed an exam and must retake it, talk about the resit, and talk about preparing for it.",
+    "assesses": [
+      "RU-LEX-C382-EKZAMEN-03",
+      "RU-LEX-C382-EKZAMEN-04",
+      "RU-LEX-C382-EKZAMEN-05"
+    ]
+  }
+}

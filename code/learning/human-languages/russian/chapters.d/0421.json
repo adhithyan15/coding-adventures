@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Take-off and landing",
+  "label": "ch:ru-take-off-and-landing",
+  "canDo": "I can talk about take-off and landing: taking off, the take-off, landing, the plane window and the steps.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C421-trap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about take-off and landing: taking off, the take-off, landing, the plane window and the steps.",
+    "assesses": [
+      "RU-LEX-C421-VZLYOT-03",
+      "RU-LEX-C421-VZLYOT-04",
+      "RU-LEX-C421-VZLYOT-05"
+    ]
+  }
+}

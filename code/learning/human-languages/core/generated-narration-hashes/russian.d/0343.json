@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:98e06851bd62f069",
+  "lessonIds": [
+    "RU-C343-kritikovat",
+    "RU-C343-kritika",
+    "RU-C343-odobryat",
+    "RU-C343-osuzhdat",
+    "RU-C343-uprekat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch343.txt",
+  "json": "russian/narration/ch343.json",
+  "textHash": "fnv1a64:0946a7f93c792fd0",
+  "jsonHash": "fnv1a64:dbe9cd7ec3358d12",
+  "findings": []
+}

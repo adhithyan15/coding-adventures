@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:af0761a05a386006",
+  "lessonIds": [
+    "RU-C361-predpriyatie",
+    "RU-C361-pribyl",
+    "RU-C361-ubytok",
+    "RU-C361-dokhod",
+    "RU-C361-sdelka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch361.txt",
+  "json": "russian/narration/ch361.json",
+  "textHash": "fnv1a64:db40a520690cc888",
+  "jsonHash": "fnv1a64:4b4d6a790a06eb1b",
+  "findings": []
+}

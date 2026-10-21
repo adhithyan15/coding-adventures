@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C440-perekhod",
+    "language": "russian",
+    "chapter": 440,
+    "sequence": 25090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5d565e0d8bcfe5e"
+  },
+  "findings": []
+}

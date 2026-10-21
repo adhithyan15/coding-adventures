@@ -1,0 +1,11 @@
+{
+  "id": "RU-C393-podavat",
+  "pathSegment": "RU-PATH-393-DOKUMENTY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-393-DOKUMENTY",
+      "order": 1
+    }
+  ]
+}

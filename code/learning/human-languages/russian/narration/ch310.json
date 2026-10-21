@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 310,
+  "title": "Anniversaries and christenings",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1f523e5b028d97a4",
+  "lessons": [
+    {
+      "id": "RU-C310-yubiley",
+      "sequence": 18390,
+      "title": "юбилей (yubiléy) — a jubilee, a big round birthday or anniversary",
+      "headword": "юбилей",
+      "romanization": "yubiléy",
+      "gloss": "a jubilee, a big round birthday or anniversary",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:092c9e01de7a06e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a widow, then the Russian for an heir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: юбилей",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "юбилей (yubiléy) — \"a jubilee, a big round birthday or anniversary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У дедушки скоро юбилей, семьдесят лет. U dédushki skóro yubiléy, sémdesyat let. Grandpa soon has a big birthday: seventy."
+            },
+            {
+              "kind": "speech",
+              "text": "A round number: fifty, sixty, seventy years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "юбилей (yubiléy) was borrowed from German Jubiläum (EtymDB), which comes from Late Latin iūbilaeus \"the jubilee year\", which is usually traced to a Hebrew word for the ram's horn that announced it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubiléy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubiléy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubiléy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubiléy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with yubiléy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *yubiléy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a widow, then the Russian for an heir, then say yubiléy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a widow, then the Russian for an heir, then say *yubiléy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does юбилей (yubiléy) mean? (\"A jubilee, a big round birthday or anniversary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C310-godovshchina",
+      "sequence": 18400,
+      "title": "годовщина (godovshchína) — an anniversary",
+      "headword": "годовщина",
+      "romanization": "godovshchína",
+      "gloss": "an anniversary",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9efef93fef0c4447",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an heir, then the Russian for a jubilee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: годовщина",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "годовщина (godovshchína) — \"an anniversary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Сегодня годовщина их свадьбы. Sevódnya godovshchína ikh svádby. Today is their wedding anniversary."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "годовщина (godovshchína) is built on год \"year\", inherited through Old East Slavic godŭ from Proto-Slavic godŭ \"the right time\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godovshchína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *godovshchína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godovshchína, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *godovshchína*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with godovshchína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *godovshchína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an heir, then the Russian for a jubilee, then say godovshchína again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an heir, then the Russian for a jubilee, then say *godovshchína* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does годовщина (godovshchína) mean? (\"An anniversary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C310-novorozhdyonnyy",
+      "sequence": 18410,
+      "title": "новорождённый (novorozhdyónnyy) — a newborn",
+      "headword": "новорождённый",
+      "romanization": "novorozhdyónnyy",
+      "gloss": "a newborn",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:736ef18017b1878c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a jubilee, then the Russian for an anniversary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: новорождённый",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "новорождённый (novorozhdyónnyy) — \"a newborn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Новорождённый весил три килограмма. Novorozhdyónnyy vésil tri kilográmma. The newborn weighed three kilograms."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective that serves as a noun. A girl is новорождённая (novorozhdyónnaya)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "новорождённый (novorozhdyónnyy) joins новый \"new\", inherited from Proto-Slavic novŭ, PIE néwos, and рождённый \"born\", from родить, Proto-Slavic roditi (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "novorozhdyónnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *novorozhdyónnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "novorozhdyónnyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *novorozhdyónnyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with novorozhdyónnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *novorozhdyónnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a jubilee, then the Russian for an anniversary, then say novorozhdyónnyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a jubilee, then the Russian for an anniversary, then say *novorozhdyónnyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does новорождённый (novorozhdyónnyy) mean? (\"A newborn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C310-krestiny",
+      "sequence": 18420,
+      "title": "крестины (krestíny) — a christening (party)",
+      "headword": "крестины",
+      "romanization": "krestíny",
+      "gloss": "a christening (party)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40d23739fcbdf98a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an anniversary, then the Russian for a newborn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: крестины",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "крестины (krestíny) — \"a christening (party)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На крестины пригласили всех родственников. Na krestíny priglasíli vsekh ródstvennikov. All the relatives were invited to the christening."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural only; genitive крестин."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "крестины (krestíny) is built on крест \"a cross\", from Church Slavonic krĭstŭ, which EtymDB traces ultimately to Greek Khristós \"the anointed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krestíny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krestíny*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krestíny, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krestíny*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with krestíny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *krestíny*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an anniversary, then the Russian for a newborn, then say krestíny again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an anniversary, then the Russian for a newborn, then say *krestíny* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does крестины (krestíny) mean? (\"A christening (party)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C310-krestit",
+      "sequence": 18430,
+      "title": "крестить (krestít) — to christen, to baptize",
+      "headword": "крестить",
+      "romanization": "krestít",
+      "gloss": "to christen, to baptize",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0c4646988058801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a newborn, then the Russian for a christening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: крестить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "крестить (krestít) — \"to christen, to baptize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ребёнка крестили в мае. Rebyónka krestíli v máye. The baby was christened in May."
+            },
+            {
+              "kind": "speech",
+              "text": "Both aspects; also perfective окрестить (okrestít). Present крещу, крестишь."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "крестить (krestít) is inherited from Proto-Slavic krĭstiti, built on krĭstŭ \"baptism\" (EtymDB), a word that goes back to Greek Khristós."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krestít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krestít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krestít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krestít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with krestít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *krestít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a newborn, then the Russian for a christening, then say krestít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a newborn, then the Russian for a christening, then say *krestít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does крестить (krestít) mean? (\"To christen, to baptize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R310-review-303-310",
+      "sequence": 18440,
+      "title": "Words from chapters 303–310 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 303-310",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0e2997289c5b659",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for birth and to be born."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "birth, to be born, a baby, pregnant, to give birth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: birth, to be born, a baby, pregnant, to give birth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "childhood, youth, one's young years, old age, to grow up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: childhood, youth, one's young years, old age, to grow up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bring up, to adopt, to grow old, a graduation party, a generation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bring up, to adopt, to grow old, a graduation party, a generation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an engagement, to fall in love, to court, a church wedding, to part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an engagement, to fall in love, to court, a church wedding, to part]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a divorce, to get divorced, a move, to quit, an inheritance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a divorce, to get divorced, a move, to quit, an inheritance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a school-leaver, to enter, to finish, a degree, a school-leaving certificate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a school-leaver, to enter, to finish, a degree, a school-leaving certificate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a funeral, to bury, death, a widow, an heir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a funeral, to bury, death, a widow, an heir]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a jubilee, an anniversary, a newborn, a christening, to christen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a jubilee, an anniversary, a newborn, a christening, to christen]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Birth? (рождение.) To be born? (рождаться.) A baby? (младенец.) Pregnant? (беременная.) To give birth? (рожать.) Childhood? (детство.) Youth? (юность.) One's young years? (молодость.) Old age? (старость.) To grow up? (взрослеть.) To bring up? (воспитывать.) To adopt? (усыновлять.) To grow old? (стареть.) A graduation party? (выпускной.) A generation? (поколение.) An engagement? (помолвка.) To fall in love? (влюбляться.) To court? (ухаживать.) A church wedding? (венчание.) To part? (расставаться.) A divorce? (развод.) To get divorced? (разводиться.) A move? (переезд.) To quit? (увольняться.) An inheritance? (наследство.) A school-leaver? (выпускник.) To enter? (поступать.) To finish? (оканчивать.) A degree? (диплом.) A school-leaving certificate? (аттестат.) A funeral? (похороны.) To bury? (хоронить.) Death? (смерть.) A widow? (вдова.) An heir? (наследник.) A jubilee? (юбилей (yubiléy).) An anniversary? (годовщина (godovshchína).) A newborn? (новорождённый (novorozhdyónnyy).) A christening? (крестины (krestíny).) To christen? (крестить (krestít).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

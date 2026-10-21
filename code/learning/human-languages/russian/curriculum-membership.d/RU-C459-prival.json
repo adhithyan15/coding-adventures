@@ -1,0 +1,11 @@
+{
+  "id": "RU-C459-prival",
+  "pathSegment": "RU-PATH-459-POKHOD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-459-POKHOD",
+      "order": 2
+    }
+  ]
+}

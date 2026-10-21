@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C389-zapreshchat",
+    "language": "russian",
+    "chapter": 389,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a255755dcb452e5c"
+  },
+  "findings": []
+}

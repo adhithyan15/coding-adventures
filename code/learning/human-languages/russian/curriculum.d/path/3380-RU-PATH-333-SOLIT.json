@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-333-SOLIT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-333-SOLIT"
+  ],
+  "after": []
+}

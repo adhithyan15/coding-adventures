@@ -1,0 +1,11 @@
+{
+  "id": "RU-C502-podelka",
+  "pathSegment": "RU-PATH-502-CRAFTS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-502-CRAFTS",
+      "order": 4
+    }
+  ]
+}

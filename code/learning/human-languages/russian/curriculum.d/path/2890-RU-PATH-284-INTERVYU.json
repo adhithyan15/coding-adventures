@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-284-INTERVYU",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-284-INTERVYU"
+  ],
+  "after": []
+}

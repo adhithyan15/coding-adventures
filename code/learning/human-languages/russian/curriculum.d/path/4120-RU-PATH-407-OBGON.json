@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-407-OBGON",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-407-OBGON"
+  ],
+  "after": []
+}

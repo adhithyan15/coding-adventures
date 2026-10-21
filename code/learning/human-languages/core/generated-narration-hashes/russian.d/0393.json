@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:53c9353041b2d6e8",
+  "lessonIds": [
+    "RU-C393-zayavlenie",
+    "RU-C393-podavat",
+    "RU-C393-notarius",
+    "RU-C393-doverennost",
+    "RU-C393-zaveshchanie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch393.txt",
+  "json": "russian/narration/ch393.json",
+  "textHash": "fnv1a64:31fd83a66cd911d7",
+  "jsonHash": "fnv1a64:f6c0133503f6c03a",
+  "findings": []
+}

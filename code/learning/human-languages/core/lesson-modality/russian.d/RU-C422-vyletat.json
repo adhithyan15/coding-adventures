@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C422-vyletat",
+    "language": "russian",
+    "chapter": 422,
+    "sequence": 24180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:479d9cb646efe3a1"
+  },
+  "findings": []
+}

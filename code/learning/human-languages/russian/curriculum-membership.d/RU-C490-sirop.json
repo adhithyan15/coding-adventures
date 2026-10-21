@@ -1,0 +1,11 @@
+{
+  "id": "RU-C490-sirop",
+  "pathSegment": "RU-PATH-490-RECOVERY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-490-RECOVERY",
+      "order": 4
+    }
+  ]
+}

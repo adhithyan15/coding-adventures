@@ -1,0 +1,789 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 266,
+  "title": "A Ticket, and a Missed Train",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ccdf064ca8648a01",
+  "lessons": [
+    {
+      "id": "RU-C266-tuda-i-obratno",
+      "sequence": 16170,
+      "title": "билет туда и обратно (bilét tudá i obrátno) — a return ticket",
+      "headword": "билет туда и обратно",
+      "romanization": "bilét tudá i obrátno",
+      "gloss": "a return ticket — literally 'a ticket there and back'; a ticket до a place and на a train, bought at the till",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ff3655cf1e210ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a ticket\", \"a train\" and \"the till\". (Bilét. Póyezd. Kássa.) Then ask the way to the till. (Kak proytí k kásse?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: туда и обратно",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "туда и обратно — tudá i obrátno — \"there and back\". At the till it is a return ticket:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Один билет до Москвы, пожалуйста. — Туда и обратно? — odín bilét do Moskvý, pozhálusta. tudá i obrátno? — One ticket to Moscow, please. Return? — Да, туда и обратно. — da, tudá i obrátno — Yes, a return."
+            },
+            {
+              "kind": "speech",
+              "text": "A single is в одну сторону — v odnú stóronu — \"in one direction\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: до a place, на a train",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A ticket goes до the place, as far as it, and the place changes as it did after до in the street: светофор, до светофора; Москва, до Москвы."
+            },
+            {
+              "kind": "speech",
+              "text": "A ticket is на the train or the bus, and поезд and автобус keep their plain form: билет на поезд, билет на автобус — bilét na póyezd, bilét na avtóbus. After два, билет adds -а: два билета."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Сколько стоит билет? — Тысяча рублей."
+            },
+            {
+              "kind": "speech",
+              "text": "Skólko stóit bilét? — \"How much is the ticket?\" Týsyacha rubléy — \"A thousand roubles.\" After тысяча, рубль takes the counting form рублей."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обратно is the adverb of обратный, \"reverse, return\". EtymDB 2.1 has no entry for обратный, but takes the verb обратить back to Proto-Slavic ob(v)ortiti. By the usual account that is об-, \"around\", with a root of turning, kin to вертеть, \"to turn\", from Proto-Indo-European wert-: a ticket that turns round. туда is \"to that place\", on the same pointing stem as тот."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Odín bilét do Moskvý, pozhálusta.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Odín bilét do Moskvý, pozhálusta.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tudá i obrátno. Then a single: V odnú stóronu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tudá i obrátno.* Then a single: *V odnú stóronu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva biléta na póyezd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva biléta na póyezd.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Skólko stóit bilét? Týsyacha rubléy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Skólko stóit bilét?* *Týsyacha rubléy.*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A return ticket\"? (Билет туда и обратно.) \"A ticket to Moscow\"? (Билет до Москвы.) \"A ticket for the train\"? (Билет на поезд.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C266-opozdal",
+      "sequence": 16180,
+      "title": "я опоздал на поезд (ya opozdál na póyezd) — I've missed the train",
+      "headword": "я опоздал на поезд",
+      "romanization": "ya opozdál na póyezd",
+      "gloss": "I've missed the train — literally 'I was late for the train'; reporting a problem with the perfective past, the result that is still true now",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c0ee78c9fd4a8be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to be late\" and \"to lose\". (Opázdyvat. Teryát.) Then \"a return ticket for the train\". (Bilét na póyezd tudá i obrátno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: я опоздал на поезд",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я опоздал на поезд. — ya opozdál na póyezd — I've missed the train. A woman says Я опоздала на поезд."
+            },
+            {
+              "kind": "speech",
+              "text": "Russian says \"I was late for the train\", with на, as on a ticket. Опоздать is the perfective partner of опаздывать: one lateness, and the train is gone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a problem is a result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English often reports a problem with \"I have\": I've lost, it has gone. Russian uses the perfective past, because the result is still true now:"
+            },
+            {
+              "kind": "speech",
+              "text": "К сожалению, я потерял билет. — k sozhaléniyu, ya poteryál bilét — Unfortunately I've lost my ticket. Поезд уже ушёл. — póyezd uzhé ushól — The train has already left."
+            },
+            {
+              "kind": "speech",
+              "text": "Потерял is the partner of терять; ушёл, of уходить."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Извините, у меня проблема. Я опоздал на поезд. — Ничего. Есть поезд через час."
+            },
+            {
+              "kind": "speech",
+              "text": "U menyá probléma — \"I have a problem\", literally \"at me, a problem\". Nichevó. Yest póyezd chérez chas — \"Never mind. There's a train in an hour.\" Есть, \"there is\", is the present of быть that Russian does say aloud. When it is serious: Помогите, пожалуйста!"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "опоздать is о- with the root of поздно, \"late\". EtymDB 2.1 lists опоздать without a parent, and takes поздний, \"late\", back to Proto-Slavic pozdĭnŭ. The usual account relates that root to Latin post, \"after\"; EtymDB itself does not draw the link."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya opozdál na póyezd, then a woman: Ya opozdála na póyezd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya opozdál na póyezd*, then a woman: *Ya opozdála na póyezd.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "K sozhaléniyu, ya poteryál bilét.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *K sozhaléniyu, ya poteryál bilét.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Izvinítye, u menyá probléma. Póyezd uzhé ushól.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Izvinítye, u menyá probléma. Póyezd uzhé ushól.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem of your own at a station, with one perfective verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem of your own at a station, with one perfective verb]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I've missed the train\"? (Я опоздал на поезд.) \"I've lost my ticket\": which aspect? (Perfective, потерял: it is still lost.) \"I have a problem\"? (У меня проблема.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C266-obyavleniye",
+      "sequence": 16183,
+      "title": "объявление (obyavléniye) — an announcement; a notice",
+      "headword": "объявление",
+      "romanization": "obyavléniye",
+      "gloss": "an announcement; a notice — the announcement at the station, and the notice on a door",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3ef212d11ea1dca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I've missed the train\". (Ya opozdál na póyezd.) Then ask for a return ticket to Moscow. (Bilét do Moskvý, tudá i obrátno.) At a station, a voice from above often tells you first that something has gone wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: объявление",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "объявление — obyavléniye — \"an announcement\". At the station it is the voice over the platform:"
+            },
+            {
+              "kind": "speech",
+              "text": "На вокзале объявление: поезд до Москвы опаздывает. — na vokzále obyavléniye: póyezd do Moskvý opázdyvayet — An announcement at the station: the train to Moscow is running late."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it in five beats, ob-yav-lé-ni-ye, with the weight on -lé-. The b stops before the y: ob-yav, and not o-byav. Russian marks that break with a letter of its own, and the next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Что в объявлении? — Поезд до Москвы опаздывает. — Ничего. Есть поезд через час."
+            },
+            {
+              "kind": "speech",
+              "text": "Shto v obyavlénii? — \"What's in the announcement?\" After в, the word ends in -нии: v obyavlénii. The noun is neuter. A notice on a door is an объявление too: na dverí obyavléniye, \"there's a notice on the door\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "объявление (obyavléniye) is the noun of the verb объявить, \"to announce\", made with the ending -ение that turns an action into a thing. Объявить is об- with явить, \"to show, to make appear\", the verb behind явный, \"plain, obvious\". EtymDB 2.1 does not list объявление (obyavléniye) or объявить, but it takes явить through Old East Slavic javiti back to Proto-Slavic aviti, often written javiti, \"to make visible\". EtymDB stops there, and gives no older parent. An announcement shows everyone the same thing at once."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Obyavléniye. Then slowly, in beats: ob-yav-lé-ni-ye.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Obyavléniye.* Then slowly, in beats: *ob-yav-lé-ni-ye.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Na vokzále obyavléniye: póyezd do Moskvý opázdyvayet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Na vokzále obyavléniye: póyezd do Moskvý opázdyvayet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Shto v obyavlénii? The train is late: Póyezd opázdyvayet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Shto v obyavlénii?* The train is late: *Póyezd opázdyvayet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the announcement came too late for you: Ya opozdál na póyezd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the announcement came too late for you: *Ya opozdál na póyezd.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"An announcement\"? (Объявление.) \"In the announcement\"? (В объявлении.) Where does the weight fall? (On -lé-: obyavléniye.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W266-tvyordyy-znak",
+      "sequence": 16186,
+      "title": "ъ (tvyórdyy znak) — the hard sign inside объявление (obyavléniye)",
+      "headword": "ъ",
+      "romanization": "tvyórdyy znak",
+      "gloss": "the hard sign — the silent ъ inside объявление",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2d12aa6483e754af",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ъ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ъ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write щ and ь once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say объявление (obyavléniye), \"an announcement\". You met it a moment ago, at the station. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ъ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ъ — the hard sign, tvyórdyy znak."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inside объявление (obyavléniye), right after об-. It looks like ь with a short flag at the top left, and like ь it has no sound of its own. It keeps the б apart from the y that я carries: ob-yav-lé-ni-ye, with a small break after the b, and not o-byav-."
+            },
+            {
+              "kind": "speech",
+              "text": "It turns up mostly where a prefix ending in a consonant meets е, ё, ю or я: подъезд (podyézd), the entrance to a block of flats, is под- with -езд; съесть (syest), \"to eat up\", is с- with есть, \"to eat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Both signs put a y before the next vowel. ь also softens the consonant, and sits inside a word: семья (semyá), \"a family\". ъ (tvyórdyy znak) asks for a hard one, and sits after a prefix. Before the spelling reform of 1918 it also closed every word ending in a hard consonant: домъ for дом."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ъ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ъ (tvyórdyy znak) yourself — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at объявление (obyavléniye) and point at ъ (tvyórdyy znak) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **объявление** and point at ъ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ъ three times, saying tvyórdyy znak as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ъ three times, saying *tvyórdyy znak* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ь, then ъ (tvyórdyy znak), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ь, then ъ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "объявление (obyavléniye), then подъезд, aloud, with the small break after the prefix",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **объявление**, then **подъезд**, aloud, with the small break after the prefix]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ъ? (The hard sign, tvyórdyy znak; it has no sound of its own.) Which word did it come from? (объявление, obyavléniye, \"an announcement\".) \"A family\": ь or ъ? (ь, inside the word: семья.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C266-review",
+      "sequence": 16190,
+      "title": "Review — a ticket, and a train that left without you",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "at the station — a return ticket до a place and на a train, an announcement that the train is late, then a missed train and a lost ticket reported in the perfective",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37ae75dd3420ec67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for one return ticket to Moscow. (Odín bilét do Moskvý, tudá i obrátno, pozhálusta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons and a letter, and the station can be handled out loud. A ticket goes до a place and на a train; a return is туда и обратно. An объявление, obyavléniye, tells the whole station at once, and the hard sign, tvyórdyy znak, keeps its ob- and -yav- apart. And when it goes wrong, the perfective past says what happened and is still true: я опоздал на поезд (ya opozdál na póyezd), я потерял билет."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Извините, я опоздала на поезд. Как пройти к кассе? — Идите прямо, потом налево."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole trip so far in two lines: a problem in the perfective, a question about the way, and an answer in two steps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Izvinítye, ya opozdála na póyezd. Kak proytí k kásse?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Izvinítye, ya opozdála na póyezd. Kak proytí k kásse?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva biléta na póyezd, tudá i obrátno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva biléta na póyezd, tudá i obrátno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Shto v obyavlénii na vokzále? The train is late: Póyezd opázdyvayet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Shto v obyavlénii na vokzále?* The train is late: *Póyezd opázdyvayet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "K sozhaléniyu, ya poteryál bilét.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *K sozhaléniyu, ya poteryál bilét.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Pochemú ty opozdál? Explain what happened, then what followed, with poétomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Pochemú ty opozdál?* Explain what happened, then what followed, with *poétomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "the cashier asks Tudá i obrátno? Answer for a single: Nyet, v odnú stóronu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: the cashier asks *Tudá i obrátno?* Answer for a single: *Nyet, v odnú stóronu.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"She's missed the train\"? (Она опоздала на поезд.) \"Two tickets for the bus\"? (Два билета на автобус.) \"An announcement\"? (Объявление.) In obyavléniye, what keeps ob- and -yav- apart? (The hard sign, tvyórdyy znak, which makes no sound of its own.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

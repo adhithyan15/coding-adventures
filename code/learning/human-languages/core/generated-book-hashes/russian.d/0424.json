@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:afad04aba7fef6d0",
+  "lessonIds": [
+    "RU-C424-parom",
+    "RU-C424-paluba",
+    "RU-C424-kayuta",
+    "RU-C424-prichal",
+    "RU-C424-pristan"
+  ],
+  "tex": "russian/book/chapters/ch424-on-the-ferry.tex"
+}

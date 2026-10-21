@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-397-OPLATA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-397-OPLATA"
+  ],
+  "after": []
+}

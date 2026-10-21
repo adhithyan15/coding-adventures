@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile, readdir, rm } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseLandingModel } from "./model.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(here, "dist");
@@ -37,6 +38,9 @@ if (reportFiles.size !== 2 || manifestAsset.path !== assetPath) {
   throw new Error("Landing report routes, asset path, or file count differ");
 }
 const html = htmlBytes.toString("utf8");
+// Content changes should update the authored model, not a second copy of its
+// statistics here. Still require every published statistic in the real output.
+const model = parseLandingModel(JSON.parse(await readFile(resolve(here, "data/index.landing"), "utf8")));
 const expectedAssetUrl = `/coding-adventures/${assetPath}`;
 const requiredFragments = [
   '<meta name="generator" content="Forme">',
@@ -45,10 +49,9 @@ const requiredFragments = [
   'id="paths"',
   'id="labs"',
   'id="forme"',
-  "5,003",
-  "1,498",
-  "62",
-  "Preview and watch mode",
+  `Updated ${model.site.updated}`,
+  ...model.snapshot.items.flatMap(item => [item.value, item.label]),
+  ...model.forme.status.flatMap(item => [item.value, item.label]),
 ];
 for (const fragment of requiredFragments) {
   if (!html.includes(fragment)) throw new Error(`Landing HTML is missing ${JSON.stringify(fragment)}`);

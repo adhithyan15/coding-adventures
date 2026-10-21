@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:32134f8d4408cb20",
+  "lessonIds": [
+    "RU-C376-isklyuchenie",
+    "RU-C376-lish-by",
+    "RU-C376-razve-chto",
+    "RU-C376-khotya-by",
+    "RU-C376-na-vsyakiy-sluchay",
+    "RU-R376-review-369-376"
+  ],
+  "tex": "russian/book/chapters/ch376-exceptions.tex"
+}

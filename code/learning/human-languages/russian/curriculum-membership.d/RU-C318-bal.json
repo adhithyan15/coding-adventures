@@ -1,0 +1,11 @@
+{
+  "id": "RU-C318-bal",
+  "pathSegment": "RU-PATH-318-TRADITSIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-318-TRADITSIYA",
+      "order": 3
+    }
+  ]
+}

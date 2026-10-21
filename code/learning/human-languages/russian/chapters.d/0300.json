@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Natural disasters",
+  "label": "ch:ru-natural-disasters",
+  "canDo": "I can talk about a flood, an earthquake, a tornado and a drought, and say that water flooded a place.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C300-zatoplyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can talk about a flood, an earthquake, a tornado and a drought, and say that water flooded a place.",
+    "assesses": [
+      "RU-LEX-C300-NAVODNENIYE-03",
+      "RU-LEX-C300-NAVODNENIYE-04",
+      "RU-LEX-C300-NAVODNENIYE-05"
+    ]
+  }
+}

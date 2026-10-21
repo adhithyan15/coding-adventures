@@ -1,0 +1,11 @@
+{
+  "id": "RU-C438-tablichka",
+  "pathSegment": "RU-PATH-438-UKAZATEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-438-UKAZATEL",
+      "order": 1
+    }
+  ]
+}

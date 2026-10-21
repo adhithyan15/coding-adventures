@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C298-utselet",
+    "language": "russian",
+    "chapter": 298,
+    "sequence": 17810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a47c10d39a1575cb"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C492-otchim",
+  "pathSegment": "RU-PATH-492-STEPFAMILY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-492-STEPFAMILY",
+      "order": 0
+    }
+  ]
+}

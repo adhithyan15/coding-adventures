@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:30501ae4e34835ad",
+  "lessonIds": [
+    "RU-C295-pozhar",
+    "RU-C295-dym",
+    "RU-C295-goret",
+    "RU-C295-zagoratsya",
+    "RU-C295-ognetushitel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch295.txt",
+  "json": "russian/narration/ch295.json",
+  "textHash": "fnv1a64:9106726b927c300a",
+  "jsonHash": "fnv1a64:84458df3967b2be8",
+  "findings": []
+}

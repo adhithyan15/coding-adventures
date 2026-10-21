@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C448-khimchistka",
+    "language": "russian",
+    "chapter": 448,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7de44a1f2d9b5140"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C366-protest",
+    "language": "russian",
+    "chapter": 366,
+    "sequence": 21310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d528b90ffb593960"
+  },
+  "findings": []
+}

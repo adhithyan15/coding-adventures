@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-385-OBRAZOVANIYE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-385-OBRAZOVANIYE"
+  ],
+  "after": []
+}

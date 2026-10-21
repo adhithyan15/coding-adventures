@@ -43,6 +43,7 @@
 //! is safe Rust throughout.
 
 use crate::cir::CIRInstr;
+use vm_core::errors::VMError;
 use vm_core::value::Value;
 
 // ---------------------------------------------------------------------------
@@ -103,6 +104,27 @@ pub trait Backend: Send + Sync {
     /// [`Self::compile`] when they have an `IIRFunction` in hand.
     fn compile_function(&self, _ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {
         self.compile(ir)
+    }
+
+    /// Take (and clear) the error the most recent [`Self::run`] recorded.
+    ///
+    /// `run` returns a plain [`Value`], so a backend whose compiled code can
+    /// fail — a LANG83 `trap`, an `i64_div_floor` overflow, a divide by zero,
+    /// a malformed binary, fuel exhaustion — records the failure on the side
+    /// and returns a placeholder value.  `JITCore` calls `take_error`
+    /// immediately after **every** `run` and turns `Some(err)` into an `Err`
+    /// that stops the whole program, so a failing compiled function can never
+    /// hand its caller a placeholder and let it keep running ("fail open").
+    ///
+    /// *Taking* (rather than peeking) matters too: a slot that is never
+    /// cleared would make a later, successful run look failed — or, with a
+    /// keep-the-first-message slot, would hide a later failure behind an
+    /// earlier one.
+    ///
+    /// The default returns `None`: a backend that cannot fail at run time
+    /// (or that reports failure some other way) need not implement it.
+    fn take_error(&self) -> Option<VMError> {
+        None
     }
 }
 

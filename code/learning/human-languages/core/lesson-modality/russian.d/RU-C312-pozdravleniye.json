@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C312-pozdravleniye",
+    "language": "russian",
+    "chapter": 312,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:750cc4dfba070b2c"
+  },
+  "findings": []
+}

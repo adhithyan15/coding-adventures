@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:a37458109a700875",
+  "lessonIds": [
+    "RU-C410-stolknoveniye",
+    "RU-C410-stalkivatsya",
+    "RU-C410-vrezatsya",
+    "RU-C410-sbivat",
+    "RU-C410-vmyatina",
+    "RU-R410-review-403-410"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch410.txt",
+  "json": "russian/narration/ch410.json",
+  "textHash": "fnv1a64:e7fdf03ea1ba8e1d",
+  "jsonHash": "fnv1a64:61c6c7ef341d732d",
+  "findings": []
+}

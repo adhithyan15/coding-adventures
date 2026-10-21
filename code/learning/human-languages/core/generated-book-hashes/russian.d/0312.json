@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:b193e9b7513becc0",
+  "lessonIds": [
+    "RU-C312-pozdravlyat",
+    "RU-C312-pozdravleniye",
+    "RU-C312-pozhelaniye",
+    "RU-C312-zhelat",
+    "RU-C312-tost"
+  ],
+  "tex": "russian/book/chapters/ch312-congratulations-and-wishes.tex"
+}

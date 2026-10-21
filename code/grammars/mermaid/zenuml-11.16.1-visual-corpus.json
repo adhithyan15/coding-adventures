@@ -1,0 +1,21 @@
+{
+  "upstream_version": "11.16.1",
+  "fixtures": [
+    "demo",
+    "participant-order",
+    "annotators",
+    "aliases",
+    "sync-messages",
+    "async-message",
+    "creation-messages",
+    "reply-forms",
+    "nested-reply",
+    "nesting",
+    "comments",
+    "loops",
+    "alternatives",
+    "optional-fragment",
+    "parallel-fragment",
+    "try-catch-finally"
+  ]
+}

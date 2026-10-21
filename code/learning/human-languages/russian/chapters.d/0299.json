@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "The emergency call",
+  "label": "ch:ru-the-emergency-call",
+  "canDo": "I can talk about a stretcher, a siren, an alarm and the person on duty, and say that someone called for help.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C299-vyzyvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can talk about a stretcher, a siren, an alarm and the person on duty, and say that someone called for help.",
+    "assesses": [
+      "RU-LEX-C299-SIRENA-03",
+      "RU-LEX-C299-SIRENA-04",
+      "RU-LEX-C299-SIRENA-05"
+    ]
+  }
+}

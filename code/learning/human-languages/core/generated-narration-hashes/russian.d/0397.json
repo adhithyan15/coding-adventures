@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:bc788677c3c1d43f",
+  "lessonIds": [
+    "RU-C397-oplachivat",
+    "RU-C397-platyozh",
+    "RU-C397-besplatnyy",
+    "RU-C397-platnyy",
+    "RU-C397-vygodnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch397.txt",
+  "json": "russian/narration/ch397.json",
+  "textHash": "fnv1a64:dd107fd7f9c2c294",
+  "jsonHash": "fnv1a64:9d7075c4c580667e",
+  "findings": []
+}

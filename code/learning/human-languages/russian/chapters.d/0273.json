@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Happening and going on",
+  "label": "ch:ru-happening-and-going-on",
+  "canDo": "I can say that something happens, goes on, lasts, stops and sets in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C273-nastupat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say that something happens, goes on, lasts, stops and sets in.",
+    "assesses": [
+      "RU-LEX-C273-PROISKHODIT-03",
+      "RU-LEX-C273-PROISKHODIT-04",
+      "RU-LEX-C273-PROISKHODIT-05"
+    ]
+  }
+}

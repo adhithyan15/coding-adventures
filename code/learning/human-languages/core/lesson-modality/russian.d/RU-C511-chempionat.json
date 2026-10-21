@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C511-chempionat",
+    "language": "russian",
+    "chapter": 511,
+    "sequence": 28760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77996d01058b2115"
+  },
+  "findings": []
+}

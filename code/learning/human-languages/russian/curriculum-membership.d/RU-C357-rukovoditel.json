@@ -1,0 +1,11 @@
+{
+  "id": "RU-C357-rukovoditel",
+  "pathSegment": "RU-PATH-357-SOTRUDNIK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-357-SOTRUDNIK",
+      "order": 1
+    }
+  ]
+}

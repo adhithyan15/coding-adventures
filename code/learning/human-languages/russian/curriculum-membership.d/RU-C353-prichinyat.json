@@ -1,0 +1,11 @@
+{
+  "id": "RU-C353-prichinyat",
+  "pathSegment": "RU-PATH-353-USHCHERB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-353-USHCHERB",
+      "order": 1
+    }
+  ]
+}

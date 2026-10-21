@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Visiting",
+  "label": "ch:ru-visiting",
+  "canDo": "I can talk about visiting people and hospitality.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C499-gostit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about visiting people and hospitality.",
+    "assesses": [
+      "RU-LEX-C499-VISITS-03",
+      "RU-LEX-C499-VISITS-04",
+      "RU-LEX-C499-VISITS-05"
+    ]
+  }
+}

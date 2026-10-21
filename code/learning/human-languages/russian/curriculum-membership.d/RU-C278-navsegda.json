@@ -1,0 +1,11 @@
+{
+  "id": "RU-C278-navsegda",
+  "pathSegment": "RU-PATH-278-VPERVYYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-278-VPERVYYE",
+      "order": 1
+    }
+  ]
+}

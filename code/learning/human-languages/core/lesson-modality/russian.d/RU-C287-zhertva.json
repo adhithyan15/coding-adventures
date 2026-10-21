@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C287-zhertva",
+    "language": "russian",
+    "chapter": 287,
+    "sequence": 17240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d8bc3b9144e3a27"
+  },
+  "findings": []
+}

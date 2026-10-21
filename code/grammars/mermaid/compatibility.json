@@ -23,7 +23,7 @@
     {
       "id": "sequence",
       "headers": ["sequenceDiagram"],
-      "status": "partial",
+      "status": "full",
       "ir": "sequence",
       "smoke_source": "sequenceDiagram\nAlice->>Bob: Hello"
     },
@@ -233,7 +233,7 @@
     {
       "id": "zenuml",
       "headers": ["zenuml"],
-      "status": "partial",
+      "status": "full",
       "ir": "sequence",
       "external": true,
       "smoke_source": "zenuml\nAlice->Bob: Hello"

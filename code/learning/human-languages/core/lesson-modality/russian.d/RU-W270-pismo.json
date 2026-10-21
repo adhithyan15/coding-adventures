@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W270-pismo",
+    "language": "russian",
+    "chapter": 270,
+    "sequence": 16330,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fa1a0e1168256fa7",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

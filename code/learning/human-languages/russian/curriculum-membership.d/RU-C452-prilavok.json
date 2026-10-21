@@ -1,0 +1,11 @@
+{
+  "id": "RU-C452-prilavok",
+  "pathSegment": "RU-PATH-452-BULOCHNAYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-452-BULOCHNAYA",
+      "order": 2
+    }
+  ]
+}

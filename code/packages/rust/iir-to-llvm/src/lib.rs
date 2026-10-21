@@ -309,6 +309,14 @@ const SUPPORTED_OPS: &[&str] = &[
     // Richer dynamic byte-string ops remain unsupported.
     "str_const", "str_index", "str_concat", "str_slice", "str_len", "str_eq", "str_cmp",
     "print_str",
+    // LANG83 PR1b — floor division with defined traps, and `trap` itself. Both
+    // lower to code that calls the module's own `@__iir_trap` definition (see
+    // `emit_lang83_runtime`), so no harness C runtime is needed.
+    "i64_div_floor", "i64_mod_floor", "trap",
+    // LANG83 PR4 — overflow-checked arithmetic via the
+    // `@llvm.s{add,sub,mul}.with.overflow.i64` intrinsics; overflow branches
+    // to the same module-local `@__iir_trap` with `Trap.Overflow`.
+    "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -357,6 +365,10 @@ const SUPPORTED_OPS: &[&str] = &[
 /// enough to prove one specific object's fate).
 const SUPPORTED_BUILTINS: &[&str] = &[
     "print_i64",
+    // LANG83 PR1b — decimal, no newline. Lowers to the module's own
+    // `linkonce_odr` `@__iir_write_i64` (libc `printf("%lld")`), so it needs no
+    // host shim and shares libc's `stdout` with `putchar`.
+    "write_i64",
     "putchar",
     "getchar",
     "input_i64",
@@ -493,6 +505,17 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
             }
             if instr.op == "print_str" {
                 validate_print_str(func, instr, &mut errors);
+                continue;
+            }
+            if instr.op == "trap" {
+                // `trap` carries a kind literal, not a value: srcs = [Str(kind)]
+                // with the kind in the closed LANG83 table.
+                if trap_kind_operand(instr).is_none() {
+                    errors.push(format!(
+                        "InvalidOperand: function {:?}, trap requires srcs = [Operand::Str(registered trap kind)], got {:?}",
+                        func.name, instr.srcs
+                    ));
+                }
                 continue;
             }
             // `ret_void` carries type_hint "void"; everything else carries a
@@ -832,8 +855,35 @@ pub fn lower_iir_to_llvm(
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__dyn_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
+    // LANG83 PR1b: `write_i64` and every trap kind the module can raise (an
+    // explicit `trap`, or the defined traps of the floor-division ops) — each
+    // gets one self-contained definition / message constant.
+    let mut used_write_i64 = false;
+    let mut trap_kinds: std::collections::BTreeSet<u32> = std::collections::BTreeSet::new();
+    // LANG83 PR4: the `*.with.overflow` intrinsics the checked ops call, each
+    // declared once.
+    let mut used_ovf_intrinsics: std::collections::BTreeSet<&'static str> = std::collections::BTreeSet::new();
     for f in &module.functions {
         for i in &f.instructions {
+            match i.op.as_str() {
+                "trap" => {
+                    if let Some((_, id)) = trap_kind_operand(i) {
+                        trap_kinds.insert(id);
+                    }
+                }
+                "i64_div_floor" | "i64_mod_floor" => {
+                    for kind in floor_trap_kinds(&i.op) {
+                        trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(kind));
+                    }
+                }
+                op if overflow_intrinsic(op).is_some() => {
+                    trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
+                        interpreter_ir::exception_kind::TRAP_OVERFLOW,
+                    ));
+                    used_ovf_intrinsics.extend(overflow_intrinsic(op));
+                }
+                _ => {}
+            }
             if i.op == "alloc_bytes" {
                 used_alloc_bytes = true;
             }
@@ -893,6 +943,7 @@ pub fn lower_iir_to_llvm(
                 if let Some(Operand::Var(name)) = i.srcs.first() {
                     match name.as_str() {
                         "print_i64" => used_print_i64 = true,
+                        "write_i64" => used_write_i64 = true,
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
@@ -917,6 +968,13 @@ pub fn lower_iir_to_llvm(
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
+    }
+    emit_lang83_runtime(&mut out, used_write_i64, &trap_kinds);
+    if !used_ovf_intrinsics.is_empty() {
+        out.push('\n');
+        for name in &used_ovf_intrinsics {
+            out.push_str(&format!("declare {{ i64, i1 }} {name}(i64, i64)\n"));
+        }
     }
     if used_print_str {
         out.push('\n');
@@ -1653,6 +1711,16 @@ fn lower_function(
         lower_instr_with_slots(instr, &mut state, out)?;
     }
 
+    // `trap` ends its block with `unreachable` and opens a fresh
+    // `__after_trapN:` block for whatever follows. When the trap is the
+    // function's *last* instruction nothing follows, and that empty block
+    // would have no terminator — invalid IR that `llc`/`clang` reject. Close
+    // it with `unreachable` too: control can never reach it.
+    if state.block_open && func.instructions.last().is_some_and(|i| i.op == "trap") {
+        out.push_str("  unreachable\n");
+        state.block_open = false;
+    }
+
     out.push_str("}\n");
     Ok(())
 }
@@ -1700,7 +1768,7 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
                 *counts.entry(dest.as_str()).or_insert(0) += 1;
             }
         }
-        if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
+        if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void" | "trap") {
             block += 1;
         }
     }
@@ -2122,6 +2190,12 @@ fn lower_instr(
         "int_to_real" => lower_int_to_real(instr, state, out),
         "real_to_int_trunc" => lower_real_to_int(instr, state, out, /*floor=*/ false),
         "real_to_int_floor" => lower_real_to_int(instr, state, out, /*floor=*/ true),
+        // LANG83 PR1b.
+        "i64_div_floor" => lower_floor_divmod(instr, state, out, /*want_mod=*/ false),
+        "i64_mod_floor" => lower_floor_divmod(instr, state, out, /*want_mod=*/ true),
+        "trap" => lower_trap(instr, state, out),
+        // LANG83 PR4.
+        "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => lower_checked_arith(instr, state, out),
         // AL8 sqrt + transcendentals — via LLVM intrinsics.
         "f64_sqrt" => lower_f64_sqrt(instr, state, out),
         "f64_sin"  => lower_f64_intrinsic(instr, state, out, "f64_sin",  "@llvm.sin.f64"),
@@ -2721,6 +2795,259 @@ fn lower_int_to_real(
     let dest = require_dest(instr, "int_to_real", state.fn_name)?.to_string();
     let a = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
     out.push_str(&format!("  %{dest} = sitofp i64 {a} to double\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG83 PR1b — floor division, `trap`, `write_i64`
+// ---------------------------------------------------------------------------
+//
+// The module carries its own tiny runtime for these, as `linkonce_odr`
+// definitions (one copy survives however many modules a link combines), so a
+// `.ll` that uses them links with nothing but libc — the harness C runtime
+// the older `print_i64` needs is not involved:
+//
+// ```llvm
+// define linkonce_odr void @__iir_write_i64(i64 %x)        ; printf("%lld", x)
+// define linkonce_odr void @__iir_trap(ptr %msg, i64 %len) noreturn
+//     ; fflush(NULL)  — every buffered byte reaches stdout first
+//     ; write(2, msg, len)  — "trap: <kind>\n" on stderr
+//     ; abort()
+// @__iir_trap_msg.<id> = linkonce_odr … c"trap: <kind>\0A"
+// ```
+//
+// `fflush(NULL)` matters: libc `putchar`/`printf` output is buffered when
+// stdout is a pipe, and `abort` (like `llvm.trap`) does not flush it.
+
+/// The trap kind a well-formed `trap` instruction names, with its stable id.
+fn trap_kind_operand(instr: &IIRInstr) -> Option<(&str, u32)> {
+    match instr.srcs.as_slice() {
+        [Operand::Str(kind)] => {
+            interpreter_ir::exception_kind::trap_kind_id(kind).map(|id| (kind.as_str(), id))
+        }
+        _ => None,
+    }
+}
+
+/// The kinds a floor-division op may raise (LANG83): both may divide by zero;
+/// only the quotient can overflow (`MIN mod -1` is 0).
+fn floor_trap_kinds(op: &str) -> &'static [&'static str] {
+    use interpreter_ir::exception_kind::{TRAP_DIV_ZERO, TRAP_OVERFLOW};
+    if op == "i64_div_floor" { &[TRAP_DIV_ZERO, TRAP_OVERFLOW] } else { &[TRAP_DIV_ZERO] }
+}
+
+/// The stderr line for trap kind `id`.
+fn trap_message_bytes(id: u32) -> Vec<u8> {
+    let kind = interpreter_ir::exception_kind::trap_kind_name(id).unwrap_or("Trap.Unknown");
+    format!("trap: {kind}\n").into_bytes()
+}
+
+/// Emit the self-contained LANG83 runtime definitions this module uses.
+fn emit_lang83_runtime(
+    out: &mut String,
+    used_write_i64: bool,
+    trap_kinds: &std::collections::BTreeSet<u32>,
+) {
+    if used_write_i64 {
+        out.push('\n');
+        out.push_str("declare i32 @printf(ptr, ...)\n");
+        out.push_str("@__iir_fmt_i64 = linkonce_odr unnamed_addr constant [5 x i8] c\"%lld\\00\"\n");
+        out.push_str("define linkonce_odr void @__iir_write_i64(i64 %x) {\n");
+        out.push_str("  %r = call i32 (ptr, ...) @printf(ptr @__iir_fmt_i64, i64 %x)\n");
+        out.push_str("  ret void\n");
+        out.push_str("}\n");
+    }
+    if !trap_kinds.is_empty() {
+        out.push('\n');
+        out.push_str("declare i32 @fflush(ptr)\n");
+        out.push_str("declare i64 @write(i32, ptr, i64)\n");
+        out.push_str("declare void @abort() noreturn\n");
+        for &id in trap_kinds {
+            let msg = trap_message_bytes(id);
+            out.push_str(&format!(
+                "@__iir_trap_msg.{id} = linkonce_odr unnamed_addr constant [{} x i8] c\"{}\"\n",
+                msg.len(),
+                llvm_c_bytes(&msg)
+            ));
+        }
+        out.push_str("define linkonce_odr void @__iir_trap(ptr %msg, i64 %len) noreturn {\n");
+        out.push_str("  %f = call i32 @fflush(ptr null)\n");
+        out.push_str("  %w = call i64 @write(i32 2, ptr %msg, i64 %len)\n");
+        out.push_str("  call void @abort()\n");
+        out.push_str("  unreachable\n");
+        out.push_str("}\n");
+    }
+}
+
+/// `call @__iir_trap(<kind message>); unreachable` — ends the current block.
+fn emit_trap_call(id: u32, out: &mut String) {
+    let len = trap_message_bytes(id).len();
+    out.push_str(&format!("  call void @__iir_trap(ptr @__iir_trap_msg.{id}, i64 {len})\n"));
+    out.push_str("  unreachable\n");
+}
+
+/// Lower `trap "<kind>"`. Control never falls through, but IIR may still list
+/// instructions after it (a frontend's dead tail, or the `ret` every function
+/// ends with), so a fresh — unreachable — block is opened for them.
+fn lower_trap(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let (_, id) = trap_kind_operand(instr).ok_or_else(|| IIRLlvmError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: "trap requires srcs = [Operand::Str(registered trap kind)]".into(),
+    })?;
+    emit_trap_call(id, out);
+    let after = state.fresh_bare("after_trap");
+    out.push_str(&format!("{after}:\n"));
+    state.block_open = true;
+    Ok(())
+}
+
+/// Lower `i64_div_floor` / `i64_mod_floor` (LANG83).
+///
+/// ```llvm
+///   %z = icmp eq i64 %b, 0
+///   br i1 %z, label %trap_zero, label %nonzero
+/// trap_zero:  call @__iir_trap(Trap.DivZero) ; unreachable
+/// nonzero:
+///   %m1 = icmp eq i64 %b, -1
+///   ; div: (a == MIN && b == -1) → trap Trap.Overflow
+///   ; mod: divide by 1 instead of -1 (MIN mod -1 = 0, and sdiv/srem of
+///   ;      MIN by -1 is undefined behaviour in LLVM IR)
+///   %q = sdiv i64 %a, %bs        ; truncating
+///   %r = srem i64 %a, %bs
+///   %adj = (r != 0) & ((r ^ bs) < 0)
+///   %dest = select %adj, q - 1, q      ; mod: select %adj, r + bs, r
+/// ```
+///
+/// `sdiv`/`srem` are only reached with a divisor that is neither 0 nor
+/// (with `MIN`) -1, so no path relies on LLVM's undefined behaviour.
+fn lower_floor_divmod(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+    want_mod: bool,
+) -> Result<(), IIRLlvmError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_DIV_ZERO, TRAP_OVERFLOW};
+    let opname = if want_mod { "i64_mod_floor" } else { "i64_div_floor" };
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let b = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    let div_zero = trap_kind_id(TRAP_DIV_ZERO).expect("built-in kind");
+    let overflow = trap_kind_id(TRAP_OVERFLOW).expect("built-in kind");
+
+    let is_zero = state.fresh("fz");
+    let trap_zero = state.fresh_bare("ftrapz");
+    let nonzero = state.fresh_bare("fnz");
+    out.push_str(&format!("  {is_zero} = icmp eq i64 {b}, 0\n"));
+    out.push_str(&format!("  br i1 {is_zero}, label %{trap_zero}, label %{nonzero}\n"));
+    out.push_str(&format!("{trap_zero}:\n"));
+    emit_trap_call(div_zero, out);
+    out.push_str(&format!("{nonzero}:\n"));
+
+    let minus_one = state.fresh("fm1");
+    out.push_str(&format!("  {minus_one} = icmp eq i64 {b}, -1\n"));
+    let divisor = if want_mod {
+        let bs = state.fresh("fbs");
+        out.push_str(&format!("  {bs} = select i1 {minus_one}, i64 1, i64 {b}\n"));
+        bs
+    } else {
+        let is_min = state.fresh("fmin");
+        let ovf = state.fresh("fovf");
+        let trap_ovf = state.fresh_bare("ftrapo");
+        let ok = state.fresh_bare("fok");
+        out.push_str(&format!("  {is_min} = icmp eq i64 {a}, {}\n", i64::MIN));
+        out.push_str(&format!("  {ovf} = and i1 {minus_one}, {is_min}\n"));
+        out.push_str(&format!("  br i1 {ovf}, label %{trap_ovf}, label %{ok}\n"));
+        out.push_str(&format!("{trap_ovf}:\n"));
+        emit_trap_call(overflow, out);
+        out.push_str(&format!("{ok}:\n"));
+        b
+    };
+    let q = state.fresh("fq");
+    let r = state.fresh("fr");
+    let rnz = state.fresh("frnz");
+    let x = state.fresh("fx");
+    let neg = state.fresh("fneg");
+    let adj = state.fresh("fadj");
+    let fixed = state.fresh("ffix");
+    out.push_str(&format!("  {q} = sdiv i64 {a}, {divisor}\n"));
+    out.push_str(&format!("  {r} = srem i64 {a}, {divisor}\n"));
+    out.push_str(&format!("  {rnz} = icmp ne i64 {r}, 0\n"));
+    out.push_str(&format!("  {x} = xor i64 {r}, {divisor}\n"));
+    out.push_str(&format!("  {neg} = icmp slt i64 {x}, 0\n"));
+    out.push_str(&format!("  {adj} = and i1 {rnz}, {neg}\n"));
+    if want_mod {
+        out.push_str(&format!("  {fixed} = add i64 {r}, {divisor}\n"));
+        out.push_str(&format!("  %{dest} = select i1 {adj}, i64 {fixed}, i64 {r}\n"));
+    } else {
+        out.push_str(&format!("  {fixed} = sub i64 {q}, 1\n"));
+        out.push_str(&format!("  %{dest} = select i1 {adj}, i64 {fixed}, i64 {q}\n"));
+    }
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG83 PR4 — overflow-checked arithmetic
+// ---------------------------------------------------------------------------
+
+/// The `*.with.overflow` intrinsic a checked op calls (`neg` is `0 - a`).
+fn overflow_intrinsic(op: &str) -> Option<&'static str> {
+    match op {
+        "i64_add_ovf" => Some("@llvm.sadd.with.overflow.i64"),
+        "i64_sub_ovf" | "i64_neg_ovf" => Some("@llvm.ssub.with.overflow.i64"),
+        "i64_mul_ovf" => Some("@llvm.smul.with.overflow.i64"),
+        _ => None,
+    }
+}
+
+/// Lower `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`
+/// (LANG83 PR4): the exact result, or `Trap.Overflow`.
+///
+/// LLVM's signed `*.with.overflow` intrinsics return the wrapped result
+/// together with an `i1` that is set exactly when the true result does not fit
+/// — the portable form of the CPU's overflow flag, which `llc` lowers to
+/// `add`+`jo` on x86-64 and `adds`+`b.vs` on AArch64:
+///
+/// ```llvm
+///   %t = call { i64, i1 } @llvm.sadd.with.overflow.i64(i64 %a, i64 %b)
+///   %o = extractvalue { i64, i1 } %t, 1
+///   br i1 %o, label %otrap, label %ook
+/// otrap:  call @__iir_trap(Trap.Overflow) ; unreachable
+/// ook:
+///   %dest = extractvalue { i64, i1 } %t, 0
+/// ```
+///
+/// `i64_neg_ovf a` is `ssub.with.overflow(0, a)`, which overflows only for
+/// `a = MIN`. The destination is defined only on the non-trapping edge, so a
+/// wrapped value can never be observed.
+fn lower_checked_arith(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+    let opname = instr.op.as_str();
+    let intrinsic = overflow_intrinsic(opname).ok_or_else(|| IIRLlvmError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: format!("{opname} is not an overflow-checked op"),
+    })?;
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let (a, b) = if opname == "i64_neg_ovf" {
+        ("0".to_string(), resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?)
+    } else {
+        (
+            resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?,
+            resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?,
+        )
+    };
+    let pair = state.fresh("ovt");
+    let flag = state.fresh("ovf");
+    let trap_block = state.fresh_bare("ovtrap");
+    let ok_block = state.fresh_bare("ovok");
+    out.push_str(&format!("  {pair} = call {{ i64, i1 }} {intrinsic}(i64 {a}, i64 {b})\n"));
+    out.push_str(&format!("  {flag} = extractvalue {{ i64, i1 }} {pair}, 1\n"));
+    out.push_str(&format!("  br i1 {flag}, label %{trap_block}, label %{ok_block}\n"));
+    out.push_str(&format!("{trap_block}:\n"));
+    emit_trap_call(trap_kind_id(TRAP_OVERFLOW).expect("built-in kind"), out);
+    out.push_str(&format!("{ok_block}:\n"));
+    out.push_str(&format!("  %{dest} = extractvalue {{ i64, i1 }} {pair}, 0\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
@@ -4192,6 +4519,12 @@ fn lower_call_builtin(
         });
     }
     match name.as_str() {
+        // ── write_i64(v) — LANG83 PR1b: decimal, no newline ──────────────
+        "write_i64" => {
+            let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+            out.push_str(&format!("  call void @__iir_write_i64(i64 {val})\n"));
+            Ok(())
+        }
         "print_i64" => {
             let val = match instr.srcs.get(1) {
                 Some(Operand::Var(s)) => state.env.get(s).cloned().ok_or_else(|| {

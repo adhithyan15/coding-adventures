@@ -1,0 +1,11 @@
+{
+  "id": "RU-C492-bliznetsy",
+  "pathSegment": "RU-PATH-492-STEPFAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-492-STEPFAMILY",
+      "order": 3
+    }
+  ]
+}

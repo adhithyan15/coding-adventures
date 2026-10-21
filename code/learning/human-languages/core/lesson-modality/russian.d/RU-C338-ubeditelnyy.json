@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C338-ubeditelnyy",
+    "language": "russian",
+    "chapter": 338,
+    "sequence": 19890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d6c56335ac56d17"
+  },
+  "findings": []
+}

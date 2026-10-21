@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 410,
+  "title": "A small accident",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a37458109a700875",
+  "lessons": [
+    {
+      "id": "RU-C410-stolknoveniye",
+      "sequence": 23550,
+      "title": "столкновение (stolknovéniye) — a collision; a clash",
+      "headword": "столкновение",
+      "romanization": "stolknovéniye",
+      "gloss": "a collision; a clash",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f5fcb1060e85ade",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a jack, then the Russian for a car repair shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: столкновение",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "столкновение (stolknovéniye) — \"a collision; a clash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На перекрёстке произошло столкновение двух машин. Na perekryóstke proizoshló stolknovéniye dvukh mashín. There was a collision between two cars at the crossroads."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter; formal. In speech people say авария."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "столкновение (stolknovéniye) is built on столкнуться 'to collide', from с- 'together', толкнуть 'to push' and -ся. EtymDB lists толкать without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stolknovéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stolknovéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stolknovéniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stolknovéniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stolknovéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stolknovéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a jack, then the Russian for a car repair shop, then say stolknovéniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a jack, then the Russian for a car repair shop, then say *stolknovéniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does столкновение (stolknovéniye) mean? (\"A collision; a clash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C410-stalkivatsya",
+      "sequence": 23560,
+      "title": "сталкиваться (stálkivatsya) — to collide; to come up against",
+      "headword": "сталкиваться",
+      "romanization": "stálkivatsya",
+      "gloss": "to collide; to come up against",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab5029893ed440cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a car repair shop, then the Russian for a collision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: сталкиваться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сталкиваться (stálkivatsya) — \"to collide; to come up against\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Зимой на этой дороге часто сталкиваются машины. Zimóy na étoy doróge chásto stálkivayutsya mashíny. In winter cars often collide on this road."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the perfective is столкнуться. Takes с + instrumental: столкнуться с автобусом."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сталкиваться (stálkivatsya) is built from с- 'together', -талкивать, from толкать 'to push', and -ся: to push into each other. EtymDB lists толкать without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stálkivatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stálkivatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stálkivatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stálkivatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stálkivatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stálkivatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a car repair shop, then the Russian for a collision, then say stálkivatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a car repair shop, then the Russian for a collision, then say *stálkivatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does сталкиваться (stálkivatsya) mean? (\"To collide; to come up against\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C410-vrezatsya",
+      "sequence": 23570,
+      "title": "врезаться (vrézatsya) — to crash (into)",
+      "headword": "врезаться",
+      "romanization": "vrézatsya",
+      "gloss": "to crash (into)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3e3de06e942f4bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a collision, then the Russian for to collide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: врезаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "врезаться (vrézatsya) — \"to crash (into)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Водитель не увидел столб и врезался в него. Vodítel ne uvídel stolb i vrézalsya v negó. The driver did not notice the post and crashed into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Perfective; the imperfective врезаться (vrézatsya) (vrezátsya) has the stress on the а. Takes в + accusative. Future врежусь, врежешься."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "врезаться (vrézatsya) is built from в- 'into', резать 'to cut' and -ся: to cut one's way into something. Резать is inherited from Proto-Slavic rězati (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vrézatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vrézatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vrézatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vrézatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vrézatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vrézatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a collision, then the Russian for to collide, then say vrézatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a collision, then the Russian for to collide, then say *vrézatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does врезаться (vrézatsya) mean? (\"To crash (into)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C410-sbivat",
+      "sequence": 23580,
+      "title": "сбивать (sbivát) — to knock down; to knock off",
+      "headword": "сбивать",
+      "romanization": "sbivát",
+      "gloss": "to knock down; to knock off",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2dd9284d830a0f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to collide, then the Russian for to crash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: сбивать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сбивать (sbivát) — \"to knock down; to knock off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Сильный ветер сбивал людей с ног. Sílnyy véter sbivál lyudéy s nog. The strong wind was knocking people off their feet."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective сбить (собью, собьёшь). Машина сбила собаку — a car hit a dog."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сбивать (sbivát) is built from с- 'down, off' and -бивать, from бить 'to beat'. Бить is inherited from Proto-Slavic biti 'to beat' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sbivát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sbivát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sbivát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sbivát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sbivát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sbivát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to collide, then the Russian for to crash, then say sbivát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to collide, then the Russian for to crash, then say *sbivát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does сбивать (sbivát) mean? (\"To knock down; to knock off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C410-vmyatina",
+      "sequence": 23590,
+      "title": "вмятина (vmyátina) — a dent",
+      "headword": "вмятина",
+      "romanization": "vmyátina",
+      "gloss": "a dent",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0326ec1bb0271bc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to crash, then the Russian for to knock down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: вмятина",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вмятина (vmyátina) — \"a dent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На двери машины теперь большая вмятина. Na dverí mashíny tepér bolsháya vmyátina. There is now a big dent in the car door."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Built on вмять — to press in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вмятина (vmyátina) is built on вмять 'to press in', from в- 'into' and мять 'to crumple, to knead' (EtymDB lists мять with that sense)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vmyátina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vmyátina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vmyátina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vmyátina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vmyátina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vmyátina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to crash, then the Russian for to knock down, then say vmyátina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to crash, then the Russian for to knock down, then say *vmyátina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does вмятина (vmyátina) mean? (\"A dent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R410-review-403-410",
+      "sequence": 23600,
+      "title": "Roads, stations and airports — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 403-410",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6e014d2bfe81e95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for a steering wheel and a brake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a steering wheel, a brake, to brake, to speed up, to sound the horn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a steering wheel, a brake, to brake, to speed up, to sound the horn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bonnet, an engine, a car battery, to start, to stall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bonnet, an engine, a car battery, to start, to stall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tyre, a puncture, a pump, to pump up, to spin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tyre, a puncture, a pump, to pump up, to spin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a boot, a bumper, a headlight, a seat, a windscreen wiper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a boot, a bumper, a headlight, a seat, a windscreen wiper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to overtake, to change lanes, to turn, to turn round, a hard shoulder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to overtake, to change lanes, to turn, to turn round, a hard shoulder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "speed, to exceed, an inspector, a driving licence, to fine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: speed, to exceed, an inspector, a driving licence, to fine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a breakdown, a tow truck, to tow, a jack, a car repair shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a breakdown, a tow truck, to tow, a jack, a car repair shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a collision, to collide, to crash, to knock down, a dent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a collision, to collide, to crash, to knock down, a dent]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A steering wheel? (руль.) A brake? (тормоз.) To brake? (тормозить.) To speed up? (разгоняться.) To sound the horn? (сигналить.) A bonnet? (капот.) An engine? (двигатель.) A car battery? (аккумулятор.) To start? (заводить.) To stall? (глохнуть.) A tyre? (шина.) A puncture? (прокол.) A pump? (насос.) To pump up? (накачивать.) To spin? (буксовать.) A boot? (багажник.) A bumper? (бампер.) A headlight? (фара.) A seat? (сиденье.) A windscreen wiper? (дворник.) To overtake? (обгонять.) To change lanes? (перестраиваться.) To turn? (сворачивать.) To turn round? (разворачиваться.) A hard shoulder? (обочина.) Speed? (скорость.) To exceed? (превышать.) An inspector? (инспектор.) A driving licence? (права.) To fine? (штрафовать.) A breakdown? (поломка.) A tow truck? (эвакуатор.) To tow? (буксировать.) A jack? (домкрат.) A car repair shop? (автосервис.) A collision? (столкновение (stolknovéniye).) To collide? (сталкиваться (stálkivatsya).) To crash? (врезаться (vrézatsya).) To knock down? (сбивать (sbivát).) A dent? (вмятина (vmyátina).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

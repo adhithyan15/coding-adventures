@@ -1,0 +1,11 @@
+{
+  "id": "RU-C453-primeryat",
+  "pathSegment": "RU-PATH-453-PRIMERKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-453-PRIMERKA",
+      "order": 1
+    }
+  ]
+}

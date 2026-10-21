@@ -296,6 +296,13 @@ impl CIRInstr {
             | "type_assert"
             | "jmp" | "jmp_if_true" | "jmp_if_false"
             | "label"
+            // LANG83 PR1b: a trap is observable, and a floor divide may trap
+            // (`Trap.DivZero` / `Trap.Overflow`), so dead-code elimination must
+            // keep it even when its quotient is never read.
+            | "trap" | "i64_div_floor" | "i64_mod_floor"
+            // LANG83 PR4: the overflow-checked ops trap `Trap.Overflow`, so an
+            // unused checked add is still observable and must survive DCE.
+            | "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf"
         )
     }
 }
@@ -372,7 +379,9 @@ mod tests {
 
     #[test]
     fn is_pure_side_effect_ops() {
-        for op in &["call_runtime", "call", "ret_void", "jmp", "label", "type_assert", "io_out"] {
+        for op in &["call_runtime", "call", "ret_void", "jmp", "label", "type_assert", "io_out",
+                    "trap", "i64_div_floor", "i64_mod_floor",
+                    "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf"] {
             let i = CIRInstr::new(*op, None::<&str>, vec![], "void");
             assert!(!i.is_pure(), "expected impure: {op}");
         }

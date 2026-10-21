@@ -1,0 +1,11 @@
+{
+  "id": "RU-C385-kafedra",
+  "pathSegment": "RU-PATH-385-OBRAZOVANIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-385-OBRAZOVANIYE",
+      "order": 2
+    }
+  ]
+}

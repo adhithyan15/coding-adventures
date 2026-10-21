@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:982bf683ad5948e3",
+  "lessonIds": [
+    "RU-C503-kollektsionirovat",
+    "RU-C503-kollektsioner",
+    "RU-C503-znachok",
+    "RU-C503-krossvord",
+    "RU-C503-razgadyvat"
+  ],
+  "tex": "russian/book/chapters/ch503-collections-and-puzzles.tex"
+}

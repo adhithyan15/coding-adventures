@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 485,
+  "title": "Feeling Sick and Faint",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2f3632b9cd2c26ef",
+  "lessons": [
+    {
+      "id": "RU-C485-toshnit",
+      "sequence": 27420,
+      "title": "тошнить (toshnít) — to feel sick (impersonal)",
+      "headword": "тошнить",
+      "romanization": "toshnít",
+      "gloss": "to feel sick (impersonal)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f187699aaf363e81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a strain, then the Russian for to limp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: тошнить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тошнить (toshnít) — \"to feel sick (impersonal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В автобусе меня часто тошнит. V avtóbuse menyá chásto toshnít. I often feel sick on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Impersonal: меня тошнит — I feel sick. Imperfective; perfective стошнить — to be sick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тошнить (toshnít) is built on тошно 'sickening, miserable'; EtymDB has no entry, and the root is usually linked to the one in тоска 'longing'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toshnít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toshnít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toshnít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toshnít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with toshnít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *toshnít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a strain, then the Russian for to limp, then say toshnít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a strain, then the Russian for to limp, then say *toshnít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does тошнить (toshnít) mean? (\"To feel sick (impersonal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C485-toshnota",
+      "sequence": 27430,
+      "title": "тошнота (toshnotá) — nausea",
+      "headword": "тошнота",
+      "romanization": "toshnotá",
+      "gloss": "nausea",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3a426cff7266686",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to limp, then the Russian for to feel sick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: тошнота",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тошнота (toshnotá) — \"nausea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Это лекарство помогает от тошноты. Éto lekárstvo pomogáyet ot toshnotý. This medicine helps with nausea."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тошнота (toshnotá) is built on тошно 'sickening' with -ота; EtymDB has no entry, and the root is usually linked to тоска."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toshnotá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toshnotá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toshnotá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toshnotá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with toshnotá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *toshnotá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to limp, then the Russian for to feel sick, then say toshnotá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to limp, then the Russian for to feel sick, then say *toshnotá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does тошнота (toshnotá) mean? (\"Nausea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C485-golovokruzheniye",
+      "sequence": 27440,
+      "title": "головокружение (golovokruzhéniye) — dizziness",
+      "headword": "головокружение",
+      "romanization": "golovokruzhéniye",
+      "gloss": "dizziness",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6a60b48b1003ac1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to feel sick, then the Russian for nausea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: головокружение",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "головокружение (golovokruzhéniye) — \"dizziness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Летом от жары у меня было головокружение. Létom ot zharý u menyá býlo golovokruzhéniye. In the summer the heat made me dizzy."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. У меня кружится голова — I feel dizzy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "головокружение (golovokruzhéniye) is a compound of голова 'head', inherited from Proto-Slavic golva (EtymDB), and кружение 'spinning', built on круг 'circle'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golovokruzhéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golovokruzhéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golovokruzhéniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golovokruzhéniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with golovokruzhéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *golovokruzhéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to feel sick, then the Russian for nausea, then say golovokruzhéniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to feel sick, then the Russian for nausea, then say *golovokruzhéniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does головокружение (golovokruzhéniye) mean? (\"Dizziness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C485-obmorok",
+      "sequence": 27450,
+      "title": "обморок (óbmorok) — a faint",
+      "headword": "обморок",
+      "romanization": "óbmorok",
+      "gloss": "a faint",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0eb4fc917d4891bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for nausea, then the Russian for dizziness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: обморок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обморок (óbmorok) — \"a faint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В душном зале одна женщина упала в обморок. V dúshnom zále odná zhénshchina upála v óbmorok. In the stuffy hall a woman fainted."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Упасть в обморок (óbmorok) — to faint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обморок (óbmorok) is built on об- and морок, which EtymDB glosses 'darkness, cloud, fog': fainting is a darkening of the eyes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "óbmorok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *óbmorok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "óbmorok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *óbmorok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with óbmorok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *óbmorok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for nausea, then the Russian for dizziness, then say óbmorok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for nausea, then the Russian for dizziness, then say *óbmorok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does обморок (óbmorok) mean? (\"A faint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C485-znobit",
+      "sequence": 27460,
+      "title": "знобить (znobít) — to have the shivers (impersonal)",
+      "headword": "знобить",
+      "romanization": "znobít",
+      "gloss": "to have the shivers (impersonal)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0cb8192dfb6e7b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for dizziness, then the Russian for a faint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: знобить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "знобить (znobít) — \"to have the shivers (impersonal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У меня температура, и меня знобит. U menyá temperatúra, i menyá znobít. I've got a temperature and I've got the shivers."
+            },
+            {
+              "kind": "speech",
+              "text": "Impersonal: меня знобит. Imperfective only."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "знобить (znobít) shares its root with озноб 'a chill'; EtymDB has no entry for either, and the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "znobít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *znobít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "znobít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *znobít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with znobít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *znobít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for dizziness, then the Russian for a faint, then say znobít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for dizziness, then the Russian for a faint, then say *znobít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does знобить (znobít) mean? (\"To have the shivers (impersonal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

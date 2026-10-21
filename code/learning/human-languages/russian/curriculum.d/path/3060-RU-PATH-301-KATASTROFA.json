@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-301-KATASTROFA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-301-KATASTROFA"
+  ],
+  "after": []
+}

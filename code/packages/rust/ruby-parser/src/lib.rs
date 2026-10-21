@@ -1,9 +1,26 @@
-//! Ruby parser backed by compiled parser grammar.
+//! Ruby parser backed by compiled parser grammars.
+//!
+//! Two entry points live side by side while LANG84 phases 3–5 land:
+//!
+//! - The **release API** ([`parse_ruby_at`], [`tokenize_ruby_at`]) runs the
+//!   generic `GrammarLexer` + `GrammarParser` over one release's
+//!   `ruby<release>.tokens` / `ruby<release>.grammar` pair, with typed errors
+//!   and no fallback between releases. This is the LANG84 frontend path.
+//! - The **legacy API** ([`parse_ruby`], [`try_create_ruby_parser`]) keeps
+//!   the hand-written `ruby-lexer` and the unversioned `ruby.grammar` for the
+//!   existing non-release callers, unchanged.
 
 use coding_adventures_ruby_lexer::tokenize_ruby_for_version;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
+mod release;
+
+pub use release::{
+    grammar_classes, parse_ruby_at, resolve_release, supported_releases, tokenize_ruby_at, FrontendBudgets,
+    RubyFrontendError, RubyParse, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_MAX_TOKENS, DEFAULT_RELEASE,
+    MAX_TRUSTED_SOURCE_BYTES, MAX_TRUSTED_TOKENS,
+};
 
 /// Recursion-depth cap for the Ruby [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -64,7 +81,7 @@ pub const DEFAULT_RUBY_ERA: &str = "3.0";
 /// Native frontends that accept untrusted source should use this entry point.
 pub fn try_create_ruby_parser(source: &str) -> Result<GrammarParser, String> {
     let tokens = tokenize_ruby_for_version(source, DEFAULT_RUBY_ERA)?;
-    Ok(GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH))
+    Ok(GrammarParser::new(tokens, _grammar::unversioned_parser_grammar()).with_max_depth(MAX_RULE_DEPTH))
 }
 
 pub fn create_ruby_parser(source: &str) -> GrammarParser {

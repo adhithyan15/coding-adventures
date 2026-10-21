@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — the netlist is `HostInput` and runs on Ctrl/Cmd+Enter (UI25 §4)
+
+- `netlist-input` moved from the retiring legacy `Input` to
+  `HostInput ( multiline : true )`, which lowers identically, with
+  `onCommit : emit: onRun`: Enter is a line break and Ctrl+Enter (Cmd+Enter on
+  macOS) runs the deck, as the Run button does.
+
 ### Added — this changelog (SW-5)
 
 - The package had none, the only `code/packages/mosaic` package without

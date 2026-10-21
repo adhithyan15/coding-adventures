@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Giving someone a lift",
+  "label": "ch:ru-giving-someone-a-lift",
+  "canDo": "I can talk about sharing rides: a fellow traveller, a lift in a passing car, giving someone a lift, dropping them off and buckling up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C411-pristyogivatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about sharing rides: a fellow traveller, a lift in a passing car, giving someone a lift, dropping them off and buckling up.",
+    "assesses": [
+      "RU-LEX-C411-POPUTCHIK-03",
+      "RU-LEX-C411-POPUTCHIK-04",
+      "RU-LEX-C411-POPUTCHIK-05"
+    ]
+  }
+}

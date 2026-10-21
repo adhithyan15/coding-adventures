@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Damage and harm",
+  "label": "ch:ru-damage-and-harm",
+  "canDo": "I can speak about damage, say what causes harm, what does damage and what makes things worse, and who suffers.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C353-ukhudshat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can speak about damage, say what causes harm, what does damage and what makes things worse, and who suffers.",
+    "assesses": [
+      "RU-LEX-C353-USHCHERB-03",
+      "RU-LEX-C353-USHCHERB-04",
+      "RU-LEX-C353-USHCHERB-05"
+    ]
+  }
+}

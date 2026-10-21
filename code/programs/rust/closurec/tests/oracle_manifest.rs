@@ -1004,7 +1004,7 @@ fn validate_manifest(root: &Path, manifest: &OracleManifest) -> Vec<String> {
             }
         }
 
-        if set.default_harness.is_some() == !set.harnesses.is_empty() {
+        if set.default_harness.is_some() != set.harnesses.is_empty() {
             errors.push(format!(
                 "fixture set {} must use exactly one harness mapping mode",
                 set.id
@@ -1168,13 +1168,13 @@ fn canonical_manifest_classifies_every_fixture_offline() {
         .flat_map(|set| &set.fixtures)
         .filter(|fixture| fixture.starts_with("minify_"))
         .count();
-    // 626 pre-existing + 171 CCR-066 ladder rungs (57 rungs x 3 compilation
+    // 626 pre-existing + 174 CCR-066 ladder rungs (58 rungs x 3 compilation
     // levels; tiers 1-7, plus the five rungs CCR-078 added — three for
     // local-scope propagation and two pinning top-level `const` in a CONDITION
-    // position). This assertion is a tripwire, not a fact to be kept current
+    // position — and #15942's array-spread-before-index rung). This assertion is a tripwire, not a fact to be kept current
     // automatically: a fixture appearing without a reviewer noticing is the
     // thing it exists to prevent, so update it deliberately or not at all.
-    assert_eq!(fixture_count, 797, "reviewed fixture inventory changed");
+    assert_eq!(fixture_count, 800, "reviewed fixture inventory changed");
     assert_eq!(minify_count, 462, "reviewed minify cohort changed");
 }
 

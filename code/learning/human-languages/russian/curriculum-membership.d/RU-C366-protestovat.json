@@ -1,0 +1,11 @@
+{
+  "id": "RU-C366-protestovat",
+  "pathSegment": "RU-PATH-366-VYBORY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-366-VYBORY",
+      "order": 4
+    }
+  ]
+}

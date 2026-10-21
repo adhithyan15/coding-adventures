@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C449-parikmakherskaya",
+    "language": "russian",
+    "chapter": 449,
+    "sequence": 25550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9dae92845267912c"
+  },
+  "findings": []
+}

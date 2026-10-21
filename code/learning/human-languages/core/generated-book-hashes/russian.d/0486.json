@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:4a0a83b51a0d8a51",
+  "lessonIds": [
+    "RU-C486-zhar",
+    "RU-C486-oznob",
+    "RU-C486-smorkatsya",
+    "RU-C486-okhripnut",
+    "RU-C486-pershit"
+  ],
+  "tex": "russian/book/chapters/ch486-a-fever-and-a-sore-throat.tex"
+}

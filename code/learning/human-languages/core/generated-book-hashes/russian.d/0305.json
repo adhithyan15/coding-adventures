@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:52ee489b9fb87387",
+  "lessonIds": [
+    "RU-C305-vospityvat",
+    "RU-C305-usynovlyat",
+    "RU-C305-staret",
+    "RU-C305-vypusknoy",
+    "RU-C305-pokoleniye"
+  ],
+  "tex": "russian/book/chapters/ch305-bringing-up-a-family.tex"
+}

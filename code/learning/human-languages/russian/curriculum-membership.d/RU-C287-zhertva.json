@@ -1,0 +1,11 @@
+{
+  "id": "RU-C287-zhertva",
+  "pathSegment": "RU-PATH-287-PRESTUPLENIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-287-PRESTUPLENIYE",
+      "order": 2
+    }
+  ]
+}

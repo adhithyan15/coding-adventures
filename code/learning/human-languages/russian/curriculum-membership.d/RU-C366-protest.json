@@ -1,0 +1,11 @@
+{
+  "id": "RU-C366-protest",
+  "pathSegment": "RU-PATH-366-VYBORY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-366-VYBORY",
+      "order": 3
+    }
+  ]
+}

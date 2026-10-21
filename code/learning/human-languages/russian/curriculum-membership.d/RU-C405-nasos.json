@@ -1,0 +1,11 @@
+{
+  "id": "RU-C405-nasos",
+  "pathSegment": "RU-PATH-405-SHINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-405-SHINA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C347-prichyom",
+  "pathSegment": "RU-PATH-347-ODNAKO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-347-ODNAKO",
+      "order": 2
+    }
+  ]
+}

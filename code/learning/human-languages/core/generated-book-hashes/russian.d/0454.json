@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:f6c8fe3e105b24e7",
+  "lessonIds": [
+    "RU-C454-rasprodazha",
+    "RU-C454-utsenka",
+    "RU-C454-aktsiya",
+    "RU-C454-torgovatsya",
+    "RU-C454-pereplachivat"
+  ],
+  "tex": "russian/book/chapters/ch454-sales-and-bargains.tex"
+}

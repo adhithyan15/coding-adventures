@@ -1,0 +1,11 @@
+{
+  "id": "RU-C291-rassledovat",
+  "pathSegment": "RU-PATH-291-SLEDOVATEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-291-SLEDOVATEL",
+      "order": 2
+    }
+  ]
+}

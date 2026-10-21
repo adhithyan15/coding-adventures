@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:dcc659d397aa3cf6",
+  "lessonIds": [
+    "RU-C481-lopatka",
+    "RU-C481-pozvonochnik",
+    "RU-C481-bedro",
+    "RU-C481-pyatka",
+    "RU-C481-ladon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch481.txt",
+  "json": "russian/narration/ch481.json",
+  "textHash": "fnv1a64:5763dc16c59bab0c",
+  "jsonHash": "fnv1a64:148e488b6ef30470",
+  "findings": []
+}

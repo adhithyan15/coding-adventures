@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:8707c90b0c6358fb",
+  "lessonIds": [
+    "RU-C280-soobshchat",
+    "RU-C280-otritsat",
+    "RU-C280-publikovat",
+    "RU-C280-podtverzhdat",
+    "RU-C280-oprovergat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch280.txt",
+  "json": "russian/narration/ch280.json",
+  "textHash": "fnv1a64:c42e041217903d2b",
+  "jsonHash": "fnv1a64:dde93fedc314c867",
+  "findings": []
+}

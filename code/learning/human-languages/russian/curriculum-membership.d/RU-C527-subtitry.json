@@ -1,0 +1,11 @@
+{
+  "id": "RU-C527-subtitry",
+  "pathSegment": "RU-PATH-527-SERIES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-527-SERIES",
+      "order": 2
+    }
+  ]
+}

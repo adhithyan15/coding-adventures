@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:b56710c9d2efc68d",
+  "lessonIds": [
+    "RU-C375-garantirovat",
+    "RU-C375-obyazatelno",
+    "RU-C375-neobkhodimyy",
+    "RU-C375-neobkhodimost",
+    "RU-C375-dostatochno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch375.txt",
+  "json": "russian/narration/ch375.json",
+  "textHash": "fnv1a64:5d6488865ecbd38e",
+  "jsonHash": "fnv1a64:fc2f232e5e88af0f",
+  "findings": []
+}

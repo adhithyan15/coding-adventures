@@ -1,0 +1,11 @@
+{
+  "id": "RU-C324-osvobozhdat",
+  "pathSegment": "RU-PATH-324-POBEDA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-324-POBEDA",
+      "order": 4
+    }
+  ]
+}

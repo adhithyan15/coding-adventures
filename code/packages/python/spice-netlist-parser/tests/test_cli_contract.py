@@ -45,6 +45,21 @@ def test_run_netlist_json_preserves_both_nested_dc_axes() -> None:
     assert payload["analyses"][0]["records"] == case["expected"]["records"]
 
 
+def test_run_netlist_json_expands_global_temperature_cards() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "global-temperature-op")
+    payload = json.loads(run_netlist_json(case["deck"]))
+
+    assert [analysis["index"] for analysis in payload["analyses"]] == case["expected"]["analysisIndexes"]
+    assert [analysis["kind"] for analysis in payload["analyses"]] == case["expected"]["analysisKinds"]
+    assert [analysis["temperatureKelvin"] for analysis in payload["analyses"]] == case["expected"]["temperatureKelvin"]
+    assert [len(analysis["records"]) for analysis in payload["analyses"]] == case["expected"]["recordCounts"]
+    assert [output["temperatureKelvin"] for output in payload["outputs"]] == case["expected"]["outputTemperaturesKelvin"]
+    assert [measure["temperatureKelvin"] for measure in payload["measures"]] == case["expected"]["measureTemperaturesKelvin"]
+    assert [measure["analysis"] for measure in payload["measures"]] == case["expected"]["measureAnalyses"]
+    assert [measure["name"] for measure in payload["measures"]] == case["expected"]["measureNames"]
+
+
 def test_run_netlist_json_exposes_deck_output_artifacts() -> None:
     corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
     case = next(case for case in corpus["cases"] if case["id"] == "deck-output-artifacts")

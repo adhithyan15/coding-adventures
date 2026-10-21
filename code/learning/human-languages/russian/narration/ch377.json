@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 377,
+  "title": "Changing plans",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b7e7e6a85e72ece6",
+  "lessons": [
+    {
+      "id": "RU-C377-perenosit",
+      "sequence": 21850,
+      "title": "переносить (perenosít) — to postpone, to move (to another time); to carry over",
+      "headword": "переносить",
+      "romanization": "perenosít",
+      "gloss": "to postpone, to move (to another time); to carry over",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74d0b6e5dffe5073",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for at least, then the Russian for in case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: переносить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "переносить (perenosít) — \"to postpone, to move (to another time); to carry over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мы переносим встречу на понедельник. My perenósim vstréchu na ponedélnik. We are moving the meeting to Monday."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; present переношу, переносишь; perfective перенести. Переносить на + accusative — to move to. It also means to bear: плохо переносить (perenosít) холод."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "переносить (perenosít) is built from пере- \"across, over\" and носить \"to carry\", inherited from Proto-Slavic: to carry a meeting over to another day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perenosít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perenosít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perenosít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perenosít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with perenosít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *perenosít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for at least, then the Russian for in case, then say perenosít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for at least, then the Russian for in case, then say *perenosít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does переносить (perenosít) mean? (\"To postpone, to move (to another time); to carry over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C377-peredumyvat",
+      "sequence": 21860,
+      "title": "передумывать (peredúmyvat) — to change one’s mind",
+      "headword": "передумывать",
+      "romanization": "peredúmyvat",
+      "gloss": "to change one’s mind",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e180aa6453d5c8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for in case, then the Russian for to postpone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: передумывать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "передумывать (peredúmyvat) — \"to change one’s mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он часто передумывает в последнюю минуту. On chásto peredúmyvayet v poslédnyuyu minútu. He often changes his mind at the last minute."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective передумать: я передумал — I have changed my mind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "передумывать (peredúmyvat) is built from пере- \"over again\" and думать \"to think\": to think a thing over again and come out the other way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peredúmyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peredúmyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peredúmyvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peredúmyvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with peredúmyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *peredúmyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for in case, then the Russian for to postpone, then say peredúmyvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for in case, then the Russian for to postpone, then say *peredúmyvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does передумывать (peredúmyvat) mean? (\"To change one’s mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C377-otkazyvatsya",
+      "sequence": 21870,
+      "title": "отказываться (otkázyvatsya) — to refuse, to turn down; to give up",
+      "headword": "отказываться",
+      "romanization": "otkázyvatsya",
+      "gloss": "to refuse, to turn down; to give up",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf09f1de81ebd932",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to postpone, then the Russian for to change one’s mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: отказываться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отказываться (otkázyvatsya) — \"to refuse, to turn down; to give up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Она отказывается от сладкого. Oná otkázyvayetsya ot sládkogo. She is giving up sweet things."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective отказаться. Отказываться от + genitive (to turn down or give up), or + infinitive: отказался помочь."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отказываться (otkázyvatsya) is built from от- \"away\" and казать \"to show, to say\", Proto-Slavic kazati (EtymDB): to say a thing away from yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otkázyvatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otkázyvatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otkázyvatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otkázyvatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with otkázyvatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *otkázyvatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to postpone, then the Russian for to change one’s mind, then say otkázyvatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to postpone, then the Russian for to change one’s mind, then say *otkázyvatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does отказываться (otkázyvatsya) mean? (\"To refuse, to turn down; to give up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C377-naznachat",
+      "sequence": 21880,
+      "title": "назначать (naznachát) — to set, to fix (a time); to appoint",
+      "headword": "назначать",
+      "romanization": "naznachát",
+      "gloss": "to set, to fix (a time); to appoint",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:882cec96b2805ca8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to change one’s mind, then the Russian for to refuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: назначать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "назначать (naznachát) — \"to set, to fix (a time); to appoint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мы назначили встречу на пять часов. My naznáchili vstréchu na pyat chasóv. We set the meeting for five o’clock."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective назначить. It also means to appoint someone to a post, or to prescribe a medicine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "назначать (naznachát) is built from на- and знак \"a sign, a mark\", on the root of знать \"to know\", Proto-Slavic znati: to mark a time out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naznachát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naznachát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naznachát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naznachát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with naznachát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *naznachát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to change one’s mind, then the Russian for to refuse, then say naznachát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to change one’s mind, then the Russian for to refuse, then say *naznachát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does назначать (naznachát) mean? (\"To set, to fix (a time); to appoint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C377-sobiratsya",
+      "sequence": 21890,
+      "title": "собираться (sobirátsya) — to be going to, to intend; to gather",
+      "headword": "собираться",
+      "romanization": "sobirátsya",
+      "gloss": "to be going to, to intend; to gather",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd166ab21dc782de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to refuse, then the Russian for to set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: собираться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "собираться (sobirátsya) — \"to be going to, to intend; to gather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Летом мы собираемся на море. Létom my sobiráyemsya na móre. In the summer we are planning to go to the seaside."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective собраться. With an infinitive, to intend: я собираюсь уехать. It also means to gather: гости собираются."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "собираться (sobirátsya) is the reflexive of собирать \"to gather\", from со- \"together\" and бирать, from брать \"to take\": to gather yourself up for a journey or a plan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobirátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobirátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobirátsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobirátsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sobirátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sobirátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to refuse, then the Russian for to set, then say sobirátsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to refuse, then the Russian for to set, then say *sobirátsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does собираться (sobirátsya) mean? (\"To be going to, to intend; to gather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

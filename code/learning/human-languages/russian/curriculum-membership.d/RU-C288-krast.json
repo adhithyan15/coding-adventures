@@ -1,0 +1,11 @@
+{
+  "id": "RU-C288-krast",
+  "pathSegment": "RU-PATH-288-KRAZHA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-288-KRAZHA",
+      "order": 2
+    }
+  ]
+}

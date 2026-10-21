@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "At the airport",
+  "label": "ch:ru-at-the-airport",
+  "canDo": "I can read the airport board: departure, flying out, arrival, the terminal and the flight attendant.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C422-styuardessa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can read the airport board: departure, flying out, arrival, the terminal and the flight attendant.",
+    "assesses": [
+      "RU-LEX-C422-VYLET-03",
+      "RU-LEX-C422-VYLET-04",
+      "RU-LEX-C422-VYLET-05"
+    ]
+  }
+}

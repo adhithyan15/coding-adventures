@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C400-khaker",
+    "language": "russian",
+    "chapter": 400,
+    "sequence": 23040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c072e5ea441f4a28"
+  },
+  "findings": []
+}

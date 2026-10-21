@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-367-RAVENSTVO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-367-RAVENSTVO"
+  ],
+  "after": []
+}

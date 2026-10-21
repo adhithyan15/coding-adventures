@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C342-obsuzhdenie",
+    "language": "russian",
+    "chapter": 342,
+    "sequence": 20060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e57f44a77b6d9fe"
+  },
+  "findings": []
+}

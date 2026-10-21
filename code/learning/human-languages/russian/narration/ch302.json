@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 302,
+  "title": "First aid",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e6d536e527412163",
+  "lessons": [
+    {
+      "id": "RU-C302-zadykhatsya",
+      "sequence": 17980,
+      "title": "задыхаться (zadykhátsya) — to choke, to suffocate; to be out of breath",
+      "headword": "задыхаться",
+      "romanization": "zadykhátsya",
+      "gloss": "to choke, to suffocate; to be out of breath",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1828823386c5c789",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to collapse, then the Russian for panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: задыхаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "задыхаться (zadykhátsya) — \"to choke, to suffocate; to be out of breath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В дыму мы задыхались. V dymú my zadykhális. We were choking in the smoke."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective задохнуться (zadokhnútsya). Also after running: он бежал и задыхался."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "задыхаться (zadykhátsya) is built on за-, дыхать \"to breathe\" and -ся (EtymDB), from the Slavic root of дышать and дух \"breath\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zadykhátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zadykhátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zadykhátsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zadykhátsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zadykhátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zadykhátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to collapse, then the Russian for panic, then say zadykhátsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to collapse, then the Russian for panic, then say *zadykhátsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does задыхаться (zadykhátsya) mean? (\"To choke, to suffocate; to be out of breath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C302-vyzhivat",
+      "sequence": 17990,
+      "title": "выживать (vyzhivát) — to survive",
+      "headword": "выживать",
+      "romanization": "vyzhivát",
+      "gloss": "to survive",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1f11ccfd4c51680",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for panic, then the Russian for to choke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: выживать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "выживать (vyzhivát) — \"to survive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он выжил после аварии. On výzhil pósle avárii. He survived the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective выжить (výzhit), выживу, stressed on вы-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "выживать (vyzhivát) is built on вы- \"out\" and жить \"to live\", an inherited Slavic verb from PIE gʷeyh₃- \"to live\": to live through."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyzhivát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyzhivát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyzhivát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyzhivát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vyzhivát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vyzhivát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for panic, then the Russian for to choke, then say vyzhivát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for panic, then the Russian for to choke, then say *vyzhivát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does выживать (vyzhivát) mean? (\"To survive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C302-perevyazyvat",
+      "sequence": 18000,
+      "title": "перевязывать (perevyázyvat) — to bandage, to dress (a wound)",
+      "headword": "перевязывать",
+      "romanization": "perevyázyvat",
+      "gloss": "to bandage, to dress (a wound)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0896c3b334192c01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to choke, then the Russian for to survive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: перевязывать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "перевязывать (perevyázyvat) — \"to bandage, to dress (a wound)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Медсестра перевязала рану. Medsestrá perevyazála ránu. The nurse dressed the wound."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the perfective is перевязать (perevyazát), перевяжу. Перевязка — a dressing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "перевязывать (perevyázyvat) is built on пере- \"across\" and вязать \"to tie\", inherited from Proto-Slavic vęzati (EtymDB): to tie across."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perevyázyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perevyázyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perevyázyvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perevyázyvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with perevyázyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *perevyázyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to choke, then the Russian for to survive, then say perevyázyvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to choke, then the Russian for to survive, then say *perevyázyvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does перевязывать (perevyázyvat) mean? (\"To bandage, to dress (a wound)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C302-obzhechsya",
+      "sequence": 18010,
+      "title": "обжечься (obzhéchsya) — to burn oneself, to get burnt",
+      "headword": "обжечься",
+      "romanization": "obzhéchsya",
+      "gloss": "to burn oneself, to get burnt",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ade636d0bebc7aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to survive, then the Russian for to bandage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: обжечься",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обжечься (obzhéchsya) — \"to burn oneself, to get burnt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Я обжёгся горячим чаем. Ya obzhyógsya goryáchim cháyem. I burnt myself on hot tea."
+            },
+            {
+              "kind": "speech",
+              "text": "Perfective; imperfective обжигаться (obzhigátsya). Past обжёгся (obzhyógsya), обожглась."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обжечься (obzhéchsya) is built on об- and жечь \"to burn\", inherited through Old East Slavic žeči (EtymDB), with the reflexive -ся."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obzhéchsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obzhéchsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obzhéchsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obzhéchsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obzhéchsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obzhéchsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to survive, then the Russian for to bandage, then say obzhéchsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to survive, then the Russian for to bandage, then say *obzhéchsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does обжечься (obzhéchsya) mean? (\"To burn oneself, to get burnt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C302-porezatsya",
+      "sequence": 18020,
+      "title": "порезаться (porézatsya) — to cut oneself",
+      "headword": "порезаться",
+      "romanization": "porézatsya",
+      "gloss": "to cut oneself",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a717b5715194b54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to bandage, then the Russian for to burn oneself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: порезаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "порезаться (porézatsya) — \"to cut oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он порезался ножом. On porézalsya nozhóm. He cut himself with a knife."
+            },
+            {
+              "kind": "speech",
+              "text": "Perfective. The tool is in the instrumental."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "порезаться (porézatsya) is built on по- and резать \"to cut\", inherited from Proto-Slavic rězati (EtymDB), with the reflexive -ся."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "porézatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *porézatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "porézatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *porézatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with porézatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *porézatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to bandage, then the Russian for to burn oneself, then say porézatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to bandage, then the Russian for to burn oneself, then say *porézatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does порезаться (porézatsya) mean? (\"To cut oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R302-review-295-302",
+      "sequence": 18030,
+      "title": "Words from chapters 295–302 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 295-302",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7b5ab009f4667ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for a fire and smoke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fire, smoke, to burn, to catch fire, a fire extinguisher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fire, smoke, to burn, to catch fire, a fire extinguisher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rescuer, to save, rescue, to evacuate, an evacuation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rescuer, to save, rescue, to evacuate, an evacuation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an injury, a bruise, consciousness, to be hurt, to wound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an injury, a bruise, consciousness, to be hurt, to wound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hit, an injured person, to crash, to come out unhurt, to overturn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hit, an injured person, to crash, to come out unhurt, to overturn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stretcher, a siren, an alarm, the person on duty, to call",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stretcher, a siren, an alarm, the person on duty, to call]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flood, an earthquake, a tornado, a drought, to flood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flood, an earthquake, a tornado, a drought, to flood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a disaster, an explosion, to explode, to collapse, panic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a disaster, an explosion, to explode, to collapse, panic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to choke, to survive, to bandage, to burn oneself, to cut oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to choke, to survive, to bandage, to burn oneself, to cut oneself]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A fire? (пожар.) Smoke? (дым.) To burn? (гореть.) To catch fire? (загораться.) A fire extinguisher? (огнетушитель.) A rescuer? (спасатель.) To save? (спасать.) Rescue? (спасение.) To evacuate? (эвакуировать.) An evacuation? (эвакуация.) An injury? (травма.) A bruise? (ушиб.) Consciousness? (сознание.) To be hurt? (пострадать.) To wound? (ранить.) A hit? (наезд.) An injured person? (пострадавший.) To crash? (разбиваться.) To come out unhurt? (уцелеть.) To overturn? (перевернуться.) A stretcher? (носилки.) A siren? (сирена.) An alarm? (тревога.) The person on duty? (дежурный.) To call? (вызывать.) A flood? (наводнение.) An earthquake? (землетрясение.) A tornado? (смерч.) A drought? (засуха.) To flood? (затоплять.) A disaster? (катастрофа.) An explosion? (взрыв.) To explode? (взрываться.) To collapse? (обрушиться.) Panic? (паника.) To choke? (задыхаться (zadykhátsya).) To survive? (выживать (vyzhivát).) To bandage? (перевязывать (perevyázyvat).) To burn oneself? (обжечься (obzhéchsya).) To cut oneself? (порезаться (porézatsya).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

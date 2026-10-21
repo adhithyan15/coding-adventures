@@ -54,6 +54,7 @@ fn decodes_borrowed_algorithm_and_subject_public_key() {
         bit_string(0, &[0x30, 0x01, 0x00]),
     ]);
     let value = decode(&encoded).unwrap();
+    assert_eq!(value.contents(), &encoded[2..]);
     assert!(value
         .algorithm()
         .algorithm()

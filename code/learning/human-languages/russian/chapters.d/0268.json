@@ -1,0 +1,22 @@
+{
+  "chapter": 268,
+  "title": "Better Than, and Years Ago",
+  "label": "ch:ru-better-than-and-years-ago",
+  "canDo": "I can compare two things with -ее, больше, лучше and чем, and say how long and how long ago with уже ... года and ... назад.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C268-review",
+    "kind": "production",
+    "summary": "Complete RU-C268-review: compare two ways to travel, then say how long you have done something and when you did it.",
+    "assesses": [
+      "RU-GRAMMAR-COMPARATIVE-EE-01",
+      "RU-GRAMMAR-CHEM-THAN-01",
+      "RU-GRAMMAR-COMPARATIVE-IRREGULAR-01",
+      "RU-GRAMMAR-UZHE-PRESENT-DURATION-01",
+      "RU-GRAMMAR-NAZAD-AGO-01",
+      "RU-GRAMMAR-GOD-GODA-LET-01"
+    ]
+  }
+}

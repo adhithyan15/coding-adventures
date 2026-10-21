@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "RU-C262-chtenie",
+    "language": "russian",
+    "chapter": 262,
+    "sequence": 16060,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a47d020a28440b6f"
+  },
+  "findings": []
+}

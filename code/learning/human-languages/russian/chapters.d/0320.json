@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Fairy-tale creatures",
+  "label": "ch:ru-fairy-tale-creatures",
+  "canDo": "I can talk about a wizard, a witch, a monster and a dragon, and say that someone turned into something else.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C320-prevrashchatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can talk about a wizard, a witch, a monster and a dragon, and say that someone turned into something else.",
+    "assesses": [
+      "RU-LEX-C320-VOLSHEBNIK-03",
+      "RU-LEX-C320-VOLSHEBNIK-04",
+      "RU-LEX-C320-VOLSHEBNIK-05"
+    ]
+  }
+}
