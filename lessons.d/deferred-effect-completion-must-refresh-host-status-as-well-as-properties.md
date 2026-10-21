@@ -15,3 +15,7 @@ diagnostic through a different path.
 The first test run also caught the layout-switching shell's exact-string rewrite
 of this callback. Update that rewrite and its lifecycle assertion together with
 the plain shell; a focused plain-window test does not exercise variant mounting.
+
+The package-artifact builder also asserts the generated callback across policy
+boundaries. Run its suite alongside emitter tests: emitter-only validation missed
+this downstream exact-string assertion and failed macOS CI.
