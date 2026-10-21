@@ -1316,3 +1316,17 @@ executable columns. Nine of them are `StdoutThenTrap` rows, which check the
 output written before the trap *and* the kind each column reports. LANG79's
 float pilot (`python_iir_compiler::compile_source`) is a separate API and is
 not reachable from `lang-aot`.
+
+Since phase 7b, `--lang python@<release>` selects any profiled release of
+`code/grammars/python/releases.csv` exactly, through the same release API as
+Perl and Ruby, and the module records it in `IIRModule::release`:
+
+```sh
+lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `python`, `python@3.0a1`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
+| `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |

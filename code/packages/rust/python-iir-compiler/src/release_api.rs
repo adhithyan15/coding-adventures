@@ -104,6 +104,10 @@ fn finish(
     let instructions = Lowering::new(release, profile).lower_file(ast)?;
     let mut module = IIRModule::new(module_name, "python");
     module.entry_point = Some("main".into());
+    // LANG84 "Selection API": the module names the one release whose grammar
+    // produced it, so a backend, a cache key or a test can tell a 3.0a1
+    // module from a 3.13.16 one even when their instructions are identical.
+    module.release = Some(release.to_string());
     module.add_or_replace(IIRFunction::new("main", vec![], "i64", instructions));
     let errors = module.validate();
     if !errors.is_empty() {
