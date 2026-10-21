@@ -9200,7 +9200,8 @@ fn main() { out(1, VALUE); }\n",
     },
 
     // Perl — LANG84 phase 4a, the bounded LANG81 integer `print` subset on its
-    // default release (the unversioned LANG81 pair). Perl's `print` writes the
+    // default release (`5.38.0` since phase 4b; the unversioned LANG81 pair in 4a,
+    // which no longer reaches the IIR path). Perl's `print` writes the
     // decimal text with NO newline, which is LANG83's `write_i64`; the frontend emits
     // `call_builtin write_i64` and nothing Perl-specific, so every column runs these
     // rows through the same lowering the op-conformance suite already proved.
@@ -25473,8 +25474,9 @@ fn perl_rows_agree_with_the_host_perl_oracle() {
             .output()
             .expect("perl ran once already");
         assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
+        // Perl on Windows prints through a `:crlf` layer; fold "\r\n" back.
         assert_eq!(
-            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"),
             expected,
             "perl {version} disagrees with the row's expectation for {:?}",
             program.src

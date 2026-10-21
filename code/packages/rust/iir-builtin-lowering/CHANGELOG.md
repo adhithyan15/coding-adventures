@@ -1,5 +1,11 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
 ## 0.42.0 - 2026-08-27 - propagate boxed dynamic returns through call signatures
 
 `lower_dynamic_arith` now widens a function return and every matching call
