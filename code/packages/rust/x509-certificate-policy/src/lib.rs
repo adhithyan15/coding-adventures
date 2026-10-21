@@ -13,7 +13,9 @@
 //! gate requires one exact caller-supplied Extended Key Usage OID over already
 //! validated end-entity role evidence. Its issuer-link gate fixes the direction
 //! of one caller-supplied Name comparison without embedding a normalization or
-//! equality rule. None of these gates establishes certificate trust.
+//! equality rule. Its self-issued classifier binds the result of one
+//! caller-supplied issuer-to-subject Name comparison to the exact decoded
+//! certificate. None of these gates establishes certificate trust.
 
 #![deny(unsafe_code)]
 
@@ -510,6 +512,35 @@ pub struct ValidatedCertificateIssuerLink {
     private: (),
 }
 
+/// Non-copyable caller-policy classification of one exact certificate.
+///
+/// This value proves only that the caller's distinguished-name policy was
+/// applied exactly once to this certificate's issuer and subject Names. A
+/// self-issued certificate is not necessarily self-signed or trusted.
+pub struct ClassifiedCertificateSelfIssued<'certificate, 'encoded> {
+    certificate: &'certificate X509Certificate<'encoded>,
+    is_self_issued: bool,
+}
+
+impl<'certificate, 'encoded> ClassifiedCertificateSelfIssued<'certificate, 'encoded> {
+    pub const fn certificate(&self) -> &'certificate X509Certificate<'encoded> {
+        self.certificate
+    }
+
+    pub const fn is_self_issued(&self) -> bool {
+        self.is_self_issued
+    }
+}
+
+impl fmt::Debug for ClassifiedCertificateSelfIssued<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ClassifiedCertificateSelfIssued")
+            .field("is_self_issued", &self.is_self_issued)
+            .finish_non_exhaustive()
+    }
+}
+
 /// Opaque evidence that one explicit observation was inside the interval.
 ///
 /// This value proves nothing about the observation's source or freshness and
@@ -814,6 +845,28 @@ pub fn validate_certificate_issuer_link<'child, 'issuer>(
     }
 
     Ok(ValidatedCertificateIssuerLink { private: () })
+}
+
+/// Classify one exact certificate as self-issued under caller-owned Name policy.
+///
+/// `same_name` is invoked exactly once with the certificate's issuer followed
+/// by its subject. The result remains bound to that exact decoded certificate
+/// so later policy can consume the classification without accepting an
+/// unrelated boolean. This function does not provide a built-in RFC 5280 Name
+/// normalization rule and does not verify the certificate's signature.
+pub fn classify_certificate_self_issued<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    same_name: impl FnOnce(&X509Name<'encoded>, &X509Name<'encoded>) -> bool,
+) -> ClassifiedCertificateSelfIssued<'certificate, 'encoded> {
+    let is_self_issued = same_name(
+        certificate.tbs_certificate().issuer(),
+        certificate.tbs_certificate().subject(),
+    );
+
+    ClassifiedCertificateSelfIssued {
+        certificate,
+        is_self_issued,
+    }
 }
 
 /// Authorize one exact Extended Key Usage purpose for end-entity evidence.

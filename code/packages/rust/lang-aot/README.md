@@ -30,8 +30,9 @@ an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
 `2^53`, including exact additive composition; fractional factors, non-unit
-divisors, denominator roots, repeated roots, and oversized products stay
-conservative. Unary
+integer division, denominator roots, repeated roots, and oversized products
+stay conservative. A non-unit static divisor is accepted only when it divides
+every possible exact integer value of the sign-rooted transform. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
@@ -693,6 +694,14 @@ kind; the conformance suite proves that ("print, then trap") on WASM, VM, JIT,
 LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
 value model on the JVM (they are never narrowed to `i32`). See
 `code/specs/LANG83-iir-standard-operation-registry.md`.
+
+Since LANG83 PR4 every backend also lowers the overflow-checked
+`i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf`: the exact
+result, or `Trap.Overflow` when it does not fit in an i64 (the hook Python's
+and Ruby's integer subsets use to promote to a bignum). The conformance suite
+runs them at the i64 bounds and one step past them on every executable column.
+The JVM wide-model evidence for ops is now derived from the registry: every Op
+with an `i64` operand type keeps its module on `long`.
 
 ## Limitations
 

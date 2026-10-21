@@ -9155,6 +9155,10 @@ fn emit_host_number_input(
         Some(LayoutPropValue::Expr(expr)) => expr.clone(),
         _ => "0.0".to_string(),
     };
+    // `placeholder` is not lowered, by decision (UI29 §2, EM-14): the text
+    // below is always `value_expr.toString()`, so the field is never empty
+    // and a placeholder could never show. If the field ever gains an empty
+    // state (a nullable value), lower it as `emit_host_input` does.
 
     let on_value_change = if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let case = pascalize(&strip_on_prefix(emit_name));
@@ -12228,6 +12232,43 @@ mod tests {
         assert!(out.contains("BasicTextField("), "{out}");
         assert!(!out.contains("placeholder ="), "{out}");
         assert!(out.contains("enabled = true,"));
+    }
+
+    /// EM-14 / UI29 §2 — Compose lowers no `placeholder` on a number field,
+    /// literal or bound, and that is a recorded decision, not a drop: the
+    /// field's text is always the bound number's `toString()`, so it is never
+    /// empty and a placeholder has no state in which to show. The
+    /// `toString()` is asserted here because it is the whole premise; if the
+    /// field ever gains an empty state, the placeholder must be lowered.
+    #[test]
+    fn host_number_input_placeholder_is_omitted_because_the_text_is_never_empty() {
+        let m = component(
+            "X",
+            vec![
+                slot("value", SlotType::Number, true),
+                slot("placeholder", SlotType::Text, false),
+            ],
+            vec![],
+        );
+        for (value, expected_text) in [
+            (Some("value"), "value = value.toString(),"),
+            (None, "value = 0.0.toString(),"),
+        ] {
+            let mut props = vec![LayoutProp {
+                name: "placeholder".into(),
+                value: LayoutPropValue::SlotRef("placeholder".into()),
+            }];
+            if let Some(slot) = value {
+                props.push(LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::SlotRef(slot.into()),
+                });
+            }
+            let l = layout("X", node("HostNumberInput", props, vec![]));
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected_text), "expected `{expected_text}` in:\n{out}");
+            assert!(!out.contains("placeholder ="), "{out}");
+        }
     }
 
     #[test]

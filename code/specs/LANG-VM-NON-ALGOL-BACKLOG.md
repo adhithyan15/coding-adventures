@@ -80,6 +80,18 @@ executions locally). CLR and BEAM compile locally; CI executes them. AArch64
 is checked structurally against `aarch64-encoder`. vm-core's legacy `div`/`mod`
 no longer panic on `MIN / -1`: they wrap.
 
+**VM-078e / PR4 — overflow-checked arithmetic on all nine backends
+(implemented on `claude/lang-vm-status-4xtyw8-lang83-pr4`).** `i64_add_ovf`,
+`i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf` are registered and `Lowered`
+everywhere in one slice: x86-64 `add`/`sub`/`imul`/`neg` + `jno`; AArch64
+`adds`/`subs`/`negs` + `b.vc` and `mul`+`smulh` compare; LLVM
+`*.with.overflow` intrinsics; WASM, JVM and CLR operand sign tests and an exact
+divide-back check for `mul`; BEAM bignum result + range check; VM `checked_*`;
+JIT `*_OVF_I64` bytecodes. Each traps `Trap.Overflow` after flushing.
+`op_conformance` adds 15 cases (366 compilations, 346 executions locally),
+which run on WASM, VM, JIT, LLVM, native and JVM. CLR, BEAM and AArch64 are
+structural locally. `i64_div_trunc`/`i64_mod_trunc` stay `Later`.
+
 **Next, in order:**
 
 1. **VM-078b follow-ups:** port `lang_matrix`'s data-less

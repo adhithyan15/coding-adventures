@@ -2,6 +2,41 @@
 
 ## [Unreleased]
 
+### Fixed - drop the dead tail after a top-level `throw` (CCR-086, #15923)
+
+`dce_program` now truncates a program's tail after a top-level terminator,
+as `dce_block_statement` does inside blocks, with the same hoisting guard. A
+tail holding any declaration or compound statement is kept whole. This
+matches upstream:
+
+- `throw 1;console.log(1);` → `throw 1;`
+- `throw 1;debugger;` → `throw 1;`, which closes the CCR-053 residual
+- `{throw 1;console.log(1);}` → `throw 1;`
+
+Upstream hoists a dead `var` (`throw 1;var z=1;` → `var z;throw 1;`); that gap
+is shared with CCR-082 and still open.
+
+Three new unit tests cover this.
+
+### Fixed - a nested `break` keeps its switch (#17842)
+
+The constant-discriminant switch collapse stripped only the case's *trailing*
+`break`. A `break` deeper in the case (`if (x) break;`) exited the switch,
+but after the collapse it exited the enclosing loop instead, or failed to
+parse outside one:
+
+```js
+while (c--) { switch (1) { case 1: if (x) break; b(); break; } d(); }
+// collapsed: for(;c--;){if(x)break;b();d()}  -> d() never ran
+```
+
+The collapse is now declined while `has_break_targeting_enclosing` finds
+another unlabelled `break` aimed at the switch. That check doesn't enter
+loops, nested switches or functions. Upstream rewrites the case instead
+(`x||b()`), which is a smaller output we don't produce yet.
+
+Three new unit tests cover this.
+
 ### Fixed - drop the dead tail after `continue` and `break` (CCR-082, #15878)
 
 `is_terminator` now includes `ContinueStatement` and `BreakStatement`, labelled

@@ -948,6 +948,45 @@ machine TOML, the action interpreter and `oracle.rs` are deleted, and
 `ruby-lexer-state-machine.md` and the era list in
 `ruby-version-evolution.md` are then marked superseded by LANG84.
 
+**Status (3.2, R0, 2026-10-20).** Five rows have pairs and claim `partial`,
+stage `P`, subset `rb-int-puts`: the start of the inventory (`0.49`, `0.50`,
+each reviewed against its tag's `parse.y`) and the current line around
+`DEFAULT_RELEASE` (`3.3.5` reviewed; `3.3.6` and `3.3.7` mechanical copies
+with identical `parse.y`, `defs/keywords` and `prism/config.yml` blobs). Blob
+IDs live in `code/grammars/ruby/pair-evidence.csv`;
+`code/scripts/ruby_release_pairs.py` writes the headers and copies and
+refuses a copy whose blobs differ. The 3.3.6 token streams of a 22-program
+R0 corpus match `Ripper.lex` of ruby 3.3.6 exactly (kind, spelling, line,
+column, newlines). Against `ruby-lexer` 17 programs agree and 5 differ, each
+a `ruby-lexer` defect the oracle confirms (split `$~`, `?a`, `+4`; `a / b`
+read as an unterminated regexp that silently drops the rest of the input).
+`0.51` is next: its `yylex()` introduces UPLUS/UMINUS and EXPR_FNAME, so it
+needs a reviewed pair, not a copy.
+
+Decisions and deviations in this slice:
+
+- Lex states are F10 flat modes (`beg`, `arg`, `fname`, `default`); no
+  grammar-tools extension was needed. Known R0 divergences are listed in each
+  `.tokens` header and pinned by tests: `x!=y` without a space (no regex
+  lookahead), operator/variable symbols (`:@iv`), `1if`, the space-sensitive
+  `foo +1`, and F10 transitions not firing on the engine's built-in NEWLINE
+  token (a line starting with `?a`/`:sym` keeps the previous line's mode).
+- The `.grammar` files keep `ruby.grammar`'s rule names (C8) and accept
+  NEWLINE exactly where the release's lexer would be in EXPR_BEG. The 3.3
+  grammar over-accepts `puts (1, 2)` (needs E6 `@space_before`).
+- The deduplicating generator lives in the grammar-tools program behind an
+  explicit opt-in table (Ruby only); the release list comes from
+  `releases.csv`. Parser tables also embed the inventory so `UnknownRelease`
+  and `ReleaseNotAvailable` are told apart without reading the CSV at run time.
+- `ruby-parser` exposes `parse_ruby_at`/`tokenize_ruby_at` with
+  `FrontendBudgets` and `RubyFrontendError`; `DEFAULT_RELEASE` is `3.3.6`,
+  provisional until phase 5 gives that row an `iir_status` (C4.4).
+- `ruby-iir-compiler` stays on `ruby-lexer`: LANG80 accepts `puts -7 / 2`,
+  whose unary reading depends on the space before `-`, so moving it now would
+  regress LANG80. Phase 5 moves it together with E6.
+- The `corpus/rb-int-puts` directory named in `subsets.csv` arrives with
+  stage I in phase 5.
+
 ### JavaScript: rewrite to walk the CST
 
 1. **6a.** Copy the F10 regex/division table (`start_mode`, `group div`,
@@ -1121,7 +1160,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 2b | `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
 | | 2c | `release_evidence.py` (blob-ID capture per release) | ~400 lines |
 | 3 | 3.1 | E1 line/column guards (+ F-spec) | ~800 lines Rust + tests |
-| | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests | ~600 lines + pairs |
+| | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests. **Landed for 0.49, 0.50, 3.3.5–3.3.7** (see the Ruby status above) | ~600 lines + pairs |
 | | 3.3 | E2 pair-kind stack and depth-guarded push/pop; delete the JS template special case | ~1,200 lines |
 | | 3.4 | E3 conditional skip (optional Wolfram/Derive hook removal) | ~400 lines |
 | | 3.5 | E4 capture-then-literal-match | ~1,000 lines |

@@ -1,5 +1,6 @@
 //! LANG83 PR1b on real WASM: `i64_div_floor`, `i64_mod_floor`, `trap`,
-//! `write_i64`.
+//! `write_i64` — and the PR4 overflow-checked ops `i64_add_ovf`,
+//! `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` (end of file).
 //!
 //! Lower → encode → run on the in-process `wasm-runtime` with a host that
 //! implements the two new imports:
@@ -164,4 +165,87 @@ fn imports_are_appended_after_the_older_ones() {
     let wasm = lower_iir_to_wasm(&floor_program("i64_div_floor", &[(1, 1)]), &IIRWasmConfig::default()).unwrap();
     let names: Vec<&str> = wasm.imports.iter().map(|i| i.name.as_str()).collect();
     assert_eq!(names, ["putchar", "__write_i64", "__trap"]);
+}
+
+// ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────────────
+
+/// `floor_program` for a checked op; `i64_neg_ovf` takes only `x`.
+fn checked_program(op: &str, pairs: &[(i64, i64)]) -> IIRModule {
+    let mut m = floor_program("i64_div_floor", pairs);
+    for instr in &mut m.functions[0].instructions {
+        if instr.op == "i64_div_floor" {
+            instr.op = op.into();
+            if op == "i64_neg_ovf" {
+                instr.srcs.truncate(1);
+            }
+        }
+    }
+    m
+}
+
+const MAX: i64 = i64::MAX;
+const MIN: i64 = i64::MIN;
+
+#[test]
+fn checked_ops_return_exact_results_at_the_range_edges_on_wasm() {
+    /// (op, operand pairs, expected output)
+    type EdgeCase<'a> = (&'a str, &'a [(i64, i64)], &'a str);
+    let cases: [EdgeCase; 4] = [
+        ("i64_add_ovf", &[(MAX, 0), (MAX - 1, 1), (MIN, MAX), (-5, 3)], "9223372036854775807 9223372036854775807 -1 -2 "),
+        ("i64_sub_ovf", &[(MIN, 0), (MIN + 1, 1), (-1, MAX), (-5, 3)], "-9223372036854775808 -9223372036854775808 -9223372036854775808 -8 "),
+        (
+            "i64_mul_ovf",
+            &[(MIN, 1), (-(1 << 32), 1 << 31), (3_037_000_499, 3_037_000_499), (0, MIN), (-1, MAX), (MIN, 0)],
+            "-9223372036854775808 -9223372036854775808 9223372030926249001 0 -9223372036854775807 0 ",
+        ),
+        ("i64_neg_ovf", &[(MAX, 0), (0, 0), (-7, 0)], "-9223372036854775807 0 7 "),
+    ];
+    for (op, pairs, want) in cases {
+        let (out, trap, done) = run(&checked_program(op, pairs));
+        assert_eq!((out.as_str(), trap, done), (want, None, true), "{op}");
+    }
+}
+
+/// Every overflowing edge traps `Trap.Overflow` (id 5) after the earlier
+/// output, and the module stops even though the host's `__trap` returns.
+#[test]
+fn checked_ops_trap_overflow_one_past_the_range_on_wasm() {
+    for (op, bad) in [
+        ("i64_add_ovf", (MAX, 1)),
+        ("i64_add_ovf", (MIN, -1)),
+        ("i64_sub_ovf", (MIN, 1)),
+        ("i64_sub_ovf", (MAX, -1)),
+        ("i64_sub_ovf", (0, MIN)),
+        ("i64_mul_ovf", (MIN, -1)),
+        ("i64_mul_ovf", (-1, MIN)),
+        ("i64_mul_ovf", (1 << 32, 1 << 31)),
+        ("i64_mul_ovf", (3_037_000_500, 3_037_000_500)),
+        ("i64_mul_ovf", (MAX, 2)),
+        ("i64_neg_ovf", (MIN, 0)),
+    ] {
+        let (out, trap, done) = run(&checked_program(op, &[(2, 1), bad, (2, 1)]));
+        let first = match op {
+            "i64_add_ovf" => "3 ",
+            "i64_sub_ovf" => "1 ",
+            "i64_mul_ovf" => "2 ",
+            _ => "-2 ",
+        };
+        assert_eq!((out.as_str(), trap, done), (first, Some(5), false), "{op}{bad:?}");
+    }
+}
+
+#[test]
+fn checked_ops_import_only_the_trap_host_function() {
+    let wasm = lower_iir_to_wasm(&checked_program("i64_mul_ovf", &[(1, 1)]), &IIRWasmConfig::default()).unwrap();
+    let names: Vec<&str> = wasm.imports.iter().map(|i| i.name.as_str()).collect();
+    assert_eq!(names, ["putchar", "__write_i64", "__trap"]);
+    // A dest that aliases an operand reads both operands before the store.
+    let m = module(vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(20)], "i64"),
+        IIRInstr::new("const", Some("y".into()), vec![Operand::Int(22)], "i64"),
+        IIRInstr::new("i64_add_ovf", Some("x".into()), vec![v("x"), v("y")], "i64"),
+        IIRInstr::new("call_builtin", None, vec![v("write_i64"), v("x")], "void"),
+        IIRInstr::new("ret", None, vec![v("x")], "i64"),
+    ]);
+    assert_eq!(run(&m), ("42".to_string(), None, true));
 }
