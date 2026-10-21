@@ -4,7 +4,7 @@
   "chapter": 325,
   "title": "It Depends, and What Would Have Been",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:13230ad88a580803",
+  "sourceHash": "fnv1a64:8fe8af2e97b9dc99",
   "lessons": [
     {
       "id": "TE-C325-adharapadu",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:831bd4898604c73e",
+      "sourceHash": "fnv1a64:d1a54754e38a1668",
       "notice": null,
       "blocks": [
         {
@@ -189,11 +189,11 @@
             },
             {
               "kind": "speech",
-              "text": "ఆధారపడి, the -ఇ form, with ఉంటుంది, \"it stays\": \"it stays resting on\". This is the answer to a question that has no single answer: > అది మీ మీద ఆధారపడి ఉంటుంది (mīda ādhārapaḍi uṇṭundi)."
+              "text": "ఆధారపడి, the -ఇ form, with ఉంటుంది, \"it stays\": \"it stays resting on\". This is the answer to a question that has no single answer:"
             },
             {
               "kind": "speech",
-              "text": "adi mī mīda ādhārapaḍi uṇṭundi. — \"That is up to you.\""
+              "text": "అది మీ మీద ఆధారపడి ఉంటుంది. adi mī mīda ādhārapaḍi uṇṭundi. — \"That is up to you.\""
             },
             {
               "kind": "speech",

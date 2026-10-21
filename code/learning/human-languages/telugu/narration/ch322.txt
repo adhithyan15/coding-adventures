@@ -13,7 +13,7 @@ You'll want to know: దుఃఖం.
 దుఃఖం — duḥkhaṁ — "grief".
 ఆ కథ చదివి నాకు దుఃఖం వచ్చింది. ā katha cadivi nāku duḥkhaṁ vaccindi. — "Reading that story, I was moved to grief."
 బాధ is the everyday hurt and sadness of a bad day. దుఃఖం (duḥkhaṁ) is heavier: grief, the sorrow that brings tears. Like a fever, it "comes" to you: నాకు దుఃఖం (duḥkhaṁ) వచ్చింది.
-The mark after దు is a breath, ḥ. Many speakers let it run into the next sound, close to dukkhaṁ. The next lesson puts the mark in your hand.
+The mark after దు is a breath, ḥ. Many speakers let it run into the next sound, close to dukkhaṁ. The next lesson is about that mark.
 
 The word, taken apart.
 దుఃఖం (duḥkhaṁ) is borrowed from Sanskrit duḥkha, "difficulty, pain" (CDIAL 6375), with Telugu's noun ending -ం. CDIAL notes it was formed after sukha, the word you know as సుఖం: the two are a pair, ease and its opposite.
@@ -73,15 +73,14 @@ Lesson 3 of 5.
 
 Warm-up.
 [pause 2 seconds]
-Say "fear" (bhayaṁ), "anger" (kōpaṁ) and "happily" (santōṣaṅgā). Then say "grief". (duḥkhaṁ.)
-[once you have stopped driving — write: ః (ḥ), once]
+Say "fear" (bhayaṁ), "anger" (kōpaṁ) and "happily" (santōṣaṅgā). Then say "grief". (duḥkhaṁ.) Which mark sits after its first syllable? (ః, the visarga, ḥ.)
 
 You'll want to know: నాకు … -గా ఉంది.
 నాకు చాలా సంతోషంగా ఉంది. nāku cālā santōṣaṅgā undi. — "I am very happy."
 నాకు భయంగా ఉంది. nāku bhayaṅgā undi. — "I am afraid."
 The one who feels is in the dative, నాకు, as in నాకు తెలుగు వచ్చు. The feeling takes -గా, and ఉంది, "it is", closes the sentence: "to me, fearfully, it is". So too నాకు బాధగా ఉంది, "I feel sad"; నాకు చలిగా ఉంది, "I feel cold"; నాకు ఆకలిగా ఉంది, "I am hungry".
-Some feelings "come" instead, like the grief of the last lesson: > నాకు కోపం వచ్చింది.
-nāku kōpaṁ vaccindi. — "I got angry."
+Some feelings "come" instead, as దుఃఖం (duḥkhaṁ) does:
+నాకు కోపం వచ్చింది. nāku kōpaṁ vaccindi. — "I got angry."
 
 You'll want to know: … అనిపించింది, I felt.
 రాత్రి ఒంటరిగా నడుస్తున్నప్పుడు నాకు భయంగా అనిపించింది. rātri oṇṭarigā naḍustunnappuḍu nāku bhayaṅgā anipiñcindi. — "Walking alone at night, I felt afraid."

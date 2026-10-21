@@ -49,7 +49,7 @@ straight on". (*sūṭigā veḷḷaṇḍi*.)
 >
 > *āsupatriki elā veḷḷāli?* — "How do I get to the hospital?"
 
-The second is "how must (I) go to …", with the **-ఆలి** you learned for reasons.
+The second is "how must (I) go to …", with the **-ఆలి** of "must".
 
 > **ఇక్కడి నుంచి దూరమా?**
 >

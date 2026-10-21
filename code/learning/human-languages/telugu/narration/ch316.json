@@ -4,7 +4,7 @@
   "chapter": 316,
   "title": "Was Doing, Did, Used To",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d2d94177dd304455",
+  "sourceHash": "fnv1a64:a9278882dcbf6153",
   "lessons": [
     {
       "id": "TE-C316-vellanu",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07b11824a2045be1",
+      "sourceHash": "fnv1a64:5fbc5141b33feebd",
       "notice": null,
       "blocks": [
         {
@@ -272,7 +272,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu has no separate tense for \"was doing\". The same form that says \"I am reading\" says \"I was reading\" once a past time sets the scene:"
+              "text": "Telugu needs no separate tense for \"was doing\". The same form that says \"I am reading\" says \"I was reading\" once a past time sets the scene:"
             },
             {
               "kind": "speech",
@@ -280,11 +280,11 @@
             },
             {
               "kind": "speech",
-              "text": "The past is carried by నిన్న రాత్రి, not by the verb. ఉన్నాను, the \"am\" inside చదువుతున్నాను, works the same way: > నిన్న నేను ఇంట్లో ఉన్నాను."
+              "text": "The past is carried by నిన్న రాత్రి, not by the verb. ఉన్నాను, the \"am\" inside చదువుతున్నాను, works the same way:"
             },
             {
               "kind": "speech",
-              "text": "ninna nēnu iṇṭlō unnānu. — \"Yesterday I was at home.\""
+              "text": "నిన్న నేను ఇంట్లో ఉన్నాను. ninna nēnu iṇṭlō unnānu. — \"Yesterday I was at home.\""
             },
             {
               "kind": "speech",

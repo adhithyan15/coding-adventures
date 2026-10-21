@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 321,
-  "sourceHash": "fnv1a64:aa40bd4bd8c9ca3a",
+  "sourceHash": "fnv1a64:802dbc914ab85337",
   "lessonIds": [
     "TE-C321-situ",
     "TE-C321-tikkettu-ivvandi",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "telugu/narration/ch321.txt",
   "json": "telugu/narration/ch321.json",
-  "textHash": "fnv1a64:e121a42b93e0eae5",
-  "jsonHash": "fnv1a64:8f8e78d655dcad59",
+  "textHash": "fnv1a64:0b57d55c40783d68",
+  "jsonHash": "fnv1a64:cd5424a179025ed9",
   "findings": []
 }

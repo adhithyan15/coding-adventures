@@ -15,7 +15,7 @@ concept_tag: TE-B1C320-URU
 prerequisites: [TE-C55-village, TE-C77-town, TE-C319-vellali, TE-C319-nadavadam-valla, TE-C42-small, TE-C64-also]
 sounds: []
 roots: [dravidian-uur-settlement]
-etymology_hook: "ūru: native Dravidian, one word with Tamil and Malayalam ūr and Kannada ūru (DEDR 752)"
+etymology_hook: "ūru: native Dravidian, one word with Tamil, Malayalam and Kannada ūr and Tulu ūru (DEDR 752)"
 duration:
   max_seconds: 242
 requires:
@@ -62,7 +62,7 @@ from. Before an ending its **-ఉ** turns to **-ఇ**: **ఊరికి** (*ūr
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ఊరు** (*ūru*) is native Dravidian, one word with Tamil and Malayalam *ūr* and Kannada *ūru*, all "village, town"
+**ఊరు** (*ūru*) is native Dravidian, one word with Tamil, Malayalam and Kannada *ūr* and Tulu *ūru*, all "village, town"
 (DEDR 752). It is one of the words the whole family shares.
 
 ## Guided Practice

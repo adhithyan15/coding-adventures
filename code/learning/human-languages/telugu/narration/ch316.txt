@@ -64,10 +64,10 @@ That clause is the scene. The thing that cut into it is the event, in the plain 
 వర్షం (varṣaṁ, "rain") with పడింది (paḍindi, "fell"): rain "falls" in Telugu.
 
 Grammar Lens: 'was doing' on its own.
-Telugu has no separate tense for "was doing". The same form that says "I am reading" says "I was reading" once a past time sets the scene:
+Telugu needs no separate tense for "was doing". The same form that says "I am reading" says "I was reading" once a past time sets the scene:
 నిన్న రాత్రి తొమ్మిది గంటలకు నేను పుస్తకం చదువుతున్నాను. ninna rātri tommidi gaṇṭalaku nēnu pustakaṁ caduvutunnānu. — "At nine last night I was reading a book."
-The past is carried by నిన్న రాత్రి, not by the verb. ఉన్నాను, the "am" inside చదువుతున్నాను, works the same way: > నిన్న నేను ఇంట్లో ఉన్నాను.
-ninna nēnu iṇṭlō unnānu. — "Yesterday I was at home."
+The past is carried by నిన్న రాత్రి, not by the verb. ఉన్నాను, the "am" inside చదువుతున్నాను, works the same way:
+నిన్న నేను ఇంట్లో ఉన్నాను. ninna nēnu iṇṭlō unnānu. — "Yesterday I was at home."
 ఇంట్లో (iṇṭlō, "at home") is the ఇంటి- of ఇంటికి with -లో, "in".
 
 Guided Practice.

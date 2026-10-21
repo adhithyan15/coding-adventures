@@ -48,14 +48,14 @@ long *ō* after a consonant, as in **తోలు**.)
 After a consonant, long *ō* is the sign **ో**. At the start of a word it stands as a letter of its own, **ఓ**,
 and it pairs with the short **ఒ** you know, the way **ఏ** pairs with **ఎ**.
 
-In print **ఓ** is **ఒ** with a short upright stroke added at its top. Say the pair aloud: **ఒ** *o*, short; **ఓ**
+In print **ఓ** is **ఒ** with a small hooked stroke added at its top, rising and curling over to the right. Say the pair aloud: **ఒ** *o*, short; **ఓ**
 *ō*, held longer.
 
 ## Writing: ఓ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-175] -->
 
 Put your pen beside **ఓ** and copy it, slowly, and larger than it is printed. Write the body of **ఒ** first, the way
-you learned it, then copy the short upright stroke at its top.
+you learned it, then copy the small hook at its top.
 
 > This book does not yet say where the pen starts on this shape, or which way it travels. That is taught with real variation from school to school, and it waits here until it can be written down from a source. Copying the printed shape needs no such source, and it puts the shape in your hand in the meantime.
 
@@ -72,5 +72,5 @@ you learned it, then copy the short upright stroke at its top.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-165, TE-LEX-C319-OTU-01, TE-SCRIPT-RECOG-175] -->
 
 [PAUSE 3s] Which letter is this — ఓ? (**ō**, long *ō* at the start of a word.) Which word did it come from?
-(**ఓటు**, *ōṭu*, "a vote".) How is it different from **ఒ**? (**The short upright stroke at its top; the vowel is
+(**ఓటు**, *ōṭu*, "a vote".) How is it different from **ఒ**? (**The small hook at its top; the vowel is
 long.**)

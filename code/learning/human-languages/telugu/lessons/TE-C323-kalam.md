@@ -53,7 +53,7 @@ reviews_of: [TE-C170-samayam, TE-C14-rutuvulu, TE-C323-kante, TE-C64-after]
 > *mīru ikkaḍa enta kālaṁ uṇṭāru?* — "How long will you stay here?"
 
 **సమయం** is time on the clock: is there time, what time is it. **కాలం** is time as a stretch: how long, a long
-while, a season. You have said it already without seeing it: **వానాకాలం** is "the rains' time", the rainy
+while, a season. You have said it already without noticing it: **వానాకాలం** is "the rains' time", the rainy
 season, and **శీతాకాలం** is "the cold time", winter.
 
 ## The word, taken apart

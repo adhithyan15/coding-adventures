@@ -13,7 +13,7 @@ You'll want to know: అనిపించు.
 అనిపించు — anipiñcu — "to seem, to feel (to someone)".
 మొదట తెలుగు నాకు కష్టంగా అనిపించింది. modaṭa telugu nāku kaṣṭaṅgā anipiñcindi. — "At first Telugu seemed hard to me."
 ఇప్పుడు అది నాకు సులభంగా అనిపిస్తుంది. ippuḍu adi nāku sulabhaṅgā anipistundi. — "Now it seems easy to me."
-The one who feels sits in the dative, నాకు, the way it does in నాకు తెలుగు వచ్చు. The verb stays "it": అనిపిస్తుంది (anipistundi, "it seems"), అనిపించింది (anipiñcindi, "it seemed"). The quality takes -గా: కష్టంగా, సులభంగా.
+The one who feels sits in the dative, నాకు, the way it does in నాకు తెలుగు వచ్చు. The verb stays "it": అనిపిస్తుంది (anipistundi, "it seems"), అనిపించింది (anipiñcindi, "it seemed"). The quality takes -గా: కష్టంగా, సులభంగా. నాకు అలా అనిపిస్తుంది is "that is how it seems to me": అలా (alā, "like that") is the అలా inside అలాగే.
 
 The word, taken apart.
 అనిపించు (anipiñcu) is native Dravidian. DEDR 868 lists Telugu anu, "to say", and beside it anipincu, "to seem, appear, be considered", which it also glosses "to cause to be said". So నాకు అలా అనిపిస్తుంది is close to "it gets said to me like that". The same అను is inside అనుకో, "to think", and ఎందుకంటే.

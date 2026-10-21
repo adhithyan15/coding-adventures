@@ -4,7 +4,7 @@
   "chapter": 318,
   "title": "What I Think, and So",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:95343bf824ac2b20",
+  "sourceHash": "fnv1a64:0868dae7fced182f",
   "lessons": [
     {
       "id": "TE-C318-anipincu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:348e0b8fb88e2f9d",
+      "sourceHash": "fnv1a64:4fd11772bf3e4b5d",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "The one who feels sits in the dative, నాకు, the way it does in నాకు తెలుగు వచ్చు. The verb stays \"it\": అనిపిస్తుంది (anipistundi, \"it seems\"), అనిపించింది (anipiñcindi, \"it seemed\"). The quality takes -గా: కష్టంగా, సులభంగా."
+              "text": "The one who feels sits in the dative, నాకు, the way it does in నాకు తెలుగు వచ్చు. The verb stays \"it\": అనిపిస్తుంది (anipistundi, \"it seems\"), అనిపించింది (anipiñcindi, \"it seemed\"). The quality takes -గా: కష్టంగా, సులభంగా. నాకు అలా అనిపిస్తుంది is \"that is how it seems to me\": అలా (alā, \"like that\") is the అలా inside అలాగే."
             }
           ]
         },

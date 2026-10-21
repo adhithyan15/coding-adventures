@@ -35,8 +35,7 @@ reviews_of: [TE-C108-valla, TE-C318-kabatti, TE-C319-otu, TE-S175-letter-oo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C108-WANT108-05, TE-GRAMMAR-C318-KABATTI-01, TE-LEX-C319-OTU-01, TE-SCRIPT-RECOG-175] -->
 
-[PAUSE 2s] Say "because of" (*valla*). Then say "a vote". (*ōṭu*.)
-- [YOU WRITE: **ఓ**, its first letter, once]
+[PAUSE 2s] Say "because of" (*valla*). Then say "a vote". (*ōṭu*.) Which letter opens it? (**ఓ**, a long *ō*.)
 
 ## You'll want to know: -అడం వల్ల
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C319-ADAM-VALLA-01]; assesses=[TE-LEX-C149-ACT149-01, TE-LEX-C63-HEALTH-05, TE-LEX-C32-TINU-01, TE-LEX-C58-REPLY-02, TE-LEX-C47-BODY-05, TE-LEX-C84-UNWELL-02] -->
@@ -52,7 +51,7 @@ reviews_of: [TE-C108-valla, TE-C318-kabatti, TE-C319-otu, TE-S175-letter-oo]
 >
 > *ekkuva tinaḍaṁ valla nāku kaḍupu noppi vaccindi.* — "Eating too much gave me a stomach ache."
 
-**బాగుంటుంది** (*bāguṇṭundi*, "it stays well") is **బాగా** with the **-ఉంటుంది** of **ఉండు**.
+**బాగుంటుంది** (*bāguṇṭundi*, "it stays well") is **బాగు**, "good, well", the base of **బాగా**, with **ఉంటుంది**, "it stays", from **ఉండు**.
 
 ## Grammar Lens: two places for a reason
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C319-REASON-ORDER-01]; assesses=[TE-LEX-C74-LINK-05, TE-LEX-C84-UNWELL-01] -->

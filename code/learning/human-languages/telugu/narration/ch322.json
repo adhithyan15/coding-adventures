@@ -4,7 +4,7 @@
   "chapter": 322,
   "title": "Feelings and Hopes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:14a713bb330362c4",
+  "sourceHash": "fnv1a64:730883d8f3a8fd84",
   "lessons": [
     {
       "id": "TE-C322-duhkham",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0b0c4f24ea40f88",
+      "sourceHash": "fnv1a64:c4efe7a38330dfe0",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "The mark after దు is a breath, ḥ. Many speakers let it run into the next sound, close to dukkhaṁ. The next lesson puts the mark in your hand."
+              "text": "The mark after దు is a breath, ḥ. Many speakers let it run into the next sound, close to dukkhaṁ. The next lesson is about that mark."
             }
           ]
         },
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50e38b6be5d3419d",
+      "sourceHash": "fnv1a64:95c2ab86209f9da5",
       "notice": null,
       "blocks": [
         {
@@ -327,16 +327,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"fear\" (bhayaṁ), \"anger\" (kōpaṁ) and \"happily\" (santōṣaṅgā). Then say \"grief\". (duḥkhaṁ.)"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ః (ḥ), once",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ః**, once]"
+              "text": "Say \"fear\" (bhayaṁ), \"anger\" (kōpaṁ) and \"happily\" (santōṣaṅgā). Then say \"grief\". (duḥkhaṁ.) Which mark sits after its first syllable? (ః, the visarga, ḥ.)"
             }
           ]
         },
@@ -359,11 +350,11 @@
             },
             {
               "kind": "speech",
-              "text": "Some feelings \"come\" instead, like the grief of the last lesson: > నాకు కోపం వచ్చింది."
+              "text": "Some feelings \"come\" instead, as దుఃఖం (duḥkhaṁ) does:"
             },
             {
               "kind": "speech",
-              "text": "nāku kōpaṁ vaccindi. — \"I got angry.\""
+              "text": "నాకు కోపం వచ్చింది. nāku kōpaṁ vaccindi. — \"I got angry.\""
             }
           ]
         },

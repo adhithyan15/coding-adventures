@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 317,
-  "sourceHash": "fnv1a64:2a86f440f6d6ad63",
+  "sourceHash": "fnv1a64:6c3c577d2adf7e47",
   "lessonIds": [
     "TE-C317-iloga",
     "TE-S174-letter-ii",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch317.txt",
   "json": "telugu/narration/ch317.json",
-  "textHash": "fnv1a64:21af918957643137",
-  "jsonHash": "fnv1a64:571d92218cc02110",
+  "textHash": "fnv1a64:994abbdb2b2307aa",
+  "jsonHash": "fnv1a64:e42f2c990340888e",
   "findings": []
 }

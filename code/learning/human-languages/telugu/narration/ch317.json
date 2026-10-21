@@ -4,7 +4,7 @@
   "chapter": 317,
   "title": "Telling a Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2a86f440f6d6ad63",
+  "sourceHash": "fnv1a64:6c3c577d2adf7e47",
   "lessons": [
     {
       "id": "TE-C317-iloga",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8014e9015f3179df",
+      "sourceHash": "fnv1a64:85ddfb8e24ba1c17",
       "notice": null,
       "blocks": [
         {
@@ -66,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its first letter is one you have not written yet. The next lesson takes it out of this word and puts it in your hand."
+              "text": "Its first letter is one you have not written yet. The next lesson takes it out of this word."
             }
           ]
         },
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f79738fadb56c96",
+      "sourceHash": "fnv1a64:3c9f53e0ba4b8a4c",
       "notice": null,
       "blocks": [
         {
@@ -352,16 +352,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"after, later\" (taruvāta) and \"before\" (mundu). Then the word that opened the last lesson, \"in the meantime\". (īlōgā.)"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ఈ (ī), once",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ఈ**, once]"
+              "text": "Say \"after, later\" (taruvāta) and \"before\" (mundu). Then the word that opened the last lesson, \"in the meantime\". (īlōgā.) Which letter opens it? (ఈ, a long ī.)"
             }
           ]
         },
@@ -630,7 +621,7 @@
         "reading-type",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:8a50bca990c21735",
+      "sourceHash": "fnv1a64:5565b8c34e030009",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -703,7 +694,7 @@
             },
             {
               "kind": "speech",
-              "text": "The scene is చదువుతున్నాను; the habit is వెళ్ళేవాడిని; the background is ఉండేది. Every other verb is an event."
+              "text": "The scene is వెళ్తున్నప్పుడు and చదువుతున్నాను; the habit is వెళ్ళేవాడిని; the background is ఉండేది. The ఉంది of \"now\" is the present. Every other verb is an event."
             }
           ]
         },

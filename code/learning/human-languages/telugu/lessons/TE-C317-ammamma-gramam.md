@@ -59,8 +59,8 @@ reviews_of: [TE-C316-cestunnappudu, TE-C316-cadivevadini, TE-C154-itivala, TE-C4
 [PAUSE 2s] New forms: **కూర్చున్నాను** (*kūrcunnānu*, "I sat"), **కలిసి** (*kalisi*, "together"), **నన్ను** (*nannu*, "me"),
 **నవ్వింది** (*navvindi*, "she smiled"), and **-తో**, "with", in **అమ్మమ్మతో**.
 
-[PAUSE 2s] The scene is **చదువుతున్నాను**; the habit is **వెళ్ళేవాడిని**; the background is **ఉండేది**.
-Every other verb is an event.
+[PAUSE 2s] The scene is **వెళ్తున్నప్పుడు** and **చదువుతున్నాను**; the habit is **వెళ్ళేవాడిని**; the background is
+**ఉండేది**. The **ఉంది** of "now" is the present. Every other verb is an event.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SKILL-C317-READ-STORY-01, TE-GRAMMAR-C316-SCENE-EVENT-01, TE-GRAMMAR-C316-PAST-HABITUAL-01, TE-LEX-C317-ILOGA-01] -->

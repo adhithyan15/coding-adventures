@@ -36,8 +36,7 @@ reviews_of: [TE-C321-tikkettu-ivvandi, TE-C321-ausadham, TE-S177-letter-au, TE-C
 <!-- hl-knowledge: introduces=[]; assesses=[TE-GRAMMAR-C321-BUY-TICKET-01, TE-GRAMMAR-C321-WHEN-LEAVES-01, TE-LEX-C321-AUSADHAM-01, TE-SCRIPT-RECOG-177] -->
 
 [PAUSE 2s] Say "At what time does the train leave?" (*railu enni gaṇṭalaku bayaludērutundi?*) Then say "a remedy".
-(*auṣadhaṁ*.)
-- [YOU WRITE: **ఔ**, once]
+(*auṣadhaṁ*.) Which letter opens it? (**ఔ**, *au*.)
 
 ## You'll want to know: the bus has gone
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C321-MISSED-01]; assesses=[TE-LEX-C105-LOC105-02, TE-LEX-C280-KRIYA280-02] -->
@@ -47,7 +46,7 @@ reviews_of: [TE-C321-tikkettu-ivvandi, TE-C321-ausadham, TE-S177-letter-au, TE-C
 > *ayyō! bassu veḷḷipōyindi.* — "Oh no! The bus has gone."
 
 **అయ్యో** (*ayyō*, "oh no"). **వెళ్ళిపోయింది** is **వెళ్ళి**, "having gone", with **పోయింది**, "went
-away": gone, and not coming back. Telugu says what the bus did; English says what you missed.
+away": gone, and not coming back. Telugu says what the bus did, where English often says "I missed the bus".
 
 > **నేను బస్సు అందుకోలేకపోయాను.**
 >

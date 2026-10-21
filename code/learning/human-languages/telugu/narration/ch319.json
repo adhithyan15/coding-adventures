@@ -4,7 +4,7 @@
   "chapter": 319,
   "title": "Must, Must Not, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:31238dfc729578be",
+  "sourceHash": "fnv1a64:a9f3678c9b8e7067",
   "lessons": [
     {
       "id": "TE-C319-vellali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee6fd61be8e829d8",
+      "sourceHash": "fnv1a64:7e84f7652b83c4a8",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have said this ending for a long time. కావాలి is -ఆలి on కా-, \"to become, to be\": \"it must be (had)\", so \"it is wanted\"."
+              "text": "You have said this ending for a long time. కావాలి is -ఆలి on కా-, \"to become\": \"it must come to be (mine)\", so \"it is needed, it is wanted\"."
             }
           ]
         },
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:974cabbbb2280f8f",
+      "sourceHash": "fnv1a64:a47571176256ca95",
       "notice": null,
       "blocks": [
         {
@@ -231,7 +231,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఓటు (ōṭu) is a loan from English vote, with the -ఉ that Telugu gives most borrowed nouns, as in బస్సు and టిక్కెట్టు. The English v and the long ō are kept."
+              "text": "ఓటు (ōṭu) is a loan from English vote, with the -ఉ that Telugu gives most borrowed nouns, as in బస్సు and టిక్కెట్టు. The English v drops away, the vowel stays long, and the English t becomes ట, as it does in టిక్కెట్టు."
             }
           ]
         },
@@ -310,7 +310,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:8e57ca34d91065a8",
+      "sourceHash": "fnv1a64:6c0f0f800d64fd90",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -368,7 +368,7 @@
             },
             {
               "kind": "speech",
-              "text": "In print ఓ is ఒ with a short upright stroke added at its top. Say the pair aloud: ఒ o, short; ఓ ō, held longer."
+              "text": "In print ఓ is ఒ with a small hooked stroke added at its top, rising and curling over to the right. Say the pair aloud: ఒ o, short; ఓ ō, held longer."
             }
           ]
         },
@@ -379,7 +379,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ఓ (ō) and copy it, slowly, and larger than it is printed. Write the body of ఒ first, the way you learned it, then copy the short upright stroke at its top."
+              "text": "Put your pen beside ఓ (ō) and copy it, slowly, and larger than it is printed. Write the body of ఒ first, the way you learned it, then copy the small hook at its top."
             },
             {
               "kind": "speech",
@@ -449,7 +449,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is this — ఓ? (ō, long ō at the start of a word.) Which word did it come from? (ఓటు, ōṭu, \"a vote\".) How is it different from ఒ? (The short upright stroke at its top; the vowel is long.)"
+              "text": "Which letter is this — ఓ? (ō, long ō at the start of a word.) Which word did it come from? (ఓటు, ōṭu, \"a vote\".) How is it different from ఒ? (The small hook at its top; the vowel is long.)"
             }
           ]
         }
@@ -468,7 +468,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bc4d3950dfc636f",
+      "sourceHash": "fnv1a64:e9d62f82d23f9bf5",
       "notice": null,
       "blocks": [
         {
@@ -484,16 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"because of\" (valla). Then say \"a vote\". (ōṭu.)"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ఓ (ō), its first letter, once",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ఓ**, its first letter, once]"
+              "text": "Say \"because of\" (valla). Then say \"a vote\". (ōṭu.) Which letter opens it? (ఓ, a long ō.)"
             }
           ]
         },
@@ -516,7 +507,7 @@
             },
             {
               "kind": "speech",
-              "text": "బాగుంటుంది (bāguṇṭundi, \"it stays well\") is బాగా with the -ఉంటుంది of ఉండు."
+              "text": "బాగుంటుంది (bāguṇṭundi, \"it stays well\") is బాగు, \"good, well\", the base of బాగా, with ఉంటుంది, \"it stays\", from ఉండు."
             }
           ]
         },

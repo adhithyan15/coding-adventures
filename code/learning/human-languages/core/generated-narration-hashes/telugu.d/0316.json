@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 316,
-  "sourceHash": "fnv1a64:d2d94177dd304455",
+  "sourceHash": "fnv1a64:a9278882dcbf6153",
   "lessonIds": [
     "TE-C316-vellanu",
     "TE-C316-cestunnappudu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "telugu/narration/ch316.txt",
   "json": "telugu/narration/ch316.json",
-  "textHash": "fnv1a64:81230351fb5d64bf",
-  "jsonHash": "fnv1a64:e3a92e32fc36b844",
+  "textHash": "fnv1a64:276e5e3d22e4a79e",
+  "jsonHash": "fnv1a64:0dbd2fba40fbf91f",
   "findings": []
 }

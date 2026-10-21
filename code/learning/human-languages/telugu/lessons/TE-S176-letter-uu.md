@@ -48,14 +48,15 @@ long *ū* after a consonant, as in **కూర**.) Then write **ఈ** once.
 After a consonant, long *ū* is the sign **ూ**. At the start of a word it stands as a letter of its own, **ఊ**, and
 it pairs with the short **ఉ** you know.
 
-In print **ఊ** is built on **ఉ**: the same body and bar, a top stroke that waves instead of a short tick, and a
-small curl standing on its right, like the curl beside **ఈ**.
+In print **ఊ** is built on **ఉ**: the same round body with the bar across it, and a small curl added on its
+right, like the curl beside **ఈ**, with the bar running on into it. Some typefaces also double the short
+upright stroke on top.
 
 ## Writing: ఊ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-176] -->
 
 Put your pen beside **ఊ** and copy it, slowly, and larger than it is printed. Write the body of **ఉ** the way you
-learned it, then copy the wave on top and the small curl on the right.
+learned it, then copy the small curl on the right and run the bar into it.
 
 > This book does not yet say where the pen starts on this shape, or which way it travels. That is taught with real variation from school to school, and it waits here until it can be written down from a source. Copying the printed shape needs no such source, and it puts the shape in your hand in the meantime.
 
@@ -72,5 +73,5 @@ learned it, then copy the wave on top and the small curl on the right.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-122, TE-LEX-C320-URU-01, TE-SCRIPT-RECOG-176] -->
 
 [PAUSE 3s] Which letter is this — ఊ? (**ū**, long *ū* at the start of a word.) Which word did it come from?
-(**ఊరు**, *ūru*.) How is it different from **ఉ**? (**The wave on top and the curl on the right; the vowel is
+(**ఊరు**, *ūru*.) How is it different from **ఉ**? (**The curl on the right; the vowel is
 long.**)

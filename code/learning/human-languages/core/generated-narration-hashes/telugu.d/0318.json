@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 318,
-  "sourceHash": "fnv1a64:95343bf824ac2b20",
+  "sourceHash": "fnv1a64:0868dae7fced182f",
   "lessonIds": [
     "TE-C318-anipincu",
     "TE-C318-anukuntunnanu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "telugu/narration/ch318.txt",
   "json": "telugu/narration/ch318.json",
-  "textHash": "fnv1a64:9ef0b872a6f74f34",
-  "jsonHash": "fnv1a64:5cb5672012bde630",
+  "textHash": "fnv1a64:4f56944db54c1a2e",
+  "jsonHash": "fnv1a64:8e705b2e6adcaf33",
   "findings": []
 }

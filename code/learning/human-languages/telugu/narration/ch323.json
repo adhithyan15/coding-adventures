@@ -4,7 +4,7 @@
   "chapter": 323,
   "title": "Bigger, Best and How Long",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f13d31c5bfeb5e56",
+  "sourceHash": "fnv1a64:f0867edfcef8b44d",
   "lessons": [
     {
       "id": "TE-C323-kante",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dbb4a91250b5730",
+      "sourceHash": "fnv1a64:37d44db70c8b892c",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "సమయం is time on the clock: is there time, what time is it. కాలం (kālaṁ) is time as a stretch: how long, a long while, a season. You have said it already without seeing it: వానాకాలం is \"the rains' time\", the rainy season, and శీతాకాలం is \"the cold time\", winter."
+              "text": "సమయం is time on the clock: is there time, what time is it. కాలం (kālaṁ) is time as a stretch: how long, a long while, a season. You have said it already without noticing it: వానాకాలం is \"the rains' time\", the rainy season, and శీతాకాలం is \"the cold time\", winter."
             }
           ]
         },
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:feb40b2f0bf11076",
+      "sourceHash": "fnv1a64:f071a68546e90e56",
       "notice": null,
       "blocks": [
         {
@@ -349,11 +349,11 @@
             },
             {
               "kind": "speech",
-              "text": "A span that is over takes no -గా: > నేను మూడు గంటలు నడిచాను."
+              "text": "A span that is over takes no -గా:"
             },
             {
               "kind": "speech",
-              "text": "nēnu mūḍu gaṇṭalu naḍicānu. — \"I walked for three hours.\""
+              "text": "నేను మూడు గంటలు నడిచాను. nēnu mūḍu gaṇṭalu naḍicānu. — \"I walked for three hours.\""
             }
           ]
         },

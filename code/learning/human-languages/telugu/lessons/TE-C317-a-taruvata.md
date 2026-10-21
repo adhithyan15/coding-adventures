@@ -36,8 +36,7 @@ reviews_of: [TE-C64-after, TE-C75-before, TE-C317-iloga, TE-S174-letter-ii]
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-04, TE-LEX-C75-WHEN-04, TE-LEX-C317-ILOGA-01, TE-SCRIPT-RECOG-174] -->
 
 [PAUSE 2s] Say "after, later" (*taruvāta*) and "before" (*mundu*). Then the word that opened the last
-lesson, "in the meantime". (*īlōgā*.)
-- [YOU WRITE: **ఈ**, once]
+lesson, "in the meantime". (*īlōgā*.) Which letter opens it? (**ఈ**, a long *ī*.)
 
 ## You'll want to know: మొదట … ఆ తరువాత
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C317-FIRST-THEN-01]; assesses=[TE-LEX-C39-TII-01, TE-LEX-C103-LOC103-02, TE-LEX-C81-ORDINAL-01, TE-GRAMMAR-C316-PAST-SIMPLE-01] -->

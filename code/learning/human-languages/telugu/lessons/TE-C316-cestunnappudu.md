@@ -61,7 +61,7 @@ Telugu says a call "came", where English says the phone rang.
 ## Grammar Lens: 'was doing' on its own
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C316-PROGRESSIVE-PAST-01]; assesses=[TE-LEX-C46-ASK-05, TE-LEX-C33-CADUVU-01, TE-LEX-C18-GANTA-01, TE-LEX-C07-NUMBERS-6-10-01] -->
 
-Telugu has no separate tense for "was doing". The same form that says "I am reading" says "I was reading"
+Telugu needs no separate tense for "was doing". The same form that says "I am reading" says "I was reading"
 once a past time sets the scene:
 
 > **నిన్న రాత్రి తొమ్మిది గంటలకు నేను పుస్తకం చదువుతున్నాను.**
@@ -69,7 +69,9 @@ once a past time sets the scene:
 > *ninna rātri tommidi gaṇṭalaku nēnu pustakaṁ caduvutunnānu.* — "At nine last night I was reading a book."
 
 The past is carried by **నిన్న రాత్రి**, not by the verb. **ఉన్నాను**, the "am" inside
-**చదువుతున్నాను**, works the same way: > **నిన్న నేను ఇంట్లో ఉన్నాను.**
+**చదువుతున్నాను**, works the same way:
+
+> **నిన్న నేను ఇంట్లో ఉన్నాను.**
 >
 > *ninna nēnu iṇṭlō unnānu.* — "Yesterday I was at home."
 

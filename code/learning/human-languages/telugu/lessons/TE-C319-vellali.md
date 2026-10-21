@@ -53,8 +53,8 @@ reviews_of: [TE-C80-want, TE-C130-tikkettu, TE-C318-kabatti, TE-C50-now]
 **తినాలి**, **చదువు** → **చదవాలి**, and **వచ్చు** → **రావాలి**. It does not change for the
 person: **నేను**, **నువ్వు**, **అతను**, all **వెళ్ళాలి**. It covers both "must" and "should".
 
-You have said this ending for a long time. **కావాలి** is **-ఆలి** on **కా-**, "to become, to be": "it must
-be (had)", so "it is wanted".
+You have said this ending for a long time. **కావాలి** is **-ఆలి** on **కా-**, "to become": "it must
+come to be (mine)", so "it is needed, it is wanted".
 
 ## You'll want to know: -అకూడదు, must not
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C319-PROHIBITIVE-01]; assesses=[TE-LEX-C84-UNWELL-01, TE-LEX-C103-LOC103-02, TE-LEX-C119-THINGS119-05, TE-LEX-C149-ACT149-04] -->

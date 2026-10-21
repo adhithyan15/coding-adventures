@@ -49,7 +49,7 @@ You'll want to know: కాలం.
 కాలం — kālaṁ — "a span of time; a period, an age".
 చాలా కాలం తరువాత నేను మా ఊరికి వెళ్ళాను. cālā kālaṁ taruvāta nēnu mā ūriki veḷḷānu. — "After a long time I went to my home town."
 మీరు ఇక్కడ ఎంత కాలం ఉంటారు? mīru ikkaḍa enta kālaṁ uṇṭāru? — "How long will you stay here?"
-సమయం is time on the clock: is there time, what time is it. కాలం (kālaṁ) is time as a stretch: how long, a long while, a season. You have said it already without seeing it: వానాకాలం is "the rains' time", the rainy season, and శీతాకాలం is "the cold time", winter.
+సమయం is time on the clock: is there time, what time is it. కాలం (kālaṁ) is time as a stretch: how long, a long while, a season. You have said it already without noticing it: వానాకాలం is "the rains' time", the rainy season, and శీతాకాలం is "the cold time", winter.
 
 The word, taken apart.
 కాలం (kālaṁ) is borrowed from Sanskrit kāla, "time" (CDIAL 3084), with Telugu's noun ending -ం. The same kāla is the first half of కాలపట్టిక, "a timetable".
@@ -82,8 +82,8 @@ You'll want to know: a span + -గా, 'for … now'.
 రెండు రోజులుగా వర్షం పడుతోంది. reṇḍu rōjulugā varṣaṁ paḍutōndi. — "It has been raining for two days."
 The span takes -గా, and the verb stays in the -తున్న- form: it began then and is still going on. English says "have been"; Telugu says "am -ing". The plural of సంవత్సరం is సంవత్సరాలు; of రోజు, రోజులు.
 ఎంత కాలంగా మీరు ఇక్కడ ఉంటున్నారు? enta kālaṅgā mīru ikkaḍa uṇṭunnāru? — "How long have you been living here?"
-A span that is over takes no -గా: > నేను మూడు గంటలు నడిచాను.
-nēnu mūḍu gaṇṭalu naḍicānu. — "I walked for three hours."
+A span that is over takes no -గా:
+నేను మూడు గంటలు నడిచాను. nēnu mūḍu gaṇṭalu naḍicānu. — "I walked for three hours."
 
 You'll want to know: నుంచి … వరకు.
 నేను ఉదయం తొమ్మిది నుంచి సాయంత్రం ఐదు వరకు పని చేస్తాను. nēnu udayaṁ tommidi nuñci sāyantraṁ aidu varaku pani cēstānu. — "I work from nine in the morning until five in the evening."

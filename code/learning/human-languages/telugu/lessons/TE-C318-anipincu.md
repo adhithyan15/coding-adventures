@@ -54,7 +54,8 @@ say what **ఈ** means on its own, in front of a noun. ("This.")
 
 The one who feels sits in the dative, **నాకు**, the way it does in **నాకు తెలుగు వచ్చు**. The verb stays
 "it": **అనిపిస్తుంది** (*anipistundi*, "it seems"), **అనిపించింది** (*anipiñcindi*, "it seemed"). The quality takes **-గా**:
-**కష్టంగా**, **సులభంగా**.
+**కష్టంగా**, **సులభంగా**. **నాకు అలా అనిపిస్తుంది** is "that is how it seems to me": **అలా** (*alā*,
+"like that") is the **అలా** inside **అలాగే**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

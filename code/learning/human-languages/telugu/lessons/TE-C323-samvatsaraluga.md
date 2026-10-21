@@ -57,7 +57,9 @@ says "have been"; Telugu says "am -ing". The plural of **సంవత్సర�
 >
 > *enta kālaṅgā mīru ikkaḍa uṇṭunnāru?* — "How long have you been living here?"
 
-A span that is over takes no **-గా**: > **నేను మూడు గంటలు నడిచాను.**
+A span that is over takes no **-గా**:
+
+> **నేను మూడు గంటలు నడిచాను.**
 >
 > *nēnu mūḍu gaṇṭalu naḍicānu.* — "I walked for three hours."
 

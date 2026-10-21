@@ -50,7 +50,9 @@ reviews_of: [TE-C325-adharapadu, TE-C324-vaste, TE-C177-prakaram, TE-C50-journey
 > *rēpaṭi prayāṇaṁ varṣaṁ mīda ādhārapaḍi uṇṭundi.* — "Tomorrow's trip depends on the rain."
 
 **ఆధారపడి**, the **-ఇ** form, with **ఉంటుంది**, "it stays": "it stays resting on". This is the answer to a
-question that has no single answer: > **అది మీ మీద ఆధారపడి ఉంటుంది.**
+question that has no single answer:
+
+> **అది మీ మీద ఆధారపడి ఉంటుంది.**
 >
 > *adi mī mīda ādhārapaḍi uṇṭundi.* — "That is up to you."
 

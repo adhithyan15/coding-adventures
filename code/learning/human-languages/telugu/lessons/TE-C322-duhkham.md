@@ -52,7 +52,7 @@ reviews_of: [TE-C85-sorrow, TE-C93-ease, TE-C312-katha, TE-C321-poyindi]
 Like a fever, it "comes" to you: **నాకు దుఃఖం వచ్చింది**.
 
 The mark after **దు** is a breath, *ḥ*. Many speakers let it run into the next sound, close to *dukkhaṁ*. The next
-lesson puts the mark in your hand.
+lesson is about that mark.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

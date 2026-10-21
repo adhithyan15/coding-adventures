@@ -58,8 +58,7 @@ reviews_of: [TE-C172-intalo, TE-C316-cadivevadini, TE-C316-vellanu, TE-C144-vand
 "at that very moment": something broke into the middle of a scene. **ఈలోగా** leans toward the time before something
 else arrives, and what someone did with it.
 
-Its first letter is one you have not written yet. The next lesson takes it out of this word and puts it in
-your hand.
+Its first letter is one you have not written yet. The next lesson takes it out of this word.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

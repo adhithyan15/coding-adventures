@@ -4,7 +4,7 @@
   "chapter": 321,
   "title": "Tickets, Seats and Trouble",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:aa40bd4bd8c9ca3a",
+  "sourceHash": "fnv1a64:802dbc914ab85337",
   "lessons": [
     {
       "id": "TE-C321-situ",
@@ -592,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b8c567d55116ecd",
+      "sourceHash": "fnv1a64:69f5ad778331ee15",
       "notice": null,
       "blocks": [
         {
@@ -608,16 +608,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"At what time does the train leave?\" (railu enni gaṇṭalaku bayaludērutundi?) Then say \"a remedy\". (auṣadhaṁ.)"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ఔ (au), once",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: **ఔ**, once]"
+              "text": "Say \"At what time does the train leave?\" (railu enni gaṇṭalaku bayaludērutundi?) Then say \"a remedy\". (auṣadhaṁ.) Which letter opens it? (ఔ, au.)"
             }
           ]
         },
@@ -632,7 +623,7 @@
             },
             {
               "kind": "speech",
-              "text": "అయ్యో (ayyō, \"oh no\"). వెళ్ళిపోయింది is వెళ్ళి, \"having gone\", with పోయింది (pōyindi), \"went away\": gone, and not coming back. Telugu says what the bus did; English says what you missed."
+              "text": "అయ్యో (ayyō, \"oh no\"). వెళ్ళిపోయింది is వెళ్ళి, \"having gone\", with పోయింది (pōyindi), \"went away\": gone, and not coming back. Telugu says what the bus did, where English often says \"I missed the bus\"."
             },
             {
               "kind": "speech",

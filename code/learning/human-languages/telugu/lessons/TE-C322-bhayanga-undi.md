@@ -36,8 +36,7 @@ reviews_of: [TE-C85-fear, TE-C85-anger, TE-C93-gladly, TE-C06-dative-subject]
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C85-FEEL-03, TE-LEX-C85-FEEL-04, TE-LEX-C93-FINE-04, TE-GRAMMAR-C06-DATIVE-SUBJECT-02, TE-LEX-C322-DUHKHAM-01, TE-SCRIPT-RECOG-178] -->
 
 [PAUSE 2s] Say "fear" (*bhayaṁ*), "anger" (*kōpaṁ*) and "happily" (*santōṣaṅgā*). Then say "grief".
-(*duḥkhaṁ*.)
-- [YOU WRITE: **ః**, once]
+(*duḥkhaṁ*.) Which mark sits after its first syllable? (**ః**, the visarga, *ḥ*.)
 
 ## You'll want to know: నాకు … -గా ఉంది
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C322-FEELING-GA-UNDI-01]; assesses=[TE-LEX-C93-FINE-04, TE-LEX-C85-FEEL-03, TE-LEX-C85-FEEL-05, TE-LEX-C85-FEEL-01, TE-LEX-C63-HEALTH-01, TE-LEX-C85-FEEL-04, TE-GRAMMAR-C06-DATIVE-SUBJECT-02] -->
@@ -54,7 +53,9 @@ The one who feels is in the dative, **నాకు**, as in **నాకు త�
 **ఉంది**, "it is", closes the sentence: "to me, fearfully, it is". So too **నాకు బాధగా ఉంది**, "I feel sad";
 **నాకు చలిగా ఉంది**, "I feel cold"; **నాకు ఆకలిగా ఉంది**, "I am hungry".
 
-Some feelings "come" instead, like the grief of the last lesson: > **నాకు కోపం వచ్చింది.**
+Some feelings "come" instead, as **దుఃఖం** does:
+
+> **నాకు కోపం వచ్చింది.**
 >
 > *nāku kōpaṁ vaccindi.* — "I got angry."
 

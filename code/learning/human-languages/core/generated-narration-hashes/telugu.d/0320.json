@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 320,
-  "sourceHash": "fnv1a64:c1be16ffa509b55d",
+  "sourceHash": "fnv1a64:cadc736e84afb99a",
   "lessonIds": [
     "TE-C320-uru",
     "TE-S176-letter-uu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch320.txt",
   "json": "telugu/narration/ch320.json",
-  "textHash": "fnv1a64:72cf481591d318e5",
-  "jsonHash": "fnv1a64:ccd8452459854358",
+  "textHash": "fnv1a64:d956a7c004988bf7",
+  "jsonHash": "fnv1a64:392d8e44952d8244",
   "findings": []
 }

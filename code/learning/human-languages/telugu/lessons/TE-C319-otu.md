@@ -61,7 +61,8 @@ of this word.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ఓటు** (*ōṭu*) is a loan from English *vote*, with the **-ఉ** that Telugu gives most borrowed nouns, as in
-**బస్సు** and **టిక్కెట్టు**. The English *v* and the long *ō* are kept.
+**బస్సు** and **టిక్కెట్టు**. The English *v* drops away, the vowel stays long, and the English *t* becomes
+**ట**, as it does in **టిక్కెట్టు**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C319-OTU-01, TE-GRAMMAR-C319-OBLIGATIVE-01] -->
