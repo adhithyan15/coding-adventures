@@ -181,6 +181,31 @@ while the separate empty probe has its intended policy, reopen its active path
 with production verification access and verify identity, zero length and policy.
 Unsupported verification policies now reject before original mutation.
 
+### Changed - refuse private class elements, as upstream does (CCR-075 slice 1, #15860, CLOC44)
+
+Upstream `v20260915` rejects every private element with
+`JSC_UNSUPPORTED_LANGUAGE_FEATURE` ("Private elements."). The owner decided
+that closurec refuses what Closure refuses, so closurec now rejects them too.
+Every input is scanned before compilation, and a refused program produces:
+
+- stderr byte-identical to upstream's: one located error with an excerpt and
+  caret per occurrence, plus the extra error a `static` field gets, then
+  `N error(s), 0 warning(s)`;
+- exit status `min(N, 127)`;
+- no stdout, no output file and no sidecar.
+
+The ladder gains a third verdict, `DeclinedIdentically`. A rung upstream
+refuses records `expected.exit` and `expected.stderr` from the jar, and
+counts as agreement when closurec declines identically. The three
+`private_field` rungs moved there: the ledger drops from 59 to 56, and parity
+is now 56/58, 37/58 and 25/58. The four CCR-081 `simple-private-*` fixtures
+now assert the identical refusal. They had pinned closurec's old output.
+
+Diagnostics stay byte-identical up to 16 MiB. Past that, closurec stops
+printing error blocks but keeps the true count and exit status, because
+upstream's output grows with errors × line length on a hostile line. Memory
+stays proportional to the input. See CLOC44 for both.
+
 ### Fixed - a constant `switch` no longer loses a nested `break` (#17842)
 
 `while(c--){switch(1){case 1:if(x)break;b();break}d()}` collapsed the switch,

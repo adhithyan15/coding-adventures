@@ -1,0 +1,5 @@
+tests/diff/simple-private-field/input/a.js:1:10: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is not currently supported by the compiler: Private elements.
+  1| class C { #x = 1 + 2 }
+               ^
+
+1 error(s), 0 warning(s)
