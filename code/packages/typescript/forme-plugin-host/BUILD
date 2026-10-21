@@ -1,4 +1,12 @@
 # build-tool: deps=typescript/forme-plugin-runner-ts
+cd ../directed-graph && npm install --silent
+cd ../state-machine && npm install --silent
+cd ../cli-builder && npm install --silent
+cd ../grammar-tools && npm install --silent
+cd ../lexer && npm install --silent
+cd ../toml-lexer && npm install --silent
+cd ../parser && npm install --silent
+cd ../toml-parser && npm install --silent
 cd ../document-ast && npm install --silent
 cd ../forme-types && npm install --silent && npm run build
 cd ../forme-errors && npm install --silent && npm run build

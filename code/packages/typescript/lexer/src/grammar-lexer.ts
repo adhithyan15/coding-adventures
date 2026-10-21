@@ -109,7 +109,7 @@ function lowerScopedCaseInsensitiveGroups(pattern: string): string {
 }
 
 function compileGrammarRegExp(patternSource: string, flags: string): RegExp {
-  return new RegExp(lowerScopedCaseInsensitiveGroups(patternSource), flags);
+  return new RegExp(lowerScopedCaseInsensitiveGroups(patternSource), `${flags}y`);
 }
 
 // ---------------------------------------------------------------------------
@@ -214,6 +214,8 @@ export type OnTokenCallback = (token: Token, ctx: LexerContext) => void;
 
 export interface GrammarLexerOptions {
   readonly preserveSourceInfo?: boolean;
+  /** Maximum number of emitted tokens, including EOF. */
+  readonly maxTokens?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -665,6 +667,9 @@ export class GrammarLexer {
   /** Whether token/trivia source metadata should be preserved. */
   private readonly _preserveSourceInfo: boolean;
 
+  /** Hard output bound checked before every token emission. */
+  private readonly _maxTokens: number;
+
   /** Trivia collected since the previous emitted token. */
   private _pendingTrivia: Trivia[] = [];
 
@@ -674,6 +679,12 @@ export class GrammarLexer {
   constructor(source: string, grammar: TokenGrammar, options?: GrammarLexerOptions) {
     this._grammar = grammar;
     this._preserveSourceInfo = options?.preserveSourceInfo === true;
+    const maxTokens = options?.maxTokens ?? Number.POSITIVE_INFINITY;
+    if (maxTokens !== Number.POSITIVE_INFINITY &&
+        (!Number.isSafeInteger(maxTokens) || maxTokens < 1)) {
+      throw new RangeError("GrammarLexer maxTokens must be a positive safe integer");
+    }
+    this._maxTokens = maxTokens;
     this._caseInsensitive = grammar.caseInsensitive === true;
     this._caseSensitive = grammar.caseSensitive !== false && !this._caseInsensitive;
     // Only lowercase the source for the legacy caseSensitive:false pattern-level mode.
@@ -1474,10 +1485,10 @@ export class GrammarLexer {
     }
 
     // Comment-only line — check skip patterns
-    const remaining = this._source.slice(this._pos);
     for (const pat of this._skipPatterns) {
-      const match = pat.pattern.exec(remaining);
-      if (match !== null && match.index === 0) {
+      pat.pattern.lastIndex = this._pos;
+      const match = pat.pattern.exec(this._source);
+      if (match !== null) {
         const peekPos = this._pos + match[0].length;
         if (
           peekPos >= this._source.length ||
@@ -1566,10 +1577,10 @@ export class GrammarLexer {
    * @returns true if a skip pattern matched (text was consumed), false otherwise.
    */
   private _trySkip(): boolean {
-    const remaining = this._source.slice(this._pos);
     for (const pat of this._skipPatterns) {
-      const match = pat.pattern.exec(remaining);
-      if (match !== null && match.index === 0) {
+      pat.pattern.lastIndex = this._pos;
+      const match = pat.pattern.exec(this._source);
+      if (match !== null) {
         const startLine = this._line;
         const startColumn = this._column;
         const startOffset = this._pos;
@@ -1594,7 +1605,6 @@ export class GrammarLexer {
    * @returns A Token if a pattern matched, null otherwise.
    */
   private _tryMatchTokenInGroup(groupName: string): Token | null {
-    const remaining = this._source.slice(this._pos);
     // F10: a flat mode (a set-mode target) inherits the default group's
     // patterns. Its own patterns take priority (tried first); the rest
     // fall through by appending the default patterns. Nested push regions
@@ -1616,8 +1626,9 @@ export class GrammarLexer {
     }
 
     for (const { name, pattern, alias } of patterns) {
-      const match = pattern.exec(remaining);
-      if (match !== null && match.index === 0) {
+      pattern.lastIndex = this._pos;
+      const match = pattern.exec(this._source);
+      if (match !== null) {
         let value = match[0];
         const startLine = this._line;
         const startColumn = this._column;
@@ -1762,6 +1773,13 @@ export class GrammarLexer {
   }
 
   private _emitToken(tokens: Token[], token: Token): void {
+    if (tokens.length >= this._maxTokens) {
+      throw new LexerError(
+        `Token count exceeds ${this._maxTokens}-token limit`,
+        token.line,
+        token.column,
+      );
+    }
     let finalized = token;
     if (this._preserveSourceInfo) {
       finalized = {

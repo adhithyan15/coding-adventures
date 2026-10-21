@@ -1234,7 +1234,9 @@ attribute form and lower through shared rounded-container or circular semantic, 
 The internal `classBox`, `erBox`, and `requirementBox` ShapeIDs remain accepted in attribute form and
 lower through shared titled-container semantic, layout, and backend-neutral paint geometry.
 Normalized quoted Unicode lane
-and node labels, named and numeric label entities,
+and node labels, named and numeric label entities, and Flowchart-style Markdown strings on
+ownership lanes, nested groups, nodes, and edge labels preserve multiline text plus bold and italic
+spans through semantic and layout IR into backend-neutral glyph runs,
 directed/undirected/dotted/thick chained links, including open dotted and thick
 forms, point/circle/cross endpoint
 markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
@@ -1325,6 +1327,6 @@ color, and typography fields through semantic and layout IR into backend-neutral
 Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 
-This is intentionally partial. The complete Flowchart shape
-and link catalog beyond the documented marker forms, and exact upstream routing or typography remain
+This is intentionally partial. Flowchart icons and images, additional link forms beyond the documented
+marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

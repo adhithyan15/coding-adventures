@@ -1,17 +1,53 @@
-//! Grammar-driven Perl-language parser for LANG81's bounded print pilot.
+//! Grammar-driven Perl-language parser.
+//!
+//! Like `perl-lexer`, this crate owns compiled grammars, not parsing code:
+//! the generic [`GrammarParser`] runs over a [`ParserGrammar`] generated from
+//! `code/grammars/perl/` by `grammar-tools generate-rust-compiled-grammars
+//! perl`. [`release_parser_grammar`] returns the grammar of exactly one
+//! inventory release (LANG84); [`parse_perl`] keeps using the unversioned
+//! LANG81 execution grammar (`perl.grammar`).
 
 use coding_adventures_perl_lexer::tokenize_perl;
+use grammar_tools::parser_grammar::ParserGrammar;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
-// The tiny pilot grammar has bounded source size and uses a guarded parser.
-const MAX_RULE_DEPTH: usize = 96;
+/// Every release in `code/grammars/perl/releases.csv` as `(release,
+/// grammar_stage)`, pending rows included, in canonical inventory order. A
+/// release here but not in [`SUPPORTED_RELEASES`] is known but has no pair
+/// yet (stage `none`); a release in neither is unknown.
+pub use _grammar::INVENTORY;
 
-/// Parse the accepted Perl subset, rejecting trailing or malformed syntax.
+/// Every release with a compiled parser grammar, in inventory order.
+pub use _grammar::SUPPORTED_RELEASES;
+
+/// The deduplicated module (`g_<12 hex>`) that holds a release's parser
+/// table, or `None` for a release without one.
+pub use _grammar::grammar_class;
+
+/// The parser's rule-depth cap. `GrammarParser`'s default is `usize::MAX`,
+/// so every Perl parse sets this explicitly (LANG84 C5). The bounded grammar
+/// nests one `unary` per `-`, so a deep `- - - … 1` reaches this cap and is
+/// refused with an error rather than overflowing the stack.
+pub const MAX_RULE_DEPTH: usize = 96;
+
+/// The compiled parser grammar of exactly one inventory release, or `None`
+/// when the release is pending or unknown. There is no fallback.
+pub fn release_parser_grammar(release: &str) -> Option<ParserGrammar> {
+    _grammar::parser_grammar(release)
+}
+
+/// The unversioned LANG81 parser grammar (`perl.grammar`).
+pub fn unversioned_parser_grammar() -> ParserGrammar {
+    _grammar::unversioned_parser_grammar()
+}
+
+/// Parse the accepted Perl subset with the unversioned LANG81 grammar,
+/// rejecting trailing or malformed syntax.
 pub fn parse_perl(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = tokenize_perl(source)?;
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, unversioned_parser_grammar())
         .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|error| format!("Perl parse failed: {error}"))
@@ -861,5 +897,89 @@ mod tests {
     fn deep_parentheses_fail_without_stack_overflow() {
         let source = format!("print({}1{});", "(".repeat(1000), ")".repeat(1000));
         assert!(parse_perl(&source).is_err());
+    }
+
+    /// Zero the one field deduplication may disagree on: a release shares the
+    /// FIRST release's module in its class, so its line numbers belong there.
+    fn without_line_numbers(mut grammar: ParserGrammar) -> ParserGrammar {
+        for rule in &mut grammar.rules {
+            rule.line_number = 0;
+        }
+        grammar
+    }
+
+    /// The LANG84 regeneration check for the compiled parser tables: the
+    /// compiled release list is the inventory's non-pending rows, and each
+    /// compiled grammar equals its own `.grammar` file parsed fresh.
+    #[test]
+    fn compiled_tables_match_every_inventoried_pair() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        let mut rows = inventory.lines().filter(|row| !row.starts_with('#'));
+        let header: Vec<_> = rows.next().unwrap().split(',').collect();
+        let release_col = header.iter().position(|h| *h == "release").unwrap();
+        let status_col = header.iter().position(|h| *h == "grammar_status").unwrap();
+        let mut all = Vec::new();
+        let mut compiled = Vec::new();
+        for row in rows {
+            let fields: Vec<_> = row.split(',').collect();
+            // Until the LANG84 schema migration the stage is derived from the
+            // status: pending -> none, otherwise P.
+            let pending = fields[status_col] == "pending";
+            all.push((fields[release_col], if pending { "none" } else { "P" }));
+            if !pending {
+                compiled.push(fields[release_col]);
+            }
+        }
+        assert_eq!(INVENTORY, all.as_slice());
+        assert_eq!(SUPPORTED_RELEASES, compiled.as_slice());
+        assert_eq!(
+            SUPPORTED_RELEASES,
+            coding_adventures_perl_lexer::SUPPORTED_RELEASES,
+            "lexer and parser tables must cover the same releases"
+        );
+        for release in SUPPORTED_RELEASES {
+            let text =
+                std::fs::read_to_string(directory.join(format!("perl{release}.grammar"))).unwrap();
+            assert_eq!(
+                without_line_numbers(release_parser_grammar(release).unwrap()),
+                without_line_numbers(parse_parser_grammar(&text).unwrap()),
+                "{release}: compiled table is stale"
+            );
+        }
+        for (release, _) in INVENTORY {
+            assert_eq!(
+                grammar_class(release).is_some(),
+                SUPPORTED_RELEASES.contains(release)
+            );
+            assert_eq!(
+                release_parser_grammar(release).is_some(),
+                SUPPORTED_RELEASES.contains(release),
+                "{release}: a pending release must have no table"
+            );
+        }
+        let text = std::fs::read_to_string(directory.join("perl.grammar")).unwrap();
+        assert_eq!(
+            without_line_numbers(unversioned_parser_grammar()),
+            without_line_numbers(parse_parser_grammar(&text).unwrap())
+        );
+    }
+
+    /// Every compiled release pair, driven through the compiled tables rather
+    /// than files read from disk, accepts the shared subset probe and refuses
+    /// a malformed one.
+    #[test]
+    fn every_compiled_release_parses_the_shared_probe() {
+        for release in SUPPORTED_RELEASES {
+            let tokens = coding_adventures_perl_lexer::release_token_grammar(release).unwrap();
+            let grammar = release_parser_grammar(release).unwrap();
+            for (source, accepted) in [("print(1+2*3); print(-4);", true), ("print(", false)] {
+                let tokens = GrammarLexer::new(source, &tokens).tokenize().unwrap();
+                let parsed = GrammarParser::new(tokens, grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse();
+                assert_eq!(parsed.is_ok(), accepted, "{release}: {source}");
+            }
+        }
     }
 }

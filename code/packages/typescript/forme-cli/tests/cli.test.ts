@@ -1,7 +1,7 @@
-import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, link, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { join, resolve } from "node:path";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { mkdtemp } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -126,6 +126,17 @@ function successfulResult(): RunResult {
 }
 
 describe("argument and diagnostic contracts", () => {
+  it("ASCII-escapes config-derived status output", async () => {
+    const io = makeIO();
+    const loaded = config({ name: "safe\u001b]8;;https://evil.example\u0007\n\u202e" });
+    expect(await run(["check"], io, {}, services(loaded))).toBe(EXIT_OK);
+    expect(io.stdoutText).not.toContain("\u001b");
+    expect(io.stdoutText).not.toContain("\u0007");
+    expect(io.stdoutText).not.toContain("\u202e");
+    expect(io.stdoutText.split("\n")).toHaveLength(2);
+    expect(io.stdoutText).toContain("\\u{1b}");
+  });
+
   it("prints help and version with stable success exits", async () => {
     const help = makeIO();
     expect(await run([], help)).toBe(EXIT_OK);
@@ -672,6 +683,88 @@ describe("clean", () => {
 });
 
 describe("installed-project shape", () => {
+  it("rejects symlink and hardlink TOML configs", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-file-"));
+    roots.push(root);
+    const source = join(root, "source.toml");
+    await writeFile(source, 'name = "unsafe"\n', "utf8");
+    const linked = join(root, "linked.toml");
+    await symlink(source, linked, "file");
+    const hardlinked = join(root, "hardlinked.toml");
+    await link(source, hardlinked);
+
+    for (const path of [linked, hardlinked]) {
+      const io = makeIO(root, new Set([path]));
+      expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
+      expect(io.stderrText).toMatch(/regular|link|identity/i);
+    }
+  });
+
+  it.skipIf(process.platform === "win32")("rejects a FIFO TOML config without blocking", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-fifo-"));
+    roots.push(root);
+    const fifo = join(root, "fifo.toml");
+    await execFileAsync("mkfifo", [fifo]);
+    const io = makeIO(root, new Set([fifo]));
+    expect(await run(["check", "--config", fifo], io)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(io.stderrText).toMatch(/regular|link|identity/i);
+  });
+
+  it("renders TOML parser diagnostics as bounded ASCII without terminal controls", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-diagnostic-"));
+    roots.push(root);
+    const path = join(root, "forme.config.toml");
+    await writeFile(path, '"bad\\u001b\\n\\u202e" = true\n', "utf8");
+    const io = makeIO(root, new Set([path]));
+    expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(io.stderrText).not.toContain("\u001b");
+    expect(io.stderrText).not.toContain("\u202e");
+    expect(io.stderrText.split("\n")).toHaveLength(2);
+    expect(io.stderrText).toContain("\\u{1b}");
+    expect(io.stderrText.length).toBeLessThanOrEqual(4200);
+  });
+
+  it("discovers TOML and runs its StageRef through the real CLI product path", async () => {
+    const root = await mkdtemp(join(process.platform === "win32" ? homedir() : tmpdir(), "forme-cli-toml-"));
+    roots.push(root);
+    const plugin = join(root, "forme-plugins", "plugin-source");
+    await mkdir(plugin, { recursive: true });
+    await writeFile(join(plugin, "plugin.mjs"), "export {};\n", "utf8");
+    await writeFile(join(plugin, "plugin.toml"), `manifestVersion = 1
+[plugin]
+name = "@example/toml-source"
+version = "1.0.0"
+apiVersion = 2
+[runtime]
+kind = "node"
+entry = "./plugin.mjs"
+[[contributes.stages]]
+id = "source"
+consumes = "Void"
+produces = "DeployArtifact"
+`, "utf8");
+    await writeFile(join(root, "forme.config.toml"), `name = "toml-product"
+[settings]
+storage-root = "."
+cache-dir = ".forme/cache"
+reproducible-build = true
+log-level = "info"
+best-effort = false
+[[stages]]
+id = "source"
+stage = "@example/toml-source"
+export = "source"
+`, "utf8");
+
+    const bin = fileURLToPath(new URL("../bin/forme.mjs", import.meta.url));
+    const checked = await execFileAsync(process.execPath, [bin, "check"], {
+      cwd: root,
+      timeout: 20_000,
+    });
+    expect(checked.stderr).toBe("");
+    expect(checked.stdout).toContain("forme check: toml-product is valid (1 stage)");
+  }, 30_000);
+
   it("loads and builds a self-contained config outside the repository tree", async () => {
     const root = await mkdtemp(join(tmpdir(), "forme-cli-external-"));
     roots.push(root);

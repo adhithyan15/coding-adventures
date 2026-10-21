@@ -2,7 +2,7 @@
  * @coding-adventures/forme-pipeline-config
  *
  * The user-authored description of *what to build* — `PipelineConfig`
- * types, validator, and TS-form loader.
+ * types, validator, and TypeScript/TOML loaders.
  *
  * Three responsibilities:
  *
@@ -15,12 +15,11 @@
  *     summarising all of them.
  *
  *   - **Loading** — `loadTsConfig(path)` dynamically imports a TS-form
- *     `forme.config.ts` and returns its default export, ready to be
- *     fed to `validateConfig`.
+ *     config. `parseTomlConfig(source)` lowers bounded declarative TOML to
+ *     exactly the same in-memory shape.
  *
- * See FM03 §2 for the design.  The TOML-form loader (FM03 §2.3) lives
- * in a sibling package (not yet built); both forms produce the same
- * `PipelineConfig` shape declared here.
+ * See FM03 §2 for the design. Both forms produce the `PipelineConfig`
+ * shape declared here and pass through the same validator/orchestrator path.
  */
 
 export type {
@@ -48,3 +47,5 @@ export type { SchemaViolation, SchemaValidationResult } from "./json-schema.js";
 
 export { loadTsConfig } from "./load.js";
 export type { LoadTsConfigOptions } from "./load.js";
+
+export { MAX_TOML_CONFIG_BYTES, parseTomlConfig } from "./parse-toml.js";
