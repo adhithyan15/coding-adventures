@@ -137,7 +137,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "top": 6,
         # Exact control `width: 100%` declarations now lower to
         # `Layout.fillWidth`; the three remaining drops are Text geometry.
-        "width": 3,
     },
     "flutter": {
         "background": 2,

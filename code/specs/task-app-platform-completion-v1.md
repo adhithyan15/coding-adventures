@@ -336,6 +336,10 @@ wrapper ownership, negative inputs, and exact emitted geometry. Keep every
 unrelated style allowance and release artifact boundary unchanged. Native Qt
 build evidence belongs to CI, not a local source-generation claim.
 
+Implemented bare Text scalar/fill lowering with ordered scalar states. Painted
+Text retains existing outer-wrapper scalar geometry. Both authored themes
+measure 78 style drops and zero width drops; all unrelated allowances remain.
+
 ### Tier C — reach, stated honestly
 
 14. **iOS: run, don't just compile.** **Done for the CI/runtime claim in #16035,

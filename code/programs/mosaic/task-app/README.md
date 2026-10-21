@@ -114,9 +114,13 @@ calendar-event text omissions tracked by #17146 (#17128). Qt now passes the
 event surface's supported color and font size to descendant text and lowers
 the authored hidden/ellipsis/nowrap trio as native clipping and right elision,
 retiring those final five omissions (#17146).
+Qt Text also preserves the calendar heading fill width and timeline column
+widths (150 and 190), reducing both themes from 81 to 78 reported style drops.
+This is generated-source evidence; native build validation runs in release CI.
+
 Qt controls now lower their 15 exact `width: 100%` declarations to
 `Layout.fillWidth: true`, reducing the Qt inventory from 108 to 93. The three
-remaining Qt width omissions belong to `Text` geometry, while other
+Text geometry omissions were subsequently resolved by #17913, while other
 percentages and mixed fixed/fill states remain explicit debt (#17338).
 Qt now also treats the ten non-inset CSS shadows paired with supported
 `elevation` tokens as consumed by their emitted native `MultiEffect` depth,
