@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-323-COMPARE-DURATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things with kaṇṭē, pick the best with anniṭikaṇṭē, and say how long with a span and -gā, nunci and varaku.",
+  "prerequisites": [
+    "TE-EXT-322-FEELINGS-HOPES"
+  ]
+}

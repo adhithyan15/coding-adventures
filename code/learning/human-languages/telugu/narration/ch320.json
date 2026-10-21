@@ -1,0 +1,694 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 320,
+  "title": "Asking the Way",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c1be16ffa509b55d",
+  "lessons": [
+    {
+      "id": "TE-C320-uru",
+      "sequence": 15390,
+      "title": "ఊరు (ūru) — a village or town; one's home place",
+      "headword": "ఊరు",
+      "romanization": "ūru",
+      "gloss": "a village or town; one's home place",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:707de87a8b0b2dcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a village\" (grāmaṁ) and \"a town\" (paṭṭaṇaṁ). Then \"I must go\". (nēnu veḷḷāli.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఊరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఊరు — ūru — \"a village or town; one's home place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మీది ఏ ఊరు? mīdi ē ūru? — \"Which town are you from?\""
+            },
+            {
+              "kind": "speech",
+              "text": "మా ఊరు చిన్నది, కానీ చాలా బాగుంటుంది. mā ūru cinnadi, kānī cālā bāguṇṭundi. — \"My home town is small, but it is very nice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "మీది (mīdi, \"yours\") and ఏ (ē, \"which\"): \"yours is which town?\", the usual way to ask where someone comes from."
+            },
+            {
+              "kind": "speech",
+              "text": "ఊరు (ūru) is wider than గ్రామం or పట్టణం: any place where people live, and most of all the one you come from. Before an ending its -ఉ turns to -ఇ: ఊరికి (ūriki, \"to the town, home\"), ఊరిలో (ūrilō, \"in the town\"). ఊరికి వెళ్తున్నాను on its own means \"I am going home, to my own place\". Many town names end in it, as నెల్లూరు does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఊరు (ūru) is native Dravidian, one word with Tamil and Malayalam ūr and Kannada ūru, all \"village, town\" (DEDR 752). It is one of the words the whole family shares."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūru, with a long ū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūru*, with a long *ū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Which town are you from?\" — mīdi ē ūru?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Which town are you from?\" — *mīdi ē ūru?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My home town is small, but it is very nice\" — mā ūru cinnadi, kānī cālā bāguṇṭundi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My home town is small, but it is very nice\" — *mā ūru cinnadi, kānī cālā bāguṇṭundi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"On holiday I go home to my town\" — selavulō nēnu ūriki veḷtānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"On holiday I go home to my town\" — *selavulō nēnu ūriki veḷtānu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఊరు (ūru) mean? (A village or town; one's home place.) \"To the town, home\"? (ఊరికి.) How do you ask where someone comes from? (మీది ఏ ఊరు (ūru)?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S176-letter-uu",
+      "sequence": 15400,
+      "title": "ఊ (ū) — the letter that opens ఊరు (ūru)",
+      "headword": "ఊ",
+      "romanization": "ū",
+      "gloss": "the letter ఊ — taken from ఊరు",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1c7408134e3510ed",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ఊ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ఊ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ఉ and ూ once each, and name them. (Short u at the start of a word; long ū after a consonant, as in కూర.) Then write ఈ once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ఊరు (ūru). This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఊ — ū, a long ū at the start of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "After a consonant, long ū is the sign ూ. At the start of a word it stands as a letter of its own, ఊ, and it pairs with the short ఉ you know."
+            },
+            {
+              "kind": "speech",
+              "text": "In print ఊ (ū) is built on ఉ: the same body and bar, a top stroke that waves instead of a short tick, and a small curl standing on its right, like the curl beside ఈ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఊ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ఊ (ū) and copy it, slowly, and larger than it is printed. Write the body of ఉ the way you learned it, then copy the wave on top and the small curl on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet say where the pen starts on this shape, or which way it travels. That is taught with real variation from school to school, and it waits here until it can be written down from a source. Copying the printed shape needs no such source, and it puts the shape in your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ఊ (ū) at the start of ఊరు (ūru)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ఊ at the start of **ఊరు**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఊ three times, saying ū as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ఊ three times, saying *ū* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఉ, then ఊ (ū), from memory, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ఉ, then ఊ, from memory, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఊరు (ūru), then ఈ ఊరు (ūru), \"this town\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఊరు**, then **ఈ ఊరు**, \"this town\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ఊ? (ū, long ū at the start of a word.) Which word did it come from? (ఊరు, ūru.) How is it different from ఉ? (The wave on top and the curl on the right; the vowel is long.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C320-sutiga",
+      "sequence": 15410,
+      "title": "సూటిగా (sūṭigā) — straight on, directly",
+      "headword": "సూటిగా",
+      "romanization": "sūṭigā",
+      "gloss": "straight on, directly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75f55c22fc35b0af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"slowly\" (nemmadigā) and \"quickly\" (tvaragā). Then say \"one's home place\". (ūru.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సూటిగా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సూటిగా — sūṭigā — \"straight on, directly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సూటిగా వెళ్ళండి. sūṭigā veḷḷaṇḍi. — \"Go straight on.\""
+            },
+            {
+              "kind": "speech",
+              "text": "అతను సూటిగా మాట్లాడతాడు. atanu sūṭigā māṭlāḍatāḍu. — \"He speaks plainly, straight to the point.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Like నెమ్మదిగా and త్వరగా, it is a word with -గా on the end, and it answers \"how?\". On a road it is \"straight on\"; about speech it is \"straight to the point\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సూటిగా (sūṭigā) is native Dravidian: సూటి, sūṭi, \"aim\", which DEDR 2658 lists with Tamil cuṭṭu, \"to point out, to aim at\", and the adverb ending -గా. Going straight is going where you aim."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūṭigā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūṭigā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go straight on\" — sūṭigā veḷḷaṇḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go straight on\" — *sūṭigā veḷḷaṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He speaks plainly, straight to the point\" — atanu sūṭigā māṭlāḍatāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He speaks plainly, straight to the point\" — *atanu sūṭigā māṭlāḍatāḍu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సూటిగా (sūṭigā) mean? (Straight on, directly.) Which ending does it share with నెమ్మదిగా? (-గా.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C320-ela-vellali",
+      "sequence": 15420,
+      "title": "ఎలా వెళ్ళాలి? (elā veḷḷāli?) — asking the way",
+      "headword": "ఎలా వెళ్ళాలి?",
+      "romanization": "elā veḷḷāli?",
+      "gloss": "how do I get there? — asking the way, and following the answer",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:886776b8b50e5962",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"where?\" (ekkaḍa), \"how?\" (elā) and \"I must go\" (nēnu veḷḷāli). Then \"go straight on\". (sūṭigā veḷḷaṇḍi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: asking",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "క్షమించండి, ఆసుపత్రి ఎక్కడ ఉంది? kṣamiñcaṇḍi, āsupatri ekkaḍa undi? — \"Excuse me, where is the hospital?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఆసుపత్రికి ఎలా వెళ్ళాలి? āsupatriki elā veḷḷāli? — \"How do I get to the hospital?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The second is \"how must (I) go to …\", with the -ఆలి you learned for reasons."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇక్కడి నుంచి దూరమా? ikkaḍi nuñci dūramā? — \"Is it far from here?\""
+            },
+            {
+              "kind": "speech",
+              "text": "-ఆ at the end makes a yes-or-no question: దూరం, \"far\" becomes దూరమా?, \"far?\". ఇక్కడి is the form ఇక్కడ takes before నుంచి."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: following the answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సూటిగా వెళ్ళండి. రెండవ మలుపులో ఎడమ వైపు తిరగండి. sūṭigā veḷḷaṇḍi. reṇḍava malupulō eḍama vaipu tiragaṇḍi. — \"Go straight on. At the second turning, turn left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఆసుపత్రి కుడి వైపు ఉంది. దగ్గరే. āsupatri kuḍi vaipu undi. daggarē. — \"The hospital is on the right. It is close.\""
+            },
+            {
+              "kind": "speech",
+              "text": "వైపు (vaipu, \"side\"): ఎడమ వైపు, \"on the left, to the left\"; కుడి వైపు, \"on the right\". తిరగండి (tiragaṇḍi, \"turn\") is the polite command of a verb for turning, with the -అండి of క్షమించండి. దగ్గరే (daggarē, \"close by\") is దగ్గర with an -ఏ that leans on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How do I get to the hospital?\" — āsupatriki elā veḷḷāli?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How do I get to the hospital?\" — *āsupatriki elā veḷḷāli?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go straight on. At the second turning, turn left.\" — sūṭigā veḷḷaṇḍi. reṇḍava malupulō eḍama vaipu tiragaṇḍi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go straight on. At the second turning, turn left.\" — *sūṭigā veḷḷaṇḍi. reṇḍava malupulō eḍama vaipu tiragaṇḍi.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask the way to the station, then give the way back: straight on, then right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask the way to the station, then give the way back: straight on, then right]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"how do I get there\", then \"is it far\". (ఎలా వెళ్ళాలి; దూరమా.) Then \"on the left\" and \"turn\", politely. (ఎడమ వైపు; తిరగండి.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R320-asking-the-way",
+      "sequence": 15430,
+      "title": "Review — asking the way",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "where is it, how do I get there, straight on, left and right",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9867966f0e44d4f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"one's home place\", \"a vote\" and \"in the meantime\". (ūru, ōṭu, īlōgā.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first letter of each, ఊ (ū), ఓ and ఈ, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first letter of each, **ఊ**, **ఓ** and **ఈ**, once]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Which town are you from? My home town is small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Which town are you from? My home town is small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excuse me, how do I get to the station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Excuse me, how do I get to the station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Go straight on. At the second turning, turn right. It is close.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Go straight on. At the second turning, turn right. It is close.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It is far, so you had better take an auto.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It is far, so you had better take an auto.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఊరు (ūru), ఓటు, ఈలోగా",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఊరు**, **ఓటు**, **ఈలోగా**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get to the hospital?\" (ఆసుపత్రికి ఎలా వెళ్ళాలి? (elā veḷḷāli?)) \"Straight on\"? (సూటిగా (sūṭigā).) \"On the right\"? (కుడి వైపు.) \"One's home town\"? (ఊరు (ūru), which opens with ఊ (ū).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

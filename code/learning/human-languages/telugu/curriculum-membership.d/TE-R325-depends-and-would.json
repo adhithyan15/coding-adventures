@@ -1,0 +1,11 @@
+{
+  "id": "TE-R325-depends-and-would",
+  "pathSegment": "TE-PATH-325-WOULD-DEPENDS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-325-WOULD-DEPENDS",
+      "order": 4
+    }
+  ]
+}

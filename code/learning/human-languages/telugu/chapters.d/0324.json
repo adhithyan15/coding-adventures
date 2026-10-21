@@ -1,0 +1,20 @@
+{
+  "chapter": 324,
+  "title": "If It Rains",
+  "label": "ch:te-if-it-rains",
+  "canDo": "I can say what will happen if something happens, with -tē and okavēḷa, and if it does not, with -akapōtē and lēkapōtē.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-R324-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete TE-R324-if-and-otherwise: make real conditions with -tē, okavēḷa, -akapōtē and lēkapōtē.",
+    "assesses": [
+      "TE-GRAMMAR-C324-TE-CONDITIONAL-01",
+      "TE-GRAMMAR-C324-OKAVELA-TE-01",
+      "TE-GRAMMAR-C324-REAL-CONDITION-01",
+      "TE-GRAMMAR-C324-NEGATIVE-CONDITION-01"
+    ]
+  }
+}

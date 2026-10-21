@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "TE-S175-letter-oo",
+    "language": "telugu",
+    "chapter": 319,
+    "sequence": 15360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8e57ca34d91065a8",
+    "detachableSegments": [
+      "Script you'll notice: ఓ",
+      "Writing: ఓ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

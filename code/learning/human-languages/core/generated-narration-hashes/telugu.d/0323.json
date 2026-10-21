@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:f13d31c5bfeb5e56",
+  "lessonIds": [
+    "TE-C323-kante",
+    "TE-C323-kalam",
+    "TE-C323-samvatsaraluga",
+    "TE-R323-comparing-and-time"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "telugu/narration/ch323.txt",
+  "json": "telugu/narration/ch323.json",
+  "textHash": "fnv1a64:28856b5957593b1e",
+  "jsonHash": "fnv1a64:3a0106414077f9c5",
+  "findings": []
+}

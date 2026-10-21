@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:7ee0f6418b407312",
+  "lessonIds": [
+    "TE-C325-adharapadu",
+    "TE-C325-adharapadi-untundi",
+    "TE-C325-undi-unte",
+    "TE-W325-six-lines",
+    "TE-R325-depends-and-would"
+  ],
+  "tex": "telugu/book/chapters/ch325-it-depends-and-what-would-have-been.tex"
+}

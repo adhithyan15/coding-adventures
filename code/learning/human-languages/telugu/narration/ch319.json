@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 319,
+  "title": "Must, Must Not, and Because",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:31238dfc729578be",
+  "lessons": [
+    {
+      "id": "TE-C319-vellali",
+      "sequence": 15340,
+      "title": "వెళ్ళాలి (veḷḷāli) — must, must not, had better",
+      "headword": "వెళ్ళాలి",
+      "romanization": "veḷḷāli",
+      "gloss": "(I) must go, should go — the -ఆలి you know from కావాలి",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee6fd61be8e829d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want a ticket\". (nāku oka ṭikkeṭṭu kāvāli.) Then \"It is raining, so I am at home.\" (varṣaṁ paḍutōndi kābaṭṭi nēnu iṇṭlō unnānu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ఆలి, must",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నేను ఇప్పుడు వెళ్ళాలి. nēnu ippuḍu veḷḷāli. — \"I must go now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఈ మందు ప్రతి రోజు తీసుకోవాలి. mīru ī mandu prati rōju tīsukōvāli. — \"You should take this medicine every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-ఆలి sits on the verb's base: వెళ్ళు becomes వెళ్ళాలి (veḷḷāli), చేయు becomes చేయాలి, తిను becomes తినాలి, చదువు becomes చదవాలి, and వచ్చు becomes రావాలి. It does not change for the person: నేను, నువ్వు, అతను, all వెళ్ళాలి (veḷḷāli). It covers both \"must\" and \"should\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have said this ending for a long time. కావాలి is -ఆలి on కా-, \"to become, to be\": \"it must be (had)\", so \"it is wanted\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -అకూడదు, must not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జ్వరం ఉన్నప్పుడు బడికి వెళ్ళకూడదు. jvaraṁ unnappuḍu baḍiki veḷḷakūḍadu. — \"When you have a fever, you must not go to school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఇప్పుడు కాఫీ తాగకూడదు. ippuḍu kāphī tāgakūḍadu. — \"You must not drink coffee now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "-అకూడదు: వెళ్ళకూడదు, తాగకూడదు, చేయకూడదు. ఉన్నప్పుడు (unnappuḍu, \"when there is\") is ఉన్న + అప్పుడు, built like -తున్నప్పుడు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: -తే మంచిది, had better",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మీరు ఆసుపత్రికి వెళ్తే మంచిది. mīru āsupatriki veḷtē mañcidi. — \"You had better go to the hospital.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"if you go, it is good\": advice, softer than -ఆలి. The -తే, \"if\", gets a lesson of its own later in this core; here keep -తే మంచిది as one piece."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I must go now\" — nēnu ippuḍu veḷḷāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I must go now\" — *nēnu ippuḍu veḷḷāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You should take this medicine every day\" — mīru ī mandu prati rōju tīsukōvāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You should take this medicine every day\" — *mīru ī mandu prati rōju tīsukōvāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You must not drink coffee now\" — ippuḍu kāphī tāgakūḍadu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You must not drink coffee now\" — *ippuḍu kāphī tāgakūḍadu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You had better go to the hospital\" — mīru āsupatriki veḷtē mañcidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You had better go to the hospital\" — *mīru āsupatriki veḷtē mañcidi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Must come\"? (రావాలి.) \"Must not eat\"? (తినకూడదు.) \"Had better go\"? (వెళ్తే మంచిది.) Which word you knew already ends in -ఆలి? (కావాలి.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C319-otu",
+      "sequence": 15350,
+      "title": "ఓటు (ōṭu) — a vote",
+      "headword": "ఓటు",
+      "romanization": "ōṭu",
+      "gloss": "a vote",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:974cabbbb2280f8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I must go\" and \"you must not drink coffee now\". (nēnu veḷḷāli; ippuḍu kāphī tāgakūḍadu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఓటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఓటు — ōṭu — \"a vote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రతి ఒక్కరూ ఓటు వేయాలి. prati okkarū ōṭu vēyāli. — \"Everyone must vote.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నేను నిన్న ఓటు వేశాను. nēnu ninna ōṭu vēśānu. — \"I voted yesterday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A vote is \"put\": ఓటు వేయు (ōṭu vēyu, \"to cast a vote\"), with వేయు, \"to put\". ప్రతి ఒక్కరూ (prati okkarū, \"every single person\") is ప్రతి, \"every\", with a word for \"one person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first letter, a long ō at the start of a word, is one you have not written. The next lesson takes it out of this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఓటు (ōṭu) is a loan from English vote, with the -ఉ that Telugu gives most borrowed nouns, as in బస్సు and టిక్కెట్టు. The English v and the long ō are kept."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭu, with a long ō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭu*, with a long *ō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Everyone must vote\" — prati okkarū ōṭu vēyāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Everyone must vote\" — *prati okkarū ōṭu vēyāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I voted yesterday\" — nēnu ninna ōṭu vēśānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I voted yesterday\" — *nēnu ninna ōṭu vēśānu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఓటు (ōṭu) mean? (A vote.) \"To cast a vote\"? (ఓటు (ōṭu) వేయు.) Where does the word come from? (English vote.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S175-letter-oo",
+      "sequence": 15360,
+      "title": "ఓ (ō) — the letter that opens ఓటు (ōṭu)",
+      "headword": "ఓ",
+      "romanization": "ō",
+      "gloss": "the letter ఓ — taken from ఓటు",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:8e57ca34d91065a8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ఓ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ఓ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ఒ and ో once each, and name them. (Short o at the start of a word; long ō after a consonant, as in తోలు.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ఓటు (ōṭu), \"a vote\". This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఓ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఓ — ō, a long ō at the start of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "After a consonant, long ō is the sign ో. At the start of a word it stands as a letter of its own, ఓ, and it pairs with the short ఒ you know, the way ఏ pairs with ఎ."
+            },
+            {
+              "kind": "speech",
+              "text": "In print ఓ is ఒ with a short upright stroke added at its top. Say the pair aloud: ఒ o, short; ఓ ō, held longer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఓ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ఓ (ō) and copy it, slowly, and larger than it is printed. Write the body of ఒ first, the way you learned it, then copy the short upright stroke at its top."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet say where the pen starts on this shape, or which way it travels. That is taught with real variation from school to school, and it waits here until it can be written down from a source. Copying the printed shape needs no such source, and it puts the shape in your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ఓ (ō) at the start of ఓటు (ōṭu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ఓ at the start of **ఓటు**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఓ three times, saying ō as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ఓ three times, saying *ō* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఒ, then ఓ (ō), from memory, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ఒ, then ఓ, from memory, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఓటు (ōṭu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఓటు**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ఓ? (ō, long ō at the start of a word.) Which word did it come from? (ఓటు, ōṭu, \"a vote\".) How is it different from ఒ? (The short upright stroke at its top; the vowel is long.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C319-nadavadam-valla",
+      "sequence": 15370,
+      "title": "నడవడం వల్ల (naḍavaḍaṁ valla) — giving the reason",
+      "headword": "నడవడం వల్ల",
+      "romanization": "naḍavaḍaṁ valla",
+      "gloss": "because of walking — -అడం వల్ల, and the two places a reason can stand",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bc4d3950dfc636f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because of\" (valla). Then say \"a vote\". (ōṭu.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఓ (ō), its first letter, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఓ**, its first letter, once]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -అడం వల్ల",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-అడం turns a verb into a noun, \"-ing\": నడవడం, \"walking\"; చదవడం, \"reading\"; తినడం, \"eating\"; రావడం, \"coming\". With వల్ల, \"because of\", it gives a reason:"
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రతి రోజు నడవడం వల్ల ఆరోగ్యం బాగుంటుంది. prati rōju naḍavaḍaṁ valla ārōgyaṁ bāguṇṭundi. — \"Walking every day keeps you healthy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఎక్కువ తినడం వల్ల నాకు కడుపు నొప్పి వచ్చింది. ekkuva tinaḍaṁ valla nāku kaḍupu noppi vaccindi. — \"Eating too much gave me a stomach ache.\""
+            },
+            {
+              "kind": "speech",
+              "text": "బాగుంటుంది (bāguṇṭundi, \"it stays well\") is బాగా with the -ఉంటుంది of ఉండు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two places for a reason",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నేను రాలేదు, ఎందుకంటే నాకు జ్వరం వచ్చింది. nēnu rālēdu, endukaṇṭē nāku jvaraṁ vaccindi. — \"I did not come, because I had a fever.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు జ్వరం వచ్చింది కాబట్టి నేను రాలేదు. nāku jvaraṁ vaccindi kābaṭṭi nēnu rālēdu. — \"I had a fever, so I did not come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same two facts. With ఎందుకంటే the reason stands after the result, where English puts it. With కాబట్టి, or -అడం వల్ల, it stands before, and the sentence ends on its main verb, as a Telugu sentence does. Both are everyday Telugu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Walking every day keeps you healthy\" — prati rōju naḍavaḍaṁ valla ārōgyaṁ bāguṇṭundi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Walking every day keeps you healthy\" — *prati rōju naḍavaḍaṁ valla ārōgyaṁ bāguṇṭundi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Eating too much gave me a stomach ache\" — ekkuva tinaḍaṁ valla nāku kaḍupu noppi vaccindi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Eating too much gave me a stomach ache\" — *ekkuva tinaḍaṁ valla nāku kaḍupu noppi vaccindi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I did not come, because I had a fever\" — nēnu rālēdu, endukaṇṭē nāku jvaraṁ vaccindi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I did not come, because I had a fever\" — *nēnu rālēdu, endukaṇṭē nāku jvaraṁ vaccindi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"the same, with the reason first\" — nāku jvaraṁ vaccindi kābaṭṭi nēnu rālēdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"the same, with the reason first\" — *nāku jvaraṁ vaccindi kābaṭṭi nēnu rālēdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why everyone must vote, in one sentence of your own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why everyone must vote, in one sentence of your own]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Reading\", as a noun? (చదవడం.) \"Because of reading\"? (చదవడం వల్ల.) With which word does the reason come after the result? (ఎందుకంటే.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R319-advice-and-reasons",
+      "sequence": 15380,
+      "title": "Review — advice and reasons",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "advice and duty with -ఆలి and -అకూడదు, and reasons on both sides",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:467ed1c984862ff5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a vote\". (ōṭu.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఓ (ō) once from memory; then ఈ, from ఈలోగా",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఓ** once from memory; then **ఈ**, from **ఈలోగా**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You must not go to school today. You had better stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You must not go to school today. You had better stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think everyone must vote.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think everyone must vote.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because of reading every day, my Telugu is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because of reading every day, my Telugu is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I did not come, because I had a fever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I did not come, because I had a fever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I had a fever. That is why I did not come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I had a fever. That is why I did not come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఓటు (ōṭu), then ఈ ఓటు (ōṭu), \"this vote\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఓటు**, then **ఈ ఓటు**, \"this vote\"]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Must\"? (-ఆలి.) \"Must not\"? (-అకూడదు.) \"Had better\"? (-తే మంచిది.) \"Because of walking\"? (నడవడం వల్ల (naḍavaḍaṁ valla).) \"A vote\"? (ఓటు (ōṭu), which opens with ఓ (ō).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

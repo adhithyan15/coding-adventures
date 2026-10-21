@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:d3aa7aee6c2356b6",
+  "lessonIds": [
+    "TE-C320-uru",
+    "TE-S176-letter-uu",
+    "TE-C320-sutiga",
+    "TE-C320-ela-vellali",
+    "TE-R320-asking-the-way"
+  ],
+  "tex": "telugu/book/chapters/ch320-asking-the-way.tex"
+}

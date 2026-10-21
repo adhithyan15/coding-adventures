@@ -1,0 +1,872 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 321,
+  "title": "Tickets, Seats and Trouble",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:aa40bd4bd8c9ca3a",
+  "lessons": [
+    {
+      "id": "TE-C321-situ",
+      "sequence": 15440,
+      "title": "సీటు (sīṭu) — a seat",
+      "headword": "సీటు",
+      "romanization": "sīṭu",
+      "gloss": "a seat (on a bus or train, or in a hall)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c6c11282cd37008",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a bus\" (bassu) and \"a train\" (railu). Then ask \"how do I get to the station?\" (sṭēṣanuki elā veḷḷāli?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సీటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సీటు — sīṭu — \"a seat\", on a bus or a train, or in a hall."
+            },
+            {
+              "kind": "speech",
+              "text": "ఈ సీటు ఖాళీగా ఉందా? ī sīṭu khāḷīgā undā? — \"Is this seat free?\""
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు కిటికీ దగ్గర సీటు కావాలి. nāku kiṭikī daggara sīṭu kāvāli. — \"I would like a seat by the window.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఖాళీగా (khāḷīgā, \"empty, free\") with ఉందా?, \"is it?\": the -ఆ question again. Two seats are రెండు సీట్లు (reṇḍu sīṭlu), the way two tickets are టిక్కెట్లు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సీటు (sīṭu) is a loan from English seat, with the -ఉ that Telugu gives most borrowed nouns, as in బస్సు and ఫోను."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Is this seat free?\" — ī sīṭu khāḷīgā undā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Is this seat free?\" — *ī sīṭu khāḷīgā undā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I would like a seat by the window\" — nāku kiṭikī daggara sīṭu kāvāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I would like a seat by the window\" — *nāku kiṭikī daggara sīṭu kāvāli*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సీటు (sīṭu) mean? (A seat.) \"Is this seat free?\" (ఈ సీటు (sīṭu) ఖాళీగా ఉందా?) \"Two seats\"? (రెండు సీట్లు.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C321-tikkettu-ivvandi",
+      "sequence": 15450,
+      "title": "ఒక టిక్కెట్టు ఇవ్వండి (oka ṭikkeṭṭu ivvaṇḍi) — at the ticket counter",
+      "headword": "ఒక టిక్కెట్టు ఇవ్వండి",
+      "romanization": "oka ṭikkeṭṭu ivvaṇḍi",
+      "gloss": "a ticket, please — buying a ticket, and asking when it leaves",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66377d4af200d948",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a ticket\" (ṭikkeṭṭu) and \"give\", politely (ivvaṇḍi). Then \"is this seat free?\" (ī sīṭu khāḷīgā undā?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: buying a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విజయవాడకి రెండు టిక్కెట్లు ఇవ్వండి. vijayavāḍaki reṇḍu ṭikkeṭlu ivvaṇḍi. — \"Two tickets to Vijayawada, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The place takes -కి, \"to\"; the number comes before the ticket; ఇవ్వండి, \"give\", closes the request."
+            },
+            {
+              "kind": "speech",
+              "text": "టిక్కెట్టు ధర ఎంత? ṭikkeṭṭu dhara enta? — \"How much is the ticket?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఎంత (enta, \"how much\"). For the way back:"
+            },
+            {
+              "kind": "speech",
+              "text": "నేను రేపు తిరిగి వస్తాను. nēnu rēpu tirigi vastānu. — \"I will come back tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "తిరిగి, \"back\", is the one in తిరిగి ఇవ్వు, \"to give back\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: when does it leave?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రైలు ఎన్ని గంటలకు బయలుదేరుతుంది? railu enni gaṇṭalaku bayaludērutundi? — \"At what time does the train leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఆరు గంటలకు బయలుదేరుతుంది. āru gaṇṭalaku bayaludērutundi. — \"It leaves at six.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఎన్ని గంటలకు (enni gaṇṭalaku, \"at how many o'clock\"): times of day take -కు, \"at\": ఆరు గంటలకు, \"at six\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Two tickets to Vijayawada, please\" — vijayavāḍaki reṇḍu ṭikkeṭlu ivvaṇḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Two tickets to Vijayawada, please\" — *vijayavāḍaki reṇḍu ṭikkeṭlu ivvaṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How much is the ticket?\" — ṭikkeṭṭu dhara enta?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How much is the ticket?\" — *ṭikkeṭṭu dhara enta?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"At what time does the train leave?\" — railu enni gaṇṭalaku bayaludērutundi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"At what time does the train leave?\" — *railu enni gaṇṭalaku bayaludērutundi?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buy one ticket to a town you know, ask the time, and say you will come back tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: buy one ticket to a town you know, ask the time, and say you will come back tomorrow]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for two tickets, then ask the price and the time. (రెండు టిక్కెట్లు ఇవ్వండి; టిక్కెట్టు ధర ఎంత; ఎన్ని గంటలకు బయలుదేరుతుంది.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C321-ausadham",
+      "sequence": 15460,
+      "title": "ఔషధం (auṣadhaṁ) — a remedy; medication",
+      "headword": "ఔషధం",
+      "romanization": "auṣadhaṁ",
+      "gloss": "a remedy; medication",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bea5983206b061bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"medicine\" (mandu), \"a fever\" (jvaraṁ) and \"a doctor\" (vaidyuḍu)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఔషధం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఔషధం — auṣadhaṁ — \"a remedy; medication\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రయాణంలో నాకు జ్వరం వచ్చింది. అక్కడ ఒక వైద్యుడు నాకు ఔషధం ఇచ్చాడు. prayāṇaṁlō nāku jvaraṁ vaccindi. akkaḍa oka vaidyuḍu nāku auṣadhaṁ iccāḍu. — \"On the trip I got a fever. A doctor there gave me a remedy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నవ్వు మంచి ఔషధం. navvu mañci auṣadhaṁ. — \"Laughter is a good remedy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday Telugu says మందు. ఔషధం (auṣadhaṁ) is the careful, learned word: you will read it on the signs of chemists' shops (ఔషధాలు, \"medicines\"), on labels, and in sentences about what heals in a wider sense, like the one about laughter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఔషధం (auṣadhaṁ) is borrowed from Sanskrit auṣadha, which CDIAL describes as \"made of herbs\" and as \"a herb\" (CDIAL 2571), with Telugu's noun ending -ం. A remedy was first a plant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auṣadhaṁ, the au gliding from a toward u",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auṣadhaṁ*, the *au* gliding from *a* toward *u*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"A doctor gave me a remedy\" — oka vaidyuḍu nāku auṣadhaṁ iccāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"A doctor gave me a remedy\" — *oka vaidyuḍu nāku auṣadhaṁ iccāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Laughter is a good remedy\" — navvu mañci auṣadhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Laughter is a good remedy\" — *navvu mañci auṣadhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday word for medicine, then the learned one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday word for medicine, then the learned one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఔషధం (auṣadhaṁ) mean? (A remedy; medication.) Which word is the everyday one? (మందు.) Where will you read ఔషధం (auṣadhaṁ)? (On chemists' signs and labels.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S177-letter-au",
+      "sequence": 15470,
+      "title": "ఔ (au) — the letter that opens ఔషధం (auṣadhaṁ)",
+      "headword": "ఔ",
+      "romanization": "au",
+      "gloss": "the letter ఔ — taken from ఔషధం",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1b0961c7971752b1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ఔ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ఔ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ఒ and ఓ once each. Then the sign ౌ, which you know from గౌరవం, \"respect\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ఔషధం (auṣadhaṁ). This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఔ — au, at the start of a word: one vowel that glides from a toward u, the way the middle of English now does."
+            },
+            {
+              "kind": "speech",
+              "text": "After a consonant, au is the sign ౌ: గౌరవం. At the start of a word it stands as a letter of its own, ఔ. Few words open with it, and most of them come from Sanskrit."
+            },
+            {
+              "kind": "speech",
+              "text": "In print ఔ (au) is built on the body of ఒ, with a long stroke laid along its top that runs out to the right and ends in a small loop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఔ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ఔ (au) and copy it, slowly, and larger than it is printed. Write the body of ఒ the way you learned it, then copy the long top stroke and its loop."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet say where the pen starts on this shape, or which way it travels. That is taught with real variation from school to school, and it waits here until it can be written down from a source. Copying the printed shape needs no such source, and it puts the shape in your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ఔ (au) at the start of ఔషధం (auṣadhaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ఔ at the start of **ఔషధం**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఔ three times, saying au as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ఔ three times, saying *au* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఒ, ఓ, then ఔ (au), from memory, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ఒ, ఓ, then ఔ, from memory, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఔషధం (auṣadhaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఔషధం**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ఔ? (au, at the start of a word.) Which word did it come from? (ఔషధం, auṣadhaṁ, \"a remedy\".) Which sign says au after a consonant? (ౌ, as in గౌరవం.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C321-poyindi",
+      "sequence": 15480,
+      "title": "పోయింది (pōyindi) — when something goes wrong",
+      "headword": "పోయింది",
+      "romanization": "pōyindi",
+      "gloss": "it is lost; it has gone — saying what went wrong on a trip",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b8c567d55116ecd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"At what time does the train leave?\" (railu enni gaṇṭalaku bayaludērutundi?) Then say \"a remedy\". (auṣadhaṁ.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఔ (au), once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఔ**, once]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the bus has gone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అయ్యో! బస్సు వెళ్ళిపోయింది. ayyō! bassu veḷḷipōyindi. — \"Oh no! The bus has gone.\""
+            },
+            {
+              "kind": "speech",
+              "text": "అయ్యో (ayyō, \"oh no\"). వెళ్ళిపోయింది is వెళ్ళి, \"having gone\", with పోయింది (pōyindi), \"went away\": gone, and not coming back. Telugu says what the bus did; English says what you missed."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను బస్సు అందుకోలేకపోయాను. nēnu bassu andukōlēkapōyānu. — \"I could not catch the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "అందుకోలేకపోయాను (andukōlēkapōyānu, \"I could not catch\") is అందుకో, \"to catch\", with -లేకపోయాను, \"I could not\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: it is lost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నా సంచి పోయింది. nā sañci pōyindi. — \"My bag is lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "పోవు, \"to go\", says \"to be lost\" too: the bag \"went\". Then say what was in it and when it went:"
+            },
+            {
+              "kind": "speech",
+              "text": "సంచిలో నా ఫోను, నా డబ్బు ఉన్నాయి. sañcilō nā phōnu, nā ḍabbu unnāyi. — \"My phone and my money were in the bag.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నిన్న సాయంత్రం స్టేషనులో పోయింది. నేను పోలీసులకు ఫిర్యాదు ఇవ్వాలి. ninna sāyantraṁ sṭēṣanulō pōyindi. nēnu pōlīsulaku phiryādu ivvāli. — \"It went yesterday evening, at the station. I must make a complaint to the police.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఉన్నాయి (unnāyi, \"they are, they were\") is the plural of ఉంది. A report answers three questions: what, where, when."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Oh no! The bus has gone.\" — ayyō! bassu veḷḷipōyindi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Oh no! The bus has gone.\" — *ayyō! bassu veḷḷipōyindi.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I could not catch the bus\" — nēnu bassu andukōlēkapōyānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I could not catch the bus\" — *nēnu bassu andukōlēkapōyānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My bag is lost\" — nā sañci pōyindi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My bag is lost\" — *nā sañci pōyindi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My phone and my money were in the bag\" — sañcilō nā phōnu, nā ḍabbu unnāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My phone and my money were in the bag\" — *sañcilō nā phōnu, nā ḍabbu unnāyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "report a lost phone: what, where and when, and that you must make a complaint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: report a lost phone: what, where and when, and that you must make a complaint]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The bus has gone\"? (బస్సు వెళ్ళిపోయింది.) \"My bag is lost\"? (నా సంచి పోయింది (pōyindi).) What three questions does a report answer? (What, where, when.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R321-at-the-station",
+      "sequence": 15490,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a ticket, a seat, a time, and what to say when the bus has gone",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3b3c91a5437490d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a remedy\". (auṣadhaṁ.) Then the three words whose first letters came before it. (ūru, ōṭu, īlōgā.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఔ (au), ఊ, ఓ and ఈ, once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఔ**, **ఊ**, **ఓ** and **ఈ**, once each from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "One ticket to my home town, please. At what time does the bus leave?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: One ticket to my home town, please. At what time does the bus leave?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Is this seat free? I would like a seat by the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Is this seat free? I would like a seat by the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Oh no, the bus has gone. How do I get to the station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Oh no, the bus has gone. How do I get to the station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My bag is lost. My phone was in the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My bag is lost. My phone was in the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఔషధం (auṣadhaṁ), ఊరు, ఓటు, ఈలోగా",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఔషధం**, **ఊరు**, **ఓటు**, **ఈలోగా**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A seat\"? (సీటు (sīṭu).) \"At what time does it leave?\" (ఎన్ని గంటలకు బయలుదేరుతుంది?) \"It has gone\"? (వెళ్ళిపోయింది.) \"It is lost\"? (పోయింది (pōyindi).) \"A remedy\"? (ఔషధం (auṣadhaṁ), which opens with ఔ (au).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C319-otu",
+    "language": "telugu",
+    "chapter": 319,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:974cabbbb2280f8f"
+  },
+  "findings": []
+}

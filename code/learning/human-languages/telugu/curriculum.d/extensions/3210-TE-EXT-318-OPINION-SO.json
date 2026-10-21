@@ -1,0 +1,10 @@
+{
+  "id": "TE-EXT-318-OPINION-SO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I think, firmly or softly, with ani anukuṇṭunnānu, nā abhiprāyaṁlō and anipistundi, and give a result with kābaṭṭi and andukē.",
+  "prerequisites": [
+    "TE-EXT-317-STORY-ORDER"
+  ]
+}

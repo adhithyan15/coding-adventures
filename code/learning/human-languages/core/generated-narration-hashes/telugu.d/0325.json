@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:13230ad88a580803",
+  "lessonIds": [
+    "TE-C325-adharapadu",
+    "TE-C325-adharapadi-untundi",
+    "TE-C325-undi-unte",
+    "TE-W325-six-lines",
+    "TE-R325-depends-and-would"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "telugu/narration/ch325.txt",
+  "json": "telugu/narration/ch325.json",
+  "textHash": "fnv1a64:006cf993e510bb78",
+  "jsonHash": "fnv1a64:940075bf66275d64",
+  "findings": []
+}

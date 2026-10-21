@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "TE-S176-letter-uu",
+    "language": "telugu",
+    "chapter": 320,
+    "sequence": 15400,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1c7408134e3510ed",
+    "detachableSegments": [
+      "Script you'll notice: ఊ",
+      "Writing: ఊ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

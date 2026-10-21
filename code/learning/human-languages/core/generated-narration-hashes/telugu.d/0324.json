@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:9ab02f084aa0f318",
+  "lessonIds": [
+    "TE-C324-vaste",
+    "TE-C324-varsham-padite",
+    "TE-R324-if-and-otherwise"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "telugu/narration/ch324.txt",
+  "json": "telugu/narration/ch324.json",
+  "textHash": "fnv1a64:4633968e04d59108",
+  "jsonHash": "fnv1a64:384cd7eb79b5be6b",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:59f9661e7959be83",
+  "lessonIds": [
+    "TE-C323-kante",
+    "TE-C323-kalam",
+    "TE-C323-samvatsaraluga",
+    "TE-R323-comparing-and-time"
+  ],
+  "tex": "telugu/book/chapters/ch323-bigger-best-and-how-long.tex"
+}

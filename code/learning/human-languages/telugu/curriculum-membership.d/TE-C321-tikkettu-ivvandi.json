@@ -1,0 +1,11 @@
+{
+  "id": "TE-C321-tikkettu-ivvandi",
+  "pathSegment": "TE-PATH-321-TICKETS-TROUBLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-321-TICKETS-TROUBLE",
+      "order": 1
+    }
+  ]
+}

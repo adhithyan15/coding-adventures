@@ -1,0 +1,556 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 318,
+  "title": "What I Think, and So",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:95343bf824ac2b20",
+  "lessons": [
+    {
+      "id": "TE-C318-anipincu",
+      "sequence": 15300,
+      "title": "అనిపించు (anipiñcu) — to seem, to feel",
+      "headword": "అనిపించు",
+      "romanization": "anipiñcu",
+      "gloss": "to seem, to feel (to someone)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:348e0b8fb88e2f9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"I came home and had a meal\". (nēnu iṇṭiki vacci bhōjanaṁ cēśānu.) Then say what ఈ means on its own, in front of a noun. (\"This.\")"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అనిపించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనిపించు — anipiñcu — \"to seem, to feel (to someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మొదట తెలుగు నాకు కష్టంగా అనిపించింది. modaṭa telugu nāku kaṣṭaṅgā anipiñcindi. — \"At first Telugu seemed hard to me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ఇప్పుడు అది నాకు సులభంగా అనిపిస్తుంది. ippuḍu adi nāku sulabhaṅgā anipistundi. — \"Now it seems easy to me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one who feels sits in the dative, నాకు, the way it does in నాకు తెలుగు వచ్చు. The verb stays \"it\": అనిపిస్తుంది (anipistundi, \"it seems\"), అనిపించింది (anipiñcindi, \"it seemed\"). The quality takes -గా: కష్టంగా, సులభంగా."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనిపించు (anipiñcu) is native Dravidian. DEDR 868 lists Telugu anu, \"to say\", and beside it anipincu, \"to seem, appear, be considered\", which it also glosses \"to cause to be said\". So నాకు అలా అనిపిస్తుంది is close to \"it gets said to me like that\". The same అను is inside అనుకో, \"to think\", and ఎందుకంటే."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anipiñcu, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anipiñcu*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"At first Telugu seemed hard to me\" — modaṭa telugu nāku kaṣṭaṅgā anipiñcindi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"At first Telugu seemed hard to me\" — *modaṭa telugu nāku kaṣṭaṅgā anipiñcindi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Now it seems easy to me\" — ippuḍu adi nāku sulabhaṅgā anipistundi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Now it seems easy to me\" — *ippuḍu adi nāku sulabhaṅgā anipistundi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"That is how it seems to me\" — nāku alā anipistundi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"That is how it seems to me\" — *nāku alā anipistundi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అనిపించు (anipiñcu) mean? (To seem, to feel.) Where does the one who feels go? (In the dative: నాకు.) \"It seemed\"? (అనిపించింది.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C318-anukuntunnanu",
+      "sequence": 15310,
+      "title": "అని అనుకుంటున్నాను (ani anukuṇṭunnānu) — I think that",
+      "headword": "అని అనుకుంటున్నాను",
+      "romanization": "ani anukuṇṭunnānu",
+      "gloss": "I think that … — and నా అభిప్రాయంలో, 'in my opinion'",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55b1db51924661c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to think\" (anukō) and \"an opinion\" (abhiprāyaṁ). Then \"it seems so to me\". (nāku alā anipistundi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: … అని అనుకుంటున్నాను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తెలుగు కష్టం కాదని నేను అనుకుంటున్నాను. telugu kaṣṭaṁ kādani nēnu anukuṇṭunnānu. — \"I think Telugu is not hard.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The thought comes first, closed by అని (ani, \"saying\"); then the verb of thinking. A final -ఉ melts into అని: కాదు + అని becomes కాదని; పడుతుంది + అని becomes పడుతుందని."
+            },
+            {
+              "kind": "speech",
+              "text": "రేపు వర్షం పడుతుందని నేను అనుకుంటున్నాను. rēpu varṣaṁ paḍutundani nēnu anukuṇṭunnānu. — \"I think it will rain tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "అనుకుంటున్నాను is the -తున్నాను form of అనుకో: \"I am thinking (that)\", the everyday \"I think\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: నా అభిప్రాయంలో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నా అభిప్రాయంలో ఈ హోటలు చాలా మంచిది. nā abhiprāyaṁlō ī hōṭalu cālā mañcidi. — \"In my opinion this restaurant is very good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు అలా అనిపిస్తుంది. nāku alā anipistundi. — \"That is how it seems to me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Three ways, from firm to soft. నా అభిప్రాయంలో is careful and a little formal. … అని అనుకుంటున్నాను (ani anukuṇṭunnānu) is the plain one. నాకు … అనిపిస్తుంది is the softest: a feeling more than a claim. నా ఉద్దేశంలో, with the ఉద్దేశం you know, is heard too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think Telugu is not hard\" — telugu kaṣṭaṁ kādani nēnu anukuṇṭunnānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think Telugu is not hard\" — *telugu kaṣṭaṁ kādani nēnu anukuṇṭunnānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I think it will rain tomorrow\" — rēpu varṣaṁ paḍutundani nēnu anukuṇṭunnānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I think it will rain tomorrow\" — *rēpu varṣaṁ paḍutundani nēnu anukuṇṭunnānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion this restaurant is very good\" — nā abhiprāyaṁlō ī hōṭalu cālā mañcidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion this restaurant is very good\" — *nā abhiprāyaṁlō ī hōṭalu cālā mañcidi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own opinion of a film you saw, three ways: firm, plain and soft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own opinion of a film you saw, three ways: firm, plain and soft]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the thought go, before or after అని? (Before.) \"Is not\" + అని? (కాదని.) \"In my opinion\"? (నా అభిప్రాయంలో.) Which way is the softest? (నాకు … అనిపిస్తుంది.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C318-kabatti",
+      "sequence": 15320,
+      "title": "కాబట్టి (kābaṭṭi) — so: the reason, then the result",
+      "headword": "కాబట్టి",
+      "romanization": "kābaṭṭi",
+      "gloss": "so, since — the reason first, then the result",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bc11ab84763c8d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"therefore\" (anduvalla), \"that is exactly why\" (andukē) and \"because\" (endukaṇṭē)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a reason + కాబట్టి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వర్షం పడుతోంది కాబట్టి నేను ఇంట్లో ఉన్నాను. varṣaṁ paḍutōndi kābaṭṭi nēnu iṇṭlō unnānu. — \"It is raining, so I am at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "బస్సు లేదు కాబట్టి మేము నడిచాము. bassu lēdu kābaṭṭi mēmu naḍicāmu. — \"There was no bus, so we walked.\""
+            },
+            {
+              "kind": "speech",
+              "text": "కాబట్టి (kābaṭṭi) follows the reason directly, inside the same sentence; the result comes after it. Read it as \"since it is raining, …\" or \"it is raining, so …\". The order is the reverse of ఎందుకంటే, where the result comes first and the reason follows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: అందుకే, a new sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాకు జ్వరం వచ్చింది. అందుకే నేను బడికి వెళ్ళలేదు. nāku jvaraṁ vaccindi. andukē nēnu baḍiki veḷḷalēdu. — \"I had a fever. That is why I did not go to school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the reason is a whole sentence, the next sentence opens on అందుకే, \"that is exactly why\", or, more formally, అందువల్ల, \"therefore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వెళ్ళలేదు (veḷḷalēdu, \"did not go\") is how a story says \"did not\": the verb's base with లేదు. చేయలేదు, \"did not do\"; రాలేదు, \"did not come\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It is raining, so I am at home\" — varṣaṁ paḍutōndi kābaṭṭi nēnu iṇṭlō unnānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It is raining, so I am at home\" — *varṣaṁ paḍutōndi kābaṭṭi nēnu iṇṭlō unnānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There was no bus, so we walked\" — bassu lēdu kābaṭṭi mēmu naḍicāmu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There was no bus, so we walked\" — *bassu lēdu kābaṭṭi mēmu naḍicāmu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I had a fever. That is why I did not go to school.\" — nāku jvaraṁ vaccindi. andukē nēnu baḍiki veḷḷalēdu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I had a fever. That is why I did not go to school.\" — *nāku jvaraṁ vaccindi. andukē nēnu baḍiki veḷḷalēdu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you did not do yesterday, and why, with కాబట్టి (kābaṭṭi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you did not do yesterday, and why, with కాబట్టి]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With కాబట్టి (kābaṭṭi), which comes first, the reason or the result? (The reason.) With ఎందుకంటే? (The result.) \"Did not come\"? (రాలేదు.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R318-opinion-and-result",
+      "sequence": 15330,
+      "title": "Review — opinion and result",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "saying what you think, softly or firmly, and what follows from a reason",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:122410ba28cfa3d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it seemed hard to me\". (nāku kaṣṭaṅgā anipiñcindi.) Then say \"in the meantime\". (īlōgā.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఈ, the first letter of ఈలోగా, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఈ**, the first letter of **ఈలోగా**, once]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think this book is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think this book is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion Telugu is not hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion Telugu is not hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It is raining, so we did not go to the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It is raining, so we did not go to the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I had a fever. That is why I stayed at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I had a fever. That is why I stayed at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "First we had a meal. After that we went to a film. In the end we came home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: First we had a meal. After that we went to a film. In the end we came home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reading's trip in two sentences, with -ఇ forms",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reading's trip in two sentences, with -ఇ forms]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I think that …\"? (… అని అనుకుంటున్నాను (ani anukuṇṭunnānu).) \"In my opinion\"? (నా అభిప్రాయంలో.) \"It seems to me\"? (నాకు … అనిపిస్తుంది.) \"So\", after a reason? (కాబట్టి (kābaṭṭi).) \"That is why\", opening a sentence? (అందుకే.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

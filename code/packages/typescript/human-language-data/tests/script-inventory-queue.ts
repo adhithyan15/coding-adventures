@@ -15,5 +15,18 @@ export function assertCorpusGlyphGapQueue({
     ([leftGlyph, leftCount], [rightGlyph, rightCount]) =>
       rightCount - leftCount || leftGlyph.localeCompare(rightGlyph),
   );
-    expect(queue).toEqual([]);
+  // The Telugu B1 core (chapters 316-325) teaches the independent vowels ఈ ఓ ఊ
+  // ఔ with letter lessons anchored on ఈలోగా, ఓటు, ఊరు and ఔషధం. Their rows in
+  // data/scripts/telugu.json are still recognition-only: validate.ts covers an
+  // independent vowel in a headword only once its handwriting row is
+  // source-backed and font-checked, and no stroke order for these four has been
+  // taken from a source yet. So each anchor headword is one glyph gap, held
+  // here until a cited row (and its script-ductus ductus) lands. No letter
+  // lesson promises a numbered strip for them.
+  expect(queue).toEqual([
+    ["ఈ", 1],
+    ["ఊ", 1],
+    ["ఓ", 1],
+    ["ఔ", 1],
+  ]);
 }

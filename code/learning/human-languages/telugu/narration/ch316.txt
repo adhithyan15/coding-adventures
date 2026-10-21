@@ -1,0 +1,150 @@
+Telugu, chapter 316: Was Doing, Did, Used To.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+వెళ్ళాను (veḷḷānu) — the plain past: what happened.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say "I go", or "I will go". (nēnu veḷtānu.) Then the last two people you met: the watchman and the milkman. (kāpalādāru, pālavāḍu.)
+[pause 1 second]
+వెళ్తాను says what happens, or what will. A story has already happened. It needs the past.
+
+You'll want to know: the plain past.
+నిన్న నేను పట్టణానికి వెళ్ళాను. ninna nēnu paṭṭaṇāniki veḷḷānu. — "Yesterday I went to the town."
+వెళ్ళాను (veḷḷānu) is "I went". Where the form you know has -తా- (వెళ్తాను), the past has -ఆ-: వెళ్ళ + ఆను. The person ending at the end works the way it does in వెళ్తాను:
+నేను వెళ్ళాను (nēnu veḷḷānu) — I went.
+నువ్వు వెళ్ళావు (nuvvu veḷḷāvu) — you went.
+అతను వెళ్ళాడు (atanu veḷḷāḍu) — he went.
+ఆమె వెళ్ళింది (āme veḷḷindi) — she went, and "it went".
+మేము వెళ్ళాము (mēmu veḷḷāmu) — we went.
+వాళ్ళు వెళ్ళారు (vāḷḷu veḷḷāru) — they went; with మీరు, "you went", said with respect.
+Only "she" and "it" step out of line: వెళ్ళింది, with -ఇంది.
+
+You'll want to know: the stems that change.
+Many verbs take the past on their own stem. A -ఉ- before the last consonant turns to -ఇ-: చదువు becomes చదివాను (cadivānu), "I read"; నడుచు becomes నడిచాను (naḍicānu), "I walked".
+A few of the commonest verbs change more, and they are worth learning as pairs:
+వచ్చు becomes వచ్చాను (vaccānu), "I came".
+చూడు becomes చూశాను (cūśānu), "I saw"; she saw: చూసింది (cūsindi).
+చేయు becomes చేశాను (cēśānu), "I did"; she did: చేసింది (cēsindi).
+తిను becomes తిన్నాను (tinnānu), "I ate".
+ఇవ్వు becomes ఇచ్చాను (iccānu), "I gave".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Yesterday I went to the town" — ninna nēnu paṭṭaṇāniki veḷḷānu]
+[pause 8 seconds for the answer]
+[your turn — say: "She came in the evening" — āme sāyantraṁ vaccindi]
+[pause 8 seconds for the answer]
+[your turn — say: "We drank tea" — mēmu ṭī tāgāmu]
+[pause 8 seconds for the answer]
+[your turn — say: "I read a book. After that I had a meal." — nēnu oka pustakaṁ cadivānu. ā taruvāta bhōjanaṁ cēśānu.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I went"? (వెళ్ళాను (veḷḷānu).) "He came"? (వచ్చాడు.) "She saw"? (చూసింది.) "I ate"? (తిన్నాను.) Which person takes -ఇంది instead of -ఆ-? (She, and it.)
+
+
+Lesson 2 of 4.
+చేస్తున్నప్పుడు (cēstunnappuḍu) — the scene and the event.
+
+Warm-up.
+[pause 2 seconds]
+Say "I am eating now". (nēnu ippuḍu tiṇṭunnānu.) Then "I ate". (tinnānu.)
+[pause 1 second]
+The first is going on. The second is done. A told story needs both, one inside the other.
+
+You'll want to know: -తున్నప్పుడు, while it was going on.
+నేను భోజనం చేస్తున్నప్పుడు ఫోను వచ్చింది. nēnu bhōjanaṁ cēstunnappuḍu phōnu vaccindi. — "While I was having a meal, a call came."
+Take చేస్తున్నాను, "I am doing", drop the person ending, and add అప్పుడు, "then, at that time": చేస్తున్న + అప్పుడు becomes చేస్తున్నప్పుడు (cēstunnappuḍu), "at the time (I) was doing".
+That clause is the scene. The thing that cut into it is the event, in the plain past: వచ్చింది. Telugu says a call "came", where English says the phone rang.
+మేము నడుస్తున్నప్పుడు అకస్మాత్తుగా వర్షం పడింది. mēmu naḍustunnappuḍu akasmāttugā varṣaṁ paḍindi. — "We were walking when suddenly it rained."
+వర్షం (varṣaṁ, "rain") with పడింది (paḍindi, "fell"): rain "falls" in Telugu.
+
+Grammar Lens: 'was doing' on its own.
+Telugu has no separate tense for "was doing". The same form that says "I am reading" says "I was reading" once a past time sets the scene:
+నిన్న రాత్రి తొమ్మిది గంటలకు నేను పుస్తకం చదువుతున్నాను. ninna rātri tommidi gaṇṭalaku nēnu pustakaṁ caduvutunnānu. — "At nine last night I was reading a book."
+The past is carried by నిన్న రాత్రి, not by the verb. ఉన్నాను, the "am" inside చదువుతున్నాను, works the same way: > నిన్న నేను ఇంట్లో ఉన్నాను.
+ninna nēnu iṇṭlō unnānu. — "Yesterday I was at home."
+ఇంట్లో (iṇṭlō, "at home") is the ఇంటి- of ఇంటికి with -లో, "in".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "While I was having a meal, a call came" — nēnu bhōjanaṁ cēstunnappuḍu phōnu vaccindi]
+[pause 8 seconds for the answer]
+[your turn — say: "While the watchman was sleeping, the milkman came" — kāpalādāru nidrapōtunnappuḍu pālavāḍu vaccāḍu]
+[pause 8 seconds for the answer]
+[your turn — say: "At nine last night I was reading a book" — ninna rātri tommidi gaṇṭalaku nēnu pustakaṁ caduvutunnānu]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which form paints the scene? (-తున్నప్పుడు, or -తున్నాను with a past time.) Which form drops in the event? (The plain past: వచ్చింది, పడింది.) "While I was eating"? (నేను తింటున్నప్పుడు, nēnu tiṇṭunnappuḍu.)
+
+
+Lesson 3 of 4.
+చదివేవాడిని (cadivēvāḍini) — what used to happen.
+
+Warm-up.
+[pause 2 seconds]
+Say "While I was having a meal, a call came." (nēnu bhōjanaṁ cēstunnappuḍu phōnu vaccindi.)
+[pause 1 second]
+That happened once. Some things happened many times: what you did every day as a child.
+
+You'll want to know: -ఏవాడిని, 'used to'.
+బాల్యంలో నేను ప్రతి రోజు ఒక కథ చదివేవాడిని. bālyaṁlō nēnu prati rōju oka katha cadivēvāḍini. — "In my childhood I used to read a story every day."
+చదివేవాడిని (cadivēvāḍini) is "I used to read", said by a man. A woman says చదివేదాన్ని (cadivēdānni). Taken apart, it is the -ఏ form of the verb (చదివే, "who reads") with వాడు, "that man", or దాని, "that one", and the -ని of "I": roughly "I was one who reads".
+నేను చదివేవాడిని (nēnu cadivēvāḍini) / చదివేదాన్ని (cadivēdānni) — I used to read.
+అతను చదివేవాడు (atanu cadivēvāḍu) — he used to read.
+ఆమె చదివేది (āme cadivēdi) — she used to read.
+మేము చదివేవాళ్ళం (mēmu cadivēvāḷḷaṁ) — we used to read.
+వాళ్ళు చదివేవాళ్ళు (vāḷḷu cadivēvāḷḷu) — they used to read.
+The same -ఏ sits on any verb: వెళ్ళేవాడిని, "I used to go"; తినేవాడిని, "I used to eat".
+
+You'll want to know: ఉండేది, 'there used to be'.
+మా గ్రామంలో ఒక చిన్న అంగడి ఉండేది. mā grāmaṁlō oka cinna aṅgaḍi uṇḍēdi. — "There used to be a small shop in our village."
+ఉండేది is the same form of ఉండు, "to be": "it used to be there". Set it against the present:
+ఇప్పుడు అక్కడ ఒక పెద్ద హోటలు ఉంది. ippuḍu akkaḍa oka pedda hōṭalu undi. — "Now there is a big restaurant there."
+A story about the old days leans on ఉండేది for the background.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "In my childhood I used to read a story every day" — bālyaṁlō nēnu prati rōju oka katha cadivēvāḍini]
+[pause 8 seconds for the answer]
+[your turn — say: "A woman says: I used to go to school every day" — nēnu prati rōju baḍiki veḷḷēdānni]
+[pause 8 seconds for the answer]
+[your turn — say: "My grandmother used to cook every evening" — mā ammamma prati sāyantraṁ vaṇḍēdi]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I used to go", said by a man? (వెళ్ళేవాడిని.) By a woman? (వెళ్ళేదాన్ని.) "There used to be"? (ఉండేది.) Which vowel marks the habit? (-ఏ, as in చదివే.)
+
+
+Lesson 4 of 4.
+Review — the past three ways.
+
+Warm-up.
+[pause 2 seconds]
+Say "Yesterday I went to the town." (ninna nēnu paṭṭaṇāniki veḷḷānu.) Then "she saw" and "I ate". (cūsindi, tinnānu.)
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: We drank tea, and after that we saw a film.]
+[pause 8 seconds for the answer]
+[your turn — say: While I was reading a book, Mother called.]
+[pause 8 seconds for the answer]
+[your turn — say: At nine last night I was at home.]
+[pause 8 seconds for the answer]
+[your turn — say: In my childhood I used to walk to school every day.]
+[pause 8 seconds for the answer]
+[your turn — say: There used to be a small shop in our village. Now there is a big restaurant.]
+[pause 8 seconds for the answer]
+[your turn — say: one thing you were doing yesterday evening, with -తున్నప్పుడు, and one thing that cut into it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which past is the event? (The plain past: వెళ్ళాను (veḷḷānu), వచ్చింది.) Which is the scene? (-తున్నప్పుడు, or -తున్నాను with a past time.) Which is the habit? (-ఏవాడిని, -ఏదాన్ని.) "There used to be"? (ఉండేది.)

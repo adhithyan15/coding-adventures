@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C323-samvatsaraluga",
+    "language": "telugu",
+    "chapter": 323,
+    "sequence": 15570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feb40b2f0bf11076"
+  },
+  "findings": []
+}

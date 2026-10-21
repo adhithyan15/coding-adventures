@@ -1,0 +1,11 @@
+{
+  "id": "TE-C323-samvatsaraluga",
+  "pathSegment": "TE-PATH-323-COMPARE-DURATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-323-COMPARE-DURATION",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:38c94b88cc64e154",
+  "lessonIds": [
+    "TE-C322-duhkham",
+    "TE-S178-sign-visarga",
+    "TE-C322-bhayanga-undi",
+    "TE-C322-vellalani-undi",
+    "TE-R322-feelings-and-hopes"
+  ],
+  "tex": "telugu/book/chapters/ch322-feelings-and-hopes.tex"
+}

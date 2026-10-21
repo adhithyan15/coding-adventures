@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C316-vellanu",
+    "language": "telugu",
+    "chapter": 316,
+    "sequence": 15200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bca08aab67591cf2"
+  },
+  "findings": []
+}

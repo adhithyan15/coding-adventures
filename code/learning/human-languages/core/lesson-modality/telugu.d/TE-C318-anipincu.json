@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C318-anipincu",
+    "language": "telugu",
+    "chapter": 318,
+    "sequence": 15300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:348e0b8fb88e2f9d"
+  },
+  "findings": []
+}

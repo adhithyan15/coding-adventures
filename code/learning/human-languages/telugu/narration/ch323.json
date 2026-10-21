@@ -1,0 +1,568 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 323,
+  "title": "Bigger, Best and How Long",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:f13d31c5bfeb5e56",
+  "lessons": [
+    {
+      "id": "TE-C323-kante",
+      "sequence": 15550,
+      "title": "కంటే (kaṇṭē) — bigger than, best of all",
+      "headword": "కంటే",
+      "romanization": "kaṇṭē",
+      "gloss": "than — comparing with కంటే, and అన్నిటికంటే, 'most of all'",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a437f668baf145c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"big\" (pedda), \"more\" (ekkuva) and \"I like Telugu\" (nāku telugu iṣṭaṁ). Then \"I would like to go to my home town\". (nāku mā ūriki veḷḷālani undi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: X కంటే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హైదరాబాదు విజయవాడ కంటే పెద్దది. haidarābādu vijayavāḍa kaṇṭē peddadi. — \"Hyderabad is bigger than Vijayawada.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నాకు టీ కంటే కాఫీ ఎక్కువ ఇష్టం. nāku ṭī kaṇṭē kāphī ekkuva iṣṭaṁ. — \"I like coffee more than tea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The thing you measure against comes with కంటే (kaṇṭē), \"than\", after it; then the quality. The quality does not change: no \"bigger\", only పెద్దది (peddadi, \"a big one\"). ఎక్కువ, \"more\", can stand before it to make the \"more\" plain."
+            },
+            {
+              "kind": "speech",
+              "text": "రైలు బస్సు కంటే వేగంగా వెళ్తుంది. railu bassu kaṇṭē vēgaṅgā veḷtundi. — \"The train goes faster than the bus.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: అన్నిటికంటే, అందరికంటే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మా ఊరిలో ఈ హోటలు అన్నిటికంటే మంచిది. mā ūrilō ī hōṭalu anniṭikaṇṭē mañcidi. — \"In our town this restaurant is the best.\""
+            },
+            {
+              "kind": "speech",
+              "text": "మా ఇంట్లో అమ్మమ్మ అందరికంటే పెద్దది. mā iṇṭlō ammamma andarikaṇṭē peddadi. — \"At home, Grandmother is the eldest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "అన్నిటికంటే is \"than all (things)\"; అందరికంటే is \"than everyone\", for people. Better than all is the best; bigger than everyone is the eldest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hyderabad is bigger than Vijayawada\" — haidarābādu vijayavāḍa kaṇṭē peddadi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hyderabad is bigger than Vijayawada\" — *haidarābādu vijayavāḍa kaṇṭē peddadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like coffee more than tea\" — nāku ṭī kaṇṭē kāphī ekkuva iṣṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like coffee more than tea\" — *nāku ṭī kaṇṭē kāphī ekkuva iṣṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train goes faster than the bus\" — railu bassu kaṇṭē vēgaṅgā veḷtundi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train goes faster than the bus\" — *railu bassu kaṇṭē vēgaṅgā veḷtundi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In our town this restaurant is the best\" — mā ūrilō ī hōṭalu anniṭikaṇṭē mañcidi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In our town this restaurant is the best\" — *mā ūrilō ī hōṭalu anniṭikaṇṭē mañcidi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two people you know, compared: who is older, who is the eldest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two people you know, compared: who is older, who is the eldest]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (కంటే (kaṇṭē).) Where does it stand? (After the thing you measure against.) \"Best of all\"? (అన్నిటికంటే మంచిది.) \"Than everyone\"? (అందరికంటే.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C323-kalam",
+      "sequence": 15560,
+      "title": "కాలం (kālaṁ) — a span of time",
+      "headword": "కాలం",
+      "romanization": "kālaṁ",
+      "gloss": "a span of time; a period, an age",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dbb4a91250b5730",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"time\" (samayaṁ). Then the four seasons you learned long ago. (vasanta ṛtuvu, vēsavi, vānākālaṁ, śītākālaṁ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాలం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలం — kālaṁ — \"a span of time; a period, an age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా కాలం తరువాత నేను మా ఊరికి వెళ్ళాను. cālā kālaṁ taruvāta nēnu mā ūriki veḷḷānu. — \"After a long time I went to my home town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఇక్కడ ఎంత కాలం ఉంటారు? mīru ikkaḍa enta kālaṁ uṇṭāru? — \"How long will you stay here?\""
+            },
+            {
+              "kind": "speech",
+              "text": "సమయం is time on the clock: is there time, what time is it. కాలం (kālaṁ) is time as a stretch: how long, a long while, a season. You have said it already without seeing it: వానాకాలం is \"the rains' time\", the rainy season, and శీతాకాలం is \"the cold time\", winter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలం (kālaṁ) is borrowed from Sanskrit kāla, \"time\" (CDIAL 3084), with Telugu's noun ending -ం. The same kāla is the first half of కాలపట్టిక, \"a timetable\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After a long time I went to my home town\" — cālā kālaṁ taruvāta nēnu mā ūriki veḷḷānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After a long time I went to my home town\" — *cālā kālaṁ taruvāta nēnu mā ūriki veḷḷānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How long will you stay here?\" — mīru ikkaḍa enta kālaṁ uṇṭāru?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How long will you stay here?\" — *mīru ikkaḍa enta kālaṁ uṇṭāru?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two seasons that end in kālaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two seasons that end in *kālaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాలం (kālaṁ) mean? (A span of time.) And సమయం? (Time on the clock.) \"How long?\" (ఎంత కాలం (kālaṁ)?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C323-samvatsaraluga",
+      "sequence": 15570,
+      "title": "మూడు సంవత్సరాలుగా (mūḍu saṁvatsarālugā) — how long",
+      "headword": "మూడు సంవత్సరాలుగా",
+      "romanization": "mūḍu saṁvatsarālugā",
+      "gloss": "for three years now — a span with -గా, and నుంచి … వరకు",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:feb40b2f0bf11076",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a year\" (saṁvatsaraṁ), \"from\" (nuñci) and \"until\" (varaku). Then \"how long?\" (enta kālaṁ?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a span + -గా, 'for … now'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూడు సంవత్సరాలుగా నేను తెలుగు నేర్చుకుంటున్నాను. mūḍu saṁvatsarālugā nēnu telugu nērcukuṇṭunnānu. — \"I have been learning Telugu for three years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "రెండు రోజులుగా వర్షం పడుతోంది. reṇḍu rōjulugā varṣaṁ paḍutōndi. — \"It has been raining for two days.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The span takes -గా, and the verb stays in the -తున్న- form: it began then and is still going on. English says \"have been\"; Telugu says \"am -ing\". The plural of సంవత్సరం is సంవత్సరాలు; of రోజు, రోజులు."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎంత కాలంగా మీరు ఇక్కడ ఉంటున్నారు? enta kālaṅgā mīru ikkaḍa uṇṭunnāru? — \"How long have you been living here?\""
+            },
+            {
+              "kind": "speech",
+              "text": "A span that is over takes no -గా: > నేను మూడు గంటలు నడిచాను."
+            },
+            {
+              "kind": "speech",
+              "text": "nēnu mūḍu gaṇṭalu naḍicānu. — \"I walked for three hours.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: నుంచి … వరకు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నేను ఉదయం తొమ్మిది నుంచి సాయంత్రం ఐదు వరకు పని చేస్తాను. nēnu udayaṁ tommidi nuñci sāyantraṁ aidu varaku pani cēstānu. — \"I work from nine in the morning until five in the evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నిన్నటి నుంచి నాకు జ్వరం ఉంది. ninnaṭi nuñci nāku jvaraṁ undi. — \"I have had a fever since yesterday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "నుంచి marks where a span starts, వరకు where it stops. నిన్నటి (ninnaṭi, \"yesterday's\") is the form నిన్న takes before an ending: \"from yesterday\", so \"since yesterday\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have been learning Telugu for three years\" — mūḍu saṁvatsarālugā nēnu telugu nērcukuṇṭunnānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have been learning Telugu for three years\" — *mūḍu saṁvatsarālugā nēnu telugu nērcukuṇṭunnānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I walked for three hours\" — nēnu mūḍu gaṇṭalu naḍicānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I walked for three hours\" — *nēnu mūḍu gaṇṭalu naḍicānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work from nine in the morning until five in the evening\" — nēnu udayaṁ tommidi nuñci sāyantraṁ aidu varaku pani cēstānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work from nine in the morning until five in the evening\" — *nēnu udayaṁ tommidi nuñci sāyantraṁ aidu varaku pani cēstānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long you have been learning Telugu, and since when",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long you have been learning Telugu, and since when]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For two years now\"? (రెండు సంవత్సరాలుగా.) Which form does the verb keep? (-తున్న-, still going on.) \"Since yesterday\"? (నిన్నటి నుంచి.) \"Until five\"? (ఐదు వరకు.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R323-comparing-and-time",
+      "sequence": 15580,
+      "title": "Review — comparing and time",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "bigger, best, how long and since when",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5968898056ee6592",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five words this core took its letters from. (īlōgā, ōṭu, ūru, auṣadhaṁ, duḥkhaṁ.) Then say \"a span of time\". (kālaṁ.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the five letters, ఈ, ఓ, ఊ, ఔ, ః, once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the five letters, **ఈ**, **ఓ**, **ఊ**, **ఔ**, **ః**, once each from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My home town is smaller than Hyderabad, but for me it is the best of all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My home town is smaller than Hyderabad, but for me it is the best of all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have been living here for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have been living here for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "After a long time I went to the village. I felt very happy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: After a long time I went to the village. I felt very happy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I work from morning until evening. I would like to go home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I work from morning until evening. I would like to go home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఈలోగా, ఓటు, ఊరు, ఔషధం, దుఃఖం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఈలోగా**, **ఓటు**, **ఊరు**, **ఔషధం**, **దుఃఖం**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\"? (కంటే (kaṇṭē).) \"The best\"? (అన్నిటికంటే మంచిది.) \"For three years now\"? (మూడు సంవత్సరాలుగా (mūḍu saṁvatsarālugā).) \"From … until\"? (నుంచి … వరకు.) \"How long?\" (ఎంత కాలం (kālaṁ)?)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

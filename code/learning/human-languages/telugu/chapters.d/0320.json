@@ -1,0 +1,21 @@
+{
+  "chapter": 320,
+  "title": "Asking the Way",
+  "label": "ch:te-asking-the-way",
+  "canDo": "I can ask where a place is and how to get there, follow directions with sūṭigā, eḍama vaipu and kuḍi vaipu, and talk about my ūru.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R320-asking-the-way",
+    "kind": "production",
+    "summary": "Complete TE-R320-asking-the-way: ask the way, follow and give directions, and read the new letter ఊ.",
+    "assesses": [
+      "TE-LEX-C320-URU-01",
+      "TE-SCRIPT-RECOG-176",
+      "TE-LEX-C320-SUTIGA-01",
+      "TE-GRAMMAR-C320-ASK-WAY-01",
+      "TE-GRAMMAR-C320-GIVE-WAY-01"
+    ]
+  }
+}

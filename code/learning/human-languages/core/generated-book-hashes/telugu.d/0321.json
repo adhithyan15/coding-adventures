@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:5290dee7264b99c8",
+  "lessonIds": [
+    "TE-C321-situ",
+    "TE-C321-tikkettu-ivvandi",
+    "TE-C321-ausadham",
+    "TE-S177-letter-au",
+    "TE-C321-poyindi",
+    "TE-R321-at-the-station"
+  ],
+  "tex": "telugu/book/chapters/ch321-tickets-seats-and-trouble.tex"
+}
