@@ -1,0 +1,11 @@
+{
+  "id": "RU-C322-dospekhi",
+  "pathSegment": "RU-PATH-322-RYTSAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-322-RYTSAR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C311-prazdnichnyy",
+  "pathSegment": "RU-PATH-311-PRAZDNOVAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-311-PRAZDNOVAT",
+      "order": 4
+    }
+  ]
+}

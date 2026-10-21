@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:b94e9855a8ceda45",
+  "lessonIds": [
+    "RU-C466-burya",
+    "RU-C466-uragan",
+    "RU-C466-poryv",
+    "RU-C466-gremet",
+    "RU-C466-sverkat",
+    "RU-R466-review-459-466"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch466.txt",
+  "json": "russian/narration/ch466.json",
+  "textHash": "fnv1a64:837dfffa3abbb01d",
+  "jsonHash": "fnv1a64:1d588b1d8d997c0c",
+  "findings": []
+}

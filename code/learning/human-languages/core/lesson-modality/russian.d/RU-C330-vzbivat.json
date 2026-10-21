@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C330-vzbivat",
+    "language": "russian",
+    "chapter": 330,
+    "sequence": 19430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b98edd746e8a355"
+  },
+  "findings": []
+}

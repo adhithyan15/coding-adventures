@@ -19,6 +19,22 @@ total = base * RATE;
 total = base * 2;
 ```
 
+## SIMPLE vs ADVANCED (CCR-078)
+
+The example above is ADVANCED (`InlineVariablesPass::closed_world()`). At
+SIMPLE (`InlineVariablesPass::new()`), a top-level `const` is kept at its
+ordinary uses, as the reference compiler does: SIMPLE is open-world, and
+another script may read the global. Its literal is used only to decide a
+statement condition, which then folds away:
+
+```js
+const T = true; T && go();   // SIMPLE: const T=!0;go();
+const R = 2; f(R);            // SIMPLE: unchanged
+```
+
+See [CLOC43](../../../specs/CLOC43-open-world-const-propagation.md) for the
+measured table.
+
 ## Why only `const`, only literals
 
 Propagating `X`'s value to a use site is sound only when that value is

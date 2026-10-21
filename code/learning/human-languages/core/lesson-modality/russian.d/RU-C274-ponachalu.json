@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C274-ponachalu",
+    "language": "russian",
+    "chapter": 274,
+    "sequence": 16570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ac6b545e2d10d8f"
+  },
+  "findings": []
+}

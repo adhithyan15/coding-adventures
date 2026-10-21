@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C368-posobie",
+    "language": "russian",
+    "chapter": 368,
+    "sequence": 21400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:210d82cba138483f"
+  },
+  "findings": []
+}

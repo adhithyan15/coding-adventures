@@ -1,0 +1,11 @@
+{
+  "id": "RU-C346-polza",
+  "pathSegment": "RU-PATH-346-PLYUSY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-346-PLYUSY",
+      "order": 2
+    }
+  ]
+}

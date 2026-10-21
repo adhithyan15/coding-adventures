@@ -128,13 +128,13 @@ import { PARSER_GRAMMAR } from "./_grammar.js";
  *     // Parse a document with multiple tables:
  *     const ast = parseTOML('[database]\nserver = "192.168.1.1"\nport = 5432');
  */
-export function parseTOML(source: string): ASTNode {
+export function parseTOML(source: string, maxTokens?: number): ASTNode {
   /**
    * Step 1: Tokenize.
    * The toml-lexer handles all four string types, date/time recognition,
    * multiple integer formats, bare keys, comments, and newline emission.
    */
-  const tokens = tokenizeTOML(source);
+  const tokens = tokenizeTOML(source, maxTokens);
 
   /**
    * Step 2: Parse.

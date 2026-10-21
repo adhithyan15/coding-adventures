@@ -1,0 +1,11 @@
+{
+  "id": "RU-C390-obyazatelnyy",
+  "pathSegment": "RU-PATH-390-PORYADOK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-390-PORYADOK",
+      "order": 1
+    }
+  ]
+}

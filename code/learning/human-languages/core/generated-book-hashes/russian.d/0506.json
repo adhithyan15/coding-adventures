@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:3eedb892b8fa4f68",
+  "lessonIds": [
+    "RU-C506-gryadka",
+    "RU-C506-leyka",
+    "RU-C506-polot",
+    "RU-C506-sornyak",
+    "RU-C506-urozhay"
+  ],
+  "tex": "russian/book/chapters/ch506-in-the-vegetable-garden.tex"
+}

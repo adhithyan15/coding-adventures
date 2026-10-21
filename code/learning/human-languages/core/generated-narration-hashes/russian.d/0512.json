@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:76cbd8c6f4c3657f",
+  "lessonIds": [
+    "RU-C512-marafon",
+    "RU-C512-begun",
+    "RU-C512-finish",
+    "RU-C512-otstavat",
+    "RU-C512-distantsiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch512.txt",
+  "json": "russian/narration/ch512.json",
+  "textHash": "fnv1a64:ac9075f6166e6e35",
+  "jsonHash": "fnv1a64:77f88409c2395f1d",
+  "findings": []
+}

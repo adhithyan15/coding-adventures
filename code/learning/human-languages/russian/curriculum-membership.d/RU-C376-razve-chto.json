@@ -1,0 +1,11 @@
+{
+  "id": "RU-C376-razve-chto",
+  "pathSegment": "RU-PATH-376-ISKLYUCHENIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-376-ISKLYUCHENIYE",
+      "order": 2
+    }
+  ]
+}

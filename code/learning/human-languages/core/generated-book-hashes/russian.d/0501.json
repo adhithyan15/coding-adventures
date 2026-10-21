@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:8c33aa564ba4ac43",
+  "lessonIds": [
+    "RU-C501-nitka",
+    "RU-C501-igolka",
+    "RU-C501-napyorstok",
+    "RU-C501-vykroyka",
+    "RU-C501-podshivat"
+  ],
+  "tex": "russian/book/chapters/ch501-needle-and-thread.tex"
+}

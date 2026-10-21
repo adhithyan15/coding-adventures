@@ -1,0 +1,11 @@
+{
+  "id": "RU-C456-obmennik",
+  "pathSegment": "RU-PATH-456-OBMENNIK",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-456-OBMENNIK",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C330-polovnik",
+  "pathSegment": "RU-PATH-330-SMESHIVAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-330-SMESHIVAT",
+      "order": 4
+    }
+  ]
+}

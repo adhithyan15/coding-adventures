@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C315-ugoshcheniye",
+    "language": "russian",
+    "chapter": 315,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f059393cc8332fb"
+  },
+  "findings": []
+}

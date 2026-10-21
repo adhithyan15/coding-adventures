@@ -1,0 +1,11 @@
+{
+  "id": "RU-C361-predpriyatie",
+  "pathSegment": "RU-PATH-361-PRIBYL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-361-PRIBYL",
+      "order": 0
+    }
+  ]
+}

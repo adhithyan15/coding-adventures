@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:9b8f505572f3d66f",
+  "lessonIds": [
+    "RU-C330-smeshivat",
+    "RU-C330-vzbivat",
+    "RU-C330-venchik",
+    "RU-C330-pomeshivat",
+    "RU-C330-polovnik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch330.txt",
+  "json": "russian/narration/ch330.json",
+  "textHash": "fnv1a64:36e1bdd5dc6ce04a",
+  "jsonHash": "fnv1a64:a9688d5681654a4c",
+  "findings": []
+}

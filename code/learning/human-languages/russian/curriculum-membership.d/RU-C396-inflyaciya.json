@@ -1,0 +1,11 @@
+{
+  "id": "RU-C396-inflyaciya",
+  "pathSegment": "RU-PATH-396-TSENY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-396-TSENY",
+      "order": 2
+    }
+  ]
+}

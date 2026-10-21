@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:a0bda877a18c45ca",
+  "lessonIds": [
+    "RU-C480-khokhotat",
+    "RU-C480-khikhikat",
+    "RU-C480-rydat",
+    "RU-C480-uteshat",
+    "RU-C480-utesheniye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch480.txt",
+  "json": "russian/narration/ch480.json",
+  "textHash": "fnv1a64:8f43624fbe042c09",
+  "jsonHash": "fnv1a64:32310d3ece69efd5",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C481-pyatka",
+  "pathSegment": "RU-PATH-481-BACK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-481-BACK",
+      "order": 3
+    }
+  ]
+}

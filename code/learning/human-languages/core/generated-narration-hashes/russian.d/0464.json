@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:86fdebc0c5c230d2",
+  "lessonIds": [
+    "RU-C464-prognoz",
+    "RU-C464-sinoptik",
+    "RU-C464-osadki",
+    "RU-C464-pasmurnyy",
+    "RU-C464-proyasnyatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch464.txt",
+  "json": "russian/narration/ch464.json",
+  "textHash": "fnv1a64:4ca90036db9be75f",
+  "jsonHash": "fnv1a64:6fc29088c8fb7d37",
+  "findings": []
+}

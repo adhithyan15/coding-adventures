@@ -1,0 +1,11 @@
+{
+  "id": "RU-C286-publikatsiya",
+  "pathSegment": "RU-PATH-286-OSVESHCHAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-286-OSVESHCHAT",
+      "order": 3
+    }
+  ]
+}

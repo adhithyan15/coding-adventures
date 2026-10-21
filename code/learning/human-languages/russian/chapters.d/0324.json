@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Victory",
+  "label": "ch:ru-victory",
+  "canDo": "I can talk about a victory, winning, waging war, dying in battle and setting people free.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C324-osvobozhdat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can talk about a victory, winning, waging war, dying in battle and setting people free.",
+    "assesses": [
+      "RU-LEX-C324-POBEDA-03",
+      "RU-LEX-C324-POBEDA-04",
+      "RU-LEX-C324-POBEDA-05"
+    ]
+  }
+}

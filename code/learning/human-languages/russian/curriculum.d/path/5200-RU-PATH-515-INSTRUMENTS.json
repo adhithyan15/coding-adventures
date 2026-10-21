@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-515-INSTRUMENTS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-515-INSTRUMENTS"
+  ],
+  "after": []
+}

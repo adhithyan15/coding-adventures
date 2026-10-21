@@ -1,0 +1,11 @@
+{
+  "id": "RU-C472-yarost",
+  "pathSegment": "RU-PATH-472-ANGER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-472-ANGER",
+      "order": 3
+    }
+  ]
+}

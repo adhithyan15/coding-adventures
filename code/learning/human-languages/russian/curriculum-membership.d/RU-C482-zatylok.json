@@ -1,0 +1,11 @@
+{
+  "id": "RU-C482-zatylok",
+  "pathSegment": "RU-PATH-482-HEAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-482-HEAD",
+      "order": 1
+    }
+  ]
+}

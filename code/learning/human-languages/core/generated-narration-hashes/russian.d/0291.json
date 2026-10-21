@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:813c989dfcc8c3ef",
+  "lessonIds": [
+    "RU-C291-sledovatel",
+    "RU-C291-rassledovaniye",
+    "RU-C291-rassledovat",
+    "RU-C291-podozrevayemyy",
+    "RU-C291-podozrevat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch291.txt",
+  "json": "russian/narration/ch291.json",
+  "textHash": "fnv1a64:95f701aeaf6c2698",
+  "jsonHash": "fnv1a64:13d9247763ca2940",
+  "findings": []
+}

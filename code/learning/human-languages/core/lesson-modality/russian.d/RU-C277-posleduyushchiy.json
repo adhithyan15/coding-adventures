@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C277-posleduyushchiy",
+    "language": "russian",
+    "chapter": 277,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c9efc5e24a39a03"
+  },
+  "findings": []
+}

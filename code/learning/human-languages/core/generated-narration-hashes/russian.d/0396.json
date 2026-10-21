@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:ddc11c5a7d5c97d9",
+  "lessonIds": [
+    "RU-C396-dorozhat",
+    "RU-C396-deshevet",
+    "RU-C396-inflyaciya",
+    "RU-C396-kurs",
+    "RU-C396-obmen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch396.txt",
+  "json": "russian/narration/ch396.json",
+  "textHash": "fnv1a64:436a920a4156f3e7",
+  "jsonHash": "fnv1a64:a52bd47b93ef61ec",
+  "findings": []
+}

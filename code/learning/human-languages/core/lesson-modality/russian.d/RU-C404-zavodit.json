@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C404-zavodit",
+    "language": "russian",
+    "chapter": 404,
+    "sequence": 23280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee8b75cc8a4a9e49"
+  },
+  "findings": []
+}

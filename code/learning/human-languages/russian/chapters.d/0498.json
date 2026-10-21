@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Friends and Classmates",
+  "label": "ch:ru-friends-and-classmates",
+  "canDo": "I can talk about friendship and people my own age.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C498-odnoklassnik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about friendship and people my own age.",
+    "assesses": [
+      "RU-LEX-C498-FRIENDS-03",
+      "RU-LEX-C498-FRIENDS-04",
+      "RU-LEX-C498-FRIENDS-05"
+    ]
+  }
+}

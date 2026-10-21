@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-527-SERIES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-527-SERIES"
+  ],
+  "after": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 180,
-  "sourceHash": "fnv1a64:2f5a9607c0ddb4a9",
+  "sourceHash": "fnv1a64:2abe7afd1cc429cb",
   "lessonIds": [
     "PA-C180-lok",
     "PA-C180-us",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch180.txt",
   "json": "punjabi/narration/ch180.json",
-  "textHash": "fnv1a64:fde080d2025d411d",
-  "jsonHash": "fnv1a64:89602249446b206d",
+  "textHash": "fnv1a64:804fe968435cfb92",
+  "jsonHash": "fnv1a64:8043e9cd014e2f32",
   "findings": []
 }

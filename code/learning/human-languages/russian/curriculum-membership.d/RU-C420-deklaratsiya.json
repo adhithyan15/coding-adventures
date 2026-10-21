@@ -1,0 +1,11 @@
+{
+  "id": "RU-C420-deklaratsiya",
+  "pathSegment": "RU-PATH-420-DOSMOTR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-420-DOSMOTR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Wallpaper and Drills",
+  "label": "ch:ru-wallpaper-and-drills",
+  "canDo": "I can talk about decorating and drilling at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R532-review-525-532",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about decorating and drilling at home.",
+    "assesses": [
+      "RU-LEX-C532-DIY-03",
+      "RU-LEX-C532-DIY-04",
+      "RU-LEX-C532-DIY-05"
+    ]
+  }
+}

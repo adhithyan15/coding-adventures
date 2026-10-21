@@ -1,0 +1,11 @@
+{
+  "id": "RU-C332-protiven",
+  "pathSegment": "RU-PATH-332-ZAPEKAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-332-ZAPEKAT",
+      "order": 1
+    }
+  ]
+}

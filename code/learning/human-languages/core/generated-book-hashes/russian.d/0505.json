@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:2c0c9051d8dca65a",
+  "lessonIds": [
+    "RU-C505-rybalka",
+    "RU-C505-udochka",
+    "RU-C505-kryuchok",
+    "RU-C505-klevat",
+    "RU-C505-ulov"
+  ],
+  "tex": "russian/book/chapters/ch505-gone-fishing.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:9b9172034d4a9a87",
+  "lessonIds": [
+    "RU-C386-doklad",
+    "RU-C386-referat",
+    "RU-C386-prezentaciya",
+    "RU-C386-ponyatie",
+    "RU-C386-termin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch386.txt",
+  "json": "russian/narration/ch386.json",
+  "textHash": "fnv1a64:c787ca8180b45d74",
+  "jsonHash": "fnv1a64:dded4ec8a6108fe3",
+  "findings": []
+}

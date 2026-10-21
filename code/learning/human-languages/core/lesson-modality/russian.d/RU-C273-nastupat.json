@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C273-nastupat",
+    "language": "russian",
+    "chapter": 273,
+    "sequence": 16540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25c14a700db29a66"
+  },
+  "findings": []
+}

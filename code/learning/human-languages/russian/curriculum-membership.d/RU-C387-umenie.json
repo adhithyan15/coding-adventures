@@ -1,0 +1,11 @@
+{
+  "id": "RU-C387-umenie",
+  "pathSegment": "RU-PATH-387-ZNANIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-387-ZNANIYA",
+      "order": 1
+    }
+  ]
+}

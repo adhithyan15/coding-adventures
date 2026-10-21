@@ -1,0 +1,11 @@
+{
+  "id": "RU-C502-gonchar",
+  "pathSegment": "RU-PATH-502-CRAFTS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-502-CRAFTS",
+      "order": 2
+    }
+  ]
+}

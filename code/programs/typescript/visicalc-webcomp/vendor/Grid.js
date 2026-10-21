@@ -32,6 +32,54 @@ function safeHref(value) {
   return escapeHtmlAttribute(href);
 }
 
+const MOSAIC_FOCUS_SIGNATURE = ["aria-label", "name", "placeholder", "oninput", "onchange", "onkeydown", "onclick"];
+
+function mosaicFocusSignature(element) {
+  return [element.tagName, ...MOSAIC_FOCUS_SIGNATURE.map(name => element.getAttribute(name) ?? "")].join("\u0000");
+}
+
+function mosaicFocusTwins(root, name, signature) {
+  return [...root.querySelectorAll("*")].filter(element => element.localName === name && mosaicFocusSignature(element) === signature);
+}
+
+function mosaicCaptureFocus(root) {
+  try {
+    const active = root.activeElement;
+    if (!active) return null;
+    const signature = mosaicFocusSignature(active);
+    const twins = mosaicFocusTwins(root, active.localName, signature);
+    const state = { signature, name: active.localName, occurrence: twins.indexOf(active), count: twins.length, scrollTop: active.scrollTop };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
+    return null;
+  }
+}
+
+function mosaicRestoreFocus(root, state) {
+  if (state === null || state.occurrence < 0) return;
+  try {
+    const twins = mosaicFocusTwins(root, state.name, state.signature);
+    if (twins.length !== state.count) return;
+    const element = twins[state.occurrence];
+    if (element === undefined) return;
+    element.focus({ preventScroll: true });
+    if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+      const length = String(element.value ?? "").length;
+      try {
+        element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+      } catch {
+        // Some input types (number, email) refuse a selection; focus is enough.
+      }
+    }
+    element.scrollTop = state.scrollTop;
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
+  }
+}
+
 class MosGrid extends HTMLElement {
   static get observedAttributes() {
     return ["column-headers", "viewport-rows", "column-widths", "total-height", "selected-row", "selected-col", "edit-row", "edit-col", "edit-content"];
@@ -55,7 +103,9 @@ class MosGrid extends HTMLElement {
     const editRow = this.getAttribute("edit-row") !== null ? Number(this.getAttribute("edit-row")) : NaN;
     const editCol = this.getAttribute("edit-col") !== null ? Number(this.getAttribute("edit-col")) : NaN;
     const editContent = this.getAttribute("edit-content") ?? "";
-    this.shadowRoot.innerHTML = `<table style="font-family: monospace; font-size: 12px; color: #cccccc; background: #1e1e1e; border-collapse: collapse; width: 100%"><colgroup>${columnWidths.map((w, cw) => `<col style="width: ${Number.isFinite(Number(w)) ? Number(w) : 0}px">`).join('')}</colgroup><thead><tr style="height: 24px">${columnHeaders.map((h, ch) => `<th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border-width: 1px; border-style: solid; border-color: #3f3f46; height: 24px"><span>${escapeHtml(h)}</span></th>`).join('')}</tr></thead><tbody>${viewportRows.map((row, r) => `<tr style="height: 22px">${row.map((v, c) => `<td style="border-width: 1px; border-style: solid; border-color: #3f3f46; padding: 2px; height: 22px; text-align: right${(( r == selectedRow && c == selectedCol )) ? '; background: #264f78; color: #ffffff; outline: 1px solid #007acc' : ''}${(( r == editRow && c == editCol )) ? '; background: #1f4f3f; outline: 1px solid #007acc' : ''}">${(( r == editRow && c == editCol )) ? `<input type="text" style="padding: 0px; border: 0px; background: transparent; font: inherit; width: 100%; box-sizing: border-box" aria-label="Cell value" value="${escapeHtmlAttribute(editContent)}" autofocus onchange="this.getRootNode().host.dispatch({type:'formulaChange',value:event.target.value})" onkeydown="if(event.key==='Enter')this.getRootNode().host.dispatch({type:'editCommit'});if(event.key==='Escape')this.getRootNode().host.dispatch({type:'editCancel'});" />` : `<span>${escapeHtml(v)}</span>`}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    const mosaicFocus = mosaicCaptureFocus(this.shadowRoot);
+    this.shadowRoot.innerHTML = `<table style="font-family: monospace; font-size: 12px; color: #cccccc; background: #1e1e1e; border-collapse: collapse; width: 100%"><colgroup>${columnWidths.map((w, cw) => `<col style="width: ${Number.isFinite(Number(w)) ? Number(w) : 0}px">`).join('')}</colgroup><thead><tr style="height: 24px">${columnHeaders.map((h, ch) => `<th style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border-width: 1px; border-style: solid; border-color: #3f3f46; height: 24px"><span>${escapeHtml(h)}</span></th>`).join('')}</tr></thead><tbody>${viewportRows.map((row, r) => `<tr style="height: 22px">${row.map((v, c) => `<td style="border-width: 1px; border-style: solid; border-color: #3f3f46; padding: 2px; height: 22px; text-align: right${(( r == selectedRow && c == selectedCol )) ? '; background: #264f78; color: #ffffff; outline: 1px solid #007acc' : ''}${(( r == editRow && c == editCol )) ? '; background: #1f4f3f; outline: 1px solid #007acc' : ''}">${(( r == editRow && c == editCol )) ? `<input type="text" style="padding: 0px; border: 0px; background: transparent; font: inherit; width: 100%; box-sizing: border-box" aria-label="Cell value" value="${escapeHtmlAttribute(editContent)}" autofocus oninput="if(!event.isComposing)this.getRootNode().host.dispatch({type:'formulaChange',value:event.target.value})" oncompositionend="this.getRootNode().host.dispatch({type:'formulaChange',value:event.target.value})" onkeydown="if(event.key==='Enter')this.getRootNode().host.dispatch({type:'editCommit'});if(event.key==='Escape')this.getRootNode().host.dispatch({type:'editCancel'});" />` : `<span>${escapeHtml(v)}</span>`}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    mosaicRestoreFocus(this.shadowRoot, mosaicFocus);
   }
 
   dispatch(event) {

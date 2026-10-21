@@ -1,0 +1,11 @@
+{
+  "id": "RU-C467-metel",
+  "pathSegment": "RU-PATH-467-MOROZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-467-MOROZ",
+      "order": 2
+    }
+  ]
+}

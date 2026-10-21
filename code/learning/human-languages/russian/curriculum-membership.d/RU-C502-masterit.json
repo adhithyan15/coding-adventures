@@ -1,0 +1,11 @@
+{
+  "id": "RU-C502-masterit",
+  "pathSegment": "RU-PATH-502-CRAFTS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-502-CRAFTS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Rehearsals and Tours",
+  "label": "ch:ru-rehearsals-and-tours",
+  "canDo": "I can talk about rehearsing and performing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C518-gastroli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about rehearsing and performing.",
+    "assesses": [
+      "RU-LEX-C518-REHEARSAL-03",
+      "RU-LEX-C518-REHEARSAL-04",
+      "RU-LEX-C518-REHEARSAL-05"
+    ]
+  }
+}

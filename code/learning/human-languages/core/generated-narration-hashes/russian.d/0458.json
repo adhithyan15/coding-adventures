@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:09cf7e319ffedc2b",
+  "lessonIds": [
+    "RU-C458-ravnina",
+    "RU-C458-dolina",
+    "RU-C458-sklon",
+    "RU-C458-vershina",
+    "RU-C458-ushchelye",
+    "RU-R458-review-451-458"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch458.txt",
+  "json": "russian/narration/ch458.json",
+  "textHash": "fnv1a64:7743b22a043ec3f7",
+  "jsonHash": "fnv1a64:204eed3f58788f8b",
+  "findings": []
+}

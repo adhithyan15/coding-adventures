@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:66ce38881094a003",
+  "lessonIds": [
+    "RU-C349-sposobstvovat",
+    "RU-C349-privodit",
+    "RU-C349-vliyat",
+    "RU-C349-vliyanie",
+    "RU-C349-vozdeystvie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch349.txt",
+  "json": "russian/narration/ch349.json",
+  "textHash": "fnv1a64:b403906529908d71",
+  "jsonHash": "fnv1a64:b6d023d3194e1e15",
+  "findings": []
+}

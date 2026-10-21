@@ -102,6 +102,8 @@
     "flowchart-node-padding",
     "flowchart-title-top-margin",
     "flowchart-subgraph-title-margins",
+    "markdown-string-labels",
+    "multiline-markdown-string-labels",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]

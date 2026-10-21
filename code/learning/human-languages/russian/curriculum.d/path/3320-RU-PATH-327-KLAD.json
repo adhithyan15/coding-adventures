@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-327-KLAD",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-327-KLAD"
+  ],
+  "after": []
+}

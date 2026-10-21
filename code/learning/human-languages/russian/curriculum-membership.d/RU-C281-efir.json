@@ -1,0 +1,11 @@
+{
+  "id": "RU-C281-efir",
+  "pathSegment": "RU-PATH-281-EFIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-281-EFIR",
+      "order": 3
+    }
+  ]
+}

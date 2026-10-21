@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Food shopping",
+  "label": "ch:ru-food-shopping",
+  "canDo": "I can shop for food: the bakery, the grocery, the counter, the shop assistant and weighing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C452-vzveshivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can shop for food: the bakery, the grocery, the counter, the shop assistant and weighing.",
+    "assesses": [
+      "RU-LEX-C452-BULOCHNAYA-03",
+      "RU-LEX-C452-BULOCHNAYA-04",
+      "RU-LEX-C452-BULOCHNAYA-05"
+    ]
+  }
+}

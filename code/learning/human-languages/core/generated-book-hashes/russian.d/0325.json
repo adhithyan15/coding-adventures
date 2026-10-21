@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:ad1b6e0f1248aed6",
+  "lessonIds": [
+    "RU-C325-imperiya",
+    "RU-C325-revolyutsiya",
+    "RU-C325-vosstaniye",
+    "RU-C325-zavoyovyvat",
+    "RU-C325-pravit"
+  ],
+  "tex": "russian/book/chapters/ch325-empires-and-uprisings.tex"
+}

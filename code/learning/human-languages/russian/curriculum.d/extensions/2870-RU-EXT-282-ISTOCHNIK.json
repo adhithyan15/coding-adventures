@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-282-ISTOCHNIK",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where a story came from: a source, an eyewitness, a rumour, a detail and a fact.",
+  "prerequisites": []
+}

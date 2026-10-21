@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "In a boat",
+  "label": "ch:ru-in-a-boat",
+  "canDo": "I can talk about small boats: the motor boat, the lifeboat, the life jacket, the oar and rowing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R426-review-419-426",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about small boats: the motor boat, the lifeboat, the life jacket, the oar and rowing.",
+    "assesses": [
+      "RU-LEX-C426-VESLO-03",
+      "RU-LEX-C426-VESLO-04",
+      "RU-LEX-C426-VESLO-05"
+    ]
+  }
+}

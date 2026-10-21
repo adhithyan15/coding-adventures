@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Agreeing and objecting",
+  "label": "ch:ru-agreeing-and-objecting",
+  "canDo": "I can agree and give my consent, say that I disagree, and object to an idea.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C340-vozrazhenie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can agree and give my consent, say that I disagree, and object to an idea.",
+    "assesses": [
+      "RU-LEX-C340-SOGLASIYE-03",
+      "RU-LEX-C340-SOGLASIYE-04",
+      "RU-LEX-C340-SOGLASIYE-05"
+    ]
+  }
+}

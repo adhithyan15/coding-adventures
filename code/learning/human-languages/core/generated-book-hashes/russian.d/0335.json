@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:e5255db91149507e",
+  "lessonIds": [
+    "RU-C335-ostyvat",
+    "RU-C335-razmorazhivat",
+    "RU-C335-okhlazhdat",
+    "RU-C335-rastaplivat",
+    "RU-C335-perevorachivat"
+  ],
+  "tex": "russian/book/chapters/ch335-cooling-and-thawing.tex"
+}

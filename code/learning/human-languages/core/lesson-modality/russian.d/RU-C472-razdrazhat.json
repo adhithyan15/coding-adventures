@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C472-razdrazhat",
+    "language": "russian",
+    "chapter": 472,
+    "sequence": 26750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cdd0898fc117d62"
+  },
+  "findings": []
+}

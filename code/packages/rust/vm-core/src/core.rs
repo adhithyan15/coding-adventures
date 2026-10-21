@@ -1561,6 +1561,62 @@ mod tests {
         assert!(matches!(run_i64_op("div", 1, 0), Err(crate::errors::VMError::DivisionByZero)));
     }
 
+    // ── LANG83 PR4: overflow-checked arithmetic ────────────────────────────
+
+    fn run_neg_ovf(a: i64) -> Result<Value, crate::errors::VMError> {
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new("i64_neg_ovf", Some("r".into()), vec![Operand::Var("a".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        ));
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    #[test]
+    fn checked_ops_return_the_exact_result_at_the_range_edges() {
+        const MAX: i64 = i64::MAX;
+        const MIN: i64 = i64::MIN;
+        for (op, a, b, want) in [
+            ("i64_add_ovf", MAX, 0, MAX),
+            ("i64_add_ovf", MAX - 1, 1, MAX),
+            ("i64_add_ovf", MIN, MAX, -1),
+            ("i64_sub_ovf", MIN, 0, MIN),
+            ("i64_sub_ovf", MIN + 1, 1, MIN),
+            ("i64_sub_ovf", -1, MAX, MIN),
+            ("i64_mul_ovf", MIN, 1, MIN),
+            ("i64_mul_ovf", -(1 << 32), 1 << 31, MIN),
+            ("i64_mul_ovf", 3_037_000_499, 3_037_000_499, 9_223_372_030_926_249_001),
+        ] {
+            assert_eq!(run_i64_op(op, a, b).unwrap(), Value::Int(want), "{op}({a}, {b})");
+        }
+        assert_eq!(run_neg_ovf(MAX).unwrap(), Value::Int(-MAX));
+        assert_eq!(run_neg_ovf(0).unwrap(), Value::Int(0));
+    }
+
+    #[test]
+    fn checked_ops_trap_overflow_one_past_the_range() {
+        const MAX: i64 = i64::MAX;
+        const MIN: i64 = i64::MIN;
+        for (op, a, b) in [
+            ("i64_add_ovf", MAX, 1),
+            ("i64_add_ovf", MIN, -1),
+            ("i64_sub_ovf", MIN, 1),
+            ("i64_sub_ovf", MAX, -1),
+            ("i64_sub_ovf", 0, MIN),
+            ("i64_mul_ovf", MIN, -1),
+            ("i64_mul_ovf", -1, MIN),
+            ("i64_mul_ovf", 1 << 32, 1 << 31),
+            ("i64_mul_ovf", 3_037_000_500, 3_037_000_500),
+        ] {
+            assert_eq!(lang83_trap_kind(run_i64_op(op, a, b)), "Trap.Overflow", "{op}({a}, {b})");
+        }
+        assert_eq!(lang83_trap_kind(run_neg_ovf(MIN)), "Trap.Overflow");
+    }
+
     #[test]
     fn trap_reports_its_kind_and_rejects_unregistered_kinds() {
         let build = |kind: &str| {

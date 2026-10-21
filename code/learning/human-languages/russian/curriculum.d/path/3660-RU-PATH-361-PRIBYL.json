@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-361-PRIBYL",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-361-PRIBYL"
+  ],
+  "after": []
+}

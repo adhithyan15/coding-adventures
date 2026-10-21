@@ -1,0 +1,11 @@
+{
+  "id": "RU-C359-poruchat",
+  "pathSegment": "RU-PATH-359-OBYAZANNOSTI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-359-OBYAZANNOSTI",
+      "order": 1
+    }
+  ]
+}

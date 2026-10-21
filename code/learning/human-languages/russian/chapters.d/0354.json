@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Better or worse",
+  "label": "ch:ru-better-or-worse",
+  "canDo": "I can say that something improves or gets worse, grows or shrinks, and that someone lowers or raises it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C354-povyshat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say that something improves or gets worse, grows or shrinks, and that someone lowers or raises it.",
+    "assesses": [
+      "RU-LEX-C354-BOLSHE-03",
+      "RU-LEX-C354-BOLSHE-04",
+      "RU-LEX-C354-BOLSHE-05"
+    ]
+  }
+}

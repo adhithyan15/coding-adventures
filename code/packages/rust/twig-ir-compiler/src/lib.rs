@@ -1,7 +1,9 @@
 //! # twig-ir-compiler — TW00: Twig → InterpreterIR (IIR)
 //!
 //! This crate is the third stage of the Rust [Twig](../../specs/TW00-twig-language.md)
-//! pipeline.  It accepts a parsed [`twig_parser::Program`] and emits an
+//! pipeline.  It accepts Twig's **parse tree** — the generic
+//! [`GrammarASTNode`] that the grammar-driven parser builds from
+//! `code/grammars/twig/twig.{tokens,grammar}` — and emits an
 //! [`interpreter_ir::IIRModule`] that the LANG VM (`vm-core`) can
 //! execute, or that a JIT can specialise.
 //!
@@ -10,18 +12,60 @@
 //! ```text
 //! Twig source
 //!     │
-//!     ▼  twig_lexer::tokenize
+//!     ▼  twig_lexer::tokenize_twig        (GrammarLexer over twig.tokens)
 //! Vec<Token>
 //!     │
-//!     ▼  twig_parser::parse
-//! Program (typed AST)
+//!     ▼  twig_parser::parse_to_ast        (GrammarParser over twig.grammar)
+//! GrammarASTNode  (the CST)
 //!     │
-//!     ▼  compile_source / compile_program        ← THIS CRATE
+//!     ▼  compile_ast / compile_source     ← THIS CRATE
+//!     │    1. check_cst      — validate the tree's shape
+//!     │    2. TW05-B gate    — only for (typed lenient|strict) modules
+//!     │    3. lower          — walk the CST through borrowed views
 //! IIRModule  (functions: top-level fns + anonymous lambdas + main)
 //!     │
 //!     ▼  vm-core / jit-core
 //! program output
 //! ```
+//!
+//! ## Input: the parse tree, not a typed AST (LANG84 decision 6)
+//!
+//! LANG84's rule is *"the IIR compiler walks the parse tree"*: no
+//! hand-written code may convert the CST into an owned, typed AST before
+//! IIR compilation.  Up to v0.45 this crate broke that rule — it lowered
+//! `twig_parser::Program`, the typed AST that `twig_parser::parse` lifts
+//! out of the CST.  From v0.46 the only thing the compiler looks at is the
+//! [`GrammarASTNode`] from [`twig_parser::parse_to_ast`]:
+//!
+//! - **Borrowed views** (`src/cst.rs`) read the tree one node at a time.
+//!   `ExprNode::kind` says what an `expr` node is (`IntLit`, `If`,
+//!   `Apply`, …) and hands back its children as further unclassified
+//!   handles.  Nothing is copied and no tree is built.
+//! - **[`check_cst`]** (`src/check_cst.rs`) is a validation pass that
+//!   rejects exactly what the typed-AST extractor rejected, with the same
+//!   messages, positions and order — so callers see the same
+//!   `parse error: …` diagnostics as before.
+//! - **Sugar** is expanded by the compiler itself: `'x` and `(quote x)`
+//!   are one symbol literal; `(define (f x) …)` and
+//!   `(define f (lambda (x) …))` are one top-level function.
+//!
+//! The IIR is byte-identical to the v0.45 typed-AST pipeline (checked over
+//! every Twig program in the repo's test suites; see the CHANGELOG).
+//! `twig_parser::Program` still exists for its other consumers (the type
+//! checker, the formatter, the LSP crates, `twig-to-semantic-ir`) — it is
+//! simply no longer on the IIR path.
+//!
+//! ### The type-check gate (TW05-B)
+//!
+//! A module that declares `(typed lenient)` or `(typed strict)` is
+//! type-checked before lowering: strict-mode errors abort compilation,
+//! lenient-mode errors are printed as warnings.  The compiler hands the
+//! checker the **CST** ([`twig_type_checker::check_cst_with_globals`]) and
+//! gets back only diagnostics keyed by source position `(line, column)`.
+//! Nothing the checker computes feeds IIR emission — the gate either lets
+//! lowering proceed or stops it.  (Internally the checker still runs on
+//! its own typed AST; porting TW05-B to the CST is LANG84 open question 2
+//! and is independent of this crate.)
 //!
 //! ## What gets emitted
 //!
@@ -60,8 +104,9 @@
 //! ## Example
 //!
 //! ```
-//! use twig_ir_compiler::compile_source;
+//! use twig_ir_compiler::{compile_ast, compile_source};
 //!
+//! // Source text in one step …
 //! let module = compile_source(
 //!     "(define (square x) (* x x)) (square 7)",
 //!     "demo",
@@ -73,86 +118,63 @@
 //! let names: Vec<&str> = module.functions.iter().map(|f| f.name.as_str()).collect();
 //! assert!(names.contains(&"square"));
 //! assert!(names.contains(&"main"));
+//!
+//! // … or from a parse tree you already hold.
+//! let cst = twig_parser::parse_to_ast("(define (square x) (* x x)) (square 7)").unwrap();
+//! let again = compile_ast(&cst, "demo").unwrap();
+//! assert_eq!(format!("{again:?}"), format!("{module:?}"));
 //! ```
 
+mod check_cst;
 pub mod compiler;
+mod cst;
 pub mod errors;
-pub mod free_vars;
+mod free_vars;
 
+pub use check_cst::check_cst;
 pub use compiler::Compiler;
 pub use errors::TwigCompileError;
-pub use free_vars::free_vars;
 
 use interpreter_ir::{
     function::FunctionTypeStatus,
     source_loc::SourceLoc,
     IIRModule,
 };
+use parser::grammar_parser::GrammarASTNode;
 use std::collections::HashMap;
-use twig_parser::{parse, Program, TypedMode};
+use twig_parser::parse_to_ast;
+use twig_type_checker::TwigKind;
 use type_declarations::AnnotatedNode;
 
-/// Compile a parsed [`Program`] into an [`IIRModule`].
+/// Compile a Twig parse tree into an [`IIRModule`].
 ///
-/// The `module_name` is stored on the resulting module — useful for
-/// debug prints and for the source-position table.  Entry point is
+/// `cst` must be the `program` root that [`twig_parser::parse_to_ast`]
+/// returns.  The `module_name` is stored on the resulting module — useful
+/// for debug prints and for the source-position table.  Entry point is
 /// always `"main"`; language tag is always `"twig"`.
 ///
 /// # Errors
 ///
-/// Returns [`TwigCompileError`] for any of: a `(lambda ...)` that
-/// captures an unbound name, a `VarRef` that doesn't resolve to a
-/// local / global / builtin, an empty function body, or an integer
-/// overflow.
-pub fn compile_program(
-    program: &Program,
-    module_name: &str,
-) -> Result<IIRModule, TwigCompileError> {
-    // ── Optional TW05-B type-check pre-pass (LANG49) ──────────────────────
-    //
-    // Runs only when the module declares `(typed lenient)` or `(typed strict)`.
-    // `(typed off)` and programs with no `(module …)` declaration are untouched —
-    // `check_program` returns immediately in those cases.
-    //
-    // Lenient mode: errors are printed as warnings but compilation continues.
-    // Strict mode:  any type error blocks compilation and returns Err.
-    if let Some(mode) = program
-        .module_info
-        .as_ref()
-        .and_then(|mi| mi.typed_mode.as_ref())
-    {
-        let tc_result = twig_type_checker::check_program(program, None);
-        match mode {
-            TypedMode::Strict if !tc_result.ok => {
-                // Invariant: ok == false in Strict mode ↔ errors is non-empty.
-                // Using expect here enforces the invariant at this integration
-                // boundary.  A panic here means a bug in the type checker, not
-                // in user input — fail loudly rather than silently.
-                let d = tc_result.errors.first().expect(
-                    "type-checker invariant violated: ok==false but errors is empty",
-                );
-                return Err(TwigCompileError {
-                    message: format!("type error: {}", d.message),
-                    line: d.line,
-                    column: d.column,
-                });
-            }
-            TypedMode::Lenient => {
-                for d in &tc_result.errors {
-                    eprintln!(
-                        "twig type warning ({}:{}): {}",
-                        d.line, d.column, d.message
-                    );
-                }
-            }
-            _ => {}
-        }
-    }
-
-    Compiler::new().compile(program, module_name)
+/// Returns [`TwigCompileError`] for any of: a tree that is not a
+/// well-formed Twig `program` (reported as `parse error: …`, exactly as a
+/// malformed source would be), a strict-mode type error, a `(lambda ...)`
+/// that captures an unbound name, a name that doesn't resolve to a local /
+/// global / builtin, or nesting past [`compiler::MAX_COMPILE_DEPTH`].
+///
+/// # Example
+///
+/// ```
+/// use twig_ir_compiler::compile_ast;
+///
+/// let cst = twig_parser::parse_to_ast("(+ 1 2)").unwrap();
+/// let m = compile_ast(&cst, "test").unwrap();
+/// assert_eq!(m.functions[0].name, "main");
+/// ```
+pub fn compile_ast(cst: &GrammarASTNode, module_name: &str) -> Result<IIRModule, TwigCompileError> {
+    compile_ast_with_externs_and_globals(cst, module_name, &[], &HashMap::new())
 }
 
-/// Compile a [`Program`] that may call functions defined in other modules.
+/// Compile a parse tree that may call functions defined in other modules.
 ///
 /// This is the LANG56 entry point used by `twig-module-driver`.  Before
 /// the compiler's own pre-pass runs, `extern_fns` is pre-registered in
@@ -161,75 +183,36 @@ pub fn compile_program(
 /// provided by the other modules; `iir_linker::link` resolves the call
 /// targets at link time.
 ///
-/// The type-check pre-pass (LANG49) is applied identically to
-/// [`compile_program`].
+/// The type-check gate (LANG49) is applied identically to [`compile_ast`].
 ///
 /// # Example
 ///
 /// ```
-/// use twig_ir_compiler::{compile_program_with_externs};
-/// use twig_parser::parse;
+/// use twig_ir_compiler::compile_ast_with_externs;
+/// use twig_parser::parse_to_ast;
 ///
-/// let program = parse("(define (sq x) (* x x)) (sq 5)").unwrap();
+/// let cst = parse_to_ast("(define (sq x) (* x x)) (helper (sq 5))").unwrap();
 /// // "helper" is defined in another module; pre-register it so the compiler
-/// // accepts `(helper 42)` in this module.
-/// let m = compile_program_with_externs(&program, "my_mod", &["helper"]).unwrap();
+/// // accepts `(helper …)` in this module.
+/// let m = compile_ast_with_externs(&cst, "my_mod", &["helper"]).unwrap();
 /// assert!(m.get_function("sq").is_some());
 /// ```
-pub fn compile_program_with_externs(
-    program: &Program,
+pub fn compile_ast_with_externs(
+    cst: &GrammarASTNode,
     module_name: &str,
     extern_fns: &[&str],
 ) -> Result<IIRModule, TwigCompileError> {
-    // Apply the same LANG49 type-check pre-pass as `compile_program`.
-    if let Some(mode) = program
-        .module_info
-        .as_ref()
-        .and_then(|mi| mi.typed_mode.as_ref())
-    {
-        let tc_result = twig_type_checker::check_program(program, None);
-        match mode {
-            TypedMode::Strict if !tc_result.ok => {
-                // Use ok_or_else rather than expect so that a downstream bug in
-                // the type-checker (ok==false with empty errors) returns a
-                // graceful Err rather than panicking in a library context.
-                let d = tc_result.errors.first().ok_or_else(|| TwigCompileError {
-                    message: "type-checker invariant violated: ok==false but errors is empty"
-                        .to_string(),
-                    line: 0,
-                    column: 0,
-                })?;
-                return Err(TwigCompileError {
-                    message: format!("type error: {}", d.message),
-                    line: d.line,
-                    column: d.column,
-                });
-            }
-            TypedMode::Lenient => {
-                for d in &tc_result.errors {
-                    eprintln!(
-                        "twig type warning ({}:{}): {}",
-                        d.line, d.column, d.message
-                    );
-                }
-            }
-            _ => {}
-        }
-    }
-
-    Compiler::new().with_extern_fns(extern_fns).compile(program, module_name)
+    compile_ast_with_externs_and_globals(cst, module_name, extern_fns, &HashMap::new())
 }
 
-/// Compile an already-parsed [`Program`] with both extern function names and
-/// cross-module globals (LANG72 / TW05-Q).
+/// Compile a parse tree with both extern function names and cross-module
+/// globals (LANG72 / TW05-Q).
 ///
-/// This is identical to [`compile_program_with_externs`] except that the
-/// internal type-check pre-pass calls
-/// `twig_type_checker::check_program_with_globals` with `extra_globals`
-/// instead of `twig_type_checker::check_program`.  This is needed when the
+/// Identical to [`compile_ast_with_externs`] except that the type-check
+/// gate seeds the checker with `extra_globals`.  This is needed when the
 /// module imports functions from other already-typed modules; without the
-/// extra globals the type checker would flag those cross-module references as
-/// "unresolved variable" errors.
+/// extra globals the type checker would flag those cross-module references
+/// as "unresolved variable" errors.
 ///
 /// `extra_globals` maps every name that is exported by a dependency module
 /// to its `TwigKind`.  The module driver builds this map in Phase 3.5 and
@@ -239,65 +222,85 @@ pub fn compile_program_with_externs(
 /// # Example
 ///
 /// ```no_run
-/// use twig_ir_compiler::compile_program_with_externs_and_globals;
-/// use twig_parser::parse;
+/// use twig_ir_compiler::compile_ast_with_externs_and_globals;
+/// use twig_parser::parse_to_ast;
 /// use std::collections::HashMap;
 ///
-/// let prog = parse("(module m (typed strict) (import lib/add)) (define r (add-one 41))").unwrap();
+/// let cst = parse_to_ast("(module m (typed strict) (import lib/add)) (define r (add-one 41))").unwrap();
 /// let mut globals = HashMap::new();
 /// globals.insert("add-one".to_string(), twig_type_checker::TwigKind::Function { arity: 1 });
-/// let m = compile_program_with_externs_and_globals(&prog, "m", &["add-one"], &globals).unwrap();
-/// assert!(m.get_function("r").is_some() || true); // compiles without type error
+/// let m = compile_ast_with_externs_and_globals(&cst, "m", &["add-one"], &globals).unwrap();
+/// assert!(m.get_function("main").is_some()); // compiles without type error
 /// ```
-pub fn compile_program_with_externs_and_globals(
-    program: &Program,
+pub fn compile_ast_with_externs_and_globals(
+    cst: &GrammarASTNode,
     module_name: &str,
     extern_fns: &[&str],
-    extra_globals: &std::collections::HashMap<String, twig_type_checker::TwigKind>,
+    extra_globals: &HashMap<String, TwigKind>,
 ) -> Result<IIRModule, TwigCompileError> {
-    // Apply the same LANG49 type-check pre-pass as `compile_program`, but
-    // seed the environment with cross-module globals so that strict-mode
-    // modules that reference imported names pass the check.
-    if let Some(mode) = program
-        .module_info
-        .as_ref()
-        .and_then(|mi| mi.typed_mode.as_ref())
-    {
-        let tc_result =
-            twig_type_checker::check_program_with_globals(program, None, extra_globals);
-        match mode {
-            TypedMode::Strict if !tc_result.ok => {
-                let d = tc_result.errors.first().ok_or_else(|| TwigCompileError {
-                    message: "type-checker invariant violated: ok==false but errors is empty"
-                        .to_string(),
-                    line: 0,
-                    column: 0,
-                })?;
-                return Err(TwigCompileError {
-                    message: format!("type error: {}", d.message),
-                    line: d.line,
-                    column: d.column,
-                });
-            }
-            TypedMode::Lenient => {
-                for d in &tc_result.errors {
-                    eprintln!(
-                        "twig type warning ({}:{}): {}",
-                        d.line, d.column, d.message
-                    );
-                }
-            }
-            _ => {}
-        }
-    }
+    // 1. Shape validation first: a malformed tree is a parse error, and
+    //    the old pipeline reported parse errors before type errors.
+    check_cst(cst)?;
+    // 2. The optional TW05-B gate.
+    type_check_gate(cst, extra_globals)?;
+    // 3. Lowering.
+    Compiler::new().with_extern_fns(extern_fns).compile(cst, module_name)
+}
 
-    Compiler::new().with_extern_fns(extern_fns).compile(program, module_name)
+/// The TW05-B type-check gate (LANG49 / LANG72).
+///
+/// Runs only when the module declares `(typed lenient)` or `(typed strict)`
+/// — `(typed off)` and programs with no `(module …)` declaration are
+/// untouched, so untyped Twig pays nothing.
+///
+/// | mode      | checker errors                                   |
+/// |-----------|--------------------------------------------------|
+/// | `strict`  | the first one becomes `Err("type error: …")`     |
+/// | `lenient` | each is printed to stderr as a warning           |
+/// | `off`     | the checker returns immediately with no errors   |
+///
+/// The checker receives the CST and returns diagnostics keyed by source
+/// position; its results never feed IIR emission (see the crate docs).
+fn type_check_gate(
+    cst: &GrammarASTNode,
+    extra_globals: &HashMap<String, TwigKind>,
+) -> Result<(), TwigCompileError> {
+    let Some(mode) = cst::ProgramView(cst).module().and_then(|m| m.typed_mode()) else {
+        return Ok(());
+    };
+    let tc_result = twig_type_checker::check_cst_with_globals(cst, None, extra_globals)?;
+    match mode {
+        "strict" if !tc_result.ok => {
+            // Invariant: ok == false in strict mode ↔ errors is non-empty.
+            // A violation is a type-checker bug, reported as an error rather
+            // than a panic in library code.
+            let d = tc_result.errors.first().ok_or_else(|| TwigCompileError {
+                message: "type-checker invariant violated: ok==false but errors is empty"
+                    .to_string(),
+                line: 0,
+                column: 0,
+            })?;
+            Err(TwigCompileError {
+                message: format!("type error: {}", d.message),
+                line: d.line,
+                column: d.column,
+            })
+        }
+        "lenient" => {
+            for d in &tc_result.errors {
+                eprintln!("twig type warning ({}:{}): {}", d.line, d.column, d.message);
+            }
+            Ok(())
+        }
+        _ => Ok(()),
+    }
 }
 
 /// Lex, parse, and compile a Twig source string in one call.
 ///
-/// This is the most ergonomic entry point — most callers never need
-/// to construct a [`Program`] explicitly.
+/// This is the most ergonomic entry point: [`twig_parser::parse_to_ast`]
+/// (the grammar-driven lexer + parser, with their depth guards) followed
+/// by [`compile_ast`].
 ///
 /// # Example
 ///
@@ -309,8 +312,8 @@ pub fn compile_program_with_externs_and_globals(
 /// assert_eq!(m.functions[0].name, "main");
 /// ```
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, TwigCompileError> {
-    let program = parse(source)?;
-    compile_program(&program, module_name)
+    let cst = parse_to_ast(source)?;
+    compile_ast(&cst, module_name)
 }
 
 // ---------------------------------------------------------------------------

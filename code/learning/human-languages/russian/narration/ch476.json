@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 476,
+  "title": "Fright and Courage",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:74548e14f5108bd1",
+  "lessons": [
+    {
+      "id": "RU-C476-ispug",
+      "sequence": 26950,
+      "title": "испуг (ispúg) — a fright",
+      "headword": "испуг",
+      "romanization": "ispúg",
+      "gloss": "a fright",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caa6daae0c28d6cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for pride, then the Russian for to boast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: испуг",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "испуг (ispúg) — \"a fright\"."
+            },
+            {
+              "kind": "speech",
+              "text": "От испуга кошка прыгнула на шкаф. Ot ispúga kóshka prýgnula na shkaf. The cat jumped onto the wardrobe in fright."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. The adjective is испуганный — frightened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "испуг (ispúg) is built on ис- and the root of пугать 'to frighten'; EtymDB lists пугать without a source, so its further origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ispúg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ispúg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ispúg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ispúg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ispúg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ispúg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for pride, then the Russian for to boast, then say ispúg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for pride, then the Russian for to boast, then say *ispúg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does испуг (ispúg) mean? (\"A fright\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C476-pugatsya",
+      "sequence": 26960,
+      "title": "пугаться (pugátsya) — to get frightened",
+      "headword": "пугаться",
+      "romanization": "pugátsya",
+      "gloss": "to get frightened",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06009495a4eae2df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to boast, then the Russian for a fright."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: пугаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пугаться (pugátsya) — \"to get frightened\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мой сын пугается грома. Moy syn pugáyetsya gróma. My son gets frightened of thunder."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective испугаться. Takes the genitive: пугаться (pugátsya) грома."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пугаться (pugátsya) is the reflexive of пугать 'to frighten, to scare'; EtymDB lists пугать without a source, so the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugátsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugátsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pugátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pugátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to boast, then the Russian for a fright, then say pugátsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to boast, then the Russian for a fright, then say *pugátsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does пугаться (pugátsya) mean? (\"To get frightened\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C476-vzdragivat",
+      "sequence": 26970,
+      "title": "вздрагивать (vzdrágivat) — to flinch",
+      "headword": "вздрагивать",
+      "romanization": "vzdrágivat",
+      "gloss": "to flinch",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6439a82149134553",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a fright, then the Russian for to get frightened."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: вздрагивать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вздрагивать (vzdrágivat) — \"to flinch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Собака вздрагивает от каждого звука. Sobáka vzdrágivayet ot kázhdogo zvúka. The dog flinches at every sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective вздрогнуть (once). Related to дрожать — to tremble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вздрагивать (vzdrágivat) is built on вз- and the root of дрогнуть 'to quiver' and дрожать 'to tremble'; EtymDB lists these words without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzdrágivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzdrágivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzdrágivat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzdrágivat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vzdrágivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vzdrágivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a fright, then the Russian for to get frightened, then say vzdrágivat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a fright, then the Russian for to get frightened, then say *vzdrágivat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does вздрагивать (vzdrágivat) mean? (\"To flinch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C476-trus",
+      "sequence": 26980,
+      "title": "трус (trus) — a coward",
+      "headword": "трус",
+      "romanization": "trus",
+      "gloss": "a coward",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1270724821b7f85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to get frightened, then the Russian for to flinch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: трус",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "трус (trus) — \"a coward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В начале фильма герой был трусом. V nachále fílma geróy byl trúsom. At the start of the film the hero was a coward."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. The adjective is трусливый — cowardly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "EtymDB lists трус (trus) without a source; it is usually linked to трусить 'to shake, to tremble', so a coward is someone who trembles."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with trus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *trus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to get frightened, then the Russian for to flinch, then say trus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to get frightened, then the Russian for to flinch, then say *trus* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does трус (trus) mean? (\"A coward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C476-smelost",
+      "sequence": 26990,
+      "title": "смелость (smélost) — courage, boldness",
+      "headword": "смелость",
+      "romanization": "smélost",
+      "gloss": "courage, boldness",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70b02e9ba983319a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to flinch, then the Russian for a coward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: смелость",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "смелость (smélost) — \"courage, boldness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Нужно много смелости, чтобы петь на сцене. Núzhno mnógo smélosti, chtóby pet na stséne. It takes a lot of courage to sing on stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Built on смелый — bold, brave."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "смелость (smélost) is built on смелый 'bold' with -ость (EtymDB); смелый is inherited from Old East Slavic sъmělъ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smélost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smélost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smélost, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *smélost*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with smélost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *smélost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to flinch, then the Russian for a coward, then say smélost again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to flinch, then the Russian for a coward, then say *smélost* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does смелость (smélost) mean? (\"Courage, boldness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R476-review-469-476",
+      "sequence": 27000,
+      "title": "Feelings, health and family — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 469-476",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfbb7d65f03461b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for jealousy and to be jealous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jealousy, to be jealous, jealous, envy, to envy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: jealousy, to be jealous, jealous, envy, to envy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shame, to be ashamed, to get embarrassed, to blush, shy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: shame, to be ashamed, to get embarrassed, to blush, shy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hurt feelings, to take offence, to hurt, touchy, to forgive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hurt feelings, to take offence, to hurt, touchy, to forgive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to irritate, irritation, to be angry, fury, quick-tempered",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to irritate, irritation, to be angry, fury, quick-tempered]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disappointment, disappointed, relief, despair, to sigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: disappointment, disappointed, relief, despair, to sigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be nervous, anxious, to worry, worry, to calm down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be nervous, anxious, to worry, worry, to calm down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "delight, to admire, to be proud, pride, to boast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: delight, to admire, to be proud, pride, to boast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fright, to get frightened, to flinch, a coward, courage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fright, to get frightened, to flinch, a coward, courage]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Jealousy? (ревность.) To be jealous? (ревновать.) Jealous? (ревнивый.) Envy? (зависть.) To envy? (завидовать.) Shame? (стыд.) To be ashamed? (стыдиться.) To get embarrassed? (смущаться.) To blush? (краснеть.) Shy? (застенчивый.) Hurt feelings? (обида.) To take offence? (обижаться.) To hurt? (обижать.) Touchy? (обидчивый.) To forgive? (прощать.) To irritate? (раздражать.) Irritation? (раздражение.) To be angry? (злиться.) Fury? (ярость.) Quick-tempered? (вспыльчивый.) Disappointment? (разочарование.) Disappointed? (разочарованный.) Relief? (облегчение.) Despair? (отчаяние.) To sigh? (вздыхать.) To be nervous? (нервничать.) Anxious? (тревожный.) To worry? (беспокоиться.) Worry? (беспокойство.) To calm down? (успокаиваться.) Delight? (восторг.) To admire? (восхищаться.) To be proud? (гордиться.) Pride? (гордость.) To boast? (хвастаться.) A fright? (испуг (ispúg).) To get frightened? (пугаться (pugátsya).) To flinch? (вздрагивать (vzdrágivat).) A coward? (трус (trus).) Courage? (смелость (smélost).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

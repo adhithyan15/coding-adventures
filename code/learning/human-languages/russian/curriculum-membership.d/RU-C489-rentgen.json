@@ -1,0 +1,11 @@
+{
+  "id": "RU-C489-rentgen",
+  "pathSegment": "RU-PATH-489-CHECKUP",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-489-CHECKUP",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:ad1b5adbfa77eb32",
+  "lessonIds": [
+    "RU-C384-zubrit",
+    "RU-C384-zauchivat",
+    "RU-C384-progulivat",
+    "RU-C384-shpargalka",
+    "RU-C384-otvlekatsya",
+    "RU-R384-review-377-384"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch384.txt",
+  "json": "russian/narration/ch384.json",
+  "textHash": "fnv1a64:59b458504461c361",
+  "jsonHash": "fnv1a64:42acc0e258db6dc3",
+  "findings": []
+}

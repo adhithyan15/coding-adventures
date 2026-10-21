@@ -1,0 +1,11 @@
+{
+  "id": "RU-C509-vratar",
+  "pathSegment": "RU-PATH-509-FOOTBALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-509-FOOTBALL",
+      "order": 1
+    }
+  ]
+}

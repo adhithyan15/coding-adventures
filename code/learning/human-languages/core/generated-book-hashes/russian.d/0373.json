@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:9c060a5dda90fd91",
+  "lessonIds": [
+    "RU-C373-riskovat",
+    "RU-C373-opasatsya",
+    "RU-C373-izbegat",
+    "RU-C373-ugrozhat",
+    "RU-C373-predotvrashchat"
+  ],
+  "tex": "russian/book/chapters/ch373-playing-it-safe.tex"
+}

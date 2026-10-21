@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-357-SOTRUDNIK",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-357-SOTRUDNIK"
+  ],
+  "after": []
+}

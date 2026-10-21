@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-429-ZASELENIYE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in and out: the receptionist, checking in, checking out, the deposit and extending a stay.",
+  "prerequisites": []
+}

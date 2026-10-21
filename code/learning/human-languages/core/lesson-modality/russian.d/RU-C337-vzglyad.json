@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C337-vzglyad",
+    "language": "russian",
+    "chapter": 337,
+    "sequence": 19820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67e8b7bceea57ebb"
+  },
+  "findings": []
+}

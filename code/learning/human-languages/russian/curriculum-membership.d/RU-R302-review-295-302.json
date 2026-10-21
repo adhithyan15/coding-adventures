@@ -1,0 +1,11 @@
+{
+  "id": "RU-R302-review-295-302",
+  "pathSegment": "RU-PATH-302-ZADYKHATSYA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-302-ZADYKHATSYA",
+      "order": 5
+    }
+  ]
+}

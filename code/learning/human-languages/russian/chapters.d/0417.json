@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Metro and minibus",
+  "label": "ch:ru-metro-and-minibus",
+  "canDo": "I can get around town: the turnstile, a travel pass, a fare dodger, the route and the minibus.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C417-marshrutka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can get around town: the turnstile, a travel pass, a fare dodger, the route and the minibus.",
+    "assesses": [
+      "RU-LEX-C417-MARSHRUTKA-03",
+      "RU-LEX-C417-MARSHRUTKA-04",
+      "RU-LEX-C417-MARSHRUTKA-05"
+    ]
+  }
+}

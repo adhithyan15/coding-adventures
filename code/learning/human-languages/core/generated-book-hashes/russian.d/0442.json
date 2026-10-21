@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:a15c8579415a53a5",
+  "lessonIds": [
+    "RU-C442-ekskursiya",
+    "RU-C442-ekskursovod",
+    "RU-C442-putevoditel",
+    "RU-C442-dostoprimechatelnost",
+    "RU-C442-osmatrivat",
+    "RU-R442-review-435-442"
+  ],
+  "tex": "russian/book/chapters/ch442-sightseeing.tex"
+}

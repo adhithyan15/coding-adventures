@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:82df676feea4a53c",
+  "lessonIds": [
+    "RU-C423-zaderzhka",
+    "RU-C423-zaderzhivat",
+    "RU-C423-otmena",
+    "RU-C423-otmenyat",
+    "RU-C423-kompensatsiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch423.txt",
+  "json": "russian/narration/ch423.json",
+  "textHash": "fnv1a64:fc9b1afbe16dc105",
+  "jsonHash": "fnv1a64:de0b7d5980135e15",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:d948677aa9b6eba8",
+  "lessonIds": [
+    "RU-C447-masterskaya",
+    "RU-C447-sapozhnik",
+    "RU-C447-chasovshchik",
+    "RU-C447-slesar",
+    "RU-C447-remont"
+  ],
+  "tex": "russian/book/chapters/ch447-repair-shops.tex"
+}

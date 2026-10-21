@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C325-pravit",
+    "language": "russian",
+    "chapter": 325,
+    "sequence": 19200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4e4d21de13f7e40"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C329-kipet",
+  "pathSegment": "RU-PATH-329-KIPYATIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-329-KIPYATIT",
+      "order": 1
+    }
+  ]
+}

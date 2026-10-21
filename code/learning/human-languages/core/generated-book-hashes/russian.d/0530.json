@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:bf4a94e3b57467c7",
+  "lessonIds": [
+    "RU-C530-stirka",
+    "RU-C530-prishchepka",
+    "RU-C530-pyatno",
+    "RU-C530-razveshivat",
+    "RU-C530-otstiryvat"
+  ],
+  "tex": "russian/book/chapters/ch530-washing-day.tex"
+}

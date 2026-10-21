@@ -1,0 +1,11 @@
+{
+  "id": "RU-C396-obmen",
+  "pathSegment": "RU-PATH-396-TSENY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-396-TSENY",
+      "order": 4
+    }
+  ]
+}

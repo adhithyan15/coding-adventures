@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C354-uluchshat",
+    "language": "russian",
+    "chapter": 354,
+    "sequence": 20670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c184be24bb49376"
+  },
+  "findings": []
+}

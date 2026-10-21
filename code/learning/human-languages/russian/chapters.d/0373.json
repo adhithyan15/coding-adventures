@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Playing it safe",
+  "label": "ch:ru-playing-it-safe",
+  "canDo": "I can talk about taking a risk, being wary of something, avoiding it, saying that something threatens us, and preventing it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C373-predotvrashchat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can talk about taking a risk, being wary of something, avoiding it, saying that something threatens us, and preventing it.",
+    "assesses": [
+      "RU-LEX-C373-OSTOROZHNO-03",
+      "RU-LEX-C373-OSTOROZHNO-04",
+      "RU-LEX-C373-OSTOROZHNO-05"
+    ]
+  }
+}

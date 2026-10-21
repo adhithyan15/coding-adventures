@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:5e5bc1f01a43b6b0",
+  "lessonIds": [
+    "RU-C463-priliv",
+    "RU-C463-otliv",
+    "RU-C463-bukhta",
+    "RU-C463-rakushka",
+    "RU-C463-nyryat"
+  ],
+  "tex": "russian/book/chapters/ch463-at-the-seaside.tex"
+}
