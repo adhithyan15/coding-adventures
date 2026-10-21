@@ -6,26 +6,6 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ### Fixed
 
-- Annex B `SingleLineHTMLCloseComment`: a `-->` that leads its line (after a
-  line terminator, optional whitespace and same-line `/* */` comments, after a
-  `/* */` that contains a line terminator, or at the start of the input) is now
-  skipped to the end of the line, like `//`. It used to lex as `--` then `>`.
-  javascript-parser's newline-led `++`/`--` split (#17840) then turned
-  `[23]⏎-->[0]` into `[23]; -- > [0]` and rejected the program, which regressed
-  test262 `annexB/language/comments/single-line-html-close-asi.js` (sloppy and
-  strict). Before that split it passed only because the grammar misread the
-  line as `[23]-- > [0]`. Every entry point gets this through one private
-  `javascript_lexer` constructor: when the source contains `-->`, it adds an
-  exclusive `html_close_comment` pattern group and an on-token callback that
-  suppresses both halves of the comment, so no F10 mode transition fires on
-  them. Sources without `-->` take the old path with no callback. It applies
-  in every edition and goal; a line-leading `-->` is never valid code, so no
-  previously valid program changes meaning. `<!--` is still not handled,
-  because in module code it is valid code (`a<!--b`). Six tests cover the
-  accepted shapes, the non-comment cases (mid-line, `-- >`, inside a template
-  or block comment), regex-vs-division mode across the comment, and every
-  entry point.
-
 - Add explicit `tokenize_javascript_division_only` for subsets excluding regex
   literals, preserving comments, strings, token locations and version rules.
   Existing regex-capable entry points retain their behavior.
