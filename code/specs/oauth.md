@@ -804,7 +804,7 @@ It does not apply the selected anchor's name constraints, validate the target's
 role, purpose, validity, or identity, construct a multi-hop path, apply path
 length or other constraints, check revocation, or provide TLS, HTTP, OAuth
 transport, or network authority.
-The next bounded composition is `x509-server-certificate-policy`. It consumes
+A bounded `x509-server-certificate-policy` composition now consumes
 certificate-wide end-entity role-policy evidence and certificate-bound,
 caller-selected algorithm-policy evidence, rejecting them unless they retain
 the same exact decoded target certificate and the role is exactly end entity.
