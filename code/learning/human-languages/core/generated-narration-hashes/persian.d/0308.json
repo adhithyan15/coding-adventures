@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:da2655c47e5ed018",
+  "lessonIds": [
+    "FA-C308-gozaresh",
+    "FA-C308-gozaresh-dadan",
+    "FA-C308-gozareshgar",
+    "FA-C308-titr",
+    "FA-C308-akhbar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch308.txt",
+  "json": "persian/narration/ch308.json",
+  "textHash": "fnv1a64:c7e78b7e7ed958f0",
+  "jsonHash": "fnv1a64:81b4e3a0171aed98",
+  "findings": []
+}

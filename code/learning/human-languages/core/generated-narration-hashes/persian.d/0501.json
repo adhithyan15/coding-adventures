@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:80423eb205073992",
+  "lessonIds": [
+    "FA-C501-baradarzade",
+    "FA-C501-madarshohar",
+    "FA-C501-pedarzan",
+    "FA-C501-doqolu",
+    "FA-C501-farzand"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch501.txt",
+  "json": "persian/narration/ch501.json",
+  "textHash": "fnv1a64:c36f2c9e5155e8e5",
+  "jsonHash": "fnv1a64:5009a3fcfe11d3a3",
+  "findings": []
+}

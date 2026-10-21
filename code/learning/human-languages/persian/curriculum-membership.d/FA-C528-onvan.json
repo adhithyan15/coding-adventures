@@ -1,0 +1,11 @@
+{
+  "id": "FA-C528-onvan",
+  "pathSegment": "FA-PATH-528-BOOKS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-528-BOOKS",
+      "order": 1
+    }
+  ]
+}

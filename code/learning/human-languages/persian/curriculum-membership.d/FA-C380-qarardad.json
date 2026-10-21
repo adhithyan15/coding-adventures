@@ -1,0 +1,11 @@
+{
+  "id": "FA-C380-qarardad",
+  "pathSegment": "FA-PATH-380-REZUME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-380-REZUME",
+      "order": 1
+    }
+  ]
+}

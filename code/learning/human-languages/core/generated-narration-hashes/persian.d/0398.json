@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:55eeb7606e89d4bb",
+  "lessonIds": [
+    "FA-C398-emkan-pazir",
+    "FA-C398-amali",
+    "FA-C398-budje",
+    "FA-C398-owlaviyyat",
+    "FA-C398-sanjidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch398.txt",
+  "json": "persian/narration/ch398.json",
+  "textHash": "fnv1a64:22c83c85bc65bd46",
+  "jsonHash": "fnv1a64:b89e68baef6a0023",
+  "findings": []
+}

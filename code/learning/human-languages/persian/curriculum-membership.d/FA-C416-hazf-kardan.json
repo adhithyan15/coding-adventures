@@ -1,0 +1,11 @@
+{
+  "id": "FA-C416-hazf-kardan",
+  "pathSegment": "FA-PATH-416-KARBAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-416-KARBAR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-300-NAGAHAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-300-NAGAHAN"
+  ],
+  "after": []
+}

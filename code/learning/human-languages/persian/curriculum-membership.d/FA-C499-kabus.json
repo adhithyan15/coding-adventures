@@ -1,0 +1,11 @@
+{
+  "id": "FA-C499-kabus",
+  "pathSegment": "FA-PATH-499-SLEEP",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-499-SLEEP",
+      "order": 2
+    }
+  ]
+}

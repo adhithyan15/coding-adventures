@@ -50,7 +50,7 @@ export const scriptInventoryEvidence = {
     const gurmukhi = scripts.gurmukhi!;
     expect(gurmukhi.font).toBe("_fonts/NotoSansGurmukhi-Static.ttf");
     expect(gurmukhi.complete).toBe(false);
-    expect(gurmukhi.letters).toHaveLength(33);
+    expect(gurmukhi.letters).toHaveLength(34);
     expect(gurmukhi.marks).toHaveLength(14);
     expect(gurmukhi.digits?.map((digit) => digit.glyph).join("")).toBe("੦੧੨੫");
 

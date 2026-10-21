@@ -1,0 +1,11 @@
+{
+  "id": "FA-C335-arusi",
+  "pathSegment": "FA-PATH-335-ARUSI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-335-ARUSI",
+      "order": 0
+    }
+  ]
+}

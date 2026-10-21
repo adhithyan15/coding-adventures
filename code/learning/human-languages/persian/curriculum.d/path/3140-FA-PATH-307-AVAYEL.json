@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-307-AVAYEL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-307-AVAYEL"
+  ],
+  "after": []
+}

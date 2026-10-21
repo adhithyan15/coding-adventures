@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:ad0b9d73541547f5",
+  "lessonIds": [
+    "FA-C456-peyk",
+    "FA-C456-sanduq-e-post",
+    "FA-C456-simkart",
+    "FA-C456-bongah",
+    "FA-C456-tamas-gereftan"
+  ],
+  "tex": "persian/book/chapters/ch456-couriers-phones-and-agents.tex"
+}

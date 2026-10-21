@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:0d1beefb7d7bad04",
+  "lessonIds": [
+    "FA-C490-sarmakhordegi",
+    "FA-C490-anfolanza",
+    "FA-C490-atse-kardan",
+    "FA-C490-galudard",
+    "FA-C490-tab-kardan"
+  ],
+  "tex": "persian/book/chapters/ch490-colds-and-flu.tex"
+}

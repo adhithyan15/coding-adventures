@@ -1,0 +1,11 @@
+{
+  "id": "FA-C382-herfei",
+  "pathSegment": "FA-PATH-382-PROZHE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-382-PROZHE",
+      "order": 4
+    }
+  ]
+}

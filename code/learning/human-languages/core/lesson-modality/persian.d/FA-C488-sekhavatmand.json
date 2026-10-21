@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C488-sekhavatmand",
+    "language": "persian",
+    "chapter": 488,
+    "sequence": 25040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:529f7cf0f461c483"
+  },
+  "findings": []
+}

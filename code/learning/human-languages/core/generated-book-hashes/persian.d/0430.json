@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:dd0e2a146e04df89",
+  "lessonIds": [
+    "FA-C430-maqsad",
+    "FA-C430-takhir",
+    "FA-C430-laghv-shodan",
+    "FA-C430-dir-kardan",
+    "FA-C430-bolandgu"
+  ],
+  "tex": "persian/book/chapters/ch430-departures-and-delays.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:d6947030e9034782",
+  "lessonIds": [
+    "FA-C457-raste",
+    "FA-C457-hojre",
+    "FA-C457-bazarche",
+    "FA-C457-timche",
+    "FA-C457-karvansara"
+  ],
+  "tex": "persian/book/chapters/ch457-in-the-bazaar.tex"
+}

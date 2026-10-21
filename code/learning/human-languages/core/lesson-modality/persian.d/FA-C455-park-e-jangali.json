@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C455-park-e-jangali",
+    "language": "persian",
+    "chapter": 455,
+    "sequence": 23300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c02a12080d876ff0"
+  },
+  "findings": []
+}

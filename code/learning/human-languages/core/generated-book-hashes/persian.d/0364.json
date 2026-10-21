@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:33463dd91803870e",
+  "lessonIds": [
+    "FA-C364-vaqeiyyat",
+    "FA-C364-haqiqat",
+    "FA-C364-dar-vaqe",
+    "FA-C364-shayee",
+    "FA-C364-enkar-kardan"
+  ],
+  "tex": "persian/book/chapters/ch364-facts-and-rumours.tex"
+}

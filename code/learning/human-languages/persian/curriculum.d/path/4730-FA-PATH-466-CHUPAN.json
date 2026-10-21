@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-466-CHUPAN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-466-CHUPAN"
+  ],
+  "after": []
+}

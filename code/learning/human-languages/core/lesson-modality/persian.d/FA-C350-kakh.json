@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C350-kakh",
+    "language": "persian",
+    "chapter": 350,
+    "sequence": 17880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ee08b577fe284b8"
+  },
+  "findings": []
+}

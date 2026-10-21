@@ -1,0 +1,896 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 419,
+  "title": "Staying safe online",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:316499756d44ce9c",
+  "lessons": [
+    {
+      "id": "FA-C419-harim-e-khosusi",
+      "sequence": 21420,
+      "title": "حریم خصوصی (harim-e khosusi) — privacy",
+      "headword": "حریم خصوصی",
+      "romanization": "harim-e khosusi",
+      "gloss": "privacy",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47bd7c123d35a077",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to upload, then the Persian for technical support."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حریم خصوصی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حریم خصوصی (harim-e khosusi) — \"privacy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این برنامه به حریم خصوصی ما احترام نمیگذارد. in barnâme be harim-e khosusi-ye mâ ehterâm nemigozârad. This app does not respect our privacy."
+            },
+            {
+              "kind": "speech",
+              "text": "Harim \"protected space\" + ezafe + khosusi \"private\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حریم خصوصی (harim-e khosusi) is literally \"the private protected space\": harim is usually traced to Arabic ḥarīm \"a protected precinct\", and khosusi to Arabic khuṣūṣī \"particular, private\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harim-e khosusi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harim-e khosusi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harim-e khosusi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harim-e khosusi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with harim-e khosusi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *harim-e khosusi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to upload, then the Persian for technical support, then say harim-e khosusi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to upload, then the Persian for technical support, then say *harim-e khosusi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حریم خصوصی (harim-e khosusi) mean? (\"Privacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C419-hak-kardan",
+      "sequence": 21430,
+      "title": "هک کردن (hak kardan) — to hack",
+      "headword": "هک کردن",
+      "romanization": "hak kardan",
+      "gloss": "to hack",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b94d4724fa0b9ae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for technical support, then the Persian for privacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هک کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هک کردن (hak kardan) — \"to hack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کسی حساب ایمیل او را هک کرد. kasi hesâb-e imeyl-e u râ hak kard. Someone hacked his email account."
+            },
+            {
+              "kind": "speech",
+              "text": "An English loan + kardan. Hak shodan — to be hacked."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هک کردن (hak kardan) joins the English loan hack to the inherited Persian verb kardan \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hak kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hak kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hak kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hak kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hak kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hak kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for technical support, then the Persian for privacy, then say hak kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for technical support, then the Persian for privacy, then say *hak kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هک کردن (hak kardan) mean? (\"To hack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C419-virus",
+      "sequence": 21440,
+      "title": "ویروس (virus) — a virus",
+      "headword": "ویروس",
+      "romanization": "virus",
+      "gloss": "a virus",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbf15cd23082743d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for privacy, then the Persian for to hack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ویروس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ویروس (virus) — \"a virus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کامپیوترم ویروس گرفته است. kâmpyuteram virus gerefte ast. My computer has caught a virus."
+            },
+            {
+              "kind": "speech",
+              "text": "For computers and for illness alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ویروس came into Persian from European languages, usually traced through French virus to Latin vīrus \"slime, poison\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *virus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for privacy, then the Persian for to hack, then say virus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for privacy, then the Persian for to hack, then say *virus* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ویروس mean? (\"A virus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C419-be-eshterak-gozashtan",
+      "sequence": 21450,
+      "title": "به اشتراک گذاشتن (be eshterâk gozâshtan) — to share (online)",
+      "headword": "به اشتراک گذاشتن",
+      "romanization": "be eshterâk gozâshtan",
+      "gloss": "to share (online)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd6d85242d4ccfa8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to hack, then the Persian for a virus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: به اشتراک گذاشتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "به اشتراک گذاشتن (be eshterâk gozâshtan) — \"to share (online)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او عکسهای سفرش را به اشتراک گذاشت. u 'akshâ-ye safarash râ be eshterâk gozâsht. She shared the photos from her trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Eshterâk \"sharing; subscription\" + gozâshtan \"to put\" (stem gozâr-)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "به اشتراک گذاشتن (be eshterâk gozâshtan) is literally \"to put into sharing\": eshterâk is usually traced to Arabic ishtirāk \"sharing, taking part\", and gozâshtan \"to put\" is native Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be eshterâk gozâshtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be eshterâk gozâshtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be eshterâk gozâshtan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be eshterâk gozâshtan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with be eshterâk gozâshtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *be eshterâk gozâshtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to hack, then the Persian for a virus, then say be eshterâk gozâshtan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to hack, then the Persian for a virus, then say *be eshterâk gozâshtan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does به اشتراک گذاشتن (be eshterâk gozâshtan) mean? (\"To share (online)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C419-hush-e-masnui",
+      "sequence": 21460,
+      "title": "هوش مصنوعی (hush-e masnu'i) — artificial intelligence",
+      "headword": "هوش مصنوعی",
+      "romanization": "hush-e masnu'i",
+      "gloss": "artificial intelligence",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a314e709864ec2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a virus, then the Persian for to share."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هوش مصنوعی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هوش مصنوعی (hush-e masnu'i) — \"artificial intelligence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هوش مصنوعی کار خیلی از مردم را عوض میکند. hush-e masnu'i kâr-e kheyli az mardom râ 'avaz mikonad. Artificial intelligence is changing many people's work."
+            },
+            {
+              "kind": "speech",
+              "text": "Hush \"intelligence\" + ezafe + masnu'i \"artificial\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هوش مصنوعی (hush-e masnu'i) joins hush \"intelligence\", which EtymDB traces to a Middle Persian word for consciousness, to masnu'i \"artificial\", built on Arabic maṣnū' \"made\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hush-e masnu'i",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hush-e masnu'i*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hush-e masnu'i, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hush-e masnu'i*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hush-e masnu'i",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hush-e masnu'i*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a virus, then the Persian for to share, then say hush-e masnu'i again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a virus, then the Persian for to share, then say *hush-e masnu'i* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هوش مصنوعی (hush-e masnu'i) mean? (\"Artificial intelligence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R419-review-416-419",
+      "sequence": 21470,
+      "title": "Conditions and rules — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 416-419",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a78b0c93f4e5bd53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a user and a password."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a user, a password, to save, to delete, an update",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a user, a password, to save, to delete, an update]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a network, a social network, a connection, access, virtual",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a network, a social network, a connection, access, virtual]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "software, hardware, a computer file, to upload, technical support",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: software, hardware, a computer file, to upload, technical support]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "privacy, to hack, a virus, to share, artificial intelligence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: privacy, to hack, a virus, to share, artificial intelligence]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A user? (کاربر.) A password? (رمز عبور.) To save? (ذخیره کردن.) To delete? (حذف کردن.) An update? (به روز رسانی.) A network? (شبکه.) A social network? (شبکه اجتماعی.) A connection? (اتصال.) Access? (دسترسی.) Virtual? (مجازی.) Software? (نرم افزار.) Hardware? (سخت افزار.) A computer file? (فایل.) To upload? (آپلود کردن.) Technical support? (پشتیبانی.) Privacy? (حریم خصوصی (harim-e khosusi).) To hack? (هک کردن (hak kardan).) A virus? (ویروس.) To share? (به اشتراک گذاشتن (be eshterâk gozâshtan).) Artificial intelligence? (هوش مصنوعی (hush-e masnu'i).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R419-review-final-419",
+      "sequence": 21480,
+      "title": "Staying safe online — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 419",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b087c22ffabf9bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for privacy and to hack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "privacy, to hack, a virus, to share, artificial intelligence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: privacy, to hack, a virus, to share, artificial intelligence]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Privacy? (حریم خصوصی (harim-e khosusi).) To hack? (هک کردن (hak kardan).) A virus? (ویروس.) To share? (به اشتراک گذاشتن (be eshterâk gozâshtan).) Artificial intelligence? (هوش مصنوعی (hush-e masnu'i).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

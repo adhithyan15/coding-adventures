@@ -1,0 +1,11 @@
+{
+  "id": "FA-C433-esteqbal-kardan",
+  "pathSegment": "FA-PATH-433-SAK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-433-SAK",
+      "order": 3
+    }
+  ]
+}

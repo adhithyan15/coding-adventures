@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-448-MIYANBOR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the road ahead: a shortcut, an uphill stretch, a downhill stretch, an underpass and a flyover.",
+  "prerequisites": []
+}

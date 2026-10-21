@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-432-GIT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-432-GIT"
+  ],
+  "after": []
+}

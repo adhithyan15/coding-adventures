@@ -1,0 +1,11 @@
+{
+  "id": "FA-C427-jush-avardan",
+  "pathSegment": "FA-PATH-427-TAMIRGAH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-427-TAMIRGAH",
+      "order": 2
+    }
+  ]
+}

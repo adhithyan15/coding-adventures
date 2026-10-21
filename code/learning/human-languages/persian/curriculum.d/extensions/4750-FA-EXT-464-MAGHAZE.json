@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-464-MAGHAZE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with shopkeepers: a shop, a shopkeeper, doing a deal, a deposit and being overcharged.",
+  "prerequisites": []
+}

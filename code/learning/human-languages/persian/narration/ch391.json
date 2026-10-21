@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 391,
+  "title": "Supposing",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0350f82015aa2c2b",
+  "lessons": [
+    {
+      "id": "FA-C391-farz-kardan",
+      "sequence": 19980,
+      "title": "فرض کردن (farz kardan) — to suppose, to assume",
+      "headword": "فرض کردن",
+      "romanization": "farz kardan",
+      "gloss": "to suppose, to assume",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99ce22cfed73f55c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for unless, then the Persian for otherwise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فرض کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرض کردن (farz kardan) — \"to suppose, to assume\"."
+            },
+            {
+              "kind": "speech",
+              "text": "من فرض کردم که او خبر دارد. man farz kardam ke u khabar dârad. I assumed that he knew."
+            },
+            {
+              "kind": "speech",
+              "text": "Farz \"assumption\" + kardan (stem kon-). Farz konim ke … — let us suppose that …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرض was borrowed from Arabic farḍ (EtymDB), a word for something laid down; in Persian it means an assumption. Kardan \"to do\" is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farz kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farz kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farz kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farz kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with farz kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *farz kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for unless, then the Persian for otherwise, then say farz kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for unless, then the Persian for otherwise, then say *farz kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فرض کردن (farz kardan) mean? (\"To suppose, to assume\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C391-farziye",
+      "sequence": 19990,
+      "title": "فرضیه (farziye) — a hypothesis",
+      "headword": "فرضیه",
+      "romanization": "farziye",
+      "gloss": "a hypothesis",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d64468a78948040f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for otherwise, then the Persian for to suppose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فرضیه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرضیه (farziye) — \"a hypothesis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دانشمندها این فرضیه را آزمایش کردند. dâneshmandhâ in farziye râ âzmâyesh kardand. The scientists tested this hypothesis."
+            },
+            {
+              "kind": "speech",
+              "text": "Farz \"assumption\" + -iye. Plural farziyehâ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرضیه (farziye) is built on farz \"assumption\", from Arabic farḍ (EtymDB), with the ending -iye, as in nazariye \"theory\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farziye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farziye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farziye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farziye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with farziye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *farziye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for otherwise, then the Persian for to suppose, then say farziye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for otherwise, then the Persian for to suppose, then say *farziye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فرضیه (farziye) mean? (\"A hypothesis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C391-chenanche",
+      "sequence": 20000,
+      "title": "چنانچه (chenânche) — if (formal), in case",
+      "headword": "چنانچه",
+      "romanization": "chenânche",
+      "gloss": "if (formal), in case",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6bcdb57641c0453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to suppose, then the Persian for a hypothesis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چنانچه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چنانچه (chenânche) — \"if (formal), in case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "چنانچه هوا خوب باشد، مسابقه برگزار میشود. chenânche havâ khub bâshad, mosâbeqe bargozâr mishavad. If the weather is good, the match will be held."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal and written, like agar; it takes the subjunctive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چنانچه (chenânche) is a native Persian compound built from chenân \"so, in that way\" and che \"what\": in such a way that, if."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chenânche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chenânche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chenânche, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chenânche*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with chenânche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *chenânche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to suppose, then the Persian for a hypothesis, then say chenânche again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to suppose, then the Persian for a hypothesis, then say *chenânche* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چنانچه (chenânche) mean? (\"If (formal), in case\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C391-ba-vojud-e-inke",
+      "sequence": 20010,
+      "title": "با وجود اینکه (bâ vojud-e inke) — even though, despite the fact that",
+      "headword": "با وجود اینکه",
+      "romanization": "bâ vojud-e inke",
+      "gloss": "even though, despite the fact that",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35dc6853696abfe0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a hypothesis, then the Persian for if."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: با وجود اینکه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "با وجود اینکه (bâ vojud-e inke) — \"even though, despite the fact that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "با وجود اینکه باران میآمد، بیرون رفتیم. bâ vojud-e inke bârân miâmad, birun raftim. Even though it was raining, we went out."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes an indicative clause, like agarche. With a noun, bâ vojud-e alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "با وجود اینکه (bâ vojud-e inke) is literally \"with the existence of the fact that\": vojud comes from Arabic wujūd \"existence\" (EtymDB), and bâ \"with\" and inke \"that\" are Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâ vojud-e inke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâ vojud-e inke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâ vojud-e inke, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâ vojud-e inke*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bâ vojud-e inke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bâ vojud-e inke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a hypothesis, then the Persian for if, then say bâ vojud-e inke again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a hypothesis, then the Persian for if, then say *bâ vojud-e inke* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does با وجود اینکه (bâ vojud-e inke) mean? (\"Even though, despite the fact that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C391-khiyal-kardan",
+      "sequence": 20020,
+      "title": "خیال کردن (khiyâl kardan) — to imagine; to think wrongly",
+      "headword": "خیال کردن",
+      "romanization": "khiyâl kardan",
+      "gloss": "to imagine; to think wrongly",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20701f94f80e2422",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for if, then the Persian for even though."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خیال کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خیال کردن (khiyâl kardan) — \"to imagine; to think wrongly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خیال کردم او رفته است، اما خانه بود. khiyâl kardam u rafte ast, ammâ khâne bud. I thought he had gone, but he was at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Often a belief that turns out wrong. Khiyâl \"imagination\" + kardan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خیال was borrowed from Arabic khayāl \"imagination\" (EtymDB); with the inherited verb kardan \"to do\", it means to imagine, often wrongly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiyâl kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiyâl kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiyâl kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiyâl kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khiyâl kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khiyâl kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for if, then the Persian for even though, then say khiyâl kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for if, then the Persian for even though, then say *khiyâl kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خیال کردن (khiyâl kardan) mean? (\"To imagine; to think wrongly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R391-review-384-391",
+      "sequence": 20030,
+      "title": "Words from chapters 384–391 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 384-391",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:034567ae5369ac26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a strike and a union."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a strike, a union, to work hard, to succeed, to be defeated",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a strike, a union, to work hard, to succeed, to be defeated]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a society, social, a generation, elderly, a religion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a society, social, a generation, elderly, a religion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "equality, inequality, justice, poverty, wealth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: equality, inequality, justice, poverty, wealth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migration, a migrant, a minority, a majority, discrimination",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: migration, a migrant, a minority, a majority, discrimination]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pollution, recycling, to recycle, consumption, to consume",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pollution, recycling, to recycle, consumption, to consume]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a volunteer, a charity, peace, violence, addiction",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a volunteer, a charity, peace, violence, addiction]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "provided that, in the event that, in case of, unless, otherwise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: provided that, in the event that, in case of, unless, otherwise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suppose, a hypothesis, if, even though, to imagine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suppose, a hypothesis, if, even though, to imagine]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A strike? (اعتصاب.) A union? (اتحادیه.) To work hard? (زحمت کشیدن.) To succeed? (موفق شدن.) To be defeated? (شکست خوردن.) A society? (جامعه.) Social? (اجتماعی.) A generation? (نسل.) Elderly? (سالمند.) A religion? (مذهب.) Equality? (برابری.) Inequality? (نابرابری.) Justice? (عدالت.) Poverty? (فقر.) Wealth? (ثروت.) Migration? (مهاجرت.) A migrant? (مهاجر.) A minority? (اقلیت.) A majority? (اکثریت.) Discrimination? (تبعیض.) Pollution? (آلودگی.) Recycling? (بازیافت.) To recycle? (بازیافت کردن.) Consumption? (مصرف.) To consume? (مصرف کردن.) A volunteer? (داوطلب.) A charity? (خیریه.) Peace? (صلح.) Violence? (خشونت.) Addiction? (اعتیاد.) Provided that? (به شرط اینکه.) In the event that? (در صورتی که.) In case of? (در صورت.) Unless? (مگر اینکه.) Otherwise? (در غیر این صورت.) To suppose? (فرض کردن (farz kardan).) A hypothesis? (فرضیه (farziye).) If? (چنانچه (chenânche).) Even though? (با وجود اینکه (bâ vojud-e inke).) To imagine? (خیال کردن (khiyâl kardan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

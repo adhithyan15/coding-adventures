@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Migration and minorities",
+  "label": "ch:fa-migration-and-minorities",
+  "canDo": "I can talk about migration and migrants, minorities and majorities, and discrimination.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C387-tabiz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about migration and migrants, minorities and majorities, and discrimination.",
+    "assesses": [
+      "FA-LEX-C387-MOHAJERAT-03",
+      "FA-LEX-C387-MOHAJERAT-04",
+      "FA-LEX-C387-MOHAJERAT-05"
+    ]
+  }
+}

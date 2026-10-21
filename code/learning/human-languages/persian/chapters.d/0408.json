@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Fraud and corruption",
+  "label": "ch:fa-fraud-and-corruption",
+  "canDo": "I can talk about fraud and theft, bribes and corruption, and the charges against someone.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C408-etteham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about fraud and theft, bribes and corruption, and the charges against someone.",
+    "assesses": [
+      "FA-LEX-C408-KOLAHBARDARI-03",
+      "FA-LEX-C408-KOLAHBARDARI-04",
+      "FA-LEX-C408-KOLAHBARDARI-05"
+    ]
+  }
+}

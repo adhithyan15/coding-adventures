@@ -1,0 +1,11 @@
+{
+  "id": "FA-C465-shokhm-zadan",
+  "pathSegment": "FA-PATH-465-MAZRAE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-465-MAZRAE",
+      "order": 4
+    }
+  ]
+}

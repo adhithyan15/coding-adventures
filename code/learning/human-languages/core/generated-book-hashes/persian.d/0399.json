@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:39fd0ca37c3de1fb",
+  "lessonIds": [
+    "FA-C399-konkur",
+    "FA-C399-azmun",
+    "FA-C399-qabuli",
+    "FA-C399-mardud-shodan",
+    "FA-C399-moaddel",
+    "FA-R399-review-392-399"
+  ],
+  "tex": "persian/book/chapters/ch399-entrance-exams.tex"
+}

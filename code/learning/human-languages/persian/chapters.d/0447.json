@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Corners and house numbers",
+  "label": "ch:fa-corners-and-house-numbers",
+  "canDo": "I can find a building: the street corner, the house number, the postcode, a main road and a side street.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C447-fari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can find a building: the street corner, the house number, the postcode, a main road and a side street.",
+    "assesses": [
+      "FA-LEX-C447-NABSH-03",
+      "FA-LEX-C447-NABSH-04",
+      "FA-LEX-C447-NABSH-05"
+    ]
+  }
+}

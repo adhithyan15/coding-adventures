@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-320-KARAGAH",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-320-KARAGAH"
+  ],
+  "after": []
+}

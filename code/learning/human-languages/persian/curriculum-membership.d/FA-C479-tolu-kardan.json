@@ -1,0 +1,11 @@
+{
+  "id": "FA-C479-tolu-kardan",
+  "pathSegment": "FA-PATH-479-RANGINKAMAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-479-RANGINKAMAN",
+      "order": 4
+    }
+  ]
+}

@@ -462,6 +462,21 @@ Current pairs:
   Its `perly.y` matches 5.004_01_02; `toke.c` changes debugger line
   hooks outside this plain-decimal `print` subset. It retains the tested
   250-digit decimal bound and claims no full-release syntax coverage.
+- `perl5.38.0.*` is a distinct **partial** pair checked against its own
+  [`v5.38.0` source tag] (tag object `f47267bec592…`, commit
+  `76298ae68aa7…`; full IDs in the pair headers). It is the Perl frontend's
+  `DEFAULT_RELEASE` since LANG84 phase 4b. Its rules come from that tag's
+  own blobs: `keywords.h` `KEY_print`, `toke.c`'s `LOP(OP_PRINT)` and
+  `yyl_hyphen` (adjacent `--` is a decrement token, refused), `perly.y`'s
+  `FUNC ( optexpr )`, `ADDOP`, `MULOP` and `%prec UMINUS` rules, and
+  `scan_num`'s decimal path, which copies into `parser.h`'s 256-byte
+  `tokenbuf` with six bytes reserved and so croaks `Number too long` on the
+  251st digit. A carriage return is whitespace because `PERL_STRICT_CR` is
+  unset by default; form feed and vertical tab are whitespace upstream but
+  outside this subset. The token and grammar rules equal 5.004_72's, so
+  the compiled tables share one class. Retrieved 2026-10-20: the
+  `perly.y`, `toke.c` and `keywords.h` blobs of `v5.38.0` and `v5.38.2`
+  are identical (and `perly.y`/`keywords.h` match `v5.37.11`).
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -589,4 +604,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
 [historical 5.004_01_02 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_02.tar.gz
 [historical 5.004_01_03 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_03.tar.gz
+[`v5.38.0` source tag]: https://github.com/Perl/perl5/tree/v5.38.0
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

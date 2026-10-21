@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:477cdaab2bff2aef",
+  "lessonIds": [
+    "FA-C470-chador",
+    "FA-C470-kise-khab",
+    "FA-C470-hizom",
+    "FA-C470-gardesh-kardan",
+    "FA-C470-otraq-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch470.txt",
+  "json": "persian/narration/ch470.json",
+  "textHash": "fnv1a64:289967eb93d96b03",
+  "jsonHash": "fnv1a64:5a77dc992948fe40",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C446-masafat",
+    "language": "persian",
+    "chapter": 446,
+    "sequence": 22860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e149a17ca22b3396"
+  },
+  "findings": []
+}

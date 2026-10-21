@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:b9fd7eb79d5cabcf",
+  "lessonIds": [
+    "FA-C379-estefa-dadan",
+    "FA-C379-ekhraj-kardan",
+    "FA-C379-ekhraj-shodan",
+    "FA-C379-bikari",
+    "FA-C379-bazneshastegi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch379.txt",
+  "json": "persian/narration/ch379.json",
+  "textHash": "fnv1a64:299c2f93764d2cf6",
+  "jsonHash": "fnv1a64:d85d338732becd15",
+  "findings": []
+}

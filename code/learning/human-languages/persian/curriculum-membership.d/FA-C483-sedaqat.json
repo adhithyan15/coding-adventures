@@ -1,0 +1,11 @@
+{
+  "id": "FA-C483-sedaqat",
+  "pathSegment": "FA-PATH-483-HONESTY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-483-HONESTY",
+      "order": 1
+    }
+  ]
+}

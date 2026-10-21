@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:73f31ac69f1b34b2",
+  "lessonIds": [
+    "FA-C492-halat-e-tahavvo",
+    "FA-C492-estefragh-kardan",
+    "FA-C492-ghash-kardan",
+    "FA-C492-zaf-kardan",
+    "FA-C492-araq-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch492.txt",
+  "json": "persian/narration/ch492.json",
+  "textHash": "fnv1a64:5137f2190d0f140b",
+  "jsonHash": "fnv1a64:c01eb8cebfebff0a",
+  "findings": []
+}

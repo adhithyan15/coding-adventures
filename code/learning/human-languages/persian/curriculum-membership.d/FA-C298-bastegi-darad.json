@@ -1,0 +1,11 @@
+{
+  "id": "FA-C298-bastegi-darad",
+  "pathSegment": "FA-PATH-298-IF",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-298-IF",
+      "order": 4
+    }
+  ]
+}

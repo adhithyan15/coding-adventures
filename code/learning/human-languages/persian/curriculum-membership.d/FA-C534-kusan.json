@@ -1,0 +1,11 @@
+{
+  "id": "FA-C534-kusan",
+  "pathSegment": "FA-PATH-534-FURNISH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-534-FURNISH",
+      "order": 3
+    }
+  ]
+}

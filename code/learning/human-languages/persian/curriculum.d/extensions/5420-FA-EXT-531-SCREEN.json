@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-531-SCREEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about what I watch on screen.",
+  "prerequisites": []
+}

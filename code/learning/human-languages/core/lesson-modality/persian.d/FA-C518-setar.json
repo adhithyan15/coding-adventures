@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C518-setar",
+    "language": "persian",
+    "chapter": 518,
+    "sequence": 26540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03f2ab75a8be779d"
+  },
+  "findings": []
+}

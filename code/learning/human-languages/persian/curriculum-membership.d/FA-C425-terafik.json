@@ -1,0 +1,11 @@
+{
+  "id": "FA-C425-terafik",
+  "pathSegment": "FA-PATH-425-OTOBAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-425-OTOBAN",
+      "order": 3
+    }
+  ]
+}

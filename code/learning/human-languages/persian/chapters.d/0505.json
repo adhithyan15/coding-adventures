@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Support and Comfort",
+  "label": "ch:fa-support-and-comfort",
+  "canDo": "I can talk about supporting and comforting people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C505-navazesh-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about supporting and comforting people.",
+    "assesses": [
+      "FA-LEX-C505-SUPPORT-03",
+      "FA-LEX-C505-SUPPORT-04",
+      "FA-LEX-C505-SUPPORT-05"
+    ]
+  }
+}

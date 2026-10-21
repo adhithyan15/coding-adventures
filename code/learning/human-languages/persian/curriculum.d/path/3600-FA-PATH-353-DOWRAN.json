@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-353-DOWRAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-353-DOWRAN"
+  ],
+  "after": []
+}

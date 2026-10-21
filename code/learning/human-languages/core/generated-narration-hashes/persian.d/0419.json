@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:316499756d44ce9c",
+  "lessonIds": [
+    "FA-C419-harim-e-khosusi",
+    "FA-C419-hak-kardan",
+    "FA-C419-virus",
+    "FA-C419-be-eshterak-gozashtan",
+    "FA-C419-hush-e-masnui",
+    "FA-R419-review-416-419",
+    "FA-R419-review-final-419"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch419.txt",
+  "json": "persian/narration/ch419.json",
+  "textHash": "fnv1a64:3895b7f05a6b24ac",
+  "jsonHash": "fnv1a64:ee19cc13d9875273",
+  "findings": []
+}

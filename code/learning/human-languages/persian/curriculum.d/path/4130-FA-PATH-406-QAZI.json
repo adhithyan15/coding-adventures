@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-406-QAZI",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-406-QAZI"
+  ],
+  "after": []
+}

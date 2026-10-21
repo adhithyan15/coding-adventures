@@ -1,0 +1,11 @@
+{
+  "id": "FA-C319-bazdasht-kardan",
+  "pathSegment": "FA-PATH-319-MAMUR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-319-MAMUR",
+      "order": 4
+    }
+  ]
+}

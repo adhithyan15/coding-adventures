@@ -1,0 +1,11 @@
+{
+  "id": "FA-C346-majara",
+  "pathSegment": "FA-PATH-346-MAJARA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-346-MAJARA",
+      "order": 0
+    }
+  ]
+}

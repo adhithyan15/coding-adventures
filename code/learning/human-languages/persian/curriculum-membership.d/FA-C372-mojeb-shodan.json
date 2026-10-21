@@ -1,0 +1,11 @@
+{
+  "id": "FA-C372-mojeb-shodan",
+  "pathSegment": "FA-PATH-372-TASIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-372-TASIR",
+      "order": 3
+    }
+  ]
+}

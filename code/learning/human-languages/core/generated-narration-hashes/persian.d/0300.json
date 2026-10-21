@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:beb4f480e2418c3c",
+  "lessonIds": [
+    "FA-C300-nagahan",
+    "FA-C300-belafasele",
+    "FA-C300-bi-derang",
+    "FA-C300-hamin-ke",
+    "FA-C300-ettefaqi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch300.txt",
+  "json": "persian/narration/ch300.json",
+  "textHash": "fnv1a64:021930c920377a19",
+  "jsonHash": "fnv1a64:ad4e1b1ece245e0a",
+  "findings": []
+}

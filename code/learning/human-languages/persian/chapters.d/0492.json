@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Feeling Unwell",
+  "label": "ch:fa-feeling-unwell",
+  "canDo": "I can say that I feel sick or faint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C492-araq-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say that I feel sick or faint.",
+    "assesses": [
+      "FA-LEX-C492-UNWELL-03",
+      "FA-LEX-C492-UNWELL-04",
+      "FA-LEX-C492-UNWELL-05"
+    ]
+  }
+}

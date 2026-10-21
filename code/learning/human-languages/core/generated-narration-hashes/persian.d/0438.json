@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:67fa4d3fcd505152",
+  "lessonIds": [
+    "FA-C438-tahvil-gereftan",
+    "FA-C438-tasviye-hesab-kardan",
+    "FA-C438-kart-e-shenasayi",
+    "FA-C438-pishpardakht",
+    "FA-C438-gavsanduq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch438.txt",
+  "json": "persian/narration/ch438.json",
+  "textHash": "fnv1a64:881b6d0086b09030",
+  "jsonHash": "fnv1a64:7225c8171b07510b",
+  "findings": []
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "PA-C181-yayya",
+    "language": "punjabi",
+    "chapter": 181,
+    "sequence": 9500,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f2ea52c004ccaa3",
+    "detachableSegments": [
+      "Script you'll notice: ਯ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

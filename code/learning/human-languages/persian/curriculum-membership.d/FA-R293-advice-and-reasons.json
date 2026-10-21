@@ -1,0 +1,11 @@
+{
+  "id": "FA-R293-advice-and-reasons",
+  "pathSegment": "FA-PATH-293-ADVICE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-293-ADVICE",
+      "order": 5
+    }
+  ]
+}

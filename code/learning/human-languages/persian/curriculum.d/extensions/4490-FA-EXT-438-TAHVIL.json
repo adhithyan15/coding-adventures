@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-438-TAHVIL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in and out: getting the room, settling the bill, the ID card, the deposit and the safe.",
+  "prerequisites": []
+}

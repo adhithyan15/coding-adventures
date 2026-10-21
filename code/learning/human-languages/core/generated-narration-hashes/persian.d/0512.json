@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:76489fd6b93e01c4",
+  "lessonIds": [
+    "FA-C512-havadar",
+    "FA-C512-varzeshkar",
+    "FA-C512-harif",
+    "FA-C512-lig",
+    "FA-C512-emtiyaz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch512.txt",
+  "json": "persian/narration/ch512.json",
+  "textHash": "fnv1a64:cfb3dadc67bb0bba",
+  "jsonHash": "fnv1a64:c8aff7bea6c83410",
+  "findings": []
+}

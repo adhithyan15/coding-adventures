@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Departures and delays",
+  "label": "ch:fa-departures-and-delays",
+  "canDo": "I can follow departures: the destination, a delay, a cancellation, running late and the loudspeaker.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C430-bolandgu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can follow departures: the destination, a delay, a cancellation, running late and the loudspeaker.",
+    "assesses": [
+      "FA-LEX-C430-MAGHSAD-03",
+      "FA-LEX-C430-MAGHSAD-04",
+      "FA-LEX-C430-MAGHSAD-05"
+    ]
+  }
+}

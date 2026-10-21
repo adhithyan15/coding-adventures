@@ -1,0 +1,11 @@
+{
+  "id": "FA-C417-shabake-ye-ejtemai",
+  "pathSegment": "FA-PATH-417-SHABAKE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-417-SHABAKE",
+      "order": 1
+    }
+  ]
+}

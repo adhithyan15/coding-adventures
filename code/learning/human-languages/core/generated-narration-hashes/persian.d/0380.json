@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:57251ff7aa3c0b56",
+  "lessonIds": [
+    "FA-C380-rezume",
+    "FA-C380-qarardad",
+    "FA-C380-tarfi",
+    "FA-C380-karamuz",
+    "FA-C380-karamuzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch380.txt",
+  "json": "persian/narration/ch380.json",
+  "textHash": "fnv1a64:88f1e99ec5d18f46",
+  "jsonHash": "fnv1a64:867a5139fe9d3e16",
+  "findings": []
+}

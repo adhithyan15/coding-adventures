@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C371-ba-tavajjoh-be",
+    "language": "persian",
+    "chapter": 371,
+    "sequence": 19000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f84ef6d8e38f3f1"
+  },
+  "findings": []
+}

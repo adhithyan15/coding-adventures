@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:ad27d8c58e072888",
+  "lessonIds": [
+    "FA-C436-eskele",
+    "FA-C436-nakhoda",
+    "FA-C436-arshe",
+    "FA-C436-lenj",
+    "FA-C436-langar-andakhtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch436.txt",
+  "json": "persian/narration/ch436.json",
+  "textHash": "fnv1a64:391132ab2ef4254a",
+  "jsonHash": "fnv1a64:8c433a361c1fbfa2",
+  "findings": []
+}

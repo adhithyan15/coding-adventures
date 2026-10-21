@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:baec1032881de07d",
+  "lessonIds": [
+    "FA-C418-narm-afzar",
+    "FA-C418-sakht-afzar",
+    "FA-C418-fayl",
+    "FA-C418-aplod-kardan",
+    "FA-C418-poshtibani"
+  ],
+  "tex": "persian/book/chapters/ch418-devices-and-software.tex"
+}

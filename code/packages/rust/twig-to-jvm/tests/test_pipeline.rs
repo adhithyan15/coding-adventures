@@ -345,6 +345,7 @@ fn typed_add_function_compiles_via_pipeline() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let config = IIRJvmConfig::new("AddTest");
@@ -376,6 +377,7 @@ fn typed_void_function_compiles_via_pipeline() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let config = IIRJvmConfig::new("VoidTest");

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C377-ahamiyyat-dashtan",
+    "language": "persian",
+    "chapter": 377,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41948c546235dba7"
+  },
+  "findings": []
+}

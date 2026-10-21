@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C397-amadegi",
+    "language": "persian",
+    "chapter": 397,
+    "sequence": 20310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b2489d73f80e4b"
+  },
+  "findings": []
+}

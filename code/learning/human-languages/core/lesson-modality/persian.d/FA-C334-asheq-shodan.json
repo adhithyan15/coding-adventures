@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C334-asheq-shodan",
+    "language": "persian",
+    "chapter": 334,
+    "sequence": 17040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffbbdb4de3e2035f"
+  },
+  "findings": []
+}

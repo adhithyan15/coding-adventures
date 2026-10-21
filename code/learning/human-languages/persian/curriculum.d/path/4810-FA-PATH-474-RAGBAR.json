@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-474-RAGBAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-474-RAGBAR"
+  ],
+  "after": []
+}

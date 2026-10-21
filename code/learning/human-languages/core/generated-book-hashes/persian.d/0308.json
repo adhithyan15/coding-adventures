@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:705d95d5251a1003",
+  "lessonIds": [
+    "FA-C308-gozaresh",
+    "FA-C308-gozaresh-dadan",
+    "FA-C308-gozareshgar",
+    "FA-C308-titr",
+    "FA-C308-akhbar"
+  ],
+  "tex": "persian/book/chapters/ch308-news-and-reports.tex"
+}

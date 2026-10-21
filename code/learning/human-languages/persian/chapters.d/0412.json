@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Investing",
+  "label": "ch:fa-investing",
+  "canDo": "I can talk about capital and investing, shares and the stock exchange, and a company that went bankrupt.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C412-varshekaste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about capital and investing, shares and the stock exchange, and a company that went bankrupt.",
+    "assesses": [
+      "FA-LEX-C412-SARMAYE-03",
+      "FA-LEX-C412-SARMAYE-04",
+      "FA-LEX-C412-SARMAYE-05"
+    ]
+  }
+}

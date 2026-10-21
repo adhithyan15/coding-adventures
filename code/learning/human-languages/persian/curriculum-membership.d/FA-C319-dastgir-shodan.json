@@ -1,0 +1,11 @@
+{
+  "id": "FA-C319-dastgir-shodan",
+  "pathSegment": "FA-PATH-319-MAMUR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-319-MAMUR",
+      "order": 3
+    }
+  ]
+}

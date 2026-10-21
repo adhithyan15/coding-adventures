@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Games",
+  "label": "ch:fa-games",
+  "canDo": "I can talk about board and card games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C509-varaq-bazi-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about board and card games.",
+    "assesses": [
+      "FA-LEX-C509-GAMES-03",
+      "FA-LEX-C509-GAMES-04",
+      "FA-LEX-C509-GAMES-05"
+    ]
+  }
+}

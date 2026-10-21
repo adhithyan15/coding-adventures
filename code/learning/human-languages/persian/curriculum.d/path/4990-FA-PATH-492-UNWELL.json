@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-492-UNWELL",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-492-UNWELL"
+  ],
+  "after": []
+}

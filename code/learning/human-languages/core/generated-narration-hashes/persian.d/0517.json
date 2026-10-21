@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:6657917c6315887e",
+  "lessonIds": [
+    "FA-C517-piyano",
+    "FA-C517-viyolon",
+    "FA-C517-tar",
+    "FA-C517-santur",
+    "FA-C517-tombak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch517.txt",
+  "json": "persian/narration/ch517.json",
+  "textHash": "fnv1a64:abe0b44dbfccb7d7",
+  "jsonHash": "fnv1a64:118c27f6d1eac0d9",
+  "findings": []
+}

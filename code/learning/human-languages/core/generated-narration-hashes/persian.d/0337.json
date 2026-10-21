@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:49fd63f1971c6bb5",
+  "lessonIds": [
+    "FA-C337-marg",
+    "FA-C337-dargozashtan",
+    "FA-C337-fowt-kardan",
+    "FA-C337-dafn-kardan",
+    "FA-C337-qabr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch337.txt",
+  "json": "persian/narration/ch337.json",
+  "textHash": "fnv1a64:e742a9a79865a9df",
+  "jsonHash": "fnv1a64:e3a358bb71736fcd",
+  "findings": []
+}

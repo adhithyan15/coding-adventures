@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 360,
+  "title": "Opinions and beliefs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c04bc0c44cf79a17",
+  "lessons": [
+    {
+      "id": "FA-C360-aqide",
+      "sequence": 18400,
+      "title": "عقیده ('aqide) — an opinion, a belief",
+      "headword": "عقیده",
+      "romanization": "'aqide",
+      "gloss": "an opinion, a belief",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40f758ac1ab09d7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an invoice, then the Persian for a cash machine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عقیده",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عقیده ('aqide) — \"an opinion, a belief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عقیده من این است که او راست میگوید. 'aqide-ye man in ast ke u râst miguyad. My opinion is that he is telling the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural 'aqâyed, an Arabic broken plural. Be 'aqide-ye man — in my opinion, a little more formal than be nazar-e man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عقیده ('aqide) was borrowed from Arabic 'aqīda \"a creed, a firm belief\" (EtymDB). A belief, in this picture, is something you have tied fast."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'aqide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'aqide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'aqide, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'aqide*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'aqide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'aqide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an invoice, then the Persian for a cash machine, then say 'aqide again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an invoice, then the Persian for a cash machine, then say *'aqide* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عقیده ('aqide) mean? (\"An opinion, a belief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C360-didgah",
+      "sequence": 18410,
+      "title": "دیدگاه (didgâh) — a point of view, a viewpoint",
+      "headword": "دیدگاه",
+      "romanization": "didgâh",
+      "gloss": "a point of view, a viewpoint",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b6666c1172102d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a cash machine, then the Persian for an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دیدگاه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دیدگاه (didgâh) — \"a point of view, a viewpoint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "از دیدگاه پدرم، این کار خطرناک است. az didgâh-e pedaram, in kâr khatarnâk ast. From my father's point of view, this is dangerous."
+            },
+            {
+              "kind": "speech",
+              "text": "Az didgâh-e … — from the point of view of …. Plural didgâhhâ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دیدگاه (didgâh) is a native Persian compound built from did \"sight\", the past stem of didan \"to see\", and -gâh \"place\". A point of view is the place you look from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "didgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *didgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "didgâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *didgâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with didgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *didgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a cash machine, then the Persian for an opinion, then say didgâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a cash machine, then the Persian for an opinion, then say *didgâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دیدگاه (didgâh) mean? (\"A point of view, a viewpoint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C360-negaresh",
+      "sequence": 18420,
+      "title": "نگرش (negaresh) — an attitude, an outlook",
+      "headword": "نگرش",
+      "romanization": "negaresh",
+      "gloss": "an attitude, an outlook",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c85b5b138386efb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an opinion, then the Persian for a point of view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نگرش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نگرش (negaresh) — \"an attitude, an outlook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نگرش او به کار عوض شده است. negaresh-e u be kâr 'avaz shode ast. His attitude to work has changed."
+            },
+            {
+              "kind": "speech",
+              "text": "Negaresh be — an attitude towards. Formal and written; in speech people often say tarz-e fekr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نگرش (negaresh) is built on negar-, the present stem of the native verb negaristan \"to look\" (EtymDB lists the verb), with the noun suffix -esh: an attitude is a way of looking."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negaresh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negaresh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negaresh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negaresh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with negaresh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *negaresh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an opinion, then the Persian for a point of view, then say negaresh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an opinion, then the Persian for a point of view, then say *negaresh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نگرش (negaresh) mean? (\"An attitude, an outlook\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C360-motaqed-budan",
+      "sequence": 18430,
+      "title": "معتقد بودن (mo'taqed budan) — to believe, to be convinced",
+      "headword": "معتقد بودن",
+      "romanization": "mo'taqed budan",
+      "gloss": "to believe, to be convinced",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a32db31f420efe5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a point of view, then the Persian for an attitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معتقد بودن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معتقد بودن (mo'taqed budan) — \"to believe, to be convinced\"."
+            },
+            {
+              "kind": "speech",
+              "text": "من معتقدم که ورزش برای همه لازم است. man mo'taqedam ke varzesh barâye hame lâzem ast. I believe that sport is necessary for everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Mo'taqed \"convinced\" + budan \"to be\": mo'taqedam ke … — I believe that …. A belief in something takes be: be chizi mo'taqed budan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معتقد is usually traced to Arabic mu'taqid \"believing, holding firmly\", from the same Arabic family as 'aqīda. Budan \"to be\" is the inherited Persian verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'taqed budan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'taqed budan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'taqed budan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'taqed budan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mo'taqed budan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mo'taqed budan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a point of view, then the Persian for an attitude, then say mo'taqed budan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a point of view, then the Persian for an attitude, then say *mo'taqed budan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معتقد بودن (mo'taqed budan) mean? (\"To believe, to be convinced\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C360-nazariye",
+      "sequence": 18440,
+      "title": "نظریه (nazariye) — a theory",
+      "headword": "نظریه",
+      "romanization": "nazariye",
+      "gloss": "a theory",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:520e060fe1642556",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an attitude, then the Persian for to believe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نظریه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نظریه (nazariye) — \"a theory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این نظریه خیلی قدیمی است. in nazariye kheyli qadimi ast. This theory is very old."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on nazar \"view\" with the suffix -iye. Plural nazariyehâ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نظریه (nazariye) comes from Arabic naẓariyya \"theory\" (EtymDB), built on naẓar \"a look, a view\", the same word that gave Persian nazar. A theory is a way of viewing the facts."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazariye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazariye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazariye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazariye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nazariye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nazariye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an attitude, then the Persian for to believe, then say nazariye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an attitude, then the Persian for to believe, then say *nazariye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نظریه (nazariye) mean? (\"A theory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

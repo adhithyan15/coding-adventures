@@ -1,0 +1,11 @@
+{
+  "id": "FA-C378-padash",
+  "pathSegment": "FA-PATH-378-DASTMOZD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-378-DASTMOZD",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C383-mahsul",
+  "pathSegment": "FA-PATH-383-TOWLID",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-383-TOWLID",
+      "order": 1
+    }
+  ]
+}

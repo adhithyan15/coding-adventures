@@ -732,6 +732,95 @@ pub struct ValidatedCertificateRoleExtensions<'a> {
     extended_key_usage: Option<ExtendedKeyUsage<'a>>,
 }
 
+/// Non-copyable certificate-wide critical-extension and role evidence.
+///
+/// The evidence binds both checks to one exact decoded certificate. Caller
+/// recognition of a critical extension is not semantic validation of that
+/// extension, and this value grants no path, signature, identity, validity,
+/// purpose, trust, revocation, TLS, HTTP, or network authority.
+/// Binding-sensitive downstream APIs must consume this outer evidence rather
+/// than a detached clone of its lower-level role evidence.
+pub struct ValidatedCertificateRolePolicy<'certificate, 'encoded> {
+    certificate: &'certificate X509Certificate<'encoded>,
+    role_extensions: ValidatedCertificateRoleExtensions<'encoded>,
+}
+
+impl<'certificate, 'encoded> ValidatedCertificateRolePolicy<'certificate, 'encoded> {
+    pub const fn certificate(&self) -> &'certificate X509Certificate<'encoded> {
+        self.certificate
+    }
+
+    pub const fn role_extensions(&self) -> &ValidatedCertificateRoleExtensions<'encoded> {
+        &self.role_extensions
+    }
+}
+
+impl fmt::Debug for ValidatedCertificateRolePolicy<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ValidatedCertificateRolePolicy")
+            .field("role", &self.role_extensions.role())
+            .finish_non_exhaustive()
+    }
+}
+
+/// Stable combined critical-extension and role-policy failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificateRolePolicyErrorKind {
+    CriticalExtension(X509CertificatePolicyErrorKind),
+    Role(X509CertificateRoleErrorKind),
+}
+
+/// A redacted certificate-wide critical-extension and role-policy failure.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateRolePolicyError {
+    kind: X509CertificateRolePolicyErrorKind,
+    extension_index: Option<usize>,
+}
+
+impl X509CertificateRolePolicyError {
+    const fn critical(error: X509CertificatePolicyError) -> Self {
+        Self {
+            kind: X509CertificateRolePolicyErrorKind::CriticalExtension(error.kind()),
+            extension_index: Some(error.extension_index()),
+        }
+    }
+
+    const fn role(error: X509CertificateRoleError) -> Self {
+        Self {
+            kind: X509CertificateRolePolicyErrorKind::Role(error.kind()),
+            extension_index: error.extension_index(),
+        }
+    }
+
+    pub const fn kind(self) -> X509CertificateRolePolicyErrorKind {
+        self.kind
+    }
+
+    pub const fn extension_index(self) -> Option<usize> {
+        self.extension_index
+    }
+}
+
+impl fmt::Display for X509CertificateRolePolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.extension_index {
+            Some(index) => write!(
+                formatter,
+                "X.509 certificate role policy error {:?} at extension index {}",
+                self.kind, index
+            ),
+            None => write!(
+                formatter,
+                "X.509 certificate role policy error {:?}",
+                self.kind
+            ),
+        }
+    }
+}
+
+impl Error for X509CertificateRolePolicyError {}
+
 impl<'a> ValidatedCertificateRoleExtensions<'a> {
     pub const fn role(&self) -> X509CertificateRole {
         self.role
@@ -871,7 +960,8 @@ pub fn classify_certificate_self_issued<'certificate, 'encoded>(
 
 /// Authorize one exact Extended Key Usage purpose for end-entity evidence.
 ///
-/// The role evidence must come from [`validate_certificate_role_extensions`].
+/// The role evidence must come from [`validate_certificate_role_extensions`]
+/// directly or through [`ValidatedCertificateRolePolicy::role_extensions`].
 /// Extended Key Usage must be present and contain the exact caller-supplied
 /// OID. No OID, including `anyExtendedKeyUsage`, receives wildcard semantics.
 /// This gate performs no key operation and establishes no certificate trust.
@@ -1093,5 +1183,31 @@ pub fn validate_certificate_role_extensions<'a>(
         basic_constraints: basic_constraints.map(|(_, _, value)| value),
         key_usage: key_usage.map(|(_, value)| value),
         extended_key_usage: extended_key_usage.map(|(_, value)| value),
+    })
+}
+
+/// Validate critical-extension recognition and role semantics for one exact certificate.
+///
+/// Critical extensions are checked first in wire order. Only if every critical
+/// extension is recognized does the role gate decode and enforce Basic
+/// Constraints, Key Usage, and Extended Key Usage under `limits`. Recognition
+/// alone does not semantically validate critical extensions outside that role
+/// gate; the caller must still enforce every such recognized extension before
+/// assigning path or trust authority.
+pub fn validate_certificate_role_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    role: X509CertificateRole,
+    limits: Asn1Limits,
+    recognizes: impl FnMut(ObjectIdentifier<'encoded>) -> bool,
+) -> Result<ValidatedCertificateRolePolicy<'certificate, 'encoded>, X509CertificateRolePolicyError>
+{
+    validate_critical_extensions(certificate, recognizes)
+        .map_err(X509CertificateRolePolicyError::critical)?;
+    let role_extensions = validate_certificate_role_extensions(certificate, role, limits)
+        .map_err(X509CertificateRolePolicyError::role)?;
+
+    Ok(ValidatedCertificateRolePolicy {
+        certificate,
+        role_extensions,
     })
 }

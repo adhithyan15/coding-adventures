@@ -1,0 +1,22 @@
+{
+  "chapter": 297,
+  "title": "Better Than, And Years Ago",
+  "label": "ch:fa-better-than-and-years-ago",
+  "canDo": "I can compare two things with -tar az, name the best with -tarin, say what something is like, and say how long something has lasted or how long ago it happened.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R297-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete FA-R297-comparing-and-time: compare two places and say how long ago and for how long.",
+    "assesses": [
+      "FA-GRAMMAR-COMPARATIVE-TAR-01",
+      "FA-GRAMMAR-SUPERLATIVE-TARIN-01",
+      "FA-LEX-C297-MESL-01",
+      "FA-SCRIPT-C297-SE-01",
+      "FA-GRAMMAR-DURATION-AST-KE-01",
+      "FA-GRAMMAR-PISH-AGO-01"
+    ]
+  }
+}

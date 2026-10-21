@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-430-MAGHSAD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-430-MAGHSAD"
+  ],
+  "after": []
+}

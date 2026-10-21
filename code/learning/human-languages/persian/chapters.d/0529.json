@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Readers and Critics",
+  "label": "ch:fa-readers-and-critics",
+  "canDo": "I can talk about writers, readers and reviews.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C529-kerm-e-ketab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about writers, readers and reviews.",
+    "assesses": [
+      "FA-LEX-C529-READERS-03",
+      "FA-LEX-C529-READERS-04",
+      "FA-LEX-C529-READERS-05"
+    ]
+  }
+}

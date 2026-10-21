@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:71890a453bbee828",
+  "lessonIds": [
+    "FA-C533-mojri",
+    "FA-C533-tanz",
+    "FA-C533-komedi",
+    "FA-C533-pakhsh-shodan",
+    "FA-C533-khire-shodan"
+  ],
+  "tex": "persian/book/chapters/ch533-shows-and-presenters.tex"
+}

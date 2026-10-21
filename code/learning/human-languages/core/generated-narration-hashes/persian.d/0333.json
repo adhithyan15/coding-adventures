@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:bdb1dc3105c3d06b",
+  "lessonIds": [
+    "FA-C333-nowjavani",
+    "FA-C333-danesh-amukhte",
+    "FA-C333-sarbazi",
+    "FA-C333-miyansali",
+    "FA-C333-piri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch333.txt",
+  "json": "persian/narration/ch333.json",
+  "textHash": "fnv1a64:cc1d5d8314e92d32",
+  "jsonHash": "fnv1a64:070cb92fb712ec90",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:3480ebc9a03299d4",
+  "lessonIds": [
+    "FA-C423-pomp-e-benzin",
+    "FA-C423-benzin-zadan",
+    "FA-C423-bak",
+    "FA-C423-tamam-shodan",
+    "FA-C423-karvash"
+  ],
+  "tex": "persian/book/chapters/ch423-filling-up.tex"
+}

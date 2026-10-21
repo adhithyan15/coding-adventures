@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C433-sak",
+    "language": "persian",
+    "chapter": 433,
+    "sequence": 22160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4e12c2aaaf51693"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C349-khiyanat-kardan",
+  "pathSegment": "FA-PATH-349-KHIYANAT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-349-KHIYANAT",
+      "order": 0
+    }
+  ]
+}

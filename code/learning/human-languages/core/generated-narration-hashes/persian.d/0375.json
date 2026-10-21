@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:05e38e2468aae72f",
+  "lessonIds": [
+    "FA-C375-maziyyat",
+    "FA-C375-eyb",
+    "FA-C375-ziyan",
+    "FA-C375-arzesh-dashtan",
+    "FA-C375-natije-dadan",
+    "FA-R375-review-368-375"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch375.txt",
+  "json": "persian/narration/ch375.json",
+  "textHash": "fnv1a64:6aaf94d2135d1e28",
+  "jsonHash": "fnv1a64:7357059c11d57234",
+  "findings": []
+}

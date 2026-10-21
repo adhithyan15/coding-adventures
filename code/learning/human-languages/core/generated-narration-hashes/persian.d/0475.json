@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:017e15723fb5c617",
+  "lessonIds": [
+    "FA-C475-rad-o-barq",
+    "FA-C475-saeqe",
+    "FA-C475-ghorresh-kardan",
+    "FA-C475-tondbad",
+    "FA-C475-gerdbad",
+    "FA-R475-review-468-475"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch475.txt",
+  "json": "persian/narration/ch475.json",
+  "textHash": "fnv1a64:0ca3b4ae8b1f5944",
+  "jsonHash": "fnv1a64:a8cf1eba8c308de6",
+  "findings": []
+}

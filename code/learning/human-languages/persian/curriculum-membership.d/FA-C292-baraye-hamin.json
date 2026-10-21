@@ -1,0 +1,11 @@
+{
+  "id": "FA-C292-baraye-hamin",
+  "pathSegment": "FA-PATH-292-OPINION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-292-OPINION",
+      "order": 1
+    }
+  ]
+}
