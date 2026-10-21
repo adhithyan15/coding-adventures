@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C341-sham",
+    "language": "persian",
+    "chapter": 341,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f38b0c355e016ce6"
+  },
+  "findings": []
+}

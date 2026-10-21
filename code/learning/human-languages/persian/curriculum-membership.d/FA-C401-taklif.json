@@ -1,0 +1,11 @@
+{
+  "id": "FA-C401-taklif",
+  "pathSegment": "FA-PATH-401-MORUR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-401-MORUR",
+      "order": 4
+    }
+  ]
+}

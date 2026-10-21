@@ -1,0 +1,11 @@
+{
+  "id": "FA-C334-khastegari-kardan",
+  "pathSegment": "FA-PATH-334-ASHEQ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-334-ASHEQ",
+      "order": 2
+    }
+  ]
+}

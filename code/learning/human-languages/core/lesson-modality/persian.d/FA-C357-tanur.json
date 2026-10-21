@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C357-tanur",
+    "language": "persian",
+    "chapter": 357,
+    "sequence": 18260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfa743dfb5452bb8"
+  },
+  "findings": []
+}

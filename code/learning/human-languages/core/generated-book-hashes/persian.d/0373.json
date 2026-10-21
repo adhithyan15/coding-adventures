@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:6ce3f3539a59fc57",
+  "lessonIds": [
+    "FA-C373-afzayesh",
+    "FA-C373-afzayesh-yaftan",
+    "FA-C373-kahesh",
+    "FA-C373-kahesh-dadan",
+    "FA-C373-roshd-kardan"
+  ],
+  "tex": "persian/book/chapters/ch373-rising-and-falling.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C310-peygiri-kardan",
+  "pathSegment": "FA-PATH-310-TAKZIB",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-310-TAKZIB",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-321-QASAM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-321-QASAM"
+  ],
+  "after": []
+}

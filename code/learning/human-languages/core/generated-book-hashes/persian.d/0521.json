@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:0bb0bc7925541392",
+  "lessonIds": [
+    "FA-C521-sher",
+    "FA-C521-shaer",
+    "FA-C521-ghazal",
+    "FA-C521-robai",
+    "FA-C521-beyt"
+  ],
+  "tex": "persian/book/chapters/ch521-poetry.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:1e7406f3a64c8de3",
+  "lessonIds": [
+    "FA-C411-qarz-gereftan",
+    "FA-C411-qarz-dadan",
+    "FA-C411-bedehi",
+    "FA-C411-bedehkar",
+    "FA-C411-talabkar"
+  ],
+  "tex": "persian/book/chapters/ch411-borrowing-and-lending.tex"
+}

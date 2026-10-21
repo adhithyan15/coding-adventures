@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Manners and Temperament",
+  "label": "ch:fa-manners-and-temperament",
+  "canDo": "I can describe manners and temperament.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C489-maskhare-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can describe manners and temperament.",
+    "assesses": [
+      "FA-LEX-C489-MANNERS-03",
+      "FA-LEX-C489-MANNERS-04",
+      "FA-LEX-C489-MANNERS-05"
+    ]
+  }
+}

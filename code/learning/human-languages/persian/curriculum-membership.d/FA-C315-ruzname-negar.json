@@ -1,0 +1,11 @@
+{
+  "id": "FA-C315-ruzname-negar",
+  "pathSegment": "FA-PATH-315-KHABARFOWRI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-315-KHABARFOWRI",
+      "order": 1
+    }
+  ]
+}

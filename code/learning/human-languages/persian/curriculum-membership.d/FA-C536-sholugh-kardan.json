@@ -1,0 +1,11 @@
+{
+  "id": "FA-C536-sholugh-kardan",
+  "pathSegment": "FA-PATH-536-CHORES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-536-CHORES",
+      "order": 2
+    }
+  ]
+}

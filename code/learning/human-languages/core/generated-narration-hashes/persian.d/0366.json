@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:673cba5fe2fcb878",
+  "lessonIds": [
+    "FA-C366-bahs",
+    "FA-C366-bahs-kardan",
+    "FA-C366-mozakere",
+    "FA-C366-eteraz",
+    "FA-C366-mesal-zadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch366.txt",
+  "json": "persian/narration/ch366.json",
+  "textHash": "fnv1a64:de7bc038d1fa5df1",
+  "jsonHash": "fnv1a64:93ac206819d78ba8",
+  "findings": []
+}

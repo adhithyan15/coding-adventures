@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-473-HAVASHENASI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a forecast: the climate, the weather service, degrees, changes in the weather and below zero.",
+  "prerequisites": []
+}

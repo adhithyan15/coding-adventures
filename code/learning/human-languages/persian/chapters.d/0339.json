@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Getting ready for Nowruz",
+  "label": "ch:fa-getting-ready-for-nowruz",
+  "canDo": "I can talk about getting ready for the New Year: the festival, spring cleaning, samanu, oleaster and the goldfish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R339-review-332-339",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can talk about getting ready for the New Year: the festival, spring cleaning, samanu, oleaster and the goldfish.",
+    "assesses": [
+      "FA-LEX-C339-EYD-03",
+      "FA-LEX-C339-EYD-04",
+      "FA-LEX-C339-EYD-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-422-KAPUT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-422-KAPUT"
+  ],
+  "after": []
+}

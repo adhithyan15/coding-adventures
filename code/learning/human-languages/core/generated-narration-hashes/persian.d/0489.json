@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:5de44a7cda57982f",
+  "lessonIds": [
+    "FA-C489-moaddab",
+    "FA-C489-biadab",
+    "FA-C489-zudranj",
+    "FA-C489-kamru",
+    "FA-C489-maskhare-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch489.txt",
+  "json": "persian/narration/ch489.json",
+  "textHash": "fnv1a64:459f974212350d80",
+  "jsonHash": "fnv1a64:aed875aa1755884b",
+  "findings": []
+}

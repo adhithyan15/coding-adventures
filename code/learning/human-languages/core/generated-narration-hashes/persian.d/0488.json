@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:d657fb659354e444",
+  "lessonIds": [
+    "FA-C488-bahush",
+    "FA-C488-shukh",
+    "FA-C488-khosh-akhlaq",
+    "FA-C488-sekhavatmand",
+    "FA-C488-delsuz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch488.txt",
+  "json": "persian/narration/ch488.json",
+  "textHash": "fnv1a64:9b1bd57cde73fefb",
+  "jsonHash": "fnv1a64:a4a5e86d859ca68b",
+  "findings": []
+}

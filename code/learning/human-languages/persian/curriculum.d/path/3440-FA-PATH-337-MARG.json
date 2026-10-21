@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-337-MARG",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-337-MARG"
+  ],
+  "after": []
+}

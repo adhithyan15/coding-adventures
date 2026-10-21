@@ -1,0 +1,11 @@
+{
+  "id": "FA-C302-payan",
+  "pathSegment": "FA-PATH-302-AGHAZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-302-AGHAZ",
+      "order": 2
+    }
+  ]
+}

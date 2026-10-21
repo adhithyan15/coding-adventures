@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:7866bb1d69cc4a64",
+  "lessonIds": [
+    "FA-C442-ozrkhahi-kardan",
+    "FA-C442-jobran-kardan",
+    "FA-C442-taviz-kardan",
+    "FA-C442-pas-gereftan",
+    "FA-C442-bargardandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch442.txt",
+  "json": "persian/narration/ch442.json",
+  "textHash": "fnv1a64:4c2b0b545d55eb7f",
+  "jsonHash": "fnv1a64:eee96e4f052988be",
+  "findings": []
+}

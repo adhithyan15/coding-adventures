@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:2fc547496c27484f",
+  "lessonIds": [
+    "FA-C506-ers-bordan",
+    "FA-C506-shebahat-dashtan",
+    "FA-C506-sar-zadan",
+    "FA-C506-raft-o-amad-kardan",
+    "FA-C506-aberu"
+  ],
+  "tex": "persian/book/chapters/ch506-family-ties.tex"
+}

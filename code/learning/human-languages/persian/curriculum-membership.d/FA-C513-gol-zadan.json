@@ -1,0 +1,11 @@
+{
+  "id": "FA-C513-gol-zadan",
+  "pathSegment": "FA-PATH-513-SCORES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-513-SCORES",
+      "order": 4
+    }
+  ]
+}

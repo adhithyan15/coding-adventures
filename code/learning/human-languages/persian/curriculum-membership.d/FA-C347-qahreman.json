@@ -1,0 +1,11 @@
+{
+  "id": "FA-C347-qahreman",
+  "pathSegment": "FA-PATH-347-AFSANE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-347-AFSANE",
+      "order": 2
+    }
+  ]
+}

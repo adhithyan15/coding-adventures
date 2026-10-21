@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:0636db50e1ecfb22",
+  "lessonIds": [
+    "FA-C444-neshani",
+    "FA-C444-pors-o-ju-kardan",
+    "FA-C444-balad-budan",
+    "FA-C444-gom-shodan",
+    "FA-C444-neshane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch444.txt",
+  "json": "persian/narration/ch444.json",
+  "textHash": "fnv1a64:ba29ad7116e73884",
+  "jsonHash": "fnv1a64:024ce41835b6d8a1",
+  "findings": []
+}

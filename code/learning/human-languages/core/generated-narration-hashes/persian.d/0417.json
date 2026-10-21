@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:3052baef7e7aeaf5",
+  "lessonIds": [
+    "FA-C417-shabake",
+    "FA-C417-shabake-ye-ejtemai",
+    "FA-C417-ettesal",
+    "FA-C417-dastresi",
+    "FA-C417-majazi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch417.txt",
+  "json": "persian/narration/ch417.json",
+  "textHash": "fnv1a64:7b295716b0c93fa0",
+  "jsonHash": "fnv1a64:56bbb80aae66938f",
+  "findings": []
+}

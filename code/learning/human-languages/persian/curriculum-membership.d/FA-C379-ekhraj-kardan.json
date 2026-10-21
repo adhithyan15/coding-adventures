@@ -1,0 +1,11 @@
+{
+  "id": "FA-C379-ekhraj-kardan",
+  "pathSegment": "FA-PATH-379-ESTEFA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-379-ESTEFA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:386b68dff8079943",
+  "lessonIds": [
+    "FA-C400-daneshkade",
+    "FA-C400-shahriye",
+    "FA-C400-pazirofte-shodan",
+    "FA-C400-bursiye",
+    "FA-C400-vahed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch400.txt",
+  "json": "persian/narration/ch400.json",
+  "textHash": "fnv1a64:e8886357717f8bb5",
+  "jsonHash": "fnv1a64:741bb7e4a8ab215e",
+  "findings": []
+}

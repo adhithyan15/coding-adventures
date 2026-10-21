@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:88dbcd292d5194d6",
+  "lessonIds": [
+    "FA-C321-qasam-khordan",
+    "FA-C321-shahadat-dadan",
+    "FA-C321-eqrar-kardan",
+    "FA-C321-low-dadan",
+    "FA-C321-gonahkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch321.txt",
+  "json": "persian/narration/ch321.json",
+  "textHash": "fnv1a64:a2d9df67a2d3bfa8",
+  "jsonHash": "fnv1a64:33a551203f6a642d",
+  "findings": []
+}

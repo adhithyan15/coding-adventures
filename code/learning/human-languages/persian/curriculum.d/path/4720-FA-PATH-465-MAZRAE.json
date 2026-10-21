@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-465-MAZRAE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-465-MAZRAE"
+  ],
+  "after": []
+}

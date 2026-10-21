@@ -1,0 +1,11 @@
+{
+  "id": "FA-C498-chaq-shodan",
+  "pathSegment": "FA-PATH-498-WEIGHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-498-WEIGHT",
+      "order": 1
+    }
+  ]
+}

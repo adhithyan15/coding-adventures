@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:3586a67723f60d5e",
+  "lessonIds": [
+    "FA-C504-dusti",
+    "FA-C504-dust-shodan",
+    "FA-C504-rabete",
+    "FA-C504-gharibe",
+    "FA-C504-hamdigar"
+  ],
+  "tex": "persian/book/chapters/ch504-friends.tex"
+}

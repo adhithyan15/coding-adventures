@@ -1,0 +1,11 @@
+{
+  "id": "FA-C338-vasiyat",
+  "pathSegment": "FA-PATH-338-KHATM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-338-KHATM",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "First, then and in the end",
+  "label": "ch:fa-first-then-and-in-the-end",
+  "canDo": "I can order the steps of a story: at first, first of all, then, at the very end and ultimately.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C303-dar-nahayat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can order the steps of a story: at first, first of all, then, at the very end and ultimately.",
+    "assesses": [
+      "FA-LEX-C303-EBTEDA-03",
+      "FA-LEX-C303-EBTEDA-04",
+      "FA-LEX-C303-EBTEDA-05"
+    ]
+  }
+}

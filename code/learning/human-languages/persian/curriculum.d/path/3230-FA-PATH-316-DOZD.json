@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-316-DOZD",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-316-DOZD"
+  ],
+  "after": []
+}

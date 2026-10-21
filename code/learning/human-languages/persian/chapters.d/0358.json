@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "On the stove",
+  "label": "ch:fa-on-the-stove",
+  "canDo": "I can talk about a pot, water coming to the boil, simmering, a stew that is well cooked, and a slotted spoon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C358-kafgir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about a pot, water coming to the boil, simmering, a stew that is well cooked, and a slotted spoon.",
+    "assesses": [
+      "FA-LEX-C358-QABLAME-03",
+      "FA-LEX-C358-QABLAME-04",
+      "FA-LEX-C358-QABLAME-05"
+    ]
+  }
+}

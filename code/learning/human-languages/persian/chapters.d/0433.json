@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Packing and goodbyes",
+  "label": "ch:fa-packing-and-goodbyes",
+  "canDo": "I can talk about leaving and arriving: a travel bag, packing, seeing someone off, meeting someone and hurrying.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C433-ajale-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about leaving and arriving: a travel bag, packing, seeing someone off, meeting someone and hurrying.",
+    "assesses": [
+      "FA-LEX-C433-SAK-03",
+      "FA-LEX-C433-SAK-04",
+      "FA-LEX-C433-SAK-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C291-vaqti",
+  "pathSegment": "FA-PATH-291-STORY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-291-STORY",
+      "order": 3
+    }
+  ]
+}

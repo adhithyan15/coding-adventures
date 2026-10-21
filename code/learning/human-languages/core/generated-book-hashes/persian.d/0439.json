@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:97863235d6e9adc2",
+  "lessonIds": [
+    "FA-C439-malafe",
+    "FA-C439-rutakhti",
+    "FA-C439-kuler",
+    "FA-C439-shufazh",
+    "FA-C439-manzare"
+  ],
+  "tex": "persian/book/chapters/ch439-in-the-room.tex"
+}

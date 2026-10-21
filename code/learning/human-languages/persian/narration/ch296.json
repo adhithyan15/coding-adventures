@@ -1,0 +1,789 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 296,
+  "title": "Glad, Tired, Hopeful",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e1015b8deb2abd94",
+  "lessons": [
+    {
+      "id": "FA-C296-khoshhal-budam",
+      "sequence": 15132,
+      "title": "خوشحال بودم (khoshhâl budam) — I was happy, and I became happy",
+      "headword": "خوشحال بودم",
+      "romanization": "khoshhâl budam",
+      "gloss": "I was happy — a feeling as scene with budam, and as event with shodam, 'I became'",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18c553952aafd920",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"happy\", \"tired\", \"upset\". (Khoshhâl, khaste, nârâhat.) Then \"to become\". (Shodan.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say what happened on a trip. Describing it means saying how it felt, and Persian gives a feeling two pasts as well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the feeling as scene",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The adjective, then budan in the past:"
+            },
+            {
+              "kind": "speech",
+              "text": "خوشحال بودم. — khoshhâl budam — I was happy."
+            },
+            {
+              "kind": "speech",
+              "text": "Khaste budam, I was tired; nârâhat budim, we were upset; shâd bud, she was cheerful. The adjective stays the same for every person, and the ending rides on bud-. This is the feeling as background, there for a while."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the feeling as event",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Swap budan for shodan, \"to become\", and the feeling arrives at a moment:"
+            },
+            {
+              "kind": "speech",
+              "text": "خسته شدم. — khaste shodam — I got tired."
+            },
+            {
+              "kind": "speech",
+              "text": "وقتی قطار را از دست دادم، ناراحت شدم. — vaqti qatâr râ az dast dâdam, nârâhat shodam — When I missed the train, I got upset."
+            },
+            {
+              "kind": "speech",
+              "text": "The cause can come with az, \"from\", and the infinitive works as a noun:"
+            },
+            {
+              "kind": "speech",
+              "text": "از دیدن شما خوشحال شدم. — az didan-e shomâ khoshhâl shodam — I was glad to see you."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"from the seeing of you I became happy\". It is a thing people say at the end of a first meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "So khoshhâl budam is the mood of the whole day, and khoshhâl shodam is the moment the news arrived."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Shodan is usually traced to Middle Persian šudan, \"to go\". Becoming is going into a state: khaste shodam is \"I went tired\". Khoshhâl is khosh, \"good\", with hâl, \"state\", the same hâl as in hâl-e shomâ chetor ast?"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was happy\", then \"I was tired\" — khoshhâl budam, khaste budam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was happy\", then \"I was tired\" — *khoshhâl budam*, *khaste budam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I got tired\" — khaste shodam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I got tired\" — *khaste shodam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaqti qatâr râ az dast dâdam, nârâhat shodam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaqti qatâr râ az dast dâdam, nârâhat shodam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at the end of a first meeting — az didan-e shomâ khoshhâl shodam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at the end of a first meeting — *az didan-e shomâ khoshhâl shodam*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which is the mood of the day, khoshhâl budam or khoshhâl shodam? (Budam: scene.) Which is the moment? (Shodam: event.) \"I was glad to see you\"? (Az didan-e shomâ khoshhâl shodam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C296-ghaza",
+      "sequence": 15140,
+      "title": "غذا (ghazâ) — food, and how it was",
+      "headword": "غذا",
+      "romanization": "ghazâ",
+      "gloss": "food; a meal — the word for what you ate, and how it was",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a17a8fd6cf83811",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was happy\", then \"I got tired\". (Khoshhâl budam, khaste shodam.) Then \"delicious\". (Khoshmaze.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Talk about a trip, and sooner or later the food comes up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غذا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غذا — ghazâ — \"food\", and \"a meal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غذای این رستوران خیلی خوشمزه بود. — ghazâ-ye in resturân kheyli khoshmaze bud — The food at this restaurant was very tasty."
+            },
+            {
+              "kind": "speech",
+              "text": "After its long â the ezafe is -ye, and here it is written, as ی: غذای. Ghazâ khordan is \"to eat, to have a meal\": ghazâ khordim, we ate."
+            },
+            {
+              "kind": "speech",
+              "text": "Say gha-zâ, with the gh far back, like a soft gargle. Its first letter is new, and the next lesson puts it in your hand. The second is ذ, which you wrote in chapter two hundred and ninety."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghazâ is borrowed from Arabic ghidhāʾ, \"nourishment, food\" (EtymDB 2.1). Arabic says its middle letter as the th of English this. Persian kept the letter ذ in the spelling and says it z, which is why ghazâ sounds nothing like the Arabic it is spelled from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazâ, with the gh far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazâ*, with the *gh* far back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazâ-ye in resturân kheyli khoshmaze bud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazâ-ye in resturân kheyli khoshmaze bud*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"we ate\", with the noun — ghazâ khordim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"we ate\", with the noun — *ghazâ khordim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opinion of a meal — be nazar-e man ghazâ khoshmaze bud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opinion of a meal — *be nazar-e man ghazâ khoshmaze bud*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Food\"? (Ghazâ.) How is the ezafe written after it? (-ye, as ی: غذای.) Which letter of غذا (ghazâ) sounds z? (ذ, zâl.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W296-gheyn",
+      "sequence": 15148,
+      "title": "غ (gheyn) — the letter that opens غذا (ghazâ)",
+      "headword": "غ",
+      "romanization": "gheyn",
+      "gloss": "gheyn — the letter that opens غذا",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:5c54ff362b62e89b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: غ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: غ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ع and ق once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say غذا (ghazâ), \"food\". You met it a moment ago. This lesson takes its first letter out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: غ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غ — gheyn, the sound gh, made far back, like a soft gargle."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens غذا (ghazâ), in its opening shape, غـ, joined to ذ. It is ع with one dot above, and it changes shape the same way: an open hook at the start, a small closed loop in the middle, a tail at the end."
+            },
+            {
+              "kind": "speech",
+              "text": "In Tehran speech غ (gheyn) and ق sound alike: ghazâ and qatâr open on the same sound. Spelling keeps them apart, and so does this book's romanization: ق is written q, as in qatâr, and غ (gheyn) is written gh, as in ghazâ. Each word has to be learned with its own letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: غ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on غ (gheyn) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "غ (gheyn) at the start of غذا (ghazâ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: غ at the start of **غذا**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "غ (gheyn) standing alone three times, saying gh as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: غ standing alone three times, saying *gh* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ع, then غ (gheyn), from memory: one dot apart",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ع, then غ, from memory: one dot apart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "غذا (ghazâ), then قطار: one sound, two letters",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **غذا**, then **قطار**: one sound, two letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "غذا (ghazâ) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **غذا** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — غ? (gheyn, gh.) Which word did it come from? (غذا, ghazâ, \"food\".) Which other letter sounds the same in Tehran? (ق, written q.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C296-omidvaram-ke",
+      "sequence": 15156,
+      "title": "امیدوارم که (omidvâram ke) — I hope that, I'd like to, I dream of",
+      "headword": "امیدوارم که",
+      "romanization": "omidvâram ke",
+      "gloss": "I hope that — omidvâr with the -am of khubam, and the subjunctive after it; with dust dâram and ârezu dâram for what you would like and dream of",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3765d6f27f5f7446",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to hope\", then \"I want to go\". (Omidvâr budan, mikhâham beravam.) Then \"I'm well\", in one word. (Khubam.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Describing an experience runs forward as well as back: what you hope for next, and what you would like to become."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: omidvâram ke, and the subjunctive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Omidvâr takes the -am of khubam: امیدوارم, omidvâram, \"I am hopeful\", \"I hope\". What you hope for follows ke in the subjunctive, because it has not happened:"
+            },
+            {
+              "kind": "speech",
+              "text": "امیدوارم که سال دیگر به تهران بروم. — omidvâram ke sâl-e digar be Tehrân beravam — I hope to go to Tehran next year."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter one hundred and thirty-eight showed omidvâram hâlat khub bâshad, \"I hope you are well\". The bâshad there is this subjunctive, and the ke has been left out, as speech often does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what you'd like, and what you dream of",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dust dâram, \"I like\", with a subjunctive after it is \"I'd like to\":"
+            },
+            {
+              "kind": "speech",
+              "text": "دوست دارم مهندس بشوم. — dust dâram mohandes beshavam — I'd like to become an engineer."
+            },
+            {
+              "kind": "speech",
+              "text": "Beshavam is shodan in the subjunctive, on its stem shav-; in speech it is shortened to besham. Ârezu, \"a wish, a dream\", works the same way with dâram:"
+            },
+            {
+              "kind": "speech",
+              "text": "آرزو دارم که یک روز خلبان بشوم. — ârezu dâram ke yek ruz khalabân beshavam — My dream is to become a pilot one day."
+            },
+            {
+              "kind": "speech",
+              "text": "So three strengths: mikhâham, I want; dust dâram, I'd like; ârezu dâram, I dream of. All three take the subjunctive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omidvâram ke sâl-e digar be Tehrân beravam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omidvâram ke sâl-e digar be Tehrân beravam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'd like to become an engineer\" — dust dâram mohandes beshavam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'd like to become an engineer\" — *dust dâram mohandes beshavam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dream of your own, with ârezu dâram ke and beshavam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dream of your own, with *ârezu dâram ke* and *beshavam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a meal, then a hope — ghazâ khoshmaze bud. omidvâram ke dobâre beravim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a meal, then a hope — *ghazâ khoshmaze bud. omidvâram ke dobâre beravim*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is omidvâram, taken apart? (Omidvâr with -am, \"I am\".) Why is the verb after it in the subjunctive? (The hoped-for thing has not happened.) Which letter opens غذا (ghazâ)? (غ, gheyn.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R296-feelings-and-hopes",
+      "sequence": 15164,
+      "title": "Review — how it felt, and what you hope for",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "how a day felt and what comes next — budam and shodam for the feeling, ghazâ for the meal, omidvâram ke and dust dâram for the hope",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec4677bb234dd5c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was tired\", then \"I got tired\". (Khaste budam, khaste shodam.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and an experience now has its colour. Budam gives the feeling of a whole stretch; shodam gives the moment it arrived. Ghazâ brings in the meal, and omidvâram ke, dust dâram and ârezu dâram carry the hope forward, each with the subjunctive after it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Back to the bad morning at the station, told as an experience:"
+            },
+            {
+              "kind": "speech",
+              "text": "qatâr râ az dast dâdam va nârâhat shodam. ba'd mas'ul-e istgâh bilit-e fardâ râ be man dâd, barâ-ye hamin khoshhâl shodam. ghazâ-ye istgâh khoshmaze bud. omidvâram ke fardâ dir naresam."
+            },
+            {
+              "kind": "speech",
+              "text": "The last verb, naresam, is the subjunctive with na-: \"that I don't arrive\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the station morning, told as an experience, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the station morning, told as an experience, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a whole day as mood — ruz khub bud, the day was good, then khoshhâl budam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a whole day as mood — *ruz khub bud*, the day was good, then *khoshhâl budam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something you'd like, and something you dream of — dust dâram..., ârezu dâram ke...",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something you'd like, and something you dream of — *dust dâram...*, *ârezu dâram ke...*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hope at the end — omidvâram ke fardâ dir naresam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hope at the end — *omidvâram ke fardâ dir naresam*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which tells the mood of a day, budam or shodam? (Budam.) \"I hope I won't be late tomorrow\"? (Omidvâram ke fardâ dir naresam.) Which two letters of this run are new to your hand? (غ (gheyn) in غذا (ghazâ), ئ in مسئول.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

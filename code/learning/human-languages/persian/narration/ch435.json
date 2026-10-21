@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 435,
+  "title": "Taxis and porters",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:850f26749b322de1",
+  "lessons": [
+    {
+      "id": "FA-C435-darbast",
+      "sequence": 22260,
+      "title": "دربست (darbast) — a private hire (a taxi taken for yourself alone)",
+      "headword": "دربست",
+      "romanization": "darbast",
+      "gloss": "a private hire (a taxi taken for yourself alone)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4eff6ab6fb4c1942",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to get a seat, then the Persian for to miss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دربست",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دربست (darbast) — \"a private hire (a taxi taken for yourself alone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تا فرودگاه دربست گرفتیم. Tâ forudgâh darbast gereftim. We took a private taxi to the airport."
+            },
+            {
+              "kind": "speech",
+              "text": "A shared taxi picks up several people on a fixed route; darbast means you hire the whole car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "darbast is usually analysed as a native compound of dar 'in' and bast 'closed', the past stem of bastan 'to tie, to close', which EtymDB traces to the PIE root bʰendʰ-: the whole car, closed to others."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darbast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darbast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darbast, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darbast*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with darbast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *darbast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to get a seat, then the Persian for to miss, then say darbast again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to get a seat, then the Persian for to miss, then say *darbast* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دربست (darbast) mean? (\"A private hire (a taxi taken for yourself alone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C435-azhans",
+      "sequence": 22270,
+      "title": "آژانس (âzhâns) — a car service, a minicab office; an agency",
+      "headword": "آژانس",
+      "romanization": "âzhâns",
+      "gloss": "a car service, a minicab office; an agency",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9aeaa157f261bcfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to miss, then the Persian for a private hire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آژانس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آژانس (âzhâns) — \"a car service, a minicab office; an agency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شب دیر بود و آژانس گرفتیم. Shab dir bud va âzhâns gereftim. It was late at night and we called a car service."
+            },
+            {
+              "kind": "speech",
+              "text": "Âzhâns-e mosâferati — a travel agency."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âzhâns was borrowed from French agence 'agency' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âzhâns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âzhâns*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âzhâns, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âzhâns*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âzhâns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âzhâns*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to miss, then the Persian for a private hire, then say âzhâns again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to miss, then the Persian for a private hire, then say *âzhâns* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آژانس (âzhâns) mean? (\"A car service, a minicab office; an agency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C435-mosaferbari",
+      "sequence": 22280,
+      "title": "مسافربری (mosâferbari) — a coach company; passenger transport",
+      "headword": "مسافربری",
+      "romanization": "mosâferbari",
+      "gloss": "a coach company; passenger transport",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6816053817022fe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a private hire, then the Persian for a car service."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسافربری",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسافربری (mosâferbari) — \"a coach company; passenger transport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بلیت اتوبوس را از مسافربری خریدیم. Bilit-e otobus râ az mosâferbari kharidim. We bought the bus ticket from the coach company."
+            },
+            {
+              "kind": "speech",
+              "text": "mosâfer 'passenger' + bar 'carrying' + -i."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mosâferbari is built from mosâfer 'traveller', borrowed from Arabic musāfir, and native bar, the present stem of bordan 'to carry', with the ending -i."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mosâferbari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mosâferbari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mosâferbari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mosâferbari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mosâferbari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mosâferbari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a private hire, then the Persian for a car service, then say mosâferbari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a private hire, then the Persian for a car service, then say *mosâferbari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسافربری (mosâferbari) mean? (\"A coach company; passenger transport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C435-barbar",
+      "sequence": 22290,
+      "title": "باربر (bârbar) — a porter",
+      "headword": "باربر",
+      "romanization": "bârbar",
+      "gloss": "a porter",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34bbb926bc226ffe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a car service, then the Persian for a coach company."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: باربر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باربر (bârbar) — \"a porter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "باربر (bârbar) چمدانهای ما را تا تاکسی برد. Bârbar chamedân-hâ-ye mâ râ tâ tâksi bord. The porter took our suitcases to the taxi."
+            },
+            {
+              "kind": "speech",
+              "text": "bâr 'load' + bar 'carrier'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bârbar is a native compound of bâr 'load', which EtymDB lists, and bar, the present stem of bordan 'to carry': a load-carrier."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bârbar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bârbar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bârbar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bârbar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bârbar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bârbar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a car service, then the Persian for a coach company, then say bârbar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a car service, then the Persian for a coach company, then say *bârbar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does باربر (bârbar) mean? (\"A porter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C435-resandan",
+      "sequence": 22300,
+      "title": "رساندن (resândan) — to give someone a lift, to drop off; to deliver",
+      "headword": "رساندن",
+      "romanization": "resândan",
+      "gloss": "to give someone a lift, to drop off; to deliver",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8162f55a1398215d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a coach company, then the Persian for a porter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رساندن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رساندن (resândan) — \"to give someone a lift, to drop off; to deliver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "همکارم مرا با ماشینش تا خانه رساند. Hamkâram marâ bâ mâshinash tâ khâne resând. My colleague gave me a lift home in his car."
+            },
+            {
+              "kind": "speech",
+              "text": "The causative of residan 'to arrive': to make someone arrive. Present stem resân-: miresânam."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "resândan is built on residan 'to arrive', usually traced to Middle Persian rasīdan, with the causative ending -ândan: to make arrive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "resândan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *resândan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "resândan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *resândan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with resândan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *resândan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a coach company, then the Persian for a porter, then say resândan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a coach company, then the Persian for a porter, then say *resândan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رساندن (resândan) mean? (\"To give someone a lift, to drop off; to deliver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R435-review-428-435",
+      "sequence": 22310,
+      "title": "Words from chapters 428–435 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 428-435",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6d5d5f87215d626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a pedestrian and a motorcycle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pedestrian, a motorcycle, a lorry, a pickup, to run over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pedestrian, a motorcycle, a lorry, a pickup, to run over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a railway, a platform, a carriage, a compartment, a rail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a railway, a platform, a carriage, a compartment, a rail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a destination, a delay, to be cancelled, to be late, a loudspeaker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a destination, a delay, to be cancelled, to be late, a loudspeaker]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flight, to fly, to land, an airline, a boarding pass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flight, to fly, to land, an airline, a boarding pass]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a gate, a passport, excess baggage, to search, a flight attendant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a gate, a passport, excess baggage, to search, a flight attendant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a holdall, to pack, to see off, to meet, to hurry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a holdall, to pack, to see off, to meet, to hurry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an escalator, a route, a fare, to get a seat, to miss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an escalator, a route, a fare, to get a seat, to miss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a private hire, a car service, a coach company, a porter, to give someone a lift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a private hire, a car service, a coach company, a porter, to give someone a lift]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A pedestrian? (عابر پیاده.) A motorcycle? (موتورسیکلت.) A lorry? (کامیون.) A pickup? (وانت.) To run over? (زیر گرفتن.) A railway? (راه آهن.) A platform? (سکو.) A carriage? (واگن.) A compartment? (کوپه.) A rail? (ریل.) A destination? (مقصد.) A delay? (تاخیر.) To be cancelled? (لغو شدن.) To be late? (دیر کردن.) A loudspeaker? (بلندگو.) A flight? (پرواز.) To fly? (پرواز کردن.) To land? (فرود آمدن.) An airline? (هواپیمایی.) A boarding pass? (کارت پرواز.) A gate? (گیت.) A passport? (گذرنامه.) Excess baggage? (اضافه بار.) To search? (بازرسی کردن.) A flight attendant? (مهماندار.) A holdall? (ساک.) To pack? (بار بستن.) To see off? (بدرقه کردن.) To meet? (استقبال کردن.) To hurry? (عجله کردن.) An escalator? (پله برقی.) A route? (مسیر.) A fare? (کرایه.) To get a seat? (جا گرفتن.) To miss? (جا ماندن.) A private hire? (دربست (darbast).) A car service? (آژانس (âzhâns).) A coach company? (مسافربری (mosâferbari).) A porter? (باربر (bârbar).) To give someone a lift? (رساندن (resândan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

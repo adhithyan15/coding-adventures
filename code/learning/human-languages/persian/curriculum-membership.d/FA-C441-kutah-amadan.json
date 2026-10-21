@@ -1,0 +1,11 @@
+{
+  "id": "FA-C441-kutah-amadan",
+  "pathSegment": "FA-PATH-441-DARKHAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-441-DARKHAST",
+      "order": 3
+    }
+  ]
+}

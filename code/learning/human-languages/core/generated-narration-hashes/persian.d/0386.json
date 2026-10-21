@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:3f346ea030feb9cd",
+  "lessonIds": [
+    "FA-C386-barabari",
+    "FA-C386-nabarabari",
+    "FA-C386-edalat",
+    "FA-C386-faqr",
+    "FA-C386-servat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch386.txt",
+  "json": "persian/narration/ch386.json",
+  "textHash": "fnv1a64:d2c29438c210e3f8",
+  "jsonHash": "fnv1a64:1098068ce4ae06b9",
+  "findings": []
+}

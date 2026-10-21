@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:735c91c659f15f7d",
+  "lessonIds": [
+    "FA-C409-hokumat",
+    "FA-C409-siyasat",
+    "FA-C409-entekhabat",
+    "FA-C409-ray-dadan",
+    "FA-C409-majles"
+  ],
+  "tex": "persian/book/chapters/ch409-government-and-elections.tex"
+}

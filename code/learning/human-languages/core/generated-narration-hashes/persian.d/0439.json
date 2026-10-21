@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:546132695c7d1b8c",
+  "lessonIds": [
+    "FA-C439-malafe",
+    "FA-C439-rutakhti",
+    "FA-C439-kuler",
+    "FA-C439-shufazh",
+    "FA-C439-manzare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch439.txt",
+  "json": "persian/narration/ch439.json",
+  "textHash": "fnv1a64:021b7ac38fdfb8aa",
+  "jsonHash": "fnv1a64:79537d15fc102439",
+  "findings": []
+}

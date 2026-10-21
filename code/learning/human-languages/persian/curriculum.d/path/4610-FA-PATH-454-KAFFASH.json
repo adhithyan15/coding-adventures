@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-454-KAFFASH",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-454-KAFFASH"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C394-khatar-kardan",
+  "pathSegment": "FA-PATH-394-RISK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-394-RISK",
+      "order": 4
+    }
+  ]
+}

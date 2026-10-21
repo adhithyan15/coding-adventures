@@ -1,0 +1,11 @@
+{
+  "id": "FA-C317-low-raftan",
+  "pathSegment": "FA-PATH-317-TAQIB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-317-TAQIB",
+      "order": 4
+    }
+  ]
+}

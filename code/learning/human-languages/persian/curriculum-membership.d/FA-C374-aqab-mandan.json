@@ -1,0 +1,11 @@
+{
+  "id": "FA-C374-aqab-mandan",
+  "pathSegment": "FA-PATH-374-BEHBUD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-374-BEHBUD",
+      "order": 4
+    }
+  ]
+}

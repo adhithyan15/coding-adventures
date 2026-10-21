@@ -1,0 +1,22 @@
+{
+  "chapter": 298,
+  "title": "If It Rains",
+  "label": "ch:fa-if-it-rains",
+  "canDo": "I can state a real condition with agar and the subjunctive, give its result, and answer a plan with bastegi darad.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-R298-if-and-it-depends",
+    "kind": "production",
+    "summary": "Complete FA-R298-if-and-it-depends: a plan that depends on the weather, said with agar and bastegi darad.",
+    "assesses": [
+      "FA-GRAMMAR-AGAR-SUBJ-01",
+      "FA-LEX-C298-ZHAKAT-01",
+      "FA-SCRIPT-C298-ZHE-01",
+      "FA-GRAMMAR-REAL-CONDITION-01",
+      "FA-GRAMMAR-BIYAYAD-01",
+      "FA-LEX-BASTEGI-DARAD-01"
+    ]
+  }
+}

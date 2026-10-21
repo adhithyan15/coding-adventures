@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Telling the story",
+  "label": "ch:fa-telling-the-story",
+  "canDo": "I can talk about what happened, an account of it, narrating and relating events, and reminding someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C346-yadavari-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can talk about what happened, an account of it, narrating and relating events, and reminding someone.",
+    "assesses": [
+      "FA-LEX-C346-MAJARA-03",
+      "FA-LEX-C346-MAJARA-04",
+      "FA-LEX-C346-MAJARA-05"
+    ]
+  }
+}

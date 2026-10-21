@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C380-karamuzi",
+    "language": "persian",
+    "chapter": 380,
+    "sequence": 19460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71cc41680fb028c4"
+  },
+  "findings": []
+}

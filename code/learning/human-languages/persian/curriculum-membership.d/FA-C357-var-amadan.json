@@ -1,0 +1,11 @@
+{
+  "id": "FA-C357-var-amadan",
+  "pathSegment": "FA-PATH-357-KHAMIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-357-KHAMIR",
+      "order": 2
+    }
+  ]
+}

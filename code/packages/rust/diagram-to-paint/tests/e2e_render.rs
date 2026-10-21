@@ -3845,7 +3845,7 @@ line "Target" [35, 50, 68, 82]"##,
                     matches!(instruction, PaintInstruction::Rect(_))
                 ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
             }
-            if fixture_name == "markdown-string-labels" {
+            if matches!(fixture_name, "markdown-string-labels" | "multiline-markdown-string-labels") {
                 assert!(layout.lanes[0].label.markdown.is_some());
                 assert!(layout.groups[0].label.markdown.is_some());
                 assert!(layout.nodes.iter().find(|node| node.id == "request").unwrap().label.markdown.is_some());

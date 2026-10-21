@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Kinds of Stories",
+  "label": "ch:fa-kinds-of-stories",
+  "canDo": "I can say what kind of story something is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C530-khandedar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say what kind of story something is.",
+    "assesses": [
+      "FA-LEX-C530-STORIES-03",
+      "FA-LEX-C530-STORIES-04",
+      "FA-LEX-C530-STORIES-05"
+    ]
+  }
+}

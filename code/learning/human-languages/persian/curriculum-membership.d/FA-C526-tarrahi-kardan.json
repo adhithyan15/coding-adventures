@@ -1,0 +1,11 @@
+{
+  "id": "FA-C526-tarrahi-kardan",
+  "pathSegment": "FA-PATH-526-ART",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-526-ART",
+      "order": 3
+    }
+  ]
+}

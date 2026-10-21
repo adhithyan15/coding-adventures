@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:8a9a8aede0063943",
+  "lessonIds": [
+    "FA-C457-raste",
+    "FA-C457-hojre",
+    "FA-C457-bazarche",
+    "FA-C457-timche",
+    "FA-C457-karvansara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch457.txt",
+  "json": "persian/narration/ch457.json",
+  "textHash": "fnv1a64:4a8662e71fb6a62a",
+  "jsonHash": "fnv1a64:7d8c100da5eb96c0",
+  "findings": []
+}

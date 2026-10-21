@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:d506fcb5a4119bd5",
+  "lessonIds": [
+    "FA-C333-nowjavani",
+    "FA-C333-danesh-amukhte",
+    "FA-C333-sarbazi",
+    "FA-C333-miyansali",
+    "FA-C333-piri"
+  ],
+  "tex": "persian/book/chapters/ch333-growing-up-and-growing-old.tex"
+}

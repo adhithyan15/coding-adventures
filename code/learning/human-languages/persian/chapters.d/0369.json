@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Causes",
+  "label": "ch:fa-causes",
+  "canDo": "I can name the cause of something and the factors behind it, and say what caused it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C369-be-ellat-e",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can name the cause of something and the factors behind it, and say what caused it.",
+    "assesses": [
+      "FA-LEX-C369-ELLAT-03",
+      "FA-LEX-C369-ELLAT-04",
+      "FA-LEX-C369-ELLAT-05"
+    ]
+  }
+}

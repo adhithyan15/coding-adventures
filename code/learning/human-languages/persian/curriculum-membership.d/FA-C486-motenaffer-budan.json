@@ -1,0 +1,11 @@
+{
+  "id": "FA-C486-motenaffer-budan",
+  "pathSegment": "FA-PATH-486-JOY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-486-JOY",
+      "order": 4
+    }
+  ]
+}

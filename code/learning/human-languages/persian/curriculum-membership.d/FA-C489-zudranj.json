@@ -1,0 +1,11 @@
+{
+  "id": "FA-C489-zudranj",
+  "pathSegment": "FA-PATH-489-MANNERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-489-MANNERS",
+      "order": 2
+    }
+  ]
+}

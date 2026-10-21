@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C525-galeri",
+    "language": "persian",
+    "chapter": 525,
+    "sequence": 26940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4161ed4ca6555faf"
+  },
+  "findings": []
+}

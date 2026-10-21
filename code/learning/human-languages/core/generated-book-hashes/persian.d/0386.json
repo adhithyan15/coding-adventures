@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:5b5066c4dfd452d8",
+  "lessonIds": [
+    "FA-C386-barabari",
+    "FA-C386-nabarabari",
+    "FA-C386-edalat",
+    "FA-C386-faqr",
+    "FA-C386-servat"
+  ],
+  "tex": "persian/book/chapters/ch386-fairness-in-society.tex"
+}

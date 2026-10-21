@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-435-DARBAST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get a ride: a private taxi, a car service, the coach company, a porter and giving someone a lift.",
+  "prerequisites": []
+}

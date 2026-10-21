@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Early, mid and late",
+  "label": "ch:fa-early-mid-and-late",
+  "canDo": "I can say whether something happened early in, in the middle of or late in a period, on its eve, and roughly when.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R307-review-300-307",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say whether something happened early in, in the middle of or late in a period, on its eve, and roughly when.",
+    "assesses": [
+      "FA-LEX-C307-AVAYEL-03",
+      "FA-LEX-C307-AVAYEL-04",
+      "FA-LEX-C307-AVAYEL-05"
+    ]
+  }
+}

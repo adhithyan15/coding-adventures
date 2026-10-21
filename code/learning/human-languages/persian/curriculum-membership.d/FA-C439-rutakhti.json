@@ -1,0 +1,11 @@
+{
+  "id": "FA-C439-rutakhti",
+  "pathSegment": "FA-PATH-439-MALAFE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-439-MALAFE",
+      "order": 1
+    }
+  ]
+}

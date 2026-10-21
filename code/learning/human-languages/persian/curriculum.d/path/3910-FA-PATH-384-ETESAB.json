@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-384-ETESAB",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-384-ETESAB"
+  ],
+  "after": []
+}

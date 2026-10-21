@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:24f0d33c5a5077ac",
+  "lessonIds": [
+    "FA-C465-mazrae",
+    "FA-C465-gandom",
+    "FA-C465-shalizar",
+    "FA-C465-takestan",
+    "FA-C465-shokhm-zadan"
+  ],
+  "tex": "persian/book/chapters/ch465-on-the-farm.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:9d7f75af77aa54cc",
+  "lessonIds": [
+    "FA-C390-be-shart-e-inke",
+    "FA-C390-dar-surati-ke",
+    "FA-C390-dar-surat-e",
+    "FA-C390-magar-inke",
+    "FA-C390-dar-gheyr-e-in-surat"
+  ],
+  "tex": "persian/book/chapters/ch390-provided-that.tex"
+}

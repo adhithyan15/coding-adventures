@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:9a01752541c1952e",
+  "lessonIds": [
+    "FA-C377-bohran",
+    "FA-C377-rah-e-hall",
+    "FA-C377-jelogiri-kardan",
+    "FA-C377-pishgiri",
+    "FA-C377-ahamiyyat-dashtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch377.txt",
+  "json": "persian/narration/ch377.json",
+  "textHash": "fnv1a64:3960dde48b980192",
+  "jsonHash": "fnv1a64:363364ff647b9b03",
+  "findings": []
+}

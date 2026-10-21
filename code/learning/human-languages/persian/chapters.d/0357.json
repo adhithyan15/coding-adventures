@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Dough and bread",
+  "label": "ch:fa-dough-and-bread",
+  "canDo": "I can talk about dough, kneading it, letting it rise, yeast and the clay oven.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C357-tanur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about dough, kneading it, letting it rise, yeast and the clay oven.",
+    "assesses": [
+      "FA-LEX-C357-KHAMIR-03",
+      "FA-LEX-C357-KHAMIR-04",
+      "FA-LEX-C357-KHAMIR-05"
+    ]
+  }
+}

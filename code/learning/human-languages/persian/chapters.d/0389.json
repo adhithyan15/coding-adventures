@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Charity, peace and violence",
+  "label": "ch:fa-charity-peace-and-violence",
+  "canDo": "I can talk about volunteers and charities, peace and violence, and addiction.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C389-etiyad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk about volunteers and charities, peace and violence, and addiction.",
+    "assesses": [
+      "FA-LEX-C389-DAVTALAB-03",
+      "FA-LEX-C389-DAVTALAB-04",
+      "FA-LEX-C389-DAVTALAB-05"
+    ]
+  }
+}

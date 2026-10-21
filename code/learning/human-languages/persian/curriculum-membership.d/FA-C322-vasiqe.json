@@ -1,0 +1,11 @@
+{
+  "id": "FA-C322-vasiqe",
+  "pathSegment": "FA-PATH-322-MAHKUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-322-MAHKUM",
+      "order": 3
+    }
+  ]
+}

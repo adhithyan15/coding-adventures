@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C447-pelak",
+    "language": "persian",
+    "chapter": 447,
+    "sequence": 22890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c72d246058e2f301"
+  },
+  "findings": []
+}
