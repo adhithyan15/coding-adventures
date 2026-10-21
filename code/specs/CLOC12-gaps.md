@@ -1463,6 +1463,31 @@ drop.
 `switch(2){case 1: var x=1; break; case 2: return typeof x}` becomes
 `return"undefined"`. closurec keeps the switch.
 
+### #17886 / #17888 / #17887 — token patterns that ran past the token's end
+
+**Resolved (soundness).** In every ES `.tokens` file:
+
+| Token | Was | Problem | Now |
+|---|---|---|---|
+| templates (HEAD, NO_SUB, MIDDLE, TAIL) | `([^`\\$]\|\\.\|\$[^{])*` | `\$[^{]` ate `$` plus the backtick, so `` `$` `` didn't end | `([^`\\$]\|\\.\|\$+([^{`\\$]\|\\.))*\$*` |
+| `BLOCK_COMMENT` | `\/\*([^*]\|\*[^\/])*\*\/` | ate the `*` of `*/`, so `/***/` wasn't a comment | `\/\*[^*]*\*+([^\/*][^*]*\*+)*\/` |
+| `LINE_COMMENT`, `HASHBANG` | `[^\n]*` | ran past `\r` | `[^\n\r]*` |
+| `REGEX` body | `[^\/\\\n]\|\\.` | could hold `\r` | `[^\/\\\n\r]\|\\[^\n\r]` |
+
+Each mismatch let comment or string text be lexed as code, or swallowed
+code. At SIMPLE, `` var x = `$` // `; f() `` ran `f()`.
+
+**Still open:**
+
+- U+2028 and U+2029 also end lines. They are not in these patterns, because
+  every language's lexer reads the shared `.tokens` files and their regex
+  engines disagree on those escapes. A raw U+2028 or U+2029 in a regex is
+  handled by the javascript-lexer refusal check (#17875 follow-up).
+- A regex vs. division after `}` (#17886 review) is a lexer-mode problem,
+  not a pattern problem.
+- The TypeScript and Go compiled JavaScript grammars aren't checked for
+  drift by CI, so they keep the old patterns until regenerated.
+
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
 **Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a
