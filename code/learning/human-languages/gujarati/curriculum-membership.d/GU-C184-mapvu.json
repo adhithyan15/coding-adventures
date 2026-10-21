@@ -1,0 +1,11 @@
+{
+  "id": "GU-C184-mapvu",
+  "pathSegment": "GU-PATH-184-RATE184",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-184-RATE184",
+      "order": 3
+    }
+  ]
+}

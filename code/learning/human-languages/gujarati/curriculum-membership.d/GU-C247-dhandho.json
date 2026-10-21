@@ -1,0 +1,11 @@
+{
+  "id": "GU-C247-dhandho",
+  "pathSegment": "GU-PATH-247-LIVING247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-247-LIVING247",
+      "order": 2
+    }
+  ]
+}

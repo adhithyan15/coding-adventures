@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:cae3d25088116b8b",
+  "lessonIds": [
+    "GU-C168-masalvu",
+    "GU-C168-velan",
+    "GU-C168-vanvu",
+    "GU-C168-tavo",
+    "GU-C168-sekvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch168.txt",
+  "json": "gujarati/narration/ch168.json",
+  "textHash": "fnv1a64:42deea0d8a555a91",
+  "jsonHash": "fnv1a64:49b1cb3a745ccd6d",
+  "findings": []
+}

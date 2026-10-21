@@ -1,0 +1,832 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 176,
+  "title": "Hours and quarters",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c5c05c62e3827e3d",
+  "lessons": [
+    {
+      "id": "GU-C176-ghadiyal",
+      "sequence": 9580,
+      "title": "ઘડિયાળ (ghaḍiyāḷ) — clock, watch",
+      "headword": "ઘડિયાળ",
+      "romanization": "ghaḍiyāḷ",
+      "gloss": "clock, watch",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2992f91d398320b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for half, then the Gujarati for constantly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઘડિયાળ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘડિયાળ — ghaḍiyāḷ — \"clock, watch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું નવી ઘડિયાળ ખરીદીશ. — hũ navī ghaḍiyāḷ kharīdīś — \"I will buy a new watch.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘડિયાળ (ghaḍiyāḷ) is a tadbhava. It comes from ghaṭītāḍa, \"striking the time\", a reconstructed compound of ghaṭī, \"water-clock\", and tāḍa, \"striking\", and CDIAL glosses the Gujarati word \"clock\" (CDIAL 4413)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaḍiyāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaḍiyāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaḍiyāḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaḍiyāḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ navī ghaḍiyāḷ kharīdīś — I will buy a new watch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ navī ghaḍiyāḷ kharīdīś* — I will buy a new watch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for half, then the Gujarati for constantly, then say ghaḍiyāḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for half, then the Gujarati for constantly, then say *ghaḍiyāḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઘડિયાળ (ghaḍiyāḷ) mean? (\"Clock, watch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C176-sada",
+      "sequence": 9590,
+      "title": "સાડા (sāḍā) — and a half",
+      "headword": "સાડા",
+      "romanization": "sāḍā",
+      "gloss": "and a half",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edb351c5a3f0787a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for constantly, then the Gujarati for clock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સાડા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાડા — sāḍā — \"and a half\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું સાડા ત્રણ કલાક ભણીશ. — hũ sāḍā traṇ kalāk bhaṇīś — \"I will study for three and a half hours.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Before a number: સાડા (sāḍā) ત્રણ, three and a half."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાડા (sāḍā) is a tadbhava. It comes from Sanskrit sārdha, \"plus a half\", built from sa-, \"with\", and ardha, \"half\"; CDIAL lists the Gujarati word (CDIAL 13369)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ sāḍā traṇ kalāk bhaṇīś — I will study for three and a half hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ sāḍā traṇ kalāk bhaṇīś* — I will study for three and a half hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for constantly, then the Gujarati for clock, then say sāḍā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for constantly, then the Gujarati for clock, then say *sāḍā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સાડા (sāḍā) mean? (\"And a half\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C176-sava",
+      "sequence": 9600,
+      "title": "સવા (savā) — and a quarter",
+      "headword": "સવા",
+      "romanization": "savā",
+      "gloss": "and a quarter",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bf49085747e54dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for clock, then the Gujarati for and a half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સવા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સવા — savā — \"and a quarter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "કામ સવા કલાક ચાલશે. — kām savā kalāk cālśe — \"The work will take an hour and a quarter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સવા (savā) is a tadbhava. It comes from Sanskrit sapāda, \"increased by a fourth\", built from sa-, \"with\", and pāda, \"foot, quarter\"; CDIAL glosses the Gujarati word \"plus a quarter\" (CDIAL 13134)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām savā kalāk cālśe — The work will take an hour and a quarter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kām savā kalāk cālśe* — The work will take an hour and a quarter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for clock, then the Gujarati for and a half, then say savā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for clock, then the Gujarati for and a half, then say *savā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સવા (savā) mean? (\"And a quarter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C176-ponu",
+      "sequence": 9610,
+      "title": "પોણું (poṇũ) — three quarters",
+      "headword": "પોણું",
+      "romanization": "poṇũ",
+      "gloss": "three quarters",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:276d0a30face4c0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for and a half, then the Gujarati for and a quarter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પોણું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પોણું — poṇũ — \"three quarters\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું પોણો કલાક ચાલીશ. — hũ poṇo kalāk cālīś — \"I will walk for three quarters of an hour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Before a number it means a quarter less: પોણા બે, one and three quarters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પોણું (poṇũ) is a tadbhava. It comes from padūna, \"less by a quarter\", a reconstructed form beside Sanskrit pādona; CDIAL glosses the Gujarati word \"three quarters\" (CDIAL 7765)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṇũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṇũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṇũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṇũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ poṇo kalāk cālīś — I will walk for three quarters of an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ poṇo kalāk cālīś* — I will walk for three quarters of an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for and a half, then the Gujarati for and a quarter, then say poṇũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for and a half, then the Gujarati for and a quarter, then say *poṇũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પોણું (poṇũ) mean? (\"Three quarters\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C176-lagbhag",
+      "sequence": 9620,
+      "title": "લગભગ (lagbhag) — almost, about",
+      "headword": "લગભગ",
+      "romanization": "lagbhag",
+      "gloss": "almost, about",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:430fe3433813f1b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for and a quarter, then the Gujarati for three quarters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લગભગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લગભગ — lagbhag — \"almost, about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે લગભગ બે કલાકમાં આવશે. — te lagbhag be kalākmā̃ āvśe — \"He will come in about two hours.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of લગભગ (lagbhag) is not settled. CDIAL lists no Gujarati form of it, and EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagbhag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagbhag*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lagbhag, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lagbhag*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te lagbhag be kalākmā̃ āvśe — He will come in about two hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te lagbhag be kalākmā̃ āvśe* — He will come in about two hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for and a quarter, then the Gujarati for three quarters, then say lagbhag again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for and a quarter, then the Gujarati for three quarters, then say *lagbhag* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લગભગ (lagbhag) mean? (\"Almost, about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R176-review-171-176",
+      "sequence": 9630,
+      "title": "Words from chapters 171–176 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 171-176",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ee3345302caba40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for taste and to taste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taste, to taste, bitter, salty, sweet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: taste, to taste, bitter, salty, sweet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bland, stale, to get burnt, orange, juice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bland, stale, to get burnt, orange, juice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "week, fortnight, next, last, whole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: week, fortnight, next, last, whole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "October, December, Maha, wall calendar, beginning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: October, December, Maha, wall calendar, beginning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "full moon day, new moon day, end, half, constantly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: full moon day, new moon day, end, half, constantly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clock, and a half, and a quarter, three quarters, almost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clock, and a half, and a quarter, three quarters, almost]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Taste? (સ્વાદ.) To taste? (ચાખવું.) Bitter? (કડવું.) Salty? (ખારું.) Sweet? (ગળ્યું.) Bland? (ફીકું.) Stale? (વાસી.) To get burnt? (બળવું.) Orange? (નારંગી.) Juice? (રસ.) Week? (અઠવાડિયું.) Fortnight? (પખવાડિયું.) Next? (આવતું.) Last? (છેલ્લું.) Whole? (આખું.) October? (ઓક્ટોબર.) December? (ડિસેમ્બર.) Maha? (મહા.) Wall calendar? (તારીખિયું.) Beginning? (શરૂઆત.) Full moon day? (પૂનમ.) New moon day? (અમાસ.) End? (અંત.) Half? (અડધું.) Constantly? (સતત.) Clock? (ઘડિયાળ (ghaḍiyāḷ).) And a half? (સાડા (sāḍā).) And a quarter? (સવા (savā).) Three quarters? (પોણું (poṇũ).) Almost? (લગભગ (lagbhag).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

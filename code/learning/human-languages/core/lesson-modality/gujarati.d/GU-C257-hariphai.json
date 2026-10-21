@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C257-hariphai",
+    "language": "gujarati",
+    "chapter": 257,
+    "sequence": 13940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4676aeee02bd5979"
+  },
+  "findings": []
+}

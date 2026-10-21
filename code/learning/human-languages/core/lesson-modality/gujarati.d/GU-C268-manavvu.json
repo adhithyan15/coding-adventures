@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C268-manavvu",
+    "language": "gujarati",
+    "chapter": 268,
+    "sequence": 14520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3a07b798dc1b3bc"
+  },
+  "findings": []
+}

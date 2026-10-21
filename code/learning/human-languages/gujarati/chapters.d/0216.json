@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "The hot months",
+  "label": "ch:gu-the-hot-months",
+  "canDo": "I can say how hot it will get and what the temperature will be.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C216-digri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say how hot it will get and what the temperature will be.",
+    "assesses": [
+      "GU-LEX-C216-HEAT216-03",
+      "GU-LEX-C216-HEAT216-04",
+      "GU-LEX-C216-HEAT216-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:b3785a305662a5b1",
+  "lessonIds": [
+    "GU-C158-saph-karvu",
+    "GU-C158-valvu",
+    "GU-C158-luchvu",
+    "GU-C158-potu",
+    "GU-C158-dagh",
+    "GU-R158-review-153-158"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch158.txt",
+  "json": "gujarati/narration/ch158.json",
+  "textHash": "fnv1a64:663389e7337349d4",
+  "jsonHash": "fnv1a64:2b117d5bb791351b",
+  "findings": []
+}

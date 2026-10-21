@@ -1,0 +1,11 @@
+{
+  "id": "GU-C262-pokarvu",
+  "pathSegment": "GU-PATH-262-OUTING262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-262-OUTING262",
+      "order": 1
+    }
+  ]
+}

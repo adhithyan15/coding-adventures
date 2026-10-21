@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:587dbc88758951b8",
+  "lessonIds": [
+    "GU-C267-naraj",
+    "GU-C267-nirash",
+    "GU-C267-akalavu",
+    "GU-C267-cidavu",
+    "GU-C267-risavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch267.txt",
+  "json": "gujarati/narration/ch267.json",
+  "textHash": "fnv1a64:9c2431a5bdabd16a",
+  "jsonHash": "fnv1a64:5807668afb390eae",
+  "findings": []
+}

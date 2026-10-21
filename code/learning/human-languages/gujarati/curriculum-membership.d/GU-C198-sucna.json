@@ -1,0 +1,11 @@
+{
+  "id": "GU-C198-sucna",
+  "pathSegment": "GU-PATH-198-SIGNS198",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-198-SIGNS198",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 245,
+  "title": "Homework and spelling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:154e7ca92d6c4009",
+  "lessons": [
+    {
+      "id": "GU-C245-grhkarya",
+      "sequence": 13300,
+      "title": "ગૃહકાર્ય (gṛhkārya) — homework",
+      "headword": "ગૃહકાર્ય",
+      "romanization": "gṛhkārya",
+      "gloss": "homework",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e287fafbee533bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to explain, then the Gujarati for to solve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગૃહકાર્ય",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગૃહકાર્ય — gṛhkārya — \"homework\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું સાંજે ગૃહકાર્ય કરું છું. — hũ sā̃je gṛhkārya karũ chũ — \"I do my homework in the evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગૃહકાર્ય (gṛhkārya) is a modern learned compound built from two tatsamas: Sanskrit gṛha, \"house\" (CDIAL 4240), and kārya, \"what is to be done, business\" (CDIAL 3078)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gṛhkārya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gṛhkārya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gṛhkārya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gṛhkārya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ sā̃je gṛhkārya karũ chũ — I do my homework in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ sā̃je gṛhkārya karũ chũ* — I do my homework in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to explain, then the Gujarati for to solve, then say gṛhkārya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to explain, then the Gujarati for to solve, then say *gṛhkārya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગૃહકાર્ય (gṛhkārya) mean? (\"Homework\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C245-jodni",
+      "sequence": 13310,
+      "title": "જોડણી (joḍṇī) — spelling",
+      "headword": "જોડણી",
+      "romanization": "joḍṇī",
+      "gloss": "spelling",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0ea427a1a6015e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to solve, then the Gujarati for homework."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જોડણી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જોડણી — joḍṇī — \"spelling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ શબ્દની જોડણી અઘરી છે. — ā śabdanī joḍṇī agharī che — \"The spelling of this word is hard.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જોડણી (joḍṇī), the joining of letters, is built on the inherited verb joḍvũ, \"to join\", with the suffix -aṇī. CDIAL lists joḍvũ under yōṭayati, \"joins\", a reconstructed form in its entry yuṭati, \"is joined\", and calls the history of the group obscure (CDIAL 10496)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joḍṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joḍṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joḍṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *joḍṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā śabdanī joḍṇī agharī che — The spelling of this word is hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā śabdanī joḍṇī agharī che* — The spelling of this word is hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to solve, then the Gujarati for homework, then say joḍṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to solve, then the Gujarati for homework, then say *joḍṇī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જોડણી (joḍṇī) mean? (\"Spelling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C245-bhusvu",
+      "sequence": 13320,
+      "title": "ભૂંસવું (bhū̃svũ) — to rub out, to erase",
+      "headword": "ભૂંસવું",
+      "romanization": "bhū̃svũ",
+      "gloss": "to rub out, to erase",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aec76e36c2015bbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for homework, then the Gujarati for spelling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભૂંસવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભૂંસવું — bhū̃svũ — \"to rub out, to erase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે ખોટો શબ્દ ભૂંસે છે. — te khoṭo śabda bhū̃se che — \"He rubs out the wrong word.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ભૂંસવું (bhū̃svũ) is not settled. CDIAL lists no Gujarati verb of this form and meaning, and our other sources do not trace it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhū̃svũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhū̃svũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhū̃svũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhū̃svũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te khoṭo śabda bhū̃se che — He rubs out the wrong word.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te khoṭo śabda bhū̃se che* — He rubs out the wrong word.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for homework, then the Gujarati for spelling, then say bhū̃svũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for homework, then the Gujarati for spelling, then say *bhū̃svũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભૂંસવું (bhū̃svũ) mean? (\"To rub out, to erase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C245-rabar",
+      "sequence": 13330,
+      "title": "રબર (rabar) — eraser, rubber",
+      "headword": "રબર",
+      "romanization": "rabar",
+      "gloss": "eraser, rubber",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa4dace4cc166ce0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for spelling, then the Gujarati for to rub out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રબર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રબર — rabar — \"eraser, rubber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારું રબર ક્યાં છે? — mārũ rabar kyā̃ che? — \"Where is my eraser?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રબર (rabar) is a loan from English rubber, the material and the eraser made of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārũ rabar kyā̃ che? — Where is my eraser?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārũ rabar kyā̃ che?* — Where is my eraser?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for spelling, then the Gujarati for to rub out, then say rabar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for spelling, then the Gujarati for to rub out, then say *rabar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રબર (rabar) mean? (\"Eraser, rubber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C245-uccarvu",
+      "sequence": 13340,
+      "title": "ઉચ્ચારવું (uccārvũ) — to pronounce, to utter",
+      "headword": "ઉચ્ચારવું",
+      "romanization": "uccārvũ",
+      "gloss": "to pronounce, to utter",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f18f6c7d6a76d3c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to rub out, then the Gujarati for eraser."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉચ્ચારવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉચ્ચારવું — uccārvũ — \"to pronounce, to utter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે દરેક શબ્દ ધીમે ઉચ્ચારે છે. — te darek śabda dhīme uccāre che — \"She pronounces every word slowly.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉચ્ચારવું (uccārvũ) comes from Sanskrit uccārayati, \"utters\", the causative of úccarati. CDIAL lists the inherited Gujarati ucārvũ, \"to pronounce, speak\"; the written cc follows the Sanskrit, a semi-tatsama (CDIAL 1641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uccārvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uccārvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uccārvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uccārvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te darek śabda dhīme uccāre che — She pronounces every word slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te darek śabda dhīme uccāre che* — She pronounces every word slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to rub out, then the Gujarati for eraser, then say uccārvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to rub out, then the Gujarati for eraser, then say *uccārvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉચ્ચારવું (uccārvũ) mean? (\"To pronounce, to utter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

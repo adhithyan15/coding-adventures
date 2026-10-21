@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-214-RAIN214",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that rain will fall and that I will get wet.",
+  "prerequisites": []
+}

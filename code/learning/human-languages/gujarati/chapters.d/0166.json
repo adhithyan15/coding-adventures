@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Chopping, peeling and grinding",
+  "label": "ch:gu-chopping-peeling-and-grinding",
+  "canDo": "I can describe chopping, peeling and grinding food.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C166-vatvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can describe chopping, peeling and grinding food.",
+    "assesses": [
+      "GU-LEX-C166-CHOP166-03",
+      "GU-LEX-C166-CHOP166-04",
+      "GU-LEX-C166-CHOP166-05"
+    ]
+  }
+}

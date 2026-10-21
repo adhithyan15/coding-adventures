@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C167-baphvu",
+    "language": "gujarati",
+    "chapter": 167,
+    "sequence": 9150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5df9a8aba040793"
+  },
+  "findings": []
+}

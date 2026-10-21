@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C249-melavvu",
+    "language": "gujarati",
+    "chapter": 249,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb93f9e4ca23196d"
+  },
+  "findings": []
+}

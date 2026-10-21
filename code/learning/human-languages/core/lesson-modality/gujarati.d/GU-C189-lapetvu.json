@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C189-lapetvu",
+    "language": "gujarati",
+    "chapter": 189,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9f0fd0b6d1b4b65"
+  },
+  "findings": []
+}

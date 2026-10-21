@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "At the post office",
+  "label": "ch:gu-at-the-post-office",
+  "canDo": "I can post a parcel and register a letter.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R200-review-195-200",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can post a parcel and register a letter.",
+    "assesses": [
+      "GU-LEX-C200-POST200-03",
+      "GU-LEX-C200-POST200-04",
+      "GU-LEX-C200-POST200-05"
+    ]
+  }
+}

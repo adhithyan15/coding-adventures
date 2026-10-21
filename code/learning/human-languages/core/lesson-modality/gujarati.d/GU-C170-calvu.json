@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C170-calvu",
+    "language": "gujarati",
+    "chapter": 170,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85a8bd16e72df6a1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C156-medi",
+  "pathSegment": "GU-PATH-156-ADORN156",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-156-ADORN156",
+      "order": 2
+    }
+  ]
+}

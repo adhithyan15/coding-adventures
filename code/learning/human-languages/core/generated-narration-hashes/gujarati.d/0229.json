@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:e2c31e05dbb3d420",
+  "lessonIds": [
+    "GU-C229-kadu",
+    "GU-C229-angutho",
+    "GU-C229-ghuti",
+    "GU-C229-edi",
+    "GU-C229-pasli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch229.txt",
+  "json": "gujarati/narration/ch229.json",
+  "textHash": "fnv1a64:386071958df8d645",
+  "jsonHash": "fnv1a64:ee04b8960f4f53a7",
+  "findings": []
+}

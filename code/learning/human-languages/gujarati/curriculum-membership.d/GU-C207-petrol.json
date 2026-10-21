@@ -1,0 +1,11 @@
+{
+  "id": "GU-C207-petrol",
+  "pathSegment": "GU-PATH-207-TAXI207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-207-TAXI207",
+      "order": 3
+    }
+  ]
+}

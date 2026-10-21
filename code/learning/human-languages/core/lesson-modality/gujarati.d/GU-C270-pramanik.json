@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C270-pramanik",
+    "language": "gujarati",
+    "chapter": 270,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7a0c05f87c83e75"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C255-philm",
+    "language": "gujarati",
+    "chapter": 255,
+    "sequence": 13860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08310f457a2900d9"
+  },
+  "findings": []
+}

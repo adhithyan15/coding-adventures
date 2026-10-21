@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-181-DELAY181",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "GU-EXT-181-DELAY181"
+  ],
+  "after": []
+}

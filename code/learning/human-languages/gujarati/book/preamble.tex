@@ -132,6 +132,15 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+% The A2 vocabulary (chapters 153-272) takes the book past page 999, and
+% every contents line with a four-digit page ("1000" is 4.93pt wider than
+% LaTeX's 1.55em default box) reported an overfull \hbox. 2.4em holds four
+% bold digits; the right margin that keeps titles clear of the numbers widens
+% by the same 0.85em so the dotted leaders still stop short of them. Same fix
+% as the Arabic, Bengali, Tamil, German, Sanskrit, Italian and French
+% preambles.
+\renewcommand\@pnumwidth{2.4em}
+\renewcommand\@tocrmarg{3.4em}
 \makeatother
 
 % ---------------------------------------------------------------------------

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C190-vatavvu",
+  "pathSegment": "GU-PATH-190-BANK190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-190-BANK190",
+      "order": 3
+    }
+  ]
+}

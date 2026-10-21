@@ -1,0 +1,11 @@
+{
+  "id": "GU-C237-pakh",
+  "pathSegment": "GU-PATH-237-WINGS237",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-237-WINGS237",
+      "order": 2
+    }
+  ]
+}

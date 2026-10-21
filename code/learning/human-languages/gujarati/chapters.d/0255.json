@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Stories, poems and films",
+  "label": "ch:gu-stories-poems-and-films",
+  "canDo": "I can say which stories I heard and which films and plays I saw.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C255-philm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say which stories I heard and which films and plays I saw.",
+    "assesses": [
+      "GU-LEX-C255-STORY255-03",
+      "GU-LEX-C255-STORY255-04",
+      "GU-LEX-C255-STORY255-05"
+    ]
+  }
+}

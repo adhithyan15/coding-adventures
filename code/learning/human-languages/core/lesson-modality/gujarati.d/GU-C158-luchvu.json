@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C158-luchvu",
+    "language": "gujarati",
+    "chapter": 158,
+    "sequence": 8670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:998493aa44284e3d"
+  },
+  "findings": []
+}

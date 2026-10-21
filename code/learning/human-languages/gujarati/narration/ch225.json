@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 225,
+  "title": "Not so well today",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:28c4cceeeddb351c",
+  "lessons": [
+    {
+      "id": "GU-C225-cakkar",
+      "sequence": 12220,
+      "title": "ચક્કર (cakkar) — dizziness, a turn",
+      "headword": "ચક્કર",
+      "romanization": "cakkar",
+      "gloss": "dizziness, a turn",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbe038bdc173b823",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to throb, then the Gujarati for breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચક્કર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચક્કર — cakkar — \"dizziness, a turn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમને ચક્કર આવે છે? — śũ tamne cakkar āve che? — \"Do you feel dizzy?\""
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun. Word for word, does a turn come to you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચક્કર (cakkar) is usually traced to Sanskrit cakra, \"wheel\", so dizziness is the head going round. CDIAL lists only the inherited Gujarati cāk, \"wheel\", under cakra, not cakkar itself (CDIAL 4538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakkar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakkar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tamne cakkar āve che? — Do you feel dizzy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tamne cakkar āve che?* — Do you feel dizzy?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to throb, then the Gujarati for breath, then say cakkar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to throb, then the Gujarati for breath, then say *cakkar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચક્કર (cakkar) mean? (\"Dizziness, a turn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C225-ulti-thavi",
+      "sequence": 12230,
+      "title": "ઊલટી થવી (ūlṭī thavī) — to vomit, to be sick",
+      "headword": "ઊલટી થવી",
+      "romanization": "ūlṭī thavī",
+      "gloss": "to vomit, to be sick",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f4e8d89a23e5599",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for breath, then the Gujarati for dizziness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊલટી થવી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊલટી થવી — ūlṭī thavī — \"to vomit, to be sick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમને ઊલટી થાય છે? — śũ tamne ūlṭī thāy che? — \"Are you being sick?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, vomiting happens: ઊલટી, ūlṭī, and થવું, thavũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊલટી થવી (ūlṭī thavī) is built from ūlṭī, \"vomiting\", the noun of ūlṭũ, \"turned over\" (EtymDB), and thavũ, \"to become\". CDIAL traces the family to ullaṭati, \"turns over\", a reconstructed form (CDIAL 2368)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūlṭī thavī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūlṭī thavī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūlṭī thavī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūlṭī thavī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tamne ūlṭī thāy che? — Are you being sick?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tamne ūlṭī thāy che?* — Are you being sick?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for breath, then the Gujarati for dizziness, then say ūlṭī thavī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for breath, then the Gujarati for dizziness, then say *ūlṭī thavī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊલટી થવી (ūlṭī thavī) mean? (\"To vomit, to be sick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C225-pacvu",
+      "sequence": 12240,
+      "title": "પચવું (pacvũ) — to digest, to be digested",
+      "headword": "પચવું",
+      "romanization": "pacvũ",
+      "gloss": "to digest, to be digested",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e774cda9e22b5f9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for dizziness, then the Gujarati for to vomit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પચવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પચવું — pacvũ — \"to digest, to be digested\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મને દૂધ પચતું નથી. — mane dūdh pactũ nathī — \"Milk does not agree with me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, milk is not digested to me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પચવું (pacvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pacyate, \"is cooked, is digested\" (CDIAL 7654)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pacvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pacvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pacvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pacvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mane dūdh pactũ nathī — Milk does not agree with me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mane dūdh pactũ nathī* — Milk does not agree with me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for dizziness, then the Gujarati for to vomit, then say pacvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for dizziness, then the Gujarati for to vomit, then say *pacvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પચવું (pacvũ) mean? (\"To digest, to be digested\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C225-bagasu-khavu",
+      "sequence": 12250,
+      "title": "બગાસું ખાવું (bagāsũ khāvũ) — to yawn",
+      "headword": "બગાસું ખાવું",
+      "romanization": "bagāsũ khāvũ",
+      "gloss": "to yawn",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e8b356ad93124eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to vomit, then the Gujarati for to digest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બગાસું ખાવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બગાસું ખાવું — bagāsũ khāvũ — \"to yawn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું બાળક બગાસું ખાય છે? — śũ bāḷak bagāsũ khāy che? — \"Is the child yawning?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, to eat a yawn: બગાસું, bagāsũ, and ખાવું, khāvũ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બગાસું ખાવું (bagāsũ khāvũ) is built from bagāsũ, \"a yawn\", and the inherited verb khāvũ, \"to eat\". The origin of bagāsũ is not settled: CDIAL lists no Gujarati form for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagāsũ khāvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagāsũ khāvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagāsũ khāvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagāsũ khāvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ bāḷak bagāsũ khāy che? — Is the child yawning?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ bāḷak bagāsũ khāy che?* — Is the child yawning?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to vomit, then the Gujarati for to digest, then say bagāsũ khāvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to vomit, then the Gujarati for to digest, then say *bagāsũ khāvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બગાસું ખાવું (bagāsũ khāvũ) mean? (\"To yawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C225-parsevo",
+      "sequence": 12260,
+      "title": "પરસેવો (parsevo) — sweat",
+      "headword": "પરસેવો",
+      "romanization": "parsevo",
+      "gloss": "sweat",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11c49e5581a64be3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to digest, then the Gujarati for to yawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પરસેવો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરસેવો — parsevo — \"sweat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમને પરસેવો થાય છે? — śũ tamne parsevo thāy che? — \"Are you sweating?\""
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરસેવો (parsevo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prasveda, \"great sweat\" (CDIAL 8898)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parsevo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parsevo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parsevo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parsevo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tamne parsevo thāy che? — Are you sweating?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tamne parsevo thāy che?* — Are you sweating?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to digest, then the Gujarati for to yawn, then say parsevo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to digest, then the Gujarati for to yawn, then say *parsevo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પરસેવો (parsevo) mean? (\"Sweat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

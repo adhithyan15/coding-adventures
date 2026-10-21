@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-264-FRIENDS264",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask whether people know each other and say who is not at home.",
+  "prerequisites": []
+}

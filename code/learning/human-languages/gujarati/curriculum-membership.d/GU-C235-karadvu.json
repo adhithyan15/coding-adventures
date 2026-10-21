@@ -1,0 +1,11 @@
+{
+  "id": "GU-C235-karadvu",
+  "pathSegment": "GU-PATH-235-DOG235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-235-DOG235",
+      "order": 1
+    }
+  ]
+}

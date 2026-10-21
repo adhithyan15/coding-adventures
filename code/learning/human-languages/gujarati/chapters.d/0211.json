@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Boats, pilgrims and rides",
+  "label": "ch:gu-boats-pilgrims-and-rides",
+  "canDo": "I can say how we travelled: by boat, on a ride or on a pilgrimage.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C211-vahan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say how we travelled: by boat, on a ride or on a pilgrimage.",
+    "assesses": [
+      "GU-LEX-C211-RIDES211-03",
+      "GU-LEX-C211-RIDES211-04",
+      "GU-LEX-C211-RIDES211-05"
+    ]
+  }
+}

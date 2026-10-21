@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:1f47a0ff95398003",
+  "lessonIds": [
+    "GU-C222-prthvi",
+    "GU-C222-vatavaran",
+    "GU-C222-kudrat",
+    "GU-C222-bharti",
+    "GU-C222-ot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch222.txt",
+  "json": "gujarati/narration/ch222.json",
+  "textHash": "fnv1a64:4ea34eeac13aa912",
+  "jsonHash": "fnv1a64:69a9e26135802415",
+  "findings": []
+}

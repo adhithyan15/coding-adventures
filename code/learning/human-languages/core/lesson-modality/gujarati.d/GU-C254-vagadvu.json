@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C254-vagadvu",
+    "language": "gujarati",
+    "chapter": 254,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f3c60093ecef92a"
+  },
+  "findings": []
+}

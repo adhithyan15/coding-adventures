@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Quarrels and advice",
+  "label": "ch:gu-quarrels-and-advice",
+  "canDo": "I can say that people do not quarrel and ask who cheated or persuaded whom.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C268-salah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say that people do not quarrel and ask who cheated or persuaded whom.",
+    "assesses": [
+      "GU-LEX-C268-QUARREL268-03",
+      "GU-LEX-C268-QUARREL268-04",
+      "GU-LEX-C268-QUARREL268-05"
+    ]
+  }
+}

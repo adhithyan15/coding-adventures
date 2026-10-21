@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Caring for each other",
+  "label": "ch:gu-caring-for-each-other",
+  "canDo": "I can ask who looks after whom and say whom I miss.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C269-adar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can ask who looks after whom and say whom I miss.",
+    "assesses": [
+      "GU-LEX-C269-CARE269-03",
+      "GU-LEX-C269-CARE269-04",
+      "GU-LEX-C269-CARE269-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C194-baju",
+  "pathSegment": "GU-PATH-194-CORNER194",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-194-CORNER194",
+      "order": 3
+    }
+  ]
+}

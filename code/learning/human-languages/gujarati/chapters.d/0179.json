@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Plans and programmes",
+  "label": "ch:gu-plans-and-programmes",
+  "canDo": "I can say what we have decided and what is planned.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C179-cokkas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say what we have decided and what is planned.",
+    "assesses": [
+      "GU-LEX-C179-PLAN179-03",
+      "GU-LEX-C179-PLAN179-04",
+      "GU-LEX-C179-PLAN179-05"
+    ]
+  }
+}

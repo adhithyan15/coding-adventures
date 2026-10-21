@@ -1,0 +1,11 @@
+{
+  "id": "GU-C184-bhav",
+  "pathSegment": "GU-PATH-184-RATE184",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-184-RATE184",
+      "order": 0
+    }
+  ]
+}

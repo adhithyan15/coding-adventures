@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C177-vakhat",
+    "language": "gujarati",
+    "chapter": 177,
+    "sequence": 9660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c350186eb519ab10"
+  },
+  "findings": []
+}

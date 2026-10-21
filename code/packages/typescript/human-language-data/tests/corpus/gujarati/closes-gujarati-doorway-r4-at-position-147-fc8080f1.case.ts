@@ -175,7 +175,16 @@ it("closes Gujarati doorway R4 at position 149", () => {
   //        chapter 140-143 verbs, whose windows now fall inside the track.
   //    -4  closed outright: koī, kaīk, ahī̃ and tyā̃ (chapters 99-101) reach their
   //        R4 in the core's negation, past and present lessons.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1524);
+  // 1524 -> 2884. The A2 vocabulary, chapters 153-272 (624 lessons),
+  // decomposed against the corpus measured with the core alone:
+  //  +1259  on the 600 new words' own atoms. Each is revisited in the next two
+  //         lessons and by its six-chapter review (three revisits, none under
+  //         the level gate's two), but that fixed layout cannot land in every
+  //         R2/R3/R4 window, as in the other tracks' generated vocabulary.
+  //   +103  PRE-EXISTING (atom, window) slots on older atoms that did not exist
+  //         until the track grew 856 -> 1480 and their late windows fell inside.
+  //     -2  older misses the vocabulary's examples close.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(2884);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

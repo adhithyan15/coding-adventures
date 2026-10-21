@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Jewellery, bindi and henna",
+  "label": "ch:gu-jewellery-bindi-and-henna",
+  "canDo": "I can talk about jewellery, the bindi and henna.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C156-badhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can talk about jewellery, the bindi and henna.",
+    "assesses": [
+      "GU-LEX-C156-ADORN156-03",
+      "GU-LEX-C156-ADORN156-04",
+      "GU-LEX-C156-ADORN156-05"
+    ]
+  }
+}

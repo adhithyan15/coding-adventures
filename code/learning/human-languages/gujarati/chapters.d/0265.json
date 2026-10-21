@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Love and marriage",
+  "label": "ch:gu-love-and-marriage",
+  "canDo": "I can ask about love, engagements and weddings.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C265-vishvas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can ask about love, engagements and weddings.",
+    "assesses": [
+      "GU-LEX-C265-LOVE265-03",
+      "GU-LEX-C265-LOVE265-04",
+      "GU-LEX-C265-LOVE265-05"
+    ]
+  }
+}

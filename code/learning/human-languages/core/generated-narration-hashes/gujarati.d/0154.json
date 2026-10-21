@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:3eb2e2bd0966936a",
+  "lessonIds": [
+    "GU-C154-kapdu",
+    "GU-C154-sadi",
+    "GU-C154-dupatto",
+    "GU-C154-utarvu",
+    "GU-C154-odhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch154.txt",
+  "json": "gujarati/narration/ch154.json",
+  "textHash": "fnv1a64:edd84933e03c2b90",
+  "jsonHash": "fnv1a64:267b6479aa0c8ecf",
+  "findings": []
+}

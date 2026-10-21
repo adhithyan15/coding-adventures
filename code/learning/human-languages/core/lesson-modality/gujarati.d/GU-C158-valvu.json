@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C158-valvu",
+    "language": "gujarati",
+    "chapter": 158,
+    "sequence": 8660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0fbd5b79eb0dba3"
+  },
+  "findings": []
+}
