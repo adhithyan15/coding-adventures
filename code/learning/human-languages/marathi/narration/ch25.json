@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "A Six-Field Profile",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cbe4bd6d629ba5dd",
+  "sourceHash": "fnv1a64:cc9ec73cd1cd3d55",
   "lessons": [
     {
       "id": "MR-A1F04-first-three-select",
@@ -841,6 +841,213 @@
               "feedback": {
                 "correct": "A new six-field profile is independently selected and written in Devanagari.",
                 "incorrect": "Do not reveal the model during scoring; record the first failed row or repair dimension."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F14-partial-timer",
+      "sequence": 1070,
+      "title": "Give the form its first gentle timer",
+      "headword": "partial-timer practical form",
+      "romanization": "",
+      "gloss": "write three practised profile fields under a generous partial timer",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:a8a6cab3cda1b508",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall — score, then repair"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall — score, then repair."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A new profile gives these meanings: name Arun; city Pune; language Marathi. Read the familiar printed labels: नाव, शहर, भाषा. No completed row or value bank is shown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — generous partial timer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set a 60-second partial timer. Fill only these three fields in Marathi Devanagari. Stop at the bell; keep the first attempt. The six-field form follows next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall — score, then repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score task fulfilment (all three meanings), organisation (values beside the correct labels), Marathi control (the right Marathi forms), and orthographic control (Devanagari letters) separately. Make one 20-second repair on a separate line; do not replace the timed attempt. This is not a full A1 mock."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1F14-partial-timer-check",
+              "prompt": "In 60 seconds fill the name, city and language rows for Arun in Pune with Marathi; stop at the bell.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "नाव: अरुण; शहर: पुणे; भाषा: मराठी"
+              ],
+              "feedback": {
+                "correct": "Keep the stopped first attempt as partial-timer evidence.",
+                "incorrect": "Keep the stopped first attempt; score before viewing the reference values."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1F14-partial-timer-separate-repair",
+              "prompt": "After scoring, on a separate line repair the misplaced city value in शहर: मराठी for this profile.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-SHAHAR"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "शहर: पुणे"
+              ],
+              "feedback": {
+                "correct": "This row-organisation repair is separate from the stopped form attempt.",
+                "incorrect": "Put the city beside its label; keep the timed first attempt unchanged."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F15-timed-form",
+      "sequence": 1071,
+      "title": "A full practical form under a timer",
+      "headword": "timed six-field practical form",
+      "romanization": "",
+      "gloss": "independently complete the familiar practical form under a target task timer",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:4e18a1edbdb1f52a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall — score, then repair"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall — score, then repair."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Profile C gives these meanings: name Arun; city Pune; language Marathi; favorite drink milk; favorite activity writing; friend Mira. Use the six printed Marathi labels from the earlier form. There is no value bank or completed model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — full task timer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set two minutes. Write all six fields in Marathi Devanagari from the meanings alone. Stop at the bell and keep the first attempt before checking any values."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall — score, then repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score task fulfilment (all requested values), organisation (right row for each value), Marathi control (familiar noun and agreement forms), and orthographic control (Devanagari spelling) separately. Make one 20-second repair on another line; do not overwrite the stopped attempt. This is not a full A1 mock or a readiness claim."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1F15-timed-form-check",
+              "prompt": "In 120 seconds complete Profile C's six Marathi fields from meanings alone; stop at the bell.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA",
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 120,
+              "acceptedResponses": [
+                "नाव: अरुण; शहर: पुणे; भाषा: मराठी; आवडते पेय: दूध; आवडती कृती: लिहिणे; मित्राचे नाव: मीरा"
+              ],
+              "feedback": {
+                "correct": "Keep the six-field timed first attempt for separate scoring.",
+                "incorrect": "Keep the stopped first attempt; score before viewing reference values."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1F15-timed-form-separate-repair",
+              "prompt": "After scoring, on a separate line repair the wrong friend value in मित्राचे नाव: अरुण for Profile C.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "मित्राचे नाव: मीरा"
+              ],
+              "feedback": {
+                "correct": "This task-fulfilment repair is separate from the stopped form attempt.",
+                "incorrect": "Use the requested friend value; keep the timed first attempt unchanged."
               }
             }
           ]

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C490-sarmakhordegi",
+    "language": "persian",
+    "chapter": 490,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e44af4c6fc0bd93c"
+  },
+  "findings": []
+}

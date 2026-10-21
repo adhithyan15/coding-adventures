@@ -1,0 +1,11 @@
+{
+  "id": "FA-C422-khamush-shodan",
+  "pathSegment": "FA-PATH-422-KAPUT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-422-KAPUT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Places to stay",
+  "label": "ch:fa-places-to-stay",
+  "canDo": "I can talk about where to stay: a guesthouse, lodgings, a boarding house, a suite and staying somewhere.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C437-eqamat-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about where to stay: a guesthouse, lodgings, a boarding house, a suite and staying somewhere.",
+    "assesses": [
+      "FA-LEX-C437-MOSAFERKHANE-03",
+      "FA-LEX-C437-MOSAFERKHANE-04",
+      "FA-LEX-C437-MOSAFERKHANE-05"
+    ]
+  }
+}

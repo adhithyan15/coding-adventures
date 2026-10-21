@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Crises and solutions",
+  "label": "ch:fa-crises-and-solutions",
+  "canDo": "I can talk about a crisis, find a solution, say how something was prevented and say what matters.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C377-ahamiyyat-dashtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about a crisis, find a solution, say how something was prevented and say what matters.",
+    "assesses": [
+      "FA-LEX-C377-BOHRAN-03",
+      "FA-LEX-C377-BOHRAN-04",
+      "FA-LEX-C377-BOHRAN-05"
+    ]
+  }
+}

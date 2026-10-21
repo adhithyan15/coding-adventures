@@ -2155,6 +2155,7 @@ pub struct LayoutedSwimlaneNode {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneEdge {
     pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<DiagramLabel>, pub kind: SwimlaneEdgeKind,
+    pub label_position: Option<Point>, pub label_width: f64, pub label_height: f64,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
     pub classes: Vec<String>, pub style: DiagramStyle,
     pub animate: bool, pub animation: Option<SwimlaneEdgeAnimation>,

@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Police and arrests",
+  "label": "ch:fa-police-and-arrests",
+  "canDo": "I can talk about police officers, patrols, suspects, arrests and detention.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C319-bazdasht-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can talk about police officers, patrols, suspects, arrests and detention.",
+    "assesses": [
+      "FA-LEX-C319-MAMUR-03",
+      "FA-LEX-C319-MAMUR-04",
+      "FA-LEX-C319-MAMUR-05"
+    ]
+  }
+}

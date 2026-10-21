@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:78b055b2cf48f436",
+  "lessonIds": [
+    "FA-C461-kartkhan",
+    "FA-C461-kart-be-kart-kardan",
+    "FA-C461-nesye",
+    "FA-C461-pul-e-khord",
+    "FA-C461-sarrafi"
+  ],
+  "tex": "persian/book/chapters/ch461-paying.tex"
+}

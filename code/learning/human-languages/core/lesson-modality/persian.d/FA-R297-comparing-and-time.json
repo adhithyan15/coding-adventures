@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R297-comparing-and-time",
+    "language": "persian",
+    "chapter": 297,
+    "sequence": 15204,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e9ad0525ff5da2c"
+  },
+  "findings": []
+}

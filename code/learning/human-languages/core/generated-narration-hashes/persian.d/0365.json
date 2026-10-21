@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:8e2f15602bd4969e",
+  "lessonIds": [
+    "FA-C365-qezavat-kardan",
+    "FA-C365-enteqad",
+    "FA-C365-enteqad-kardan",
+    "FA-C365-eghraq-kardan",
+    "FA-C365-towjih-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch365.txt",
+  "json": "persian/narration/ch365.json",
+  "textHash": "fnv1a64:198eecc44797938d",
+  "jsonHash": "fnv1a64:ff2d79506c66b4ef",
+  "findings": []
+}

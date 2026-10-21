@@ -1,0 +1,11 @@
+{
+  "id": "FA-C297-se-sal-ast-ke",
+  "pathSegment": "FA-PATH-297-COMPARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-297-COMPARE",
+      "order": 3
+    }
+  ]
+}

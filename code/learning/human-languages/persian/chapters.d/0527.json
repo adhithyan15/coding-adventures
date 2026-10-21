@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Talent and Masterpieces",
+  "label": "ch:fa-talent-and-masterpieces",
+  "canDo": "I can talk about talent and great works.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R527-review-520-527",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about talent and great works.",
+    "assesses": [
+      "FA-LEX-C527-TALENT-03",
+      "FA-LEX-C527-TALENT-04",
+      "FA-LEX-C527-TALENT-05"
+    ]
+  }
+}

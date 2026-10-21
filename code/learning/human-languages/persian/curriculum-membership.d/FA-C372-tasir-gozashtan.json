@@ -1,0 +1,11 @@
+{
+  "id": "FA-C372-tasir-gozashtan",
+  "pathSegment": "FA-PATH-372-TASIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-372-TASIR",
+      "order": 1
+    }
+  ]
+}

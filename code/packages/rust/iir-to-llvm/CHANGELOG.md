@@ -1,4 +1,10 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
 ## [0.62.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
 
 - **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `call void

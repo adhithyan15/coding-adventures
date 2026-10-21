@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-460-VITRIN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can shop for clothes: the shop window, the arcade, trying on, the fitting room and liking something.",
+  "prerequisites": []
+}

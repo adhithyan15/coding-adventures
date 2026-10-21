@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Honesty and Lies",
+  "label": "ch:fa-honesty-and-lies",
+  "canDo": "I can talk about honesty and lying.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C483-dorughgu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about honesty and lying.",
+    "assesses": [
+      "FA-LEX-C483-HONESTY-03",
+      "FA-LEX-C483-HONESTY-04",
+      "FA-LEX-C483-HONESTY-05"
+    ]
+  }
+}

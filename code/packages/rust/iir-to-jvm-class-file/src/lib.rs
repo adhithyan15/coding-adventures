@@ -39,6 +39,7 @@
 //!     language: "test".into(),
 //!     exports: vec![],
 //!     imports: vec![],
+//!     release: None,
 //! };
 //!
 //! let errors = validate_for_jvm(&module);

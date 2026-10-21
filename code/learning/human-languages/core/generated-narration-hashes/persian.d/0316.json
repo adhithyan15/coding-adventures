@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:42c2a13302a074ec",
+  "lessonIds": [
+    "FA-C316-dozd",
+    "FA-C316-dozdi",
+    "FA-C316-sareq",
+    "FA-C316-jib-bor",
+    "FA-C316-kif-qap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch316.txt",
+  "json": "persian/narration/ch316.json",
+  "textHash": "fnv1a64:fb60e82ae78287cc",
+  "jsonHash": "fnv1a64:d6fd9c963d38f9a1",
+  "findings": []
+}

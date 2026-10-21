@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C500-khaharzade",
+    "language": "persian",
+    "chapter": 500,
+    "sequence": 25660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23aea7d675b3426d"
+  },
+  "findings": []
+}

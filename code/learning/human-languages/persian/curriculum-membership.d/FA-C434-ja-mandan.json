@@ -1,0 +1,11 @@
+{
+  "id": "FA-C434-ja-mandan",
+  "pathSegment": "FA-PATH-434-PELLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-434-PELLE",
+      "order": 4
+    }
+  ]
+}

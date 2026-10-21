@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Painting",
+  "label": "ch:fa-painting",
+  "canDo": "I can talk about painting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C525-galeri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about painting.",
+    "assesses": [
+      "FA-LEX-C525-PAINTING-03",
+      "FA-LEX-C525-PAINTING-04",
+      "FA-LEX-C525-PAINTING-05"
+    ]
+  }
+}

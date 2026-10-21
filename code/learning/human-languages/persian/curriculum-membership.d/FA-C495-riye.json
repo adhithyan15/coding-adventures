@@ -1,0 +1,11 @@
+{
+  "id": "FA-C495-riye",
+  "pathSegment": "FA-PATH-495-ORGANS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-495-ORGANS",
+      "order": 1
+    }
+  ]
+}

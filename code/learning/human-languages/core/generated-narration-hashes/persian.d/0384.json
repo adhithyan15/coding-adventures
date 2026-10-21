@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:beccb09db6a128d4",
+  "lessonIds": [
+    "FA-C384-etesab",
+    "FA-C384-ettehadiye",
+    "FA-C384-zahmat-keshidan",
+    "FA-C384-movaffaq-shodan",
+    "FA-C384-shekast-khordan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch384.txt",
+  "json": "persian/narration/ch384.json",
+  "textHash": "fnv1a64:2625cd39ab3995b9",
+  "jsonHash": "fnv1a64:ed70040e2ec634d3",
+  "findings": []
+}

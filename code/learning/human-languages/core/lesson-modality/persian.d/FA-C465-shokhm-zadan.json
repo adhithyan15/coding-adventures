@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C465-shokhm-zadan",
+    "language": "persian",
+    "chapter": 465,
+    "sequence": 23840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:070489e57af4b71e"
+  },
+  "findings": []
+}

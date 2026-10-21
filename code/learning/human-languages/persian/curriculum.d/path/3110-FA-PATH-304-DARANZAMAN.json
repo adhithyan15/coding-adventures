@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-304-DARANZAMAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-304-DARANZAMAN"
+  ],
+  "after": []
+}

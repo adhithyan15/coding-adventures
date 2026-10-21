@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-315-KHABARFOWRI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-315-KHABARFOWRI"
+  ],
+  "after": []
+}

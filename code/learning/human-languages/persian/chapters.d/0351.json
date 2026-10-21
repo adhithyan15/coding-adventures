@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "War and victory",
+  "label": "ch:fa-war-and-victory",
+  "canDo": "I can talk about an army, a battle, a victory, defeating an enemy and capturing a city.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C351-fath-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can talk about an army, a battle, a victory, defeating an enemy and capturing a city.",
+    "assesses": [
+      "FA-LEX-C351-SEPAH-03",
+      "FA-LEX-C351-SEPAH-04",
+      "FA-LEX-C351-SEPAH-05"
+    ]
+  }
+}

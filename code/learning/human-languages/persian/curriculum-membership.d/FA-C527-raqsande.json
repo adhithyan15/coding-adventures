@@ -1,0 +1,11 @@
+{
+  "id": "FA-C527-raqsande",
+  "pathSegment": "FA-PATH-527-TALENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-527-TALENT",
+      "order": 3
+    }
+  ]
+}

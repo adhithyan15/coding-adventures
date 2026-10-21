@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Confirming and passing on",
+  "label": "ch:fa-confirming-and-passing-on",
+  "canDo": "I can say that a report was denied, confirmed, followed up and passed on to someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C310-ettela-dadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say that a report was denied, confirmed, followed up and passed on to someone.",
+    "assesses": [
+      "FA-LEX-C310-TAKZIB-03",
+      "FA-LEX-C310-TAKZIB-04",
+      "FA-LEX-C310-TAKZIB-05"
+    ]
+  }
+}

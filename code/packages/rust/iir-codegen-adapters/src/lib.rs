@@ -43,6 +43,7 @@
 //!     language: "test".into(),
 //!     exports: vec![],
 //!     imports: vec![],
+//!     release: None,
 //! };
 //!
 //! // Show available backends.

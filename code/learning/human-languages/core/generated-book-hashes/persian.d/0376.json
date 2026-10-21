@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:775621cb1246bfe2",
+  "lessonIds": [
+    "FA-C376-taqsir",
+    "FA-C376-gonah",
+    "FA-C376-noqte-ye-zaf",
+    "FA-C376-rokh-dadan",
+    "FA-C376-eteraf-kardan"
+  ],
+  "tex": "persian/book/chapters/ch376-whose-fault-is-it.tex"
+}

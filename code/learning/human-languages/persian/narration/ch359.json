@@ -1,0 +1,896 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 359,
+  "title": "Finishing the dish",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:761de3e5589da918",
+  "lessons": [
+    {
+      "id": "FA-C359-zafaran",
+      "sequence": 18320,
+      "title": "زعفران (za'farân) — saffron",
+      "headword": "زعفران",
+      "romanization": "za'farân",
+      "gloss": "saffron",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dad19df7ecbe1d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to be well cooked, then the Persian for a slotted spoon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زعفران",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زعفران (za'farân) — \"saffron\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زعفران (za'farân) به برنج رنگ زرد میدهد. Za'farân be berenj rang-e zard midahad. Saffron gives rice a yellow colour."
+            },
+            {
+              "kind": "speech",
+              "text": "It is brewed first in a little hot water, then poured over the rice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "za'farân is borrowed from Arabic za'farān, \"saffron\" (EtymDB), and EtymDB links the Arabic word in turn with a Persian zarparān, \"with golden leaves\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "za'farân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *za'farân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "za'farân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *za'farân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with za'farân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *za'farân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to be well cooked, then the Persian for a slotted spoon, then say za'farân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to be well cooked, then the Persian for a slotted spoon, then say *za'farân* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زعفران (za'farân) mean? (\"Saffron\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C359-ezafe-kardan",
+      "sequence": 18330,
+      "title": "اضافه کردن (ezâfe kardan) — to add",
+      "headword": "اضافه کردن",
+      "romanization": "ezâfe kardan",
+      "gloss": "to add",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2df751e6d6032ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a slotted spoon, then the Persian for saffron."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اضافه کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اضافه کردن (ezâfe kardan) — \"to add\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در آخر کمی نمک اضافه کرد. Dar âkhar kami namak ezâfe kard. At the end she added a little salt."
+            },
+            {
+              "kind": "speech",
+              "text": "With be: be khoresh ezâfe kard. Ezâfe is also the name of the Persian linking -e."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ezâfe is borrowed from Arabic iḍāfa, \"an adding, an adjunct\" (EtymDB). kardan \"to do\" is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ezâfe kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ezâfe kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ezâfe kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ezâfe kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ezâfe kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ezâfe kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a slotted spoon, then the Persian for saffron, then say ezâfe kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a slotted spoon, then the Persian for saffron, then say *ezâfe kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اضافه کردن (ezâfe kardan) mean? (\"To add\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C359-saf-kardan",
+      "sequence": 18340,
+      "title": "صاف کردن (sâf kardan) — to strain, to filter; to smooth",
+      "headword": "صاف کردن",
+      "romanization": "sâf kardan",
+      "gloss": "to strain, to filter; to smooth",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f6dbb5ae11fae63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for saffron, then the Persian for to add."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صاف کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صاف کردن (sâf kardan) — \"to strain, to filter; to smooth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "چای را صاف کرد و در لیوان ریخت. Chây râ sâf kard va dar livân rikht. She strained the tea and poured it into a glass."
+            },
+            {
+              "kind": "speech",
+              "text": "Also \"to smooth, to straighten\". Present sâf mikonad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sâf \"clear, smooth\" is borrowed from Arabic ṣāfī, \"pure\" (EtymDB). kardan \"to do\" is inherited Persian: to make clear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sâf kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sâf kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sâf kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sâf kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sâf kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sâf kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for saffron, then the Persian for to add, then say sâf kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for saffron, then the Persian for to add, then say *sâf kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صاف کردن (sâf kardan) mean? (\"To strain, to filter; to smooth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C359-bereshte",
+      "sequence": 18350,
+      "title": "برشته (bereshte) — toasted, crisp and golden",
+      "headword": "برشته",
+      "romanization": "bereshte",
+      "gloss": "toasted, crisp and golden",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2beb67dcff175cbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to add, then the Persian for to strain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: برشته",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "برشته (bereshte) — \"toasted, crisp and golden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نان برشته بوی خوبی داشت. Nân-e bereshte bu-ye khubi dâsht. The toasted bread smelled good."
+            },
+            {
+              "kind": "speech",
+              "text": "From bereshtan \"to roast\". Qahve-ye bereshte \"roasted coffee\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bereshte is the participle of the native verb bereshtan \"to roast, to parch\"; EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bereshte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bereshte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bereshte, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bereshte*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bereshte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bereshte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to add, then the Persian for to strain, then say bereshte again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to add, then the Persian for to strain, then say *bereshte* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does برشته (bereshte) mean? (\"Toasted, crisp and golden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C359-tam",
+      "sequence": 18360,
+      "title": "طعم (ta'm) — a taste, a flavour",
+      "headword": "طعم",
+      "romanization": "ta'm",
+      "gloss": "a taste, a flavour",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0dbbc466475e853",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to strain, then the Persian for toasted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: طعم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طعم (ta'm) — \"a taste, a flavour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "طعم (ta'm) این خورش خیلی خوب است. Ta'm-e in khoresh kheyli khub ast. This stew tastes very good."
+            },
+            {
+              "kind": "speech",
+              "text": "Khoshta'm \"tasty\". Close to maze."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ta'm is borrowed from Arabic ṭa'm, \"taste\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ta'm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ta'm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to strain, then the Persian for toasted, then say ta'm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to strain, then the Persian for toasted, then say *ta'm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does طعم (ta'm) mean? (\"A taste, a flavour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R359-review-356-359",
+      "sequence": 18370,
+      "title": "Step by step, once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 356-359",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f62b79ccd1c36d87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for to chop finely and to mince."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to chop finely, to mince, to mash, to sauté, fried onion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to chop finely, to mince, to mash, to sauté, fried onion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dough, to knead, to rise, yeast, a clay oven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dough, to knead, to rise, yeast, a clay oven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cooking pot, to come to the boil, to bubble, to be well cooked, a slotted spoon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cooking pot, to come to the boil, to bubble, to be well cooked, a slotted spoon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saffron, to add, to strain, toasted, a taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: saffron, to add, to strain, toasted, a taste]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To chop finely? (ریز کردن.) To mince? (چرخ کردن.) To mash? (له کردن.) To sauté? (تفت دادن.) Fried onion? (پیاز داغ.) Dough? (خمیر.) To knead? (ورز دادن.) To rise? (ور آمدن.) Yeast? (خمیرمایه.) A clay oven? (تنور.) A cooking pot? (قابلمه.) To come to the boil? (جوش آمدن.) To bubble? (قل زدن.) To be well cooked? (جا افتادن.) A slotted spoon? (کفگیر.) Saffron? (زعفران (za'farân).) To add? (اضافه کردن (ezâfe kardan).) To strain? (صاف کردن (sâf kardan).) Toasted? (برشته (bereshte).) A taste? (طعم (ta'm).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R359-review-final-359",
+      "sequence": 18380,
+      "title": "Finishing the dish — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 359",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc4b9bed1bb56cb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for saffron and to add."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saffron, to add, to strain, toasted, a taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: saffron, to add, to strain, toasted, a taste]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Saffron? (زعفران (za'farân).) To add? (اضافه کردن (ezâfe kardan).) To strain? (صاف کردن (sâf kardan).) Toasted? (برشته (bereshte).) A taste? (طعم (ta'm).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

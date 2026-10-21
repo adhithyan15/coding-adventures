@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:041ef9c381c86850",
+  "lessonIds": [
+    "FA-C363-eddea",
+    "FA-C363-eddea-kardan",
+    "FA-C363-esbat-kardan",
+    "FA-C363-sabet-shodan",
+    "FA-C363-shavahed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch363.txt",
+  "json": "persian/narration/ch363.json",
+  "textHash": "fnv1a64:7c58b1e44ad713af",
+  "jsonHash": "fnv1a64:74bdd58825cd9584",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-531-SCREEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-531-SCREEN"
+  ],
+  "after": []
+}

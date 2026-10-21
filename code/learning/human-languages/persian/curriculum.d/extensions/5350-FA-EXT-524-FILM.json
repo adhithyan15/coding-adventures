@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-524-FILM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about how films are made.",
+  "prerequisites": []
+}

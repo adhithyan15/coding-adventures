@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:3e8a58c6069b2b14",
+  "lessonIds": [
+    "FA-C393-qatan",
+    "FA-C393-tardid",
+    "FA-C393-etminan",
+    "FA-C393-motmaen-shodan",
+    "FA-C393-zaheran"
+  ],
+  "tex": "persian/book/chapters/ch393-sure-and-unsure.tex"
+}

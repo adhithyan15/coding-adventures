@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:9d3b9cc71d729ea9",
+  "lessonIds": [
+    "FA-C396-monsaref-shodan",
+    "FA-C396-aqab-andakhtan",
+    "FA-C396-be-taviq-andakhtan",
+    "FA-C396-hamahang-kardan",
+    "FA-C396-ejra-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch396.txt",
+  "json": "persian/narration/ch396.json",
+  "textHash": "fnv1a64:5a2267a72076f357",
+  "jsonHash": "fnv1a64:b89b9a9d6c405d36",
+  "findings": []
+}

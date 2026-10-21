@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Suddenly and at once",
+  "label": "ch:fa-suddenly-and-at-once",
+  "canDo": "I can say that something happened suddenly, immediately, without delay, the moment something else happened, and by chance.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C300-ettefaqi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say that something happened suddenly, immediately, without delay, the moment something else happened, and by chance.",
+    "assesses": [
+      "FA-LEX-C300-NAGAHAN-03",
+      "FA-LEX-C300-NAGAHAN-04",
+      "FA-LEX-C300-NAGAHAN-05"
+    ]
+  }
+}

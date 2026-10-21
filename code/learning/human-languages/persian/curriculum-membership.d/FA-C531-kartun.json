@@ -1,0 +1,11 @@
+{
+  "id": "FA-C531-kartun",
+  "pathSegment": "FA-PATH-531-SCREEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-531-SCREEN",
+      "order": 1
+    }
+  ]
+}

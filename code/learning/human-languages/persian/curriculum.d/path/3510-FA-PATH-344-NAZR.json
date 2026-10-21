@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-344-NAZR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-344-NAZR"
+  ],
+  "after": []
+}

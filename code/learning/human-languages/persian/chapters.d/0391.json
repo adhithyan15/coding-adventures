@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Supposing",
+  "label": "ch:fa-supposing",
+  "canDo": "I can make an assumption, put forward a hypothesis, set a formal condition with if, concede a point and say that I imagined something wrongly.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-R391-review-384-391",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can make an assumption, put forward a hypothesis, set a formal condition with if, concede a point and say that I imagined something wrongly.",
+    "assesses": [
+      "FA-LEX-C391-FARZ-03",
+      "FA-LEX-C391-FARZ-04",
+      "FA-LEX-C391-FARZ-05"
+    ]
+  }
+}

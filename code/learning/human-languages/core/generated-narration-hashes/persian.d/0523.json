@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:cfa7a7025fed0032",
+  "lessonIds": [
+    "FA-C523-teatr",
+    "FA-C523-sahne",
+    "FA-C523-namayeshname",
+    "FA-C523-tamashachi",
+    "FA-C523-naqsh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch523.txt",
+  "json": "persian/narration/ch523.json",
+  "textHash": "fnv1a64:4f37c2d2dee8d640",
+  "jsonHash": "fnv1a64:a7df5a383dc72413",
+  "findings": []
+}

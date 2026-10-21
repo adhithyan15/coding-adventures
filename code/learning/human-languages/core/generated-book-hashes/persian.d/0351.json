@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:c5526e01219e9a83",
+  "lessonIds": [
+    "FA-C351-sepah",
+    "FA-C351-nabard",
+    "FA-C351-piruzi",
+    "FA-C351-shekast-dadan",
+    "FA-C351-fath-kardan"
+  ],
+  "tex": "persian/book/chapters/ch351-war-and-victory.tex"
+}

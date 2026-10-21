@@ -41,6 +41,7 @@ fn writes(builtin: &str, values: &[f64]) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

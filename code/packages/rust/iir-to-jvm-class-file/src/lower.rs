@@ -6246,6 +6246,7 @@ fn serialize_method_attribute(
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 /// let cfg = IIRJvmConfig::new("MyClass");
 /// let class_file = lower_iir_to_jvm(&module, &cfg).unwrap();
@@ -6425,6 +6426,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -6799,6 +6801,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = lower_iir_to_jvm(&module, &make_cfg());
         assert!(matches!(result, Err(IIRJvmError::ValidationFailed(_))));

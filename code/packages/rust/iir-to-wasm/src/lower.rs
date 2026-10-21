@@ -6504,6 +6504,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -6633,6 +6634,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
         assert!(matches!(result, Err(IIRWasmError::ValidationFailed(_))));

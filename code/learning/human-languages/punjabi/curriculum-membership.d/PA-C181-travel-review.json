@@ -1,0 +1,11 @@
+{
+  "id": "PA-C181-travel-review",
+  "pathSegment": "PA-PATH-181-A2-TRANSPORT",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-181-A2-TRANSPORT",
+      "order": 6
+    }
+  ]
+}

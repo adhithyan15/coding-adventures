@@ -1,0 +1,11 @@
+{
+  "id": "FA-C311-be-naql-az",
+  "pathSegment": "FA-PATH-311-MANBA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-311-MANBA",
+      "order": 2
+    }
+  ]
+}

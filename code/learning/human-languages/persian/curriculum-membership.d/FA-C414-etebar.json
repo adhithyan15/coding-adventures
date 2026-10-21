@@ -1,0 +1,11 @@
+{
+  "id": "FA-C414-etebar",
+  "pathSegment": "FA-PATH-414-ARZ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-414-ARZ",
+      "order": 1
+    }
+  ]
+}

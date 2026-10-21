@@ -1,0 +1,20 @@
+{
+  "chapter": 292,
+  "title": "What I Think, And So",
+  "label": "ch:fa-what-i-think-and-so",
+  "canDo": "I can give an opinion with be nazar-e man or fekr mikonam ke, and draw a result from it with bara-ye hamin or pas.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R292-opinion-and-result",
+    "kind": "production",
+    "summary": "Complete FA-R292-opinion-and-result: an opinion, then the result drawn from it.",
+    "assesses": [
+      "FA-LEX-BE-NAZAR-E-MAN-01",
+      "FA-GRAMMAR-FEKR-MIKONAM-KE-01",
+      "FA-GRAMMAR-BARAYE-HAMIN-01",
+      "FA-GRAMMAR-PAS-SO-01"
+    ]
+  }
+}

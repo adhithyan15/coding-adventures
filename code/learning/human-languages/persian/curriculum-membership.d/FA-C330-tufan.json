@@ -1,0 +1,11 @@
+{
+  "id": "FA-C330-tufan",
+  "pathSegment": "FA-PATH-330-TUFAN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-330-TUFAN",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 296,
+  "title": "Glad, Tired, Hopeful",
+  "label": "ch:fa-glad-tired-hopeful",
+  "canDo": "I can say how I felt and what I became, describe a meal, and say what I hope for and would like to do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R296-feelings-and-hopes",
+    "kind": "production",
+    "summary": "Complete FA-R296-feelings-and-hopes: how a day made you feel, and one thing you hope for.",
+    "assesses": [
+      "FA-GRAMMAR-FEELING-BUDAM-01",
+      "FA-GRAMMAR-FEELING-SHODAM-01",
+      "FA-LEX-C296-GHAZA-01",
+      "FA-SCRIPT-C296-GHEYN-01",
+      "FA-GRAMMAR-OMIDVARAM-KE-01",
+      "FA-GRAMMAR-DUST-DARAM-SUBJ-01"
+    ]
+  }
+}

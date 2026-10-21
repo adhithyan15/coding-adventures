@@ -1,0 +1,11 @@
+{
+  "id": "FA-C349-asir-shodan",
+  "pathSegment": "FA-PATH-349-KHIYANAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-349-KHIYANAT",
+      "order": 4
+    }
+  ]
+}

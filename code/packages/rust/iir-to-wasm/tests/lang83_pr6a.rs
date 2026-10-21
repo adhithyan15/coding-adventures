@@ -88,6 +88,7 @@ fn module(body: Vec<IIRInstr>) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

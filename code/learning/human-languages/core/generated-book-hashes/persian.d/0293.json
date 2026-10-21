@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:04c95c3cf3e6987c",
+  "lessonIds": [
+    "FA-C293-beravam",
+    "FA-C293-bayad-beravi",
+    "FA-C293-towzih-dadan",
+    "FA-W293-zad",
+    "FA-C293-dalil-in-ast",
+    "FA-R293-advice-and-reasons"
+  ],
+  "tex": "persian/book/chapters/ch293-advice-and-why.tex"
+}

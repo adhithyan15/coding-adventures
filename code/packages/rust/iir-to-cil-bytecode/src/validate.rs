@@ -212,6 +212,7 @@ const LISTY_PAIR_TYPE: &str = "ref<LispyPair>";
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 /// assert!(validate_iir_for_clr(&module).is_empty());
 /// ```
@@ -617,6 +618,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -629,6 +631,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let errs = validate_iir_for_clr(&module);
         assert!(!errs.is_empty(), "should reject empty module");

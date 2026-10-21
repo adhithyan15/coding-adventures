@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:4f8154dab6123ded",
+  "lessonIds": [
+    "FA-C520-navazande",
+    "FA-C520-ahangsaz",
+    "FA-C520-orkestr",
+    "FA-C520-goruh-e-kor",
+    "FA-C520-albom"
+  ],
+  "tex": "persian/book/chapters/ch520-musicians.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:842e4ba9043770da",
+  "lessonIds": [
+    "FA-C317-taqib-kardan",
+    "FA-C317-qayem-shodan",
+    "FA-C317-gorikhtan",
+    "FA-C317-napadid-shodan",
+    "FA-C317-low-raftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch317.txt",
+  "json": "persian/narration/ch317.json",
+  "textHash": "fnv1a64:b9463105236c1fd4",
+  "jsonHash": "fnv1a64:7942d0f5aaf580f2",
+  "findings": []
+}

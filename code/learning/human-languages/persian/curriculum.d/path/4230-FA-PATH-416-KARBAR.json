@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-416-KARBAR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-416-KARBAR"
+  ],
+  "after": []
+}

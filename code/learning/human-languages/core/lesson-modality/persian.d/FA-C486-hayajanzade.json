@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C486-hayajanzade",
+    "language": "persian",
+    "chapter": 486,
+    "sequence": 24900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fc90db86590cfbf"
+  },
+  "findings": []
+}

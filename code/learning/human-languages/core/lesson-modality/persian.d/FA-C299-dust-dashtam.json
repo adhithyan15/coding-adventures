@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C299-dust-dashtam",
+    "language": "persian",
+    "chapter": 299,
+    "sequence": 15268,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8854450545ef4eb"
+  },
+  "findings": []
+}

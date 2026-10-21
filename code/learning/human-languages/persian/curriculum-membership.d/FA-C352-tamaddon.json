@@ -1,0 +1,11 @@
+{
+  "id": "FA-C352-tamaddon",
+  "pathSegment": "FA-PATH-352-BASTAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-352-BASTAN",
+      "order": 2
+    }
+  ]
+}

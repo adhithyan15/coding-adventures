@@ -1,0 +1,11 @@
+{
+  "id": "FA-C305-bamdad",
+  "pathSegment": "FA-PATH-305-SEPIDEDAM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-305-SEPIDEDAM",
+      "order": 1
+    }
+  ]
+}

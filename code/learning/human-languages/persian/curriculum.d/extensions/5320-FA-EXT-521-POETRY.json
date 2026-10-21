@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-521-POETRY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about poems and poets.",
+  "prerequisites": []
+}

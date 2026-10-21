@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:76e685c6826499a8",
+  "lessonIds": [
+    "FA-C521-sher",
+    "FA-C521-shaer",
+    "FA-C521-ghazal",
+    "FA-C521-robai",
+    "FA-C521-beyt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch521.txt",
+  "json": "persian/narration/ch521.json",
+  "textHash": "fnv1a64:f891e2c6841033d2",
+  "jsonHash": "fnv1a64:d94f9be4a4393010",
+  "findings": []
+}

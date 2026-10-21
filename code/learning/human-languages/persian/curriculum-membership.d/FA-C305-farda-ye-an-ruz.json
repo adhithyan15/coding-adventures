@@ -1,0 +1,11 @@
+{
+  "id": "FA-C305-farda-ye-an-ruz",
+  "pathSegment": "FA-PATH-305-SEPIDEDAM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-305-SEPIDEDAM",
+      "order": 2
+    }
+  ]
+}

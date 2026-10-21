@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:a7b813fe6c5fc910",
+  "lessonIds": [
+    "FA-C315-khabar-e-fowri",
+    "FA-C315-ruzname-negar",
+    "FA-C315-sarmaqale",
+    "FA-C315-tazahorat",
+    "FA-C315-shoar",
+    "FA-R315-review-308-315"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch315.txt",
+  "json": "persian/narration/ch315.json",
+  "textHash": "fnv1a64:91c18414093822ca",
+  "jsonHash": "fnv1a64:96fa7aa90a2e7ad5",
+  "findings": []
+}

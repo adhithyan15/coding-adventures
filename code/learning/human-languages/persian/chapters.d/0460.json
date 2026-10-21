@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Window shopping",
+  "label": "ch:fa-window-shopping",
+  "canDo": "I can shop for clothes: the shop window, the arcade, trying on, the fitting room and liking something.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C460-pasandidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can shop for clothes: the shop window, the arcade, trying on, the fitting room and liking something.",
+    "assesses": [
+      "FA-LEX-C460-VITRIN-03",
+      "FA-LEX-C460-VITRIN-04",
+      "FA-LEX-C460-VITRIN-05"
+    ]
+  }
+}

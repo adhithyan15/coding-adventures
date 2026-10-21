@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C293-towzih-dadan",
+    "language": "persian",
+    "chapter": 293,
+    "sequence": 15036,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa0dfcd545031591"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C434-keraye",
+  "pathSegment": "FA-PATH-434-PELLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-434-PELLE",
+      "order": 2
+    }
+  ]
+}

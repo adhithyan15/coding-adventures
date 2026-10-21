@@ -1,0 +1,11 @@
+{
+  "id": "FA-C322-zendani",
+  "pathSegment": "FA-PATH-322-MAHKUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-322-MAHKUM",
+      "order": 2
+    }
+  ]
+}

@@ -49,6 +49,7 @@ fn try_index(src: &str, i: i64) -> Result<i64, String> {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).map_err(|e| format!("{e:?}"))?;
     let bytes = encode_module(&wasm).map_err(|e| format!("{e:?}"))?;

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:67e6f9feb4cd1896",
+  "lessonIds": [
+    "FA-C447-nabsh",
+    "FA-C447-pelak",
+    "FA-C447-kodposti",
+    "FA-C447-asli",
+    "FA-C447-fari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch447.txt",
+  "json": "persian/narration/ch447.json",
+  "textHash": "fnv1a64:dba38a4df57e6556",
+  "jsonHash": "fnv1a64:ae25e99ee25ad252",
+  "findings": []
+}

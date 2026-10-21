@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Musical Instruments",
+  "label": "ch:fa-musical-instruments",
+  "canDo": "I can name some musical instruments.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C517-tombak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can name some musical instruments.",
+    "assesses": [
+      "FA-LEX-C517-INSTRUMENTS-03",
+      "FA-LEX-C517-INSTRUMENTS-04",
+      "FA-LEX-C517-INSTRUMENTS-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:7821681a0e8e7ffb",
+  "lessonIds": [
+    "FA-C384-etesab",
+    "FA-C384-ettehadiye",
+    "FA-C384-zahmat-keshidan",
+    "FA-C384-movaffaq-shodan",
+    "FA-C384-shekast-khordan"
+  ],
+  "tex": "persian/book/chapters/ch384-effort-success-and-strikes.tex"
+}

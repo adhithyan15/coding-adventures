@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 427,
+  "title": "At the garage",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d266f55b7a0ac980",
+  "lessons": [
+    {
+      "id": "FA-C427-tamirgah",
+      "sequence": 21850,
+      "title": "تعمیرگاه (ta'mirgâh) — a garage, a repair shop",
+      "headword": "تعمیرگاه",
+      "romanization": "ta'mirgâh",
+      "gloss": "a garage, a repair shop",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffbb315e89d3a4c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for one-way, then the Persian for a driving licence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعمیرگاه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعمیرگاه (ta'mirgâh) — \"a garage, a repair shop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ماشین را به تعمیرگاه بردیم. Mâshin râ be ta'mirgâh bordim. We took the car to the garage."
+            },
+            {
+              "kind": "speech",
+              "text": "ta'mir 'repair' + gâh 'place'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ta'mirgâh is built from ta'mir 'repair', a loan usually traced to Arabic taʿmīr 'making habitable, restoring', and the native gâh 'place'. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'mirgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'mirgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'mirgâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'mirgâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ta'mirgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ta'mirgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for one-way, then the Persian for a driving licence, then say ta'mirgâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for one-way, then the Persian for a driving licence, then say *ta'mirgâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعمیرگاه (ta'mirgâh) mean? (\"A garage, a repair shop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C427-tamir-kardan",
+      "sequence": 21860,
+      "title": "تعمیر کردن (ta'mir kardan) — to repair, to fix",
+      "headword": "تعمیر کردن",
+      "romanization": "ta'mir kardan",
+      "gloss": "to repair, to fix",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc0e6b9461ebb9fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a driving licence, then the Persian for a garage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعمیر کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعمیر کردن (ta'mir kardan) — \"to repair, to fix\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مکانیک ماشین را در دو روز تعمیر کرد. Mekânik mâshin râ dar do ruz ta'mir kard. The mechanic repaired the car in two days."
+            },
+            {
+              "kind": "speech",
+              "text": "ta'mir + kardan. Present stem kon-: ta'mir mikonad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ta'mir kardan is built from ta'mir 'repair', usually traced to Arabic taʿmīr 'restoring', and kardan 'to do', inherited from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'mir kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'mir kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'mir kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'mir kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ta'mir kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ta'mir kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a driving licence, then the Persian for a garage, then say ta'mir kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a driving licence, then the Persian for a garage, then say *ta'mir kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعمیر کردن (ta'mir kardan) mean? (\"To repair, to fix\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C427-jush-avardan",
+      "sequence": 21870,
+      "title": "جوش آوردن (jush âvardan) — to overheat (of an engine); to boil over; to lose your temper",
+      "headword": "جوش آوردن",
+      "romanization": "jush âvardan",
+      "gloss": "to overheat (of an engine); to boil over; to lose your temper",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aba7198cf46c779e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a garage, then the Persian for to repair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جوش آوردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جوش آوردن (jush âvardan) — \"to overheat (of an engine); to boil over; to lose your temper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در گرمای تابستان ماشین ما جوش آورد. Dar garmâ-ye tâbestân mâshin-e mâ jush âvard. In the summer heat our car overheated."
+            },
+            {
+              "kind": "speech",
+              "text": "jush 'boiling' + âvardan 'to bring'. Said of people too: jush âvard — he lost his temper."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jush âvardan is built from jush 'boiling, simmering', a native word that EtymDB lists, and âvardan 'to bring', usually traced to Middle Persian āwurdan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jush âvardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jush âvardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jush âvardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jush âvardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with jush âvardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *jush âvardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a garage, then the Persian for to repair, then say jush âvardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a garage, then the Persian for to repair, then say *jush âvardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جوش آوردن (jush âvardan) mean? (\"To overheat (of an engine); to boil over; to lose your temper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C427-yadakkesh",
+      "sequence": 21880,
+      "title": "یدک کش (yadakkesh) — a tow truck, a breakdown lorry",
+      "headword": "یدک کش",
+      "romanization": "yadakkesh",
+      "gloss": "a tow truck, a breakdown lorry",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ec698bf1f61c723",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to repair, then the Persian for to overheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: یدک کش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یدک کش (yadakkesh) — \"a tow truck, a breakdown lorry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یدک کش (yadakkesh) ماشین ما را به تعمیرگاه برد. Yadakkesh mâshin-e mâ râ be ta'mirgâh bord. The tow truck took our car to the garage."
+            },
+            {
+              "kind": "speech",
+              "text": "yadak 'spare, in tow' + kesh 'puller', from keshidan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yadakkesh is built from yadak 'a led horse, a spare', usually traced to a Turkic word for a horse led on a rope, and kesh 'puller', from the native verb keshidan 'to pull'. EtymDB lists neither part."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadakkesh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadakkesh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadakkesh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadakkesh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with yadakkesh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *yadakkesh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to repair, then the Persian for to overheat, then say yadakkesh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to repair, then the Persian for to overheat, then say *yadakkesh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does یدک کش (yadakkesh) mean? (\"A tow truck, a breakdown lorry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C427-boksel-kardan",
+      "sequence": 21890,
+      "title": "بکسل کردن (boksel kardan) — to tow",
+      "headword": "بکسل کردن",
+      "romanization": "boksel kardan",
+      "gloss": "to tow",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a148d911665fcf0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to overheat, then the Persian for a tow truck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بکسل کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بکسل کردن (boksel kardan) — \"to tow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "برادرم ماشین خراب مرا با طناب بکسل کرد. Barâdaram mâshin-e kharâb-e marâ bâ tanâb boksel kard. My brother towed my broken-down car with a rope."
+            },
+            {
+              "kind": "speech",
+              "text": "boksel (a tow rope) + kardan. Present stem kon-: boksel mikonad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "boksel kardan is built from boksel 'a tow, a tow rope', which EtymDB takes from Russian buksír 'towing', and kardan 'to do', inherited from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boksel kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boksel kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boksel kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boksel kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with boksel kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *boksel kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to overheat, then the Persian for a tow truck, then say boksel kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to overheat, then the Persian for a tow truck, then say *boksel kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بکسل کردن (boksel kardan) mean? (\"To tow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R427-review-420-427",
+      "sequence": 21900,
+      "title": "Roads, stations and lodging — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 420-427",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:970cc77ff6406890",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a steering wheel and to drive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a steering wheel, to drive, a gear, to change gear, a clutch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a steering wheel, to drive, a gear, to change gear, a clutch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a horn, to honk, a light, a windscreen wiper, a side mirror",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a horn, to honk, a light, a windscreen wiper, a side mirror]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bonnet, an engine, oil, to start, to stall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bonnet, an engine, oil, to start, to stall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a petrol station, to fill up, a fuel tank, to run out, a car wash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a petrol station, to fill up, a fuel tank, to run out, a car wash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "speed, to speed up, to overtake, to pull over, safety",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: speed, to speed up, to overtake, to pull over, safety]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a motorway, a toll booth, a hard shoulder, traffic, to swerve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a motorway, a toll booth, a hard shoulder, traffic, to swerve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a traffic jam, to park, to turn round, one-way, a driving licence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a traffic jam, to park, to turn round, one-way, a driving licence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garage, to repair, to overheat, a tow truck, to tow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garage, to repair, to overheat, a tow truck, to tow]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A steering wheel? (فرمان.) To drive? (رانندگی کردن.) A gear? (دنده.) To change gear? (دنده عوض کردن.) A clutch? (کلاچ.) A horn? (بوق.) To honk? (بوق زدن.) A light? (چراغ.) A windscreen wiper? (برف پاک کن.) A side mirror? (آینه بغل.) A bonnet? (کاپوت.) An engine? (موتور.) Oil? (روغن.) To start? (استارت زدن.) To stall? (خاموش شدن.) A petrol station? (پمپ بنزین.) To fill up? (بنزین زدن.) A fuel tank? (باک.) To run out? (تمام شدن.) A car wash? (کارواش.) Speed? (سرعت.) To speed up? (سرعت گرفتن.) To overtake? (سبقت گرفتن.) To pull over? (کنار زدن.) Safety? (ایمنی.) A motorway? (اتوبان.) A toll booth? (عوارضی.) A hard shoulder? (شانه خاکی.) Traffic? (ترافیک.) To swerve? (منحرف شدن.) A traffic jam? (راهبندان.) To park? (پارک کردن.) To turn round? (دور زدن.) One-way? (یک طرفه.) A driving licence? (گواهینامه.) A garage? (تعمیرگاه (ta'mirgâh).) To repair? (تعمیر کردن (ta'mir kardan).) To overheat? (جوش آوردن (jush âvardan).) A tow truck? (یدک کش (yadakkesh).) To tow? (بکسل کردن (boksel kardan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

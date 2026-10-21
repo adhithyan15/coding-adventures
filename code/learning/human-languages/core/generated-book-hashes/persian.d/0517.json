@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:69d117c7de8868ea",
+  "lessonIds": [
+    "FA-C517-piyano",
+    "FA-C517-viyolon",
+    "FA-C517-tar",
+    "FA-C517-santur",
+    "FA-C517-tombak"
+  ],
+  "tex": "persian/book/chapters/ch517-musical-instruments.tex"
+}

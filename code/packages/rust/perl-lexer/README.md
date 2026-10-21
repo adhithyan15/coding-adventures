@@ -5,7 +5,7 @@ checked-in `code/grammars/perl/perl.tokens` definition. This is not a full
 Perl tokenizer.
 
 It also carries the compiled token grammar of every checked release pair in
-`code/grammars/perl/releases.csv` (LANG84). The 117 partial pairs share 5
+`code/grammars/perl/releases.csv` (LANG84). The 118 partial pairs share 5
 distinct grammars, so `src/_grammar.rs` holds one module per distinct grammar
 and maps each release ID to its module:
 

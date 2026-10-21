@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:b21fc6743df94342",
+  "lessonIds": [
+    "FA-C459-jens",
+    "FA-C459-kala",
+    "FA-C459-asl",
+    "FA-C459-taqallobi",
+    "FA-C459-garanti",
+    "FA-R459-review-452-459"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch459.txt",
+  "json": "persian/narration/ch459.json",
+  "textHash": "fnv1a64:3087fcd08e4ee4e4",
+  "jsonHash": "fnv1a64:44b095f352dbf88d",
+  "findings": []
+}

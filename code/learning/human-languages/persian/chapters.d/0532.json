@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Watching and Listening",
+  "label": "ch:fa-watching-and-listening",
+  "canDo": "I can talk about screens and listening.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C532-hedfon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about screens and listening.",
+    "assesses": [
+      "FA-LEX-C532-WATCHING-03",
+      "FA-LEX-C532-WATCHING-04",
+      "FA-LEX-C532-WATCHING-05"
+    ]
+  }
+}

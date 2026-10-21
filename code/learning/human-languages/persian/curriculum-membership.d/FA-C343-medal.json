@@ -1,0 +1,11 @@
+{
+  "id": "FA-C343-medal",
+  "pathSegment": "FA-PATH-343-BARANDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-343-BARANDE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 400,
+  "output": "persian/book/chapters/ch400-getting-into-university.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

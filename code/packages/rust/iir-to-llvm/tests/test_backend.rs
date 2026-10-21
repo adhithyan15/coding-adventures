@@ -25,6 +25,7 @@ fn empty_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -37,6 +38,7 @@ fn module_with(func: IIRFunction) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -524,6 +526,7 @@ fn arith_rem_signed_emits_srem_unsigned_urem() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("srem i64"), "expected srem for i64; got:\n{ll}");
@@ -796,6 +799,7 @@ fn call_user_fn_non_void_emits_typed_call() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("%r = call i32 @square(i32 5)"),
@@ -841,6 +845,7 @@ fn boolean_call_result_stays_i1_for_logical_ops_and_branches() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let ll = lower(&module);
@@ -876,6 +881,7 @@ fn call_void_return_omits_lhs() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("  call void @sink(i32 7)"),
@@ -931,6 +937,7 @@ fn call_arg_count_mismatch_is_error() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let err = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())
         .expect_err("arg-count mismatch should fail");
@@ -992,6 +999,7 @@ fn declare_for_print_i64_is_emitted_exactly_once_per_module() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert_eq!(
@@ -2712,6 +2720,7 @@ fn e4dyn_string_procedure_return_and_call_result_print() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
 
@@ -2761,6 +2770,7 @@ fn e4dyn_str_len_of_runtime_string_reads_header() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("inttoptr i64") && ll.contains("load i64, ptr %__slp"),
@@ -2892,6 +2902,7 @@ fn str_literal_call_arg_is_ptrtoint_to_i64() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert!(ll.contains("ptrtoint ptr @__twig_str"),
@@ -3184,6 +3195,7 @@ fn special_char_function_names_are_quoted_at_define_and_call() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let ll = lower(&module);
     assert!(ll.contains(r#"define i64 @"Some?"("#), "define not quoted:\n{ll}");
@@ -3471,6 +3483,7 @@ fn floor_program(op: &str, pairs: &[(i64, i64)]) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -3706,6 +3719,7 @@ fn float_program(builtin: &str, values: &[f64]) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

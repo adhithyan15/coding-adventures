@@ -1,0 +1,11 @@
+{
+  "id": "FA-C344-golab",
+  "pathSegment": "FA-PATH-344-NAZR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-344-NAZR",
+      "order": 4
+    }
+  ]
+}

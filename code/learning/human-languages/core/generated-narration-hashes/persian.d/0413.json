@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:c24bebc784d486d6",
+  "lessonIds": [
+    "FA-C413-eqtesad",
+    "FA-C413-tavarrom",
+    "FA-C413-gerani",
+    "FA-C413-yarane",
+    "FA-C413-nerkh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch413.txt",
+  "json": "persian/narration/ch413.json",
+  "textHash": "fnv1a64:18d8ca9825081a95",
+  "jsonHash": "fnv1a64:7ec5247fb3ec70ad",
+  "findings": []
+}

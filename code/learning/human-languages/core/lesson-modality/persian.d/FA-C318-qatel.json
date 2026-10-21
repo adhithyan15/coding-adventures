@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C318-qatel",
+    "language": "persian",
+    "chapter": 318,
+    "sequence": 16240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e50ff94def65acac"
+  },
+  "findings": []
+}

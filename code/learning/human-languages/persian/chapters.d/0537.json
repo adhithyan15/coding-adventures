@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Changes at Home",
+  "label": "ch:fa-changes-at-home",
+  "canDo": "I can talk about doing up a home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C537-sahebkhane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about doing up a home.",
+    "assesses": [
+      "FA-LEX-C537-CHANGES-03",
+      "FA-LEX-C537-CHANGES-04",
+      "FA-LEX-C537-CHANGES-05"
+    ]
+  }
+}

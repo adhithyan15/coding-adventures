@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:8d3c1f26c3493d30",
+  "lessonIds": [
+    "FA-C402-tahqiq",
+    "FA-C402-pazhuhesh",
+    "FA-C402-maqale",
+    "FA-C402-payan-name",
+    "FA-C402-sokhanrani"
+  ],
+  "tex": "persian/book/chapters/ch402-research-and-papers.tex"
+}

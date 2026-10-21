@@ -213,6 +213,7 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 /// assert!(validate_for_wasm(&module).is_empty());
 /// ```
@@ -635,6 +636,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -647,6 +649,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let errs = validate_for_wasm(&module);
         assert!(!errs.is_empty(), "should reject empty module");

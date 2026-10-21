@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Disaster",
+  "label": "ch:fa-disaster",
+  "canDo": "I can talk about a disaster: buildings destroyed or collapsing, rubble, evacuating and taking shelter.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R331-review-324-331",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can talk about a disaster: buildings destroyed or collapsing, rubble, evacuating and taking shelter.",
+    "assesses": [
+      "FA-LEX-C331-VIRAN-03",
+      "FA-LEX-C331-VIRAN-04",
+      "FA-LEX-C331-VIRAN-05"
+    ]
+  }
+}

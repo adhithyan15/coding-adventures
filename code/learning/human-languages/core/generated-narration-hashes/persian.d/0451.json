@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:cdb01d8aefc345d2",
+  "lessonIds": [
+    "FA-C451-sholughi",
+    "FA-C451-nimkat",
+    "FA-C451-saken",
+    "FA-C451-rahgozar",
+    "FA-C451-hamshahri",
+    "FA-R451-review-444-451"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch451.txt",
+  "json": "persian/narration/ch451.json",
+  "textHash": "fnv1a64:ef8ae2ac908399d3",
+  "jsonHash": "fnv1a64:0a3a456fef65b08f",
+  "findings": []
+}

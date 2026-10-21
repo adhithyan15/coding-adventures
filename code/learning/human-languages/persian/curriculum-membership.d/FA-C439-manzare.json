@@ -1,0 +1,11 @@
+{
+  "id": "FA-C439-manzare",
+  "pathSegment": "FA-PATH-439-MALAFE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-439-MALAFE",
+      "order": 4
+    }
+  ]
+}

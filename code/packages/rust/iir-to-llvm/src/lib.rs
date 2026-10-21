@@ -72,6 +72,7 @@
 //!     language: "test".into(),
 //!     exports: vec![],
 //!     imports: vec![],
+//!     release: None,
 //! };
 //!
 //! let ll = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())

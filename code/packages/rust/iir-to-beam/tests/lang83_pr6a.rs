@@ -65,6 +65,7 @@ fn writer(builtin: &str) -> BEAMModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
     lower_iir_to_beam(&module, &IIRBeamConfig::new("floats")).expect("lowers")
@@ -520,6 +521,7 @@ fn a_module_without_float_output_is_unchanged() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let m = lower_iir_to_beam(&module, &IIRBeamConfig::new("plain")).unwrap();
     assert!(!m.atoms.iter().any(|a| a == "__iir_write_f64" || a == "float_to_list" || a == "nthtail"));
@@ -539,6 +541,7 @@ fn a_function_named_like_the_helper_is_refused() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     module.functions.push(IIRFunction::new("__iir_write_f64", vec![], "i64", vec![
         IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:ade1e78ba1d6c852",
+  "lessonIds": [
+    "FA-C429-rah-ahan",
+    "FA-C429-sakku",
+    "FA-C429-vagon",
+    "FA-C429-kupe",
+    "FA-C429-reyl"
+  ],
+  "tex": "persian/book/chapters/ch429-the-railway.tex"
+}

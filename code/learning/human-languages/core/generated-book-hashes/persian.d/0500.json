@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:fed8268c78f7e2b1",
+  "lessonIds": [
+    "FA-C500-amu",
+    "FA-C500-amme",
+    "FA-C500-pesaramu",
+    "FA-C500-dokhtarkhale",
+    "FA-C500-khaharzade"
+  ],
+  "tex": "persian/book/chapters/ch500-uncles-aunts-and-cousins.tex"
+}
