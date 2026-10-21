@@ -257,8 +257,10 @@ bounded denominator remain conservative. Static whole-number factors may
 precede the bounded numerator, including exact divisions among those factors,
 provided multiplication connects the resulting prefix to its root; division
 by that root remains conservative.
-An exact variable-free exponent chain evaluating to one may preserve the
-bounded result before `entier`; other or dynamic exponents remain conservative.
+Positive variable-free whole-number powers may raise the exact sign-rooted
+integer transform within the existing exponent-unroll cap while checked
+exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
+oversized powers remain conservative.
 Additional built-in `entier` calls may wrap that already integral bounded
 result; an unrestricted runtime `entier` operand remains conservative.
 Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`

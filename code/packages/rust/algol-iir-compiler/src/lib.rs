@@ -4692,8 +4692,9 @@ impl Compiler {
 
     /// Recognize an exact-integer transform rooted in one built-in `sign` call
     /// and return its worst-case magnitude. This complements the wider bounded
-    /// transform proof above with non-unit integer scaling while keeping every
-    /// intermediate operation exactly representable in binary64.
+    /// transform proof above with non-unit integer scaling and positive static
+    /// powers while keeping every intermediate operation exactly representable
+    /// in binary64.
     fn builtin_exact_integer_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4725,9 +4726,31 @@ impl Compiler {
             .iter()
             .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
         {
-            return self.builtin_exact_integer_sign_operand(literal_power_identity_base(
-                node, true,
-            )?);
+            let sequence = pieces(node);
+            if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+                return None;
+            }
+            let mut operands = Vec::new();
+            for (index, piece) in sequence.iter().enumerate() {
+                if index.is_multiple_of(2) {
+                    let Piece::Node(operand) = piece else {
+                        return None;
+                    };
+                    operands.push(*operand);
+                } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**"))
+                {
+                    return None;
+                }
+            }
+            let (base, exponents) = operands.split_first()?;
+            let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)?;
+            if exponent == 0 {
+                return None;
+            }
+            let mut proof = self.builtin_exact_integer_sign_operand(base)?;
+            proof.magnitude = proof.magnitude.checked_pow(exponent)?;
+            proof.value_gcd = proof.value_gcd.checked_pow(exponent)?;
+            return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
         }
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
@@ -15357,11 +15380,14 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_provenance_crosses_unit_power_entier_sign_widening() {
+    fn al4_runtime_real_provenance_crosses_exact_positive_power_entier_sign_widening() {
         for source in [
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) ^ (2 - 1)); output(x) end",
             "begin real procedure pick; pick := 3.5; real x; x := entier((abs(sign(pick()))) ^ 1.0); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier((abs(sign(pick()))) ^ (2 - 1)))) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 2); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((sign(pick()) + 2) ^ (1 + 1)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((2 * sign(pick()) + 2) ^ 3); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -15378,10 +15404,11 @@ mod tests {
     }
 
     #[test]
-    fn al4_unit_power_entier_sign_widening_rejects_unproven_exponents() {
+    fn al4_exact_power_entier_sign_widening_rejects_unproven_exponents() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 0); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick())) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 1) ^ (-1)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer unit; real result; unit := 1; result := entier(sign(pick()) ^ unit); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(1 ^ sign(pick())); output(result) end",
         ] {
