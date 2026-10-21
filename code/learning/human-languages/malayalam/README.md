@@ -150,11 +150,14 @@ All forty-seven later lessons remain below five effective minutes.
   unreal **-ഇരുന്നെങ്കിൽ … -ഉമായിരുന്നു**, closed by six connected lines of
   writing. Eight letters arrive here, each written straight after a word that
   holds it: **ഈ** (ഈയിടെ), **ഐ** (ഐക്യം), **ഔ** (ഔദ്യോഗികമായ), **ഡ** (റോഡ്),
-  **ൗ** (സൗകര്യം), **ഃ** (ദുഃഖം), **ഋ** (ഋതു) and **ഘ** (ആഘോഷം). The four vowels
-  and two signs cite Jayasree's recorded strokes in
-  [`data/scripts/malayalam.json`](../data/scripts/malayalam.json); none has
-  filmstrip geometry yet, so their lessons describe the order in words and print
-  no strip.
+  **ൗ** (സൗകര്യം), **ഃ** (ദുഃഖം), **ഋ** (ഋതു) and **ഘ** (ആഘോഷം). The rows for the four
+  vowels and two signs in
+  [`data/scripts/malayalam.json`](../data/scripts/malayalam.json) are
+  recognition-only: no stroke order is claimed for them, because the
+  script-ductus package has no font-checked ductus to back one yet. Their
+  lessons describe the shape in words, ask the learner to copy the printed
+  letter, and print no strip. Until a cited row lands, the four vowels stay out
+  of glyph closure, and each anchoring headword is one pinned glyph gap.
 - **Chapters 349–572 — the B1 vocabulary** ([`lessons/`](./lessons/),
   `ML-C349-*` to `ML-R572-*`): 1,120 headwords, 400 of them verbs, one word per
   lesson, practised again in the next two lessons, with a review after every

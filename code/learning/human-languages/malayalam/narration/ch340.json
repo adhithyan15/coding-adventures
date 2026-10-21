@@ -4,7 +4,7 @@
   "chapter": 340,
   "title": "Telling a Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6dd5ddcea41e696f",
+  "sourceHash": "fnv1a64:ab46c1d1c10e86ee",
   "lessons": [
     {
       "id": "ML-C340-iyite",
@@ -165,7 +165,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:30366029ecc9650d",
+      "sourceHash": "fnv1a64:cbbc0a6d6603cba5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -238,11 +238,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One recorded hand writes ഈ (ī) in two strokes. First the whole of ഇ: from the inner tip of the small spiral, round it, up to the stem, over the broad right lobe, round the bottom, a curl below the line, and the long baseline to the right. Then, after one lift, the tail: over its small left lobe, down into the notch, over the broader right lobe, and back along its foot."
+              "text": "ഈ (ī) is two parts side by side: the whole of ഇ on the left, and the tail on the right. Write the ഇ you already know first, then add the tail beside it: a small lobe, a notch, and a broader lobe that sweeps back along its foot."
             },
             {
               "kind": "speech",
-              "text": "Write ഈ (ī) yourself, slowly, and larger than it is printed. Copy the printed shape, and keep the order above."
+              "text": "Write ഈ (ī) yourself, slowly, and larger than it is printed. Copy the printed shape."
             }
           ]
         },

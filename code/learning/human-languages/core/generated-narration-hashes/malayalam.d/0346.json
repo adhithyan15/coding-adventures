@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 346,
-  "sourceHash": "fnv1a64:fe920b52d1399a67",
+  "sourceHash": "fnv1a64:7b4c99e96fdc6044",
   "lessonIds": [
     "ML-C346-atinekkal",
     "ML-C346-rtu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch346.txt",
   "json": "malayalam/narration/ch346.json",
-  "textHash": "fnv1a64:48003cd005ad5d6e",
-  "jsonHash": "fnv1a64:09f65b34cf34bfc0",
+  "textHash": "fnv1a64:8d175ced23a2914d",
+  "jsonHash": "fnv1a64:aab8bb23ec86e060",
   "findings": []
 }

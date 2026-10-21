@@ -4,7 +4,7 @@
   "chapter": 345,
   "title": "Feelings and Hopes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:44c7c94e914d63cd",
+  "sourceHash": "fnv1a64:0767a51c6c4ff392",
   "lessons": [
     {
       "id": "ML-C345-duhkham",
@@ -161,7 +161,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:cc3d22d51162a1dc",
+      "sourceHash": "fnv1a64:278039a58cf87960",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -226,11 +226,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One recorded hand writes ഃ (ḥ) in two strokes: the upper ring first, then, after a lift, the lower one. Each ring starts at its top and goes round anticlockwise, to the left first."
+              "text": "ഃ (ḥ) is two small closed rings, one above the other. Write the upper ring first, then the lower."
             },
             {
               "kind": "speech",
-              "text": "Write ഃ (ḥ) yourself, slowly, and larger than it is printed: two rings the same size, one above the other. Copy the printed shape and keep the order above."
+              "text": "Write ഃ (ḥ) yourself, slowly, and larger than it is printed: two rings the same size, one above the other. Copy the printed shape."
             }
           ]
         },

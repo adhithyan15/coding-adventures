@@ -4,7 +4,7 @@
   "chapter": 341,
   "title": "What I Think, and So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:52aea481e0b410d9",
+  "sourceHash": "fnv1a64:cba32c7d8c8d2ab7",
   "lessons": [
     {
       "id": "ML-C341-vicarikkuka",
@@ -434,7 +434,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ec728d5869cc0c23",
+      "sourceHash": "fnv1a64:4884c0f2836b0f41",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -503,11 +503,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One recorded hand writes ഐ (ai) in two strokes. First the left half, as you write എ: from the inner tip, round the small loop and out over the arch to its foot. Then, after one lift, the right half in one run: up and over its small loop, along the base, up the short stem, down below the line, and up the tall loop, over its top and down the right side."
+              "text": "ഐ (ai) is two parts side by side. The left half is the shape of എ, which you already write. The right half is a small loop, a short base and stem, and a tall loop that drops below the line. Write the left half first, then the right half beside it."
             },
             {
               "kind": "speech",
-              "text": "Write ഐ (ai) yourself, slowly, and larger than it is printed. Copy the printed shape and keep the order above."
+              "text": "Write ഐ (ai) yourself, slowly, and larger than it is printed. Copy the printed shape."
             }
           ]
         },

@@ -56,13 +56,11 @@ base, and a tall loop that drops below the line.
 ## Writing: ഐ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C341-AI-01] -->
 
-One recorded hand writes **ഐ** in two strokes. First the left half, as you write **എ**: from the
-inner tip, round the small loop and out over the arch to its foot. Then, after one lift, the right
-half in one run: up and over its small loop, along the base, up the short stem, down below the
-line, and up the tall loop, over its top and down the right side.
+**ഐ** is two parts side by side. The left half is the shape of **എ**, which you already write.
+The right half is a small loop, a short base and stem, and a tall loop that drops below the line.
+Write the left half first, then the right half beside it.
 
-Write **ഐ** yourself, slowly, and larger than it is printed. Copy the printed shape and keep the
-order above.
+Write **ഐ** yourself, slowly, and larger than it is printed. Copy the printed shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-135, ML-SCRIPT-C114-AI-SIGN-01, ML-LEX-C341-AIKYAM-01, ML-SCRIPT-C341-AI-01] -->

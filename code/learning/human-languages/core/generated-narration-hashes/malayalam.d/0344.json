@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 344,
-  "sourceHash": "fnv1a64:01a5ba12eda1805a",
+  "sourceHash": "fnv1a64:6b8dbcc3fef7f079",
   "lessonIds": [
     "ML-C344-ticket-venam",
     "ML-C344-saukaryam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch344.txt",
   "json": "malayalam/narration/ch344.json",
-  "textHash": "fnv1a64:e2bd9404720d1a46",
-  "jsonHash": "fnv1a64:221701a2dbe7e718",
+  "textHash": "fnv1a64:6dcab5eb85e18b9d",
+  "jsonHash": "fnv1a64:04490296cd425227",
   "findings": []
 }

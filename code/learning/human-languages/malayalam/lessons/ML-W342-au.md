@@ -53,12 +53,11 @@ and a broader lobe that sweeps back along its foot. A later letter lesson is abo
 ## Writing: ഔ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C342-AU-01] -->
 
-One recorded hand writes **ഔ** in two strokes. First the body: from the inner tip, round the small
-loop, out over the broad arch, and down round the lower lobe to its foot. Then, after one lift,
-the tail: over the small lobe, into the notch, over the broader lobe and back along its foot.
+**ഔ** is two parts side by side: the body of **ഒ** on the left, and on the right the tail you
+know from **ഊ**. Write the body first, then add the tail beside it: a small lobe, a notch, and a
+broader lobe that sweeps back along its foot.
 
-Write **ഔ** yourself, slowly, and larger than it is printed. Copy the printed shape and keep the
-order above.
+Write **ഔ** yourself, slowly, and larger than it is printed. Copy the printed shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-126, ML-SCRIPT-RECOG-125, ML-LEX-C342-AUDYOGIKAMAYA-01, ML-SCRIPT-C342-AU-01] -->

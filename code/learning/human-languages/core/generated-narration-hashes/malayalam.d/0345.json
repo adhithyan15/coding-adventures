@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 345,
-  "sourceHash": "fnv1a64:44c7c94e914d63cd",
+  "sourceHash": "fnv1a64:0767a51c6c4ff392",
   "lessonIds": [
     "ML-C345-duhkham",
     "ML-W345-visarga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch345.txt",
   "json": "malayalam/narration/ch345.json",
-  "textHash": "fnv1a64:6b8f307820825466",
-  "jsonHash": "fnv1a64:d67b9600f134a13d",
+  "textHash": "fnv1a64:53aab57dfeebb1a2",
+  "jsonHash": "fnv1a64:5c079d42b5a60d86",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 344,
   "title": "Tickets, Seats and Trouble",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:01a5ba12eda1805a",
+  "sourceHash": "fnv1a64:6b8dbcc3fef7f079",
   "lessons": [
     {
       "id": "ML-C344-ticket-venam",
@@ -299,7 +299,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ff9403f57d320a3b",
+      "sourceHash": "fnv1a64:de6e65ceb8482e6b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -368,11 +368,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One recorded hand writes ൗ (au) in one stroke, with no lift: start low on the left and climb over the small lobe, dip into the notch, climb over the broader lobe and down its right side, and sweep back left along the foot."
+              "text": "ൗ (au) is the tail on its own: a small lobe on the left, a notch, and a broader lobe on the right whose foot sweeps back to the left. Write it after its consonant, the same way you wrote it on ഈ and ഔ."
             },
             {
               "kind": "speech",
-              "text": "Write ൗ (au) yourself, slowly, and larger than it is printed. Copy the printed shape and keep the order above."
+              "text": "Write ൗ (au) yourself, slowly, and larger than it is printed. Copy the printed shape."
             }
           ]
         },

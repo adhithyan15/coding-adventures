@@ -40,15 +40,17 @@
   **ഈ** (ഈയിടെ), ML-W341-ai **ഐ** (ഐക്യം), ML-W342-au **ഔ** (ഔദ്യോഗികമായ),
   ML-W343-da **ഡ** (റോഡ്), ML-W344-au-sign **ൗ** (സൗകര്യം), ML-W345-visarga
   **ഃ** (ദുഃഖം), ML-W346-vocalic-r **ഋ** (ഋതു) and ML-W348-gha **ഘ** (ആഘോഷം).
-  None has filmstrip geometry, so no lesson promises a strip; the six with a
-  cited stroke order describe it in words, and ഡ and ഘ ask the learner to copy the
-  printed shape.
+  None has filmstrip geometry, so no lesson promises a strip. None claims a
+  verified stroke order either: each describes the letter's shape in words and
+  asks the learner to copy the printed shape.
 - **Script inventory.** `data/scripts/malayalam.json` gains mark rows for the au
   length mark **ൗ** (U+0D57, the modern spelling of the au sign) and the visarga
-  **ഃ** (U+0D03), and handwriting rows for the independent vowels **ഈ ഐ ഔ ഋ**,
-  which enter glyph closure only once source-backed. All six cite Jayasree's
-  recorded strokes drawn alone (stroke count, start, order and direction; no
-  coordinate copied; CC BY 4.0).
+  **ഃ** (U+0D03), and descriptive rows for the independent vowels **ഈ ഐ ഔ ഋ**.
+  All six are recognition-only, with no stroke order, lift count or source:
+  script-ductus has no font-checked ductus for them, and a cited order needs
+  one with the same source. The four vowels therefore stay out of glyph
+  closure, and each of their anchoring headwords (ഈയിടെ, ഐക്യം, ഔദ്യോഗികമായ,
+  ഋതു) is one glyph gap, pinned in the corpus glyph-gap queue.
 - **Sources.** Etymologies cite DEDR (ഈയിടെ: 410, 448), CDIAL (ദുഃഖം 6375, ഐക്യം
   2533, വിചാരിക്കുക 11683) or Monier-Williams (സൗകര്യം, ഋതു, ഔദ്യോഗികമായ via
   *udyoga*, ആഘോഷം via *āghoṣa*); റോഡ് is borrowed from English. Where the source
@@ -58,5 +60,6 @@
   and the directly-owned overlap 69 → 77), tests/levels.test.ts (Malayalam leaves
   the A2 reach list for the over-A2 list), tests/letter-anchoring-ceilings
   (`unreadInventory` 10 → 4), tests/corpus/malayalam/track.test.ts (the writing
-  runway now ends on ML-W348-six-lines), and the inventory evidence for the six
-  new rows.
+  runway now ends on ML-W348-six-lines), the inventory evidence for the six
+  recognition-only rows, and the corpus glyph-gap queue (empty -> ഈ ഋ ഐ ഔ,
+  one headword each).

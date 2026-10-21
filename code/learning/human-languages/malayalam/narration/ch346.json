@@ -4,7 +4,7 @@
   "chapter": 346,
   "title": "Bigger, Best, and How Long",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fe920b52d1399a67",
+  "sourceHash": "fnv1a64:7b4c99e96fdc6044",
   "lessons": [
     {
       "id": "ML-C346-atinekkal",
@@ -299,7 +299,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:de8115e0364053a1",
+      "sourceHash": "fnv1a64:df77b4a09d2f36bb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -368,11 +368,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One recorded hand writes ഋ (ṛ) in two strokes. First the top: from inside the upper left loop, round it anticlockwise, down and along the waist, and up round the upper right loop, anticlockwise again. Then, after one lift, the oval below, from its top centre, clockwise."
+              "text": "ഋ (ṛ) is two parts: on top, two loops joined by a sagging waist, and below them, an oval. Write the top first, then the oval under it."
             },
             {
               "kind": "speech",
-              "text": "Write ഋ (ṛ) yourself, slowly, and larger than it is printed. Copy the printed shape and keep the order above."
+              "text": "Write ഋ (ṛ) yourself, slowly, and larger than it is printed. Copy the printed shape."
             }
           ]
         },

@@ -58,13 +58,11 @@ On its own, **ഈ** is also a word: "this", in front of a noun. **ഈ വീട�
 ## Writing: ഈ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C340-II-01] -->
 
-One recorded hand writes **ഈ** in two strokes. First the whole of **ഇ**: from the inner tip of
-the small spiral, round it, up to the stem, over the broad right lobe, round the bottom, a curl
-below the line, and the long baseline to the right. Then, after one lift, the tail: over its
-small left lobe, down into the notch, over the broader right lobe, and back along its foot.
+**ഈ** is two parts side by side: the whole of **ഇ** on the left, and the tail on the right.
+Write the **ഇ** you already know first, then add the tail beside it: a small lobe, a notch, and a
+broader lobe that sweeps back along its foot.
 
-Write **ഈ** yourself, slowly, and larger than it is printed. Copy the printed shape, and keep the
-order above.
+Write **ഈ** yourself, slowly, and larger than it is printed. Copy the printed shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-140, ML-SCRIPT-RECOG-138, ML-LEX-C340-IYITE-01, ML-SCRIPT-C340-II-01] -->

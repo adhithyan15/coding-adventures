@@ -54,12 +54,10 @@ Sanskrit, and most of them are learned words.
 ## Writing: ഃ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C345-VISARGA-01] -->
 
-One recorded hand writes **ഃ** in two strokes: the upper ring first, then, after a lift, the lower
-one. Each ring starts at its top and goes round anticlockwise, to the left first.
+**ഃ** is two small closed rings, one above the other. Write the upper ring first, then the lower.
 
 Write **ഃ** yourself, slowly, and larger than it is printed: two rings the same size, one above the
-other. Copy the printed shape and keep the
-order above.
+other. Copy the printed shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-120, ML-SCRIPT-C113-KHA-01, ML-LEX-C345-DUHKHAM-01, ML-SCRIPT-C345-VISARGA-01] -->

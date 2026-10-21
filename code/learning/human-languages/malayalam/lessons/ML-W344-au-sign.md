@@ -57,12 +57,11 @@ broader lobe sweeping back along its foot. Here it stands on its own.
 ## Writing: ൗ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C344-AU-SIGN-01] -->
 
-One recorded hand writes **ൗ** in one stroke, with no lift: start low on the left and climb over
-the small lobe, dip into the notch, climb over the broader lobe and down its right side, and sweep
-back left along the foot.
+**ൗ** is the tail on its own: a small lobe on the left, a notch, and a broader lobe on the right
+whose foot sweeps back to the left. Write it after its consonant, the same way you wrote it on **ഈ**
+and **ഔ**.
 
-Write **ൗ** yourself, slowly, and larger than it is printed. Copy the printed shape and keep the
-order above.
+Write **ൗ** yourself, slowly, and larger than it is printed. Copy the printed shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-139, ML-SCRIPT-C114-AI-SIGN-01, ML-LEX-C344-SAUKARYAM-01, ML-SCRIPT-C344-AU-SIGN-01] -->

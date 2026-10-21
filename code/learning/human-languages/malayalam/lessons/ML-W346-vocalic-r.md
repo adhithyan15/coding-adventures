@@ -56,12 +56,10 @@ Its shape is two upper loops joined by a sagging waist, with an oval below.
 ## Writing: ഋ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C346-VOCALIC-R-01] -->
 
-One recorded hand writes **ഋ** in two strokes. First the top: from inside the upper left loop, round
-it anticlockwise, down and along the waist, and up round the upper right loop, anticlockwise again.
-Then, after one lift, the oval below, from its top centre, clockwise.
+**ഋ** is two parts: on top, two loops joined by a sagging waist, and below them, an oval. Write
+the top first, then the oval under it.
 
-Write **ഋ** yourself, slowly, and larger than it is printed. Copy the printed shape and keep the
-order above.
+Write **ഋ** yourself, slowly, and larger than it is printed. Copy the printed shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-128, ML-SCRIPT-RECOG-109, ML-LEX-C346-RTU-01, ML-SCRIPT-C346-VOCALIC-R-01] -->

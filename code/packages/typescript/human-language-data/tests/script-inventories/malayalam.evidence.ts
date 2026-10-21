@@ -573,31 +573,33 @@ export const scriptInventoryEvidence = {
     }
     // The B1 core (chapters 339-348) writes four independent vowels, ഈ ഐ ഔ ഋ,
     // and two signs, the au length mark ൗ and the visarga ഃ, each after a word
-    // that holds it. Their rows cite Jayasree's recorded strokes, drawn alone:
-    // stroke count, start, order and direction only. No filmstrip geometry is
-    // fitted for them yet, and each record says so, so no lesson promises a strip.
-    // The vowels need the source to enter closure at all (validate.ts covers an
-    // independent vowel only once its handwriting row is source-backed); the two
-    // signs are new rows, appended after ോ.
-    const coreRows: Record<string, readonly [number, number]> = {
-      "ഈ": [5, 1], "ഐ": [5, 1], "ഔ": [5, 1], "ഋ": [4, 1], "ൗ": [4, 0], "ഃ": [2, 1],
-    };
-    for (const [glyph, [movements, lifts]] of Object.entries(coreRows)) {
-      const row = [
-        ...(scripts.malayalam!.independentVowels ?? []),
-        ...(scripts.malayalam!.marks ?? []).map((mark) => ({ ...mark, glyph: mark.mark })),
-      ].find((entry) => entry.glyph === glyph)!;
+    // that holds it. Their rows are recognition-only: no stroke order, lift
+    // count or source. A cited order would need a font-checked ductus in
+    // script-ductus with the same source (its "every verified prose claim"
+    // test), and none has been fitted for these six yet, so the B1 core claims
+    // none and no lesson promises a numbered strip for them.
+    //
+    // The two signs are new rows, appended after ോ; a mark row covers its glyph
+    // as identity, so neither is a glyph gap. The four vowels stay out of
+    // closure (validate.ts covers an independent vowel only once its
+    // handwriting row is source-backed and font-checked), so each anchoring
+    // headword is one glyph gap, held in the corpus queue until a cited row
+    // and its ductus land.
+    for (const glyph of ["ഈ", "ഐ", "ഔ", "ഋ"]) {
+      const row = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === glyph)!;
       expect(row, glyph).toBeDefined();
-      expect(row.penLifts, glyph).toBe(lifts);
-      expect(row.strokeOrder, glyph).toHaveLength(movements);
-      expect(row.strokeOrderSource?.url, glyph).toBe(jayasree);
-      expect(row.strokeOrderSource?.citation, glyph).toMatch(
-        new RegExp(`^Sachin Nandakumar, Jayasree: .*commit e0c9d57.*centre-line strokes? for ${glyph}, drawn alone; "Jayasree" by Sachin Nandakumar, CC BY 4\\.0$`),
-      );
-      expect(row.strokeOrderSource?.variation, glyph).toMatch(
-        /no recorded coordinate is copied.*CC BY 4\.0 \(https:\/\/creativecommons\.org\/licenses\/by\/4\.0\/\).*no filmstrip geometry has been fitted.*no lesson prints a numbered strip.*confidence is medium/,
-      );
-      expect(missingByScript.get("malayalam.json")?.has(glyph) ?? false, glyph).toBe(false);
+      expect(row.strokeOrder, glyph).toEqual([]);
+      expect(row.penLifts, glyph).toBeUndefined();
+      expect(row.strokeOrderSource, glyph).toBeUndefined();
+      expect(missingByScript.get("malayalam.json")?.has(glyph) ?? false, glyph).toBe(true);
+    }
+    for (const sign of ["ൗ", "ഃ"]) {
+      const mark = scripts.malayalam!.marks!.find((entry) => entry.mark === sign)!;
+      expect(mark, sign).toBeDefined();
+      expect(mark.strokeOrder, sign).toBeUndefined();
+      expect(mark.penLifts, sign).toBeUndefined();
+      expect(mark.strokeOrderSource, sign).toBeUndefined();
+      expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
     }
     expect(scripts.malayalam!.marks!.map((mark) => mark.mark)).toEqual([
       "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ", "ൈ", "ൊ", "ോ", "ൗ", "ഃ",
