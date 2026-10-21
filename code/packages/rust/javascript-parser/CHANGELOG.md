@@ -4,6 +4,27 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
 
 ## 0.63.0 - Unreleased - post-ASI CST entry for the native IIR compiler (LANG84)
 
+### Added - redeclaration early errors in blocks and switch case blocks (#17877)
+
+Once blocks hold declarations, programs every engine rejects began to parse.
+test262 had counted ~200 of its redeclaration tests as passing only because
+any declaration in a block used to be a parse error. `early_errors::check`
+now runs after every typed parse (`parse_javascript_typed` and its CV twin)
+and enforces ECMA-262 §14.2.1 and §14.12.1:
+
+- duplicate LexicallyDeclaredNames in a block or a switch's case block
+  (`let`, `const`, `using`, `class` and, in a block, every kind of function
+  declaration) are an error, except duplicate plain `function`s in sloppy
+  code (Annex B.3.2.4);
+- a name both lexically declared and `var`-declared in the same block is an
+  error. Var names reach through nested blocks and `for` heads, but not into
+  functions or classes.
+
+Strictness comes from `"use strict"` directives and class bodies. The walk
+is iterative and linear. test262 now shows 165 new passes and no new
+regressions. Function-body and program-level redeclarations are a
+follow-up.
+
 ### Fixed - a `function`/`class` declaration in a block is a declaration (#17877)
 
 The ES2015–ES2025 grammars gave `block`, `case_clause` and `default_clause`

@@ -1470,6 +1470,14 @@ a block that holds only statements has the same CST as before. The bridge's
 and ES5 are unchanged: block-level function declarations were not standard
 before ES2015.
 
+**Redeclaration early errors (added).** Blocks that hold declarations need
+§14.2.1's early errors, or programs every engine rejects would parse.
+`javascript_parser::early_errors` rejects duplicate lexical names in a block
+or case block, apart from Annex B's sloppy duplicate plain functions, and a
+lexical name that is also `var`-declared there. test262 shows 165 new passes
+and none lost. Function-body and program-level redeclarations are not
+checked yet.
+
 **Still open:**
 
 - **Annex B.** In sloppy mode, a block-level function is also assigned to a
