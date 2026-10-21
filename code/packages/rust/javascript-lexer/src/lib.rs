@@ -409,7 +409,7 @@ mod tests {
     // annexB/language/comments/single-line-html-close*.js)
     // -----------------------------------------------------------------------
 
-    fn values(tokens: &[lexer::token::Token]) -> Vec<&str> {
+    fn token_values(tokens: &[lexer::token::Token]) -> Vec<&str> {
         tokens.iter().map(|t| t.value.as_str()).collect()
     }
 
@@ -421,7 +421,7 @@ mod tests {
             let tokens =
                 tokenize_javascript_typed("var foo = [23]\n-->[0];\nfoo", version).unwrap();
             assert_eq!(
-                values(&tokens),
+                token_values(&tokens),
                 ["var", "foo", "=", "[", "23", "]", "foo", ""],
                 "{version}"
             );
@@ -455,7 +455,7 @@ mod tests {
             assert!(
                 tokens.iter().all(|t| t.value != "--" && t.value != ">"),
                 "{src:?} -> {:?}",
-                values(&tokens)
+                token_values(&tokens)
             );
             let last = &tokens[tokens.len() - 2];
             if last.value == "b" {
@@ -468,18 +468,18 @@ mod tests {
     fn html_close_comment_ends_at_every_line_terminator() {
         // SingleLineCommentChars stop at LF, CR, LS and PS.
         let tokens = tokenize_javascript_typed("a\n-->x\rb", EsVersion::Es2025).unwrap();
-        assert_eq!(values(&tokens), ["a", "b", ""]);
+        assert_eq!(token_values(&tokens), ["a", "b", ""]);
     }
 
     #[test]
     fn dash_dash_gt_that_does_not_lead_its_line_is_still_code() {
         // Mid-line, `-->` is `--` then `>`; `-- >` is never a comment.
         assert_eq!(
-            values(&tokenize_javascript_typed("a-->b", EsVersion::Es2025).unwrap()),
+            token_values(&tokenize_javascript_typed("a-->b", EsVersion::Es2025).unwrap()),
             ["a", "--", ">", "b", ""]
         );
         assert_eq!(
-            values(&tokenize_javascript_typed("a\n-- >b", EsVersion::Es2025).unwrap()),
+            token_values(&tokenize_javascript_typed("a\n-- >b", EsVersion::Es2025).unwrap()),
             ["a", "--", ">", "b", ""]
         );
         // A `-->` at the start of a line inside a template literal or a
@@ -488,7 +488,7 @@ mod tests {
         let template = tokenize_javascript_typed("x = `\n-->`;", EsVersion::Es2025).unwrap();
         assert_eq!(template[2].value, "`\n-->`");
         let block = tokenize_javascript_typed("a /*\n-->*/ - b", EsVersion::Es2025).unwrap();
-        assert_eq!(values(&block), ["a", "-", "b", ""]);
+        assert_eq!(token_values(&block), ["a", "-", "b", ""]);
     }
 
     #[test]
@@ -497,27 +497,27 @@ mod tests {
         // F10 transition (an emitted `>` would switch to regex mode and lex
         // `/b/g` as one REGEX).
         let tokens = tokenize_javascript_typed("a\n-->x\n/b/g", EsVersion::Es2025).unwrap();
-        assert_eq!(values(&tokens), ["a", "/", "b", "/", "g", ""]);
+        assert_eq!(token_values(&tokens), ["a", "/", "b", "/", "g", ""]);
         // After `=` a `/` starts a regex, and still does past the comment.
         let tokens = tokenize_javascript_typed("a =\n-->x\n/b/g", EsVersion::Es2025).unwrap();
-        assert_eq!(values(&tokens), ["a", "=", "/b/g", ""]);
+        assert_eq!(token_values(&tokens), ["a", "=", "/b/g", ""]);
     }
 
     #[test]
     fn every_entry_point_skips_html_close_comments() {
         let src = "a\n-->x\nb";
         let expected = ["a", "b", ""];
-        assert_eq!(values(&tokenize_javascript(src, "es2025").unwrap()), expected);
+        assert_eq!(token_values(&tokenize_javascript(src, "es2025").unwrap()), expected);
         assert_eq!(
-            values(&tokenize_javascript_division_only(src, EsVersion::Es2025).unwrap()),
+            token_values(&tokenize_javascript_division_only(src, EsVersion::Es2025).unwrap()),
             expected
         );
         assert_eq!(
-            values(&create_javascript_lexer(src, "es2025").unwrap().tokenize().unwrap()),
+            token_values(&create_javascript_lexer(src, "es2025").unwrap().tokenize().unwrap()),
             expected
         );
         assert_eq!(
-            values(&create_javascript_lexer_typed(src, EsVersion::Es2025).tokenize().unwrap()),
+            token_values(&create_javascript_lexer_typed(src, EsVersion::Es2025).tokenize().unwrap()),
             expected
         );
         let mut cv = CVLog::new(true);
