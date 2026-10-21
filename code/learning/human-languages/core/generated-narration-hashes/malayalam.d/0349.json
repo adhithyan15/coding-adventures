@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 349,
-  "sourceHash": "fnv1a64:0ab269605aee0194",
+  "sourceHash": "fnv1a64:8a45ca816dd09279",
   "lessonIds": [
     "ML-C349-saksi",
     "ML-C349-yuddham",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch349.txt",
   "json": "malayalam/narration/ch349.json",
   "textHash": "fnv1a64:ce89f789fc6f6c4d",
-  "jsonHash": "fnv1a64:beb6b44d0661a898",
+  "jsonHash": "fnv1a64:8a18cc03a959db15",
   "findings": []
 }

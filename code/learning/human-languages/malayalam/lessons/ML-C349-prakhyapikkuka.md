@@ -12,7 +12,7 @@ headword: "പ്രഖ്യാപിക്കുക"
 gloss: "to announce; to declare"
 romanization: "prakhyāpikkuka"
 concept_tag: ML-VERB-PRAKHYAPIKKUKA
-prerequisites: [ML-C349-lekhakan, ML-C349-sambhavikkuka]
+prerequisites: [ML-C349-lekhakan, ML-C349-sambhavikkuka, ML-W348-gha]
 sounds: []
 roots: [sanskrit-prakhyapana]
 etymology_hook: 'prakhyāpikkuka: Sanskrit prakhyāpana ''making known'' (Monier-Williams) + the verb ending'

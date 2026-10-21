@@ -12,7 +12,7 @@ headword: "ലേഖകൻ"
 gloss: "a correspondent; a writer"
 romanization: "lēkhakan"
 concept_tag: ML-VARTTA349-LEKHAKAN
-prerequisites: [ML-C349-saksi, ML-C349-yuddham]
+prerequisites: [ML-C349-saksi, ML-C349-yuddham, ML-W348-gha]
 sounds: []
 roots: [sanskrit-lekhaka]
 etymology_hook: 'lēkhakan ← Sanskrit lekhaka ''a writer, a scribe'' (Monier-Williams)'
