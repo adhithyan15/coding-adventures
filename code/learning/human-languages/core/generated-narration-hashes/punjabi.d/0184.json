@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:2b09d2671046ecd0",
+  "lessonIds": [
+    "PA-C184-time-return",
+    "PA-C184-hafte",
+    "PA-C184-mahine",
+    "PA-C184-agli",
+    "PA-C184-agle",
+    "PA-C184-pichhle",
+    "PA-C184-time-review",
+    "PA-C184-payoff"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch184.txt",
+  "json": "punjabi/narration/ch184.json",
+  "textHash": "fnv1a64:e7820ded44b2d3b3",
+  "jsonHash": "fnv1a64:af05a27f6b99ed98",
+  "findings": []
+}
