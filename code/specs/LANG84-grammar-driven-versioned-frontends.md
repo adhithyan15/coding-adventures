@@ -920,7 +920,7 @@ noted.
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
-| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends. The hand-written lexer remains only for non-IIR consumers | 5b; R1–R7 (phase 3) |
+| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1. The hand-written lexer remains only for non-IIR consumers | 5b slice 2; R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
 
@@ -1058,17 +1058,35 @@ Decisions and deviations in this slice:
 - **Not in 5a:** `IIRModule.release`, `compile_source_to_iir_at`, `--lang
   ruby@<release>` and the lang-aot `UnknownRelease`/`ReleaseNotAvailable`
   variants. They are the lang-aot release API that Perl's phase 4b also
-  needs; building it twice would conflict. Phase 4b has since landed that
-  API (with Perl as its only inventory language), so until 5b a
-  `ruby@<release>` request is refused as `UnknownRelease` and a Ruby module
-  leaves `IIRModule.release` as `None`.
+  needs; building it twice would conflict. Phase 4b landed that API with
+  Perl as its only inventory language, and phase 5b slice 1 (below) adds
+  Ruby to it.
 
-**Phase 5b (remaining).** Wire Ruby into the lang-aot release API above
-(`has_release_inventory`, the `compile_source_to_iir_at` arm, and
-`IIRModule.release` from `ruby-iir-compiler`); matrix
-rows with `Prog.release` on the boundary releases 3.3.5 and 3.3.7 (or the
-release sweep of [CI bounding](#ci-bounding)), after which those rows may
-claim `backend_status`; the release-identity class check in a
+**Phase 5b, slice 1 (release selection).** Ruby joins the lang-aot
+release API above:
+
+- `ruby-iir-compiler` records the resolved ID in `IIRModule.release`, from
+  `compile_source_at` and `compile_cst` alike, so a module says which
+  release's grammar produced it.
+- `Language::has_release_inventory` lists Ruby, so `--lang ruby@3.3.7` and
+  `compile_source_to_iir_at(Ruby, Some("3.3.7"), …)` compile against exactly
+  that release, and `--lang ruby` against `DEFAULT_RELEASE` (`3.3.6`).
+- The frontend's typed errors map one for one: an ID that is not a row is
+  `UnknownRelease` with its up-to-five suggestions; a row that cannot compile
+  the subset is `ReleaseNotAvailable`, whether it has no grammar pair
+  (`3.3.4`, `grammar_stage none`) or a pair but no IIR profile (`0.49`,
+  `0.50`: their `rb-int-puts` programs do not run as Ruby 3.3's do).
+  `ReleaseNotAvailable` carries a self-describing reason (`no grammar pair:
+  …` or `no IIR profile: …`), and lang-aot prints it as `release X cannot
+  compile yet (reason)` for every language, because "has no grammar pair"
+  is wrong for a Ruby row that has one.
+
+Nothing falls back: `ruby@3.3` is `UnknownRelease`, not 3.3.6.
+
+**Phase 5b, slice 2 (remaining).** Matrix rows with `Prog.release` (Perl
+phase 4c's field) on the boundary releases 3.3.5 and 3.3.7 (or the release
+sweep of [CI bounding](#ci-bounding)), after which those rows may claim
+`backend_status`; the release-identity class check in a
 `release_sweep.rs`.
 
 ### JavaScript: rewrite to walk the CST

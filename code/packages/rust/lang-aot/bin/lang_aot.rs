@@ -7,7 +7,7 @@
 //! lang-aot --help
 //! ```
 //!
-//! `--lang perl@5.004_72` compiles against exactly that row of the
+//! `--lang perl@5.004_72` (or `ruby@3.3.7`) compiles against exactly that row of the
 //! language's `releases.csv` (LANG84); a bare `--lang perl` uses the
 //! frontend's default release. An unknown or pending release is an error,
 //! never a fallback to another grammar.
@@ -349,8 +349,9 @@ Options:
                             algol60/algol/a60, ruby/rb, perl/pl).
                            A language with a release inventory takes
                            <LANG>@<RELEASE>, an exact releases.csv ID
-                           (e.g. perl@5.004_72); without one, the
-                           frontend's default release (perl: 5.38.0).
+                           (e.g. perl@5.004_72, ruby@3.3.7); without
+                           one, the frontend's default release
+                           (perl: 5.38.0, ruby: 3.3.6).
       --emit=<MODE>        What to emit:
                              native           → host executable (default)
                              llvm-ir | llvm | ll

@@ -32,7 +32,7 @@
 //! | ALGOL 60 | `algol-iir-compiler` |
 //! | FLOW-MATIC | `flow-matic-iir-compiler` |
 //! | COBOL-60 | `cobol-iir-compiler` |
-//! | Ruby | `ruby-iir-compiler` (LANG84 phase 5a; default release `3.3.6`) |
+//! | Ruby | `ruby-iir-compiler` (LANG84 phases 5a/5b; any profiled release, default `3.3.6`) |
 //! | Macsyma | `macsyma-iir-compiler` |
 //! | Perl | `perl-iir-compiler` (LANG84; any checked release, default `5.38.0`) |
 //!
@@ -48,6 +48,8 @@
 //!   --lang perl@5.004_72   ──► LanguageRequest { Perl, Some("5.004_72") } ──► Perl 5.004_72
 //!   --lang perl@5.38       ──► UnknownRelease   (not an inventory ID; no guessing)
 //!   --lang perl@1.001      ──► ReleaseNotAvailable (inventoried, grammar pending)
+//!   --lang ruby@3.3.7      ──► LanguageRequest { Ruby, Some("3.3.7") }  ──► Ruby 3.3.7
+//!   --lang ruby@0.49       ──► ReleaseNotAvailable (a grammar pair, but no IIR profile)
 //!   --lang twig@1          ──► UnknownRelease   (Twig has no release inventory)
 //! ```
 //!
@@ -131,10 +133,12 @@ pub enum Language {
     /// i64 exit code.
     Cobol60,
     /// Ruby — the `rb-int-puts` subset (`puts` of `+ - * / %` integer
-    /// arithmetic) via `ruby-iir-compiler`, compiled against the frontend's
-    /// default release (`3.3.6`, LANG84 phase 5a). The compiler walks the
-    /// tree that the generic `GrammarLexer`/`GrammarParser` build from
-    /// `ruby3.3.6.tokens`/`.grammar`, and emits only LANG83 registry ops:
+    /// arithmetic) via `ruby-iir-compiler`, compiled against one profiled
+    /// release of `code/grammars/ruby/releases.csv` (LANG84): `3.3.6` by
+    /// default, or `3.3.5`/`3.3.7` through [`compile_source_to_iir_at`] /
+    /// `--lang ruby@<release>` (phase 5b). The compiler walks the tree that
+    /// the generic `GrammarLexer`/`GrammarParser` build from that release's
+    /// `ruby<release>.tokens`/`.grammar`, and emits only LANG83 registry ops:
     /// `/` is `i64_div_floor`, `%` is `i64_mod_floor` (a zero divisor traps
     /// `Trap.DivZero`), `puts` is `print_i64`. No backend has Ruby code.
     Ruby,
@@ -211,7 +215,7 @@ impl Language {
     /// `releases.csv` inventory (LANG84 C4). Only those languages accept a
     /// `@<release>` suffix or a `Some(release)`.
     pub fn has_release_inventory(self) -> bool {
-        matches!(self, Language::Perl)
+        matches!(self, Language::Perl | Language::Ruby)
     }
 }
 
@@ -373,7 +377,9 @@ pub enum LangAotError {
         language: Language,
         /// The inventory ID.
         release: String,
-        /// Why it is not available (`"pending"`).
+        /// Why it is not available, self-describing: `no grammar pair: pending`
+        /// (Perl), `no grammar pair: grammar_stage none` or `no IIR profile:
+        /// …` (Ruby). Shown as `release X cannot compile yet (stage)`.
         stage: String,
     },
     /// The frontend rejected the source (parse / type-check error).
@@ -557,7 +563,7 @@ impl fmt::Display for LangAotError {
                 Ok(())
             }
             LangAotError::ReleaseNotAvailable { language, release, stage } => write!(f,
-                "{language}: release {} has no grammar pair yet ({})",
+                "{language}: release {} cannot compile yet ({})",
                 neutralize(release), neutralize(stage)),
             LangAotError::FrontendError { language, message } => write!(f,
                 "{language}: {message}"),
@@ -726,22 +732,34 @@ pub fn compile_source_to_iir_at(
                     message: format!("{e}"),
                 })
         }
-        // LANG84 phase 5a: the frontend's default release with the untrusted
-        // budgets. `compile_source_at` already selects any profiled release;
-        // routing `compile_source_to_iir_at`'s `release` / `--lang
-        // ruby@<release>` here (and listing Ruby in `has_release_inventory`)
-        // reuses Perl's phase 4b API and is phase 5b. Until then a
-        // `ruby@<release>` request is refused before this arm is reached.
-        Language::Ruby => ruby_iir_compiler::compile_source_at(
-            source,
-            None,
-            module_name,
-            &ruby_iir_compiler::FrontendBudgets::default(),
-        )
-        .map_err(|e| LangAotError::FrontendError {
-            language,
-            message: format!("{e}"),
-        }),
+        // LANG84 phase 5b: exactly one profiled release (3.3.5–3.3.7), chosen
+        // by the caller or `DEFAULT_RELEASE` (3.3.6), with the untrusted
+        // budgets. The frontend's release errors map one for one onto the
+        // same typed variants Perl's do; its `requested` is already bounded
+        // and escaped, and its reason (`stage`) is self-describing.
+        Language::Ruby => {
+            use ruby_iir_compiler::FrontendError as Ruby;
+            ruby_iir_compiler::compile_source_at(
+                source,
+                release,
+                module_name,
+                &ruby_iir_compiler::FrontendBudgets::default(),
+            )
+            .map_err(|e| match e {
+                Ruby::UnknownRelease { requested, suggestions } => LangAotError::UnknownRelease {
+                    language,
+                    release: requested,
+                    nearest: suggestions,
+                },
+                Ruby::ReleaseNotAvailable { release, stage } => {
+                    LangAotError::ReleaseNotAvailable { language, release, stage }
+                }
+                other => LangAotError::FrontendError {
+                    language,
+                    message: format!("{other}"),
+                },
+            })
+        }
         Language::Macsyma => {
             macsyma_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
@@ -771,7 +789,7 @@ pub fn compile_source_to_iir_at(
                     LangAotError::ReleaseNotAvailable {
                         language,
                         release,
-                        stage: stage.to_string(),
+                        stage: format!("no grammar pair: {stage}"),
                     }
                 }
                 other => LangAotError::FrontendError {
@@ -3310,7 +3328,10 @@ mod tests {
         }
         match compile_source_to_iir_at(Language::Perl, Some("1.001"), src, "p") {
             Err(e @ LangAotError::ReleaseNotAvailable { language: Language::Perl, .. }) => {
-                assert_eq!(e.to_string(), "perl: release 1.001 has no grammar pair yet (pending)");
+                assert_eq!(
+                    e.to_string(),
+                    "perl: release 1.001 cannot compile yet (no grammar pair: pending)"
+                );
             }
             other => panic!("expected ReleaseNotAvailable, got {other:?}"),
         }
@@ -3443,6 +3464,54 @@ mod tests {
             matches!(&error, LangAotError::FrontendError { language: Language::Ruby, message } if message.contains("3.3.6")),
             "{error:?}"
         );
+    }
+
+    /// LANG84 phase 5b: Ruby is an inventory language. `ruby@<release>`
+    /// selects exactly one profiled release and the module records it; an ID
+    /// that is not a row, a row with no grammar pair, and a row with a pair
+    /// but no IIR profile are three typed refusals, and nothing falls back.
+    #[test]
+    fn ruby_release_requests_select_record_and_refuse_exactly() {
+        assert!(Language::Ruby.has_release_inventory());
+        let src = "puts(6 * 7)";
+        let default = compile_source_to_iir(Language::Ruby, src, "r").unwrap();
+        assert_eq!(default.release.as_deref(), Some("3.3.6"));
+        for release in ["3.3.5", "3.3.6", "3.3.7"] {
+            let request = LanguageRequest::parse(&format!("ruby@{release}")).unwrap();
+            let module = compile_request_to_iir(request, src, "r").unwrap();
+            assert_eq!(module.release.as_deref(), Some(release));
+            assert_eq!(format!("{:?}", module.functions), format!("{:?}", default.functions));
+        }
+        // `3.3` names a line, not a release: refused with suggestions.
+        match compile_source_to_iir_at(Language::Ruby, Some("3.3"), src, "r") {
+            Err(e @ LangAotError::UnknownRelease { language: Language::Ruby, .. }) => {
+                let LangAotError::UnknownRelease { ref nearest, .. } = e else { unreachable!() };
+                assert!(!nearest.is_empty() && nearest.len() <= 5, "{nearest:?}");
+                assert!(nearest.iter().all(|id| id.starts_with("3.3")), "{nearest:?}");
+                assert!(e.to_string().starts_with("ruby: unknown release \"3.3\"; nearest"), "{e}");
+            }
+            other => panic!("expected UnknownRelease, got {other:?}"),
+        }
+        // A row with no grammar pair, and one with a pair but no profile.
+        let refused = |release: &str| match compile_source_to_iir_at(Language::Ruby, Some(release), src, "r") {
+            Err(e @ LangAotError::ReleaseNotAvailable { language: Language::Ruby, .. }) => e.to_string(),
+            other => panic!("{release}: expected ReleaseNotAvailable, got {other:?}"),
+        };
+        assert_eq!(
+            refused("3.3.4"),
+            "ruby: release 3.3.4 cannot compile yet (no grammar pair: grammar_stage none)"
+        );
+        let no_profile = refused("0.49");
+        assert!(no_profile.starts_with("ruby: release 0.49 cannot compile yet (no IIR profile: "), "{no_profile}");
+        // Hostile release text is bounded and escaped by the frontend.
+        let hostile = format!("3\n\u{1b}[2J{}", "x".repeat(10_000));
+        let error = compile_source_to_iir_at(Language::Ruby, Some(&hostile), src, "r").unwrap_err();
+        let message = error.to_string();
+        assert!(matches!(error, LangAotError::UnknownRelease { .. }), "{error:?}");
+        assert!(message.len() < 1_000 && !message.chars().any(char::is_control), "{message:?}");
+        // Errors after resolution name the release they ran against.
+        let parse = compile_source_to_iir_at(Language::Ruby, Some("3.3.7"), "puts(", "r").unwrap_err();
+        assert!(parse.to_string().contains("Ruby 3.3.7"), "{parse}");
     }
 
     #[test]
