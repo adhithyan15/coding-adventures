@@ -16,13 +16,13 @@ prerequisites: [MR-A1F01-bhasha, MR-C10-chaha, MR-C09-avadne]
 sounds: []
 roots: []
 duration:
-  max_seconds: 180
+  max_seconds: 195
 requires:
   knowledge: [MR-A1-FORM-LABEL-BHASHA]
 introduces:
   knowledge: [MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER]
 practises:
-  knowledge: [MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER]
+  knowledge: [MR-A1-FORM-LABEL-BHASHA, MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,10 @@ reviews_of: [MR-A1F01-bhasha, MR-C10-chaha, MR-C09-avadne]
 # आवडते पेय — favorite drink
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER]; assesses=[] -->
+<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-AVDATE-PEY, MR-A1-FORM-AGREEMENT-NEUTER]; assesses=[MR-A1-FORM-LABEL-BHASHA] -->
+
+Before looking back, cover the title. Write the label that asks which language
+a person uses. Check the previous page after writing it.
 
 The known drink is **चहा**. The label **आवडते पेय** means “favorite drink.”
 **पेय** is neuter, so the describing word takes neuter **-ते**: **आवडते**.
