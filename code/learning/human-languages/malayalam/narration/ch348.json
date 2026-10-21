@@ -4,7 +4,7 @@
   "chapter": 348,
   "title": "It Depends, and What Would Have Been",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fa86185c20636077",
+  "sourceHash": "fnv1a64:10afb445a9df3bd4",
   "lessons": [
     {
       "id": "ML-C348-asrayiccirikkunnu",
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9272b803b890e632",
+      "sourceHash": "fnv1a64:ba697b676f8e4a98",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The other half is the -ഉമായിരുന്നു of chapter 339, now with its second job: \"would\", \"would have\"."
+              "text": "The other half is the -ഉമായിരുന്നു from the start of this core, now with its second job: \"would\", \"would have\"."
             },
             {
               "kind": "speech",
@@ -608,7 +608,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:d8ea353cc9f84704",
+      "sourceHash": "fnv1a64:9ff9b57670af5fd8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -634,7 +634,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 338 asked for a connected message about a familiar day. This one asks for six lines, and they tell a story."
+              "text": "The last A2 writing task asked for a connected message about a familiar day. This one asks for six lines, and they tell a story."
             },
             {
               "kind": "pause",
@@ -739,7 +739,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now read your lines as you read the village story in chapter 340. Mark every verb s for scene or e for event. Line two should be mostly s; lines three and four mostly e."
+              "text": "Now read your lines as you read the village story earlier in this core. Mark every verb s for scene or e for event. Line two should be mostly s; lines three and four mostly e."
             },
             {
               "kind": "pause",

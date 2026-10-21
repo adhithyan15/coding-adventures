@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 339,
-  "sourceHash": "fnv1a64:e63ecb35958a6651",
+  "sourceHash": "fnv1a64:e89fbbede07e5f4d",
   "lessonIds": [
     "ML-C339-ayirunnu",
     "ML-C339-vayikkukayayirunnu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch339.txt",
   "json": "malayalam/narration/ch339.json",
-  "textHash": "fnv1a64:89d7cccab16b1cd3",
-  "jsonHash": "fnv1a64:0709921f7f5619a1",
+  "textHash": "fnv1a64:0898ebc472ca1c88",
+  "jsonHash": "fnv1a64:084e2364fb65a038",
   "findings": []
 }

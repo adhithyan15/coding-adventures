@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:0fbe7c18dba484bc",
+  "lessonIds": [
+    "ML-C410-sucippikkuka",
+    "ML-C410-unnipparayuka",
+    "ML-C410-cuntikkanikkuka",
+    "ML-C410-prasaktamaya",
+    "ML-C410-aprasaktamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch410.txt",
+  "json": "malayalam/narration/ch410.json",
+  "textHash": "fnv1a64:cd436422db05e2d3",
+  "jsonHash": "fnv1a64:cd9f5e67469e28f0",
+  "findings": []
+}

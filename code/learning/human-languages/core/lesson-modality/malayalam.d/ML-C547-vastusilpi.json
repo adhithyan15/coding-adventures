@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C547-vastusilpi",
+    "language": "malayalam",
+    "chapter": 547,
+    "sequence": 27550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee3ee9f2b3964926"
+  },
+  "findings": []
+}

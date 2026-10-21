@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C524-kurrabodham",
+    "language": "malayalam",
+    "chapter": 524,
+    "sequence": 26370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85ca9e36f2e7e465"
+  },
+  "findings": []
+}

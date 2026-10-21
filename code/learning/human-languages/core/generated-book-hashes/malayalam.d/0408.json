@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:011a5311b1570c09",
+  "lessonIds": [
+    "ML-C408-pariganikkuka",
+    "ML-C408-vilayiruttuka",
+    "ML-C408-nilapatu",
+    "ML-C408-manobhavam",
+    "ML-C408-nyayikarikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch408-weighing-it-up.tex"
+}

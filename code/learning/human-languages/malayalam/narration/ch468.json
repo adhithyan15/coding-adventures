@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 468,
+  "title": "On the Highway",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:aad95ed8a56e17ed",
+  "lessons": [
+    {
+      "id": "ML-C468-desiyapata",
+      "sequence": 23350,
+      "title": "ദേശീയപാത (dēśīyapāta) — a national highway",
+      "headword": "ദേശീയപാത",
+      "romanization": "dēśīyapāta",
+      "gloss": "a national highway",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bccf40360fc8acf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to unload, then the Malayalam for to pack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ദേശീയപാത",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദേശീയപാത — dēśīyapāta — \"a national highway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞങ്ങളുടെ ഗ്രാമം ദേശീയപാതയ്ക്ക് അടുത്താണ്. ñaṅṅaḷuṭe grāmaṁ dēśīyapātaykkŭ aṭuttāṇŭ. Our village is near the national highway."
+            },
+            {
+              "kind": "speech",
+              "text": "ദേശീയ means national, as in ദേശീയ ഗാനം, the national anthem; പാത is a road or track."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദേശീയപാത (dēśīyapāta) is a Malayalam compound built from ദേശീയ, national, borrowed from Sanskrit deśīya, \"belonging to a country\" (Monier-Williams), and പാത, a road, whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśīyapāta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśīyapāta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēśīyapāta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēśīyapāta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñaṅṅaḷuṭe grāmaṁ dēśīyapātaykkŭ aṭuttāṇŭ. — Our village is near the national highway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñaṅṅaḷuṭe grāmaṁ dēśīyapātaykkŭ aṭuttāṇŭ.* — Our village is near the national highway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to unload, then the Malayalam for to pack, then say dēśīyapāta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to unload, then the Malayalam for to pack, then say *dēśīyapāta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ദേശീയപാത (dēśīyapāta) mean? (\"A national highway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C468-tol",
+      "sequence": 23360,
+      "title": "ടോൾ (ṭōḷ) — a toll",
+      "headword": "ടോൾ",
+      "romanization": "ṭōḷ",
+      "gloss": "a toll",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33fc33da5f274bc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pack, then the Malayalam for a national highway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ടോൾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ടോൾ — ṭōḷ — \"a toll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പാലം കടക്കാൻ ലോറികൾ ടോൾ കൊടുക്കണം. pālaṁ kaṭakkān lōṟikaḷ ṭōḷ koṭukkaṇaṁ. Lorries must pay a toll to cross the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "The place where it is paid is a ടോൾ (ṭōḷ) പ്ലാസ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ടോൾ (ṭōḷ) was borrowed from English toll, a charge for using a road or a bridge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭōḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭōḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pālaṁ kaṭakkān lōṟikaḷ ṭōḷ koṭukkaṇaṁ. — Lorries must pay a toll to cross the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pālaṁ kaṭakkān lōṟikaḷ ṭōḷ koṭukkaṇaṁ.* — Lorries must pay a toll to cross the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pack, then the Malayalam for a national highway, then say ṭōḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pack, then the Malayalam for a national highway, then say *ṭōḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ടോൾ (ṭōḷ) mean? (\"A toll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C468-turankam",
+      "sequence": 23370,
+      "title": "തുരങ്കം (turaṅkaṁ) — a tunnel",
+      "headword": "തുരങ്കം",
+      "romanization": "turaṅkaṁ",
+      "gloss": "a tunnel",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b59d8b765b9b181c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a national highway, then the Malayalam for a toll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തുരങ്കം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുരങ്കം — turaṅkaṁ — \"a tunnel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തീവണ്ടി മലയിലെ നീളമുള്ള തുരങ്കത്തിലൂടെ പോയി. tīvaṇṭi malayile nīḷamuḷḷa turaṅkattilūṭe pōyi. The train went through a long tunnel in the hills."
+            },
+            {
+              "kind": "speech",
+              "text": "A -ം noun: before an ending the -ം becomes -ത്ത്-, as in തുരങ്കത്തിൽ, in the tunnel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുരങ്കം (turaṅkaṁ) is usually traced to Sanskrit suruṅgā, \"a passage dug underground\" (Monier-Williams); how the s- of the Sanskrit word became t- in Malayalam is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turaṅkaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turaṅkaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turaṅkaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *turaṅkaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīvaṇṭi malayile nīḷamuḷḷa turaṅkattilūṭe pōyi. — The train went through a long tunnel in the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīvaṇṭi malayile nīḷamuḷḷa turaṅkattilūṭe pōyi.* — The train went through a long tunnel in the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a national highway, then the Malayalam for a toll, then say turaṅkaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a national highway, then the Malayalam for a toll, then say *turaṅkaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തുരങ്കം (turaṅkaṁ) mean? (\"A tunnel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C468-melppalam",
+      "sequence": 23380,
+      "title": "മേൽപ്പാലം (mēlppālaṁ) — a flyover; an overbridge",
+      "headword": "മേൽപ്പാലം",
+      "romanization": "mēlppālaṁ",
+      "gloss": "a flyover; an overbridge",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0521bb147522f0f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a toll, then the Malayalam for a tunnel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മേൽപ്പാലം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേൽപ്പാലം — mēlppālaṁ — \"a flyover; an overbridge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നഗരത്തിൽ ഒരു പുതിയ മേൽപ്പാലം പണിയുന്നു. nagarattil oru putiya mēlppālaṁ paṇiyunnu. A new flyover is being built in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Built from മേൽ, above, and പാലം, a bridge: a bridge that goes over the road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മേൽപ്പാലം (mēlppālaṁ) is a native Dravidian compound of മേൽ, above (DEDR 5086), and പാലം, a bridge (DEDR 4099)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlppālaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlppālaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlppālaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlppālaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagarattil oru putiya mēlppālaṁ paṇiyunnu. — A new flyover is being built in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagarattil oru putiya mēlppālaṁ paṇiyunnu.* — A new flyover is being built in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a toll, then the Malayalam for a tunnel, then say mēlppālaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a toll, then the Malayalam for a tunnel, then say *mēlppālaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മേൽപ്പാലം (mēlppālaṁ) mean? (\"A flyover; an overbridge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C468-otukkinirttuka",
+      "sequence": 23390,
+      "title": "ഒതുക്കിനിർത്തുക (otukkinirttuka) — to pull over",
+      "headword": "ഒതുക്കിനിർത്തുക",
+      "romanization": "otukkinirttuka",
+      "gloss": "to pull over",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef46d960f0962cc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a tunnel, then the Malayalam for a flyover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒതുക്കിനിർത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒതുക്കിനിർത്തുക — otukkinirttuka — \"to pull over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അയാൾ കാർ ഒരു മരത്തിന്റെ അടുത്ത് ഒതുക്കിനിർത്തി. ayāḷ kār oru marattinṟe aṭuttŭ otukkinirtti. He pulled the car over beside a tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഒതുക്കിനിർത്തി, otukkinirtti."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒതുക്കുക is to move a thing to one side; നിർത്തുക is to stop it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒതുക്കിനിർത്തുക (otukkinirttuka) is a native Dravidian compound of ഒതുക്കുക, to put to one side (DEDR 973), and നിർത്തുക, to make stop (DEDR 3675)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otukkinirttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otukkinirttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otukkinirttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otukkinirttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayāḷ kār oru marattinṟe aṭuttŭ otukkinirtti. — He pulled the car over beside a tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayāḷ kār oru marattinṟe aṭuttŭ otukkinirtti.* — He pulled the car over beside a tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a tunnel, then the Malayalam for a flyover, then say otukkinirttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a tunnel, then the Malayalam for a flyover, then say *otukkinirttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒതുക്കിനിർത്തുക (otukkinirttuka) mean? (\"To pull over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R468-review-461-468",
+      "sequence": 23400,
+      "title": "Words for getting around",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 461-468",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8867254a368f9f59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a platform and a bus conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a platform, a bus conductor, a fare, a queue, to travel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a platform, a bus conductor, a fare, a queue, to travel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reservation, a berth, a compartment, to make a booking, to buy a ticket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reservation, a berth, a compartment, to make a booking, to buy a ticket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a terminal, a runway, an airline, to lift off, a luggage trolley",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a terminal, a runway, an airline, to lift off, a luggage trolley]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "customs, passport control, a checkpost, an inspection, a foreigner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: customs, passport control, a checkpost, an inspection, a foreigner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "departure, arrival, a delay, to wait standing, to run and board",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: departure, arrival, a delay, to wait standing, to run and board]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a suitcase, a load, a porter, a cloakroom, to drag along",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a suitcase, a load, a porter, a cloakroom, to drag along]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goods, a lorry, to put on board, to unload, to pack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: goods, a lorry, to put on board, to unload, to pack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a national highway, a toll, a tunnel, a flyover, to pull over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a national highway, a toll, a tunnel, a flyover, to pull over]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A platform? (പ്ലാറ്റ്ഫോം, plāṟṟphōṁ.) A bus conductor? (കണ്ടക്ടർ, kaṇṭakṭar.) A fare? (യാത്രാക്കൂലി, yātrākkūli.) A queue? (ക്യൂ, kyū.) To travel? (സഞ്ചരിക്കുക, sañcarikkuka.) A reservation? (റിസർവേഷൻ, ṟisarvēṣan.) A berth? (ബെർത്ത്, berttŭ.) A compartment? (കമ്പാർട്ട്മെന്റ്, kampārṭṭmenṟŭ.) To make a booking? (ബുക്ക് ചെയ്യുക, bukkŭ ceyyuka.) To buy a ticket? (ടിക്കറ്റെടുക്കുക, ṭikkaṟṟeṭukkuka.) A terminal? (ടെർമിനൽ, ṭerminal.) A runway? (റൺവേ, ṟaṇvē.) An airline? (വിമാനക്കമ്പനി, vimānakkampani.) To lift off? (പറന്നുയരുക, paṟannuyaruka.) A luggage trolley? (ട്രോളി, ṭrōḷi.) Customs? (കസ്റ്റംസ്, kasṟṟaṁsŭ.) Passport control? (എമിഗ്രേഷൻ, emigrēṣan.) A checkpost? (ചെക്ക്പോസ്റ്റ്, cekkpōsṟṟŭ.) An inspection? (പരിശോധന, pariśōdhana.) A foreigner? (വിദേശി, vidēśi.) Departure? (പുറപ്പെടൽ, puṟappeṭal.) Arrival? (വരവ്, varavŭ.) A delay? (കാലതാമസം, kālatāmasaṁ.) To wait standing? (കാത്തുനിൽക്കുക, kāttunilkkuka.) To run and board? (ഓടിക്കയറുക, ōṭikkayaṟuka.) A suitcase? (സ്യൂട്ട്കേസ്, syūṭṭkēsŭ.) A load? (ചുമട്, cumaṭŭ.) A porter? (പോർട്ടർ, pōrṭṭar.) A cloakroom? (ക്ലോക്ക്റൂം, klōkkṟūṁ.) To drag along? (വലിച്ചുകൊണ്ടുപോകുക, valiccukoṇṭupōkuka.) Goods? (ചരക്ക്, carakkŭ.) A lorry? (ലോറി, lōṟi.) To put on board? (കയറ്റുക, kayaṟṟuka.) To unload? (ഇറക്കുക, iṟakkuka.) To pack? (പാക്ക് ചെയ്യുക, pākkŭ ceyyuka.) A national highway? (ദേശീയപാത, dēśīyapāta.) A toll? (ടോൾ, ṭōḷ.) A tunnel? (തുരങ്കം, turaṅkaṁ.) A flyover? (മേൽപ്പാലം, mēlppālaṁ.) To pull over? (ഒതുക്കിനിർത്തുക, otukkinirttuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C471-takararu",
+  "pathSegment": "ML-PATH-471-VANDI471",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-471-VANDI471",
+      "order": 2
+    }
+  ]
+}

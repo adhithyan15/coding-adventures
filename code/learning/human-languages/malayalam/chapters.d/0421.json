@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Who Governs",
+  "label": "ch:ml-who-governs",
+  "canDo": "I can say administration, to govern, a minister, a chief minister and a governor.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C421-gavarnar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can say administration, to govern, a minister, a chief minister and a governor.",
+    "assesses": [
+      "ML-LEX-C421-BHARANAM421-03",
+      "ML-LEX-C421-BHARANAM421-04",
+      "ML-LEX-C421-BHARANAM421-05"
+    ]
+  }
+}

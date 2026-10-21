@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C413-prasamsikkuka",
+    "language": "malayalam",
+    "chapter": 413,
+    "sequence": 20430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89a994c9527aa693"
+  },
+  "findings": []
+}

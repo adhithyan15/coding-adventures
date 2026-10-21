@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C414-dharana",
+    "language": "malayalam",
+    "chapter": 414,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef990904ce95e21e"
+  },
+  "findings": []
+}

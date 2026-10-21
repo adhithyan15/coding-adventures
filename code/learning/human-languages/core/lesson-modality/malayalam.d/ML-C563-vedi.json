@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C563-vedi",
+    "language": "malayalam",
+    "chapter": 563,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce9d3ab78b2214ac"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Inside the Body",
+  "label": "ch:ml-inside-the-body",
+  "canDo": "I can say the brain, the intestines, tears, to snore and to perspire.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C537-viyarkkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say the brain, the intestines, tears, to snore and to perspire.",
+    "assesses": [
+      "ML-LEX-C537-SARIRAM537-03",
+      "ML-LEX-C537-SARIRAM537-04",
+      "ML-LEX-C537-SARIRAM537-05"
+    ]
+  }
+}

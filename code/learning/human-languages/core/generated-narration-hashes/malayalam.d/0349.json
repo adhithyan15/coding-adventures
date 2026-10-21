@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:0ab269605aee0194",
+  "lessonIds": [
+    "ML-C349-saksi",
+    "ML-C349-yuddham",
+    "ML-C349-lekhakan",
+    "ML-C349-sambhavikkuka",
+    "ML-C349-prakhyapikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch349.txt",
+  "json": "malayalam/narration/ch349.json",
+  "textHash": "fnv1a64:ce89f789fc6f6c4d",
+  "jsonHash": "fnv1a64:beb6b44d0661a898",
+  "findings": []
+}

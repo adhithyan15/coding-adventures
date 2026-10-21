@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:31fab8dd7241d448",
+  "lessonIds": [
+    "ML-C491-mal",
+    "ML-C491-ophar",
+    "ML-C491-adayavilppana",
+    "ML-C491-vilppanakkaran",
+    "ML-C491-ittunokkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch491.txt",
+  "json": "malayalam/narration/ch491.json",
+  "textHash": "fnv1a64:7c2f8001761c80af",
+  "jsonHash": "fnv1a64:831c9c6e6148069a",
+  "findings": []
+}

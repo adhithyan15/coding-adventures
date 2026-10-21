@@ -4,7 +4,7 @@
   "chapter": 347,
   "title": "If It Rains",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:eac18fd62ca9b275",
+  "sourceHash": "fnv1a64:be0d8fcea03349f5",
   "lessons": [
     {
       "id": "ML-C347-varunnundenkil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:348c72c88f43240f",
+      "sourceHash": "fnv1a64:e5f856e995a49dbb",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 241 gave you എങ്കിൽ on its own: \"if so\". Join it to a full verb and it says \"if it is so that …\":"
+              "text": "You already know എങ്കിൽ on its own: \"if so\". Join it to a full verb and it says \"if it is so that …\":"
             },
             {
               "kind": "speech",

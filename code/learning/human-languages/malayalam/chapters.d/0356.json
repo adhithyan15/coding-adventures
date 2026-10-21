@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Telling It Again",
+  "label": "ch:ml-telling-it-again",
+  "canDo": "I can say a conversation, a description, footage, to learn by hearsay and to fabricate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R356-review-349-356",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say a conversation, a description, footage, to learn by hearsay and to fabricate.",
+    "assesses": [
+      "ML-LEX-C356-VIVARANAM356-03",
+      "ML-LEX-C356-VIVARANAM356-04",
+      "ML-LEX-C356-VIVARANAM356-05"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 348,
-  "sourceHash": "fnv1a64:fa86185c20636077",
+  "sourceHash": "fnv1a64:10afb445a9df3bd4",
   "lessonIds": [
     "ML-C348-asrayiccirikkunnu",
     "ML-C348-aghosham",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch348.txt",
   "json": "malayalam/narration/ch348.json",
-  "textHash": "fnv1a64:30d141ac199dda22",
-  "jsonHash": "fnv1a64:8593c77cd6bf05ed",
+  "textHash": "fnv1a64:6606a21822726b7d",
+  "jsonHash": "fnv1a64:619c9f9232b7878e",
   "findings": []
 }

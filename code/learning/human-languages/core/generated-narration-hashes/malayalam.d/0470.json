@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:02aafc000fd6e370",
+  "lessonIds": [
+    "ML-C470-petrol",
+    "ML-C470-indhanam",
+    "ML-C470-tayar",
+    "ML-C470-brekku",
+    "ML-C470-pancarakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch470.txt",
+  "json": "malayalam/narration/ch470.json",
+  "textHash": "fnv1a64:488b08bf15e33d67",
+  "jsonHash": "fnv1a64:c94204c1fca495d5",
+  "findings": []
+}

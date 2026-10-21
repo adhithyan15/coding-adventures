@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:765a10f84bd59135",
+  "lessonIds": [
+    "ML-C463-terminal",
+    "ML-C463-ranve",
+    "ML-C463-vimanakkampani",
+    "ML-C463-parannuyaruka",
+    "ML-C463-troli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch463.txt",
+  "json": "malayalam/narration/ch463.json",
+  "textHash": "fnv1a64:416c78aeb508d42f",
+  "jsonHash": "fnv1a64:ec256d88e881d3aa",
+  "findings": []
+}

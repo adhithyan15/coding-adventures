@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Invasion and Revolt",
+  "label": "ch:ml-invasion-and-revolt",
+  "canDo": "I can say a slave, a revolution, an invasion, to fight and to resist.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C401-ceruttunilkkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can say a slave, a revolution, an invasion, to fight and to resist.",
+    "assesses": [
+      "ML-LEX-C401-VIPLAVAM401-03",
+      "ML-LEX-C401-VIPLAVAM401-04",
+      "ML-LEX-C401-VIPLAVAM401-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C350-patradhipar",
+  "pathSegment": "ML-PATH-350-PATRAM350",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-350-PATRAM350",
+      "order": 1
+    }
+  ]
+}

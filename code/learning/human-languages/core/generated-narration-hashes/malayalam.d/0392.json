@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:98048117e458d1d7",
+  "lessonIds": [
+    "ML-C392-anusocanam",
+    "ML-C392-adaranjali",
+    "ML-C392-caramavarsikam",
+    "ML-C392-semitteri",
+    "ML-C392-anusocikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch392.txt",
+  "json": "malayalam/narration/ch392.json",
+  "textHash": "fnv1a64:e548bffb6157512e",
+  "jsonHash": "fnv1a64:15f9dad4b2cca939",
+  "findings": []
+}

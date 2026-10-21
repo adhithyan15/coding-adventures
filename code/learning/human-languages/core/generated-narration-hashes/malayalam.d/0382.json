@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:e932833f52581fb4",
+  "lessonIds": [
+    "ML-C382-kalapam",
+    "ML-C382-ayudham",
+    "ML-C382-valayuka-surround",
+    "ML-C382-turattuka",
+    "ML-C382-santamakuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch382.txt",
+  "json": "malayalam/narration/ch382.json",
+  "textHash": "fnv1a64:68e3a8e12ee3d717",
+  "jsonHash": "fnv1a64:52021522c2f2e5c6",
+  "findings": []
+}

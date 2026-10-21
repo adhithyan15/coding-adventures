@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 349,
+  "title": "A Witness to the War",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0ab269605aee0194",
+  "lessons": [
+    {
+      "id": "ML-C349-saksi",
+      "sequence": 17000,
+      "title": "സാക്ഷി (sākṣi) — a witness",
+      "headword": "സാക്ഷി",
+      "romanization": "sākṣi",
+      "gloss": "a witness",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:844a07c353b5ac1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a principal, then the Malayalam for tuition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സാക്ഷി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാക്ഷി — sākṣi — \"a witness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അപകടം കണ്ട സാക്ഷി പോലീസിനോട് സംസാരിച്ചു. apakaṭaṁ kaṇṭa sākṣi pōlīsinōṭŭ saṁsāriccu. The witness who saw the accident spoke to the police."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സാക്ഷികൾ. To give evidence is സാക്ഷി (sākṣi) പറയുക, literally to say as a witness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാക്ഷി (sākṣi) is borrowed from Sanskrit sākṣin, \"a witness\" (CDIAL 13321). CDIAL takes the Sanskrit word apart as sa- \"with\" and akṣi \"eye\": the witness is the one who was there with his own eyes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sākṣi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sākṣi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apakaṭaṁ kaṇṭa sākṣi pōlīsinōṭŭ saṁsāriccu. — The witness who saw the accident spoke to the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apakaṭaṁ kaṇṭa sākṣi pōlīsinōṭŭ saṁsāriccu.* — The witness who saw the accident spoke to the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a principal, then the Malayalam for tuition, then say sākṣi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a principal, then the Malayalam for tuition, then say *sākṣi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സാക്ഷി (sākṣi) mean? (\"A witness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C349-yuddham",
+      "sequence": 17010,
+      "title": "യുദ്ധം (yuddhaṁ) — a war; a battle",
+      "headword": "യുദ്ധം",
+      "romanization": "yuddhaṁ",
+      "gloss": "a war; a battle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b16f9b4812075e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for tuition, then the Malayalam for a witness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: യുദ്ധം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യുദ്ധം — yuddhaṁ — \"a war; a battle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ യുദ്ധം വളരെ കാലം മുൻപ് നടന്നു. ā yuddhaṁ vaḷare kālaṁ munpŭ naṭannu. That war took place a very long time ago."
+            },
+            {
+              "kind": "speech",
+              "text": "With ചെയ്യുക it makes a verb: യുദ്ധം (yuddhaṁ) ചെയ്യുക, to fight a war."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യുദ്ധം (yuddhaṁ) is borrowed from Sanskrit yuddha, \"fought\", and as a noun \"a battle\", the past participle of the root yudh, \"to fight\" (CDIAL 10499). Like many Sanskrit nouns in -a, it ends in -ം in Malayalam."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā yuddhaṁ vaḷare kālaṁ munpŭ naṭannu. — That war took place a very long time ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā yuddhaṁ vaḷare kālaṁ munpŭ naṭannu.* — That war took place a very long time ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for tuition, then the Malayalam for a witness, then say yuddhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for tuition, then the Malayalam for a witness, then say *yuddhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does യുദ്ധം (yuddhaṁ) mean? (\"A war; a battle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C349-lekhakan",
+      "sequence": 17020,
+      "title": "ലേഖകൻ (lēkhakan) — a correspondent; a writer",
+      "headword": "ലേഖകൻ",
+      "romanization": "lēkhakan",
+      "gloss": "a correspondent; a writer",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66417486cc11fb9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a witness, then the Malayalam for a war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ലേഖകൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലേഖകൻ — lēkhakan — \"a correspondent; a writer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പത്രത്തിന്റെ ലേഖകൻ ഗ്രാമത്തിൽ എത്തി. patrattinṟe lēkhakan grāmattil etti. The newspaper's correspondent reached the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman writer or correspondent is ലേഖിക. A correspondent writes about events: ലേഖകൻ (lēkhakan) ആഘോഷം കണ്ടു, the correspondent saw the celebration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലേഖകൻ (lēkhakan) is borrowed from Sanskrit lekhaka, \"a writer, a scribe, a clerk\" (Monier-Williams), with the Malayalam masculine ending -ൻ. It belongs to the same family as ലേഖനം (lēkhanaṁ), \"an article\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēkhakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēkhakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lēkhakan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lēkhakan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrattinṟe lēkhakan grāmattil etti. — The newspaper's correspondent reached the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrattinṟe lēkhakan grāmattil etti.* — The newspaper's correspondent reached the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a witness, then the Malayalam for a war, then say lēkhakan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a witness, then the Malayalam for a war, then say *lēkhakan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ലേഖകൻ (lēkhakan) mean? (\"A correspondent; a writer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C349-sambhavikkuka",
+      "sequence": 17030,
+      "title": "സംഭവിക്കുക (sambhavikkuka) — to happen; to occur",
+      "headword": "സംഭവിക്കുക",
+      "romanization": "sambhavikkuka",
+      "gloss": "to happen; to occur",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ee92bdd5dcfc359",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a war, then the Malayalam for a correspondent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംഭവിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഭവിക്കുക — sambhavikkuka — \"to happen; to occur\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇന്നലെ രാത്രി എന്താണ് സംഭവിച്ചത്? innale rātri entāṇŭ sambhaviccatŭ? What happened last night?"
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സംഭവിച്ചു, sambhaviccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The person something happens to takes -ക്ക് or -ന്: അവന് എന്ത് സംഭവിച്ചു? What happened to him?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംഭവിക്കുക (sambhavikkuka) is built from Sanskrit saṁbhava, \"origin, coming into being\" (CDIAL 12963), with the Malayalam verb ending -ിക്കുക. സംഭവം (sambhavaṁ), \"an event\", is the noun of the same word: what happens is a സംഭവം."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhavikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhavikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "innale rātri entāṇŭ sambhaviccatŭ? — What happened last night?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *innale rātri entāṇŭ sambhaviccatŭ?* — What happened last night?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a war, then the Malayalam for a correspondent, then say sambhavikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a war, then the Malayalam for a correspondent, then say *sambhavikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംഭവിക്കുക (sambhavikkuka) mean? (\"To happen; to occur\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C349-prakhyapikkuka",
+      "sequence": 17040,
+      "title": "പ്രഖ്യാപിക്കുക (prakhyāpikkuka) — to announce; to declare",
+      "headword": "പ്രഖ്യാപിക്കുക",
+      "romanization": "prakhyāpikkuka",
+      "gloss": "to announce; to declare",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecbd432d29573d7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a correspondent, then the Malayalam for to happen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രഖ്യാപിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രഖ്യാപിക്കുക — prakhyāpikkuka — \"to announce; to declare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രിൻസിപ്പൽ നാളെ അവധി പ്രഖ്യാപിച്ചു. prinsippal nāḷe avadhi prakhyāpiccu. The principal announced a holiday for tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രഖ്യാപിച്ചു, prakhyāpiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal word, common in the news. The noun is പ്രഖ്യാപനം, an announcement. ആഘോഷത്തിന് അവധി പ്രഖ്യാപിച്ചു: a holiday was declared for the celebration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രഖ്യാപിക്കുക (prakhyāpikkuka) is built from Sanskrit prakhyāpana, \"making known, a report\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക. The Sanskrit noun comes from the verb pra-khyā, \"to announce, to proclaim\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakhyāpikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakhyāpikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakhyāpikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakhyāpikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prinsippal nāḷe avadhi prakhyāpiccu. — The principal announced a holiday for tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prinsippal nāḷe avadhi prakhyāpiccu.* — The principal announced a holiday for tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a correspondent, then the Malayalam for to happen, then say prakhyāpikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a correspondent, then the Malayalam for to happen, then say *prakhyāpikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രഖ്യാപിക്കുക (prakhyāpikkuka) mean? (\"To announce; to declare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

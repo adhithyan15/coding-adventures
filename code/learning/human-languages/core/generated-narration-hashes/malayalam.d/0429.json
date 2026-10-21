@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:f6484b6d5a72c1c7",
+  "lessonIds": [
+    "ML-C429-ksemam",
+    "ML-C429-resan",
+    "ML-C429-dhanasahayam",
+    "ML-C429-anukulyam",
+    "ML-C429-vitaranam-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch429.txt",
+  "json": "malayalam/narration/ch429.json",
+  "textHash": "fnv1a64:893e9ff82a4fec07",
+  "jsonHash": "fnv1a64:eceb3891904cb255",
+  "findings": []
+}

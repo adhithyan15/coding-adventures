@@ -1,0 +1,11 @@
+{
+  "id": "ML-C514-kariyuka",
+  "pathSegment": "ML-PATH-514-VARALCA514",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-514-VARALCA514",
+      "order": 2
+    }
+  ]
+}

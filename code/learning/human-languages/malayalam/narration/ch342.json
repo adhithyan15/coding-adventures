@@ -4,7 +4,7 @@
   "chapter": 342,
   "title": "Must, Ought To, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3bc125d04a141ef6",
+  "sourceHash": "fnv1a64:960f19923ffbddbc",
   "lessons": [
     {
       "id": "ML-C342-pokanam",
@@ -312,7 +312,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:84dea9f4c70c3a8d",
+      "sourceHash": "fnv1a64:d45021af9f8d02dd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -366,7 +366,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its body is the shape of ഒ, which you write inside ഓ: an inner loop, a broad arch, a rounded lobe. On its right it carries the tail you have written on ഊ: a small lobe, a notch, and a broader lobe that sweeps back along its foot. Chapter 344 gives that tail a lesson of its own."
+              "text": "Its body is the shape of ഒ, which you write inside ഓ: an inner loop, a broad arch, a rounded lobe. On its right it carries the tail you have written on ഊ: a small lobe, a notch, and a broader lobe that sweeps back along its foot. A later letter lesson is about that tail alone."
             }
           ]
         },

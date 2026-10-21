@@ -81,7 +81,7 @@ Warm-up.
 Say "having come". (വന്നിട്ട് (vanniṭṭŭ).) Then the word for "then, after that". (പിന്നെ (pinne).)
 
 Grammar Lens: one sentence, with -ഇട്ട്.
-Chapter 111 gave you the past form with -ഇട്ട് on it: "having done". Put it inside a sentence and it says "did this, and then":
+You already know the past form with -ഇട്ട് on it: "having done". Put it inside a sentence and it says "did this, and then":
 ഞാൻ ചായ കുടിച്ചിട്ട് ഓഫീസിൽ പോയി. ñān cāya kuṭicciṭṭŭ ōphīsil pōyi. — "I drank tea and then went to the office."
 Piece by piece: "I, tea, having drunk, to the office went". The first action is finished before the second begins.
 
@@ -89,7 +89,7 @@ Grammar Lens: two sentences, with എന്നിട്ട്.
 To keep the two actions as two sentences, start the second with എന്നിട്ട് (enniṭṭŭ):
 ഞാൻ ചായ കുടിച്ചു. എന്നിട്ട് ഓഫീസിൽ പോയി. ñān cāya kuṭiccu. enniṭṭŭ ōphīsil pōyi. — "I drank tea. And then I went to the office."
 എന്നിട്ട് (enniṭṭŭ) is usually explained as the -ഇട്ട് ending on the same root as എന്ന്: "having said so", "that done". It ties the next action to the one before.
-പിന്നെ is the looser, everyday "then, after that", and it can also mean "later". എന്നിട്ട് (enniṭṭŭ) ties the next action to the one just done.
+പിന്നെ is the looser, everyday "then, after that", and it can also mean "later". എന്നിട്ട് (enniṭṭŭ) ties the next action to the one done a moment before.
 A listener who wants the story to go on asks എന്നിട്ടോ? (enniṭṭō?), "and then?"
 
 Guided Practice.
@@ -122,7 +122,7 @@ A story then hangs on four posts: a time to open it, ആദ്യം, പിന�
 കഴിഞ്ഞ ശനിയാഴ്ച ഞങ്ങൾ നഗരത്തിൽ പോയി. ആദ്യം ചന്തയിൽ പോയി. അതിനുശേഷം ഒരു ചെറിയ കടയിൽ ചായ കുടിച്ചു. ഒടുവിൽ രാത്രി വീട്ടിൽ എത്തി. kaḻiñña śaniyāḻca ñaṅṅaḷ nagarattil pōyi. ādyaṁ cantayil pōyi. atinuśēṣaṁ oru ceṟiya kaṭayil cāya kuṭiccu. oṭuvil rātri vīṭṭil etti. — "Last Saturday we went to the city. First we went to the market. After that we drank tea in a small shop. Finally we got home at night."
 
 Grammar Lens: when it happened, -അപ്പോൾ.
-Chapter 75 gave you വരുമ്പോൾ, "when he comes". For "when he came", take the past form you know as വന്ന and add -പ്പോൾ: വന്നപ്പോൾ (vannappōḷ). In the same way എത്തി gives എത്തിയപ്പോൾ (ettiyappōḷ), "when (I) arrived", and കണ്ടു gives കണ്ടപ്പോൾ (kaṇṭappōḷ), "when (I) saw".
+You already know വരുമ്പോൾ, "when he comes". For "when he came", take the past form you know as വന്ന and add -പ്പോൾ: വന്നപ്പോൾ (vannappōḷ). In the same way എത്തി gives എത്തിയപ്പോൾ (ettiyappōḷ), "when (I) arrived", and കണ്ടു gives കണ്ടപ്പോൾ (kaṇṭappōḷ), "when (I) saw".
 ഞാൻ എത്തിയപ്പോൾ മുത്തശ്ശി കാത്തിരിക്കുകയായിരുന്നു. ñān ettiyappōḷ muttaśśi kāttirikkukayāyirunnu. — "When I arrived, Grandmother was waiting."
 The -പ്പോൾ clause sets the moment; the main verb says what was going on in it, or what happened next.
 

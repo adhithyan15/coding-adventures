@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Research",
+  "label": "ch:ml-research",
+  "canDo": "I can say research, a researcher, a thesis, a professor and a lecture.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C432-prabhasanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say research, a researcher, a thesis, a professor and a lecture.",
+    "assesses": [
+      "ML-LEX-C432-GAVESANAM432-03",
+      "ML-LEX-C432-GAVESANAM432-04",
+      "ML-LEX-C432-GAVESANAM432-05"
+    ]
+  }
+}

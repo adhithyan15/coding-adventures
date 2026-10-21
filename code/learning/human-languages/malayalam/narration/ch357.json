@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 357,
+  "title": "Afterwards and Ever Since",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6d63ca2f115d4259",
+  "lessons": [
+    {
+      "id": "ML-C357-pinnitu",
+      "sequence": 17410,
+      "title": "പിന്നീട് (pinnīṭŭ) — afterwards; later",
+      "headword": "പിന്നീട്",
+      "romanization": "pinnīṭŭ",
+      "gloss": "afterwards; later",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02aa7bf7817936f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to learn by hearsay, then the Malayalam for to fabricate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിന്നീട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നീട് — pinnīṭŭ — \"afterwards; later\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആദ്യം അവൻ ഒരു ലേഖകൻ ആയിരുന്നു, പിന്നീട് പത്രാധിപരായി. ādyaṁ avan oru lēkhakan āyirunnu, pinnīṭŭ patrādhiparāyi. At first he was a correspondent, later he became an editor."
+            },
+            {
+              "kind": "speech",
+              "text": "പിന്നെ is then, next; പിന്നീട് (pinnīṭŭ) is later on, at a later time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നീട് (pinnīṭŭ) is native Dravidian, built on പിൻ (pin), \"behind, after\" (DEDR 4205), the root of പിന്നെ, \"then\". It looks further ahead in time than പിന്നെ does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinnīṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinnīṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinnīṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinnīṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādyaṁ avan oru lēkhakan āyirunnu, pinnīṭŭ patrādhiparāyi. — At first he was a correspondent, later he became an editor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādyaṁ avan oru lēkhakan āyirunnu, pinnīṭŭ patrādhiparāyi.* — At first he was a correspondent, later he became an editor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to learn by hearsay, then the Malayalam for to fabricate, then say pinnīṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to learn by hearsay, then the Malayalam for to fabricate, then say *pinnīṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിന്നീട് (pinnīṭŭ) mean? (\"Afterwards; later\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C357-kramena",
+      "sequence": 17420,
+      "title": "ക്രമേണ (kramēṇa) — gradually",
+      "headword": "ക്രമേണ",
+      "romanization": "kramēṇa",
+      "gloss": "gradually",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e9c188ab16c9c39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to fabricate, then the Malayalam for afterwards."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്രമേണ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്രമേണ — kramēṇa — \"gradually\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ ക്രമേണ കുറഞ്ഞു. maḻa kramēṇa kuṟaññu. The rain gradually eased."
+            },
+            {
+              "kind": "speech",
+              "text": "A Sanskrit form kept whole: it never changes its ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്രമേണ (kramēṇa) is borrowed whole from Sanskrit krameṇa, \"in regular course, by degrees\" (CDIAL 3577), a form of krama, \"a step, a series\": things change step by step."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramēṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramēṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramēṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramēṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa kramēṇa kuṟaññu. — The rain gradually eased.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa kramēṇa kuṟaññu.* — The rain gradually eased.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to fabricate, then the Malayalam for afterwards, then say kramēṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to fabricate, then the Malayalam for afterwards, then say *kramēṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്രമേണ (kramēṇa) mean? (\"Gradually\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C357-atuvare",
+      "sequence": 17430,
+      "title": "അതുവരെ (atuvare) — until then",
+      "headword": "അതുവരെ",
+      "romanization": "atuvare",
+      "gloss": "until then",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:880b306258c91a04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for afterwards, then the Malayalam for gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അതുവരെ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അതുവരെ — atuvare — \"until then\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അച്ഛൻ ആറ് മണിക്ക് വന്നു, അതുവരെ ഞങ്ങൾ കാത്തിരുന്നു. acchan āṟŭ maṇikkŭ vannu, atuvare ñaṅṅaḷ kāttirunnu. Father came at six, and until then we waited."
+            },
+            {
+              "kind": "speech",
+              "text": "Built like ഇതുവരെ, so far: അത്, that, + വരെ, up to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അതുവരെ (atuvare) is native Dravidian: അത് (atŭ), \"that\", and വരെ, \"up to, until\". It mirrors ഇതുവരെ, \"until now\", with the far \"that\" (DEDR 1) in place of the near \"this\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atuvare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atuvare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atuvare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atuvare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acchan āṟŭ maṇikkŭ vannu, atuvare ñaṅṅaḷ kāttirunnu. — Father came at six, and until then we waited.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acchan āṟŭ maṇikkŭ vannu, atuvare ñaṅṅaḷ kāttirunnu.* — Father came at six, and until then we waited.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for afterwards, then the Malayalam for gradually, then say atuvare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for afterwards, then the Malayalam for gradually, then say *atuvare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അതുവരെ (atuvare) mean? (\"Until then\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C357-annumutal",
+      "sequence": 17440,
+      "title": "അന്നുമുതൽ (annumutal) — ever since; from that day",
+      "headword": "അന്നുമുതൽ",
+      "romanization": "annumutal",
+      "gloss": "ever since; from that day",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7558841039c5bc99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for gradually, then the Malayalam for until then."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അന്നുമുതൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്നുമുതൽ — annumutal — \"ever since; from that day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അന്നുമുതൽ അവൾ രാവിലെ നടക്കുന്നു. annumutal avaḷ rāvile naṭakkunnu. Ever since that day she has walked in the mornings."
+            },
+            {
+              "kind": "speech",
+              "text": "അന്ന്, that day, + മുതൽ, from: the time a change began."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അന്നുമുതൽ (annumutal) is native Dravidian: അന്ന് (annŭ), \"on that day\", and മുതൽ (mutal), \"from, beginning with\", which DEDR 4950 sets beside Tamil mutal, \"beginning, first\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annumutal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annumutal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annumutal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annumutal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annumutal avaḷ rāvile naṭakkunnu. — Ever since that day she has walked in the mornings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annumutal avaḷ rāvile naṭakkunnu.* — Ever since that day she has walked in the mornings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for gradually, then the Malayalam for until then, then say annumutal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for gradually, then the Malayalam for until then, then say *annumutal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അന്നുമുതൽ (annumutal) mean? (\"Ever since; from that day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C357-potunnane",
+      "sequence": 17450,
+      "title": "പൊടുന്നനെ (poṭunnane) — all of a sudden",
+      "headword": "പൊടുന്നനെ",
+      "romanization": "poṭunnane",
+      "gloss": "all of a sudden",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:912e295c0e7097b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for until then, then the Malayalam for ever since."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പൊടുന്നനെ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൊടുന്നനെ — poṭunnane — \"all of a sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പൊടുന്നനെ വിളക്കുകൾ എല്ലാം കെട്ടു. poṭunnane viḷakkukaḷ ellāṁ keṭṭu. All of a sudden all the lamps went out."
+            },
+            {
+              "kind": "speech",
+              "text": "A story-telling word, stronger than പെട്ടെന്ന്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പൊടുന്നനെ (poṭunnane) is native Dravidian: DEDR 4483 lists Malayalam poṭunnanē, \"suddenly, in a moment\", beside a Tamil expression for suddenness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭunnane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭunnane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭunnane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭunnane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṭunnane viḷakkukaḷ ellāṁ keṭṭu. — All of a sudden all the lamps went out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṭunnane viḷakkukaḷ ellāṁ keṭṭu.* — All of a sudden all the lamps went out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for until then, then the Malayalam for ever since, then say poṭunnane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for until then, then the Malayalam for ever since, then say *poṭunnane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പൊടുന്നനെ (poṭunnane) mean? (\"All of a sudden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

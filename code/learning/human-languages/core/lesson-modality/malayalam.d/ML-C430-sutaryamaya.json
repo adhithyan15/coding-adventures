@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C430-sutaryamaya",
+    "language": "malayalam",
+    "chapter": 430,
+    "sequence": 21310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9ced334395d7105"
+  },
+  "findings": []
+}

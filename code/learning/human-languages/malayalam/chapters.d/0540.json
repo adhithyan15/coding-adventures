@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "At the Clinic",
+  "label": "ch:ml-at-the-clinic",
+  "canDo": "I can say a clinic, a walking stick, a pimple, to go numb and to feel sore.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R540-review-533-540",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can say a clinic, a walking stick, a pimple, to go numb and to feel sore.",
+    "assesses": [
+      "ML-LEX-C540-KLINIKKU540-03",
+      "ML-LEX-C540-KLINIKKU540-04",
+      "ML-LEX-C540-KLINIKKU540-05"
+    ]
+  }
+}

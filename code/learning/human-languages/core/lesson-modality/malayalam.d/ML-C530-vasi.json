@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C530-vasi",
+    "language": "malayalam",
+    "chapter": 530,
+    "sequence": 26680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22a07122848cbc0d"
+  },
+  "findings": []
+}

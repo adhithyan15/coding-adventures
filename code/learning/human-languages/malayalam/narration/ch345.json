@@ -4,7 +4,7 @@
   "chapter": 345,
   "title": "Feelings and Hopes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:450ae03879255f6c",
+  "sourceHash": "fnv1a64:44c7c94e914d63cd",
   "lessons": [
     {
       "id": "ML-C345-duhkham",
@@ -462,7 +462,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed5e27002fe510ef",
+      "sourceHash": "fnv1a64:d7ecab73197e5095",
       "notice": null,
       "blocks": [
         {
@@ -489,7 +489,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The -ആൻ form of chapter 74 says \"to do it\". Put it before ആഗ്രഹം, \"a wish\", and the wish belongs to someone in the dative, with ഉണ്ട്:"
+              "text": "The -ആൻ form you already know says \"to do it\". Put it before ആഗ്രഹം, \"a wish\", and the wish belongs to someone in the dative, with ഉണ്ട്:"
             },
             {
               "kind": "speech",

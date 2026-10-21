@@ -155,6 +155,19 @@ All forty-seven later lessons remain below five effective minutes.
   [`data/scripts/malayalam.json`](../data/scripts/malayalam.json); none has
   filmstrip geometry yet, so their lessons describe the order in words and print
   no strip.
+- **Chapters 349–572 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `ML-C349-*` to `ML-R572-*`): 1,120 headwords, 400 of them verbs, one word per
+  lesson, practised again in the next two lessons, with a review after every
+  eight chapters. Four tranches, one per node:
+  - 349–404: narrating (news, incidents, the courts, life events, history);
+  - 405–460: reasons and conditions (opinion, society, education, the law);
+  - 461–516: travel (transport, lodging, the town, nature and the weather);
+  - 517–572: experience (feelings, health, work, family, the arts, home).
+
+  Origins cite DEDR for native Dravidian words and CDIAL or Monier-Williams for
+  Sanskrit ones, and are hedged where neither settles them. With these chapters
+  Malayalam teaches 2,569 headwords at or below B1, and **attains B1** on the
+  level gate.
 
 ## Book / fonts
 

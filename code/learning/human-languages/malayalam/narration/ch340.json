@@ -4,7 +4,7 @@
   "chapter": 340,
   "title": "Telling a Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1d5273ca85d3253c",
+  "sourceHash": "fnv1a64:6dd5ddcea41e696f",
   "lessons": [
     {
       "id": "ML-C340-iyite",
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00cb2fe7fea02e6a",
+      "sourceHash": "fnv1a64:60a7f4299119d968",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 111 gave you the past form with -ഇട്ട് on it: \"having done\". Put it inside a sentence and it says \"did this, and then\":"
+              "text": "You already know the past form with -ഇട്ട് on it: \"having done\". Put it inside a sentence and it says \"did this, and then\":"
             },
             {
               "kind": "speech",
@@ -394,7 +394,7 @@
             },
             {
               "kind": "speech",
-              "text": "പിന്നെ is the looser, everyday \"then, after that\", and it can also mean \"later\". എന്നിട്ട് (enniṭṭŭ) ties the next action to the one just done."
+              "text": "പിന്നെ is the looser, everyday \"then, after that\", and it can also mean \"later\". എന്നിട്ട് (enniṭṭŭ) ties the next action to the one done a moment before."
             },
             {
               "kind": "speech",
@@ -483,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5a59536a9f620d2",
+      "sourceHash": "fnv1a64:e9ecbfb436f11376",
       "notice": null,
       "blocks": [
         {
@@ -533,7 +533,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 75 gave you വരുമ്പോൾ, \"when he comes\". For \"when he came\", take the past form you know as വന്ന and add -പ്പോൾ: വന്നപ്പോൾ (vannappōḷ). In the same way എത്തി gives എത്തിയപ്പോൾ (ettiyappōḷ), \"when (I) arrived\", and കണ്ടു gives കണ്ടപ്പോൾ (kaṇṭappōḷ), \"when (I) saw\"."
+              "text": "You already know വരുമ്പോൾ, \"when he comes\". For \"when he came\", take the past form you know as വന്ന and add -പ്പോൾ: വന്നപ്പോൾ (vannappōḷ). In the same way എത്തി gives എത്തിയപ്പോൾ (ettiyappōḷ), \"when (I) arrived\", and കണ്ടു gives കണ്ടപ്പോൾ (kaṇṭappōḷ), \"when (I) saw\"."
             },
             {
               "kind": "speech",

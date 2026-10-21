@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "In Court",
+  "label": "ch:ml-in-court",
+  "canDo": "I can say a court of law, a court case, a trial, a judge and the accused.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C368-prati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say a court of law, a court case, a trial, a judge and the accused.",
+    "assesses": [
+      "ML-LEX-C368-KODATHI368-03",
+      "ML-LEX-C368-KODATHI368-04",
+      "ML-LEX-C368-KODATHI368-05"
+    ]
+  }
+}

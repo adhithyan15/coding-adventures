@@ -1,0 +1,11 @@
+{
+  "id": "ML-C486-pravrttisamayam",
+  "pathSegment": "ML-PATH-486-OPHIS486",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-486-OPHIS486",
+      "order": 3
+    }
+  ]
+}

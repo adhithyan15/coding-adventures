@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:30ce32664e41137d",
+  "lessonIds": [
+    "ML-C522-jijnasa",
+    "ML-C522-aksama",
+    "ML-C522-desyappetuka",
+    "ML-C522-unmesam",
+    "ML-C522-matukkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch522.txt",
+  "json": "malayalam/narration/ch522.json",
+  "textHash": "fnv1a64:a2fe01860302b40e",
+  "jsonHash": "fnv1a64:b2adc2282a822356",
+  "findings": []
+}

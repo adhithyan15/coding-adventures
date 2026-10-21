@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C374-raksapravarttanam",
+    "language": "malayalam",
+    "chapter": 374,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:044b2587a048526f"
+  },
+  "findings": []
+}

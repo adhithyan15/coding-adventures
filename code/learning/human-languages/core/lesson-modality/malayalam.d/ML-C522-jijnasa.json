@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C522-jijnasa",
+    "language": "malayalam",
+    "chapter": 522,
+    "sequence": 26250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eec2f241017ed1a2"
+  },
+  "findings": []
+}

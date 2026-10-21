@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:13c48d10b796c0d5",
+  "lessonIds": [
+    "ML-C484-kutivellam",
+    "ML-C484-tilappiccarruka",
+    "ML-C484-suddhikarikkuka",
+    "ML-C484-janal",
+    "ML-C484-kalca",
+    "ML-R484-review-477-484"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch484.txt",
+  "json": "malayalam/narration/ch484.json",
+  "textHash": "fnv1a64:c401dc866c7a6e87",
+  "jsonHash": "fnv1a64:3491d4bc399396ab",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C381-mantrikkuka",
+  "pathSegment": "ML-PATH-381-IRUTTU381",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-381-IRUTTU381",
+      "order": 3
+    }
+  ]
+}

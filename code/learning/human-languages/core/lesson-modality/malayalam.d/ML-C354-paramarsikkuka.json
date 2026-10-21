@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C354-paramarsikkuka",
+    "language": "malayalam",
+    "chapter": 354,
+    "sequence": 17290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96b723a5e46054bd"
+  },
+  "findings": []
+}

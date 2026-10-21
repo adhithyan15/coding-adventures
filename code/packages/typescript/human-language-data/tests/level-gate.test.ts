@@ -354,6 +354,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // subjunctive and the unreal condition, realizing all five B1 nodes, plus
     // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
     // 358 verbs).
+    // Malayalam followed at B1, with chapters 339-348 (the B1 core: narrating with
+    // the past and -ഉമായിരുന്നു, reasons with കൊണ്ട് and കാരണം, travel, comparison
+    // with -ഏക്കാൾ, and the conditional -ആൽ / എങ്കിൽ, realizing all five B1 nodes,
+    // plus letter lessons for ഈ ഐ ഔ ഋ ഡ ഘ ൗ ഃ) and chapters 349-572 (1,120
+    // headwords).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

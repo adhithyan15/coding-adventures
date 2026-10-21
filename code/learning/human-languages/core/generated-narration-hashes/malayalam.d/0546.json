@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:ed7d8aa5b273c855",
+  "lessonIds": [
+    "ML-C546-kulippani",
+    "ML-C546-upajivanam",
+    "ML-C546-jolibharam",
+    "ML-C546-pravrttiparicayam",
+    "ML-C546-nayikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch546.txt",
+  "json": "malayalam/narration/ch546.json",
+  "textHash": "fnv1a64:611d72747f834b71",
+  "jsonHash": "fnv1a64:4f7867466038a87f",
+  "findings": []
+}

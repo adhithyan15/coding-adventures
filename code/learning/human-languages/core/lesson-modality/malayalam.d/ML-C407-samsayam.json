@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C407-samsayam",
+    "language": "malayalam",
+    "chapter": 407,
+    "sequence": 20110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b861db0131c31357"
+  },
+  "findings": []
+}

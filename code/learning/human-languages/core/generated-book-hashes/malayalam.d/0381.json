@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:d320a02668cbe75c",
+  "lessonIds": [
+    "ML-C381-iruttu",
+    "ML-C381-sabdam",
+    "ML-C381-nissabdata",
+    "ML-C381-mantrikkuka",
+    "ML-C381-apratyaksamakuka"
+  ],
+  "tex": "malayalam/book/chapters/ch381-in-the-dark.tex"
+}

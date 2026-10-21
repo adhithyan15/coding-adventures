@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 560,
+  "title": "Sculptures and Exhibitions",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7e6818ee0bc1e46e",
+  "lessons": [
+    {
+      "id": "ML-C560-vinodayatra",
+      "sequence": 28200,
+      "title": "വിനോദയാത്ര (vinōdayātra) — an excursion; a pleasure trip",
+      "headword": "വിനോദയാത്ര",
+      "romanization": "vinōdayātra",
+      "gloss": "an excursion; a pleasure trip",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40cd4311582a4221",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to cherish, then the Malayalam for to ask forgiveness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിനോദയാത്ര",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിനോദയാത്ര — vinōdayātra — \"an excursion; a pleasure trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സ്കൂളിൽ നിന്ന് കുട്ടികൾ വിനോദയാത്രയ്ക്ക് പോയി. skūḷil ninnŭ kuṭṭikaḷ vinōdayātraykkŭ pōyi. The children went on a school excursion."
+            },
+            {
+              "kind": "speech",
+              "text": "വിനോദം a pastime + യാത്ര a journey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിനോദയാത്ര (vinōdayātra) is a learned compound built from Sanskrit vinoda, \"diversion, pastime\" (Monier-Williams), and yātrā, \"a journey\" (CDIAL 10456)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinōdayātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinōdayātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vinōdayātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vinōdayātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skūḷil ninnŭ kuṭṭikaḷ vinōdayātraykkŭ pōyi. — The children went on a school excursion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skūḷil ninnŭ kuṭṭikaḷ vinōdayātraykkŭ pōyi.* — The children went on a school excursion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to cherish, then the Malayalam for to ask forgiveness, then say vinōdayātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to cherish, then the Malayalam for to ask forgiveness, then say *vinōdayātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിനോദയാത്ര (vinōdayātra) mean? (\"An excursion; a pleasure trip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C560-citraracana",
+      "sequence": 28210,
+      "title": "ചിത്രരചന (citraracana) — painting",
+      "headword": "ചിത്രരചന",
+      "romanization": "citraracana",
+      "gloss": "painting",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60321431c1c3fec4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to ask forgiveness, then the Malayalam for an excursion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചിത്രരചന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചിത്രരചന — citraracana — \"painting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അനിയത്തിക്ക് ചിത്രരചനയിൽ സമ്മാനം കിട്ടി. aniyattikkŭ citraracanayil sammānaṁ kiṭṭi. My little sister won a prize for painting."
+            },
+            {
+              "kind": "speech",
+              "text": "ചിത്രം a picture + രചന a making, a composition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചിത്രരചന (citraracana) is a learned compound built from Sanskrit citra, \"bright, variegated\", the source of ചിത്രം (CDIAL 4803), and racana, \"making, composing\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citraracana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citraracana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citraracana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citraracana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aniyattikkŭ citraracanayil sammānaṁ kiṭṭi. — My little sister won a prize for painting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aniyattikkŭ citraracanayil sammānaṁ kiṭṭi.* — My little sister won a prize for painting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to ask forgiveness, then the Malayalam for an excursion, then say citraracana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to ask forgiveness, then the Malayalam for an excursion, then say *citraracana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചിത്രരചന (citraracana) mean? (\"Painting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C560-silpam",
+      "sequence": 28220,
+      "title": "ശില്പം (śilpaṁ) — a sculpture; a statue",
+      "headword": "ശില്പം",
+      "romanization": "śilpaṁ",
+      "gloss": "a sculpture; a statue",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8194995e813e146",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an excursion, then the Malayalam for painting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശില്പം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശില്പം — śilpaṁ — \"a sculpture; a statue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ക്ഷേത്രത്തിലെ കല്ലുകൊണ്ടുള്ള ശില്പങ്ങൾ വളരെ പഴയതാണ്. kṣētrattile kallukoṇṭuḷḷa śilpaṅṅaḷ vaḷare paḻayatāṇŭ. The stone sculptures of the temple are very old."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ശില്പങ്ങൾ, śilpaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ശില്പങ്ങൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശില്പം (śilpaṁ) is borrowed from Sanskrit śilpa, \"artistic work, a manual craft\" (CDIAL 12470)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣētrattile kallukoṇṭuḷḷa śilpaṅṅaḷ vaḷare paḻayatāṇŭ. — The stone sculptures of the temple are very old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣētrattile kallukoṇṭuḷḷa śilpaṅṅaḷ vaḷare paḻayatāṇŭ.* — The stone sculptures of the temple are very old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an excursion, then the Malayalam for painting, then say śilpaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an excursion, then the Malayalam for painting, then say *śilpaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശില്പം (śilpaṁ) mean? (\"A sculpture; a statue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C560-silpi",
+      "sequence": 28230,
+      "title": "ശില്പി (śilpi) — a sculptor",
+      "headword": "ശില്പി",
+      "romanization": "śilpi",
+      "gloss": "a sculptor",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26624055f68dcdc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for painting, then the Malayalam for a sculpture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശില്പി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശില്പി — śilpi — \"a sculptor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ ശില്പി തടിയിൽ ഒരു ആനയെ കൊത്തി. ā śilpi taṭiyil oru ānaye kotti. That sculptor carved an elephant in wood."
+            },
+            {
+              "kind": "speech",
+              "text": "One who makes ശില്പങ്ങൾ; വാസ്തുശില്പി, an architect, holds it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശില്പി (śilpi) is borrowed from Sanskrit śilpin, \"skilled in art, an artisan\" (CDIAL 12471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā śilpi taṭiyil oru ānaye kotti. — That sculptor carved an elephant in wood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā śilpi taṭiyil oru ānaye kotti.* — That sculptor carved an elephant in wood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for painting, then the Malayalam for a sculpture, then say śilpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for painting, then the Malayalam for a sculpture, then say *śilpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശില്പി (śilpi) mean? (\"A sculptor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C560-pradarsanam",
+      "sequence": 28240,
+      "title": "പ്രദർശനം (pradarśanaṁ) — an exhibition; a show",
+      "headword": "പ്രദർശനം",
+      "romanization": "pradarśanaṁ",
+      "gloss": "an exhibition; a show",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd272b16230d69eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a sculpture, then the Malayalam for a sculptor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രദർശനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രദർശനം — pradarśanaṁ — \"an exhibition; a show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നഗരത്തിൽ ഒരു പുസ്തക പ്രദർശനം നടക്കുന്നു. nagarattil oru pustaka pradarśanaṁ naṭakkunnu. A book exhibition is on in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a screening of a film: സിനിമയുടെ പ്രദർശനം (pradarśanaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രദർശനം (pradarśanaṁ) is borrowed from Sanskrit pradarśana, \"appearance, showing, pointing out\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pradarśanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pradarśanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagarattil oru pustaka pradarśanaṁ naṭakkunnu. — A book exhibition is on in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagarattil oru pustaka pradarśanaṁ naṭakkunnu.* — A book exhibition is on in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a sculpture, then the Malayalam for a sculptor, then say pradarśanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a sculpture, then the Malayalam for a sculptor, then say *pradarśanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രദർശനം (pradarśanaṁ) mean? (\"An exhibition; a show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

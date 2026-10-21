@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 408,
+  "title": "Weighing It Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d5a3ff78182156ad",
+  "lessons": [
+    {
+      "id": "ML-C408-pariganikkuka",
+      "sequence": 20150,
+      "title": "പരിഗണിക്കുക (parigaṇikkuka) — to take into account; to consider",
+      "headword": "പരിഗണിക്കുക",
+      "romanization": "parigaṇikkuka",
+      "gloss": "to take into account; to consider",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97478d90e2610cfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for reality, then the Malayalam for to imply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പരിഗണിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിഗണിക്കുക — parigaṇikkuka — \"to take into account; to consider\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കമ്പനി എന്റെ അപേക്ഷ പരിഗണിച്ചു. kampani enṟe apēkṣa parigaṇiccu. The company considered my application."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പരിഗണിച്ചു, parigaṇiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What is considered takes -നെ or stays unmarked: അപേക്ഷ പരിഗണിക്കുക (parigaṇikkuka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിഗണിക്കുക (parigaṇikkuka) is built from Sanskrit pari-, \"around, all over\", and the root gaṇ, \"to count\" (gaṇita, \"counted\", CDIAL 3996), with the Malayalam verb ending -ിക്കുക: to consider is to count a thing over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parigaṇikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parigaṇikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parigaṇikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parigaṇikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampani enṟe apēkṣa parigaṇiccu. — The company considered my application.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampani enṟe apēkṣa parigaṇiccu.* — The company considered my application.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for reality, then the Malayalam for to imply, then say parigaṇikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for reality, then the Malayalam for to imply, then say *parigaṇikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പരിഗണിക്കുക (parigaṇikkuka) mean? (\"To take into account; to consider\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C408-vilayiruttuka",
+      "sequence": 20160,
+      "title": "വിലയിരുത്തുക (vilayiruttuka) — to evaluate; to assess",
+      "headword": "വിലയിരുത്തുക",
+      "romanization": "vilayiruttuka",
+      "gloss": "to evaluate; to assess",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efcf423aa40f1733",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to imply, then the Malayalam for to take into account."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിലയിരുത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിലയിരുത്തുക — vilayiruttuka — \"to evaluate; to assess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അധ്യാപകൻ കുട്ടികളുടെ ഉത്തരങ്ങൾ വിലയിരുത്തി. adhyāpakan kuṭṭikaḷuṭe uttaraṅṅaḷ vilayirutti. The teacher evaluated the children's answers."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിലയിരുത്തി, vilayirutti."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is വിലയിരുത്തൽ, an assessment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിലയിരുത്തുക (vilayiruttuka) is a Malayalam compound of native Dravidian parts: വില, \"price, value\" (DEDR 5421), and ഇരുത്തുക, \"to seat, to settle\" (DEDR 480). To evaluate is to settle what a thing is worth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilayiruttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilayiruttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilayiruttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilayiruttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyāpakan kuṭṭikaḷuṭe uttaraṅṅaḷ vilayirutti. — The teacher evaluated the children's answers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyāpakan kuṭṭikaḷuṭe uttaraṅṅaḷ vilayirutti.* — The teacher evaluated the children's answers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to imply, then the Malayalam for to take into account, then say vilayiruttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to imply, then the Malayalam for to take into account, then say *vilayiruttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിലയിരുത്തുക (vilayiruttuka) mean? (\"To evaluate; to assess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C408-nilapatu",
+      "sequence": 20170,
+      "title": "നിലപാട് (nilapāṭŭ) — a stance; a position",
+      "headword": "നിലപാട്",
+      "romanization": "nilapāṭŭ",
+      "gloss": "a stance; a position",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:229067c6b2d173b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to take into account, then the Malayalam for to evaluate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിലപാട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിലപാട് — nilapāṭŭ — \"a stance; a position\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വിഷയത്തിൽ അവളുടെ നിലപാട് മാറിയില്ല. ā viṣayattil avaḷuṭe nilapāṭŭ māṟiyilla. Her stance on that subject did not change."
+            },
+            {
+              "kind": "speech",
+              "text": "To take a stance is നിലപാട് (nilapāṭŭ) എടുക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിലപാട് (nilapāṭŭ) is a Malayalam compound of native Dravidian parts: നില, \"a standing, a place, a position\" (DEDR 3675), and പാട്, which DEDR lists with the senses \"situation, state\" under the verb പെടുക (DEDR 3853). A stance is where one stands."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilapāṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilapāṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilapāṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilapāṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā viṣayattil avaḷuṭe nilapāṭŭ māṟiyilla. — Her stance on that subject did not change.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā viṣayattil avaḷuṭe nilapāṭŭ māṟiyilla.* — Her stance on that subject did not change.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to take into account, then the Malayalam for to evaluate, then say nilapāṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to take into account, then the Malayalam for to evaluate, then say *nilapāṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിലപാട് (nilapāṭŭ) mean? (\"A stance; a position\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C408-manobhavam",
+      "sequence": 20180,
+      "title": "മനോഭാവം (manōbhāvaṁ) — an attitude",
+      "headword": "മനോഭാവം",
+      "romanization": "manōbhāvaṁ",
+      "gloss": "an attitude",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2debbd61256a39a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to evaluate, then the Malayalam for a stance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മനോഭാവം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മനോഭാവം — manōbhāvaṁ — \"an attitude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവന്റെ മനോഭാവം എനിക്ക് ഇഷ്ടമല്ല. avanṟe manōbhāvaṁ enikkŭ iṣṭamalla. I don't like his attitude."
+            },
+            {
+              "kind": "speech",
+              "text": "മനോ- is the form മനസ്സ്, the mind, takes at the front of a compound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മനോഭാവം (manōbhāvaṁ) is borrowed from a Sanskrit compound of manas, \"mind\" (CDIAL 9822), and bhāva, \"state, disposition\" (CDIAL 9475): a state of mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manōbhāvaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manōbhāvaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manōbhāvaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manōbhāvaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanṟe manōbhāvaṁ enikkŭ iṣṭamalla. — I don't like his attitude.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanṟe manōbhāvaṁ enikkŭ iṣṭamalla.* — I don't like his attitude.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to evaluate, then the Malayalam for a stance, then say manōbhāvaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to evaluate, then the Malayalam for a stance, then say *manōbhāvaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മനോഭാവം (manōbhāvaṁ) mean? (\"An attitude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C408-nyayikarikkuka",
+      "sequence": 20190,
+      "title": "ന്യായീകരിക്കുക (nyāyīkarikkuka) — to justify",
+      "headword": "ന്യായീകരിക്കുക",
+      "romanization": "nyāyīkarikkuka",
+      "gloss": "to justify",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4567a1e35a06bdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a stance, then the Malayalam for an attitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ന്യായീകരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ന്യായീകരിക്കുക — nyāyīkarikkuka — \"to justify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ തന്റെ തീരുമാനം ന്യായീകരിച്ചു. avan tanṟe tīrumānaṁ nyāyīkariccu. He justified his decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ന്യായീകരിച്ചു, nyāyīkariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ന്യായം, fairness, a good reason, with -ീകരിക്കുക, to make into: to make a thing look fair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ന്യായീകരിക്കുക (nyāyīkarikkuka) is built from Sanskrit nyāya, \"rule, right method\" (CDIAL 7614), with -ീകരിക്കുക, the Sanskrit -ī-kṛ, \"to make into\", that Malayalam uses for new verbs. It is the verb of ന്യായം."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyīkarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyīkarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyāyīkarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyāyīkarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan tanṟe tīrumānaṁ nyāyīkariccu. — He justified his decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan tanṟe tīrumānaṁ nyāyīkariccu.* — He justified his decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a stance, then the Malayalam for an attitude, then say nyāyīkarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a stance, then the Malayalam for an attitude, then say *nyāyīkarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ന്യായീകരിക്കുക (nyāyīkarikkuka) mean? (\"To justify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

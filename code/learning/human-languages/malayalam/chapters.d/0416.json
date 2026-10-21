@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Justice and Rights",
+  "label": "ch:ml-justice-and-rights",
+  "canDo": "I can say justice, injustice, unfair, human rights and discrimination.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C416-vivecanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can say justice, injustice, unfair, human rights and discrimination.",
+    "assesses": [
+      "ML-LEX-C416-NITI416-03",
+      "ML-LEX-C416-NITI416-04",
+      "ML-LEX-C416-NITI416-05"
+    ]
+  }
+}

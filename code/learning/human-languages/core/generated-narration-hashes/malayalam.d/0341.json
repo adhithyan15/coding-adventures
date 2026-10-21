@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 341,
-  "sourceHash": "fnv1a64:c244a5a54cd3dc8b",
+  "sourceHash": "fnv1a64:52aea481e0b410d9",
   "lessonIds": [
     "ML-C341-vicarikkuka",
     "ML-C341-ennu-karutunnu",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch341.txt",
   "json": "malayalam/narration/ch341.json",
-  "textHash": "fnv1a64:65d8cc6e02702629",
-  "jsonHash": "fnv1a64:13085a2284bace99",
+  "textHash": "fnv1a64:9bb5ced81e20dd6a",
+  "jsonHash": "fnv1a64:668fcb7141345c54",
   "findings": []
 }

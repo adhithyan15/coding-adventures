@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C522-unmesam",
+    "language": "malayalam",
+    "chapter": 522,
+    "sequence": 26280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07e946451e3e8939"
+  },
+  "findings": []
+}

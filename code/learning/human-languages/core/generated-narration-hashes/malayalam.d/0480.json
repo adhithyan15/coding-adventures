@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:2f6ae3f65e9b99e5",
+  "lessonIds": [
+    "ML-C480-yatravivaranam",
+    "ML-C480-marannuvaykkuka",
+    "ML-C480-codiccariyuka",
+    "ML-C480-lokkar",
+    "ML-C480-karutivaykkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch480.txt",
+  "json": "malayalam/narration/ch480.json",
+  "textHash": "fnv1a64:8688ac84b8235556",
+  "jsonHash": "fnv1a64:f660ec1ed9ab38e1",
+  "findings": []
+}

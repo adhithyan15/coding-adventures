@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-523-PAKA523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-523-PAKA523"
+  ],
+  "after": []
+}

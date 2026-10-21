@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 477,
+  "title": "By the River",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4b8d876f128ff3ec",
+  "lessons": [
+    {
+      "id": "ML-C477-katavu",
+      "sequence": 23820,
+      "title": "കടവ് (kaṭavŭ) — a landing place; a ghat",
+      "headword": "കടവ്",
+      "romanization": "kaṭavŭ",
+      "gloss": "a landing place; a ghat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:869bc2064b149ff9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to toss about, then the Malayalam for to come ashore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കടവ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടവ് — kaṭavŭ — \"a landing place; a ghat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സ്ത്രീകൾ രാവിലെ കടവിൽ തുണി കഴുകി. strīkaḷ rāvile kaṭavil tuṇi kaḻuki. In the morning the women washed clothes at the landing."
+            },
+            {
+              "kind": "speech",
+              "text": "A spot on a river bank for bathing or for the ferry. Many place names end in -ക്കടവ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കടവ് (kaṭavŭ) is native Dravidian, from the root of കടക്കുക, to cross: the place where you cross (DEDR 1109)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭavŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭavŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭavŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭavŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strīkaḷ rāvile kaṭavil tuṇi kaḻuki. — In the morning the women washed clothes at the landing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strīkaḷ rāvile kaṭavil tuṇi kaḻuki.* — In the morning the women washed clothes at the landing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to toss about, then the Malayalam for to come ashore, then say kaṭavŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to toss about, then the Malayalam for to come ashore, then say *kaṭavŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കടവ് (kaṭavŭ) mean? (\"A landing place; a ghat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C477-pulayoram",
+      "sequence": 23830,
+      "title": "പുഴയോരം (puḻayōraṁ) — a riverbank",
+      "headword": "പുഴയോരം",
+      "romanization": "puḻayōraṁ",
+      "gloss": "a riverbank",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e7bc3e8f7900bf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to come ashore, then the Malayalam for a landing place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുഴയോരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുഴയോരം — puḻayōraṁ — \"a riverbank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുഴയോരത്ത് ധാരാളം തെങ്ങുകൾ ഉണ്ട്. puḻayōrattŭ dhārāḷaṁ teṅṅukaḷ uṇṭŭ. There are many coconut palms on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "Built like വഴിയോരം: പുഴ, a river, plus ഓരം, an edge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുഴയോരം (puḻayōraṁ) is a native Dravidian compound of പുഴ, a river (DEDR 4318), and ഓരം, an edge (DEDR 1060)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻayōraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻayōraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻayōraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻayōraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḻayōrattŭ dhārāḷaṁ teṅṅukaḷ uṇṭŭ. — There are many coconut palms on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḻayōrattŭ dhārāḷaṁ teṅṅukaḷ uṇṭŭ.* — There are many coconut palms on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to come ashore, then the Malayalam for a landing place, then say puḻayōraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to come ashore, then the Malayalam for a landing place, then say *puḻayōraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുഴയോരം (puḻayōraṁ) mean? (\"A riverbank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C477-kanal",
+      "sequence": 23840,
+      "title": "കനാൽ (kanāl) — a canal",
+      "headword": "കനാൽ",
+      "romanization": "kanāl",
+      "gloss": "a canal",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a3c162dcc7664a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a landing place, then the Malayalam for a riverbank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കനാൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കനാൽ — kanāl — \"a canal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഗ്രാമത്തിലൂടെ ഒരു ചെറിയ കനാൽ ഒഴുകുന്നു. grāmattilūṭe oru ceṟiya kanāl oḻukunnu. A small canal flows through the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Canals join the backwaters and carry boats and water for the fields."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കനാൽ (kanāl) was borrowed from English canal, a channel dug for water or boats."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmattilūṭe oru ceṟiya kanāl oḻukunnu. — A small canal flows through the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmattilūṭe oru ceṟiya kanāl oḻukunnu.* — A small canal flows through the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a landing place, then the Malayalam for a riverbank, then say kanāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a landing place, then the Malayalam for a riverbank, then say *kanāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കനാൽ (kanāl) mean? (\"A canal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C477-nintikkatakkuka",
+      "sequence": 23850,
+      "title": "നീന്തിക്കടക്കുക (nīntikkaṭakkuka) — to swim across",
+      "headword": "നീന്തിക്കടക്കുക",
+      "romanization": "nīntikkaṭakkuka",
+      "gloss": "to swim across",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79357a0592d78530",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a riverbank, then the Malayalam for a canal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നീന്തിക്കടക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീന്തിക്കടക്കുക — nīntikkaṭakkuka — \"to swim across\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചെറുപ്പത്തിൽ അച്ഛൻ ആ പുഴ നീന്തിക്കടന്നു. ceṟuppattil acchan ā puḻa nīntikkaṭannu. When he was young, father swam across that river."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നീന്തിക്കടന്നു, nīntikkaṭannu."
+            },
+            {
+              "kind": "speech",
+              "text": "നീന്തി, having swum, plus കടക്കുക, to cross. What is crossed takes no ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീന്തിക്കടക്കുക (nīntikkaṭakkuka) is a native Dravidian compound of നീന്തുക, to swim (DEDR 3687), and കടക്കുക, to cross (DEDR 1109)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīntikkaṭakkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīntikkaṭakkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīntikkaṭakkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīntikkaṭakkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟuppattil acchan ā puḻa nīntikkaṭannu. — When he was young, father swam across that river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟuppattil acchan ā puḻa nīntikkaṭannu.* — When he was young, father swam across that river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a riverbank, then the Malayalam for a canal, then say nīntikkaṭakkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a riverbank, then the Malayalam for a canal, then say *nīntikkaṭakkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നീന്തിക്കടക്കുക (nīntikkaṭakkuka) mean? (\"To swim across\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C477-kutikkuka",
+      "sequence": 23860,
+      "title": "കുതിക്കുക (kutikkuka) — to dash forward; to surge",
+      "headword": "കുതിക്കുക",
+      "romanization": "kutikkuka",
+      "gloss": "to dash forward; to surge",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c41f7c75cfea065",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a canal, then the Malayalam for to swim across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുതിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുതിക്കുക — kutikkuka — \"to dash forward; to surge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പച്ച സിഗ്നൽ കണ്ടതും വണ്ടികൾ മുന്നോട്ട് കുതിച്ചു. pacca signal kaṇṭatuṁ vaṇṭikaḷ munnōṭṭŭ kuticcu. As soon as they saw the green signal, the vehicles shot forward."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കുതിച്ചു, kuticcu."
+            },
+            {
+              "kind": "speech",
+              "text": "Prices that shoot up also കുതിക്കുക (kutikkuka): വില കുതിച്ചു, the price shot up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുതിക്കുക (kutikkuka) is native Dravidian, \"to jump, to leap\" (DEDR 1705)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pacca signal kaṇṭatuṁ vaṇṭikaḷ munnōṭṭŭ kuticcu. — As soon as they saw the green signal, the vehicles shot forward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pacca signal kaṇṭatuṁ vaṇṭikaḷ munnōṭṭŭ kuticcu.* — As soon as they saw the green signal, the vehicles shot forward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a canal, then the Malayalam for to swim across, then say kutikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a canal, then the Malayalam for to swim across, then say *kutikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുതിക്കുക (kutikkuka) mean? (\"To dash forward; to surge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

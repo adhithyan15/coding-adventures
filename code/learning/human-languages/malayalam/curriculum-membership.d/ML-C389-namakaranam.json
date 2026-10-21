@@ -1,0 +1,11 @@
+{
+  "id": "ML-C389-namakaranam",
+  "pathSegment": "ML-PATH-389-GRIHAM389",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-389-GRIHAM389",
+      "order": 1
+    }
+  ]
+}

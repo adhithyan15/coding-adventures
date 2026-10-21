@@ -150,7 +150,10 @@ describe("the committed Malayalam A1 inventory", () => {
     // each first in the headword of an anchoring word lesson (ഈയിടെ, ഐക്യം,
     // ഔദ്യോഗികമായ, റോഡ്, സൗകര്യം, ദുഃഖം, ഋതു, ആഘോഷം) and then as the
     // headword of its own letter lesson straight after it.
-    expect(lessons).toHaveLength(1735);
+    // 1735 -> 2887: the B1 vocabulary, chapters 349-572 (1,120 headwords and 32
+    // reviews). Its headwords use only glyphs the track already owns, so `shown`
+    // and the overlap hold at 77.
+    expect(lessons).toHaveLength(2887);
     expect(shown.size).toBe(77);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(77);
     expect(open).toEqual([]);

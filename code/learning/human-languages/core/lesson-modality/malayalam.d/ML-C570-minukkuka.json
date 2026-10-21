@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C570-minukkuka",
+    "language": "malayalam",
+    "chapter": 570,
+    "sequence": 28750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9af44ff745da9367"
+  },
+  "findings": []
+}

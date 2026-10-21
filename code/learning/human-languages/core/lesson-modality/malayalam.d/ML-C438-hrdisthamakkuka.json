@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C438-hrdisthamakkuka",
+    "language": "malayalam",
+    "chapter": 438,
+    "sequence": 21700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05f803e5c07e8ea5"
+  },
+  "findings": []
+}

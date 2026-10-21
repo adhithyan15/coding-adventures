@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:661ea712ffec138e",
+  "lessonIds": [
+    "ML-C458-upayogappetuttuka",
+    "ML-C458-viniyogikkuka",
+    "ML-C458-palakkuka",
+    "ML-C458-vaypa",
+    "ML-C458-sambhavana-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch458.txt",
+  "json": "malayalam/narration/ch458.json",
+  "textHash": "fnv1a64:571de24fbc477406",
+  "jsonHash": "fnv1a64:bd01174a62e60e8e",
+  "findings": []
+}

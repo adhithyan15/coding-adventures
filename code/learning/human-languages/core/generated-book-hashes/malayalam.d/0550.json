@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:04fe04cf2b9195d2",
+  "lessonIds": [
+    "ML-C550-jolisthalam",
+    "ML-C550-melnottam",
+    "ML-C550-ekopippikkuka",
+    "ML-C550-kutiyalocikkuka",
+    "ML-C550-itavela"
+  ],
+  "tex": "malayalam/book/chapters/ch550-managing-and-consulting.tex"
+}

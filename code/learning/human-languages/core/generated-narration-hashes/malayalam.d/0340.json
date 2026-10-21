@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 340,
-  "sourceHash": "fnv1a64:1d5273ca85d3253c",
+  "sourceHash": "fnv1a64:6dd5ddcea41e696f",
   "lessonIds": [
     "ML-C340-iyite",
     "ML-W340-ii",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch340.txt",
   "json": "malayalam/narration/ch340.json",
-  "textHash": "fnv1a64:58c0da9d8eceaa93",
-  "jsonHash": "fnv1a64:df1bdd999d4ae32a",
+  "textHash": "fnv1a64:728c15358b4ae94e",
+  "jsonHash": "fnv1a64:6fcf561729fc6330",
   "findings": []
 }

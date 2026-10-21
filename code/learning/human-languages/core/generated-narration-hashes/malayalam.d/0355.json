@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:f65eb0ff06ea1085",
+  "lessonIds": [
+    "ML-C355-patrapravarttakan",
+    "ML-C355-aropanam",
+    "ML-C355-velippetuttuka",
+    "ML-C355-ottukutuka",
+    "ML-C355-kuvuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch355.txt",
+  "json": "malayalam/narration/ch355.json",
+  "textHash": "fnv1a64:6c73899506ba6c17",
+  "jsonHash": "fnv1a64:d30866bd01537aba",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "Parents and In-laws",
+  "label": "ch:ml-parents-and-in-laws",
+  "canDo": "I can say a sister, parents, a brother-in-law, a sister-in-law and a family member.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C554-kutumbamgam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can say a sister, parents, a brother-in-law, a sister-in-law and a family member.",
+    "assesses": [
+      "ML-LEX-C554-MATAPITA554-03",
+      "ML-LEX-C554-MATAPITA554-04",
+      "ML-LEX-C554-MATAPITA554-05"
+    ]
+  }
+}

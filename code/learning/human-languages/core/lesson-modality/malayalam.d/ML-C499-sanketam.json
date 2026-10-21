@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C499-sanketam",
+    "language": "malayalam",
+    "chapter": 499,
+    "sequence": 24960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a15cb806e3184d63"
+  },
+  "findings": []
+}

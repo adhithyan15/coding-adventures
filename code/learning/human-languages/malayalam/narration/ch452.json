@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 452,
+  "title": "Making Peace",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2baa5f01a90f8bf1",
+  "lessons": [
+    {
+      "id": "ML-C452-vittuvilca-ceyyuka",
+      "sequence": 22400,
+      "title": "വിട്ടുവീഴ്ച ചെയ്യുക (viṭṭuvīḻca ceyyuka) — to compromise",
+      "headword": "വിട്ടുവീഴ്ച ചെയ്യുക",
+      "romanization": "viṭṭuvīḻca ceyyuka",
+      "gloss": "to compromise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56590ce9f999542e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to threaten, then the Malayalam for to hesitate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിട്ടുവീഴ്ച ചെയ്യുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിട്ടുവീഴ്ച ചെയ്യുക — viṭṭuvīḻca ceyyuka — \"to compromise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ട് കൂട്ടരും കുറച്ച് വിട്ടുവീഴ്ച ചെയ്തു. raṇṭŭ kūṭṭaruṁ kuṟaccŭ viṭṭuvīḻca ceytu. Both sides compromised a little."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വിട്ടുവീഴ്ച ചെയ്തു, viṭṭuvīḻca ceytu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun വിട്ടുവീഴ്ച is a compromise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിട്ടുവീഴ്ച ചെയ്യുക (viṭṭuvīḻca ceyyuka) is a phrase verb on a native Malayalam compound: വിടുക, \"to let go\" (DEDR 5393), and വീഴ്ച, \"a fall\", from വീഴുക (DEDR 5430), with ചെയ്യുക, \"to do\": letting go and giving way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭṭuvīḻca ceyyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭṭuvīḻca ceyyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viṭṭuvīḻca ceyyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viṭṭuvīḻca ceyyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ kūṭṭaruṁ kuṟaccŭ viṭṭuvīḻca ceytu. — Both sides compromised a little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ kūṭṭaruṁ kuṟaccŭ viṭṭuvīḻca ceytu.* — Both sides compromised a little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to threaten, then the Malayalam for to hesitate, then say viṭṭuvīḻca ceyyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to threaten, then the Malayalam for to hesitate, then say *viṭṭuvīḻca ceyyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിട്ടുവീഴ്ച ചെയ്യുക (viṭṭuvīḻca ceyyuka) mean? (\"To compromise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C452-ottutirppu",
+      "sequence": 22410,
+      "title": "ഒത്തുതീർപ്പ് (ottutīrppŭ) — a settlement",
+      "headword": "ഒത്തുതീർപ്പ്",
+      "romanization": "ottutīrppŭ",
+      "gloss": "a settlement",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9148bf9c4250aa1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to hesitate, then the Malayalam for to compromise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒത്തുതീർപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുതീർപ്പ് — ottutīrppŭ — \"a settlement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒടുവിൽ രണ്ട് കുടുംബങ്ങളും ഒത്തുതീർപ്പിലെത്തി. oṭuvil raṇṭŭ kuṭumbaṅṅaḷuṁ ottutīrppiletti. At last the two families reached a settlement."
+            },
+            {
+              "kind": "speech",
+              "text": "To reach a settlement is ഒത്തുതീർപ്പിലെത്തുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുതീർപ്പ് (ottutīrppŭ) is a native Malayalam compound: ഒത്ത്, \"together, in agreement\", and തീർപ്പ്, \"a settling, a decision\", from തീരുക, \"to be settled, to be finished\" (DEDR 3278)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottutīrppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottutīrppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottutīrppŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottutīrppŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭuvil raṇṭŭ kuṭumbaṅṅaḷuṁ ottutīrppiletti. — At last the two families reached a settlement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭuvil raṇṭŭ kuṭumbaṅṅaḷuṁ ottutīrppiletti.* — At last the two families reached a settlement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to hesitate, then the Malayalam for to compromise, then say ottutīrppŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to hesitate, then the Malayalam for to compromise, then say *ottutīrppŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒത്തുതീർപ്പ് (ottutīrppŭ) mean? (\"A settlement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C452-utampati",
+      "sequence": 22420,
+      "title": "ഉടമ്പടി (uṭampaṭi) — a treaty; a pact",
+      "headword": "ഉടമ്പടി",
+      "romanization": "uṭampaṭi",
+      "gloss": "a treaty; a pact",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d51d94f40c6f8ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to compromise, then the Malayalam for a settlement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉടമ്പടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉടമ്പടി — uṭampaṭi — \"a treaty; a pact\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ട് രാജ്യങ്ങളും ഒരു ഉടമ്പടിയിൽ ഒപ്പുവെച്ചു. raṇṭŭ rājyaṅṅaḷuṁ oru uṭampaṭiyil oppuveccu. The two countries signed a treaty."
+            },
+            {
+              "kind": "speech",
+              "text": "To sign one is ഉടമ്പടിയിൽ ഒപ്പുവെക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉടമ്പടി (uṭampaṭi) is native Dravidian: DEDR 945 lists Malayalam uṭam-paṭi, \"agreement, contract\", beside uṭan, \"together with\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭampaṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭampaṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭampaṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭampaṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ rājyaṅṅaḷuṁ oru uṭampaṭiyil oppuveccu. — The two countries signed a treaty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ rājyaṅṅaḷuṁ oru uṭampaṭiyil oppuveccu.* — The two countries signed a treaty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to compromise, then the Malayalam for a settlement, then say uṭampaṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to compromise, then the Malayalam for a settlement, then say *uṭampaṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉടമ്പടി (uṭampaṭi) mean? (\"A treaty; a pact\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C452-samipanam",
+      "sequence": 22430,
+      "title": "സമീപനം (samīpanaṁ) — an approach; an attitude to",
+      "headword": "സമീപനം",
+      "romanization": "samīpanaṁ",
+      "gloss": "an approach; an attitude to",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed7552416d9f0915",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a settlement, then the Malayalam for a treaty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സമീപനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമീപനം — samīpanaṁ — \"an approach; an attitude to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രശ്നത്തോട് അവരുടെ സമീപനം വളരെ നല്ലതായിരുന്നു. praśnattōṭŭ avaruṭe samīpanaṁ vaḷare nallatāyirunnu. Their approach to the problem was very good."
+            },
+            {
+              "kind": "speech",
+              "text": "Towards something: -ഓട് സമീപനം (samīpanaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമീപനം (samīpanaṁ) is built on Sanskrit samīpa, \"near\" (CDIAL 13226), with the noun ending -അനം: an approach is a way of coming near a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīpanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīpanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīpanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīpanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praśnattōṭŭ avaruṭe samīpanaṁ vaḷare nallatāyirunnu. — Their approach to the problem was very good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praśnattōṭŭ avaruṭe samīpanaṁ vaḷare nallatāyirunnu.* — Their approach to the problem was very good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a settlement, then the Malayalam for a treaty, then say samīpanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a settlement, then the Malayalam for a treaty, then say *samīpanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സമീപനം (samīpanaṁ) mean? (\"An approach; an attitude to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C452-sahakaranam",
+      "sequence": 22440,
+      "title": "സഹകരണം (sahakaraṇaṁ) — cooperation",
+      "headword": "സഹകരണം",
+      "romanization": "sahakaraṇaṁ",
+      "gloss": "cooperation",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37381ee91d55c1a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a treaty, then the Malayalam for an approach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സഹകരണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹകരണം — sahakaraṇaṁ — \"cooperation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാരുടെ സഹകരണം കൊണ്ട് പണി വേഗം തീർന്നു. nāṭṭukāruṭe sahakaraṇaṁ koṇṭŭ paṇi vēgaṁ tīrnnu. With the local people's cooperation, the work finished quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "As an adjective it comes first: സഹകരണ ബാങ്ക്, a cooperative bank."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സഹകരണം (sahakaraṇaṁ) is borrowed from Sanskrit sahakaraṇa, \"acting together\" (Monier-Williams): saha, \"together\", and karaṇa, \"doing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahakaraṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahakaraṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahakaraṇaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahakaraṇaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukāruṭe sahakaraṇaṁ koṇṭŭ paṇi vēgaṁ tīrnnu. — With the local people's cooperation, the work finished quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukāruṭe sahakaraṇaṁ koṇṭŭ paṇi vēgaṁ tīrnnu.* — With the local people's cooperation, the work finished quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a treaty, then the Malayalam for an approach, then say sahakaraṇaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a treaty, then the Malayalam for an approach, then say *sahakaraṇaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സഹകരണം (sahakaraṇaṁ) mean? (\"Cooperation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R452-review-445-452",
+      "sequence": 22450,
+      "title": "Words from chapters 445–452 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 445-452",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49b3819ae37086de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for inevitable and crucial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inevitable, crucial, fundamental, serious, complex",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inevitable, crucial, fundamental, serious, complex]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evident, common, effective, logical, reliable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: evident, common, effective, logical, reliable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to achieve, quality standard, to be defeated, to aim at, efficiency",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to achieve, quality standard, to be defeated, to aim at, efficiency]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crisis, a challenge, an obstacle, to analyse, a method",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crisis, a challenge, an obstacle, to analyse, a method]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to control, to go up, to increase, to go higher, to lift up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to control, to go up, to increase, to go higher, to lift up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lower, to ensure, to protect, to improve, to wrap up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lower, to ensure, to protect, to improve, to wrap up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to interfere, to insist, to put on record, to threaten, to hesitate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to interfere, to insist, to put on record, to threaten, to hesitate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to compromise, a settlement, a treaty, an approach, cooperation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to compromise, a settlement, a treaty, an approach, cooperation]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Inevitable? (അനിവാര്യമായ, anivāryamāya.) Crucial? (നിർണ്ണായകമായ, nirṇṇāyakamāya.) Fundamental? (അടിസ്ഥാനപരമായ, aṭisthānaparamāya.) Serious? (ഗുരുതരമായ, gurutaramāya.) Complex? (സങ്കീർണ്ണമായ, saṅkīrṇṇamāya.) Evident? (വ്യക്തമായ, vyaktamāya.) Common? (പൊതുവായ, potuvāya.) Effective? (ഫലപ്രദമായ, phalapradamāya.) Logical? (യുക്തിസഹമായ, yuktisahamāya.) Reliable? (വിശ്വസനീയമായ, viśvasanīyamāya.) To achieve? (നേടുക, nēṭuka.) Quality standard? (ഗുണനിലവാരം, guṇanilavāraṁ.) To be defeated? (പരാജയപ്പെടുക, parājayappeṭuka.) To aim at? (ലക്ഷ്യമിടുക, lakṣyamiṭuka.) Efficiency? (കാര്യക്ഷമത, kāryakṣamata.) A crisis? (പ്രതിസന്ധി, pratisandhi.) A challenge? (വെല്ലുവിളി, velluviḷi.) An obstacle? (തടസ്സം, taṭassaṁ.) To analyse? (വിശകലനം ചെയ്യുക, viśakalanaṁ ceyyuka.) A method? (രീതി, rīti.) To control? (നിയന്ത്രിക്കുക, niyantrikkuka.) To go up? (വർദ്ധിക്കുക, varddhikkuka.) To increase? (വർദ്ധിപ്പിക്കുക, varddhippikkuka.) To go higher? (ഉയരുക, uyaruka.) To lift up? (ഉയർത്തുക, uyarttuka.) To lower? (താഴ്ത്തുക, tāḻttuka.) To ensure? (ഉറപ്പാക്കുക, uṟappākkuka.) To protect? (സംരക്ഷിക്കുക, saṁrakṣikkuka.) To improve? (മെച്ചപ്പെടുത്തുക, meccappeṭuttuka.) To wrap up? (അവസാനിപ്പിക്കുക, avasānippikkuka.) To interfere? (ഇടപെടുക, iṭapeṭuka.) To insist? (നിർബന്ധിക്കുക, nirbandhikkuka.) To put on record? (രേഖപ്പെടുത്തുക, rēkhappeṭuttuka.) To threaten? (ഭീഷണിപ്പെടുത്തുക, bhīṣaṇippeṭuttuka.) To hesitate? (മടിക്കുക, maṭikkuka.) To compromise? (വിട്ടുവീഴ്ച ചെയ്യുക, viṭṭuvīḻca ceyyuka.) A settlement? (ഒത്തുതീർപ്പ്, ottutīrppŭ.) A treaty? (ഉടമ്പടി, uṭampaṭi.) An approach? (സമീപനം, samīpanaṁ.) Cooperation? (സഹകരണം, sahakaraṇaṁ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

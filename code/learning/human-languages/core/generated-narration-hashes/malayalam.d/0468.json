@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:aad95ed8a56e17ed",
+  "lessonIds": [
+    "ML-C468-desiyapata",
+    "ML-C468-tol",
+    "ML-C468-turankam",
+    "ML-C468-melppalam",
+    "ML-C468-otukkinirttuka",
+    "ML-R468-review-461-468"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch468.txt",
+  "json": "malayalam/narration/ch468.json",
+  "textHash": "fnv1a64:71b85f8ff1386754",
+  "jsonHash": "fnv1a64:e2ebc660bd65d11b",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:3c31a77fcceb16c5",
+  "lessonIds": [
+    "ML-C359-vaikate",
+    "ML-C359-otukkam",
+    "ML-C359-etantu",
+    "ML-C359-itaykkite",
+    "ML-C359-tottupinnale"
+  ],
+  "tex": "malayalam/book/chapters/ch359-before-long.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:b4d88015d2e98fcb",
+  "lessonIds": [
+    "ML-C414-tatvam",
+    "ML-C414-dharana",
+    "ML-C414-siddhantam",
+    "ML-C414-uravitam",
+    "ML-C414-satamanam"
+  ],
+  "tex": "malayalam/book/chapters/ch414-ideas-and-sources.tex"
+}

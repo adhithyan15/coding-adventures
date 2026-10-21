@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Catching the Bus",
+  "label": "ch:ml-catching-the-bus",
+  "canDo": "I can say a bus stop, to wave down, to drop off, to shove and to rush up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C473-otiyettuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say a bus stop, to wave down, to drop off, to shove and to rush up.",
+    "assesses": [
+      "ML-LEX-C473-BAS473-03",
+      "ML-LEX-C473-BAS473-04",
+      "ML-LEX-C473-BAS473-05"
+    ]
+  }
+}

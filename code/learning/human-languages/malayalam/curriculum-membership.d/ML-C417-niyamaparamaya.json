@@ -1,0 +1,11 @@
+{
+  "id": "ML-C417-niyamaparamaya",
+  "pathSegment": "ML-PATH-417-CATTAM417",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-417-CATTAM417",
+      "order": 3
+    }
+  ]
+}

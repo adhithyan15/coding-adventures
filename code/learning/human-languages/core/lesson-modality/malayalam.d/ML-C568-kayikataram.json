@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C568-kayikataram",
+    "language": "malayalam",
+    "chapter": 568,
+    "sequence": 28610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f01214a03b0161f"
+  },
+  "findings": []
+}

@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 451,
+  "title": "Pressure and Pushback",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2158e843ebeeee0b",
+  "lessons": [
+    {
+      "id": "ML-C451-itapetuka",
+      "sequence": 22350,
+      "title": "ഇടപെടുക (iṭapeṭuka) — to interfere; to intervene",
+      "headword": "ഇടപെടുക",
+      "romanization": "iṭapeṭuka",
+      "gloss": "to interfere; to intervene",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71a7d232cb992c05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to improve, then the Malayalam for to wrap up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇടപെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടപെടുക — iṭapeṭuka — \"to interfere; to intervene\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവരുടെ കാര്യത്തിൽ ഞാൻ ഇടപെട്ടില്ല. avaruṭe kāryattil ñān iṭapeṭṭilla. I did not interfere in their affairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഇടപെട്ടു, iṭapeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "In a matter: -ഇൽ ഇടപെടുക (iṭapeṭuka). The noun is ഇടപെടൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടപെടുക (iṭapeṭuka) is a native Malayalam compound: ഇട, \"space, place\" (DEDR 434), and പെടുക, \"to be caught, to be in\" (DEDR 3853): to step into the space between."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭapeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭapeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭapeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭapeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭe kāryattil ñān iṭapeṭṭilla. — I did not interfere in their affairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭe kāryattil ñān iṭapeṭṭilla.* — I did not interfere in their affairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to improve, then the Malayalam for to wrap up, then say iṭapeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to improve, then the Malayalam for to wrap up, then say *iṭapeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇടപെടുക (iṭapeṭuka) mean? (\"To interfere; to intervene\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C451-nirbandhikkuka",
+      "sequence": 22360,
+      "title": "നിർബന്ധിക്കുക (nirbandhikkuka) — to insist; to force",
+      "headword": "നിർബന്ധിക്കുക",
+      "romanization": "nirbandhikkuka",
+      "gloss": "to insist; to force",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd7b8314f8a70744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to wrap up, then the Malayalam for to interfere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിർബന്ധിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിർബന്ധിക്കുക — nirbandhikkuka — \"to insist; to force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭക്ഷണം കഴിക്കാൻ അമ്മ എന്നെ നിർബന്ധിച്ചു. bhakṣaṇaṁ kaḻikkān amma enne nirbandhiccu. Mother insisted that I eat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നിർബന്ധിച്ചു, nirbandhiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun നിർബന്ധം, insistence, is already known."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിർബന്ധിക്കുക (nirbandhikkuka) is built from Sanskrit nirbandha, \"perseverance, insistence\" (CDIAL 7355), with the Malayalam verb ending -ിക്കുക. It is the verb of നിർബന്ധം."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirbandhikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirbandhikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirbandhikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirbandhikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhakṣaṇaṁ kaḻikkān amma enne nirbandhiccu. — Mother insisted that I eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhakṣaṇaṁ kaḻikkān amma enne nirbandhiccu.* — Mother insisted that I eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to wrap up, then the Malayalam for to interfere, then say nirbandhikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to wrap up, then the Malayalam for to interfere, then say *nirbandhikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിർബന്ധിക്കുക (nirbandhikkuka) mean? (\"To insist; to force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C451-rekhappetuttuka",
+      "sequence": 22370,
+      "title": "രേഖപ്പെടുത്തുക (rēkhappeṭuttuka) — to put on record; to note down",
+      "headword": "രേഖപ്പെടുത്തുക",
+      "romanization": "rēkhappeṭuttuka",
+      "gloss": "to put on record; to note down",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8b6baff41b7b86c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to interfere, then the Malayalam for to insist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രേഖപ്പെടുത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രേഖപ്പെടുത്തുക — rēkhappeṭuttuka — \"to put on record; to note down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തൊഴിലാളികൾ യോഗത്തിൽ പ്രതിഷേധം രേഖപ്പെടുത്തി. toḻilāḷikaḷ yōgattil pratiṣēdhaṁ rēkhappeṭutti. The workers put their protest on record at the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: രേഖപ്പെടുത്തി, rēkhappeṭutti."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of votes and temperatures: വോട്ട് രേഖപ്പെടുത്തി, cast a vote."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രേഖപ്പെടുത്തുക (rēkhappeṭuttuka) is built on രേഖ, \"a line; a record\", from Sanskrit rēkhā, \"a scratch, a line\" (CDIAL 10810), with -പ്പെടുത്തുക from native പെടുക (DEDR 3853): to put a thing in writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rēkhappeṭuttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rēkhappeṭuttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rēkhappeṭuttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rēkhappeṭuttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilāḷikaḷ yōgattil pratiṣēdhaṁ rēkhappeṭutti. — The workers put their protest on record at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilāḷikaḷ yōgattil pratiṣēdhaṁ rēkhappeṭutti.* — The workers put their protest on record at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to interfere, then the Malayalam for to insist, then say rēkhappeṭuttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to interfere, then the Malayalam for to insist, then say *rēkhappeṭuttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രേഖപ്പെടുത്തുക (rēkhappeṭuttuka) mean? (\"To put on record; to note down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C451-bhisanippetuttuka",
+      "sequence": 22380,
+      "title": "ഭീഷണിപ്പെടുത്തുക (bhīṣaṇippeṭuttuka) — to threaten",
+      "headword": "ഭീഷണിപ്പെടുത്തുക",
+      "romanization": "bhīṣaṇippeṭuttuka",
+      "gloss": "to threaten",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9e0075995de46b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to insist, then the Malayalam for to put on record."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഭീഷണിപ്പെടുത്തുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭീഷണിപ്പെടുത്തുക — bhīṣaṇippeṭuttuka — \"to threaten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കള്ളൻ കത്തി കാട്ടി കടക്കാരനെ ഭീഷണിപ്പെടുത്തി. kaḷḷan katti kāṭṭi kaṭakkārane bhīṣaṇippeṭutti. The thief threatened the shopkeeper with a knife."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഭീഷണിപ്പെടുത്തി, bhīṣaṇippeṭutti."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun ഭീഷണി is a threat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭീഷണിപ്പെടുത്തുക (bhīṣaṇippeṭuttuka) is built from Sanskrit bhīṣaṇa, \"terrifying, frightening\" (Monier-Williams), with -പ്പെടുത്തുക, \"to cause to be\", from native പെടുക (DEDR 3853)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṣaṇippeṭuttuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṣaṇippeṭuttuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhīṣaṇippeṭuttuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhīṣaṇippeṭuttuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷan katti kāṭṭi kaṭakkārane bhīṣaṇippeṭutti. — The thief threatened the shopkeeper with a knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷan katti kāṭṭi kaṭakkārane bhīṣaṇippeṭutti.* — The thief threatened the shopkeeper with a knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to insist, then the Malayalam for to put on record, then say bhīṣaṇippeṭuttuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to insist, then the Malayalam for to put on record, then say *bhīṣaṇippeṭuttuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഭീഷണിപ്പെടുത്തുക (bhīṣaṇippeṭuttuka) mean? (\"To threaten\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C451-matikkuka",
+      "sequence": 22390,
+      "title": "മടിക്കുക (maṭikkuka) — to hesitate",
+      "headword": "മടിക്കുക",
+      "romanization": "maṭikkuka",
+      "gloss": "to hesitate",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21c8170a28f3bdaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to put on record, then the Malayalam for to threaten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മടിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മടിക്കുക — maṭikkuka — \"to hesitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സഹായം ചോദിക്കാൻ അവൾ മടിച്ചു. sahāyaṁ cōdikkān avaḷ maṭiccu. She hesitated to ask for help."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മടിച്ചു, maṭiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "What one hesitates to do takes -ആൻ. മടി alone is laziness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മടിക്കുക (maṭikkuka) is native Dravidian: DEDR 4652 lists Malayalam maṭikka, \"to grow tired, to be backward, averse, to doubt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahāyaṁ cōdikkān avaḷ maṭiccu. — She hesitated to ask for help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahāyaṁ cōdikkān avaḷ maṭiccu.* — She hesitated to ask for help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to put on record, then the Malayalam for to threaten, then say maṭikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to put on record, then the Malayalam for to threaten, then say *maṭikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മടിക്കുക (maṭikkuka) mean? (\"To hesitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

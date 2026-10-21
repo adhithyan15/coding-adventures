@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 426,
+  "title": "Demands",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0a42f8c47d7786a6",
+  "lessons": [
+    {
+      "id": "ML-C426-bahiskarikkuka",
+      "sequence": 21070,
+      "title": "ബഹിഷ്കരിക്കുക (bahiṣkarikkuka) — to boycott",
+      "headword": "ബഹിഷ്കരിക്കുക",
+      "romanization": "bahiṣkarikkuka",
+      "gloss": "to boycott",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b29c3b01e4f4930f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a general strike, then the Malayalam for a march."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബഹിഷ്കരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബഹിഷ്കരിക്കുക — bahiṣkarikkuka — \"to boycott\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വിദ്യാർത്ഥികൾ ക്ലാസുകൾ ബഹിഷ്കരിച്ചു. vidyārtthikaḷ klāsukaḷ bahiṣkariccu. The students boycotted classes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ബഹിഷ്കരിച്ചു, bahiṣkariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is ബഹിഷ്കരണം, a boycott."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബഹിഷ്കരിക്കുക (bahiṣkarikkuka) is built from Sanskrit bahiṣkāra, \"expulsion, removal\" (Monier-Williams), from bahis, \"outside\", and kṛ, \"to make\", with the Malayalam verb ending: to put a thing outside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahiṣkarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahiṣkarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahiṣkarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahiṣkarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārtthikaḷ klāsukaḷ bahiṣkariccu. — The students boycotted classes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārtthikaḷ klāsukaḷ bahiṣkariccu.* — The students boycotted classes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a general strike, then the Malayalam for a march, then say bahiṣkarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a general strike, then the Malayalam for a march, then say *bahiṣkarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബഹിഷ്കരിക്കുക (bahiṣkarikkuka) mean? (\"To boycott\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C426-avasyappetuka",
+      "sequence": 21080,
+      "title": "ആവശ്യപ്പെടുക (āvaśyappeṭuka) — to demand; to request",
+      "headword": "ആവശ്യപ്പെടുക",
+      "romanization": "āvaśyappeṭuka",
+      "gloss": "to demand; to request",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1a43ed522a7ff3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a march, then the Malayalam for to boycott."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആവശ്യപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആവശ്യപ്പെടുക — āvaśyappeṭuka — \"to demand; to request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തൊഴിലാളികൾ കൂടുതൽ ശമ്പളം ആവശ്യപ്പെട്ടു. toḻilāḷikaḷ kūṭutal śampaḷaṁ āvaśyappeṭṭu. The workers demanded more pay."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ആവശ്യപ്പെട്ടു, āvaśyappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ആവശ്യം, a need, with -പ്പെടുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആവശ്യപ്പെടുക (āvaśyappeṭuka) is built on ആവശ്യം, \"a need\", from Sanskrit āvaśyaka, \"necessary\" (Monier-Williams), with -പ്പെടുക from native പെടുക (DEDR 3853): to declare a thing needed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaśyappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaśyappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvaśyappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvaśyappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toḻilāḷikaḷ kūṭutal śampaḷaṁ āvaśyappeṭṭu. — The workers demanded more pay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toḻilāḷikaḷ kūṭutal śampaḷaṁ āvaśyappeṭṭu.* — The workers demanded more pay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a march, then the Malayalam for to boycott, then say āvaśyappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a march, then the Malayalam for to boycott, then say *āvaśyappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആവശ്യപ്പെടുക (āvaśyappeṭuka) mean? (\"To demand; to request\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C426-nivedanam",
+      "sequence": 21090,
+      "title": "നിവേദനം (nivēdanaṁ) — a memorandum; a petition",
+      "headword": "നിവേദനം",
+      "romanization": "nivēdanaṁ",
+      "gloss": "a memorandum; a petition",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b643d1d3a77290e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to boycott, then the Malayalam for to demand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിവേദനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിവേദനം — nivēdanaṁ — \"a memorandum; a petition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട്ടുകാർ മന്ത്രിക്ക് ഒരു നിവേദനം നൽകി. nāṭṭukār mantrikkŭ oru nivēdanaṁ nalki. The local people gave the minister a memorandum."
+            },
+            {
+              "kind": "speech",
+              "text": "It is given, നൽകുക, to an official."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിവേദനം (nivēdanaṁ) is borrowed from Sanskrit nivedana, \"announcing, making known\" (Monier-Williams): a memorandum makes a need known."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivēdanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivēdanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nivēdanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nivēdanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭṭukār mantrikkŭ oru nivēdanaṁ nalki. — The local people gave the minister a memorandum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭṭukār mantrikkŭ oru nivēdanaṁ nalki.* — The local people gave the minister a memorandum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to boycott, then the Malayalam for to demand, then say nivēdanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to boycott, then the Malayalam for to demand, then say *nivēdanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിവേദനം (nivēdanaṁ) mean? (\"A memorandum; a petition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C426-samarppikkuka",
+      "sequence": 21100,
+      "title": "സമർപ്പിക്കുക (samarppikkuka) — to submit",
+      "headword": "സമർപ്പിക്കുക",
+      "romanization": "samarppikkuka",
+      "gloss": "to submit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90211fd1c90234b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to demand, then the Malayalam for a memorandum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സമർപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമർപ്പിക്കുക — samarppikkuka — \"to submit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ അപേക്ഷ ഇന്നലെ സമർപ്പിച്ചു. avaḷ apēkṣa innale samarppiccu. She submitted the application yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സമർപ്പിച്ചു, samarppiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to dedicate: പുസ്തകം അമ്മയ്ക്ക് സമർപ്പിച്ചു, he dedicated the book to his mother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സമർപ്പിക്കുക (samarppikkuka) is built from Sanskrit samarpaṇa, \"placing upon; delivering over\" (CDIAL 13191), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarppikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarppikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarppikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarppikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ apēkṣa innale samarppiccu. — She submitted the application yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ apēkṣa innale samarppiccu.* — She submitted the application yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to demand, then the Malayalam for a memorandum, then say samarppikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to demand, then the Malayalam for a memorandum, then say *samarppikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സമർപ്പിക്കുക (samarppikkuka) mean? (\"To submit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C426-harji",
+      "sequence": 21110,
+      "title": "ഹർജി (harji) — a petition (to a court)",
+      "headword": "ഹർജി",
+      "romanization": "harji",
+      "gloss": "a petition (to a court)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:427b0bdf205fd0d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a memorandum, then the Malayalam for to submit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഹർജി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹർജി — harji — \"a petition (to a court)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ കോടതിയിൽ ഒരു ഹർജി നൽകി. avar kōṭatiyil oru harji nalki. They filed a petition in court."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ഹർജികൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹർജി (harji) is usually traced to Hindustani arzī, \"a petition\", which came from Arabic through Persian; where the Malayalam initial ഹ- comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar kōṭatiyil oru harji nalki. — They filed a petition in court.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar kōṭatiyil oru harji nalki.* — They filed a petition in court.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a memorandum, then the Malayalam for to submit, then say harji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a memorandum, then the Malayalam for to submit, then say *harji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഹർജി (harji) mean? (\"A petition (to a court)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

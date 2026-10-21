@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:7f05b44054d06a9a",
+  "lessonIds": [
+    "ML-C516-kuli",
+    "ML-C516-poti",
+    "ML-C516-atayuka",
+    "ML-C516-tatayuka",
+    "ML-C516-tatassappetuka",
+    "ML-R516-review-509-516",
+    "ML-R516-review-final-516"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch516.txt",
+  "json": "malayalam/narration/ch516.json",
+  "textHash": "fnv1a64:5e414dfad5d3d47e",
+  "jsonHash": "fnv1a64:c309ce9bbb5bacd2",
+  "findings": []
+}

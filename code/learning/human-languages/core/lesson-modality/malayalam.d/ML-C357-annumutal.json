@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C357-annumutal",
+    "language": "malayalam",
+    "chapter": 357,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7558841039c5bc99"
+  },
+  "findings": []
+}

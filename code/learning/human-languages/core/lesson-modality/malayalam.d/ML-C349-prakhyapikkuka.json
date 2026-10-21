@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C349-prakhyapikkuka",
+    "language": "malayalam",
+    "chapter": 349,
+    "sequence": 17040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecbd432d29573d7e"
+  },
+  "findings": []
+}

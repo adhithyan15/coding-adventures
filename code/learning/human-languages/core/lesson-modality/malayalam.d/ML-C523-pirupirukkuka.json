@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C523-pirupirukkuka",
+    "language": "malayalam",
+    "chapter": 523,
+    "sequence": 26320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7917b239137be073"
+  },
+  "findings": []
+}

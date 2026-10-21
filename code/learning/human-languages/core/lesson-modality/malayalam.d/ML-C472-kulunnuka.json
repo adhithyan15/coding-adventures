@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C472-kulunnuka",
+    "language": "malayalam",
+    "chapter": 472,
+    "sequence": 23600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42c9be363de8e7d9"
+  },
+  "findings": []
+}

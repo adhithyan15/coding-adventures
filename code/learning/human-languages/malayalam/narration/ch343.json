@@ -4,7 +4,7 @@
   "chapter": 343,
   "title": "Asking the Way",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:91d5e5df13f1ec1f",
+  "sourceHash": "fnv1a64:8825703431dbb24f",
   "lessons": [
     {
       "id": "ML-C343-rodu",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93f4cb0014605f5d",
+      "sourceHash": "fnv1a64:d27b2b6609e96e7f",
       "notice": null,
       "blocks": [
         {
@@ -354,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "The second is the -അണം of chapter 342: \"how must one go\". എത്ര ദൂരമുണ്ട്, etra dūramuṇṭŭ, asks how far."
+              "text": "The second is the -അണം of the last chapter: \"how must one go\". എത്ര ദൂരമുണ്ട്, etra dūramuṇṭŭ, asks how far."
             }
           ]
         },

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:840adf9576173bbe",
+  "lessonIds": [
+    "ML-C354-prasamgam",
+    "ML-C354-madhyamam",
+    "ML-C354-prasamgikkuka",
+    "ML-C354-kayyatikkuka",
+    "ML-C354-paramarsikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch354-a-speech-and-its-applause.tex"
+}

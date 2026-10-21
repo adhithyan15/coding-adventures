@@ -1,0 +1,11 @@
+{
+  "id": "ML-C519-amparakkuka",
+  "pathSegment": "ML-PATH-519-SAMADHANAM519",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-519-SAMADHANAM519",
+      "order": 2
+    }
+  ]
+}

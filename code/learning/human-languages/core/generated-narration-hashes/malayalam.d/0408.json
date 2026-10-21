@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:d5a3ff78182156ad",
+  "lessonIds": [
+    "ML-C408-pariganikkuka",
+    "ML-C408-vilayiruttuka",
+    "ML-C408-nilapatu",
+    "ML-C408-manobhavam",
+    "ML-C408-nyayikarikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch408.txt",
+  "json": "malayalam/narration/ch408.json",
+  "textHash": "fnv1a64:7ed0135fedbbf632",
+  "jsonHash": "fnv1a64:97f4226e66d43687",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C489-panamataykkuka",
+  "pathSegment": "ML-PATH-489-PANAM489",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-489-PANAM489",
+      "order": 3
+    }
+  ]
+}

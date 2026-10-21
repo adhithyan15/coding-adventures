@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C548-pacakakkaran",
+    "language": "malayalam",
+    "chapter": 548,
+    "sequence": 27610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf7e77e7a49c47eb"
+  },
+  "findings": []
+}

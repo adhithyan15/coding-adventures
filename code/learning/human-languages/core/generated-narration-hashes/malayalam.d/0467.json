@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:83349a7607cde9bb",
+  "lessonIds": [
+    "ML-C467-carakku",
+    "ML-C467-lori",
+    "ML-C467-kayarruka",
+    "ML-C467-irakkuka",
+    "ML-C467-pakku-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch467.txt",
+  "json": "malayalam/narration/ch467.json",
+  "textHash": "fnv1a64:3237c3711a6a25ef",
+  "jsonHash": "fnv1a64:34376e906b6baccc",
+  "findings": []
+}

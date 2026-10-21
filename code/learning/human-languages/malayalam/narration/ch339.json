@@ -4,7 +4,7 @@
   "chapter": 339,
   "title": "Was, Was Doing, Used To",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e63ecb35958a6651",
+  "sourceHash": "fnv1a64:e89fbbede07e5f4d",
   "lessons": [
     {
       "id": "ML-C339-ayirunnu",
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cdfff0b7228b4bd",
+      "sourceHash": "fnv1a64:d055ee6301c39487",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hold on to the last one. In chapter 348 the same -ഉമായിരുന്നു comes back with a second job: \"would have\"."
+              "text": "Hold on to the last one. Later in this core the same -ഉമായിരുന്നു comes back with a second job: \"would have\"."
             }
           ]
         },

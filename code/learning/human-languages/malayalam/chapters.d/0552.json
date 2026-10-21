@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "Love and Divorce",
+  "label": "ch:ml-love-and-divorce",
+  "canDo": "I can say a relationship, married life, a love letter, a boyfriend and to be in love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C552-pranayikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can say a relationship, married life, a love letter, a boyfriend and to be in love.",
+    "assesses": [
+      "ML-LEX-C552-BANDHAM552-03",
+      "ML-LEX-C552-BANDHAM552-04",
+      "ML-LEX-C552-BANDHAM552-05"
+    ]
+  }
+}
