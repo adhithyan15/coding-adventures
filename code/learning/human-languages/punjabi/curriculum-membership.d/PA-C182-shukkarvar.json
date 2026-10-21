@@ -1,0 +1,11 @@
+{
+  "id": "PA-C182-shukkarvar",
+  "pathSegment": "PA-PATH-182-A2-WEEKDAY-SCHEDULE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-182-A2-WEEKDAY-SCHEDULE",
+      "order": 4
+    }
+  ]
+}

@@ -920,7 +920,7 @@ noted.
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
-| Ruby | hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines; 15 eras share it, the era list stops at 3.3) | GP over `ruby.grammar` (919 lines) | CST | unversioned; stale 79-line `ruby.tokens` | **Non-compliant (C2 hand-written lexer)** | Phases 3 and 5 |
+| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends. The hand-written lexer remains only for non-IIR consumers | 5b; R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
 
@@ -983,9 +983,93 @@ Decisions and deviations in this slice:
   provisional until phase 5 gives that row an `iir_status` (C4.4).
 - `ruby-iir-compiler` stays on `ruby-lexer`: LANG80 accepts `puts -7 / 2`,
   whose unary reading depends on the space before `-`, so moving it now would
-  regress LANG80. Phase 5 moves it together with E6.
+  regress LANG80. Phase 5 moves it together with E6. (Phase 5a moved it
+  without E6 and refuses that one form instead; see below.)
 - The `corpus/rb-int-puts` directory named in `subsets.csv` arrives with
   stage I in phase 5.
+
+**Status (5a, 2026-10-20).** The IIR path no longer uses `ruby-lexer`.
+`ruby-iir-compiler` compiles `rb-int-puts` from the tree `parse_ruby_at`
+builds (GL over `ruby<release>.tokens`, GP over `ruby<release>.grammar`), and
+`Language::Ruby` runs it on every backend:
+
+- `compile_source_at(source, release, module_name, &FrontendBudgets)` resolves
+  an exact inventory ID (`None` is `DEFAULT_RELEASE`, `3.3.6`), looks up the
+  release's `ReleaseProfile` in `profiles.rs`, parses with that release's
+  pair, and walks the CST in place: borrowed nodes, flat `sum`/`term` chains
+  folded left in a loop, no owned AST. `compile_cst` takes a caller-supplied
+  tree after measuring it (items, depth, text). Errors are the six C6
+  categories, each naming the release and a 1-based position; `Unsupported`
+  names the CST rule and span.
+- LANG83 ops only: `/` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` →
+  `print_i64` per argument (all arguments are evaluated first, as in Ruby),
+  `puts()` → `putchar 10`, end of program → `ret 0`. The `rb_*` builtins are
+  gone. Every value is range-checked against `i64` at compile time in `i128`
+  (Ruby would switch to a Bignum); a zero divisor is not refused but traps at
+  run time with `Trap.DivZero` after the earlier output, matching Ruby's
+  `ZeroDivisionError`.
+- Stage I is `cargo test -p ruby-iir-compiler --test release_subsets`: the
+  new corpus `code/grammars/ruby/corpus/rb-int-puts` (14 accepted cases, 4 of
+  them trapping, and 9 `.reject` cases, each with a `.cite` oracle record
+  from host ruby 3.3.6) on every release whose `iir_status` claims the
+  subset. `releases.csv` now claims `iir_status` `rb-int-puts` and profile
+  `ruby33` for 3.3.5, 3.3.6 and 3.3.7, and `backend_status` `rb-int-puts` for
+  3.3.6, the release the matrix rows compile (C4.4 is met: the default claims
+  an IIR subset). The same test proves 3.3.5–3.3.7 emit identical IIR for
+  every case and that the CSV's `profile` column matches `profiles.rs`.
+- C8 is `tests/cst_contract.rs` (every dispatched rule and token exists in
+  each claiming release); C5 hostile probes run in a child process
+  (`tests/hostile.rs`); `tests/iir_path.rs` fails if the crate calls a legacy
+  `ruby-lexer` entry point.
+- Security review: `i64::MIN % -1` (Ruby: 0) is the one modulus a machine
+  `rem` faults on (x86 SIGFPE, LLVM UB, a CLR exception, a Rust panic).
+  LANG83 defines it as 0 and the PR1b backends guard it, but the compiler
+  folds that edge to `const 0` anyway, so no backend sees it; a corpus case
+  and matrix row pin it.
+- lang-aot: `Language::Ruby` (`ruby`/`rb`, `.rb`) on the default release.
+  Thirteen `lang_matrix` rows, each a verbatim corpus case, declare all eight
+  executable columns, and `check_module_for` passes on all nine backends. The
+  matrix gained `Expect::StdoutThenTrap` (LANG83's port item): four rows check
+  the stdout before the trap and the kind on every column. CLR, BEAM and
+  AArch64 execute in CI only; the authoring host had no `dotnet` or `erl`.
+
+Decisions and deviations in this slice:
+
+- **`%` joins `rb-int-puts`.** Each pair's `term` accepts `PERCENT`, cited to
+  the tag's `parse.y` (`%left '*' '/' '%'`), and `subsets.csv` says so. The
+  3.3.6/3.3.7 copies were regenerated by `ruby_release_pairs.py`.
+- **0.49 and 0.50 get no profile.** They parse the subset (stage P), but
+  `puts` is only `IO#puts` there (`io.c` line 1196 at `v0_49`), so a bare
+  `puts(1)` raises NameError, and `Fixnum#/` truncates (`numeric.c`
+  `Ffix_div`). Compiling them is a typed `ReleaseNotAvailable` ("no IIR
+  profile"), not 3.3 semantics under a 1994 label. `IntDiv::Truncate` is
+  recorded in the profile struct for the first early release that gets a
+  profile; the compiler refuses it until LANG83's `i64_div_trunc` leaves
+  `Later`.
+- **No E6.** `puts -7` (a bare command whose argument starts with `-`) stays
+  a parse error, as the R0 grammar already had it; `puts(-7)` and `puts 1 -
+  7` work. This narrows LANG80's accepted set by that one form. E6
+  (`@space_before`) is not needed for the rest of the subset, so this slice
+  does not depend on it.
+- **`main` returns `i64` 0**, not `ret_void`. That is the exit status every
+  AOT entry point reads, and it avoids the void-entry hazards a void `main`
+  hits on the CLR (an empty stack in the `int32` launcher entry) and BEAM
+  (`ret_void` returns whatever is in `x0`).
+- **Not in 5a:** `IIRModule.release`, `compile_source_to_iir_at`, `--lang
+  ruby@<release>` and the lang-aot `UnknownRelease`/`ReleaseNotAvailable`
+  variants. They are the lang-aot release API that Perl's phase 4b also
+  needs; building it twice would conflict. Phase 4b has since landed that
+  API (with Perl as its only inventory language), so until 5b a
+  `ruby@<release>` request is refused as `UnknownRelease` and a Ruby module
+  leaves `IIRModule.release` as `None`.
+
+**Phase 5b (remaining).** Wire Ruby into the lang-aot release API above
+(`has_release_inventory`, the `compile_source_to_iir_at` arm, and
+`IIRModule.release` from `ruby-iir-compiler`); matrix
+rows with `Prog.release` on the boundary releases 3.3.5 and 3.3.7 (or the
+release sweep of [CI bounding](#ci-bounding)), after which those rows may
+claim `backend_status`; the release-identity class check in a
+`release_sweep.rs`.
 
 ### JavaScript: rewrite to walk the CST
 
@@ -1515,7 +1599,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
-| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
+| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b:** lang-aot release selection and the boundary-release sweep (B for 3.3.5, 3.3.7) | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b/7c:** lang-aot release selection and the boundary sweep, Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |

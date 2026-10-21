@@ -50,8 +50,8 @@ use crate::_grammar;
 /// The release used when a caller names none. It is an exact inventory ID.
 ///
 /// 3.3.6 is the host Ruby whose `Ripper.lex` is the R0 oracle. LANG84 C4.4
-/// also wants this row to claim an IIR subset; that claim arrives with
-/// phase 5 (until then `iir_status` is `-` for every Ruby row).
+/// also wants this row to claim an IIR subset: since phase 5 its
+/// `iir_status` is `rb-int-puts` (`ruby-iir-compiler` proves it).
 pub const DEFAULT_RELEASE: &str = "3.3.6";
 
 /// Default source budget for untrusted programs (LANG84 C5).
@@ -215,12 +215,21 @@ pub fn grammar_classes(release: &str) -> Option<(&'static str, &'static str)> {
     Some((releases::grammar_class(release)?, _grammar::grammar_class(release)?))
 }
 
+/// The compiled parser grammar of one paired release, or `None` for a
+/// release with no pair (exact IDs only, like every lookup here).
+///
+/// Exposed for LANG84 C8 `cst_contract` tests: an IIR compiler checks that
+/// every rule name it dispatches on exists in each release it claims.
+pub fn release_parser_grammar(release: &str) -> Option<grammar_tools::parser_grammar::ParserGrammar> {
+    _grammar::parser_grammar(release)
+}
+
 /// Resolve a request to the exact inventory ID whose pair will be used.
 pub fn resolve_release(release: Option<&str>) -> Result<&'static str, RubyFrontendError> {
     let requested = release.unwrap_or(DEFAULT_RELEASE);
     if requested.len() > MAX_RELEASE_ID_BYTES {
         return Err(RubyFrontendError::UnknownRelease {
-            requested: format!("{}...", truncate(requested, MAX_RELEASE_ID_BYTES)),
+            requested: format!("{}...", echo(truncate(requested, MAX_RELEASE_ID_BYTES))),
             suggestions: Vec::new(),
         });
     }
@@ -233,7 +242,7 @@ pub fn resolve_release(release: Option<&str>) -> Result<&'static str, RubyFronte
             stage: (*stage).to_string(),
         }),
         None => Err(RubyFrontendError::UnknownRelease {
-            requested: requested.to_string(),
+            requested: echo(requested),
             suggestions: suggestions(requested),
         }),
     }
@@ -347,6 +356,23 @@ fn suggestions(requested: &str) -> Vec<String> {
         .take(5)
         .map(|(id, _)| (*id).to_string())
         .collect()
+}
+
+/// Neutralize caller-supplied text before it enters a diagnostic.
+///
+/// A release ID comes from outside (a `--lang ruby@...` flag, an API
+/// argument), and every error that names it ends up in a log or a terminal.
+/// A raw newline there forges a log line; an ESC drives the terminal. So each
+/// character goes through `char::escape_debug`: printable text is unchanged
+/// and a control character arrives as visible text (`\n`, `\u{1b}`).
+///
+/// | request          | echoed as          |
+/// |------------------|--------------------|
+/// | `3.3`            | `3.3`              |
+/// | `x<LF>INFO: ok`  | `x\nINFO: ok`      |
+/// | `a<ESC>[2J`      | `a\u{1b}[2J`       |
+fn echo(text: &str) -> String {
+    text.chars().flat_map(char::escape_debug).collect()
 }
 
 fn truncate(text: &str, max: usize) -> &str {

@@ -735,7 +735,7 @@
       "version": "ruby0.49",
       "kind": "grammar",
       "path": "code/grammars/ruby/ruby0.49.grammar",
-      "sha256": "f00822ef5ad8142246c47fd87b346335adabcd08af0948f482bded87996f8ce2"
+      "sha256": "d6f854aaa91c1686e151d74385c3b67104b4f69eb35ae92042a3901052afc027"
     },
     {
       "family": "ruby",
@@ -749,7 +749,7 @@
       "version": "ruby0.50",
       "kind": "grammar",
       "path": "code/grammars/ruby/ruby0.50.grammar",
-      "sha256": "54f0b354abb2ec674a4c9a87e2b5b456728279b9355711077ac9b05824753493"
+      "sha256": "3a738f13841f08087a17aa91311decefb6416345b4e1f8407e494a6e10630d9c"
     },
     {
       "family": "ruby",
@@ -763,7 +763,7 @@
       "version": "ruby3.3.5",
       "kind": "grammar",
       "path": "code/grammars/ruby/ruby3.3.5.grammar",
-      "sha256": "9037025c5935c530f0aa5be603d0cf69203c254c2918aba550d13306aefa07d4"
+      "sha256": "6e8ce78960df4a7ecf8f56c9aa98f6641160e1789add507f44240426941e98dd"
     },
     {
       "family": "ruby",
@@ -777,7 +777,7 @@
       "version": "ruby3.3.6",
       "kind": "grammar",
       "path": "code/grammars/ruby/ruby3.3.6.grammar",
-      "sha256": "3c2aed6c12b55c0544ae1a2bc6eb6b144890d02eeb3295ade0bb9fdb5487a4c0"
+      "sha256": "b550039253be965ba49a952048ba60d69d9899cff5f32727771c617ac86f19d8"
     },
     {
       "family": "ruby",
@@ -791,7 +791,7 @@
       "version": "ruby3.3.7",
       "kind": "grammar",
       "path": "code/grammars/ruby/ruby3.3.7.grammar",
-      "sha256": "02a405cc009e5f369d2ff7e797229a45d145b21c758974dbc6a909668c2273c6"
+      "sha256": "46c0d3bbad8260a011b0be7cd7585f86abcd52a6e252861f2da80ca8d219260a"
     },
     {
       "family": "ruby",

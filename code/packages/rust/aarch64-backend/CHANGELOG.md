@@ -1,4 +1,15 @@
 # Changelog — `aarch64-backend`
+## [0.42.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): two `V1_BUILTINS` rows,
+  so `call_builtin` lowers to `bl __twig_write_f64_py` / `__twig_write_f64_js`.
+  The f64's raw bits are built in a general register, stored to the slot, and
+  reloaded into `x0` with an integer `ldr`, which is the runtime's
+  `int64_t bits` argument. No FP register is involved.
+- `op_support`: both `Lowered`. A test pins the `movz …, #0x3ff8, lsl #48` /
+  `ldr x0, [sp, #…]` / `bl` shape. The bytes were cross-checked with
+  `llvm-mc --disassemble`.
+
 ## [0.41.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_neg_ovf`**

@@ -251,3 +251,5 @@ flushes stdout before reporting the kind on stderr and aborting. LANG83 PR4 adds
 `i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`, lowered to
 `@llvm.s{add,sub,mul}.with.overflow.i64` (negation is `ssub(0, a)`) with a branch
 on the overflow bit to `@__iir_trap(Trap.Overflow)`.
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → `call @__iir_write_f64(double, i32 layout)`. That module-local `linkonce_odr` IR carries a Burger–Dybvig shortest-round-trip digit core over stack big integers, and prints Python's `repr` or JavaScript's `toString` layout with libc `putchar` (see `src/lang83_f64.rs`).

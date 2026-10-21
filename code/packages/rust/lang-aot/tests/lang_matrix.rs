@@ -5413,6 +5413,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - exact static division may reduce factors before each sign
+    // root while the pathwise common-divisor proof still covers the final /3.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((12 / 2 * sign(left)) + 6) else ((18 / 2 * sign(right)) + 6)) / 3); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -7858,6 +7867,45 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("4\n2\n7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
+    // Ruby — LANG84 phase 5a (= LANG83 PR2): the `rb-int-puts` subset on the
+    // default release 3.3.6. The compiler walks the tree that the generic
+    // GrammarLexer/GrammarParser build from `ruby3.3.6.tokens`/`.grammar` (no
+    // hand-written lexer) and emits only LANG83 registry ops: `/` is
+    // `i64_div_floor`, `%` is `i64_mod_floor`, `puts` is `print_i64`, `puts()` is
+    // `putchar 10`. These are the first matrix rows that emit a PR1b op, and the
+    // `StdoutThenTrap` rows are the first that check the output before a trap
+    // AND its kind on every column.
+    //
+    // Every source below is a case of `code/grammars/ruby/corpus/rb-int-puts/`
+    // verbatim, and every expectation is that case's `.expect` trimmed — host
+    // ruby 3.3.6 produced them (`ruby_rows_are_rb_int_puts_corpus_cases` and
+    // `ruby_rows_agree_with_the_host_ruby_oracle` re-check both).
+    // `*` `/` `%` bind tighter than `+` `-`; both levels associate left: 1 + 6 - (2 % 3) = 5.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1 + 2)\nputs 1 + 2 * 3 - 8 / 4 % 3\nputs((1 + 2) * 3)\nputs(10 - 3 - 2)\n", expect: Expect::Stdout("3\n5\n9\n5"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Ruby's `/` rounds toward negative infinity (LANG83 `i64_div_floor`), unlike C, the JVM or the CLR.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(7 / 2, -7 / 2, 7 / -2, -7 / -2)\n", expect: Expect::Stdout("3\n-4\n-4\n3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Ruby's `%` takes the divisor's sign (LANG83 `i64_mod_floor`).
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(7 % 3, -7 % 3, 7 % -3, -7 % -3)\n", expect: Expect::Stdout("1\n2\n-2\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Nested and parenthesised unary minus.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(- -5, -(3 - 10), 2 * -3 * 4)\n", expect: Expect::Stdout("5\n7\n-24"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `_` digit separators and the `+5` the 3.3 lexer folds into one literal.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1_000_000 * 3)\nputs(+5 - +2)\nputs(0)\n", expect: Expect::Stdout("3000000\n3\n0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Three-argument `puts`, a bare two-argument command call, an empty `puts()` (one newline, via `putchar`) and `;` between statements.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1, 2, 3)\nputs 4, 5\nputs()\nputs(6); puts(7)\n", expect: Expect::Stdout("1\n2\n3\n4\n5\n\n6\n7"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Comments, a newline after a binary operator, newlines inside the parentheses, and a `\` line continuation.
+    Prog { lang: Language::Ruby, ext: "rb", src: "# a comment\n\nputs(1 +\n  2)\nputs(\n  3,\n  4\n) # trailing comment\nputs 5 \\\n  - 6\n", expect: Expect::Stdout("3\n3\n4\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Both ends of i64, `MIN % -1 == 0`, `MIN / 1 == MIN`, and a product just under 2^62.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(9223372036854775807, -9223372036854775807 - 1)\nputs((-9223372036854775807 - 1) % -1)\nputs((-9223372036854775807 - 1) / 1)\nputs(46340 * 46340 * 46340 * 46340)\n", expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n0\n-9223372036854775808\n4611307862899360000"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Security review: `i64::MIN % -1` (Ruby: 0) is folded by the compiler, so no machine `rem` faults on it; the neighbouring moduli still lower to `i64_mod_floor`.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1)\nputs((-9223372036854775807 - 1) % -1)\nputs((-9223372036854775807 - 1) % 1, (-9223372036854775807 - 1) % 7)\n", expect: Expect::Stdout("1\n0\n0\n6"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `ZeroDivisionError` after output: `1` is flushed, then `Trap.DivZero`.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1)\nputs(2 / 0)\nputs(3)\n", expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A zero modulus traps too, with nothing printed first.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(5 % 0)\n", expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Ruby evaluates every argument before `puts` writes, so this call prints nothing.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1, 1 / 0)\n", expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A divisor that is zero only after evaluation, after an earlier statement's output.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(4)\nputs((7 - 7) * 3, 10 / (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus
@@ -11857,6 +11905,172 @@ fn non_algol_matrix_every_proven_cell_agrees() {
     eprintln!("non-ALGOL matrix: {programs} programs, {ran} cells exercised, {skipped} skipped");
 }
 
+// ---------------------------------------------------------------------------
+// LANG84 phase 5a — Ruby on every backend (= LANG83 PR2)
+// ---------------------------------------------------------------------------
+
+fn ruby_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::Ruby).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no Ruby rows");
+    rows
+}
+
+/// The `rb-int-puts` corpus directory, read from `subsets.csv` by header.
+fn ruby_corpus_dir() -> std::path::PathBuf {
+    let grammars = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/ruby");
+    let text = std::fs::read_to_string(grammars.join("subsets.csv")).expect("ruby subsets.csv");
+    let mut lines = text.lines().filter(|l| !l.starts_with('#'));
+    let header: Vec<&str> = lines.next().expect("subsets.csv header").split(',').collect();
+    let column = |name: &str| header.iter().position(|h| *h == name).expect("subsets.csv column");
+    let (subset, dir) = (column("subset"), column("corpus_dir"));
+    let row = lines
+        .map(|l| l.split(',').collect::<Vec<_>>())
+        .find(|cells| cells[subset] == "rb-int-puts")
+        .expect("rb-int-puts is declared");
+    grammars.join(row[dir])
+}
+
+/// Every Ruby row on every backend it declares, as one named test so a Ruby
+/// regression is reported as one. A runner that returns `None` while its
+/// toolchain is present fails rather than skips.
+#[test]
+fn ruby_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped, mut trapped) = (0usize, 0usize, 0usize);
+    for program in ruby_rows() {
+        assert_eq!(
+            program.backends,
+            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+            "every Ruby row declares all eight columns: {:?}",
+            program.src
+        );
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    trapped += usize::from(matches!(result, RunResult::TrappedAfter { .. }));
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "Ruby {backend:?} silently skipped: {:?}", program.src);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0 && trapped > 0);
+    eprintln!("Ruby matrix: {ran} cells executed ({trapped} trapped as expected), {skipped} skipped");
+}
+
+/// The rows are the corpus: each source is a `.rb` case verbatim and each
+/// expectation its `.expect`, so the matrix cannot drift from what the
+/// frontend's own stage-I test (and the oracle) checked.
+#[test]
+fn ruby_rows_are_rb_int_puts_corpus_cases() {
+    let dir = ruby_corpus_dir();
+    let cases: Vec<(String, String)> = std::fs::read_dir(&dir)
+        .expect("rb-int-puts corpus")
+        .filter_map(|entry| {
+            let path = entry.expect("corpus entry").path();
+            if path.extension()? != "rb" {
+                return None;
+            }
+            let expect = std::fs::read_to_string(path.with_extension("expect")).ok()?;
+            Some((std::fs::read_to_string(&path).expect("corpus source"), expect))
+        })
+        .collect();
+    for program in ruby_rows() {
+        let Some((_, expect)) = cases.iter().find(|(source, _)| source == program.src) else {
+            panic!("Ruby row is not an rb-int-puts corpus case: {:?}", program.src);
+        };
+        let (stdout, trap) = match expect.rfind("trap:") {
+            Some(at) => (expect[..at].trim(), Some(expect[at + 5..].trim())),
+            None => (expect.trim(), None),
+        };
+        match (&program.expect, trap) {
+            (Expect::Stdout(want), None) => assert_eq!(*want, stdout, "{:?}", program.src),
+            (Expect::StdoutThenTrap(want, kind), Some(trap)) => {
+                assert_eq!((*want, *kind), (stdout, trap), "{:?}", program.src)
+            }
+            (other, _) => panic!("{:?}: {other:?} disagrees with the corpus {expect:?}", program.src),
+        }
+    }
+}
+
+/// The oracle: a host Ruby on the 3.3 line must print each row's stdout and,
+/// for a trap row, stop with `ZeroDivisionError`. The compiled programs never
+/// run on it. Skips (loudly) without a matching `ruby`.
+#[test]
+fn ruby_rows_agree_with_the_host_ruby_oracle() {
+    let version = match Command::new("ruby").arg("-v").output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
+        _ => {
+            eprintln!("SKIP Ruby oracle: no `ruby` on PATH");
+            return;
+        }
+    };
+    if !version.starts_with("ruby 3.3.") {
+        eprintln!("SKIP Ruby oracle: {version} is not the 3.3 line these rows target");
+        return;
+    }
+    for program in ruby_rows() {
+        // `-e` with the source as its own argument: no shell, no temp file.
+        let out = Command::new("ruby").args(["-e", program.src]).output().expect("ruby ran once already");
+        // Windows interpreters write text-mode stdout ("\r\n"); the rows
+        // record the language's output, so fold the line ending back.
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
+        match program.expect {
+            Expect::Stdout(want) => {
+                assert!(out.status.success(), "{version} failed {:?}", program.src);
+                assert_eq!(stdout.trim(), want, "{version}: {:?}", program.src);
+            }
+            Expect::StdoutThenTrap(want, "Trap.DivZero") => {
+                assert!(!out.status.success(), "{version} did not raise on {:?}", program.src);
+                assert!(String::from_utf8_lossy(&out.stderr).contains("(ZeroDivisionError)"));
+                assert_eq!(stdout.trim(), want, "{version}: {:?}", program.src);
+            }
+            ref other => panic!("no Ruby oracle for {other:?}"),
+        }
+    }
+    eprintln!("Ruby oracle: {} rows agree with {version}", ruby_rows().len());
+}
+
+/// LANG84 C7.3: every row's module passes `check_module_for` on all nine
+/// LANG83 backends — CLR, BEAM and AArch64 included, whatever this host can
+/// run — and holds only registry ops: the arithmetic, `i64_div_floor` /
+/// `i64_mod_floor`, `print_i64` / `putchar`, plus the ungated `const`/`ret`.
+/// No Ruby-named builtin (`rb_int_div`, `rb_puts_int`) survives.
+#[test]
+fn ruby_rows_pass_the_lang83_check_on_all_nine_backends() {
+    let mut floor_ops = 0;
+    for program in ruby_rows() {
+        let module = lang_aot::compile_source_to_iir(Language::Ruby, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+            match interpreter_ir::op_registry::registry_name(instr) {
+                Some(name) => {
+                    assert!(
+                        ["add", "sub", "mul", "neg", "i64_div_floor", "i64_mod_floor", "print_i64", "putchar"]
+                            .contains(&name),
+                        "{:?}: unexpected registry op {name}",
+                        program.src
+                    );
+                    floor_ops += usize::from(name.starts_with("i64_"));
+                }
+                None => assert!(["const", "ret"].contains(&instr.op.as_str()), "{:?}: {instr:?}", program.src),
+            }
+        }
+        for backend in lang_aot::op_check::Backend::ALL {
+            lang_aot::op_check::check_module_for(backend, &module)
+                .unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
+        }
+    }
+    assert!(floor_ops > 0, "the rows must exercise the LANG83 floor ops");
+}
+
 /// The capstone: every `(program, backend)` cell the campaign has **proven** runs
 /// and agrees with the known result. A cell whose toolchain is absent skips
 /// gracefully; a cell whose toolchain is present but disagrees fails loudly.
@@ -12238,6 +12452,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // own oracle.
         (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
+        // Ruby: LANG84 phase 5a's thirteen rb-int-puts rows (four of them
+        // StdoutThenTrap), all eight columns.
+        (Language::Ruby, 13, 104),
         (Language::Cobol60, 59, 472),
         // Perl: LANG84 phase 4a's eleven integer-`print` rows, all eight columns.
         (Language::Perl, 11, 88),
@@ -23635,6 +23852,32 @@ fn algol_pathwise_commuted_exact_divided_local_name_actual_runtime_real_output_r
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the pathwise commuted exactly-divided local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_exact_prefix_divided_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((if choose() then ((12 / 2 * sign(left)) + 6) else ((18 / 2 * sign(right)) + 6)) / 3)",
+                )
+        })
+        .expect("the pathwise exact-prefix-divided ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise exact-prefix-divided local name actual did not run"
             );
             continue;
         };
