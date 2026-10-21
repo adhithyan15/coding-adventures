@@ -1,0 +1,11 @@
+{
+  "id": "FA-C459-garanti",
+  "pathSegment": "FA-PATH-459-JENS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-459-JENS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C422-roghan",
+    "language": "persian",
+    "chapter": 422,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:044fa510edc1c52e"
+  },
+  "findings": []
+}

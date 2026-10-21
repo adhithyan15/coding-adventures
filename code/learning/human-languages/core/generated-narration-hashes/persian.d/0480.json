@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:b03b28ed93aa69bb",
+  "lessonIds": [
+    "FA-C480-ghorur",
+    "FA-C480-maghrur",
+    "FA-C480-forutan",
+    "FA-C480-eftekhar-kardan",
+    "FA-C480-khodnamayi-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch480.txt",
+  "json": "persian/narration/ch480.json",
+  "textHash": "fnv1a64:8a296f85b102f854",
+  "jsonHash": "fnv1a64:50f99ee5a7bb5d0d",
+  "findings": []
+}

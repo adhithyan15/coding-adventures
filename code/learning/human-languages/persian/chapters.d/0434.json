@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Underground and buses",
+  "label": "ch:fa-underground-and-buses",
+  "canDo": "I can get around by metro and bus: the escalator, the route, the fare, getting a seat and missing the bus.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C434-ja-mandan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can get around by metro and bus: the escalator, the route, the fare, getting a seat and missing the bus.",
+    "assesses": [
+      "FA-LEX-C434-PELLE-03",
+      "FA-LEX-C434-PELLE-04",
+      "FA-LEX-C434-PELLE-05"
+    ]
+  }
+}

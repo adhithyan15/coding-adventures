@@ -1,0 +1,11 @@
+{
+  "id": "FA-C310-ettela-dadan",
+  "pathSegment": "FA-PATH-310-TAKZIB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-310-TAKZIB",
+      "order": 4
+    }
+  ]
+}

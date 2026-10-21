@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:0a69740f4d24902d",
+  "lessonIds": [
+    "FA-C405-qanuni",
+    "FA-C405-gheyr-e-qanuni",
+    "FA-C405-takhallof",
+    "FA-C405-mojazat",
+    "FA-C405-mojavvez"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch405.txt",
+  "json": "persian/narration/ch405.json",
+  "textHash": "fnv1a64:c54949b0033cfd08",
+  "jsonHash": "fnv1a64:fe224114e987fa11",
+  "findings": []
+}

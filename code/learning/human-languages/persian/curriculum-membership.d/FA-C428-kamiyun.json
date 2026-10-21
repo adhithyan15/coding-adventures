@@ -1,0 +1,11 @@
+{
+  "id": "FA-C428-kamiyun",
+  "pathSegment": "FA-PATH-428-KAMIYUN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-428-KAMIYUN",
+      "order": 2
+    }
+  ]
+}

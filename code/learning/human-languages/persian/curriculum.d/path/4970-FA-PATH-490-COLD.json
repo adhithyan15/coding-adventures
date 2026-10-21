@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-490-COLD",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-490-COLD"
+  ],
+  "after": []
+}

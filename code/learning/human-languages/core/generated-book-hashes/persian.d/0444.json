@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:e0bcbc19d3eb3c9d",
+  "lessonIds": [
+    "FA-C444-neshani",
+    "FA-C444-pors-o-ju-kardan",
+    "FA-C444-balad-budan",
+    "FA-C444-gom-shodan",
+    "FA-C444-neshane"
+  ],
+  "tex": "persian/book/chapters/ch444-asking-the-way.tex"
+}

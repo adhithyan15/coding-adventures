@@ -1,0 +1,11 @@
+{
+  "id": "FA-C314-sherkat-kardan",
+  "pathSegment": "FA-PATH-314-RUYDAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-314-RUYDAD",
+      "order": 4
+    }
+  ]
+}

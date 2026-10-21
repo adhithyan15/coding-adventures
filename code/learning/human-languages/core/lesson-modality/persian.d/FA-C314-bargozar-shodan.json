@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C314-bargozar-shodan",
+    "language": "persian",
+    "chapter": 314,
+    "sequence": 16030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4af4c6d5a5a1770d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C499-khoropof-kardan",
+  "pathSegment": "FA-PATH-499-SLEEP",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-499-SLEEP",
+      "order": 1
+    }
+  ]
+}

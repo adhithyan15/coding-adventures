@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Effort, success and strikes",
+  "label": "ch:fa-effort-success-and-strikes",
+  "canDo": "I can talk about a strike and a union, say that someone worked hard, and say whether they succeeded or failed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C384-shekast-khordan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about a strike and a union, say that someone worked hard, and say whether they succeeded or failed.",
+    "assesses": [
+      "FA-LEX-C384-ETESAB-03",
+      "FA-LEX-C384-ETESAB-04",
+      "FA-LEX-C384-ETESAB-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-402-TAHQIQ",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-402-TAHQIQ"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "On air and in print",
+  "label": "ch:fa-on-air-and-in-print",
+  "canDo": "I can say that something was published, broadcast and covered, and talk about the newsreader and the viewers.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C312-pushesh-e-khabari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say that something was published, broadcast and covered, and talk about the newsreader and the viewers.",
+    "assesses": [
+      "FA-LEX-C312-MONTASHER-03",
+      "FA-LEX-C312-MONTASHER-04",
+      "FA-LEX-C312-MONTASHER-05"
+    ]
+  }
+}

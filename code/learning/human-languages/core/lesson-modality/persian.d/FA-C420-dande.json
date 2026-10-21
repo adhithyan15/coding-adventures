@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C420-dande",
+    "language": "persian",
+    "chapter": 420,
+    "sequence": 21520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8449a2ddb6e75de"
+  },
+  "findings": []
+}

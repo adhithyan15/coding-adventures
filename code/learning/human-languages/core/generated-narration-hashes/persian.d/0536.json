@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:849af6b80741801e",
+  "lessonIds": [
+    "FA-C536-jam-kardan",
+    "FA-C536-khoshk-kardan",
+    "FA-C536-sholugh-kardan",
+    "FA-C536-namorattab",
+    "FA-C536-ashghal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch536.txt",
+  "json": "persian/narration/ch536.json",
+  "textHash": "fnv1a64:df42950e8845d7ee",
+  "jsonHash": "fnv1a64:0a1cde1483810041",
+  "findings": []
+}

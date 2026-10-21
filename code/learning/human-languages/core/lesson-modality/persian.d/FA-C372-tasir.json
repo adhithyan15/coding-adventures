@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C372-tasir",
+    "language": "persian",
+    "chapter": 372,
+    "sequence": 19010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e195013f4fcfb9f"
+  },
+  "findings": []
+}

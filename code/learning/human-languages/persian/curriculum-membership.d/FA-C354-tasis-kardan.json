@@ -1,0 +1,11 @@
+{
+  "id": "FA-C354-tasis-kardan",
+  "pathSegment": "FA-PATH-354-KASHF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-354-KASHF",
+      "order": 2
+    }
+  ]
+}

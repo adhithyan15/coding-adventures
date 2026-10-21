@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:06e9fa8b1d705375",
+  "lessonIds": [
+    "FA-C343-barande-shodan",
+    "FA-C343-bakhtan",
+    "FA-C343-tamashagar",
+    "FA-C343-tashviq-kardan",
+    "FA-C343-medal"
+  ],
+  "tex": "persian/book/chapters/ch343-winning-and-losing.tex"
+}

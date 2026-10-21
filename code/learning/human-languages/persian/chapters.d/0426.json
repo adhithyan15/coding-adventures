@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Traffic jams and parking",
+  "label": "ch:fa-traffic-jams-and-parking",
+  "canDo": "I can talk about jams and parking: a traffic jam, parking, turning round, one-way streets and the driving licence.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C426-govahiname",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can talk about jams and parking: a traffic jam, parking, turning round, one-way streets and the driving licence.",
+    "assesses": [
+      "FA-LEX-C426-RAHBANDAN-03",
+      "FA-LEX-C426-RAHBANDAN-04",
+      "FA-LEX-C426-RAHBANDAN-05"
+    ]
+  }
+}

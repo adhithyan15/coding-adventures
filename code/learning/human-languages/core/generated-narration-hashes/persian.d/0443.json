@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:3f55760d20d43d80",
+  "lessonIds": [
+    "FA-C443-khadamat",
+    "FA-C443-keyfiyat",
+    "FA-C443-razi",
+    "FA-C443-anam",
+    "FA-C443-tashakkor-kardan",
+    "FA-R443-review-436-443"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch443.txt",
+  "json": "persian/narration/ch443.json",
+  "textHash": "fnv1a64:726012e9ea4dfeb4",
+  "jsonHash": "fnv1a64:3b11d4145151253b",
+  "findings": []
+}

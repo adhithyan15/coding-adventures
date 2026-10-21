@@ -1,0 +1,11 @@
+{
+  "id": "FA-C318-qatl",
+  "pathSegment": "FA-PATH-318-JENAYAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-318-JENAYAT",
+      "order": 1
+    }
+  ]
+}

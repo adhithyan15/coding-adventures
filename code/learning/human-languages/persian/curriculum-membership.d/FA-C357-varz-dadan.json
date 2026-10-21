@@ -1,0 +1,11 @@
+{
+  "id": "FA-C357-varz-dadan",
+  "pathSegment": "FA-PATH-357-KHAMIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-357-KHAMIR",
+      "order": 1
+    }
+  ]
+}

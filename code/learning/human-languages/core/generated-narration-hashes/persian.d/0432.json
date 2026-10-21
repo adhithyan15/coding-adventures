@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:14588f0cdf8bd145",
+  "lessonIds": [
+    "FA-C432-git",
+    "FA-C432-gozarname",
+    "FA-C432-ezafe-bar",
+    "FA-C432-bazrasi-kardan",
+    "FA-C432-mehmandar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch432.txt",
+  "json": "persian/narration/ch432.json",
+  "textHash": "fnv1a64:5e8093b8ea5ec2c9",
+  "jsonHash": "fnv1a64:467f64aac8912b98",
+  "findings": []
+}

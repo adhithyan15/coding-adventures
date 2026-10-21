@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:e61ee241a65c84ec",
+  "lessonIds": [
+    "FA-C304-dar-an-zaman",
+    "FA-C304-qadim",
+    "FA-C304-badha",
+    "FA-C304-az-an-pas",
+    "FA-C304-akhiran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch304.txt",
+  "json": "persian/narration/ch304.json",
+  "textHash": "fnv1a64:c265b453a38031b9",
+  "jsonHash": "fnv1a64:3207f8ced6ea1ab0",
+  "findings": []
+}

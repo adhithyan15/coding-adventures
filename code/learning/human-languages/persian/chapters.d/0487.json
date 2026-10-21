@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Hope and Courage",
+  "label": "ch:fa-hope-and-courage",
+  "canDo": "I can talk about hope, doubt and courage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R487-review-480-487",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about hope, doubt and courage.",
+    "assesses": [
+      "FA-LEX-C487-HOPE-03",
+      "FA-LEX-C487-HOPE-04",
+      "FA-LEX-C487-HOPE-05"
+    ]
+  }
+}

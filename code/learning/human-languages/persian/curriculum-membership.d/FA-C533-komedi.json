@@ -1,0 +1,11 @@
+{
+  "id": "FA-C533-komedi",
+  "pathSegment": "FA-PATH-533-MEDIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-533-MEDIA",
+      "order": 2
+    }
+  ]
+}

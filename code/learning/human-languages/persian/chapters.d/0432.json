@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "At the airport",
+  "label": "ch:fa-at-the-airport",
+  "canDo": "I can get through the airport: the gate, the passport, excess baggage, the security search and the flight attendant.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C432-mehmandar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can get through the airport: the gate, the passport, excess baggage, the security search and the flight attendant.",
+    "assesses": [
+      "FA-LEX-C432-GIT-03",
+      "FA-LEX-C432-GIT-04",
+      "FA-LEX-C432-GIT-05"
+    ]
+  }
+}

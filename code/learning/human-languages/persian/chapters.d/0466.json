@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Animals in the fields",
+  "label": "ch:fa-animals-in-the-fields",
+  "canDo": "I can talk about animals in the countryside: a flock, a shepherd, a stable, a pasture and grazing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C466-charidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about animals in the countryside: a flock, a shepherd, a stable, a pasture and grazing.",
+    "assesses": [
+      "FA-LEX-C466-CHUPAN-03",
+      "FA-LEX-C466-CHUPAN-04",
+      "FA-LEX-C466-CHUPAN-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Betrayal and battle",
+  "label": "ch:fa-betrayal-and-battle",
+  "canDo": "I can tell how someone betrayed another, took revenge, fought, killed and was taken prisoner.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C349-asir-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can tell how someone betrayed another, took revenge, fought, killed and was taken prisoner.",
+    "assesses": [
+      "FA-LEX-C349-KHIYANAT-03",
+      "FA-LEX-C349-KHIYANAT-04",
+      "FA-LEX-C349-KHIYANAT-05"
+    ]
+  }
+}

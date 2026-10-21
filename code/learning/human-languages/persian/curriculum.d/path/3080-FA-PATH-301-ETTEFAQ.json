@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-301-ETTEFAQ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-301-ETTEFAQ"
+  ],
+  "after": []
+}

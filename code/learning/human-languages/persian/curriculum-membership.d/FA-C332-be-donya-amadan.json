@@ -1,0 +1,11 @@
+{
+  "id": "FA-C332-be-donya-amadan",
+  "pathSegment": "FA-PATH-332-BARDAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-332-BARDAR",
+      "order": 2
+    }
+  ]
+}

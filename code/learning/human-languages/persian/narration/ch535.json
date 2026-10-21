@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 535,
+  "title": "A Cosy Home",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e5c97ce0b5b6eb38",
+  "lessons": [
+    {
+      "id": "FA-C535-shumine",
+      "sequence": 27410,
+      "title": "شومینه (shumine) — a fireplace",
+      "headword": "شومینه",
+      "romanization": "shumine",
+      "gloss": "a fireplace",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be69145f248b7d69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a cushion, then the Persian for a quilt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شومینه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شومینه (shumine) — \"a fireplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شبهای زمستان کنار شومینه مینشینیم. shabhâ-ye zemestân kenâr-e shumine mineshinim. On winter nights we sit by the fireplace."
+            },
+            {
+              "kind": "speech",
+              "text": "An open fireplace; a stove is bokhâri."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shumine is a modern loan, usually traced to French cheminée, 'fireplace'. EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shumine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shumine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shumine, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shumine*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shumine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shumine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a cushion, then the Persian for a quilt, then say shumine again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a cushion, then the Persian for a quilt, then say *shumine* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شومینه (shumine) mean? (\"A fireplace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C535-rakhtekhab",
+      "sequence": 27420,
+      "title": "رختخواب (rakhtekhâb) — bedding; a bed (on the floor)",
+      "headword": "رختخواب",
+      "romanization": "rakhtekhâb",
+      "gloss": "bedding; a bed (on the floor)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddf4cd8be3c15fc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a quilt, then the Persian for a fireplace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رختخواب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رختخواب (rakhtekhâb) — \"bedding; a bed (on the floor)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مادر رختخوابها را پهن کرد. mâdar rakhtekhâbhâ râ pahn kard. Mother laid out the bedding."
+            },
+            {
+              "kind": "speech",
+              "text": "rakht 'clothes, things' + khâb 'sleep'. rakhtekhâb pahn kardan — to make up a bed on the floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rakhtekhâb is built on two native Persian words, as EtymDB records: rakht, 'clothes, gear', and khâb, 'sleep' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhtekhâb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhtekhâb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakhtekhâb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakhtekhâb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rakhtekhâb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rakhtekhâb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a quilt, then the Persian for a fireplace, then say rakhtekhâb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a quilt, then the Persian for a fireplace, then say *rakhtekhâb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رختخواب (rakhtekhâb) mean? (\"Bedding; a bed (on the floor)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C535-denj",
+      "sequence": 27430,
+      "title": "دنج (denj) — cosy, quiet (of a place)",
+      "headword": "دنج",
+      "romanization": "denj",
+      "gloss": "cosy, quiet (of a place)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42cd28a1c6d8a8ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a fireplace, then the Persian for bedding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دنج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دنج (denj) — \"cosy, quiet (of a place)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این کافه یک جای دنج است. in kâfe yek jâ-ye denj ast. This café is a cosy spot."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a quiet, tucked-away place, not of a person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "denj is an everyday Persian word for a quiet, tucked-away place, but EtymDB has no entry for it, and its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "denj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *denj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "denj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *denj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with denj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *denj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a fireplace, then the Persian for bedding, then say denj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a fireplace, then the Persian for bedding, then say *denj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دنج (denj) mean? (\"Cosy, quiet (of a place)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C535-khanedar",
+      "sequence": 27440,
+      "title": "خانه دار (khânedâr) — a homemaker",
+      "headword": "خانه دار",
+      "romanization": "khânedâr",
+      "gloss": "a homemaker",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:924e768a6c3c8b15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for bedding, then the Persian for cosy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خانه دار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خانه دار (khânedâr) — \"a homemaker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مادرم خانه دار است و پدرم کارمند است. mâdaram khânedâr ast va pedaram kârmand ast. My mother is a homemaker and my father is an office worker."
+            },
+            {
+              "kind": "speech",
+              "text": "khâne 'house' + dâr 'keeping'. khânedâri — housekeeping."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khânedâr is built on native Persian khâne, 'house', which EtymDB traces to Middle Persian (EtymDB), and dâr, the stem of dâshtan, 'to have, to keep'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khânedâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khânedâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khânedâr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khânedâr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khânedâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khânedâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for bedding, then the Persian for cosy, then say khânedâr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for bedding, then the Persian for cosy, then say *khânedâr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خانه دار (khânedâr) mean? (\"A homemaker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C535-kadbanu",
+      "sequence": 27450,
+      "title": "کدبانو (kadbânu) — a capable housewife; the lady of the house",
+      "headword": "کدبانو",
+      "romanization": "kadbânu",
+      "gloss": "a capable housewife; the lady of the house",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e6ee31320feca6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for cosy, then the Persian for a homemaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کدبانو",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کدبانو (kadbânu) — \"a capable housewife; the lady of the house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مادربزرگ کدبانو است و همه چیز را خودش درست میکند. mâdarbozorg kadbânu ast va hame chiz râ khodash dorost mikonad. Grandmother is a wonderful homemaker and makes everything herself."
+            },
+            {
+              "kind": "speech",
+              "text": "Warm praise. Built on kad 'house' and bânu 'lady'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kadbânu is a native Persian compound, usually explained as kad, 'house', and bânu, 'lady': the lady of the house. EtymDB has no entry for the compound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadbânu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadbânu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadbânu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadbânu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kadbânu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kadbânu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for cosy, then the Persian for a homemaker, then say kadbânu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for cosy, then the Persian for a homemaker, then say *kadbânu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کدبانو (kadbânu) mean? (\"A capable housewife; the lady of the house\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R535-review-528-535",
+      "sequence": 27460,
+      "title": "Words from chapters 528–535 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 528-535",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3fadb5536f3ca4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a bookshop and a title."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bookshop, a title, a volume, a publisher, a translator",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bookshop, a title, a volume, a publisher, a translator]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a writer, a critic, to review, to study, a bookworm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a writer, a critic, to review, to study, a bookworm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a short story, the main character, scary, tragic, funny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a short story, the main character, scary, tragic, funny]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a documentary, a cartoon, subtitles, dubbed, a TV channel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a documentary, a cartoon, subtitles, dubbed, a TV channel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a screening, a remote control, a screen, a podcast, headphones",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a screening, a remote control, a screen, a podcast, headphones]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a presenter, satire, a comedy, to be broadcast, to stare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a presenter, satire, a comedy, to be broadcast, to stare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furniture, a lamp, a rug, a cushion, a quilt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: furniture, a lamp, a rug, a cushion, a quilt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fireplace, bedding, cosy, a homemaker, a capable housewife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fireplace, bedding, cosy, a homemaker, a capable housewife]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bookshop? (کتابفروشی.) A title? (عنوان.) A volume? (جلد.) A publisher? (ناشر.) A translator? (مترجم.) A writer? (نویسنده.) A critic? (منتقد.) To review? (نقد کردن.) To study? (مطالعه کردن.) A bookworm? (کرم کتاب.) A short story? (داستان کوتاه.) The main character? (شخصیت اصلی.) Scary? (ترسناک.) Tragic? (غم انگیز.) Funny? (خنده دار.) A documentary? (مستند.) A cartoon? (کارتون.) Subtitles? (زیرنویس.) Dubbed? (دوبله.) A TV channel? (کانال.) A screening? (اکران.) A remote control? (کنترل.) A screen? (صفحه نمایش.) A podcast? (پادکست.) Headphones? (هدفون.) A presenter? (مجری.) Satire? (طنز.) A comedy? (کمدی.) To be broadcast? (پخش شدن.) To stare? (خیره شدن.) Furniture? (مبلمان.) A lamp? (آباژور.) A rug? (قالیچه.) A cushion? (کوسن.) A quilt? (لحاف.) A fireplace? (شومینه (shumine).) Bedding? (رختخواب (rakhtekhâb).) Cosy? (دنج (denj).) A homemaker? (خانه دار (khânedâr).) A capable housewife? (کدبانو (kadbânu).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

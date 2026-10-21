@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Research and papers",
+  "label": "ch:fa-research-and-papers",
+  "canDo": "I can talk about research and studies, articles, a thesis and a lecture.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C402-sokhanrani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about research and studies, articles, a thesis and a lecture.",
+    "assesses": [
+      "FA-LEX-C402-TAHQIQ-03",
+      "FA-LEX-C402-TAHQIQ-04",
+      "FA-LEX-C402-TAHQIQ-05"
+    ]
+  }
+}

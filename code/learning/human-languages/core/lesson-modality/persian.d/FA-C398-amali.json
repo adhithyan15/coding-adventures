@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C398-amali",
+    "language": "persian",
+    "chapter": 398,
+    "sequence": 20350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09f72ca96649a51b"
+  },
+  "findings": []
+}

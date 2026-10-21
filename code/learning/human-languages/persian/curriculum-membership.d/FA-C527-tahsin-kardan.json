@@ -1,0 +1,11 @@
+{
+  "id": "FA-C527-tahsin-kardan",
+  "pathSegment": "FA-PATH-527-TALENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-527-TALENT",
+      "order": 4
+    }
+  ]
+}

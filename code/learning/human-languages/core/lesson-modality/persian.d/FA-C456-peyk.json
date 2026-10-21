@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C456-peyk",
+    "language": "persian",
+    "chapter": 456,
+    "sequence": 23340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96058b86a480b5f9"
+  },
+  "findings": []
+}

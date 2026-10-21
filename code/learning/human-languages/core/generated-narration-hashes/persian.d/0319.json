@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:2edf4f8dec576809",
+  "lessonIds": [
+    "FA-C319-mamur",
+    "FA-C319-gasht",
+    "FA-C319-maznun",
+    "FA-C319-dastgir-shodan",
+    "FA-C319-bazdasht-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch319.txt",
+  "json": "persian/narration/ch319.json",
+  "textHash": "fnv1a64:b484b8fb75e7ebdb",
+  "jsonHash": "fnv1a64:df623e26fe1a8a93",
+  "findings": []
+}

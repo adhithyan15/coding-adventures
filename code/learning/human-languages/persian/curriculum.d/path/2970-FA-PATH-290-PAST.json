@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-290-PAST",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-290-PAST"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-450-MARKAZ",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the town centre: the centre, the outskirts, a tower, a statue and a fountain.",
+  "prerequisites": []
+}

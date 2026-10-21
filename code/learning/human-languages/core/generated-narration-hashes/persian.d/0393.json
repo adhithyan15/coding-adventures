@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:3d1eb76ac05b08cb",
+  "lessonIds": [
+    "FA-C393-qatan",
+    "FA-C393-tardid",
+    "FA-C393-etminan",
+    "FA-C393-motmaen-shodan",
+    "FA-C393-zaheran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch393.txt",
+  "json": "persian/narration/ch393.json",
+  "textHash": "fnv1a64:2c359f87e5acd3e1",
+  "jsonHash": "fnv1a64:bc9772a7dbb5c0a4",
+  "findings": []
+}

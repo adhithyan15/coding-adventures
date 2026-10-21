@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:7eb0e837cafed9c3",
+  "lessonIds": [
+    "FA-C392-ehtemal",
+    "FA-C392-ehtemal-dadan",
+    "FA-C392-emkan",
+    "FA-C392-baid",
+    "FA-C392-qati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch392.txt",
+  "json": "persian/narration/ch392.json",
+  "textHash": "fnv1a64:e5b49798b8270ef3",
+  "jsonHash": "fnv1a64:911c15162ec73d84",
+  "findings": []
+}

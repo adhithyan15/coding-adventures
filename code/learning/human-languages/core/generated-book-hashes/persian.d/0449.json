@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:4f1b7b6a98b5c951",
+  "lessonIds": [
+    "FA-C449-masiryab",
+    "FA-C449-donbal-kardan",
+    "FA-C449-nazdik-shodan",
+    "FA-C449-gozashtan",
+    "FA-C449-kuche-pas-kuche"
+  ],
+  "tex": "persian/book/chapters/ch449-following-a-route.tex"
+}

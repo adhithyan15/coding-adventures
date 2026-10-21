@@ -1,0 +1,11 @@
+{
+  "id": "FA-C300-belafasele",
+  "pathSegment": "FA-PATH-300-NAGAHAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-300-NAGAHAN",
+      "order": 1
+    }
+  ]
+}

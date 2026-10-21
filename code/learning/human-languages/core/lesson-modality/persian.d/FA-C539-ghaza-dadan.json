@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C539-ghaza-dadan",
+    "language": "persian",
+    "chapter": 539,
+    "sequence": 27650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97e440e92a3159c6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C423-tamam-shodan",
+  "pathSegment": "FA-PATH-423-BENZIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-423-BENZIN",
+      "order": 3
+    }
+  ]
+}

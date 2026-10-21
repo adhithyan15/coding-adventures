@@ -1,0 +1,11 @@
+{
+  "id": "FA-C472-gardeshgar",
+  "pathSegment": "FA-PATH-472-TABIAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-472-TABIAT",
+      "order": 2
+    }
+  ]
+}

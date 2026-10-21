@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C326-bihush-shodan",
+    "language": "persian",
+    "chapter": 326,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69ef1224217d9802"
+  },
+  "findings": []
+}

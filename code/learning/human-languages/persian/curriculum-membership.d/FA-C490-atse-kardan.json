@@ -1,0 +1,11 @@
+{
+  "id": "FA-C490-atse-kardan",
+  "pathSegment": "FA-PATH-490-COLD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-490-COLD",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C477-garmazadegi",
+  "pathSegment": "FA-PATH-477-SHARJI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-477-SHARJI",
+      "order": 2
+    }
+  ]
+}

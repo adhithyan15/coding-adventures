@@ -1,0 +1,11 @@
+{
+  "id": "FA-C516-porenerzhi",
+  "pathSegment": "FA-PATH-516-FITNESS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-516-FITNESS",
+      "order": 3
+    }
+  ]
+}

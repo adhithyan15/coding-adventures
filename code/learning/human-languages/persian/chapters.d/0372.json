@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Effects and reactions",
+  "label": "ch:fa-effects-and-reactions",
+  "canDo": "I can say what influenced me, what something stems from, what it gave rise to and how people reacted.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C372-vakonesh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say what influenced me, what something stems from, what it gave rise to and how people reacted.",
+    "assesses": [
+      "FA-LEX-C372-TASIR-03",
+      "FA-LEX-C372-TASIR-04",
+      "FA-LEX-C372-TASIR-05"
+    ]
+  }
+}

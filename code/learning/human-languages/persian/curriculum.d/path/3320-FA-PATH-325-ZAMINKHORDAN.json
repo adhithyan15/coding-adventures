@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-325-ZAMINKHORDAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-325-ZAMINKHORDAN"
+  ],
+  "after": []
+}

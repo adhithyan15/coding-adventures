@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:da58944db7c1a8fc",
+  "lessonIds": [
+    "FA-C347-afsane",
+    "FA-C347-osture",
+    "FA-C347-qahreman",
+    "FA-C347-ezhdeha",
+    "FA-C347-div",
+    "FA-R347-review-340-347"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch347.txt",
+  "json": "persian/narration/ch347.json",
+  "textHash": "fnv1a64:a5e76808d57a4261",
+  "jsonHash": "fnv1a64:2695c50dc617f443",
+  "findings": []
+}

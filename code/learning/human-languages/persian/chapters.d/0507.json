@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Hobbies",
+  "label": "ch:fa-hobbies",
+  "canDo": "I can talk about my hobbies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C507-koleksiyon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about my hobbies.",
+    "assesses": [
+      "FA-LEX-C507-HOBBIES-03",
+      "FA-LEX-C507-HOBBIES-04",
+      "FA-LEX-C507-HOBBIES-05"
+    ]
+  }
+}

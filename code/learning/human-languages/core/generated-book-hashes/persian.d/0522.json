@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:034fea59f560de1a",
+  "lessonIds": [
+    "FA-C522-qafiye",
+    "FA-C522-sorudan",
+    "FA-C522-dekleme-kardan",
+    "FA-C522-elham-gereftan",
+    "FA-C522-takhayyol"
+  ],
+  "tex": "persian/book/chapters/ch522-writing-verse.tex"
+}

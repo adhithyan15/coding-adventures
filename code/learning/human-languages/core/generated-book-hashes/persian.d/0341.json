@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:28649715931e3619",
+  "lessonIds": [
+    "FA-C341-mehmani-dadan",
+    "FA-C341-pazirayi-kardan",
+    "FA-C341-kado",
+    "FA-C341-badkonak",
+    "FA-C341-sham"
+  ],
+  "tex": "persian/book/chapters/ch341-parties-and-presents.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:3b1005d3acc6b511",
+  "lessonIds": [
+    "FA-C436-eskele",
+    "FA-C436-nakhoda",
+    "FA-C436-arshe",
+    "FA-C436-lenj",
+    "FA-C436-langar-andakhtan"
+  ],
+  "tex": "persian/book/chapters/ch436-by-boat.tex"
+}

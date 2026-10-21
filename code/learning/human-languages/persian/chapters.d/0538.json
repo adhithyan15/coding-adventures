@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Renting and Appliances",
+  "label": "ch:fa-renting-and-appliances",
+  "canDo": "I can talk about renting and household appliances.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C538-sard-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can talk about renting and household appliances.",
+    "assesses": [
+      "FA-LEX-C538-APPLIANCES-03",
+      "FA-LEX-C538-APPLIANCES-04",
+      "FA-LEX-C538-APPLIANCES-05"
+    ]
+  }
+}

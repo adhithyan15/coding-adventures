@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-355-DASTURPOKHT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-355-DASTURPOKHT"
+  ],
+  "after": []
+}

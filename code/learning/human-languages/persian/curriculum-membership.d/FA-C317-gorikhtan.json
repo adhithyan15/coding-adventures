@@ -1,0 +1,11 @@
+{
+  "id": "FA-C317-gorikhtan",
+  "pathSegment": "FA-PATH-317-TAQIB",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-317-TAQIB",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:eabbe9c94747175b",
+  "lessonIds": [
+    "FA-C473-ab-o-hava",
+    "FA-C473-havashenasi",
+    "FA-C473-daraje",
+    "FA-C473-taghyir-kardan",
+    "FA-C473-zir-e-sefr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch473.txt",
+  "json": "persian/narration/ch473.json",
+  "textHash": "fnv1a64:1fc25642d8756e06",
+  "jsonHash": "fnv1a64:75229866769202a5",
+  "findings": []
+}

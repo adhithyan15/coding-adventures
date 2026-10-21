@@ -20,6 +20,13 @@ candidate's other critical extensions, check validity, enforce path length or
 name constraints, construct a path, select or recognize a trust anchor, check
 revocation, or provide TLS, HTTP, OAuth transport, or network authority.
 
+An evidence-bound entry point also consumes one
+`SelectedX509IssuerCandidate`. It derives both certificate references from that
+non-copyable selection evidence and applies the CA-role, RSA-key, and signature
+checks without invoking Name policy again. This prevents a caller from
+selecting one candidate and accidentally authenticating another, while still
+granting no complete-path or trust authority.
+
 ## Validation
 
 ```bash

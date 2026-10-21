@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "At the garage",
+  "label": "ch:fa-at-the-garage",
+  "canDo": "I can deal with a breakdown: the garage, repairing, overheating, the tow truck and towing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R427-review-420-427",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can deal with a breakdown: the garage, repairing, overheating, the tow truck and towing.",
+    "assesses": [
+      "FA-LEX-C427-TAMIRGAH-03",
+      "FA-LEX-C427-TAMIRGAH-04",
+      "FA-LEX-C427-TAMIRGAH-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "When things go wrong",
+  "label": "ch:fa-when-things-go-wrong",
+  "canDo": "I can say what is wrong with a room: the noise, dirt, a squeaking door, a bad smell and the water heater.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C440-abgarmkon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say what is wrong with a room: the noise, dirt, a squeaking door, a bad smell and the water heater.",
+    "assesses": [
+      "FA-LEX-C440-SARSEDA-03",
+      "FA-LEX-C440-SARSEDA-04",
+      "FA-LEX-C440-SARSEDA-05"
+    ]
+  }
+}

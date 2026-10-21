@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:17112475603a4bca",
+  "lessonIds": [
+    "FA-C506-ers-bordan",
+    "FA-C506-shebahat-dashtan",
+    "FA-C506-sar-zadan",
+    "FA-C506-raft-o-amad-kardan",
+    "FA-C506-aberu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch506.txt",
+  "json": "persian/narration/ch506.json",
+  "textHash": "fnv1a64:10853da8f38a1ea1",
+  "jsonHash": "fnv1a64:c8d09dd109f3eb62",
+  "findings": []
+}

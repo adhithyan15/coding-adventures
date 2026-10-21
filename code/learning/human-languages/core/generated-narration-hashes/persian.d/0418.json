@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:217ae5b3fd2cf800",
+  "lessonIds": [
+    "FA-C418-narm-afzar",
+    "FA-C418-sakht-afzar",
+    "FA-C418-fayl",
+    "FA-C418-aplod-kardan",
+    "FA-C418-poshtibani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch418.txt",
+  "json": "persian/narration/ch418.json",
+  "textHash": "fnv1a64:1b8bd34aa26a1a33",
+  "jsonHash": "fnv1a64:a023cbe16d6bdbec",
+  "findings": []
+}

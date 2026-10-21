@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Aches and Pains",
+  "label": "ch:fa-aches-and-pains",
+  "canDo": "I can describe aches and pains.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C491-sekseke-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can describe aches and pains.",
+    "assesses": [
+      "FA-LEX-C491-ACHES-03",
+      "FA-LEX-C491-ACHES-04",
+      "FA-LEX-C491-ACHES-05"
+    ]
+  }
+}

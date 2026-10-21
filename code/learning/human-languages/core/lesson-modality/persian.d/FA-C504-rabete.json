@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C504-rabete",
+    "language": "persian",
+    "chapter": 504,
+    "sequence": 25850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d51e69689d5e653"
+  },
+  "findings": []
+}

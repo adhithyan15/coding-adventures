@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C362-estedlal-kardan",
+    "language": "persian",
+    "chapter": 362,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c03e865eedb1e4b7"
+  },
+  "findings": []
+}

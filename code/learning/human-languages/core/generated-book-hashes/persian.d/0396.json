@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:ea2cad0aa57e4224",
+  "lessonIds": [
+    "FA-C396-monsaref-shodan",
+    "FA-C396-aqab-andakhtan",
+    "FA-C396-be-taviq-andakhtan",
+    "FA-C396-hamahang-kardan",
+    "FA-C396-ejra-kardan"
+  ],
+  "tex": "persian/book/chapters/ch396-changing-plans.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C525-galeri",
+  "pathSegment": "FA-PATH-525-PAINTING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-525-PAINTING",
+      "order": 4
+    }
+  ]
+}

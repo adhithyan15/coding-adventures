@@ -1,0 +1,11 @@
+{
+  "id": "FA-C359-ezafe-kardan",
+  "pathSegment": "FA-PATH-359-ZAFARAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-359-ZAFARAN",
+      "order": 1
+    }
+  ]
+}

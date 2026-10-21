@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:7e1a10bd66d930a2",
+  "lessonIds": [
+    "FA-C486-hayajanzade",
+    "FA-C486-zoq-kardan",
+    "FA-C486-sarhal",
+    "FA-C486-eshq",
+    "FA-C486-motenaffer-budan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch486.txt",
+  "json": "persian/narration/ch486.json",
+  "textHash": "fnv1a64:ff8dab40cb1afc33",
+  "jsonHash": "fnv1a64:f4514326d317e935",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C370-natije-gereftan",
+  "pathSegment": "FA-PATH-370-PAYAMAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-370-PAYAMAD",
+      "order": 4
+    }
+  ]
+}

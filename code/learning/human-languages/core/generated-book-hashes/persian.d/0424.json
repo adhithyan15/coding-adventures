@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:dfdca1796707777d",
+  "lessonIds": [
+    "FA-C424-sorat",
+    "FA-C424-sorat-gereftan",
+    "FA-C424-sebqat-gereftan",
+    "FA-C424-kenar-zadan",
+    "FA-C424-imeni"
+  ],
+  "tex": "persian/book/chapters/ch424-speed-and-safety.tex"
+}

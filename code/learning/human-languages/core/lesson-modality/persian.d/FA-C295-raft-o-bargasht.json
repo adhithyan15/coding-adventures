@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C295-raft-o-bargasht",
+    "language": "persian",
+    "chapter": 295,
+    "sequence": 15092,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60ce7d7283a66846"
+  },
+  "findings": []
+}

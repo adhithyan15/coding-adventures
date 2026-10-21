@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:15a39b0a8326c96e",
+  "lessonIds": [
+    "FA-C387-mohajerat",
+    "FA-C387-mohajer",
+    "FA-C387-aqalliyyat",
+    "FA-C387-aksariyyat",
+    "FA-C387-tabiz"
+  ],
+  "tex": "persian/book/chapters/ch387-migration-and-minorities.tex"
+}

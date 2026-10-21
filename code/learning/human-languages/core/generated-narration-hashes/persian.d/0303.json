@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:01679ede8cc680a0",
+  "lessonIds": [
+    "FA-C303-ebteda",
+    "FA-C303-nakhost",
+    "FA-C303-angah",
+    "FA-C303-dast-e-akhar",
+    "FA-C303-dar-nahayat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch303.txt",
+  "json": "persian/narration/ch303.json",
+  "textHash": "fnv1a64:438375c6357f4d69",
+  "jsonHash": "fnv1a64:4266e8630531717d",
+  "findings": []
+}
