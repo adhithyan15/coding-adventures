@@ -16,6 +16,13 @@
 // comes from `suiteLessonCacheOptions()`, and `tests/lesson-cache.test.ts`
 // asserts that it matches `defaultCurriculumRoot()` — if the two ever drift,
 // the cache would silently stay off and the suite would quietly be slow again.
+//
+// The narration cache (`src/narration-cache.ts`) is switched on the same way,
+// for the same root, for the same reason. `narration-cache.ts` imports only
+// `lesson-cache.ts` and Node built-ins at runtime, so this file still pulls no
+// loader, parser or narrator into the files that never use them.
 import { configureLessonCache, suiteLessonCacheOptions } from "../../src/lesson-cache.js";
+import { configureNarrationCache, suiteNarrationCacheOptions } from "../../src/narration-cache.js";
 
 configureLessonCache(suiteLessonCacheOptions());
+configureNarrationCache(suiteNarrationCacheOptions());

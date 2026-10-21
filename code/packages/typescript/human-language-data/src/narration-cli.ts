@@ -60,6 +60,8 @@ import {
   renderChapterNarrationText,
   type ChapterNarration,
 } from "./narration.js";
+import { narrationCacheFor, type NarrationCache } from "./narration-cache.js";
+import type { ParsedLesson } from "./parse.js";
 import { DEFAULT_LINEARISABLE_TABLE_COLUMNS } from "./speech.js";
 import {
   GENERATED_NARRATION_HASH_DIR,
@@ -137,6 +139,156 @@ export function policyTableWidth(root: string): number {
 }
 
 /**
+ * Chapter titles from the HL05 ledgers, keyed `"<language>/<chapter>"`.
+ *
+ * A track that has not authored a ledger is not defaulted to an invented title —
+ * `narrateChapter` says "Chapter 7", which is honest, and the missing ledger stays
+ * visible as debt in the gap report rather than being papered over here.
+ */
+export function chapterTitles(root: string): Map<string, string> {
+  const titles = new Map<string, string>();
+  for (const track of loadTrackChapters(root)) {
+    for (const chapter of track.chapters) {
+      titles.set(`${track.language}/${chapter.chapter}`, chapter.title);
+    }
+  }
+  return titles;
+}
+
+/** What the export narrates with: the policy's table width and the authored titles. */
+export interface CorpusNarrationOptions {
+  maxLinearisableTableColumns: number;
+  titles: ReadonlyMap<string, string>;
+}
+
+/**
+ * The one constructor of `CorpusNarrationOptions`, field by field.
+ *
+ * Every field here reaches `narrationChapters`, so every field must also reach the
+ * narration cache key — a field that changed the narration without changing the key
+ * would be answered from a stale entry. `narrateCorpusByTrack` therefore copies
+ * these fields by NAME into one fresh object and hands that same object to both
+ * the key and the narrator — never the caller's object, which could carry more —
+ * and
+ * `tests/narration-cache.test.ts` pins this object's exact key set: adding a field
+ * here fails that test until the key learns about it too.
+ */
+export function corpusNarrationOptions(
+  maxLinearisableTableColumns: number,
+  titles: ReadonlyMap<string, string>,
+): CorpusNarrationOptions {
+  return { maxLinearisableTableColumns, titles };
+}
+
+/**
+ * `narrationChapters(lessons, options)`, answered track by track from `cache`.
+ *
+ * Without a cache — every CLI process, every fixture root — `corpusNarration`
+ * never comes here; it calls `narrationChapters` once, as it always did. With
+ * one, the corpus is cut into tracks, each track is looked up under its lesson
+ * key (see `src/narration-cache.ts`), and only the tracks that miss are
+ * narrated. A track the loader reported no key for is narrated uncached.
+ *
+ * Why cutting by track returns exactly what one whole-corpus call returns:
+ *
+ *   - `narrationChapters` groups by `"<language>/<chapter>"`, so no chapter ever
+ *     mixes two tracks, and each track's chapters see the same lessons, in the
+ *     same relative order, either way.
+ *   - It sorts by language with `localeCompare`, then by chapter number. Sorting
+ *     the tracks by that same `localeCompare` and concatenating each track's
+ *     (already chapter-sorted) result is that same order...
+ *   - ...provided no two distinct track ids compare EQUAL, which would let the
+ *     whole-corpus sort interleave their chapters by number, and no id holds the
+ *     `/` that separates it from the chapter in the grouping key. No real id
+ *     does either, but the claim is checked rather than assumed: if it ever
+ *     fails, the cache is simply not used for this call.
+ *
+ *     tracks:   french (2 ch)   spanish (3 ch)
+ *     whole:    french/1 french/2 spanish/1 spanish/2 spanish/3
+ *     by track: [french/1 french/2] ++ [spanish/1 spanish/2 spanish/3]   (same)
+ *
+ * Not exported, deliberately: `lessonKeys` must be the keys the loader reported
+ * for THESE lessons, and the only caller that can promise that is
+ * `corpusNarration`, which loaded them a moment ago. `tests/narration-cache.test.ts`
+ * pins the equality through `corpusNarration` on a multi-track fixture, and the
+ * `--check` gate compares every byte the cached chapters produce with files
+ * generated without the cache.
+ */
+function narrateCorpusByTrack(
+  lessons: readonly ParsedLesson[],
+  options: CorpusNarrationOptions,
+  cache: NarrationCache,
+  lessonKeys: ReadonlyMap<string, string>,
+): ChapterNarration[] {
+  const tracks = new Map<string, ParsedLesson[]>();
+  for (const lesson of lessons) {
+    const own = tracks.get(lesson.language);
+    if (own) own.push(lesson);
+    else tracks.set(lesson.language, [lesson]);
+  }
+  const order = [...tracks.keys()].sort((left, right) => left.localeCompare(right));
+  // The two assumptions above, checked: a `/` in an id would let the whole-corpus
+  // key `"<language>/<chapter>"` split somewhere else, and an equal pair would let
+  // its sort interleave two tracks. Loader ids can do neither; any other input that
+  // does is narrated the plain way.
+  const separable = order.every(
+    (language, index) =>
+      !language.includes("/") &&
+      (index === 0 || order[index - 1]!.localeCompare(language) !== 0),
+  );
+  if (!separable) return narrationChapters(lessons, options);
+  const chapters: ChapterNarration[] = [];
+  for (const language of order) {
+    const own = tracks.get(language)!;
+    const lessonKey = lessonKeys.get(language);
+    if (lessonKey === undefined) {
+      chapters.push(...narrationChapters(own, options));
+      continue;
+    }
+    // One object feeds both the key and the narrator, built field by field, so
+    // nothing can reach `narrationChapters` without also reaching the key — not
+    // even a field some later caller tacks onto `options`.
+    const keyed: CorpusNarrationOptions = {
+      maxLinearisableTableColumns: options.maxLinearisableTableColumns,
+      titles: options.titles,
+    };
+    const key = cache.key({ language, ...keyed, lessonKey });
+    let narrated = cache.read(language, key);
+    if (narrated === undefined) {
+      narrated = narrationChapters(own, keyed);
+      cache.write(language, key, narrated);
+    }
+    chapters.push(...narrated);
+  }
+  return chapters;
+}
+
+/**
+ * The whole curriculum, narrated exactly as the export narrates it.
+ *
+ * The one place the export's inputs are gathered: the policy width (validated
+ * FIRST, so a bad policy fails before the corpus is read), every lesson, and the
+ * authored titles. `narrationOutputs` renders this; `tests/narration.test.ts`
+ * inspects it. Inside the test suite, for the real curriculum root only, the
+ * chapters come through the narration cache, so the suite narrates the corpus
+ * once per run instead of once per file that asks.
+ */
+export function corpusNarration(root = defaultCurriculumRoot()): ChapterNarration[] {
+  const maxLinearisableTableColumns = policyTableWidth(root);
+  const cache = narrationCacheFor(root);
+  const lessonKeys = new Map<string, string>();
+  const lessons = loadLessons(
+    root,
+    cache === undefined ? undefined : (language, key) => lessonKeys.set(language, key),
+  );
+  const titles = chapterTitles(root);
+  const options = corpusNarrationOptions(maxLinearisableTableColumns, titles);
+  return cache === undefined
+    ? narrationChapters(lessons, options)
+    : narrateCorpusByTrack(lessons, options, cache, lessonKeys);
+}
+
+/**
  * Build every narration file as an in-memory path -> content map.
  *
  * Pure enough to test: it reads the curriculum once through the loader and then does
@@ -146,27 +298,12 @@ export function narrationOutputs(
   root = defaultCurriculumRoot(),
 ): Map<string, string> {
   const maxLinearisableTableColumns = policyTableWidth(root);
-  const lessons = loadLessons(root);
-
-  // Chapter titles come from the HL05 ledgers when a track has authored one. A track
-  // that has not is not defaulted to an invented title — `narrateChapter` says
-  // "Chapter 7", which is honest, and the missing ledger stays visible as debt in the
-  // gap report rather than being papered over here.
-  const titles = new Map<string, string>();
-  for (const track of loadTrackChapters(root)) {
-    for (const chapter of track.chapters) {
-      titles.set(`${track.language}/${chapter.chapter}`, chapter.title);
-    }
-  }
+  const chapters = corpusNarration(root);
   const names = new Map<string, string>();
   for (const language of loadLanguageRegistry(root).languages) {
     names.set(language.id, language.name ?? language.id);
   }
 
-  const chapters = narrationChapters(lessons, {
-    maxLinearisableTableColumns,
-    titles,
-  });
   const outputs = new Map<string, string>();
   const manifests = new Map<string, GeneratedNarrationHashManifest>();
 
