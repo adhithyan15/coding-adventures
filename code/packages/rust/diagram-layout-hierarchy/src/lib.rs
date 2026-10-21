@@ -735,10 +735,31 @@ fn swimlane_edge_label_size(
 ) -> (f64, f64) {
     let font_size = edge.style.font_size.or(diagram.theme.font_size).unwrap_or(13.0);
     let font_scale = font_size / 13.0;
-    let weight_scale = if edge.style.font_weight.unwrap_or(400) >= 600 { 1.06 } else { 1.0 };
-    let longest_line = label.lines().map(|line| line.chars().count()).max().unwrap_or(0);
+    let base_bold = edge.style.font_weight.unwrap_or(400) >= 600;
+    let base_italic = edge.style.font_italic.unwrap_or(false);
+    let longest_line = if label.spans.is_empty() {
+        label.lines().map(|line| line.chars().count() as f64 *
+            if base_bold { 1.06 } else { 1.0 } * if base_italic { 1.02 } else { 1.0 }
+        ).fold(0.0, f64::max)
+    } else {
+        let mut longest = 0.0_f64;
+        let mut current = 0.0_f64;
+        for span in &label.spans {
+            let width = if base_bold || span.bold { 1.06 } else { 1.0 }
+                * if base_italic || span.italic { 1.02 } else { 1.0 };
+            for character in span.text.chars() {
+                if character == '\n' {
+                    longest = longest.max(current);
+                    current = 0.0;
+                } else {
+                    current += width;
+                }
+            }
+        }
+        longest.max(current)
+    };
     let line_count = label.lines().count().max(1) as f64;
-    let width = (longest_line as f64 * 7.2 * font_scale * weight_scale + 16.0)
+    let width = (longest_line * 7.2 * font_scale + 16.0)
         .clamp(104.0, diagram.flowchart_config.wrapping_width.unwrap_or(360.0).max(104.0));
     let height = (line_count * font_size * 1.2 + 6.0).max(22.0);
     (width, height)
@@ -1243,6 +1264,14 @@ mod tests {
         let gap = vertical.nodes[1].y - (vertical.nodes[0].y + vertical.nodes[0].height);
         assert!(gap + 1e-9 >= edge.label_height + 12.0);
         assert!(edge.label_position.as_ref().unwrap().x > (edge.from.x + edge.to.x) / 2.0);
+
+        diagram.edges[0].label = Some(DiagramLabel::new("A deliberately long edge label"));
+        let plain_width = layout_swimlane(&diagram).edges[0].label_width;
+        diagram.edges[0].style.font_weight = Some(700);
+        diagram.edges[0].style.font_italic = Some(true);
+        let emphasized_width = layout_swimlane(&diagram).edges[0].label_width;
+        assert!(emphasized_width > plain_width,
+            "edge weight and italic style must participate in label measurement");
     }
 
     #[test]
