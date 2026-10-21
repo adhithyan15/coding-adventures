@@ -579,6 +579,22 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed["go/starlark-compiler"] = true
 	}
+	// BF03's native Go reader lives outside the shared fixture directory. Seed
+	// its real package before external-fixture early return, including deletion
+	// and a rename's old path. All downstream consumers follow the normal graph.
+	if containsPath(changedFiles, "code/specs/fixtures/compiler-ir-v1/cases.json") && (language == "all" || language == "go") {
+		found := false
+		for _, pkg := range packages {
+			if pkg.Name == "go/compiler-ir" && pkg.Language == "go" {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("BF03 fixture consumer %q is missing from discovered packages", "go/compiler-ir")
+		}
+		changed["go/compiler-ir"] = true
+	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
