@@ -357,7 +357,7 @@
       "version": "es2015",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2015.grammar",
-      "sha256": "837db586f4966d674e7e4db3b3fb00d935c56901bdeaf0e98388ae4a7bb59263"
+      "sha256": "37c4a904da376d66a881f64bc7d84678d56cd2e3b63242de8ecadbc02cadf2d4"
     },
     {
       "family": "javascript",
@@ -371,7 +371,7 @@
       "version": "es2016",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2016.grammar",
-      "sha256": "dfd97a780de15ffee04c325438eea084e93f7f257678bf92e9a328f3cfdc855d"
+      "sha256": "92af60abd9daf4a446f86dbdfccbbf18b3f99c6fee365cb60479f8c8f775638d"
     },
     {
       "family": "javascript",
@@ -385,7 +385,7 @@
       "version": "es2017",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2017.grammar",
-      "sha256": "72f3d97acf085fd4c76be61ca97ee6ce22f408b78adbb8810627b4541e290d36"
+      "sha256": "015a30600b99b2e31e414ebb00652ea5c4796d3d53593c963ddad11c3aebf0dd"
     },
     {
       "family": "javascript",
@@ -399,7 +399,7 @@
       "version": "es2018",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2018.grammar",
-      "sha256": "398276918e6193aafb19d24209a9d806c41cedb24fbd645ae688cd7b2470a5a9"
+      "sha256": "72bc0b6257fb434490d984d1b5f33d6d2c15a0e52f4d6d86d0e1212b8169e967"
     },
     {
       "family": "javascript",
@@ -413,7 +413,7 @@
       "version": "es2019",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2019.grammar",
-      "sha256": "4935002fed220204819bc6f7615c82034cd354f2c9678e5d0bd434f8c7ead8c1"
+      "sha256": "8c05a6e7936f70774f3b4909cbd1fc12a5a5e0bd752e55c8d6a4df29dd1f3923"
     },
     {
       "family": "javascript",
@@ -427,7 +427,7 @@
       "version": "es2020",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2020.grammar",
-      "sha256": "d98d5ee5d1c3352b09962550777f78bad4f0e5d57b167a0a7259cfb9280ecdd6"
+      "sha256": "e6171a2c08d36a5751e1293bdbca8e7461e3c3dacfa25c7fdeee20e8a4c3cc05"
     },
     {
       "family": "javascript",
@@ -441,7 +441,7 @@
       "version": "es2021",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2021.grammar",
-      "sha256": "d4557daa3f436ae6fdbf434973c6ade1f348d9c9b1a166816984be5b1b1df900"
+      "sha256": "297dfb19622bbaeff85ebbf36270eeaeed8878f4b32d52764939fb7c609f3198"
     },
     {
       "family": "javascript",
@@ -455,7 +455,7 @@
       "version": "es2022",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2022.grammar",
-      "sha256": "0067ecc64ba4cbbc9a0487257147e18352f7b2bc761a8c6a7a0a2d5da6554c28"
+      "sha256": "a78e33f075be18b37299212a905795bf6b9a93289ccaea22d8f2d9f8c0729470"
     },
     {
       "family": "javascript",
@@ -469,7 +469,7 @@
       "version": "es2023",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2023.grammar",
-      "sha256": "1d0a144d72d3b1b0c2245d659ec2a11a3510ea2b5608a4de4e759c8e75e366e3"
+      "sha256": "e488aee1bd37c96229bd44e2be233cd690bb30bd6f67722e9bafef97b7d94df0"
     },
     {
       "family": "javascript",
@@ -483,7 +483,7 @@
       "version": "es2024",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2024.grammar",
-      "sha256": "e2288174a4e5875dad9fe9b090d328b75b39e719b405ab6e3dfed4ad10ab8fde"
+      "sha256": "f753951e094807e056149992360a51a569de87359389aabaed403bb825cf2de8"
     },
     {
       "family": "javascript",
@@ -497,7 +497,7 @@
       "version": "es2025",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2025.grammar",
-      "sha256": "8fd98c4eb0224430fd7296ff7b8ffa84ff47b5b122b3941a354bf3802bf61547"
+      "sha256": "c87ed868f4abc1db0afa7ccc9729a327ca2e99987b1c85f6fc8592264fa329d4"
     },
     {
       "family": "javascript",
@@ -592,6 +592,20 @@
     },
     {
       "family": "python",
+      "version": "python3.0a1",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.0a1.grammar",
+      "sha256": "60ed766694dc4e59b777dd346df242785f0e6bca01f81e5e6ac83ad7bb70be2f"
+    },
+    {
+      "family": "python",
+      "version": "python3.0a1",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.0a1.tokens",
+      "sha256": "3277c316fdcca2a773d33e06b4cebf181bb20e8e5ca3a526f575aee5d04319c4"
+    },
+    {
+      "family": "python",
       "version": "python3.10",
       "kind": "grammar",
       "path": "code/grammars/python/python3.10.grammar",
@@ -606,6 +620,20 @@
     },
     {
       "family": "python",
+      "version": "python3.11.17",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.11.17.grammar",
+      "sha256": "9f86f290edd0233b3a992dda65963092b886291d637a8784e880ce2fe9bc7c4f"
+    },
+    {
+      "family": "python",
+      "version": "python3.11.17",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.11.17.tokens",
+      "sha256": "9be8cefb1631cd31b36ad70d4d256d051cde6e376fba1f746cf9413ab08b8d16"
+    },
+    {
+      "family": "python",
       "version": "python3.12",
       "kind": "grammar",
       "path": "code/grammars/python/python3.12.grammar",
@@ -617,6 +645,48 @@
       "kind": "tokens",
       "path": "code/grammars/python/python3.12.tokens",
       "sha256": "80b0f83691b1c34106577fa82cb17be69e21106796d304ba1a752f9867677cbf"
+    },
+    {
+      "family": "python",
+      "version": "python3.12.3",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.12.3.grammar",
+      "sha256": "dee886da9e3097234953dd3676a019e3173e42dcee31f36630107b984c5c1086"
+    },
+    {
+      "family": "python",
+      "version": "python3.12.3",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.12.3.tokens",
+      "sha256": "e20d480315b14aba967a672b02b18bc17ce0792f28dc9f5554d325dc57dd6fab"
+    },
+    {
+      "family": "python",
+      "version": "python3.13.16",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.13.16.grammar",
+      "sha256": "2f32c189dcf45dc6017ea411a4140ac3abdb91ef0e1b2adb34129bf6786806ab"
+    },
+    {
+      "family": "python",
+      "version": "python3.13.16",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.13.16.tokens",
+      "sha256": "1dab4cb8fbc3480de95e19df2c0ba0c199a140e6656c3722b429c47b01627bbc"
+    },
+    {
+      "family": "python",
+      "version": "python3.16.0a1",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.16.0a1.grammar",
+      "sha256": "e3be92c01facba16ad6a2ecd5883d1754f3373e69c49921d780c9ce67465361d"
+    },
+    {
+      "family": "python",
+      "version": "python3.16.0a1",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.16.0a1.tokens",
+      "sha256": "12c7529c8d1377fff1df5a8fcb06d3c006e8b5a36fe97dae2826d264d5d39dc7"
     },
     {
       "family": "python",

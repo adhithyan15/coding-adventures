@@ -1,0 +1,11 @@
+{
+  "id": "JA-C220-futoru",
+  "pathSegment": "JA-PATH-220-WEIGHT220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-220-WEIGHT220",
+      "order": 2
+    }
+  ]
+}

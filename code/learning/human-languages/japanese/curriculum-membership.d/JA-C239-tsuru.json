@@ -1,0 +1,11 @@
+{
+  "id": "JA-C239-tsuru",
+  "pathSegment": "JA-PATH-239-PASTIME239",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-239-PASTIME239",
+      "order": 1
+    }
+  ]
+}

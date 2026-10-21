@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-235-BALL235",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "JA-EXT-235-BALL235"
+  ],
+  "after": []
+}

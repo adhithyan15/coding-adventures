@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-218-HOSPITAL218",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "JA-EXT-218-HOSPITAL218"
+  ],
+  "after": []
+}

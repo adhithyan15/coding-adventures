@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-181-SHOP181",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-181-SHOP181"
+  ],
+  "after": []
+}

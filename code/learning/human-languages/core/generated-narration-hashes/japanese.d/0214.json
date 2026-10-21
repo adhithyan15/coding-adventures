@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:035f3c3c83221a63",
+  "lessonIds": [
+    "JA-C214-arashi",
+    "JA-C214-yureru",
+    "JA-C214-hi-fire",
+    "JA-C214-moeru",
+    "JA-C214-kieru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch214.txt",
+  "json": "japanese/narration/ch214.json",
+  "textHash": "fnv1a64:65d2d1a1c8853df3",
+  "jsonHash": "fnv1a64:6e265818851db2e9",
+  "findings": []
+}

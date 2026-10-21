@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Tuesday Through to Sunday",
+  "label": "ch:ja-tuesday-through-to-sunday",
+  "canDo": "I can name the days of the week in my plans.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C164-nichiyoubi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can name the days of the week in my plans.",
+    "assesses": [
+      "JA-LEX-C164-WEEK164-03",
+      "JA-LEX-C164-WEEK164-04",
+      "JA-LEX-C164-WEEK164-05"
+    ]
+  }
+}

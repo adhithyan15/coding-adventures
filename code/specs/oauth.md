@@ -782,6 +782,28 @@ require this stronger composition without confusing it with the earlier narrow
 issuer-link result. This does not turn recognition into semantic validation of
 other critical extensions or add complete path construction, constraints,
 trust, time, revocation, TLS, HTTP, OAuth transport, or network authority.
+A bounded algorithm-policy evidence follow-up now binds the existing exact,
+caller-supplied certificate algorithm-profile result to the same decoded
+certificate object that was checked. A stronger selected RSA SHA-256 issuer-link
+entry point consumes that certificate-bound algorithm evidence together with
+the issuing-CA role-policy and candidate-selection evidence. It rejects any
+cross-certificate or non-CA combination before RSA key parsing or signature
+verification, then retains all three proofs in one distinct non-copyable result.
+The algorithm profile remains policy data only: it neither chooses nor enables
+the hard-coded RSA SHA-256 verifier, and its encoded public-key length is not an
+RSA modulus-strength check. This composition still adds no general algorithm
+routing, complete path construction or validation, trust, time, identity,
+constraints, revocation, TLS, HTTP, OAuth transport, or network authority.
+A bounded reviewed-anchor binding follow-up now consumes that strongest RSA
+SHA-256 issuer-link evidence together with reviewed-root selection evidence.
+It fails closed unless both non-copyable inputs retain the same exact issuer
+certificate, then retains both proofs in one distinct non-copyable result. This
+proves only that one authenticated child-to-issuer link terminates at a
+certificate identity occurring exactly once in the reviewed Mozilla snapshot.
+It does not apply the selected anchor's name constraints, validate the target's
+role, purpose, validity, or identity, construct a multi-hop path, apply path
+length or other constraints, check revocation, or provide TLS, HTTP, OAuth
+transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

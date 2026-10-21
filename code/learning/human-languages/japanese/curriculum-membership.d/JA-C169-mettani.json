@@ -1,0 +1,11 @@
+{
+  "id": "JA-C169-mettani",
+  "pathSegment": "JA-PATH-169-OFTEN169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-169-OFTEN169",
+      "order": 2
+    }
+  ]
+}

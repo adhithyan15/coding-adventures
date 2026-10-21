@@ -1244,7 +1244,7 @@ directed/undirected/dotted/thick chained links, including open dotted and thick
 forms, point/circle/cross endpoint
 markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
 invisible layout links,
-minimum link lengths with deterministic rank spacing,
+arbitrary minimum link lengths across plain and endpoint-marked forms with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
 thick, and dotted links, including labeled links with independently selected point, circle, cross,

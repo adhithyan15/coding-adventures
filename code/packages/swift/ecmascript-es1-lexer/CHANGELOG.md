@@ -3,10 +3,9 @@
 ## [Unreleased]
 
 ### Fixed
-- Regenerated `_Grammar.swift` from the canonical grammar. #17901
-  (`fix(ecmascript tokens)`) changed where regexes and comments end in
-  `code/grammars/ecmascript/es1.tokens` without regenerating this copy, so
-  `regen-embedded-grammars.sh --check` failed.
+- Regenerated `_Grammar.swift` from `code/grammars/ecmascript/es1.tokens`
+  after #17901 changed it without regenerating the Swift copy (the
+  `swift/grammar-tools` `--check` drift guard flagged it): line comments stop at `\r` as well as `\n`, and `/***/`, `/* a **/` are block comments.
 
 ## [0.2.0] -- 2026-07-13
 

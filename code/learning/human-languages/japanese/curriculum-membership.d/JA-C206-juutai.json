@@ -1,0 +1,11 @@
+{
+  "id": "JA-C206-juutai",
+  "pathSegment": "JA-PATH-206-TRAFFIC206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-206-TRAFFIC206",
+      "order": 2
+    }
+  ]
+}

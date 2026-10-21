@@ -1,0 +1,11 @@
+{
+  "id": "JA-C183-erabu",
+  "pathSegment": "JA-PATH-183-STAFF183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-183-STAFF183",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-187-BANK187",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-187-BANK187"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C149-nugu",
+  "pathSegment": "JA-PATH-149-DRESS149",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-149-DRESS149",
+      "order": 1
+    }
+  ]
+}

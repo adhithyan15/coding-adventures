@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C211-fueru",
+    "language": "japanese",
+    "chapter": 211,
+    "sequence": 12710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce3e11aa3984db90"
+  },
+  "findings": []
+}

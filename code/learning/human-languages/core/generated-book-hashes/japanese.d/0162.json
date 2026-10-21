@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:e44f48763655a6bd",
+  "lessonIds": [
+    "JA-C162-kowareru",
+    "JA-C162-wareru",
+    "JA-C162-toreru",
+    "JA-C162-shuuri",
+    "JA-C162-furui"
+  ],
+  "tex": "japanese/book/chapters/ch162-broken-cracked-and-repaired.tex"
+}

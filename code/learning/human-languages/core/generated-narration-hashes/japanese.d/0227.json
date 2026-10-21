@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:fabc344319041166",
+  "lessonIds": [
+    "JA-C227-machigaeru",
+    "JA-C227-kangaeru",
+    "JA-C227-omoidasu",
+    "JA-C227-tashikameru",
+    "JA-C227-kuraberu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch227.txt",
+  "json": "japanese/narration/ch227.json",
+  "textHash": "fnv1a64:53cd068b2677e365",
+  "jsonHash": "fnv1a64:a07150b9b3e97cde",
+  "findings": []
+}

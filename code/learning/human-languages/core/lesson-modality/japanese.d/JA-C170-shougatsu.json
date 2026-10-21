@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C170-shougatsu",
+    "language": "japanese",
+    "chapter": 170,
+    "sequence": 10060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3a5089507dc5769"
+  },
+  "findings": []
+}

@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 193,
+  "title": "Shrines, Temples and Cinemas",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0c71bc595e1cfcc8",
+  "lessons": [
+    {
+      "id": "JA-C193-jinja",
+      "sequence": 11480,
+      "title": "じんじゃ (jinja) — shrine; Shinto shrine",
+      "headword": "じんじゃ",
+      "romanization": "jinja",
+      "gloss": "shrine; Shinto shrine",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b420453907d57dcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to ask, then the Japanese for guidance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じんじゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じんじゃ — jinja — \"shrine; Shinto shrine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいとし じんじゃに いきます。 — maitoshi jinja ni ikimasu — \"I go to the shrine every year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じんじゃ (jinja) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jin, \"god, spirit\" (Middle Chinese zyin) and ja, \"shrine, society\" (dzyaeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maitoshi jinja ni ikimasu — I go to the shrine every year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maitoshi jinja ni ikimasu* — I go to the shrine every year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to ask, then the Japanese for guidance, then say jinja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to ask, then the Japanese for guidance, then say *jinja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じんじゃ (jinja) mean? (\"Shrine; Shinto shrine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C193-jinja-type",
+              "prompt": "Say the Japanese for 'shrine'.",
+              "assesses": [
+                "JA-LEX-C193-SIGHT193-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じんじゃ",
+                "jinja"
+              ],
+              "feedback": {
+                "correct": "Right: じんじゃ (jinja) is 'shrine; Shinto shrine'.",
+                "incorrect": "'Shrine' is じんじゃ (jinja)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C193-tera",
+      "sequence": 11490,
+      "title": "てら (tera) — temple; Buddhist temple",
+      "headword": "てら",
+      "romanization": "tera",
+      "gloss": "temple; Buddhist temple",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fec9cf7305740c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for guidance, then the Japanese for shrine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てら — tera — \"temple; Buddhist temple\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じんじゃの となりに てらが あります。 — jinja no tonari ni tera ga arimasu — \"There is a temple next to the shrine.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てら (tera) is the native reading (kun'yomi) given to the character for \"Buddhist temple\"; its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tera, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tera*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinja no tonari ni tera ga arimasu — There is a temple next to the shrine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinja no tonari ni tera ga arimasu* — There is a temple next to the shrine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for guidance, then the Japanese for shrine, then say tera again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for guidance, then the Japanese for shrine, then say *tera* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てら (tera) mean? (\"Temple; Buddhist temple\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C193-tera-type",
+              "prompt": "Say the Japanese for 'temple'.",
+              "assesses": [
+                "JA-LEX-C193-SIGHT193-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てら",
+                "tera"
+              ],
+              "feedback": {
+                "correct": "Right: てら (tera) is 'temple; Buddhist temple'.",
+                "incorrect": "'Temple' is てら (tera)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C193-eigakan",
+      "sequence": 11500,
+      "title": "えいがかん (eigakan) — cinema; movie theatre",
+      "headword": "えいがかん",
+      "romanization": "eigakan",
+      "gloss": "cinema; movie theatre",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fdfc1016a973ded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for shrine, then the Japanese for temple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えいがかん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えいがかん — eigakan — \"cinema; movie theatre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちと えいがかんに いきます。 — tomodachi to eigakan ni ikimasu — \"I go to the cinema with a friend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えいがかん (eigakan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, \"reflect\" (Middle Chinese 'jaengH), ga, \"picture\" (hweaH) and kan, \"building\" (kwanH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eigakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eigakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eigakan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eigakan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi to eigakan ni ikimasu — I go to the cinema with a friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi to eigakan ni ikimasu* — I go to the cinema with a friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for shrine, then the Japanese for temple, then say eigakan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for shrine, then the Japanese for temple, then say *eigakan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えいがかん (eigakan) mean? (\"Cinema; movie theatre\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C193-eigakan-type",
+              "prompt": "Say the Japanese for 'cinema'.",
+              "assesses": [
+                "JA-LEX-C193-SIGHT193-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えいがかん",
+                "eigakan"
+              ],
+              "feedback": {
+                "correct": "Right: えいがかん (eigakan) is 'cinema; movie theatre'.",
+                "incorrect": "'Cinema' is えいがかん (eigakan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C193-bijutsukan",
+      "sequence": 11510,
+      "title": "びじゅつかん (bijutsukan) — art museum; art gallery",
+      "headword": "びじゅつかん",
+      "romanization": "bijutsukan",
+      "gloss": "art museum; art gallery",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4ba5c194939be57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for temple, then the Japanese for cinema."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: びじゅつかん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びじゅつかん — bijutsukan — \"art museum; art gallery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅうまつ びじゅつかんに いきます。 — shūmatsu bijutsukan ni ikimasu — \"I go to the art museum at the weekend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びじゅつかん (bijutsukan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bi, \"beauty\" (Middle Chinese mijX), jutsu, \"art, skill\" (zywit) and kan, \"building\" (kwanH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bijutsukan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bijutsukan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bijutsukan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bijutsukan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūmatsu bijutsukan ni ikimasu — I go to the art museum at the weekend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūmatsu bijutsukan ni ikimasu* — I go to the art museum at the weekend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for temple, then the Japanese for cinema, then say bijutsukan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for temple, then the Japanese for cinema, then say *bijutsukan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does びじゅつかん (bijutsukan) mean? (\"Art museum; art gallery\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C193-bijutsukan-type",
+              "prompt": "Say the Japanese for 'art museum'.",
+              "assesses": [
+                "JA-LEX-C193-SIGHT193-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びじゅつかん",
+                "bijutsukan"
+              ],
+              "feedback": {
+                "correct": "Right: びじゅつかん (bijutsukan) is 'art museum; art gallery'.",
+                "incorrect": "'Art museum' is びじゅつかん (bijutsukan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C193-mieru",
+      "sequence": 11520,
+      "title": "みえる (mieru) — to be visible; to be seen, to seem",
+      "headword": "みえる",
+      "romanization": "mieru",
+      "gloss": "to be visible; to be seen, to seem",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef1430c95ecd7ccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cinema, then the Japanese for art museum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みえる — mieru — \"to be visible; to be seen, to seem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの たかい たてものが みえます。 — ano takai tatemono ga miemasu — \"That tall building can be seen.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みえます, miemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みえる (mieru) is a native Japanese word, inherited rather than borrowed, built on mi, \"seeing\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mieru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mieru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mieru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mieru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano takai tatemono ga miemasu — That tall building can be seen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano takai tatemono ga miemasu* — That tall building can be seen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cinema, then the Japanese for art museum, then say mieru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cinema, then the Japanese for art museum, then say *mieru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みえる (mieru) mean? (\"To be visible; to be seen, to seem\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C193-mieru-type",
+              "prompt": "Say the Japanese for 'to be visible'.",
+              "assesses": [
+                "JA-LEX-C193-SIGHT193-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みえる",
+                "mieru"
+              ],
+              "feedback": {
+                "correct": "Right: みえる (mieru) is 'to be visible; to be seen, to seem'.",
+                "incorrect": "'To be visible' is みえる (mieru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

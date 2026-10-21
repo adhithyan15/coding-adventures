@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:3f0bbbb59036d580",
+  "lessonIds": [
+    "JA-C229-kaisha",
+    "JA-C229-kaigi",
+    "JA-C229-jimusho",
+    "JA-C229-tsutomeru",
+    "JA-C229-douryou",
+    "JA-R229-review-224-229"
+  ],
+  "tex": "japanese/book/chapters/ch229-at-the-company.tex"
+}

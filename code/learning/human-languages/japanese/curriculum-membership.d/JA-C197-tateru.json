@@ -1,0 +1,11 @@
+{
+  "id": "JA-C197-tateru",
+  "pathSegment": "JA-PATH-197-CITY197",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-197-CITY197",
+      "order": 3
+    }
+  ]
+}

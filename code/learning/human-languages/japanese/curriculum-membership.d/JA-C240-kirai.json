@@ -1,0 +1,11 @@
+{
+  "id": "JA-C240-kirai",
+  "pathSegment": "JA-PATH-240-LIKES240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-240-LIKES240",
+      "order": 3
+    }
+  ]
+}

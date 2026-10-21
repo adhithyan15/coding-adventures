@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-204-TRIP204",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-204-TRIP204"
+  ],
+  "after": []
+}

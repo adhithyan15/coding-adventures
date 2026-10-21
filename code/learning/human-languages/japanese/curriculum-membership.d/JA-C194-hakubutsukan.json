@@ -1,0 +1,11 @@
+{
+  "id": "JA-C194-hakubutsukan",
+  "pathSegment": "JA-PATH-194-WAY194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-194-WAY194",
+      "order": 4
+    }
+  ]
+}

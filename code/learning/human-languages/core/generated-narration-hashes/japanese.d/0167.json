@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:c7ec5cbf8797ebca",
+  "lessonIds": [
+    "JA-C167-hajimaru",
+    "JA-C167-hajimeru",
+    "JA-C167-oeru",
+    "JA-C167-kawaru",
+    "JA-C167-chuushi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch167.txt",
+  "json": "japanese/narration/ch167.json",
+  "textHash": "fnv1a64:6a0b3b4ae34a5866",
+  "jsonHash": "fnv1a64:67f84db43aca2c7c",
+  "findings": []
+}

@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 204,
+  "title": "Trips, Inns and Sights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0dbc00de78aebaf0",
+  "lessons": [
+    {
+      "id": "JA-C204-ryokou",
+      "sequence": 12310,
+      "title": "りょこう (ryokō) — a trip; travel",
+      "headword": "りょこう",
+      "romanization": "ryokō",
+      "gloss": "a trip; travel",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80785089448e390f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a seat, then the Japanese for to give up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りょこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょこう — ryokō — \"a trip; travel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいげつ りょこうに いきます。 — raigetsu ryokō ni ikimasu — \"I am going on a trip next month.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょこう (ryokō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ryo, \"journey\" (Middle Chinese ljoX) and kō, \"to go\" (haeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryokō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryokō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryokō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryokō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raigetsu ryokō ni ikimasu — I am going on a trip next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raigetsu ryokō ni ikimasu* — I am going on a trip next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a seat, then the Japanese for to give up, then say ryokō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a seat, then the Japanese for to give up, then say *ryokō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りょこう (ryokō) mean? (\"A trip; travel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C204-ryokou-type",
+              "prompt": "Say the Japanese for 'a trip'.",
+              "assesses": [
+                "JA-LEX-C204-TRIP204-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りょこう",
+                "ryokō",
+                "ryokou",
+                "ryokoo",
+                "ryoko"
+              ],
+              "feedback": {
+                "correct": "Right: りょこう (ryokō) is 'a trip; travel'.",
+                "incorrect": "'A trip' is りょこう (ryokō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C204-ryokan",
+      "sequence": 12320,
+      "title": "りょかん (ryokan) — a Japanese inn",
+      "headword": "りょかん",
+      "romanization": "ryokan",
+      "gloss": "a Japanese inn",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04d549dc3258856e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to give up, then the Japanese for a trip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りょかん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょかん — ryokan — \"a Japanese inn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りょかんで ゆっくり やすみます。 — ryokan de yukkuri yasumimasu — \"I rest well at the inn.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょかん (ryokan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ryo, \"journey\" (Middle Chinese ljoX) and kan, \"building, lodge\" (kwanH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryokan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryokan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryokan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryokan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryokan de yukkuri yasumimasu — I rest well at the inn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryokan de yukkuri yasumimasu* — I rest well at the inn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to give up, then the Japanese for a trip, then say ryokan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to give up, then the Japanese for a trip, then say *ryokan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りょかん (ryokan) mean? (\"A Japanese inn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C204-ryokan-type",
+              "prompt": "Say the Japanese for 'a Japanese inn'.",
+              "assesses": [
+                "JA-LEX-C204-TRIP204-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りょかん",
+                "ryokan"
+              ],
+              "feedback": {
+                "correct": "Right: りょかん (ryokan) is 'a Japanese inn'.",
+                "incorrect": "'A Japanese inn' is りょかん (ryokan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C204-kenbutsu",
+      "sequence": 12330,
+      "title": "けんぶつ (kenbutsu) — sightseeing",
+      "headword": "けんぶつ",
+      "romanization": "kenbutsu",
+      "gloss": "sightseeing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a6a574c77239b1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a trip, then the Japanese for a Japanese inn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんぶつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんぶつ — kenbutsu — \"sightseeing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちと まちの けんぶつに いきます。 — tomodachi to machi no kenbutsu ni ikimasu — \"I go sightseeing in town with a friend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんぶつ (kenbutsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"to see\" (Middle Chinese kenH) and butsu, \"thing\" (mjut) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenbutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenbutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenbutsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenbutsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi to machi no kenbutsu ni ikimasu — I go sightseeing in town with a friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi to machi no kenbutsu ni ikimasu* — I go sightseeing in town with a friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a trip, then the Japanese for a Japanese inn, then say kenbutsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a trip, then the Japanese for a Japanese inn, then say *kenbutsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんぶつ (kenbutsu) mean? (\"Sightseeing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C204-kenbutsu-type",
+              "prompt": "Say the Japanese for 'sightseeing'.",
+              "assesses": [
+                "JA-LEX-C204-TRIP204-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんぶつ",
+                "kenbutsu"
+              ],
+              "feedback": {
+                "correct": "Right: けんぶつ (kenbutsu) is 'sightseeing'.",
+                "incorrect": "'Sightseeing' is けんぶつ (kenbutsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C204-yoru",
+      "sequence": 12340,
+      "title": "よる (yoru) — to drop in; to stop by",
+      "headword": "よる",
+      "romanization": "yoru",
+      "gloss": "to drop in; to stop by",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3281c215add47f75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a Japanese inn, then the Japanese for sightseeing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よる — yoru — \"to drop in; to stop by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきの ちかくの ほんやに よります。 — eki no chikaku no hon'ya ni yorimasu — \"I drop in at the bookshop near the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よります, yorimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よる (yoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki no chikaku no hon'ya ni yorimasu — I drop in at the bookshop near the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki no chikaku no hon'ya ni yorimasu* — I drop in at the bookshop near the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a Japanese inn, then the Japanese for sightseeing, then say yoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a Japanese inn, then the Japanese for sightseeing, then say *yoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よる (yoru) mean? (\"To drop in; to stop by\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C204-yoru-type",
+              "prompt": "Say the Japanese for 'to drop in'.",
+              "assesses": [
+                "JA-LEX-C204-TRIP204-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よる",
+                "yoru"
+              ],
+              "feedback": {
+                "correct": "Right: よる (yoru) is 'to drop in; to stop by'.",
+                "incorrect": "'To drop in' is よる (yoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C204-yado",
+      "sequence": 12350,
+      "title": "やど (yado) — lodging; a place to stay",
+      "headword": "やど",
+      "romanization": "yado",
+      "gloss": "lodging; a place to stay",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4d95a690d7cc4e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sightseeing, then the Japanese for to drop in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やど — yado — \"lodging; a place to stay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やどは うみの ちかくです。 — yado wa umi no chikaku desu — \"Our lodging is near the sea.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やど (yado) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yado wa umi no chikaku desu — Our lodging is near the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yado wa umi no chikaku desu* — Our lodging is near the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sightseeing, then the Japanese for to drop in, then say yado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sightseeing, then the Japanese for to drop in, then say *yado* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やど (yado) mean? (\"Lodging; a place to stay\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C204-yado-type",
+              "prompt": "Say the Japanese for 'lodging'.",
+              "assesses": [
+                "JA-LEX-C204-TRIP204-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やど",
+                "yado"
+              ],
+              "feedback": {
+                "correct": "Right: やど (yado) is 'lodging; a place to stay'.",
+                "incorrect": "'Lodging' is やど (yado)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

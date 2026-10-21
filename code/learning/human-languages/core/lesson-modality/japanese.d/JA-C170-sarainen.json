@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C170-sarainen",
+    "language": "japanese",
+    "chapter": 170,
+    "sequence": 10050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9778486ce261085"
+  },
+  "findings": []
+}

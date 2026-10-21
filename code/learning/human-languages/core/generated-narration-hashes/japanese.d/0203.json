@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:6b10cb676d60b0bb",
+  "lessonIds": [
+    "JA-C203-hikouki",
+    "JA-C203-kuukou",
+    "JA-C203-tobu",
+    "JA-C203-zaseki",
+    "JA-C203-yuzuru",
+    "JA-R203-review-198-203"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch203.txt",
+  "json": "japanese/narration/ch203.json",
+  "textHash": "fnv1a64:e463a273b6dad171",
+  "jsonHash": "fnv1a64:5a96231a3dac9dd2",
+  "findings": []
+}

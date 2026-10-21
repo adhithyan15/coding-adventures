@@ -3,10 +3,9 @@
 ## [Unreleased]
 
 ### Fixed
-- Regenerated `_Grammar.swift` from the canonical grammar. #17901
-  (`fix(ecmascript tokens)`) changed where regexes and comments end in
-  `code/grammars/ecmascript/es3.tokens` without regenerating this copy, so
-  `regen-embedded-grammars.sh --check` failed.
+- Regenerated `_Grammar.swift` from `code/grammars/ecmascript/es3.tokens`
+  after #17901 changed it without regenerating the Swift copy (the
+  `swift/grammar-tools` `--check` drift guard flagged it): line comments stop at `\r`, block comments ending in extra stars close, and a regex literal cannot hold a `\r`.
 
 ## [0.2.0] -- 2026-07-13
 

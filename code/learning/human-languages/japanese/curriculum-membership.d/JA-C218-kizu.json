@@ -1,0 +1,11 @@
+{
+  "id": "JA-C218-kizu",
+  "pathSegment": "JA-PATH-218-HOSPITAL218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-218-HOSPITAL218",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:0dbc00de78aebaf0",
+  "lessonIds": [
+    "JA-C204-ryokou",
+    "JA-C204-ryokan",
+    "JA-C204-kenbutsu",
+    "JA-C204-yoru",
+    "JA-C204-yado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch204.txt",
+  "json": "japanese/narration/ch204.json",
+  "textHash": "fnv1a64:800eae3053ff0549",
+  "jsonHash": "fnv1a64:d9604958b47f32e8",
+  "findings": []
+}

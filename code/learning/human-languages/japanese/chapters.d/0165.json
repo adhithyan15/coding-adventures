@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "The Seventh, the Tenth and a Birthday",
+  "label": "ch:ja-the-seventh-the-tenth-and-a-birthday",
+  "canDo": "I can say dates in the month and plan for a birthday.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C165-tanjoubi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say dates in the month and plan for a birthday.",
+    "assesses": [
+      "JA-LEX-C165-DATES165-03",
+      "JA-LEX-C165-DATES165-04",
+      "JA-LEX-C165-DATES165-05"
+    ]
+  }
+}

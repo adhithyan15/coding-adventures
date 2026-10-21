@@ -30,6 +30,7 @@ pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;
 mod _grammar;
 pub mod asi;
 pub mod bridge;
+pub mod early_errors;
 
 /// Parse JavaScript source and return a fully typed [`Program`] AST
 /// (CLOC12.136 bridge).
@@ -308,7 +309,11 @@ pub fn parse_javascript_typed(
     // only inserts a `;` before a `}`/EOF when parsing genuinely failed for lack
     // of one, so it is a no-op on any input that already parses. See [`asi`].
     let tokens = tokenize_javascript_typed(source, version)?;
-    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
+    let ast =
+        asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    // Redeclarations in a block are early errors (#17877).
+    early_errors::check(&ast).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    Ok(ast)
 }
 
 /// CV-carrying twin of [`parse_javascript_typed`] (CLOC27 D3).
@@ -346,7 +351,10 @@ pub fn parse_javascript_typed_with_cv(
         .collect();
     // Identical Phase-1 ASI parse to `parse_javascript_typed` — only the token
     // source differs (CV-stamped). See [`asi`].
-    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
+    let ast =
+        asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    early_errors::check(&ast).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    Ok(ast)
 }
 
 /// A parsed program paired with the correlation-vector ID assigned to its

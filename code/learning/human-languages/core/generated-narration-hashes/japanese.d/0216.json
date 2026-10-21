@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:9242434a0046b7f4",
+  "lessonIds": [
+    "JA-C216-byouki",
+    "JA-C216-guai",
+    "JA-C216-tsukareru",
+    "JA-C216-naoru",
+    "JA-C216-furueru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch216.txt",
+  "json": "japanese/narration/ch216.json",
+  "textHash": "fnv1a64:5283b8c42aa2e044",
+  "jsonHash": "fnv1a64:555fc8fd2c023e17",
+  "findings": []
+}

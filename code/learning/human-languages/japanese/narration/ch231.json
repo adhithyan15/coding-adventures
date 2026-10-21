@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 231,
+  "title": "Calls and Messages",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:53ada13f2c94d3a3",
+  "lessons": [
+    {
+      "id": "JA-C231-moshimoshi",
+      "sequence": 13960,
+      "title": "もしもし (moshimoshi) — hello on the phone; excuse me (calling out)",
+      "headword": "もしもし",
+      "romanization": "moshimoshi",
+      "gloss": "hello on the phone; excuse me (calling out)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8e5e91060d6e7e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a junior, then the Japanese for to do one's best."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もしもし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もしもし — moshimoshi — \"hello on the phone; excuse me (calling out)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんわで もしもしと いいます。 — denwa de moshimoshi to iimasu — \"On the phone, people say moshimoshi.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もしもし (moshimoshi) is usually called a native Japanese word (wago), not borrowed from Chinese, and JMdict gives it in kana alone; it is a doubled form, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshimoshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshimoshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshimoshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshimoshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "denwa de moshimoshi to iimasu — On the phone, people say moshimoshi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *denwa de moshimoshi to iimasu* — On the phone, people say moshimoshi.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a junior, then the Japanese for to do one's best, then say moshimoshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a junior, then the Japanese for to do one's best, then say *moshimoshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もしもし (moshimoshi) mean? (\"Hello on the phone; excuse me (calling out)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C231-moshimoshi-type",
+              "prompt": "Say the Japanese for 'hello on the phone'.",
+              "assesses": [
+                "JA-LEX-C231-PHONE231-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もしもし",
+                "moshimoshi"
+              ],
+              "feedback": {
+                "correct": "Right: もしもし (moshimoshi) is 'hello on the phone; excuse me (calling out)'.",
+                "incorrect": "'Hello on the phone' is もしもし (moshimoshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C231-bangou",
+      "sequence": 13970,
+      "title": "ばんごう (bangō) — a number; a phone number",
+      "headword": "ばんごう",
+      "romanization": "bangō",
+      "gloss": "a number; a phone number",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a9a359585ee2208",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to do one's best, then the Japanese for hello on the phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ばんごう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばんごう — bangō — \"a number; a phone number\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは でんわの ばんごうを よく まちがえます。 — chichi wa denwa no bangō o yoku machigaemasu — \"My father often gets phone numbers wrong.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばんごう (bangō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ban, \"turn, number\" (Middle Chinese phjon) and gō, \"number, name\" (hawH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bangō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bangō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bangō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bangō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa denwa no bangō o yoku machigaemasu — My father often gets phone numbers wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa denwa no bangō o yoku machigaemasu* — My father often gets phone numbers wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to do one's best, then the Japanese for hello on the phone, then say bangō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to do one's best, then the Japanese for hello on the phone, then say *bangō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ばんごう (bangō) mean? (\"A number; a phone number\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C231-bangou-type",
+              "prompt": "Say the Japanese for 'a number'.",
+              "assesses": [
+                "JA-LEX-C231-PHONE231-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ばんごう",
+                "bangō",
+                "bangou",
+                "bangoo",
+                "bango"
+              ],
+              "feedback": {
+                "correct": "Right: ばんごう (bangō) is 'a number; a phone number'.",
+                "incorrect": "'A number' is ばんごう (bangō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C231-renraku",
+      "sequence": 13980,
+      "title": "れんらく (renraku) — contact; getting in touch",
+      "headword": "れんらく",
+      "romanization": "renraku",
+      "gloss": "contact; getting in touch",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57dfe19040c3cb96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for hello on the phone, then the Japanese for a number."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: れんらく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れんらく — renraku — \"contact; getting in touch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんぱいは いつも でんわで れんらくを します。 — senpai wa itsumo denwa de renraku o shimasu — \"My senior always gets in touch by phone.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れんらく (renraku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ren, \"link\" (Middle Chinese ljen) and raku, \"entwine\" (lak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renraku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renraku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "renraku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *renraku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senpai wa itsumo denwa de renraku o shimasu — My senior always gets in touch by phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senpai wa itsumo denwa de renraku o shimasu* — My senior always gets in touch by phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for hello on the phone, then the Japanese for a number, then say renraku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for hello on the phone, then the Japanese for a number, then say *renraku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does れんらく (renraku) mean? (\"Contact; getting in touch\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C231-renraku-type",
+              "prompt": "Say the Japanese for 'contact'.",
+              "assesses": [
+                "JA-LEX-C231-PHONE231-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れんらく",
+                "renraku"
+              ],
+              "feedback": {
+                "correct": "Right: れんらく (renraku) is 'contact; getting in touch'.",
+                "incorrect": "'Contact' is れんらく (renraku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C231-henji",
+      "sequence": 13990,
+      "title": "へんじ (henji) — a response; a reply",
+      "headword": "へんじ",
+      "romanization": "henji",
+      "gloss": "a response; a reply",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e0613fdc5a7c4d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a number, then the Japanese for contact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: へんじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へんじ — henji — \"a response; a reply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちは いつも てがみの へんじを かきます。 — tomodachi wa itsumo tegami no henji o kakimasu — \"My friend always answers letters.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へんじ (henji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hen, \"return\" (Middle Chinese pjonX) and ji, \"matter\" (dzriH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *henji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "henji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *henji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi wa itsumo tegami no henji o kakimasu — My friend always answers letters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi wa itsumo tegami no henji o kakimasu* — My friend always answers letters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a number, then the Japanese for contact, then say henji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a number, then the Japanese for contact, then say *henji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does へんじ (henji) mean? (\"A response; a reply\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C231-henji-type",
+              "prompt": "Say the Japanese for 'a response'.",
+              "assesses": [
+                "JA-LEX-C231-PHONE231-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "へんじ",
+                "henji"
+              ],
+              "feedback": {
+                "correct": "Right: へんじ (henji) is 'a response; a reply'.",
+                "incorrect": "'A response' is へんじ (henji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C231-tsutaeru",
+      "sequence": 14000,
+      "title": "つたえる (tsutaeru) — to pass on; to convey",
+      "headword": "つたえる",
+      "romanization": "tsutaeru",
+      "gloss": "to pass on; to convey",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ccaa4bf9e2ff33e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for contact, then the Japanese for a response."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つたえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つたえる — tsutaeru — \"to pass on; to convey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じょうしに かいぎの じかんを つたえます。 — jōshi ni kaigi no jikan o tsutaemasu — \"I pass on the meeting time to my boss.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つたえます, tsutaemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つたえる (tsutaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōshi ni kaigi no jikan o tsutaemasu — I pass on the meeting time to my boss.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōshi ni kaigi no jikan o tsutaemasu* — I pass on the meeting time to my boss.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for contact, then the Japanese for a response, then say tsutaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for contact, then the Japanese for a response, then say *tsutaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つたえる (tsutaeru) mean? (\"To pass on; to convey\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C231-tsutaeru-type",
+              "prompt": "Say the Japanese for 'to pass on'.",
+              "assesses": [
+                "JA-LEX-C231-PHONE231-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つたえる",
+                "tsutaeru"
+              ],
+              "feedback": {
+                "correct": "Right: つたえる (tsutaeru) is 'to pass on; to convey'.",
+                "incorrect": "'To pass on' is つたえる (tsutaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

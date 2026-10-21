@@ -1,0 +1,801 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 208,
+  "title": "The Weather Forecast",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:21a082018bddf067",
+  "lessons": [
+    {
+      "id": "JA-C208-hare",
+      "sequence": 12510,
+      "title": "はれ (hare) — fine weather; clear skies",
+      "headword": "はれ",
+      "romanization": "hare",
+      "gloss": "fine weather; clear skies",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5ec32b13d332a6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to clear up, then the Japanese for to cloud over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はれ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はれ — hare — \"fine weather; clear skies\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたは はれでしょう。 — ashita wa hare deshō — \"Tomorrow will probably be fine.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はれ (hare) is native Japanese (wago), derived from the verb hareru, \"to clear up\", inherited rather than borrowed (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita wa hare deshō — Tomorrow will probably be fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita wa hare deshō* — Tomorrow will probably be fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to clear up, then the Japanese for to cloud over, then say hare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to clear up, then the Japanese for to cloud over, then say *hare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はれ (hare) mean? (\"Fine weather; clear skies\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C208-hare-type",
+              "prompt": "Say the Japanese for 'fine weather'.",
+              "assesses": [
+                "JA-LEX-C208-FORECAST208-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はれ",
+                "hare"
+              ],
+              "feedback": {
+                "correct": "Right: はれ (hare) is 'fine weather; clear skies'.",
+                "incorrect": "'Fine weather' is はれ (hare)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C208-kumori",
+      "sequence": 12520,
+      "title": "くもり (kumori) — cloudy weather",
+      "headword": "くもり",
+      "romanization": "kumori",
+      "gloss": "cloudy weather",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea097668e6020f2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to cloud over, then the Japanese for fine weather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くもり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くもり — kumori — \"cloudy weather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅうは くもりでしょう。 — raishū wa kumori deshō — \"Next week will probably be cloudy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くもり (kumori) is native Japanese (wago), derived from the verb kumoru, \"to cloud over\", inherited rather than borrowed (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kumori, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kumori*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū wa kumori deshō — Next week will probably be cloudy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū wa kumori deshō* — Next week will probably be cloudy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to cloud over, then the Japanese for fine weather, then say kumori again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to cloud over, then the Japanese for fine weather, then say *kumori* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くもり (kumori) mean? (\"Cloudy weather\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C208-kumori-type",
+              "prompt": "Say the Japanese for 'cloudy weather'.",
+              "assesses": [
+                "JA-LEX-C208-FORECAST208-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くもり",
+                "kumori"
+              ],
+              "feedback": {
+                "correct": "Right: くもり (kumori) is 'cloudy weather'.",
+                "incorrect": "'Cloudy weather' is くもり (kumori)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C208-tenkiyohou",
+      "sequence": 12530,
+      "title": "てんきよほう (tenkiyohō) — a weather forecast",
+      "headword": "てんきよほう",
+      "romanization": "tenkiyohō",
+      "gloss": "a weather forecast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53d7b50b5aa857c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for fine weather, then the Japanese for cloudy weather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てんきよほう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんきよほう — tenkiyohō — \"a weather forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたの てんきよほうは ゆきです。 — ashita no tenkiyohō wa yuki desu — \"Tomorrow's forecast is snow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんきよほう (tenkiyohō) is Sino-Japanese (kango): four Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ten, \"sky\" (Middle Chinese then), ki, \"air\" (khj+jH), yo, \"beforehand\" (yoH) and hō, \"report\" (pawH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenkiyohō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenkiyohō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenkiyohō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenkiyohō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita no tenkiyohō wa yuki desu — Tomorrow's forecast is snow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita no tenkiyohō wa yuki desu* — Tomorrow's forecast is snow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for fine weather, then the Japanese for cloudy weather, then say tenkiyohō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for fine weather, then the Japanese for cloudy weather, then say *tenkiyohō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てんきよほう (tenkiyohō) mean? (\"A weather forecast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C208-tenkiyohou-type",
+              "prompt": "Say the Japanese for 'a weather forecast'.",
+              "assesses": [
+                "JA-LEX-C208-FORECAST208-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てんきよほう",
+                "tenkiyohō",
+                "tenkiyohou",
+                "tenkiyohoo",
+                "tenkiyoho"
+              ],
+              "feedback": {
+                "correct": "Right: てんきよほう (tenkiyohō) is 'a weather forecast'.",
+                "incorrect": "'A weather forecast' is てんきよほう (tenkiyohō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C208-sora",
+      "sequence": 12540,
+      "title": "そら (sora) — the sky",
+      "headword": "そら",
+      "romanization": "sora",
+      "gloss": "the sky",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71bc6c7c239aa302",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cloudy weather, then the Japanese for a weather forecast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: そら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そら — sora — \"the sky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたは そらが あおいでしょう。 — ashita wa sora ga aoi deshō — \"The sky will probably be blue tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そら (sora) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sora*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sora, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sora*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita wa sora ga aoi deshō — The sky will probably be blue tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita wa sora ga aoi deshō* — The sky will probably be blue tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cloudy weather, then the Japanese for a weather forecast, then say sora again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cloudy weather, then the Japanese for a weather forecast, then say *sora* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does そら (sora) mean? (\"The sky\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C208-sora-type",
+              "prompt": "Say the Japanese for 'the sky'.",
+              "assesses": [
+                "JA-LEX-C208-FORECAST208-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "そら",
+                "sora"
+              ],
+              "feedback": {
+                "correct": "Right: そら (sora) is 'the sky'.",
+                "incorrect": "'The sky' is そら (sora)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C208-taifuu",
+      "sequence": 12550,
+      "title": "たいふう (taifū) — a typhoon",
+      "headword": "たいふう",
+      "romanization": "taifū",
+      "gloss": "a typhoon",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:069a8333d1d9b52b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a weather forecast, then the Japanese for the sky."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいふう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいふう — taifū — \"a typhoon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうは らいしゅうでしょう。 — taifū wa raishū deshō — \"The typhoon will probably come next week.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいふう (taifū) is Sino-Japanese (kango), read with on'yomi borrowed from Chinese. Its second part is fū, \"wind\" (Middle Chinese pjuwng); how the first part, tai, came to name a great storm is not settled (JMdict, KANJIDIC2; Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū wa raishū deshō — The typhoon will probably come next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū wa raishū deshō* — The typhoon will probably come next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a weather forecast, then the Japanese for the sky, then say taifū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a weather forecast, then the Japanese for the sky, then say *taifū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいふう (taifū) mean? (\"A typhoon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C208-taifuu-type",
+              "prompt": "Say the Japanese for 'a typhoon'.",
+              "assesses": [
+                "JA-LEX-C208-FORECAST208-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいふう",
+                "taifū",
+                "taifuu",
+                "taifu"
+              ],
+              "feedback": {
+                "correct": "Right: たいふう (taifū) is 'a typhoon'.",
+                "incorrect": "'A typhoon' is たいふう (taifū)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

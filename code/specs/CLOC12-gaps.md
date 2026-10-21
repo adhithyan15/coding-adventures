@@ -1450,6 +1450,56 @@ deleted:
 `tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
 such tails, which is the CCR-082 review fix.
 
+### #17877 — a `function`/`class` declaration in a block parsed as an expression
+
+**Resolved (soundness).** The ECMAScript grammars gave `block`,
+`case_clause` and `default_clause` only `{ statement }`. The declaration
+alternatives were in `source_element`, which only `program` and
+`function_body` use. Inside a block, `function g(){}` and `class C{}`
+matched `expression_statement`. The output re-emitted them as
+`(function g(){})` and `(class C{})`, which bind nothing, so any later use
+threw `ReferenceError`. Without a newline after the declaration
+(`{function g(){} g()}`), the parse failed instead.
+
+ES2015–ES2025 now give the three rules an inline group: the declarations
+that version's `source_element` lists, minus `import`/`export`, followed by
+`statement`. That is ECMA-262's StatementListItem. The group is inlined, so
+a block that holds only statements has the same CST as before. The bridge's
+`convert_statement_list_item` lowers a function or class declaration to
+`Statement::Declaration`, the node a function body already holds. ES1, ES3
+and ES5 are unchanged: block-level function declarations were not standard
+before ES2015.
+
+**Redeclaration early errors (added).** Blocks that hold declarations need
+§14.2.1's early errors, or programs every engine rejects would parse.
+`javascript_parser::early_errors` rejects duplicate lexical names in a block
+or case block, apart from Annex B's sloppy duplicate plain functions, and a
+lexical name that is also `var`-declared there. test262 shows 165 new passes
+and none lost. Function-body and program-level redeclarations are not
+checked yet.
+
+**Still open:**
+
+- **Annex B.** In sloppy mode, a block-level function is also assigned to a
+  `var` of the same name in the enclosing function when the block runs.
+  closurec now keeps the source's behaviour. Upstream treats the function as
+  strictly block-scoped: for `function f(){ {function g(){}} return typeof g }`
+  it returns `"undefined"` where `node` returns `"function"`, and at ADVANCED
+  it reports `JSC_UNDEFINED_VARIABLE` for a later `g()`. Matching that is a
+  parity decision; it is not taken here.
+- **Switch cases (#17879).** DCE's case truncation and constant-switch
+  collapse drop declarations that the whole switch body can see. For `var`
+  this already happens on main. With this fix, a `function`/`class` in a case
+  is a real declaration and reaches the same bug.
+- **Size.** Upstream inlines or unwraps these functions and blocks, for
+  example `if(true){function g(){return 7}g()}` becomes `function(){return
+  7}()` at SIMPLE and `7` at ADVANCED. closurec keeps the block.
+- **TypeScript grammars.** `code/grammars/typescript` has the same `block`
+  rule. closurec doesn't use it.
+- **Other languages' compiled grammars.** Rust (`javascript-parser`) and Ruby
+  (`javascript_parser`, which CI checks for drift) are regenerated. The Lua
+  `_grammar_es*.lua` files are not checked by CI and need a separate refresh.
+
 ### #17879 — DCE dropped declarations a switch body shares
 
 **Resolved (soundness).** A switch body is one scope: a `var` in any case is

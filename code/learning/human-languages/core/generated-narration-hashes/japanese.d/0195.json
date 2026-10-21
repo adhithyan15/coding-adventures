@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:34ab4ab2fadbe0c1",
+  "lessonIds": [
+    "JA-C195-kita",
+    "JA-C195-tsukiatari",
+    "JA-C195-mukai",
+    "JA-C195-sugiru",
+    "JA-C195-modoru",
+    "JA-R195-review-190-195"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch195.txt",
+  "json": "japanese/narration/ch195.json",
+  "textHash": "fnv1a64:c23844d56e3d1ebb",
+  "jsonHash": "fnv1a64:36f5a72f1a0f3a33",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C190-hairu",
+  "pathSegment": "JA-PATH-190-TOWN190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-190-TOWN190",
+      "order": 3
+    }
+  ]
+}

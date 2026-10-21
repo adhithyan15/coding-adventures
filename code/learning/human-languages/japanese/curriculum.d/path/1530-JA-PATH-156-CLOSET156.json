@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-156-CLOSET156",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "JA-EXT-156-CLOSET156"
+  ],
+  "after": []
+}

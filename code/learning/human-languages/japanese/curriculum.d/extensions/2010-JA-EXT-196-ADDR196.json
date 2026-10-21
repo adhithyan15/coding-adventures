@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-196-ADDR196",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about my neighbourhood and find an address.",
+  "prerequisites": []
+}
