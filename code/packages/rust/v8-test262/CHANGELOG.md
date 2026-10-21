@@ -2,6 +2,12 @@
 
 ## 0.1.0 — unreleased
 
+- **56 more tests parse; the token-pattern fixes (#17886, #17888) add 18 of
+  them to #17840's 38.** `annexB/language/comments/single-line-html-close-asi.js`
+  (sloppy and strict) is removed here as well as in #17898, so this PR's
+  gate doesn't depend on merge order. It only ever "passed" by reading an
+  Annex B HTML close comment as code (#17884).
+
 - **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
   `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is
   judged again (it is on the pass list in both modes). `PARSE_BUDGET_BYTES`
